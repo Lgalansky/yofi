@@ -788,6 +788,14 @@ button.bar:hover span:first-child{color:var(--pink)}
 .blogo{display:block;width:100%;max-width:400px;height:auto;aspect-ratio:740/265;margin:-6px auto 4px;animation:blogoIn .6s cubic-bezier(.2,1.4,.4,1) both}
 @keyframes blogoIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.blogo{animation:none}}
+.flow.astab .bar-top,.flow.astab .cx .wallet.cxw{display:none}
+.flow.astab .body{padding-top:8px}
+.pcats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-bottom:8px}
+.pcats button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:84px;padding:10px 6px;border-radius:18px;background:var(--card);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--violet) 22%,var(--line));font-weight:700;font-size:.84rem;line-height:1.15;text-align:center;color:var(--ink)}
+.pcats button svg{width:28px;height:28px;color:var(--violet)}
+.pcats button[aria-pressed="true"],.pcats button:active{background:#F6F0FF;color:#23113D;box-shadow:inset 0 0 0 2px var(--violet)}
+.catchip{position:absolute;top:12px;left:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 13px 0 10px;border-radius:999px;background:rgba(20,8,40,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;font-weight:700;font-size:.85rem;pointer-events:auto}
+.catchip svg{width:18px;height:18px}
 </style>
 </head>
 <body>
@@ -1340,23 +1348,30 @@ $('#file').addEventListener('change', async e => {
   const first = !S.onboarded && S.photos.length === 1;
   const win = first ? CFG.FIRST_WIN : CFG.NEW_PHOTO;
   S.gems += win; save();
-  showResult(p, { win, first });
+  askCategory(p, () => showResult(p, { win, first }));
 });
 
 /* ---------- Flow overlay ---------- */
 let flowClose = null;
 function openFlow(html, closable = true, onClose) {
-  $('#flow').classList.remove('cxmode');
+  leaveCxTab();
   $('#flowBody').innerHTML = html; $('#flowBody').scrollTop = 0; $('#flow').classList.add('on');
   $('#flowBack').style.visibility = closable ? 'visible' : 'hidden'; flowClose = onClose || null;
 }
-function closeFlow() { $('#flow').classList.remove('on', 'cxmode'); renderStudio(); renderJudge(); if (flowClose) { const f = flowClose; flowClose = null; f(); } }
+function cxTabTop() { const g = $('.seg'); return g.offsetTop + g.offsetHeight; }
+function leaveCxTab() {
+  const f = $('#flow'); if (!f.classList.contains('astab')) { f.classList.remove('cxmode'); return; }
+  f.classList.remove('cxmode', 'astab'); f.style.top = '';
+  const at = $('#panes').dataset.at; ['judge', 'studio', 'gallery'].forEach(k => $('#seg' + k[0].toUpperCase() + k.slice(1)).setAttribute('aria-pressed', at === k)); $('#segCompete').setAttribute('aria-pressed', 'false');
+}
+window.addEventListener('resize', () => { const f = $('#flow'); if (f.classList.contains('astab')) f.style.top = cxTabTop() + 'px'; });
+function closeFlow() { leaveCxTab(); $('#flow').classList.remove('on'); renderStudio(); renderJudge(); if (flowClose) { const f = flowClose; flowClose = null; f(); } }
 $('#flowBack').onclick = () => { if (!S.user) { openSignup(); return; } closeFlow(); };
 
 function showResult(p, o = {}) {
   const low = lowest(p.s), lc = catBy(low), tot = p.s.total, stage = stageOf(tot);
   const crossed = o.prevTotal != null && stage > stageOf(o.prevTotal);
-  let html = `<div class="hero-photo" style="max-height:40vh"><img src="${p.src}" alt="Your photo">${stage === 2 ? '<span class="qbadge">Competition ready</span>' : stage === 1 ? '<span class="qbadge" style="background:var(--good)">Gallery ready</span>' : ''}</div>
+  let html = `<div class="hero-photo" style="max-height:40vh"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${stage === 2 ? '<span class="qbadge">Competition ready</span>' : stage === 1 ? '<span class="qbadge" style="background:var(--good)">Gallery ready</span>' : ''}</div>
     <div class="scorebox" style="margin-top:0">${ringSVG(tot, 'r1')}${barsHTML(p.s, o.prev, true)}</div>`;
   if (o.delta != null) html += `<p class="to80" style="text-align:center;margin-top:10px">${o.delta > 0 ? `Up <strong>${o.delta}</strong> point${o.delta === 1 ? '' : 's'} with that fix.` : o.delta === 0 ? 'Same score. Your photo didn’t change.' : `Down ${-o.delta}.`}</p>`;
   if (stage === 2) html += `<div class="qual" id="qualBox"><h3>${crossed ? 'You hit 80. Competition ready!' : 'Competition ready'}</h3><p>Your photo qualifies for cash competitions. You can enter now, or keep improving it to beat the field.</p><button class="btn small" id="toComps">Enter a competition</button></div>`;
@@ -1372,6 +1387,7 @@ function showResult(p, o = {}) {
   p.q = stage === 2; save();
   if (crossed) setTimeout(() => burst($('#qualBox')), 700);
   const b = id => body.querySelector(id);
+  body.querySelectorAll('[data-cat]').forEach(x => x.onclick = () => askCategory(p, () => showResult(p), true));
   if (b('#doFix')) b('#doFix').onclick = () => startEnhance(p, low);
   body.querySelectorAll('[data-fix]').forEach(x => x.onclick = () => startEnhance(p, x.dataset.fix));
   if (b('#otherFix')) b('#otherFix').onclick = () => openEnhance(p, null);
@@ -1581,13 +1597,13 @@ $('#gemPill2').onclick = () => openStore();
 /* ---------- Competitions hub ---------- */
 const MIN = 60e3;
 const CX = [
-  { id: 'pets', k: 'cash', t: 'Cute Pets', img: 1, prize: 1000, fee: 5, n: 1284, per: 30, off: 18 },
-  { id: 'travel', k: 'cash', t: 'Travel the World', img: 9, prize: 500, fee: 3, n: 892, per: 60, off: 18 },
-  { id: 'style', k: 'cash', t: 'Style & Fashion', img: 11, prize: 250, fee: 2, n: 640, per: 90, off: 18 },
-  { id: 'food', k: 'bc', t: 'Foodie Favourites', img: 10, prize: 50, fee: 0.5, n: 1127, per: 30, off: 12 },
-  { id: 'animals', k: 'bc', t: 'Amazing Animals', img: 2, prize: 25, fee: 0.25, n: 756, per: 120, off: 32 },
-  { id: 'nature', k: 'gem', t: 'Nature Vibes', img: 0, prize: 1000, fee: 100, n: 3892, per: 30, off: 25 },
-  { id: 'citylife', k: 'gem', t: 'City Life', img: 12, prize: 500, fee: 50, n: 2144, per: 60, off: 25 },
+  { id: 'pets', cats: ['pets'], lab: 'Pets', k: 'cash', t: 'Cute Pets', img: 1, prize: 1000, fee: 5, n: 1284, per: 30, off: 18 },
+  { id: 'travel', cats: ['travel'], lab: 'Travel', k: 'cash', t: 'Travel the World', img: 9, prize: 500, fee: 3, n: 892, per: 60, off: 18 },
+  { id: 'style', cats: ['style'], lab: 'Fashion & Style', k: 'cash', t: 'Style & Fashion', img: 11, prize: 250, fee: 2, n: 640, per: 90, off: 18 },
+  { id: 'food', cats: ['food'], lab: 'Food', k: 'bc', t: 'Foodie Favourites', img: 10, prize: 50, fee: 0.5, n: 1127, per: 30, off: 12 },
+  { id: 'animals', cats: ['pets', 'wildlife'], lab: 'Pets or Wildlife', k: 'bc', t: 'Amazing Animals', img: 2, prize: 25, fee: 0.25, n: 756, per: 120, off: 32 },
+  { id: 'nature', cats: ['landscape', 'sunrise', 'golden', 'night', 'wildlife'], lab: 'Nature', k: 'gem', t: 'Nature Vibes', img: 0, prize: 1000, fee: 100, n: 3892, per: 30, off: 25 },
+  { id: 'citylife', cats: ['city', 'street', 'arch'], lab: 'City & Street', k: 'gem', t: 'City Life', img: 12, prize: 500, fee: 50, n: 2144, per: 60, off: 25 },
   { id: 'champ', k: 'sp', t: 'Yofi Champion', art: 'trophy', prize: 5000, fee: 10, n: 422, per: 240, off: 45 },
   { id: 'spot', k: 'sp', t: 'Weekly Spotlight', art: 'star', prize: 2500, fee: 5, n: 1036, per: 1680, off: 213 }
 ];
@@ -1622,7 +1638,7 @@ function openComps() {
   const cards = k => CX.filter(c => c.k === k).map(c => { const e = S.entered[c.id], left = cxLeft(c);
     return `<div class="card k-${c.k}"><div class="im">${c.art ? cxArt(c.art) : `<img src="${SEED[c.img].src}" alt="">`}${left < 15 * MIN ? '<span class="live">CLOSING</span>' : ''}</div>
       <h4>${esc(c.t)}</h4><div class="md"><div class="pz">${cxPrize(c)}</div><div class="fp">1st Prize</div>
-        <div class="mt">${IC.ppl}${(c.n + (e ? 1 : 0)).toLocaleString()} entries</div><span class="ps">${IC.pic}Your best ${cxNeed(c)}+ photo</span></div>
+        <div class="mt">${IC.ppl}${(c.n + (e ? 1 : 0)).toLocaleString()} entries</div><span class="ps">${IC.pic}${c.lab || 'Any category'} · ${cxNeed(c)}+</span></div>
       <div class="rt"><span class="cd ${left < 15 * MIN ? 'soon' : ''}" data-cx="${c.id}">${IC.clock}Ends in ${fmtLeft(left)}</span>
         ${e ? `<button class="en done" data-cx-done="${c.id}">Entered ✓<small>Good luck</small></button>` : `<button class="en" data-cx-go="${c.id}">Enter<small>${cxFee(c)}</small></button>`}</div></div>`; }).join('');
   const sec = k => `<section class="sec k-${k}"><div class="sh"><span class="si">${CXI[k]}</span><div class="tt"><h3>${CXSEC[k].h}</h3><p>${CXSEC[k].p}</p></div></div>${cards(k)}</section>`;
@@ -1640,7 +1656,8 @@ function openComps() {
     <div class="banner"><svg class="tr" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="cxt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF1B0"/><stop offset=".5" stop-color="#F2B637"/><stop offset="1" stop-color="#A86A10"/></linearGradient></defs>${[...Array(7)].map((_, i) => { const t = (200 - i * 20) * Math.PI / 180, x = 50 + 44 * Math.cos(t), y = 55 - 40 * Math.sin(t); return `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="6" ry="2.6" transform="rotate(${(-(200 - i * 20) + 125).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})" fill="#E7B347"/><ellipse cx="${(100 - x).toFixed(1)}" cy="${y.toFixed(1)}" rx="6" ry="2.6" transform="rotate(${((200 - i * 20) - 125).toFixed(0)} ${(100 - x).toFixed(1)} ${y.toFixed(1)})" fill="#E7B347"/>`; }).join('')}<path d="M32 16h36v20a18 18 0 0 1-36 0z" fill="url(#cxt)"/><path d="M32 20h-8a9 9 0 0 0 10 13M68 20h8a9 9 0 0 1-10 13" stroke="#E2A43A" stroke-width="3" fill="none"/><path d="M46 53h8v14h-8z" fill="#D18F2A"/><path d="M33 84a17 11 0 0 1 34 0z" fill="url(#cxt)"/><rect x="30" y="82" width="40" height="7" rx="2" fill="#A86A10"/><path d="M40 20v12" stroke="#fff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/></svg>
       <h3>Real People.<br>Real Prizes.<br><span>Your Turn.</span></h3><button class="btn" id="cxUpload">Upload a Photo ›</button></div>
     <p class="note">Prototype: entry fees are taken from your simulated wallet and nothing is charged. Prizes aren’t paid out yet.</p></div>`, true);
-  $('#flow').classList.add('cxmode');
+  $('#flow').classList.add('cxmode', 'astab'); $('#flow').style.top = cxTabTop() + 'px';
+  ['segJudge', 'segStudio', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segCompete').setAttribute('aria-pressed', 'true');
   const body = $('#flowBody');
   body.querySelectorAll('[data-w]').forEach(b => b.onclick = () => openStore());
   body.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { CXF = b.dataset.f; const y = body.scrollTop; openComps(); body.scrollTop = Math.min(y, 230); });
@@ -1655,10 +1672,11 @@ function openComps() {
   }, 1000);
 }
 function cxEnter(c) {
-  const need = cxNeed(c), q = S.photos.filter(p => p.s.total >= need).sort((a, b) => b.s.total - a.s.total)[0];
+  const need = cxNeed(c), q = S.photos.filter(p => cxFits(c, p) && p.s.total >= need).sort((a, b) => b.s.total - a.s.total)[0];
   if (!q) {
-    const bestP = best();
-    openSheet(`<h2>Get a photo to ${need}</h2><p class="sub">${esc(c.t)} takes photos scoring ${need} or more.${bestP ? ` Your best is at ${bestP.s.total}, ${need - bestP.s.total} points away.` : ' Score your first photo to get started.'}</p>
+    const bestP = S.photos.filter(p => cxFits(c, p)).sort((a, b) => b.s.total - a.s.total)[0];
+    const what = c.lab ? `${c.lab} photos` : 'photos';
+    openSheet(`<h2>${bestP ? `Get a photo to ${need}` : `You need ${c.lab ? 'a ' + c.lab : 'a'} photo`}</h2><p class="sub">${esc(c.t)} takes ${what} scoring ${need} or more.${bestP ? ` Your best one is at ${bestP.s.total}, ${need - bestP.s.total} points away.` : ` You don’t have one yet. Score a new photo and pick ${c.lab ? c.lab : 'its category'} when you upload it.`}</p>
       <div class="actions">${bestP ? '<button class="btn block" id="cxFix">Enhance my best photo</button>' : ''}<button class="btn ${bestP ? 'quiet ' : ''}block" id="cxNew">Score a new photo</button></div>`);
     if ($('#cxFix')) $('#cxFix').onclick = () => { closeSheet(); closeFlow(); S.cur = bestP.id; save(); go('studio'); };
     $('#cxNew').onclick = () => { closeSheet(); closeFlow(); pickPhoto(true); };
@@ -1698,8 +1716,20 @@ const GICON = {
   bw: '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',
   golden: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>',
   street: '<path d="M8 21l2-18M16 21l-2-18M12 5v2M12 10v2M12 15v3"/>',
+  style: '<path d="M9 4l3 2 3-2 5 3-2 4-2-1v10H8V10l-2 1-2-4z"/>',
   star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'
 };
+const PCATS = [['portrait', 'Portrait'], ['pets', 'Pets'], ['wildlife', 'Wildlife'], ['landscape', 'Landscape'], ['sunrise', 'Sunrise'], ['golden', 'Golden Hour'], ['night', 'Night Sky'], ['city', 'City'], ['street', 'Street'], ['arch', 'Architecture'], ['travel', 'Travel'], ['food', 'Food'], ['style', 'Fashion & Style'], ['action', 'Action & Sport'], ['bw', 'Black & White']];
+const pcatName = k => (PCATS.find(c => c[0] === k) || [])[1] || '';
+const fitsSlot = (p, key) => !!p.cat && (key === 'star' || p.cat === key);
+const cxFits = (c, p) => !!p.cat && (!c.cats || c.cats.includes(p.cat));
+function askCategory(p, done, closable = false) {
+  openFlow(`<div class="hero-photo" style="max-height:30vh;aspect-ratio:auto;height:30vh"><img src="${p.src}" alt="Your photo"></div>
+    <h2 style="font-size:1.6rem;margin:16px 0 4px">What’s in this photo?</h2>
+    <p class="muted" style="margin:0 0 14px">Pick a category. It decides which gallery frames and competitions this photo can enter.</p>
+    <div class="pcats" role="group" aria-label="Photo category">${PCATS.map(([k, n]) => `<button data-k="${k}" aria-pressed="${p.cat === k}">${gi(k)}<span>${n}</span></button>`).join('')}</div>`, closable);
+  $('#flowBody').querySelectorAll('.pcats button').forEach(b => b.onclick = () => { p.cat = b.dataset.k; save(); done(); });
+}
 const gi = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GICON[k] || GICON.star}</svg>`;
 const ROOMS = [
   { name: 'First Light', theme: 'r1', blurb: 'Light, life and everyday wonder.', slots: [['sunrise', 'Sunrise'], ['city', 'City'], ['portrait', 'Portrait'], ['pets', 'Pets'], ['night', 'Night Sky']] },
@@ -1829,9 +1859,13 @@ const roomThumb = i => { const p = ROOMS[i].slots.map((_, s) => framed(i, s)).fi
 const RV_POS = [[3.19, 36.48, 19.45, 22.25], [24.44, 38.04, 17.75, 20.81], [43.89, 39.06, 17.32, 20.04], [62.70, 39.95, 16.15, 19.26], [80.34, 40.55, 16.15, 18.78]];
 const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg>';
 const TROPHY_S = '<svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="trS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A6"/><stop offset=".5" stop-color="#F2B637"/><stop offset="1" stop-color="#B9761A"/></linearGradient></defs><path d="M14 6h20v11a10 10 0 0 1-20 0z" fill="url(#trS)"/><path d="M14 9H8.5a5.5 5.5 0 0 0 7 7.5M34 9h5.5a5.5 5.5 0 0 1-7 7.5" stroke="#E2A43A" stroke-width="3" fill="none"/><path d="M21.5 26h5v7h-5z" fill="#D18F2A"/><path d="M15 41a9 6 0 0 1 18 0z" fill="url(#trS)"/><rect x="13" y="40" width="22" height="4" rx="1.5" fill="#B9761A"/></svg>';
+function fillableSlot(r) {
+  const used = new Set(Object.values(S.frames || {}));
+  return ROOMS[r].slots.findIndex((sl, i) => !framed(r, i) && S.photos.some(p => fitsSlot(p, sl[0]) && p.s.total >= CFG.GALLERY && !used.has(p.id)));
+}
 function roomViewHTML(r) {
   const un = roomsUnlocked(), R = ROOMS[r], filled = roomFilled(r), tot = galleryTotal(), rank = galleryRank(tot);
-  const eligible = S.photos.filter(p => p.s.total >= CFG.GALLERY && !new Set(Object.values(S.frames || {})).has(p.id)).length;
+  const eligible = fillableSlot(r) >= 0;
   const frames = R.slots.map((sl, s) => {
     const p = framed(r, s), [x, y, w, h] = RV_POS[s], fresh = GV.fresh === fkey(r, s);
     return `<div class="fr2 ${p ? '' : 'vac'} ${fresh ? 'new' : ''}" data-s="${s}" role="button" tabindex="0" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%" aria-label="${sl[1]} frame${p ? ', ' + p.s.total + ' points' : ', empty, add a photo'}">
@@ -1885,16 +1919,17 @@ function myGalleryHTML() {
 function bindMyGallery() {
   const g = $('#gallery');
   bindRoomView();
-  if ($('#gFill')) $('#gFill').onclick = () => { const s = ROOMS[GV.room].slots.findIndex((_, i) => !framed(GV.room, i)); openFill(GV.room, s); };
+  if ($('#gFill')) $('#gFill').onclick = () => { const f = fillableSlot(GV.room), s = f >= 0 ? f : ROOMS[GV.room].slots.findIndex((_, i) => !framed(GV.room, i)); openFill(GV.room, s); };
   if ($('#gNext')) $('#gNext').onclick = () => { GV.room++; renderGallery(); };
   if ($('#gBoard')) $('#gBoard').onclick = () => { GV.tab = 'board'; renderGallery(); g.scrollTop = 0; };
 }
 function openFill(r, s) {
   const sl = ROOMS[r].slots[s], used = new Set(Object.values(S.frames || {}));
-  const ok = S.photos.filter(p => p.s.total >= CFG.GALLERY && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total);
-  const close = S.photos.filter(p => p.s.total < CFG.GALLERY).sort((a, b) => b.s.total - a.s.total)[0];
+  const wild = sl[0] === 'star', theme = wild ? '' : sl[1] + ' ';
+  const ok = S.photos.filter(p => fitsSlot(p, sl[0]) && p.s.total >= CFG.GALLERY && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total);
+  const close = S.photos.filter(p => fitsSlot(p, sl[0]) && p.s.total < CFG.GALLERY).sort((a, b) => b.s.total - a.s.total)[0];
   openSheet(`<h2>Fill the ${sl[1]} frame</h2>
-    <p class="sub">${ok.length ? `Pick a ${CFG.GALLERY}+ photo that fits the theme. You’ll get ${CFG.FRAME_GEMS} gems.` : `You need a photo scoring ${CFG.GALLERY}+ that isn’t already hanging.${close ? ` Your best one is at ${close.s.total}, ${CFG.GALLERY - close.s.total} points away.` : ''}`}</p>
+    <p class="sub">${ok.length ? `Pick a ${CFG.GALLERY}+ ${wild ? '' : theme}photo${wild ? ' from any category' : ''}. You’ll get ${CFG.FRAME_GEMS} gems.` : `This frame takes ${wild ? 'a photo from any category' : 'a ' + theme.trim() + ' photo'} scoring ${CFG.GALLERY}+ that isn’t already hanging.${close ? ` Your best one is at ${close.s.total}, ${CFG.GALLERY - close.s.total} points away.` : wild ? '' : ` You don’t have one yet. Pick ${theme.trim()} when you upload a photo.`}`}</p>
     ${ok.length ? `<div class="pickgrid">${ok.map(p => `<button data-p="${p.id}" aria-label="Photo scoring ${p.s.total}"><img src="${p.src}" alt=""><span>${p.s.total}</span></button>`).join('')}</div>`
       : `<div class="actions">${close ? '<button class="btn block" id="fImprove">Enhance my best photo</button>' : ''}<button class="btn ${close ? 'quiet ' : ''}block" id="fNew">Score a new photo</button></div>`}`);
   document.querySelectorAll('#sheetBody .pickgrid button').forEach(b => b.onclick = () => hang(r, s, b.dataset.p));
@@ -1973,8 +2008,9 @@ function openVisit(i) {
 
 /* ---------- Panes: Judge / Studio with flick ---------- */
 function go(where) {
+  if ($('#flow').classList.contains('astab')) closeFlow();
   $('#panes').dataset.at = where;
-  $('#segJudge').setAttribute('aria-pressed', where === 'judge'); $('#segStudio').setAttribute('aria-pressed', where === 'studio'); $('#segGallery').setAttribute('aria-pressed', where === 'gallery');
+  $('#segJudge').setAttribute('aria-pressed', where === 'judge'); $('#segStudio').setAttribute('aria-pressed', where === 'studio'); $('#segGallery').setAttribute('aria-pressed', where === 'gallery'); $('#segCompete').setAttribute('aria-pressed', 'false');
   if (where === 'studio') $('#studio').scrollTop = 0;
   if (where === 'gallery') { renderGallery(); $('#gallery').scrollTop = 0; }
 }
@@ -2124,9 +2160,9 @@ function renderStudio() {
     : stage === 1 ? `<strong>Gallery ready.</strong> Hang it in a frame, and get ${CFG.QUALIFY - tot} more points to enter cash competitions.`
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
   st.innerHTML = `<span class="hint">Flick down to judge</span>
-    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${stage === 2 ? '<span class="qbadge">Competition ready</span>' : stage === 1 ? '<span class="qbadge" style="background:var(--good)">Gallery ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to see original</span>' : ''}</div>
+    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${stage === 2 ? '<span class="qbadge">Competition ready</span>' : stage === 1 ? '<span class="qbadge" style="background:var(--good)">Gallery ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to see original</span>' : ''}</div>
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, true)}</div>
-    <p class="to80">${msg}</p>
+    <p class="to80">${p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
     ${stage === 2 ? '<div class="qrow"><button class="btn small" id="stComp">Enter a competition</button></div>' : ''}
     <h3 class="sec">Improve a category</h3>
     <div class="fixes">${sorted.map((c, i) => `<button class="fix ${i === 0 && stage < 2 ? 'top1' : ''}" data-c="${c.k}" aria-label="Improve ${c.name}, now ${p.s[c.k]}, costs ${CFG.COST} gems"><div class="t"><b>${c.name}<span class="sv">${p.s[c.k]}</span></b><i class="mb"><i style="width:${p.s[c.k]}%"></i></i><span>${c.tip}${i === 0 && stage < 2 ? '. Biggest opportunity' : ''}</span></div><span class="imp">Improve ›<span class="cost">${gemIcon()}${CFG.COST}</span></span></button>`).join('')}</div>
@@ -2139,6 +2175,7 @@ function renderStudio() {
   st.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { S.cur = b.dataset.p; save(); renderStudio(); });
   if ($('#stNew')) $('#stNew').onclick = () => pickPhoto(true);
   if ($('#stComp')) $('#stComp').onclick = openComps;
+  st.querySelectorAll('[data-cat]').forEach(x => x.onclick = () => askCategory(p, () => { closeFlow(); renderStudio(); }, true));
   const cmp = $('#cmp'), im = $('#cmpImg');
   if (p.orig !== p.src) {
     const show = e => { e.preventDefault(); im.src = p.orig; }, hide = () => { im.src = p.src; };
