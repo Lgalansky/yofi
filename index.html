@@ -1417,7 +1417,7 @@ function openEnhance(p, cat) {
 function enIdle() {
   const { p, cat } = EN, short = S.gems < CFG.COST;
   $('#enArea').innerHTML = `<div class="hero-photo" style="max-height:44vh;margin-bottom:12px"><img src="${p.src}" alt="Your photo"></div>
-    ${cat ? `<button class="btn block" id="genBtn">Make 3 versions <span class="cost">${gemIcon()}${CFG.COST}</span></button>` : '<p class="muted" style="text-align:center;margin:0">Pick a fix above.</p>'}
+    ${cat ? `<button class="btn block fixbtn" id="genBtn"><span>${catBy(cat).verb}</span><span class="gpill">${gemIcon()}${CFG.COST}</span></button>` : '<p class="muted" style="text-align:center;margin:0">Pick a fix above.</p>'}
     ${short ? `<p class="muted" style="text-align:center;margin:12px 0 4px">You have ${S.gems} gems. Each fix costs ${CFG.COST}.</p><div class="qrow"><button class="btn quiet small" id="enStore">Get gems</button><button class="btn quiet small" id="enJudge">Earn by judging</button></div>` : ''}`;
   if ($('#genBtn')) $('#genBtn').onclick = () => generate(1);
   if ($('#enStore')) $('#enStore').onclick = () => openStore();
@@ -1484,15 +1484,13 @@ function renderVariants(top) {
       <div class="s">${v.s.total}<small class="up">+${d}</small></div>
       <div class="l"><b style="color:var(--ink)">${v.label}</b><br>${v.note}</div></button>`;
   }).join('')}</div>
-  <div class="actions"><button class="btn block" id="useBtn"></button>
-  <button class="btn quiet block" id="moreBtn">Try 3 more <span class="cost">${gemIcon()}${CFG.COST}</span></button></div>`;
+  <div class="actions"><button class="btn block" id="useBtn"></button></div>`;
   const paint = () => {
     document.querySelectorAll('#enArea [data-i]').forEach(x => x.setAttribute('aria-pressed', +x.dataset.i === EN.sel));
     $('#useBtn').textContent = `Use version ${letters[EN.sel]} (+${variants[EN.sel].s.total - p.s.total})`;
   };
   document.querySelectorAll('#enArea [data-i]').forEach(x => x.onclick = () => { EN.sel = +x.dataset.i; paint(); });
   paint();
-  $('#moreBtn').onclick = () => generate(2);
   $('#useBtn').onclick = () => applyVariant();
 }
 function applyVariant() {
