@@ -169,7 +169,7 @@ h1,h2,h3{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;margin:0
 .tcard .pm{display:flex;align-items:center;gap:6px;flex:none}
 .tb{width:42px;height:42px;border-radius:13px;font-size:1.5rem;font-weight:800;display:grid;place-items:center;background:color-mix(in srgb,var(--pink) 12%,transparent);color:var(--pink);touch-action:manipulation;transition:transform .1s}
 .tb.plus{background:linear-gradient(135deg,var(--pink),var(--violet));color:#fff}
-.tb.minus{background:var(--ink);color:var(--bg);font-size:1.8rem;box-shadow:0 6px 14px -8px rgba(0,0,0,.6)}
+.tb.minus{background:linear-gradient(135deg,var(--pink),var(--violet));color:#fff;font-size:1.8rem}
 .tb:active{transform:scale(.9)}
 .tcard .pm .val{min-width:44px;text-align:center}
 .ring .t70{stroke:var(--muted)}
@@ -986,8 +986,8 @@ button.bar:hover span:first-child{color:var(--pink)}
       <button class="wplus" id="walletPlus" aria-label="Add funds">+</button>
     </div>
     <div class="seg" role="group" aria-label="Switch screen">
-      <button id="segJudge" aria-pressed="true">Judge</button>
       <button id="segStudio" aria-pressed="false">Studio</button>
+      <button id="segJudge" aria-pressed="true">Judge</button>
       <button id="segCompete" aria-pressed="false">Compete</button>
       <button id="segGallery" aria-pressed="false">Gallery</button>
     </div>
