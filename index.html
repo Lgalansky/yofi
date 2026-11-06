@@ -1179,6 +1179,11 @@ button.bar:hover span:first-child{color:var(--pink)}
 .cx .card .im .esc{position:absolute;left:5px;right:5px;bottom:5px;padding:3px 6px;border-radius:7px;background:rgba(11,16,34,.82);color:#fff;font-size:.62rem;font-weight:800;text-align:center;white-space:nowrap}
 #studio #cmp{aspect-ratio:auto;height:36vh;min-height:190px;max-height:none}
 #studio #cmp img{object-fit:cover}
+.rmpick{margin-bottom:12px}
+.rmpick button[aria-pressed="true"]{outline:3px solid var(--bad);outline-offset:2px}
+.rmpick button[disabled]{opacity:.45}
+.rmpick em{position:absolute;top:6px;left:6px;padding:1px 7px;border-radius:7px;background:#FF2D55;color:#fff;font-style:normal;font-size:.68rem;font-weight:800}
+.rmpick em.h{background:#E9A514}
 </style>
 </head>
 <body>
@@ -1741,8 +1746,29 @@ function openApp() { $('#landing').style.display = 'none'; $('#app').classList.a
 
 /* ---------- Photo intake ---------- */
 let intakeFromStudio = false;
+function makeRoom(fromStudio) {
+  if (!$('#app').classList.contains('on')) openApp();
+  const can = S.photos.filter(p => !photoLock(p));
+  if (!can.length) { toast('All your photos are in live competitions. Try again when the results are in.'); return; }
+  let sel = null;
+  openSheet(`<h2>Your studio is full</h2><p class="sub">You can keep ${CFG.MAX_PHOTOS} photos. Pick one to remove and you can upload a new one.</p>
+    <div class="pickgrid rmpick">${S.photos.map(p => { const lk = photoLock(p), hung = Object.values(S.frames || {}).includes(p.id);
+      return `<button data-p="${p.id}" ${lk ? 'disabled' : ''} aria-label="Photo scoring ${p.s.total}${lk ? ', in a live competition' : ''}"><img src="${p.src}" alt=""><span>${p.s.total}</span>${lk ? '<em>Live</em>' : hung ? '<em class="h">Hanging</em>' : ''}</button>`; }).join('')}</div>
+    <button class="btn block" id="rmGo" disabled>Remove and upload</button>`);
+  document.querySelectorAll('#sheetBody .rmpick button:not([disabled])').forEach(b => b.onclick = () => {
+    sel = b.dataset.p; document.querySelectorAll('#sheetBody .rmpick button').forEach(x => x.setAttribute('aria-pressed', x.dataset.p === sel)); $('#rmGo').disabled = false;
+  });
+  $('#rmGo').onclick = () => {
+    if (!sel) return;
+    S.photos = S.photos.filter(p => p.id !== sel);
+    Object.keys(S.frames || {}).forEach(k => { if (S.frames[k] === sel) delete S.frames[k]; });
+    if (S.cur === sel) S.cur = S.photos[0] ? S.photos[0].id : null;
+    save(); closeSheet(); renderStudio();
+    intakeFromStudio = !!fromStudio; $('#file').value = ''; $('#file').click();
+  };
+}
 function pickPhoto(fromStudio) {
-  if (S.photos.length >= CFG.MAX_PHOTOS) { toast(`This prototype keeps up to ${CFG.MAX_PHOTOS} photos.`); return; }
+  if (S.photos.length >= CFG.MAX_PHOTOS) { makeRoom(fromStudio); return; }
   intakeFromStudio = !!fromStudio; $('#file').value = ''; $('#file').click();
 }
 $('#file').addEventListener('change', async e => {
