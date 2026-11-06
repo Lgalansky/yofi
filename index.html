@@ -1200,6 +1200,11 @@ button.bar:hover span:first-child{color:var(--pink)}
 .forp b{font-size:1.1rem;color:#fff}
 .forp span{font-size:.78rem;color:#9AA6C8}
 .forp button{flex:none;padding:8px 12px;border-radius:999px;background:#202A48;color:#EEF2FF;font-weight:700;font-size:.82rem}
+.ng{text-align:center}
+.ng .ngi{display:inline-grid;place-items:center;width:64px;height:64px;margin:4px auto 8px;border-radius:20px;background:color-mix(in srgb,var(--gem) 14%,var(--card))}
+.ng .ngi svg{width:38px;height:38px}
+.ng .sub b{color:var(--ink)}
+.ng .link{display:block;margin:8px auto 0}
 </style>
 </head>
 <body>
@@ -2033,7 +2038,7 @@ function openSignup(then, opts = {}) {
     sheetLocked = false; closeSheet();
     setTimeout(() => gemExplosion(CFG.SIGNUP, { label: `Welcome, @${h}` }), 380);
     if (then) { closeFlow(); then(); return; }
-    if (firstTime) { closeFlow(); go('judge'); showCoach(); }
+    if (firstTime) { closeFlow(); CXF = 'gem'; openComps(cur()); }
   };
 }
 function showCompReady(p) {
@@ -2123,6 +2128,8 @@ const CX = [
   { id: 'animals', cats: ['pets', 'wildlife'], lab: 'Pets or Wildlife', k: 'bc', t: 'Amazing Animals', img: 2, prize: 25, fee: 0.25, n: 756, per: 120, off: 32 },
   { id: 'nature', cats: ['landscape', 'sunrise', 'golden', 'night', 'wildlife'], lab: 'Nature', k: 'gem', t: 'Nature Vibes', img: 0, prize: 1000, fee: 100, n: 3892, per: 30, off: 25 },
   { id: 'citylife', cats: ['city', 'street', 'arch'], lab: 'City & Street', k: 'gem', t: 'City Life', img: 12, prize: 500, fee: 50, n: 2144, per: 60, off: 25 },
+  { id: 'petpals', cats: ['pets', 'wildlife'], lab: 'Pets or Wildlife', k: 'gem', t: 'Pet Pals', img: 6, prize: 300, fee: 25, n: 1876, per: 30, off: 9 },
+  { id: 'snap', lab: 'Any category', k: 'gem', t: 'Snap Anything', img: 5, prize: 250, fee: 25, n: 2410, per: 30, off: 21 },
   { id: 'champ', k: 'sp', t: 'Yofi Champion', art: 'trophy', prize: 5000, fee: 10, n: 422, per: 240, off: 45 },
   { id: 'spot', k: 'sp', t: 'Weekly Spotlight', art: 'star', prize: 2500, fee: 5, n: 1036, per: 1680, off: 213 }
 ];
@@ -2383,8 +2390,18 @@ function cxEnter(c) {
   document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.onclick = () => { sel = b.dataset.p; paint(); });
   $('#enGo').onclick = () => { closeSheet(); cxPay(c, ok.find(x => x.id === sel)); };
 }
+function needGems(c) {
+  const short = c.fee - S.gems, per = CFG.VOTE + 2 * CFG.CLOSE, n = Math.ceil(short / per);
+  openSheet(`<div class="ng"><span class="ngi">${gemIcon('')}</span>
+    <h2>You need ${short} more gems</h2>
+    <p class="sub">${esc(c.t)} costs ${c.fee} gems to enter and you have ${S.gems}. Judge other people’s photos to earn them free. About <b>${n} photo${n === 1 ? '' : 's'}</b> should do it.</p>
+    <button class="btn block" id="ngJudge">Judge photos to earn gems</button>
+    <button class="link" id="ngBuy">Or get a gem pack</button></div>`);
+  $('#ngJudge').onclick = () => { closeSheet(); closeFlow(); go('judge'); toast(`Earn ${short} gems, then come back to enter ${c.t}.`); };
+  $('#ngBuy').onclick = () => { closeSheet(); openStore(`${c.t} costs ${c.fee} gems to enter.`); };
+}
 function cxPay(c, q) {
-  if (c.k === 'gem') { if (!spend(c.fee, `${c.t} costs ${c.fee} gems to enter.`)) return; }
+  if (c.k === 'gem') { if (S.gems < c.fee) { needGems(c); return; } S.gems -= c.fee; save(); paintGems(); }
   else if (c.k === 'bc') { if ((S.bonus || 0) < c.fee) { openStore(`${c.t} costs $${c.fee.toFixed(2)} Bonus Cash to enter.`); return; } S.bonus = +(S.bonus - c.fee).toFixed(2); }
   else { if ((S.cash || 0) < c.fee) { openStore(`${c.t} costs $${c.fee} Cash to enter.`); return; } S.cash = +(S.cash - c.fee).toFixed(2); }
   const e = makeEntry(c, q); S.entries.push(e); S.entered[c.id] = e.id; save(); paintWallet(); paintGems(false);
