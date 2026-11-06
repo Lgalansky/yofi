@@ -1151,6 +1151,9 @@ button.bar:hover span:first-child{color:var(--pink)}
 .stage img{display:block;width:100%;height:auto}
 .lrow .nm{font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lrow img{width:76px}
+.bar.maxd i b{background:var(--good)!important}
+.bar .mx{font-style:normal;color:var(--good);font-weight:800}
+.cats.cc button.maxd{opacity:.55}
 </style>
 </head>
 <body>
@@ -1613,14 +1616,16 @@ function animateRing(root, from) {
   requestAnimationFrame(step);
   root.querySelectorAll('.bar i b').forEach(b => requestAnimationFrame(() => requestAnimationFrame(() => { b.style.width = b.dataset.w + '%'; })));
 }
-function barsHTML(s, prev, tap) {
-  const low = lowest(s);
+function barsHTML(s, prev, tap, p) {
+  const low = p ? lowestOpen(p) : lowest(s);
   return `<div class="bars">${C.map(c => {
     const d = prev ? s[c.k] - prev[c.k] : 0;
-    return `<${tap ? 'button' : 'div'} class="bar ${c.k === low ? 'low' : ''}" ${tap ? `data-fix="${c.k}" aria-label="Improve ${c.name}, now ${s[c.k]}"` : ''}><span>${c.short || c.name}</span><i><b style="width:${prev ? prev[c.k] : 0}%" data-w="${s[c.k]}"></b></i><em>${s[c.k]}${d ? `<br><span class="d ${d < 0 ? 'dn' : ''}">${d > 0 ? '+' : ''}${d}</span>` : ''}</em></${tap ? 'button' : 'div'}>`;
-  }).join('')}</div>${tap ? '<p class="taphint">Tap a category to improve it</p>' : ''}`;
+    const t = tap && !(p && isMaxed(p, c.k));
+    return `<${t ? 'button' : 'div'} class="bar ${c.k === low ? 'low' : ''} ${p && isMaxed(p, c.k) ? 'maxd' : ''}" ${t ? `data-fix="${c.k}" aria-label="Improve ${c.name}, now ${s[c.k]}"` : ''}><span>${c.short || c.name}${p && isMaxed(p, c.k) ? ' <i class="mx" aria-label="at its best">✓</i>' : ''}</span><i><b style="width:${prev ? prev[c.k] : 0}%" data-w="${s[c.k]}"></b></i><em>${s[c.k]}${d ? `<br><span class="d ${d < 0 ? 'dn' : ''}">${d > 0 ? '+' : ''}${d}</span>` : ''}</em></${t ? 'button' : 'div'}>`;
+  }).join('')}</div>${tap && (!p || lowestOpen(p)) ? '<p class="taphint">Tap a category to improve it</p>' : ''}`;
 }
 const lowest = s => C.reduce((a, c) => (s[c.k] < s[a] ? c.k : a), C[0].k);
+const lowestOpen = p => { const o = C.filter(c => !isMaxed(p, c.k)); return o.length ? o.reduce((a, c) => (p.s[c.k] < p.s[a.k] ? c : a)).k : null; };
 function burst(root) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const b = document.createElement('div'); b.className = 'burst';
@@ -1755,14 +1760,15 @@ function closeFlow() { leaveCxTab(); $('#flow').classList.remove('on'); renderSt
 $('#flowBack').onclick = () => { if (!S.user) { openSignup(); return; } closeFlow(); };
 
 function showResult(p, o = {}) {
-  const low = lowest(p.s), lc = catBy(low), tot = p.s.total, stage = stageOf(tot);
+  const low = lowestOpen(p), lc = low ? catBy(low) : null, tot = p.s.total, stage = stageOf(tot);
   const crossed = o.prevTotal != null && stage > stageOf(o.prevTotal);
   let html = `<div class="hero-photo" style="max-height:40vh"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
-    <div class="scorebox" style="margin-top:0">${ringSVG(tot, 'r1')}${barsHTML(p.s, o.prev, true)}</div>`;
+    <div class="scorebox" style="margin-top:0">${ringSVG(tot, 'r1')}${barsHTML(p.s, o.prev, true, p)}</div>`;
   if (o.delta != null) html += `<p class="to80" style="text-align:center;margin-top:10px">${o.delta > 0 ? `Up <strong>${o.delta}</strong> point${o.delta === 1 ? '' : 's'} with that fix.` : o.delta === 0 ? 'Same score. Your photo didn’t change.' : `Down ${-o.delta}.`}</p>`;
   if (stage === 2) html += `<div class="qual" id="qualBox"><h3>${crossed ? 'You hit 80. Competition ready!' : 'Competition ready'}</h3><p>Your photo qualifies for cash competitions. You can enter now, or keep improving it to beat the field.</p><button class="btn small" id="toComps">Enter a competition</button></div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
-  html += `<div class="opp"><h3>Biggest opportunity: ${lc.name}</h3><p>${stage === 2 ? `${lc.name} is your lowest at ${p.s[low]}. Higher scores win more battles and climb competition rankings.` : `Improve your overall score by <strong>${target - tot}</strong> point${target - tot === 1 ? '' : 's'} to ${target === CFG.GALLERY ? 'enter the gallery' : 'enter cash competitions'}.`}</p>
+  if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
+  else html += `<div class="opp"><h3>Biggest opportunity: ${lc.name}</h3><p>${stage === 2 ? `${lc.name} is your lowest at ${p.s[low]}. Higher scores win more battles and climb competition rankings.` : `Improve your overall score by <strong>${target - tot}</strong> point${target - tot === 1 ? '' : 's'} to ${target === CFG.GALLERY ? 'enter the gallery' : 'enter cash competitions'}.`}</p>
     <button class="btn block fixbtn nocost" id="doFix"><span>${lc.verb}</span></button>
     <div style="text-align:center;margin-top:6px"><button class="link" id="otherFix">Choose a different fix</button></div></div>`;
   if (S.user) html += `<div style="text-align:center"><button class="link" id="doneBtn">Done</button></div>`;
@@ -1791,7 +1797,7 @@ let EN = null; // { p, cat, variants, sel }
 function enhanceShell(p, cat) {
   return `<h2 style="font-size:1.7rem;margin:4px 0 4px">${cat ? catBy(cat).verb : 'Pick a fix'}</h2>
     <p class="muted" id="enSub" style="margin:0 0 12px">${cat ? `${catBy(cat).tip}. Three versions, pick the one you like.` : 'Every fix costs ' + CFG.COST + ' gems and gives you three versions to choose from.'}</p>
-    <div class="cats cc" role="group" aria-label="Fix type">${C.map(c => `<button data-c="${c.k}" aria-pressed="${c.k === cat}" aria-label="${c.name}, ${p.s[c.k]} out of 100"><small>${c.name}</small><b>${p.s[c.k]}<span>/100</span></b><i><i style="width:${p.s[c.k]}%"></i></i></button>`).join('')}</div>
+    <div class="cats cc" role="group" aria-label="Fix type">${C.filter(c => c.k === cat || !isMaxed(p, c.k)).map(c => `<button data-c="${c.k}" aria-pressed="${c.k === cat}" aria-label="${c.name}, ${p.s[c.k]} out of 100"><small>${c.name}</small><b>${p.s[c.k]}<span>/100</span></b><i><i style="width:${p.s[c.k]}%"></i></i></button>`).join('')}</div>
     <div id="enArea"></div>`;
 }
 function openEnhance(p, cat) {
@@ -1850,6 +1856,7 @@ const photoLock = p => p && (S.entries || []).find(e => e.pid === p.id && !e.don
 function lockToast(e) { toast(`This photo is in ${CX.find(x => x.id === e.cid).t}. You can improve it again when the results are in.`); }
 function startEnhance(p, cat) {
   const lk = photoLock(p); if (lk) { lockToast(lk); return; }
+  if (isMaxed(p, cat)) { const o = lowestOpen(p); if (!o) { toast('Every category is at its best on this photo.'); return; } cat = o; }
   openEnhance(p, cat);
   if (S.gems >= CFG.COST) generate(1);
   else openStore(`Each fix costs ${CFG.COST} gems and you have ${S.gems}.`);
@@ -1886,10 +1893,11 @@ async function generate(jitterRound) {
     S.gems += CFG.COST; save(); paintGems();
     $('#flowBack').style.visibility = 'visible';
     EN.variants = null; enIdle();
-    const next = C.filter(c => c.k !== cat).sort((a, b) => p.s[a.k] - p.s[b.k])[0];
-    $('#enArea').insertAdjacentHTML('afterbegin', `<div class="enmax"><b>${nm} is already at its best on this photo (${p.s[cat]}).</b><span>We couldn’t find a version that scores higher. Your gems are back.</span><button class="btn small" id="enNext">Try ${next.name} instead</button></div>`);
+    const next = C.filter(c => c.k !== cat && !isMaxed(p, c.k)).sort((a, b) => p.s[a.k] - p.s[b.k])[0];
+    $('#enArea').insertAdjacentHTML('afterbegin', `<div class="enmax"><b>${nm} is already at its best on this photo (${p.s[cat]}).</b><span>We couldn’t find a version that scores higher. Your gems are back.${next ? '' : ' Every category is now at its best on this photo.'}</span>${next ? `<button class="btn small" id="enNext">Try ${next.name} instead</button>` : ''}</div>`);
+    const card = document.querySelector(`#flowBody .cats button[data-c="${cat}"]`); if (card) card.classList.add('maxd');
     $('#genBtn') && $('#genBtn').remove();
-    $('#enNext').onclick = () => { const b = document.querySelector(`#flowBody .cats button[data-c="${next.k}"]`); if (b) b.click(); };
+    if ($('#enNext')) $('#enNext').onclick = () => { const b = document.querySelector(`#flowBody .cats button[data-c="${next.k}"]`); if (b) b.click(); };
     return;
   }
   EN.variants = picks; EN.sel = 0;
@@ -2812,7 +2820,7 @@ function renderStudio() {
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
   st.innerHTML = `<span class="hint">Flick down to judge</span>
     <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to see original</span>' : ''}</div>
-    <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk)}</div>
+    <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
     <p class="to80">${p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
     ${stage >= 1 ? `<div class="qrow">${Object.values(S.frames || {}).includes(p.id) ? '' : '<button class="btn small quiet" id="stHang">Hang it in my gallery</button>'}${stage === 2 ? '<button class="btn small" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
     <h3 class="sec">Improve a category</h3>
