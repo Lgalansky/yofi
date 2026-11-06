@@ -1167,6 +1167,7 @@ button.bar:hover span:first-child{color:var(--pink)}
 .btn.hangbtn svg{width:20px;height:20px;flex:none}
 .bar span{white-space:nowrap}
 .qrow .btn{white-space:nowrap}
+.fixsub{margin:8px 2px 0;text-align:center;font-size:.85rem;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -1778,7 +1779,6 @@ function showResult(p, o = {}) {
   let html = `<div class="hero-photo" style="max-height:40vh"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
     <div class="scorebox" style="margin-top:0">${ringSVG(tot, 'r1')}${barsHTML(p.s, o.prev, true, p)}</div>`;
   if (o.delta != null) html += `<p class="to80" style="text-align:center;margin-top:10px">${o.delta > 0 ? `Up <strong>${o.delta}</strong> point${o.delta === 1 ? '' : 's'} with that fix.` : o.delta === 0 ? 'Same score. Your photo didn’t change.' : `Down ${-o.delta}.`}</p>`;
-  if (stage === 2) html += `<div class="qual" id="qualBox"><h3>${crossed ? 'You hit 80. Competition ready!' : 'Competition ready'}</h3><p>Your photo qualifies for cash competitions. You can enter now, or keep improving it to beat the field.</p><button class="btn small" id="toComps">Enter a competition</button></div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
   else html += `<div class="opp"><h3>Biggest opportunity: ${lc.name}</h3><p>${stage === 2 ? `${lc.name} is your lowest at ${p.s[low]}. Higher scores win more battles and climb competition rankings.` : `Improve your overall score by <strong>${target - tot}</strong> point${target - tot === 1 ? '' : 's'} to ${target === CFG.GALLERY ? 'enter the gallery' : 'enter cash competitions'}.`}</p>
@@ -2849,16 +2849,17 @@ function renderStudio() {
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
     <p class="to80">${p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
     ${stage >= 1 ? `<div class="qrow">${Object.values(S.frames || {}).includes(p.id) ? '' : '<button class="btn small hangbtn" id="stHang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="1.5"/><path d="M7 16l3.5-4 3 3 2-2 2.5 3"/><path d="M9 5l3-3 3 3"/></svg>Hang in gallery</button>'}${stage === 2 ? '<button class="btn small" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
-    <h3 class="sec">Improve a category</h3>
+    <h3 class="sec">Improve your photo</h3>
     ${lk ? `<div class="lockc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h1a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 6 10zm2.5 0h5V7.5a2.5 2.5 0 0 0-5 0z"/></svg>
       <div><b>Improvements locked</b><span>This photo is entered in <b>${esc(CX.find(x => x.id === lk.cid).t)}</b> at ${lk.score}. You can improve it again when the results are in.</span>
       <span class="lockt">Results in <b data-ll="${lk.id}">${fmtLeft(Math.max(0, lk.end - Date.now()))}</b></span></div>
-      <button class="btn small" id="stLive">View live</button></div>` : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<div class="fixes">${sorted.map((c, i) => `<button class="fix ${i === 0 ? 'top1' : ''}" data-c="${c.k}" aria-label="Improve ${c.name}, now ${p.s[c.k]}, costs ${CFG.COST} gems"><div class="t"><b>${c.name}<span class="sv">${p.s[c.k]}</span></b><i class="mb"><i style="width:${p.s[c.k]}%"></i></i><span>${c.tip}${i === 0 ? '. Biggest opportunity' : ''}</span></div><span class="imp">Improve<span class="gp">${gemIcon()}${CFG.COST}</span></span></button>`).join('')}</div>`}
+      <button class="btn small" id="stLive">View live</button></div>` : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}"><span>${sorted[0].verb}</span></button><p class="fixsub">${sorted[0].name} is your lowest at ${p.s[sorted[0].k]}. Tap a score bar above to pick another.</p>`}
     <h3 class="sec">Your photos</h3>
     <div class="strip">${S.photos.map(x => `<button data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}"><img src="${x.src}" alt=""><span>${x.s.total}</span></button>`).join('')}
     ${S.photos.length < CFG.MAX_PHOTOS ? '<button class="add" id="stNew" aria-label="Score a new photo">+</button>' : ''}</div>`;
   animateRing(st);
   st.querySelectorAll('.fix').forEach(b => b.onclick = () => startEnhance(p, b.dataset.c));
+  if ($('#stFix')) $('#stFix').onclick = () => startEnhance(p, $('#stFix').dataset.c);
   if (!lk) setTimeout(() => checkMaxed(p), 600);
   if ($('#stLive')) $('#stLive').onclick = () => { openComps(); openLive(lk); };
   clearInterval(window.__stLock); if (lk) window.__stLock = setInterval(() => { const el = st.querySelector(`[data-ll="${lk.id}"]`); if (!el || !document.contains(el)) { clearInterval(window.__stLock); return; } el.textContent = fmtLeft(Math.max(0, lk.end - Date.now())); if (Date.now() >= lk.end) { clearInterval(window.__stLock); renderStudio(); } }, 1000);
