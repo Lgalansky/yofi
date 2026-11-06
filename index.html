@@ -1120,6 +1120,10 @@ button.bar:hover span:first-child{color:var(--pink)}
 .crbox .bt-no{position:relative;color:#EADBFF}
 @media (prefers-reduced-motion:reduce){.cr-rays,.cr-cf,.cr-score{animation:none}.cr-cf{display:none}}
 .fixbtn.nocost{justify-content:center;padding:0 26px}
+.enmax{display:grid;gap:6px;margin-bottom:12px;padding:14px 16px;border-radius:18px;background:color-mix(in srgb,var(--violet) 12%,var(--card));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--violet) 35%,var(--line))}
+.enmax b{font-size:1rem}
+.enmax span{font-size:.88rem;color:var(--muted)}
+.enmax .btn{justify-self:start;margin-top:4px}
 </style>
 </head>
 <body>
@@ -1358,23 +1362,49 @@ const Engine = (() => {
     return out;
   }
 
-  function crop(img, variant, j = 1) {
-    const m = analyze(img), W = img.width, H = img.height;
-    const z = Math.min(1 + ([0.12, 0.2, 0.3][variant]) * j, Math.min(W, H) / 380);
-    if (z <= 1.02) return { width: W, height: H, data: new Uint8ClampedArray(img.data) };
-    const thirds = [[1 / 3, 1 / 3], [2 / 3, 1 / 3], [1 / 3, 2 / 3], [2 / 3, 2 / 3]];
-    let tgt = [0.5, 0.5];
-    if (variant === 1) tgt = thirds.reduce((best, p) => (Math.hypot(m.cx - p[0], m.cy - p[1]) < Math.hypot(m.cx - best[0], m.cy - best[1]) ? p : best), thirds[0]);
-    const cw = Math.round(W / z), ch = Math.round(H / z);
-    let left = Math.round(m.cx * W - tgt[0] * cw), top = Math.round(m.cy * H - tgt[1] * ch);
-    left = Math.max(0, Math.min(W - cw, left)); top = Math.max(0, Math.min(H - ch, top));
-    const out = make(cw, ch), a = img.data, o = out.data;
-    for (let y = 0; y < ch; y++) {
-      const si = ((top + y) * W + left) * 4;
-      o.set(a.subarray(si, si + cw * 4), y * cw * 4);
+  function cropRect(img, left, top, cw, ch) {
+    const W = img.width, out = make(cw, ch), a = img.data, o = out.data;
+    for (let y = 0; y < ch; y++) { const si = ((top + y) * W + left) * 4; o.set(a.subarray(si, si + cw * 4), y * cw * 4); }
+    return out;
+  }
+  function shrink(img, max) {
+    const s = Math.min(1, max / Math.max(img.width, img.height)), w = Math.max(1, Math.round(img.width * s)), h = Math.max(1, Math.round(img.height * s));
+    const out = make(w, h), a = img.data, o = out.data;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const si = ((Math.min(img.height - 1, Math.floor(y / s))) * img.width + Math.min(img.width - 1, Math.floor(x / s))) * 4, di = (y * w + x) * 4;
+      o[di] = a[si]; o[di + 1] = a[si + 1]; o[di + 2] = a[si + 2]; o[di + 3] = 255;
     }
     return out;
   }
+  // search crop windows on a small copy, score each for composition, apply the best to the full image
+  const cropCache = new WeakMap();
+  function cropSearch(img) {
+    if (cropCache.has(img.data)) return cropCache.get(img.data);
+    const sm = shrink(img, 260), W = sm.width, H = sm.height, res = [];
+    for (let z = 1.1; z <= 1.9; z += 0.08) {
+      const cw = Math.round(W / z), ch = Math.round(H / z);
+      for (let fx = 0; fx <= 1.0001; fx += 0.125) for (let fy = 0; fy <= 1.0001; fy += 0.125) {
+        const l = Math.round((W - cw) * fx), t = Math.round((H - ch) * fy), sc = score(analyze(cropRect(sm, l, t, cw, ch)));
+        res.push({ z, fx, fy, comp: sc.comp, total: sc.total });
+      }
+    }
+    const base = score(analyze(sm));
+    res.forEach(c => { c.gain = c.comp > base.comp ? c.total - base.total + (c.comp - base.comp) * 0.15 : -99; });
+    res.sort((a, b) => b.gain - a.gain || b.comp - a.comp);
+    cropCache.set(img.data, res);
+    return res;
+  }
+  function crop(img, variant, j = 1) {
+    const W = img.width, H = img.height;
+    if (Math.min(W, H) < 60) return { width: W, height: H, data: new Uint8ClampedArray(img.data) };
+    const band = [[1.1, 1.3], [1.3, 1.55], [1.55, 1.95]][variant];
+    const lo = band[0] + (j - 1) * 0.1, hi = band[1] + (j - 1) * 0.1;
+    const list = cropSearch(img).filter(c => c.z >= lo - 1e-6 && c.z < hi);
+    const pick = list[Math.min(list.length - 1, Math.max(0, Math.round((j - 1) * 6)))] || cropSearch(img)[0];
+    const cw = Math.round(W / pick.z), ch = Math.round(H / pick.z);
+    return cropRect(img, Math.round((W - cw) * pick.fx), Math.round((H - ch) * pick.fy), cw, ch);
+  }
+
 
   function pop(img, s) {
     const m = analyze(img), W = img.width, H = img.height;
@@ -1780,7 +1810,7 @@ async function generate(jitterRound) {
     for (const r of recipes) {
       const id = r.run({ width: base.width, height: base.height, data: base.data }, j);
       const s = Engine.score(Engine.analyze(id));
-      if (s.total > p.s.total || (s.total >= p.s.total && s[cat] > p.s[cat])) {
+      if (s.total > p.s.total || (s.total >= p.s.total && s[cat] > p.s[cat]) || (s.total >= p.s.total - 1 && s[cat] >= p.s[cat] + 5)) {
         const v = { label: r.label, note: r.note, s, src: toURL(id) };
         if (!best[r.label] || s.total > best[r.label].s.total || (s.total === best[r.label].s.total && s[cat] > best[r.label].s[cat])) { if (best[r.label]) extra.push(best[r.label]); best[r.label] = v; } else extra.push(v);
       }
@@ -1797,7 +1827,9 @@ async function generate(jitterRound) {
     $('#flowBack').style.visibility = 'visible';
     EN.variants = null; enIdle();
     const next = C.filter(c => c.k !== cat).sort((a, b) => p.s[a.k] - p.s[b.k])[0];
-    toast(`${nm} is already at its best on this photo (${p.s[cat]}). No gems were used. Try ${next.name} next.`);
+    $('#enArea').insertAdjacentHTML('afterbegin', `<div class="enmax"><b>${nm} is already at its best on this photo (${p.s[cat]}).</b><span>We couldn’t find a version that scores higher. No gems were used.</span><button class="btn small" id="enNext">Try ${next.name} instead</button></div>`);
+    $('#genBtn') && $('#genBtn').remove();
+    $('#enNext').onclick = () => { const b = document.querySelector(`#flowBody .cats button[data-c="${next.k}"]`); if (b) b.click(); };
     return;
   }
   EN.variants = picks; EN.sel = 0;
