@@ -2352,7 +2352,7 @@ function roomViewHTML(r) {
       ${p ? `<span class="ptp gls" style="left:${x + w / 2}%">${TROPHY_S}<b>${p.s.total}</b><small>pts</small></span>` : ''}
       <span class="lb" style="left:${x + w / 2}%">${sl[1]}</span>`;
   }).join('');
-  const cta = filled < 5 ? `<button class="cta" id="gFill">${eligible ? 'Fill a frame' : 'Earn your next frame'} ${ARROW}</button>`
+  const cta = filled < R.slots.length ? `<button class="cta" id="gFill">${eligible ? 'Fill a frame' : 'Earn your next frame'} ${ARROW}</button>`
     : r < ROOMS.length - 1 ? `<button class="cta" id="gNext">Enter Room ${r + 2} ${ARROW}</button>` : `<button class="cta" id="gBoard">See the leaderboard ${ARROW}</button>`;
   return `<div class="rv ${R.theme}"><img class="bgi" src="${HALL_BG}" alt="">
     <div class="stat gls"><div class="a">${TROPHY_S}<div><span class="num">${tot.toLocaleString()}</span><span class="cap">Total gallery points</span></div></div>
@@ -2361,7 +2361,7 @@ function roomViewHTML(r) {
       <span class="pr"><span><b>${filled}</b> OF <b>${R.slots.length}</b> FRAMES FILLED</span><i><i style="width:${filled / R.slots.length * 100}%"></i></i></span></div>
     ${frames}
     ${[...Array(10)].map((_, i) => `<i class="spark" style="left:${(7 + (i * 37) % 86)}%;top:${(32 + (i * 23) % 40)}%;animation-delay:${(i * .43).toFixed(2)}s"></i>`).join('')}
-    <div class="pnl gls"><div class="rtabs" role="group" aria-label="Rooms">${ROOMS.map((Rm, i) => `${i ? '<span class="vs"></span>' : ''}<button data-r="${i}" aria-pressed="${i === r}" ${!roomOpen(i) ? `disabled aria-label="Room ${i + 1}, locked"` : ''}><span class="th"><img src="${roomThumb(i)}" alt=""></span><span class="tx">ROOM ${i + 1}</span>${roomFilled(i) === 5 ? `<span class="ok">${CHECK}</span>` : !roomOpen(i) ? `<span class="lk">${LOCK}</span>` : ''}</button>`).join('')}</div>
+    <div class="pnl gls"><div class="rtabs" role="group" aria-label="Rooms">${ROOMS.map((Rm, i) => `${i ? '<span class="vs"></span>' : ''}<button data-r="${i}" aria-pressed="${i === r}" ${!roomOpen(i) ? `disabled aria-label="Room ${i + 1}, locked"` : ''}><span class="th"><img src="${roomThumb(i)}" alt=""></span><span class="tx">ROOM ${i + 1}</span>${roomFilled(i) === Rm.slots.length ? `<span class="ok">${CHECK}</span>` : !roomOpen(i) ? `<span class="lk">${LOCK}</span>` : ''}</button>`).join('')}</div>
       ${cta}</div>
   </div>`;
 }
