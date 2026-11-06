@@ -1193,6 +1193,13 @@ button.bar:hover span:first-child{color:var(--pink)}
 .earnc .et .gem{width:14px;height:14px}
 .earnc .ego{flex:none;padding:9px 14px;border-radius:999px;background:#fff;color:#0E7A4C;font-weight:800}
 .orbuy{margin:10px 0 10px;text-align:center;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.forp{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:10px;border-radius:18px;background:#121A31;box-shadow:inset 0 0 0 2px #FF2D8E,0 0 20px rgba(255,45,142,.25)}
+.forp img{flex:none;width:64px;height:64px;border-radius:12px;object-fit:cover}
+.forp>div{flex:1;min-width:0;display:grid;gap:1px}
+.forp small{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#FF8FC4}
+.forp b{font-size:1.1rem;color:#fff}
+.forp span{font-size:.78rem;color:#9AA6C8}
+.forp button{flex:none;padding:8px 12px;border-radius:999px;background:#202A48;color:#EEF2FF;font-weight:700;font-size:.82rem}
 </style>
 </head>
 <body>
@@ -1844,7 +1851,7 @@ function showResult(p, o = {}) {
   body.querySelectorAll('[data-fix]').forEach(x => x.onclick = () => startEnhance(p, x.dataset.fix));
   if (b('#otherFix')) b('#otherFix').onclick = () => openEnhance(p, null);
   if (b('#doneBtn')) b('#doneBtn').onclick = () => closeFlow();
-  if (b('#toComps')) b('#toComps').onclick = () => { if (!S.user) { openSignup(() => openComps()); return; } closeFlow(); openComps(); };
+  if (b('#toComps')) b('#toComps').onclick = () => { if (!S.user) { openSignup(() => openComps(p)); return; } closeFlow(); openComps(p); };
   if (b('#toGal')) b('#toGal').onclick = () => { if (!S.user) { openSignup(() => hangPhoto(p)); return; } closeFlow(); hangPhoto(p); };
   if (b('#saveNow')) b('#saveNow').onclick = () => openSignup();
   if (o.delta != null && !S.user) setTimeout(() => openSignup(), crossed ? 2200 : 1400);
@@ -2041,7 +2048,7 @@ function showCompReady(p) {
     <button class="bt-no" id="crLater">Keep improving</button></div>`;
   c.classList.add('on', 'cr');
   const close = () => c.classList.remove('on', 'cr');
-  $('#crGo').onclick = () => { close(); if (!S.user) { openSignup(() => openComps()); return; } closeFlow(); openComps(); };
+  $('#crGo').onclick = () => { close(); if (!S.user) { openSignup(() => openComps(p)); return; } closeFlow(); openComps(p); };
   $('#crLater').onclick = close;
   c.onclick = e => { if (e.target === c) close(); };
 }
@@ -2144,17 +2151,20 @@ const fmtLeft = ms => { const m = Math.floor(ms / MIN), d = Math.floor(m / 1440)
 const cxPrize = c => c.k === 'gem' ? `${c.prize.toLocaleString()}${gemIcon()}` : c.k === 'bc' ? `$${c.prize.toLocaleString()}<small>BC</small>` : `$${c.prize.toLocaleString()}`;
 const cxFee = c => c.k === 'gem' ? `<span class="gfee">${gemIcon()}${c.fee}</span>` : c.k === 'bc' ? `$${c.fee.toFixed(2)} BC` : `$${c.fee} Cash`;
 const cxNeed = c => (c.k === 'gem' ? CFG.GALLERY : CFG.QUALIFY);
-let CXF = 'all', cxTimer = null;
-function openComps() {
+let CXF = 'all', cxTimer = null, CXP = null;
+function openComps(forPhoto) {
+  if (forPhoto !== undefined) CXP = forPhoto ? forPhoto.id : null;
+  const fp = CXP && S.photos.find(x => x.id === CXP);
+  if (!fp) CXP = null;
   if ($('#sheet').classList.contains('on')) closeSheet();
-  const cards = k => CX.filter(c => c.k === k).map(c => { const e = liveEntry(c.id), left = cxLeft(c);
+  const cards = k => CX.filter(c => c.k === k && (!fp || liveEntry(c.id) || (cxFits(c, fp) && fp.s.total >= cxNeed(c)))).map(c => { const e = liveEntry(c.id), left = cxLeft(c);
     if (e) return liveCardHTML(c, e);
     return `<div class="card k-${c.k}"><div class="im">${c.art ? cxArt(c.art) : `<img src="${SEED[c.img].src}" alt="">`}${left < 15 * MIN ? '<span class="live">CLOSING</span>' : ''}</div>
       <div class="tt">${cxPill(c)}<h4>${esc(c.t)}</h4></div><div class="md"><div class="pz">${cxPrize(c)}</div><div class="fp">1st Prize</div>
         <div class="mt">${IC.ppl}${c.n.toLocaleString()} entries</div><span class="ps">Min score ${cxNeed(c)}</span></div>
       <div class="rt"><span class="cd ${left < 15 * MIN ? 'soon' : ''}" data-cx="${c.id}">${IC.clock}Ends in ${fmtLeft(left)}</span>
         <button class="en" data-cx-go="${c.id}">Enter<small>${cxFee(c)}</small></button></div></div>`; }).join('');
-  const sec = k => `<section class="sec k-${k}"><div class="sh"><span class="si">${CXI[k]}</span><div class="tt"><h3>${CXSEC[k].h}</h3><p>${CXSEC[k].p}</p></div></div>${cards(k)}</section>`;
+  const sec = k => !cards(k) ? '' : `<section class="sec k-${k}"><div class="sh"><span class="si">${CXI[k]}</span><div class="tt"><h3>${CXSEC[k].h}</h3><p>${CXSEC[k].p}</p></div></div>${cards(k)}</section>`;
   const show = { all: ['cash', 'bc', 'gem', 'sp'], cash: ['cash', 'sp'], bc: ['bc'], gem: ['gem'] }[CXF];
   const wal = `<div class="wallet cxw" aria-label="Wallet"><button class="wb cash" data-w aria-label="Cash balance">${CASH_ICON}<span><small>Cash</small><b>$${(S.cash || 0).toFixed(2)}</b></span></button>
     <button class="wb bonus" data-w aria-label="Bonus cash balance">${BONUS_ICON}<span><small>Bonus</small><b>$${(S.bonus || 0).toFixed(2)}</b></span></button>
@@ -2162,7 +2172,8 @@ function openComps() {
     <button class="wplus" data-w aria-label="Add funds">+</button></div>`;
   const live = (S.entries || []).filter(e => !e.done);
   const mine = live.length ? `<div class="myent"><div class="mh"><h3>My live entries</h3><span>${live.length} live</span></div><div class="mrow">${live.map(e => { const c = CX.find(x => x.id === e.cid), r = rankAt(e, Date.now()), d = rankMove(e); return `<button class="mcard k-${c.k}" data-live="${e.id}"><img src="${entrySrc(e)}" alt=""><span><small>${esc(c.t)}</small><b data-lr="${e.id}">#${r.toLocaleString()} ${moveHTML(d)}</b><em data-ll="${e.id}">${fmtLeft(Math.max(0, e.end - Date.now()))} left</em></span></button>`; }).join('')}</div></div>` : '';
-  openFlow(`<div class="cx">${wal}${mine}
+  const fpBar = fp ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Entering with</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${show.some(k => cards(k)) ? 'Competitions this photo can enter' : 'No open competitions fit this photo right now'}</span></div><button id="cxAll">See all</button></div>` : '';
+  openFlow(`<div class="cx">${wal}${fpBar}${mine}
     <div class="hero"><h2>Turn your photos <span>into cash.</span></h2><p>Photo competitions every 30 minutes. Real people. Real prizes.</p><button class="how" id="cxHow">How It Works ›</button>
       <div class="art" aria-hidden="true"><span class="pc"><img src="${SEED[9].src}" alt=""></span><span class="pc"><img src="${SEED[1].src}" alt=""></span><span class="cr">${CROWN('#FFC93C', 46)}</span><i class="tw" style="left:6%;top:70%"></i><i class="tw" style="left:86%;top:84%;animation-delay:.9s"></i></div></div>
     <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['cash', 'Real Cash'], ['bc', 'Bonus Cash'], ['gem', 'Gems']].map(([k, l]) => `<button data-f="${k}" aria-pressed="${CXF === k}">${l}</button>`).join('')}</div>
@@ -2178,6 +2189,7 @@ function openComps() {
   body.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { CXF = b.dataset.f; const y = body.scrollTop; openComps(); body.scrollTop = Math.min(y, 230); });
   body.querySelectorAll('[data-cx-go]').forEach(b => b.onclick = () => cxEnter(CX.find(c => c.id === b.dataset.cxGo)));
   body.querySelectorAll('[data-live]').forEach(b => b.onclick = () => openLive(S.entries.find(e => e.id === b.dataset.live)));
+  if ($('#cxAll')) $('#cxAll').onclick = () => openComps(null);
   $('#cxHow').onclick = showCoach;
   $('#cxUp').onclick = () => { closeFlow(); go('studio'); };
   $('#cxUpload').onclick = () => { closeFlow(); pickPhoto(true); };
@@ -2361,10 +2373,11 @@ function cxEnter(c) {
   }
   const ok = S.photos.filter(p => cxFits(c, p) && p.s.total >= need && !photoLock(p)).sort((a, b) => b.s.total - a.s.total);
   if (!ok.length) { toast('Your qualifying photos are already in live competitions.'); return; }
-  let sel = ok[0].id;
+  let sel = (CXP && ok.find(x => x.id === CXP)) ? CXP : ok[0].id;
+  ok.sort((a, b) => (b.id === sel) - (a.id === sel));
   openSheet(`<h2>Enter ${esc(c.t)}</h2><p class="sub">Choose the photo to enter. It’s locked in at its current score until the results are in.</p>
     <div class="pickgrid enpick">${ok.map(p => `<button data-p="${p.id}" aria-pressed="${p.id === sel}" aria-label="Photo scoring ${p.s.total}"><img src="${p.src}" alt=""><span>${p.s.total}</span></button>`).join('')}</div>
-    <div class="enprev"><img id="enImg" src="${ok[0].src}" alt="Selected photo"><div><small>Your entry</small><b id="enSc">${ok[0].s.total}</b><span>${cxPill(c)}</span></div></div>
+    <div class="enprev"><img id="enImg" src="${ok.find(x => x.id === sel).src}" alt="Selected photo"><div><small>Your entry</small><b id="enSc">${ok.find(x => x.id === sel).s.total}</b><span>${cxPill(c)}</span></div></div>
     <button class="btn block" id="enGo">Enter for ${cxFee(c)}</button>`);
   const paint = () => { const p = ok.find(x => x.id === sel); document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === sel)); $('#enImg').src = p.src; $('#enSc').textContent = p.s.total; };
   document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.onclick = () => { sel = b.dataset.p; paint(); });
@@ -2384,7 +2397,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${S.bw}–${S.bl}</b><span>Battles won–lost</span></div><div><b>${qn}</b><span>Qualified photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">Gallery</button><button class="btn quiet block" id="mC">Competitions</button><button class="btn quiet block" id="mS">Gem store</button>
     <button class="link" id="mR" style="margin-top:6px">Reset prototype</button></div>`);
-  $('#mG').onclick = openGallery; $('#mC').onclick = openComps; $('#mS').onclick = () => openStore();
+  $('#mG').onclick = openGallery; $('#mC').onclick = () => openComps(null); $('#mS').onclick = () => openStore();
   $('#mR').onclick = () => { if (confirm('Delete your photos, gems and account from this device?')) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } };
 }
 $('#avatar').onclick = openMenu;
@@ -2733,7 +2746,7 @@ function go(where) {
   if (where === 'gallery') { renderGallery(); $('#gallery').scrollTop = 0; }
 }
 $('#segJudge').onclick = () => go('judge'); $('#segStudio').onclick = () => go('studio'); $('#segGallery').onclick = () => openGallery();
-$('#segCompete').onclick = () => { if (!S.user) { openSignup(() => openComps()); return; } openComps(); };
+$('#segCompete').onclick = () => { if (!S.user) { openSignup(() => openComps(null)); return; } openComps(null); };
 (() => {
   const panes = $('#panes'); let y0 = null, t0 = 0, top0 = 0;
   let jb0 = true; const jAtBottom = () => { const j = $('#judge'); return j.scrollTop + j.clientHeight >= j.scrollHeight - 4; };
@@ -2929,7 +2942,7 @@ function renderStudio() {
   st.querySelectorAll('[data-fix]').forEach(b => b.onclick = () => startEnhance(p, b.dataset.fix));
   st.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { S.cur = b.dataset.p; save(); renderStudio(); });
   if ($('#stNew')) $('#stNew').onclick = () => pickPhoto(true);
-  if ($('#stComp')) $('#stComp').onclick = openComps;
+  if ($('#stComp')) $('#stComp').onclick = () => openComps(p);
   if ($('#stHang')) $('#stHang').onclick = () => hangPhoto(p);
   st.querySelectorAll('[data-cat]').forEach(x => x.onclick = () => askCategory(p, () => { closeFlow(); renderStudio(); }, true));
   const cmp = $('#cmp'), im = $('#cmpImg');
