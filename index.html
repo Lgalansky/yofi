@@ -912,6 +912,8 @@ button.bar:hover span:first-child{color:var(--pink)}
 .hxp-hot:active{background:rgba(255,255,255,.18)}
 .hxp-hot:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 6px #7B3CFF}
 .hxp-low{max-width:560px;padding-top:14px}
+.vcard .s{flex-wrap:wrap;row-gap:0}
+.vcard .s small.cg{flex-basis:100%;font-size:.82rem;line-height:1.2}
 </style>
 </head>
 <body>
@@ -1557,7 +1559,7 @@ function startEnhance(p, cat) {
 }
 async function generate(jitterRound) {
   const { p, cat } = EN, nm = catBy(cat).name;
-  if (!spend(CFG.COST, `Each fix costs ${CFG.COST} gems and you have ${S.gems}.`)) return;
+  if (S.gems < CFG.COST) { openStore(`Each fix costs ${CFG.COST} gems and you have ${S.gems}.`); return; }
   $('#flowBack').style.visibility = 'hidden';
   $('#enArea').innerHTML = `<div class="gen"><div class="spin"></div>Making better ${nm.toLowerCase()} versions…</div>`;
   await sleep(50);
@@ -1583,11 +1585,10 @@ async function generate(jitterRound) {
   picks = picks.slice(0, 3).sort(rank);
   await sleep(300);
   if (!picks.length) {
-    S.gems += CFG.COST; save(); paintGems();
     $('#flowBack').style.visibility = 'visible';
     EN.variants = null; enIdle();
     const next = C.filter(c => c.k !== cat).sort((a, b) => p.s[a.k] - p.s[b.k])[0];
-    toast(`${nm} is already at its best on this photo (${p.s[cat]}). Your ${CFG.COST} gems are back. Try ${next.name} next.`);
+    toast(`${nm} is already at its best on this photo (${p.s[cat]}). No gems were used. Try ${next.name} next.`);
     return;
   }
   EN.variants = picks; EN.sel = 0;
@@ -1596,25 +1597,27 @@ async function generate(jitterRound) {
 function renderVariants(top) {
   const { p, variants } = EN;
   const letters = ['A', 'B', 'C'];
-  $('#enArea').innerHTML = `<p class="muted" style="margin:0 0 10px">Every version improves your ${catBy(EN.cat).name} score. Pick the one you like and it’s applied.</p>
+  $('#enArea').innerHTML = `<p class="muted" style="margin:0 0 10px">Every version improves your ${catBy(EN.cat).name} score. Pick the one you like. You only spend ${CFG.COST} gems when you use it.</p>
   <div class="vgrid">${variants.map((v, i) => {
     const d = v.s.total - p.s.total;
     return `<button class="vcard" data-i="${i}" aria-pressed="${EN.sel === i}" aria-label="Version ${letters[i]}, ${v.label}, score ${v.s.total}">
       ${i === top ? '<span class="best">Best</span>' : ''}<img src="${v.src}" alt="">
-      <div class="s">${v.s.total}<small class="up">${d > 0 ? '+' + d : `${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}`}</small></div>
+      <div class="s">${v.s.total}${d > 0 ? `<small class="up">+${d}</small>` : `<small class="up cg">${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}</small>`}</div>
       <div class="l"><b style="color:var(--ink)">${v.label}</b><br>${v.note}</div></button>`;
   }).join('')}</div>
-  <div class="actions"><button class="btn block" id="useBtn"></button></div>`;
+  <div class="actions"><button class="btn block fixbtn" id="useBtn"><span id="useT"></span><span class="gpill">${gemIcon()}${CFG.COST}</span></button></div>`;
+  $('#flowBack').style.visibility = 'visible';
   const paint = () => {
     document.querySelectorAll('#enArea [data-i]').forEach(x => x.setAttribute('aria-pressed', +x.dataset.i === EN.sel));
     const v = variants[EN.sel], d = v.s.total - p.s.total;
-    $('#useBtn').textContent = `Use version ${letters[EN.sel]} (${d > 0 ? '+' + d : `${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}`})`;
+    $('#useT').textContent = `Use version ${letters[EN.sel]} (${d > 0 ? '+' + d : `${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}`})`;
   };
   document.querySelectorAll('#enArea [data-i]').forEach(x => x.onclick = () => { EN.sel = +x.dataset.i; paint(); });
   paint();
   $('#useBtn').onclick = () => applyVariant();
 }
 function applyVariant() {
+  if (!spend(CFG.COST, `Using a version costs ${CFG.COST} gems and you have ${S.gems}.`)) return;
   const { p, variants, sel } = EN;
   const v = variants[sel], prev = p.s, prevTotal = p.s.total;
   p.src = v.src; p.s = v.s; p.enh++; save();
