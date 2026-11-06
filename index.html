@@ -1205,6 +1205,14 @@ button.bar:hover span:first-child{color:var(--pink)}
 .ng .ngi svg{width:38px;height:38px}
 .ng .sub b{color:var(--ink)}
 .ng .link{display:block;margin:8px auto 0}
+.sbal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0 0 14px}
+.sbal>span{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:14px;background:var(--card);min-width:0}
+.sbal>span.c{box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--good) 40%,var(--line))}
+.sbal>span.bn{box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--pink) 35%,var(--line))}
+.sbal>span.g{box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--gem) 45%,var(--line))}
+.sbal svg{width:26px;height:26px;flex:none}
+.sbal small{display:block;font-size:.7rem;color:var(--muted);font-weight:600;line-height:1.1}
+.sbal b{display:block;font-size:.95rem;line-height:1.2;white-space:nowrap;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -2087,7 +2095,8 @@ const PACKS = [
 let storeTimer = null;
 function openStore(reason) {
   if (!S.offerEnd || S.offerEnd < Date.now()) { S.offerEnd = Date.now() + (3 * 3600 + 38 * 60 + 27) * 1000; save(); }
-  openSheet(`<div class="vphead"><h2>Vibe Packs<i>.</i></h2><div class="lto"><em>Limited time offer</em><span><b id="oH">00</b><small>HRS</small></span><span><b id="oM">00</b><small>MIN</small></span><span><b id="oS">00</b><small>SEC</small></span></div></div>
+  openSheet(`<div class="sbal" aria-label="Your balances"><span class="c">${CASH_ICON}<span><small>Cash</small><b>$${(S.cash || 0).toFixed(2)}</b></span></span><span class="bn">${BONUS_ICON}<span><small>Bonus</small><b>$${(S.bonus || 0).toFixed(2)}</b></span></span><span class="g">${gemIcon('')}<span><small>Gems</small><b>${S.gems.toLocaleString()}</b></span></span></div>
+    <div class="vphead"><h2>Vibe Packs<i>.</i></h2><div class="lto"><em>Limited time offer</em><span><b id="oH">00</b><small>HRS</small></span><span><b id="oM">00</b><small>MIN</small></span><span><b id="oS">00</b><small>SEC</small></span></div></div>
     <p class="sub">${reason ? esc(reason) + ' ' : ''}More value. More photos. More wins.</p>
     <button class="earnc" id="earnTop"><span class="ei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg></span>
       <span class="et"><b>Earn gems free by judging</b><span>Score other people’s photos for up to ${CFG.VOTE + 5 * CFG.CLOSE} ${gemIcon()} each${reason && S.gems < CFG.COST ? `. About ${Math.ceil((CFG.COST - S.gems) / (CFG.VOTE + 2 * CFG.CLOSE))} photos gets you your next fix` : ''}.</span></span><span class="ego">Judge ›</span></button>
