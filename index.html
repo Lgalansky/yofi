@@ -995,6 +995,111 @@ button.bar:hover span:first-child{color:var(--pink)}
 .rv .fr2.vac .em{font-size:3.4cqw}
 .rv .fr2.vac .pl{width:7cqw;height:7cqw;font-size:5.2cqw}
 .rv .fr2.vac svg{width:46%}
+/* ---------- Live competitions ---------- */
+.cpill{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;padding:4px 10px;border-radius:999px;font-weight:800;font-size:.78rem;letter-spacing:.06em;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.cpill svg{width:15px;height:15px;flex:none}
+.cpill.k-cash{background:rgba(46,229,157,.16);color:#2EE59D}.cpill.k-bc{background:rgba(255,201,60,.16);color:#FFC93C}.cpill.k-gem{background:rgba(79,211,255,.16);color:#4FD3FF}.cpill.k-sp{background:rgba(185,140,255,.18);color:#C9A6FF}
+.cx .card .tt{grid-area:tt;display:flex;flex-direction:column;gap:4px;min-width:0;padding-top:2px}
+.cx .card .tt h4{grid-area:auto;padding-top:0}
+.cx .card .ps{font-size:.72rem;font-weight:700}
+.cx .card.lcard{grid-template-areas:"im tt tt" "im md md" "lz lz lz" "lf lf lf";row-gap:8px;box-shadow:inset 0 0 0 2px var(--k),0 0 18px color-mix(in srgb,var(--k) 25%,transparent)}
+.cx .card.lcard .md .fp{margin:0}
+.cx .card .rk{display:flex;align-items:baseline;gap:6px}
+.cx .card .rk b{font:400 1.9rem/1 "Archivo Black","Arial Black",sans-serif;color:#fff}
+.cx .card .rk small{font-size:.75rem;font-weight:700;color:var(--cxm)}
+.mv{font:800 .95rem/1 Figtree,sans-serif;font-style:normal;color:var(--cxm,#9AA6C8)}.mv.mup{color:#2EE59D}.mv.mdn{color:#FF8FA3}
+.cx .card .tt h4{align-self:flex-start;text-align:left}
+.cx .card .lz{grid-area:lz;padding:8px 10px;border-radius:12px;background:color-mix(in srgb,var(--k) 12%,transparent);color:var(--k2);font-weight:800;font-size:.85rem}
+.cx .card .lf{grid-area:lf;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cx .card .lf .en{width:auto;padding:10px 16px}
+.myent{margin:2px 0 14px}
+.myent .mh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.myent h3{font-size:1.15rem;font-weight:800;color:#fff}
+.myent .mh span{font-size:.8rem;font-weight:700;color:var(--cxm)}
+.myent .mrow{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.myent .mcard{flex:0 0 calc(50% - 4px);display:flex;gap:9px;align-items:center;padding:8px;border-radius:16px;background:var(--cxc);box-shadow:inset 0 0 0 1.5px var(--k,#2A3456);text-align:left;color:#EEF2FF;min-width:0}
+.myent .mcard img{flex:none;width:44px;height:44px;border-radius:10px;object-fit:cover}
+.myent .mcard>span{display:flex;flex-direction:column;min-width:0}
+.myent .mcard small{font-size:.68rem;font-weight:700;color:var(--cxm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.myent .mcard b{font:400 1.25rem/1.1 "Archivo Black","Arial Black",sans-serif;color:#fff;white-space:nowrap}
+.myent .mcard b .mv{font-size:.8rem}
+.myent .mcard em{font-style:normal;font-size:.68rem;font-weight:700;color:#C9D1EA}
+.lv{position:absolute;left:0;right:0;bottom:0;z-index:26;display:none;overflow-y:auto;overscroll-behavior:contain;background:#0B1022;color:#EEF2FF}
+.lv.on{display:block;animation:btIn .3s cubic-bezier(.2,.9,.3,1.1)}
+.lv-in{max-width:480px;margin:0 auto;padding:14px 14px 26px;display:flex;flex-direction:column;gap:14px}
+.lv-top{display:flex;align-items:center;gap:10px}
+.lv-back{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#EEF2FF;background:#141B33;box-shadow:inset 0 0 0 1px #26304F}
+.lv-back svg{width:20px;height:20px}
+.lv-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.lv-t h2{font-size:1.35rem;font-weight:800;color:#fff}
+.lv-live{flex:none;padding:4px 9px;border-radius:7px;background:#FF2D55;color:#fff;font-size:.7rem;font-weight:800;letter-spacing:.06em}
+.lv-cd{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:20px;background:#121A31;box-shadow:inset 0 0 0 1px #202A48}
+.lv-cd span{font-weight:700;color:#9AA6C8}
+.lv-cd b{font:400 2.1rem/1 "Archivo Black","Arial Black",sans-serif;color:#FF5FA8;font-variant-numeric:tabular-nums}
+.lv-hero{--k:#2EE59D;position:relative;height:300px;border-radius:24px;overflow:hidden;box-shadow:0 0 0 3px var(--k),0 0 26px color-mix(in srgb,var(--k) 35%,transparent)}
+.lv-hero.k-bc{--k:#FFC93C}.lv-hero.k-gem{--k:#4FD3FF}.lv-hero.k-sp{--k:#B98CFF}
+.lv-hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lv-hero .ov{position:absolute;left:0;right:0;bottom:0;padding:60px 16px 14px;display:flex;align-items:flex-end;justify-content:space-between;background:linear-gradient(180deg,transparent,rgba(11,16,34,.85) 45%,#0B1022)}
+.lv-hero .ov>div:first-child{display:flex;flex-direction:column}
+.lv-hero small{font-weight:800;font-size:.75rem;letter-spacing:.08em;color:#C9D1EA}
+.lv-hero b{font:400 4rem/1 "Archivo Black","Arial Black",sans-serif;color:#fff}
+.lv-hero .ov span{font-weight:700;font-size:.88rem;color:#C9D1EA}
+.lv-hero .mvb{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.lv-hero .mvb i{font-style:normal;padding:6px 12px;border-radius:999px;font-weight:800;font-size:1.1rem;background:#141B33;color:#9AA6C8}
+.lv-hero .mvb i.up{background:rgba(46,229,157,.18);color:#2EE59D}.lv-hero .mvb i.dn{background:rgba(255,143,163,.16);color:#FF8FA3}
+.lv-hero .mvb span{font-size:.75rem}
+.lv-box{padding:14px;border-radius:20px;background:#121A31;box-shadow:inset 0 0 0 1px #202A48;display:flex;flex-direction:column;gap:6px}
+.lv-box .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
+.lv-box .hd b{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1rem;color:#fff}
+.lv-box .hd span{font-size:.75rem;font-weight:700;color:#9AA6C8;text-align:right}
+.lv-box .hd .nx{color:#2EE59D;font-weight:800}
+.lv-chart{width:100%;height:auto;color:#2EE59D}
+.lv-box .ax{display:flex;justify-content:space-between;font-size:.7rem;font-weight:700;color:#9AA6C8}
+.lad{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:#0E152A;font-weight:700;font-size:.9rem}
+.lad b{color:#2EE59D;font-weight:800;white-space:nowrap}
+.lad.me{background:rgba(46,229,157,.14);box-shadow:inset 0 0 0 2px #2EE59D;font-weight:800}
+.lad em{font-style:normal;margin-left:6px;padding:2px 8px;border-radius:999px;background:#2EE59D;color:#04281A;font-size:.68rem}
+.lv-box .ft{margin:2px 0 0;font-size:.7rem;font-weight:600;color:#9AA6C8}
+.lrow2{display:flex;align-items:center;gap:10px;font-size:.9rem;font-weight:700;color:#C9D1EA}
+.lrow2 .n{width:30px;font-weight:800}
+.lrow2 img{width:34px;height:34px;border-radius:9px;object-fit:cover}
+.lrow2 .h{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrow2.me{padding:6px 8px;margin:0 -8px;border-radius:12px;background:rgba(46,229,157,.14);box-shadow:inset 0 0 0 1.5px #2EE59D;color:#fff;font-weight:800}
+.lrow2.me .n{color:#2EE59D}
+.lv-box .dots{text-align:center;color:#5C678A;font-weight:800;letter-spacing:.2em}
+.lv-lock{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:#141B33;font-size:.82rem;line-height:1.4;color:#C9D1EA}
+.lv-lock svg{flex:none;width:18px;height:18px;margin-top:1px}
+.lv-lock b{color:#fff}
+.lv-in.rs{align-items:center;text-align:center;min-height:100%;box-sizing:border-box}
+.lv-in.rs .cpill{align-self:center}
+.rs-sub{font-size:.8rem;font-weight:700;color:#9AA6C8;margin-top:-8px}
+.rs-tro{width:90px;height:90px}
+.lv-in.rs h2{font-size:1.9rem;font-weight:800;color:#fff;line-height:1.1}
+.lv-in.rs>p{margin:-8px 0 0;color:#C9D1EA}
+.rs-won{width:100%;box-sizing:border-box;display:grid;justify-items:center;gap:4px;padding:18px 16px;border-radius:24px;background:linear-gradient(160deg,#2BC983,#0D7A4B);box-shadow:0 0 0 2px #7DF2B5,0 0 30px rgba(46,229,157,.4)}
+.rs-won small{font-weight:800;font-size:.75rem;letter-spacing:.1em}
+.rs-won b{font:400 3.2rem/1 "Archivo Black","Arial Black",sans-serif}
+.rs-won span{font-weight:700;font-size:.88rem;color:#E2FFF1}
+.rs-stats{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.rs-stats div{padding:10px 4px;border-radius:16px;background:#121A31;box-shadow:inset 0 0 0 1px #202A48}
+.rs-stats b{display:block;font:400 1.3rem/1.2 "Archivo Black","Arial Black",sans-serif;color:#fff}
+.rs-stats b.up{color:#2EE59D}.rs-stats b.dn{color:#FF8FA3}
+.rs-stats small{font-size:.68rem;font-weight:700;color:#9AA6C8}
+.rs-img{width:140px;height:140px;border-radius:18px;object-fit:cover;box-shadow:0 0 0 4px #fff,0 0 0 7px #2EE59D}
+.rs.miss .rs-img{box-shadow:0 0 0 4px #fff,0 0 0 7px #7B3CFF}
+.rs-close{width:100%;box-sizing:border-box;text-align:left;padding:16px;border-radius:22px;background:#121A31;box-shadow:inset 0 0 0 1.5px #7B3CFF;display:flex;flex-direction:column;gap:10px}
+.rs-close .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.rs-close .hd b{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.1rem;color:#fff}
+.rs-close .hd span{font-weight:800;font-size:.85rem;color:#B98CFF}
+.rs-close .bar{height:12px;border-radius:6px;background:#202A48;overflow:hidden}
+.rs-close .bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#7B3CFF,#FF2D8E)}
+.rs-close .ax{display:flex;justify-content:space-between;font-size:.72rem;font-weight:700;color:#9AA6C8}
+.rs-close .ax .g{color:#2EE59D}
+.rs-close p{margin:0;font-size:.82rem;line-height:1.4;color:#C9D1EA}
+.lv-in.rs .bt-cta{margin-top:auto}
+.lv-in.rs .bt-no{color:#C9D1EA}
+.lockn{margin:-6px 2px 12px;padding:8px 12px;border-radius:12px;font-size:.85rem;color:var(--muted);background:color-mix(in srgb,var(--violet) 8%,var(--card))}
+.lockn b{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -1076,6 +1181,7 @@ button.bar:hover span:first-child{color:var(--pink)}
     <div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div id="sheetBody"></div></div>
     <div class="coach" id="coach"></div>
     <div class="battle" id="battle" role="dialog" aria-modal="true" aria-label="Battle"></div>
+    <div class="lv" id="lv" role="dialog" aria-modal="true" aria-label="Live competition"></div>
     <div class="toast" id="toast" role="status"></div>
   </div>
 </div>
@@ -1337,7 +1443,7 @@ const rnd = (a, b) => a + Math.random() * (b - a);
 const uid = () => Math.random().toString(36).slice(2, 9);
 
 /* ---------- State ---------- */
-const fresh = () => ({ gems: 0, cash: 0, bonus: 0, frames: {}, user: null, photos: [], cur: null, votes: 0, since: 0, jIdx: 0, order: null, bw: 0, bl: 0, entered: {}, vault: {}, onboarded: false });
+const fresh = () => ({ gems: 0, cash: 0, bonus: 0, frames: {}, user: null, photos: [], cur: null, votes: 0, since: 0, jIdx: 0, order: null, bw: 0, bl: 0, entered: {}, entries: [], vault: {}, onboarded: false });
 let S = fresh();
 try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) { /* storage unavailable: run in memory */ }
 let warnedStorage = false;
@@ -1354,6 +1460,7 @@ function save() {
 const cur = () => S.photos.find(p => p.id === S.cur) || S.photos[0] || null;
 const best = () => S.photos.reduce((a, p) => (!a || p.s.total > a.s.total ? p : a), null);
 OPP.forEach(o => { if (S.vault[o.h] == null) S.vault[o.h] = Math.round(rnd(300, 1400)); });
+S.entries = S.entries || []; Object.keys(S.entered || {}).forEach(k => { if (!S.entries.some(e => e.id === S.entered[k])) delete S.entered[k]; });
 
 /* ---------- Image helpers ---------- */
 const loadImg = src => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
@@ -1840,19 +1947,22 @@ const cxNeed = c => (c.k === 'gem' ? CFG.GALLERY : CFG.QUALIFY);
 let CXF = 'all', cxTimer = null;
 function openComps() {
   if ($('#sheet').classList.contains('on')) closeSheet();
-  const cards = k => CX.filter(c => c.k === k).map(c => { const e = S.entered[c.id], left = cxLeft(c);
+  const cards = k => CX.filter(c => c.k === k).map(c => { const e = liveEntry(c.id), left = cxLeft(c);
+    if (e) return liveCardHTML(c, e);
     return `<div class="card k-${c.k}"><div class="im">${c.art ? cxArt(c.art) : `<img src="${SEED[c.img].src}" alt="">`}${left < 15 * MIN ? '<span class="live">CLOSING</span>' : ''}</div>
-      <h4>${esc(c.t)}</h4><div class="md"><div class="pz">${cxPrize(c)}</div><div class="fp">1st Prize</div>
-        <div class="mt">${IC.ppl}${(c.n + (e ? 1 : 0)).toLocaleString()} entries</div><span class="ps">${IC.pic}${c.lab || 'Any category'} · ${cxNeed(c)}+</span></div>
+      <div class="tt">${cxPill(c)}<h4>${esc(c.t)}</h4></div><div class="md"><div class="pz">${cxPrize(c)}</div><div class="fp">1st Prize</div>
+        <div class="mt">${IC.ppl}${c.n.toLocaleString()} entries</div><span class="ps">Min score ${cxNeed(c)}</span></div>
       <div class="rt"><span class="cd ${left < 15 * MIN ? 'soon' : ''}" data-cx="${c.id}">${IC.clock}Ends in ${fmtLeft(left)}</span>
-        ${e ? `<button class="en done" data-cx-done="${c.id}">Entered ✓<small>Good luck</small></button>` : `<button class="en" data-cx-go="${c.id}">Enter<small>${cxFee(c)}</small></button>`}</div></div>`; }).join('');
+        <button class="en" data-cx-go="${c.id}">Enter<small>${cxFee(c)}</small></button></div></div>`; }).join('');
   const sec = k => `<section class="sec k-${k}"><div class="sh"><span class="si">${CXI[k]}</span><div class="tt"><h3>${CXSEC[k].h}</h3><p>${CXSEC[k].p}</p></div></div>${cards(k)}</section>`;
   const show = { all: ['cash', 'bc', 'gem', 'sp'], cash: ['cash', 'sp'], bc: ['bc'], gem: ['gem'] }[CXF];
   const wal = `<div class="wallet cxw" aria-label="Wallet"><button class="wb cash" data-w aria-label="Cash balance">${CASH_ICON}<span><small>Cash</small><b>$${(S.cash || 0).toFixed(2)}</b></span></button>
     <button class="wb bonus" data-w aria-label="Bonus cash balance">${BONUS_ICON}<span><small>Bonus</small><b>$${(S.bonus || 0).toFixed(2)}</b></span></button>
     <button class="wb gems" data-w aria-label="Gems balance">${gemIcon('')}<span><small>Gems</small><b>${S.gems.toLocaleString()}</b></span></button>
     <button class="wplus" data-w aria-label="Add funds">+</button></div>`;
-  openFlow(`<div class="cx">${wal}
+  const live = (S.entries || []).filter(e => !e.done);
+  const mine = live.length ? `<div class="myent"><div class="mh"><h3>My live entries</h3><span>${live.length} live</span></div><div class="mrow">${live.map(e => { const c = CX.find(x => x.id === e.cid), r = rankAt(e, Date.now()), d = rankMove(e); return `<button class="mcard k-${c.k}" data-live="${e.id}"><img src="${entrySrc(e)}" alt=""><span><small>${esc(c.t)}</small><b data-lr="${e.id}">#${r.toLocaleString()} ${moveHTML(d)}</b><em data-ll="${e.id}">${fmtLeft(Math.max(0, e.end - Date.now()))} left</em></span></button>`; }).join('')}</div></div>` : '';
+  openFlow(`<div class="cx">${wal}${mine}
     <div class="hero"><h2>Turn your photos <span>into cash.</span></h2><p>Photo competitions every 30 minutes. Real people. Real prizes.</p><button class="how" id="cxHow">How It Works ›</button>
       <div class="art" aria-hidden="true"><span class="pc"><img src="${SEED[9].src}" alt=""></span><span class="pc"><img src="${SEED[1].src}" alt=""></span><span class="cr">${CROWN('#FFC93C', 46)}</span><i class="tw" style="left:6%;top:70%"></i><i class="tw" style="left:86%;top:84%;animation-delay:.9s"></i></div></div>
     <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['cash', 'Real Cash'], ['bc', 'Bonus Cash'], ['gem', 'Gems']].map(([k, l]) => `<button data-f="${k}" aria-pressed="${CXF === k}">${l}</button>`).join('')}</div>
@@ -1860,13 +1970,14 @@ function openComps() {
     <button class="up" id="cxUp"><svg class="big" viewBox="0 0 48 44"><defs><linearGradient id="cxu" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#2A7BFF"/><stop offset="1" stop-color="#4FD3FF"/></linearGradient></defs><rect x="4" y="28" width="8" height="12" rx="1.5" fill="url(#cxu)" opacity=".6"/><rect x="16" y="22" width="8" height="18" rx="1.5" fill="url(#cxu)" opacity=".8"/><rect x="28" y="16" width="8" height="24" rx="1.5" fill="url(#cxu)"/><path d="M4 22L16 12l8 6L42 4" stroke="#A9EBFF" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 4h8v8" stroke="#A9EBFF" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Upgrade Your Skills</b><span>Use gems to enhance your photos, get better scores and win more.</span></span><i>›</i></button>
     <div class="banner"><svg class="tr" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="cxt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF1B0"/><stop offset=".5" stop-color="#F2B637"/><stop offset="1" stop-color="#A86A10"/></linearGradient></defs>${[...Array(7)].map((_, i) => { const t = (200 - i * 20) * Math.PI / 180, x = 50 + 44 * Math.cos(t), y = 55 - 40 * Math.sin(t); return `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="6" ry="2.6" transform="rotate(${(-(200 - i * 20) + 125).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})" fill="#E7B347"/><ellipse cx="${(100 - x).toFixed(1)}" cy="${y.toFixed(1)}" rx="6" ry="2.6" transform="rotate(${((200 - i * 20) - 125).toFixed(0)} ${(100 - x).toFixed(1)} ${y.toFixed(1)})" fill="#E7B347"/>`; }).join('')}<path d="M32 16h36v20a18 18 0 0 1-36 0z" fill="url(#cxt)"/><path d="M32 20h-8a9 9 0 0 0 10 13M68 20h8a9 9 0 0 1-10 13" stroke="#E2A43A" stroke-width="3" fill="none"/><path d="M46 53h8v14h-8z" fill="#D18F2A"/><path d="M33 84a17 11 0 0 1 34 0z" fill="url(#cxt)"/><rect x="30" y="82" width="40" height="7" rx="2" fill="#A86A10"/><path d="M40 20v12" stroke="#fff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/></svg>
       <h3>Real People.<br>Real Prizes.<br><span>Your Turn.</span></h3><button class="btn" id="cxUpload">Upload a Photo ›</button></div>
-    <p class="note">Prototype: entry fees are taken from your simulated wallet and nothing is charged. Prizes aren’t paid out yet.</p></div>`, true);
+    <p class="note">Prototype: entry fees and prizes use your simulated wallet. Nothing is charged or paid out for real.</p></div>`, true);
   $('#flow').classList.add('cxmode', 'astab'); $('#flow').style.top = cxTabTop() + 'px';
   ['segJudge', 'segStudio', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segCompete').setAttribute('aria-pressed', 'true');
   const body = $('#flowBody');
   body.querySelectorAll('[data-w]').forEach(b => b.onclick = () => openStore());
   body.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { CXF = b.dataset.f; const y = body.scrollTop; openComps(); body.scrollTop = Math.min(y, 230); });
   body.querySelectorAll('[data-cx-go]').forEach(b => b.onclick = () => cxEnter(CX.find(c => c.id === b.dataset.cxGo)));
+  body.querySelectorAll('[data-live]').forEach(b => b.onclick = () => openLive(S.entries.find(e => e.id === b.dataset.live)));
   $('#cxHow').onclick = showCoach;
   $('#cxUp').onclick = () => { closeFlow(); go('studio'); };
   $('#cxUpload').onclick = () => { closeFlow(); pickPhoto(true); };
@@ -1874,8 +1985,169 @@ function openComps() {
   cxTimer = setInterval(() => {
     if (!$('#flow').classList.contains('cxmode')) { clearInterval(cxTimer); return; }
     body.querySelectorAll('[data-cx]').forEach(el => { const left = cxLeft(CX.find(c => c.id === el.dataset.cx)); el.innerHTML = `${IC.clock}Ends in ${fmtLeft(left)}`; el.classList.toggle('soon', left < 15 * MIN); });
+    paintLiveBits(body);
   }, 1000);
+  const unseen = (S.entries || []).find(e => e.done && !e.seen); if (unseen) openResult(unseen);
 }
+/* ---------- Live competition entries ---------- */
+const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+const curOf = c => (c.k === 'gem' ? 'gems' : c.k === 'bc' ? 'bonus' : 'cash');
+const paidTop = n => Math.max(10, Math.floor(n * 0.1));
+const fmtMoney = (amt, cur) => cur === 'gems' ? `${Math.round(amt).toLocaleString()} gems` : `$${Number.isInteger(amt) ? amt.toLocaleString() : amt.toFixed(2)}${cur === 'bonus' ? ' BC' : ''}`;
+function prizeFor(c, rank, n) {
+  const cur = curOf(c), top = paidTop(n);
+  if (rank === 1) return { amt: c.prize, cur };
+  if (rank === 2) return { amt: c.prize / 2, cur };
+  if (rank === 3) return { amt: c.prize / 4, cur };
+  if (rank <= 10) return { amt: cur === 'gems' ? Math.round(c.prize / 14) : Math.round(c.prize / 14 * 100) / 100, cur };
+  if (rank <= top) return cur === 'gems' ? { amt: 25, cur: 'gems' } : { amt: 1, cur: 'bonus' };
+  return null;
+}
+function ladder(c, n) {
+  const top = paidTop(n), b = prizeFor(c, 11, n);
+  return [[1, 1, '1st'], [2, 2, '2nd'], [3, 3, '3rd'], [4, 10, '4th – 10th'], [11, top, `11th – ${top}th`]].map(([a, z, l]) => ({ a, z, l, p: prizeFor(c, a, n), each: z > a }));
+}
+function makeEntry(c, p) {
+  const now = Date.now(), n = c.n + 1, top = paidTop(n), R = mulberry(Math.floor(Math.random() * 1e9));
+  const q = Engine.clamp((p.s.total - 70) / 25);
+  let fin;
+  if (R() < 0.2 + 0.25 * q) {
+    const v = R();
+    fin = v < 0.04 + 0.1 * q ? 1 + Math.floor(R() * 3) : v < 0.4 ? 4 + Math.floor(R() * 7) : 11 + Math.floor(R() * (top - 10));
+  } else fin = top + 1 + Math.floor(Math.pow(R(), 0.8 + q) * (n - top - 1) * (0.9 - 0.4 * q));
+  fin = Math.max(1, Math.min(n, fin));
+  const startR = R() < 0.75 ? Math.min(n, Math.round(fin + (n * 0.12 + 20) * (0.6 + R()))) : Math.max(1, Math.round(fin * (0.55 + R() * 0.3)));
+  return { id: uid(), cid: c.id, pid: p.id, score: p.s.total, start: now, end: now + Math.max(60e3, cxLeft(c)), n, fin, startR, seed: Math.floor(R() * 1e4), done: false };
+}
+function rankAt(e, t) {
+  const k = Engine.clamp((t - e.start) / Math.max(1, e.end - e.start));
+  if (k >= 1) return e.fin;
+  const base = e.startR + (e.fin - e.startR) * (1 - Math.pow(1 - k, 2.2)), b = Math.floor(t / 5000);
+  const wob = Math.sin(b * 1.7 + e.seed) * 0.6 + Math.sin(b * 0.53 + e.seed * 3) * 0.4;
+  return Math.max(1, Math.min(e.n, Math.round(base + wob * (1 - k) * Math.max(3, base * 0.08))));
+}
+const rankMove = e => { const now = Math.min(Date.now(), e.end); return rankAt(e, Math.max(e.start, now - 10 * MIN)) - rankAt(e, now); };
+const moveHTML = d => d > 0 ? `<i class="mv mup">▲${d}</i>` : d < 0 ? `<i class="mv mdn">▼${-d}</i>` : '<i class="mv">–</i>';
+const liveEntry = cid => (S.entries || []).find(e => e.cid === cid && !e.done);
+const entrySrc = e => { const p = S.photos.find(x => x.id === e.pid); return p ? p.src : SEED[0].src; };
+const cxPill = c => `<span class="cpill k-${c.k}">${c.cats ? gi(c.cats[0]) : gi('star')}${esc((c.lab || 'Any category').toUpperCase())}</span>`;
+const fmtClock = ms => { const t = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s2 = t % 60; return h ? `${h}:${String(m).padStart(2, '0')}:${String(s2).padStart(2, '0')}` : `${m}:${String(s2).padStart(2, '0')}`; };
+function nowPrizeLine(c, e, r) {
+  const pz = prizeFor(c, r, e.n); if (pz) return `In the prize zone · ${fmtMoney(pz.amt, pz.cur)} if it ended now`;
+  return `${(r - paidTop(e.n)).toLocaleString()} places from a prize`;
+}
+function liveCardHTML(c, e) {
+  const r = rankAt(e, Date.now()), d = rankMove(e);
+  return `<div class="card lcard k-${c.k}"><div class="im"><img src="${entrySrc(e)}" alt="Your entry"><span class="live">LIVE</span></div>
+    <div class="tt">${cxPill(c)}<h4>${esc(c.t)}</h4></div>
+    <div class="md"><div class="fp">Your rank</div><div class="rk"><b data-lr="${e.id}">#${r.toLocaleString()} ${moveHTML(d)}</b><small>of ${e.n.toLocaleString()}</small></div></div>
+    <div class="lz" data-lz="${e.id}">${nowPrizeLine(c, e, r)}</div>
+    <div class="lf"><span class="cd">${IC.clock}Results in <span data-ll="${e.id}">${fmtLeft(Math.max(0, e.end - Date.now()))}</span></span><button class="en" data-live="${e.id}">View live ›</button></div></div>`;
+}
+function paintLiveBits(root) {
+  (S.entries || []).filter(e => !e.done).forEach(e => {
+    const c = CX.find(x => x.id === e.cid), r = rankAt(e, Date.now());
+    root.querySelectorAll(`[data-lr="${e.id}"]`).forEach(el => { el.innerHTML = `#${r.toLocaleString()} ${moveHTML(rankMove(e))}`; });
+    root.querySelectorAll(`[data-ll="${e.id}"]`).forEach(el => { el.textContent = fmtLeft(Math.max(0, e.end - Date.now())) + (el.tagName === 'EM' ? ' left' : ''); });
+    root.querySelectorAll(`[data-lz="${e.id}"]`).forEach(el => { el.textContent = nowPrizeLine(c, e, r); });
+  });
+}
+
+/* live screen */
+let LV = { e: null, last: null };
+function lvShow(html) {
+  const el = $('#lv'); el.style.top = ($('.wallet').offsetTop + $('.wallet').offsetHeight + 2) + 'px';
+  el.innerHTML = html; el.classList.add('on');
+}
+function lvClose() { $('#lv').classList.remove('on'); LV.e = null; }
+function openLive(e) { if (!e) return; if (e.done) { openResult(e); return; } LV = { e, last: null }; paintLive(true); $('#lv').scrollTop = 0; }
+function paintLive(force) {
+  const e = LV.e; if (!e) return;
+  if (e.done) { openResult(e); return; }
+  const c = CX.find(x => x.id === e.cid), now = Date.now(), r = rankAt(e, now);
+  const cd = $('#lvCd'); if (cd) cd.textContent = fmtClock(e.end - now);
+  if (!force && r === LV.last) return;
+  LV.last = r;
+  const y = $('#lv').scrollTop, d = rankMove(e), top = paidTop(e.n);
+  const pts = [...Array(14)].map((_, i) => rankAt(e, e.start + (Math.min(now, e.end) - e.start) * i / 13));
+  const lo = Math.min(...pts), hi = Math.max(...pts, lo + 1);
+  const poly = pts.map((v, i) => `${(4 + i * 332 / 13).toFixed(1)},${(8 + (v - lo) / (hi - lo) * 74).toFixed(1)}`).join(' ');
+  const last = poly.split(' ').pop().split(',');
+  const lad = ladder(c, e.n), mine = lad.findIndex(t => r >= t.a && r <= t.z);
+  const nextT = mine > 0 ? lad[mine - 1] : mine === -1 ? lad[lad.length - 1] : null;
+  const nextLine = nextT ? `${(r - nextT.z).toLocaleString()} place${r - nextT.z === 1 ? '' : 's'} to ${nextT.l} (${fmtMoney(nextT.p.amt, nextT.p.cur)})` : 'Top of the board!';
+  const h = OPP.map(o => o.h), sc = e.score;
+  const row = (rank, handle, score, src, me) => `<div class="lrow2${me ? ' me' : ''}"><span class="n">${rank}</span><img src="${src}" alt=""><span class="h">${me ? 'You' : '@' + esc(handle)}</span><span class="s">${score}</span></div>`;
+  let board = row(1, h[(e.seed) % 8], Math.min(99, sc + 9), SEED[(e.seed + 1) % SEED.length].src) + row(2, h[(e.seed + 3) % 8], Math.min(98, sc + 8), SEED[(e.seed + 4) % SEED.length].src) + row(3, h[(e.seed + 5) % 8], Math.min(97, sc + 6), SEED[(e.seed + 7) % SEED.length].src);
+  if (r <= 3) board = [1, 2, 3].map(k => k === r ? row(k, '', sc, entrySrc(e), true) : row(k, h[(e.seed + k * 3) % 8], sc + (k < r ? 2 : -1), SEED[(e.seed + k * 3) % SEED.length].src)).join('') + row(4, h[(e.seed + 2) % 8], sc - 1, SEED[(e.seed + 9) % SEED.length].src);
+  else board += (r > 4 ? '<div class="dots">···</div>' : '') + row(r - 1, h[(e.seed + 1) % 8], sc + 1, SEED[(e.seed + 5) % SEED.length].src) + row(r, '', sc, entrySrc(e), true) + (r < e.n ? row(r + 1, h[(e.seed + 6) % 8], sc, SEED[(e.seed + 2) % SEED.length].src) : '');
+  lvShow(`<div class="lv-in">
+    <div class="lv-top"><button class="lv-back" id="lvBack" aria-label="Back to competitions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="lv-t">${cxPill(c)}<h2>${esc(c.t)}</h2></div><span class="lv-live">LIVE</span></div>
+    <div class="lv-cd"><span>Results in</span><b id="lvCd">${fmtClock(e.end - now)}</b></div>
+    <div class="lv-hero k-${c.k}"><img src="${entrySrc(e)}" alt="Your entry"><div class="ov"><div><small>YOUR RANK</small><b>#${r.toLocaleString()}</b><span>of ${e.n.toLocaleString()} entries</span></div>
+      <div class="mvb">${d ? `<i class="${d > 0 ? 'up' : 'dn'}">${d > 0 ? '▲' : '▼'} ${Math.abs(d)}</i>` : '<i>–</i>'}<span>in the last 10 min</span></div></div></div>
+    <div class="lv-box"><div class="hd"><b>Your climb</b><span>Entered at #${e.startR.toLocaleString()}</span></div>
+      <svg viewBox="0 0 340 90" class="lv-chart" role="img" aria-label="Rank chart from ${pts[0]} to ${r}"><line x1="0" y1="88" x2="340" y2="88" stroke="#202A48"/><line x1="0" y1="45" x2="340" y2="45" stroke="#202A48" stroke-dasharray="3 4"/>
+        <polyline points="${poly}" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${last[0]}" cy="${last[1]}" r="5" fill="currentColor"/></svg>
+      <div class="ax"><span>Entered</span><span>Now</span></div></div>
+    <div class="lv-box"><div class="hd"><b>Prizes</b><span class="nx">${nextLine}</span></div>
+      ${lad.map((t, i) => `<div class="lad${i === mine ? ' me' : ''}"><span>${t.l}${i === mine ? ` <em>YOU · #${r}</em>` : ''}</span><b>${fmtMoney(t.p.amt, t.p.cur)}${t.each ? ' each' : ''}</b></div>`).join('')}
+      <p class="ft">Top 10% win. ${curOf(c) === 'gems' ? 'Lower places win 25 gems.' : 'Places 11 and below in the top 10% win $1 Bonus Cash.'}</p></div>
+    <div class="lv-box"><div class="hd"><b>Leaderboard</b></div>${board}</div>
+    <div class="lv-lock"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h1a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 6 10zm2.5 0h5V7.5a2.5 2.5 0 0 0-5 0z"/></svg>
+      <span>Your entry is locked in at <b>${e.score}</b>. Ranks move as judges vote. Enter a stronger photo next time to climb higher.</span></div>
+  </div>`);
+  $('#lv').scrollTop = y;
+  $('#lvBack').onclick = lvClose;
+}
+
+/* results */
+function settle(e) {
+  if (e.done) return;
+  const c = CX.find(x => x.id === e.cid), pz = prizeFor(c, e.fin, e.n);
+  e.done = true; e.seen = false; e.prize = pz;
+  if (pz) { if (pz.cur === 'cash') S.cash = +((S.cash || 0) + pz.amt).toFixed(2); else if (pz.cur === 'bonus') S.bonus = +((S.bonus || 0) + pz.amt).toFixed(2); else S.gems += pz.amt; }
+  if (S.entered[e.cid] === e.id) delete S.entered[e.cid];
+  save();
+}
+function openResult(e) {
+  const c = CX.find(x => x.id === e.cid), pz = e.prize, top = paidTop(e.n), climbed = e.startR - e.fin;
+  LV = { e: null, last: null }; e.seen = true; save();
+  const ord = n => n + (['th', 'st', 'nd', 'rd'][(n % 100 - 20) % 10] || ['th', 'st', 'nd', 'rd'][n % 100] || 'th');
+  const stats = `<div class="rs-stats"><div><b>${e.score}</b><small>Your score</small></div><div><b class="${climbed >= 0 ? 'up' : 'dn'}">${climbed >= 0 ? '▲' : '▼'}${Math.abs(climbed).toLocaleString()}</b><small>Places ${climbed >= 0 ? 'climbed' : 'dropped'}</small></div><div><b>Top ${Math.max(1, Math.ceil(e.fin / e.n * 100))}%</b><small>Of entries</small></div></div>`;
+  const low = lowest(S.photos.find(x => x.id === e.pid)?.s || { light: 0, comp: 0, colour: 0, subject: 0, tech: 0 });
+  lvShow(pz ? `<div class="lv-in rs win">${cxPill(c)}<span class="rs-sub">${esc(c.t)} · Final</span>
+      <svg class="rs-tro" viewBox="0 0 96 96" aria-hidden="true"><path d="M28 12h40v22a20 20 0 0 1-40 0z" fill="#FFC93C"/><path d="M28 18H16a12 12 0 0 0 14 15M68 18h12a12 12 0 0 1-14 15" stroke="#E79A00" stroke-width="5" fill="none"/><path d="M43 52h10v14H43z" fill="#E79A00"/><path d="M30 82a18 10 0 0 1 36 0z" fill="#FFC93C"/><rect x="28" y="80" width="40" height="8" rx="3" fill="#B9761A"/></svg>
+      <h2>You placed ${ord(e.fin)}</h2><p>out of ${e.n.toLocaleString()} entries</p>
+      <div class="rs-won"><small>YOU WON</small><b>${fmtMoney(pz.amt, pz.cur)}</b><span>Added to your ${pz.cur === 'cash' ? 'Cash' : pz.cur === 'bonus' ? 'Bonus Cash' : 'Gems'} balance</span></div>
+      ${stats}<img class="rs-img" src="${entrySrc(e)}" alt="Your winning entry">
+      <button class="bt-cta" id="rsNext">Enter the next one</button><button class="bt-no" id="rsBack">Back to competitions</button></div>`
+    : `<div class="lv-in rs miss">${cxPill(c)}<span class="rs-sub">${esc(c.t)} · Final</span>
+      <img class="rs-img" src="${entrySrc(e)}" alt="Your entry">
+      <h2>You finished #${e.fin.toLocaleString()}</h2><p>out of ${e.n.toLocaleString()} entries</p>
+      <div class="rs-close"><div class="hd"><b>${e.fin - top <= 60 ? 'So close' : 'Keep going'}</b><span>${(e.fin - top).toLocaleString()} places from a prize</span></div>
+        <div class="bar"><i style="width:${Math.max(8, 100 - (e.fin - top) / e.n * 100)}%"></i></div>
+        <div class="ax"><span>You · #${e.fin.toLocaleString()}</span><span class="g">Prizes to #${top}</span></div>
+        <p>${catBy(low).name} is your lowest score, so that's the fix most likely to lift your next entry.</p></div>
+      ${stats}
+      <button class="bt-cta" id="rsNext">Enter the next one</button><button class="bt-no" id="rsStudio">Improve this photo in the Studio</button></div>`);
+  $('#lv').scrollTop = 0; paintWallet(); paintGems(false);
+  if (pz && pz.cur === 'gems') setTimeout(() => gemExplosion(pz.amt, { label: `${c.t} prize` }), 400);
+  const back = () => { lvClose(); if ($('#flow').classList.contains('cxmode')) openComps(); };
+  if ($('#rsBack')) $('#rsBack').onclick = back;
+  $('#rsNext').onclick = () => { lvClose(); openComps(); };
+  if ($('#rsStudio')) $('#rsStudio').onclick = () => { lvClose(); S.cur = e.pid; save(); closeFlow(); go('studio'); };
+}
+setInterval(() => {
+  const now = Date.now(); let fresh = null;
+  (S.entries || []).forEach(e => { if (!e.done && now >= e.end) { settle(e); fresh = e; } });
+  if (LV.e) paintLive();
+  if (!fresh) return;
+  const busy = $('#battle').classList.contains('on') || $('#sheet').classList.contains('on') || ($('#flow').classList.contains('on') && !$('#flow').classList.contains('cxmode'));
+  if ($('#app').classList.contains('on') && !busy) openResult(fresh);
+  else toast(`Results are in for ${CX.find(x => x.id === fresh.cid).t}. Open Compete to see them.`);
+}, 1000);
 function cxEnter(c) {
   const need = cxNeed(c), q = S.photos.filter(p => cxFits(c, p) && p.s.total >= need).sort((a, b) => b.s.total - a.s.total)[0];
   if (!q) {
@@ -1890,9 +2162,9 @@ function cxEnter(c) {
   if (c.k === 'gem') { if (!spend(c.fee, `${c.t} costs ${c.fee} gems to enter.`)) return; }
   else if (c.k === 'bc') { if ((S.bonus || 0) < c.fee) { openStore(`${c.t} costs $${c.fee.toFixed(2)} Bonus Cash to enter.`); return; } S.bonus = +(S.bonus - c.fee).toFixed(2); }
   else { if ((S.cash || 0) < c.fee) { openStore(`${c.t} costs $${c.fee} Cash to enter.`); return; } S.cash = +(S.cash - c.fee).toFixed(2); }
-  S.entered[c.id] = q.id; save(); paintWallet(); paintGems(false);
+  const e = makeEntry(c, q); S.entries.push(e); S.entered[c.id] = e.id; save(); paintWallet(); paintGems(false);
   const y = $('#flowBody').scrollTop; openComps(); $('#flowBody').scrollTop = y;
-  toast(`Entered ${c.t} with your ${q.s.total} photo. Good luck!`);
+  toast(`Entered ${c.t} with your ${q.s.total} photo. It's locked in. Good luck!`);
 }
 function openMenu() {
   const qn = S.photos.filter(p => p.s.total >= CFG.QUALIFY).length;
@@ -2399,6 +2671,7 @@ function renderStudio() {
     <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${stage === 2 ? '<span class="qbadge">Competition ready</span>' : stage === 1 ? '<span class="qbadge" style="background:var(--good)">Gallery ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to see original</span>' : ''}</div>
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, true)}</div>
     <p class="to80">${p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
+    ${(S.entries || []).filter(e => e.pid === p.id && !e.done).map(e => `<p class="lockn">Entered in <b>${esc(CX.find(x => x.id === e.cid).t)}</b> at ${e.score}. Changes here won’t affect that entry.</p>`).join('')}
     ${stage === 2 ? '<div class="qrow"><button class="btn small" id="stComp">Enter a competition</button></div>' : ''}
     <h3 class="sec">Improve a category</h3>
     <div class="fixes">${sorted.map((c, i) => `<button class="fix ${i === 0 ? 'top1' : ''}" data-c="${c.k}" aria-label="Improve ${c.name}, now ${p.s[c.k]}, costs ${CFG.COST} gems"><div class="t"><b>${c.name}<span class="sv">${p.s[c.k]}</span></b><i class="mb"><i style="width:${p.s[c.k]}%"></i></i><span>${c.tip}${i === 0 ? '. Biggest opportunity' : ''}</span></div><span class="imp">Improve<span class="gp">${gemIcon()}${CFG.COST}</span></span></button>`).join('')}</div>
