@@ -936,6 +936,55 @@ button.bar:hover span:first-child{color:var(--pink)}
 .vcard .s .ck{flex-basis:100%;font-family:Figtree,sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .vcard .ov{padding:0 12px 6px;font-size:.82rem;font-weight:700;color:var(--muted)}
 .vcard .ov b{font-weight:800}
+/* ---------- Battle screen (full screen) ---------- */
+.battle{position:absolute;left:0;right:0;bottom:0;z-index:25;display:none;overflow-y:auto;overscroll-behavior:contain;color:#2A0C4E;
+  background:radial-gradient(70% 30% at 15% 20%,rgba(255,255,255,.7),transparent 70%),radial-gradient(80% 40% at 90% 60%,rgba(214,170,255,.55),transparent 70%),linear-gradient(180deg,#F4E8FF 0%,#EAD7FB 50%,#E3CCF8 100%)}
+.battle.on{display:block;animation:btIn .35s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes btIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.bt-in{max-width:480px;margin:0 auto;padding:0 14px 22px;text-align:center}
+.bt-logo{display:block;width:84%;max-width:360px;height:auto;aspect-ratio:740/265;margin:0 auto -2px}
+.bt-h{font:800 clamp(1.15rem,5.5vw,2rem)/1.1 "Bricolage Grotesque",Figtree,sans-serif;letter-spacing:-.02em;color:#2A0C4E;margin:2px 0 10px;overflow-wrap:anywhere}
+.bt-rib{display:inline-flex;align-items:center;gap:12px;padding:8px 26px;color:#fff;font-weight:800;font-size:1.05rem;letter-spacing:.09em;text-transform:uppercase;
+  background:linear-gradient(180deg,#8A3CF0,#5B1CB8);clip-path:polygon(4% 0,96% 0,100% 50%,96% 100%,4% 100%,0 50%);box-shadow:inset 0 0 0 2px #E7B958}
+.bt-rib svg{width:22px;height:22px}
+.bt-rule{display:flex;align-items:center;gap:12px;margin:12px 0 14px;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.45);font:italic 800 1.08rem/1.2 Figtree,sans-serif;color:#3A1660}
+.bt-rule::before,.bt-rule::after{content:"";flex:1;height:2px;background:#3A1660;opacity:.6;max-width:44px;margin:0 auto}
+.bt-rule span{flex:none}
+.bt-cards{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bt-card{position:relative;margin:0;aspect-ratio:3/4.3;border-radius:22px;overflow:hidden;background:#2A0A48;isolation:isolate}
+.bt-card>img{position:absolute;left:0;right:0;top:0;width:100%;height:72%;object-fit:cover;object-position:center 40%;z-index:-1}
+.bt-card.me{box-shadow:0 0 0 3px #F6C453,0 0 0 5px rgba(255,214,120,.45),0 0 22px rgba(255,190,60,.6)}
+.bt-card.them{box-shadow:0 0 0 3px #CDA8FF,0 0 0 5px rgba(205,168,255,.4),0 0 22px rgba(170,110,255,.55)}
+.bt-card figcaption{position:absolute;left:0;right:0;bottom:0;display:grid;justify-items:center;padding:34px 0 0;color:#fff;
+  background:linear-gradient(180deg,transparent 0,rgba(58,15,94,.88) 32%,#3A0F5E 60%,#2B0A48 100%)}
+.bt-card .lab{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.8rem;letter-spacing:.07em;text-transform:uppercase}
+.bt-card .lab::before,.bt-card .lab::after{content:"";width:14px;height:1.5px;background:currentColor;opacity:.7}
+.bt-card b{position:relative;display:flex;align-items:flex-start;justify-content:center;font:400 clamp(3rem,15vw,4.4rem)/1 "Archivo Black","Arial Black",sans-serif;letter-spacing:-.03em;margin:4px 0 8px;min-height:1em}
+.bt-card b svg{position:absolute;right:-30px;top:-6px;transform:rotate(14deg);filter:drop-shadow(0 2px 6px rgba(255,190,0,.6))}
+.bt-card b .q{position:absolute;right:-30px;top:6px;width:26px;height:32px;border-radius:6px;display:grid;place-items:center;font:800 1rem/1 Figtree,sans-serif;font-style:normal;color:#E6CCFF;box-shadow:inset 0 0 0 2px #B98CFF;transform:rotate(12deg)}
+.bt-card b.spin{color:#FFC93C}
+.bt-card .who{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:8px 6px;background:rgba(20,4,36,.55);font-weight:700;font-size:.85rem;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.bt-card .who svg{width:15px;height:15px;flex:none}
+.bt-card.won{animation:btWon 1s ease-out}
+@keyframes btWon{30%{transform:scale(1.05)}}
+.bt-vs{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:2;font:italic 800 1.9rem/1 "Bricolage Grotesque",sans-serif;color:#FF2D8E;text-shadow:0 0 0 #fff,0 2px 0 #fff,0 -2px 0 #fff,2px 0 0 #fff,-2px 0 0 #fff}
+.bt-stakes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.bt-st,.bt-res{position:relative;display:grid;justify-items:center;padding:24px 8px 10px;border-radius:20px;color:#fff;margin-top:10px}
+.bt-st.win,.bt-res.win{background:linear-gradient(160deg,#2BC983,#0D7A4B);box-shadow:0 0 0 2px #7DF2B5,0 0 20px rgba(46,229,157,.45)}
+.bt-st.lose,.bt-res.lose{background:linear-gradient(160deg,#F23C9C,#A10F64);box-shadow:0 0 0 2px #FF9AD0,0 0 20px rgba(255,45,142,.45)}
+.bt-st .tag,.bt-res .tag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:5px 14px;border-radius:999px;background:#1E0B30;box-shadow:inset 0 0 0 1.5px #E7B958;font-weight:800;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+.bt-st b,.bt-res b{display:flex;align-items:center;gap:4px;font:400 clamp(2rem,10vw,2.8rem)/1 "Archivo Black","Arial Black",sans-serif;letter-spacing:-.03em;text-shadow:0 2px 0 rgba(0,0,0,.18)}
+.bt-st b svg,.bt-res b svg{width:.8em;height:.8em}
+.bt-st small{display:flex;align-items:center;gap:8px;margin-top:4px;font-weight:800;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase}
+.bt-st small::before,.bt-st small::after{content:"";width:16px;height:1.5px;background:currentColor;opacity:.7}
+.bt-res{padding:26px 16px 14px;margin-top:22px}
+.bt-res p{margin:6px 0 0;font-weight:600;font-size:.95rem;opacity:.95}
+.bt-note{margin:12px 0 0;font-size:.85rem;color:#5A3D7E}
+.bt-cta{display:block;width:100%;min-height:64px;margin-top:16px;border-radius:999px;color:#fff;font:800 1.6rem/1 "Bricolage Grotesque",Figtree,sans-serif;text-transform:uppercase;letter-spacing:.01em;
+  background:linear-gradient(95deg,#F030A0,#C126D8 50%,#8E3CFF);box-shadow:0 0 0 3px rgba(255,255,255,.6),0 14px 28px -10px rgba(190,40,200,.8);transition:transform .15s}
+.bt-cta:active{transform:scale(.97)}
+.bt-cta[disabled]{opacity:.7}
+.bt-no{margin-top:10px;padding:8px;color:#4B1FA0;font-weight:700;font-size:1.1rem;text-decoration:underline;text-underline-offset:4px}
 </style>
 </head>
 <body>
@@ -1016,6 +1065,7 @@ button.bar:hover span:first-child{color:var(--pink)}
     <div class="scrim" id="scrim"></div>
     <div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div id="sheetBody"></div></div>
     <div class="coach" id="coach"></div>
+    <div class="battle" id="battle" role="dialog" aria-modal="true" aria-label="Battle"></div>
     <div class="toast" id="toast" role="status"></div>
   </div>
 </div>
@@ -1906,6 +1956,7 @@ const LEVELS = [[0, 'Newcomer'], [1, 'Snapshooter'], [3, 'Rising Creator'], [6, 
 const TROPHY = '<svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><defs><linearGradient id="trG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A6"/><stop offset=".5" stop-color="#F2B637"/><stop offset="1" stop-color="#B9761A"/></linearGradient></defs><path d="M14 6h20v11a10 10 0 0 1-20 0z" fill="url(#trG)"/><path d="M14 9H8.5a5.5 5.5 0 0 0 7 7.5M34 9h5.5a5.5 5.5 0 0 1-7 7.5" stroke="#E2A43A" stroke-width="2.6" fill="none"/><path d="M21.5 26h5v7h-5z" fill="#D18F2A"/><path d="M15 41a9 6 0 0 1 18 0z" fill="url(#trG)"/><rect x="13" y="40" width="22" height="4" rx="1.5" fill="#B9761A"/><path d="M19 9.5v6" stroke="#fff" stroke-opacity=".6" stroke-width="2.2" stroke-linecap="round"/></svg>';
 const CROWN = (c = '#7B3CFF', w = 30) => `<svg viewBox="0 0 32 24" width="${w}" height="${w * 0.75}" aria-hidden="true"><path d="M3 7l6.5 6L16 3l6.5 10L29 7l-2.6 13H5.6z" fill="${c}"/><rect x="5.5" y="19.5" width="21" height="3" rx="1.2" fill="${c}"/><circle cx="3" cy="6.5" r="2" fill="${c}"/><circle cx="16" cy="2.5" r="2" fill="${c}"/><circle cx="29" cy="6.5" r="2" fill="${c}"/></svg>`;
 const HOUSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5M10 20v-5h4v5"/></svg>';
+const BT_USER = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4.3 4-6.5 8-6.5s7.2 2.2 8 6.5z"/></svg>';
 const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const LOCK = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h1a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 6 10zm2.5 0h5V7.5a2.5 2.5 0 0 0-5 0z"/></svg>';
 
@@ -2273,32 +2324,50 @@ function openBattle() {
   const me = mine.reduce((a, p) => (p.s.total > a.s.total ? p : a));
   const o = OPP[Math.floor(Math.random() * OPP.length)];
   const theirs = battleRival(me.cat);
-  const their = Math.max(60, Math.min(97, theirs.score + Math.round(rnd(-4, 3))));
+  const their = Math.max(55, Math.min(97, Math.round((theirs.score + me.s.total) / 2 + rnd(-5, 5))));
   const vault = S.vault[o.h];
   const win = Math.floor(vault * CFG.STEAL), lose = Math.floor(S.gems * CFG.STEAL);
-  openSheet(`<img class="blogo" src="${BATTLE_LOGO}" alt="Battle"><h2>@${esc(o.h)} wants a battle</h2><p class="sub">${esc(pcatName(me.cat))} battle. Your best ${esc(pcatName(me.cat))} photo against theirs. The crowd votes, and the winner takes half the loser’s gems.</p>
-    <div class="vs"><figure><img src="${me.src}" alt="Your photo"><figcaption><b>${me.s.total}</b>You</figcaption></figure><span class="x">vs</span>
-    <figure><img src="${theirs.src}" alt="Their photo"><figcaption><b aria-label="Score hidden">?</b>@${esc(o.h)}</figcaption></figure></div>
-    <div class="stakes"><span>Win and take<b>${gemIcon()}${win.toLocaleString()}</b></span><span style="text-align:right">Lose and give up<b style="justify-content:flex-end">${gemIcon()}${lose.toLocaleString()}</b></span></div>
-    ${me.s.total < CFG.QUALIFY ? `<p class="note" style="margin:-4px 0 12px">Your photo hasn’t hit ${CFG.QUALIFY} yet. Enhancing it first improves your odds.</p>` : ''}
-    <div id="bArea"><button class="btn block" id="bGo">Battle</button><div style="text-align:center"><button class="link" id="bNo">Not now</button></div></div>`);
-  $('#bNo').onclick = closeSheet;
+  const cat = pcatName(me.cat);
+  const bt = $('#battle');
+  bt.style.top = ($('.wallet').offsetTop + $('.wallet').offsetHeight + 2) + 'px';
+  bt.innerHTML = `<div class="bt-in">
+    <img class="bt-logo" src="${BATTLE_LOGO}" alt="Battle">
+    <h2 class="bt-h">@${esc(o.h)} challenges you</h2>
+    <div class="bt-rib">${gi(me.cat)}<span>${esc(cat)} battle</span>${gi(me.cat)}</div>
+    <p class="bt-rule"><span>Higher score wins the battle</span></p>
+    <div class="bt-cards">
+      <figure class="bt-card me"><img src="${me.src}" alt="Your photo"><figcaption><span class="lab">Your score</span><b>${me.s.total}${CROWN('#FFC93C', 34)}</b><span class="who">${BT_USER}You</span></figcaption></figure>
+      <span class="bt-vs">vs</span>
+      <figure class="bt-card them"><img src="${theirs.src}" alt="Their photo"><figcaption><span class="lab">Their score</span><b id="btTheir">?<i class="q">?</i></b><span class="who">${BT_USER}@${esc(o.h)}</span></figcaption></figure>
+    </div>
+    <div id="bArea">
+      <div class="bt-stakes">
+        <div class="bt-st win"><span class="tag">If you win</span><b>+${win.toLocaleString()}${gemIcon('')}</b><small>Gems</small></div>
+        <div class="bt-st lose"><span class="tag">If you lose</span><b>−${lose.toLocaleString()}${gemIcon('')}</b><small>Gems</small></div>
+      </div>
+      ${me.s.total < CFG.QUALIFY ? `<p class="bt-note">Your photo hasn’t hit ${CFG.QUALIFY} yet. Enhancing it first improves your odds.</p>` : ''}
+      <button class="bt-cta" id="bGo">Accept battle</button>
+      <button class="bt-no" id="bNo">Not now</button>
+    </div></div>`;
+  bt.scrollTop = 0; bt.classList.add('on');
+  const close = () => bt.classList.remove('on');
+  $('#bNo').onclick = close;
   $('#bGo').onclick = async () => {
-    sheetLocked = true;
-    const pWin = 1 / (1 + Math.exp(-(me.s.total - their) / 3.5));
-    let mine = Math.round(100 * (0.5 + (pWin - 0.5) * 0.8) + rnd(-6, 6)); mine = Math.max(4, Math.min(96, mine)); if (mine === 50) mine = Math.random() < pWin ? 51 : 49;
-    $('#bArea').innerHTML = `<div class="vcount"><span>You <span id="vM">0</span></span><span><span id="vT">0</span> @${esc(o.h)}</span></div><div class="votebar"><i id="vBar"></i></div><p class="muted" style="text-align:center;margin:6px 0 0" id="vMsg">The crowd is voting…</p>`;
-    requestAnimationFrame(() => requestAnimationFrame(() => { $('#vBar').style.width = mine + '%'; }));
-    const t0 = performance.now();
-    await new Promise(res => { const step = now => { const k = Math.min(1, (now - t0) / 2400), e = 1 - Math.pow(1 - k, 3); $('#vM').textContent = Math.round(mine * e); $('#vT').textContent = Math.round((100 - mine) * e); if (k < 1) requestAnimationFrame(step); else res(); }; requestAnimationFrame(step); });
-    const won = mine > 50;
+    $('#bGo').disabled = true; $('#bNo').style.visibility = 'hidden';
+    const el = $('#btTheir'), t0 = performance.now();
+    el.classList.add('spin');
+    await new Promise(res => { const step = now => { const k = (now - t0) / 1800; if (k < 1) { el.textContent = Math.round(rnd(55, 97)); requestAnimationFrame(step); } else res(); }; requestAnimationFrame(step); });
+    el.classList.remove('spin'); el.textContent = their;
+    const won = me.s.total > their || (me.s.total === their && Math.random() < 0.5);
     if (won) { S.gems += win; S.vault[o.h] = vault - win; S.bw++; } else { S.gems -= lose; S.vault[o.h] = vault + lose; S.bl++; }
-    save(); if (won) setTimeout(() => gemExplosion(win, { label: `Taken from @${o.h}` }), 200); else paintGems();
-    $('#vMsg').outerHTML = `<div class="result" style="text-align:center"><h3>${won ? `You won ${win.toLocaleString()} gems` : `@${esc(o.h)} took ${lose.toLocaleString()} gems`}</h3>
-      <p class="muted" style="margin:0 0 14px">${won ? 'Half their vault is yours.' : 'Better luck next time. A stronger photo wins more battles.'}</p>
-      <button class="btn block" id="bDone">${won ? 'Keep judging' : 'Improve my photo'}</button></div>`;
-    sheetLocked = false;
-    $('#bDone').onclick = () => { closeSheet(); if (!won) go('studio'); };
+    save();
+    bt.querySelector(won ? '.bt-card.me' : '.bt-card.them').classList.add('won');
+    $('#bArea').innerHTML = `<div class="bt-res ${won ? 'win' : 'lose'}"><span class="tag">${won ? 'You won' : `@${esc(o.h)} won`}</span>
+        <b>${won ? '+' : '−'}${(won ? win : lose).toLocaleString()}${gemIcon('')}</b>
+        <p>${me.s.total === their ? 'Tied scores. The crowd broke the tie.' : won ? `Your ${me.s.total} beat their ${their}. Half their gems are yours.` : `Their ${their} beat your ${me.s.total}. A stronger photo wins more battles.`}</p></div>
+      <button class="bt-cta" id="bDone">${won ? 'Keep judging' : 'Improve my photo'}</button>`;
+    if (won) setTimeout(() => gemExplosion(win, { label: `Taken from @${o.h}` }), 250); else paintGems();
+    $('#bDone').onclick = () => { close(); if (!won) go('studio'); };
   };
 }
 
