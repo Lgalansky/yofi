@@ -933,6 +933,9 @@ button.bar:hover span:first-child{color:var(--pink)}
 .hxp-exp:focus-visible{outline:3px solid #7B3CFF;outline-offset:4px}
 .hxp-logo{border-radius:14px}
 .hxp-logo:active{background:rgba(123,60,255,.1)}
+.vcard .s .ck{flex-basis:100%;font-family:Figtree,sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.vcard .ov{padding:0 12px 6px;font-size:.82rem;font-weight:700;color:var(--muted)}
+.vcard .ov b{font-weight:800}
 </style>
 </head>
 <body>
@@ -1618,18 +1621,19 @@ function renderVariants(top) {
   const letters = ['A', 'B', 'C'];
   $('#enArea').innerHTML = `<p class="muted" style="margin:0 0 10px">Every version improves your ${catBy(EN.cat).name} score. Pick the one you like. You only spend ${CFG.COST} gems when you use it.</p>
   <div class="vgrid">${variants.map((v, i) => {
-    const d = v.s.total - p.s.total;
-    return `<button class="vcard" data-i="${i}" aria-pressed="${EN.sel === i}" aria-label="Version ${letters[i]}, ${v.label}, score ${v.s.total}">
+    const d = v.s.total - p.s.total, c = v.s[EN.cat] - p.s[EN.cat], nm = catBy(EN.cat).short;
+    return `<button class="vcard" data-i="${i}" aria-pressed="${EN.sel === i}" aria-label="Version ${letters[i]}, ${v.label}, ${nm} ${v.s[EN.cat]}, overall ${v.s.total}">
       ${i === top ? '<span class="best">Best</span>' : ''}<img src="${v.src}" alt="">
-      <div class="s">${v.s.total}${d > 0 ? `<small class="up">+${d}</small>` : `<small class="up cg">${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}</small>`}</div>
+      <div class="s"><span class="ck">${nm}</span>${v.s[EN.cat]}<small class="up">+${c}</small></div>
+      <div class="ov">Overall ${v.s.total}${d > 0 ? ` <b class="up">+${d}</b>` : ''}</div>
       <div class="l"><b style="color:var(--ink)">${v.label}</b><br>${v.note}</div></button>`;
   }).join('')}</div>
   <div class="actions"><button class="btn block fixbtn" id="useBtn"><span id="useT"></span><span class="gpill">${gemIcon()}${CFG.COST}</span></button></div>`;
   $('#flowBack').style.visibility = 'visible';
   const paint = () => {
     document.querySelectorAll('#enArea [data-i]').forEach(x => x.setAttribute('aria-pressed', +x.dataset.i === EN.sel));
-    const v = variants[EN.sel], d = v.s.total - p.s.total;
-    $('#useT').textContent = `Use version ${letters[EN.sel]} (${d > 0 ? '+' + d : `${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}`})`;
+    const v = variants[EN.sel];
+    $('#useT').textContent = `Use ${letters[EN.sel]} · ${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}`;
   };
   document.querySelectorAll('#enArea [data-i]').forEach(x => x.onclick = () => { EN.sel = +x.dataset.i; paint(); });
   paint();
