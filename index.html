@@ -1124,6 +1124,14 @@ button.bar:hover span:first-child{color:var(--pink)}
 .enmax b{font-size:1rem}
 .enmax span{font-size:.88rem;color:var(--muted)}
 .enmax .btn{justify-self:start;margin-top:4px}
+.lockc{display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;background:color-mix(in srgb,var(--violet) 10%,var(--card));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--violet) 35%,var(--line))}
+.lockc>svg{flex:none;width:26px;height:26px;color:var(--violet)}
+.lockc>div{flex:1;display:grid;gap:3px;min-width:0}
+.lockc>div>b{font-size:1.05rem}
+.lockc span{font-size:.86rem;color:var(--muted)}
+.lockc span b{color:var(--ink)}
+.lockc .lockt b{color:var(--pink);font-variant-numeric:tabular-nums}
+.lockc .btn{flex:none}
 </style>
 </head>
 <body>
@@ -1791,7 +1799,10 @@ function bindCats() {
     EN.variants = null; enIdle();
   });
 }
+const photoLock = p => p && (S.entries || []).find(e => e.pid === p.id && !e.done && Date.now() < e.end);
+function lockToast(e) { toast(`This photo is in ${CX.find(x => x.id === e.cid).t}. You can improve it again when the results are in.`); }
 function startEnhance(p, cat) {
+  const lk = photoLock(p); if (lk) { lockToast(lk); return; }
   openEnhance(p, cat);
   if (S.gems >= CFG.COST) generate(1);
   else openStore(`Each fix costs ${CFG.COST} gems and you have ${S.gems}.`);
@@ -2744,24 +2755,28 @@ function renderStudio() {
     st.innerHTML = `<span class="hint">Flick down to judge</span><div class="empty"><h2>No photos yet</h2><p>Score your first photo to start enhancing it.</p><button class="btn" id="stAdd">Score a photo</button></div>`;
     $('#stAdd').onclick = () => pickPhoto(true); return;
   }
-  const tot = p.s.total, stage = stageOf(tot);
+  const tot = p.s.total, stage = stageOf(tot), lk = photoLock(p);
   const sorted = C.slice().sort((a, b) => p.s[a.k] - p.s[b.k]);
-  const msg = stage === 2 ? `<strong>Competition ready.</strong> Keep improving it to win more battles and climb competition rankings. Started at ${p.start}, ${p.enh} fix${p.enh === 1 ? '' : 'es'} so far.`
+  const msg = stage === 2 ? `<strong>Competition ready.</strong> ${lk ? 'Entered and locked until the results are in.' : 'Keep improving it to win more battles and climb competition rankings.'} Started at ${p.start}, ${p.enh} fix${p.enh === 1 ? '' : 'es'} so far.`
     : stage === 1 ? `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions.`
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
   st.innerHTML = `<span class="hint">Flick down to judge</span>
     <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to see original</span>' : ''}</div>
-    <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, true)}</div>
+    <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk)}</div>
     <p class="to80">${p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
-    ${(S.entries || []).filter(e => e.pid === p.id && !e.done).map(e => `<p class="lockn">Entered in <b>${esc(CX.find(x => x.id === e.cid).t)}</b> at ${e.score}. Changes here won’t affect that entry.</p>`).join('')}
     ${stage >= 1 ? `<div class="qrow">${Object.values(S.frames || {}).includes(p.id) ? '' : '<button class="btn small quiet" id="stHang">Hang it in my gallery</button>'}${stage === 2 ? '<button class="btn small" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
     <h3 class="sec">Improve a category</h3>
-    <div class="fixes">${sorted.map((c, i) => `<button class="fix ${i === 0 ? 'top1' : ''}" data-c="${c.k}" aria-label="Improve ${c.name}, now ${p.s[c.k]}, costs ${CFG.COST} gems"><div class="t"><b>${c.name}<span class="sv">${p.s[c.k]}</span></b><i class="mb"><i style="width:${p.s[c.k]}%"></i></i><span>${c.tip}${i === 0 ? '. Biggest opportunity' : ''}</span></div><span class="imp">Improve<span class="gp">${gemIcon()}${CFG.COST}</span></span></button>`).join('')}</div>
+    ${lk ? `<div class="lockc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h1a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 6 10zm2.5 0h5V7.5a2.5 2.5 0 0 0-5 0z"/></svg>
+      <div><b>Improvements locked</b><span>This photo is entered in <b>${esc(CX.find(x => x.id === lk.cid).t)}</b> at ${lk.score}. You can improve it again when the results are in.</span>
+      <span class="lockt">Results in <b data-ll="${lk.id}">${fmtLeft(Math.max(0, lk.end - Date.now()))}</b></span></div>
+      <button class="btn small" id="stLive">View live</button></div>` : `<div class="fixes">${sorted.map((c, i) => `<button class="fix ${i === 0 ? 'top1' : ''}" data-c="${c.k}" aria-label="Improve ${c.name}, now ${p.s[c.k]}, costs ${CFG.COST} gems"><div class="t"><b>${c.name}<span class="sv">${p.s[c.k]}</span></b><i class="mb"><i style="width:${p.s[c.k]}%"></i></i><span>${c.tip}${i === 0 ? '. Biggest opportunity' : ''}</span></div><span class="imp">Improve<span class="gp">${gemIcon()}${CFG.COST}</span></span></button>`).join('')}</div>`}
     <h3 class="sec">Your photos</h3>
     <div class="strip">${S.photos.map(x => `<button data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}"><img src="${x.src}" alt=""><span>${x.s.total}</span></button>`).join('')}
     ${S.photos.length < CFG.MAX_PHOTOS ? '<button class="add" id="stNew" aria-label="Score a new photo">+</button>' : ''}</div>`;
   animateRing(st);
   st.querySelectorAll('.fix').forEach(b => b.onclick = () => startEnhance(p, b.dataset.c));
+  if ($('#stLive')) $('#stLive').onclick = () => { openComps(); openLive(lk); };
+  clearInterval(window.__stLock); if (lk) window.__stLock = setInterval(() => { const el = st.querySelector(`[data-ll="${lk.id}"]`); if (!el || !document.contains(el)) { clearInterval(window.__stLock); return; } el.textContent = fmtLeft(Math.max(0, lk.end - Date.now())); if (Date.now() >= lk.end) { clearInterval(window.__stLock); renderStudio(); } }, 1000);
   st.querySelectorAll('[data-fix]').forEach(b => b.onclick = () => startEnhance(p, b.dataset.fix));
   st.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { S.cur = b.dataset.p; save(); renderStudio(); });
   if ($('#stNew')) $('#stNew').onclick = () => pickPhoto(true);
