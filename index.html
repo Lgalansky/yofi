@@ -2154,7 +2154,7 @@ function cxEnter(c) {
     const bestP = S.photos.filter(p => cxFits(c, p)).sort((a, b) => b.s.total - a.s.total)[0];
     const what = c.lab ? `${c.lab} photos` : 'photos';
     openSheet(`<h2>${bestP ? `Get a photo to ${need}` : `You need ${c.lab ? 'a ' + c.lab : 'a'} photo`}</h2><p class="sub">${esc(c.t)} takes ${what} scoring ${need} or more.${bestP ? ` Your best one is at ${bestP.s.total}, ${need - bestP.s.total} points away.` : ` You don’t have one yet. Score a new photo and pick ${c.lab ? c.lab : 'its category'} when you upload it.`}</p>
-      <div class="actions">${bestP ? '<button class="btn block" id="cxFix">Enhance my best photo</button>' : ''}<button class="btn ${bestP ? 'quiet ' : ''}block" id="cxNew">Score a new photo</button></div>`);
+      <div class="actions">${bestP ? '<button class="btn block" id="cxFix">Enhance my best photo</button>' : ''}<button class="btn ${bestP ? 'quiet ' : ''}block" id="cxNew">Upload a new photo</button></div>`);
     if ($('#cxFix')) $('#cxFix').onclick = () => { closeSheet(); closeFlow(); S.cur = bestP.id; save(); go('studio'); };
     $('#cxNew').onclick = () => { closeSheet(); closeFlow(); pickPhoto(true); };
     return;
@@ -2422,7 +2422,7 @@ function openFill(r, s, pref) {
   openSheet(`<h2>Fill the ${sl[1]} frame</h2>
     <p class="sub">${ok.length ? `Pick a ${CFG.GALLERY}+ ${wild ? '' : theme}photo${wild ? ' from any category' : ''}. ${framed(r, s) ? ' It replaces the photo hanging there now.' : ` You’ll get ${CFG.FRAME_GEMS} gems.`}` : `This frame takes ${wild ? 'a photo from any category' : 'a ' + theme.trim() + ' photo'} scoring ${CFG.GALLERY}+ that isn’t already hanging.${close ? ` Your best one is at ${close.s.total}, ${CFG.GALLERY - close.s.total} points away.` : wild ? '' : ` You don’t have one yet. Pick ${theme.trim()} when you upload a photo.`}`}</p>
     ${ok.length ? `<div class="pickgrid">${ok.map(p => `<button data-p="${p.id}" aria-label="Photo scoring ${p.s.total}"><img src="${p.src}" alt=""><span>${p.s.total}</span></button>`).join('')}</div>`
-      : `<div class="actions">${close ? '<button class="btn block" id="fImprove">Enhance my best photo</button>' : ''}<button class="btn ${close ? 'quiet ' : ''}block" id="fNew">Score a new photo</button></div>`}`);
+      : `<div class="actions">${close ? '<button class="btn block" id="fImprove">Enhance my best photo</button>' : ''}<button class="btn ${close ? 'quiet ' : ''}block" id="fNew">Upload a new photo</button></div>`}`);
   document.querySelectorAll('#sheetBody .pickgrid button').forEach(b => b.onclick = () => hang(r, s, b.dataset.p));
   if ($('#fImprove')) $('#fImprove').onclick = () => { closeSheet(); S.cur = close.id; save(); go('studio'); };
   if ($('#fNew')) $('#fNew').onclick = () => { closeSheet(); pickPhoto(true); };
