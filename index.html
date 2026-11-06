@@ -1818,7 +1818,7 @@ async function generate(jitterRound) {
     }
     if (Object.keys(best).length >= 3) break;
   }
-  const rank = (a, b) => b.s.total - a.s.total || b.s[cat] - a.s[cat];
+  const rank = (a, b) => b.s[cat] - a.s[cat] || b.s.total - a.s.total;
   let picks = Object.values(best).sort(rank);
   extra.sort(rank).forEach(v => { if (picks.length < 3 && !picks.some(x => x.s.total === v.s.total && x.label === v.label)) picks.push(v); });
   picks = picks.slice(0, 3).sort(rank);
@@ -1839,13 +1839,13 @@ async function generate(jitterRound) {
 function renderVariants(top) {
   const { p, variants } = EN;
   const letters = ['A', 'B', 'C'];
-  const gain = v => { const d = v.s.total - p.s.total; return d > 0 ? `+${d}` : `${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}`; };
-  $('#enArea').innerHTML = `<p class="muted" style="margin:0 0 10px">Every version improves your score. Pick the one you like and it’s applied.</p>
+  const nm = catBy(EN.cat).name, gain = v => `${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}`;
+  $('#enArea').innerHTML = `<p class="muted" style="margin:0 0 10px">Every version improves your ${nm} score. Pick the one you like and it’s applied.</p>
   <div class="vgrid">${variants.map((v, i) => {
-    const d = v.s.total - p.s.total;
-    return `<button class="vcard" data-i="${i}" aria-pressed="${EN.sel === i}" aria-label="Version ${letters[i]}, ${v.label}, score ${v.s.total}">
+    const c = v.s[EN.cat] - p.s[EN.cat];
+    return `<button class="vcard" data-i="${i}" aria-pressed="${EN.sel === i}" aria-label="Version ${letters[i]}, ${v.label}, ${nm} ${v.s[EN.cat]}">
       ${i === top ? '<span class="best">Best</span>' : ''}<img src="${v.src}" alt="">
-      <div class="s">${v.s.total}${d > 0 ? `<small class="up">+${d}</small>` : `<small class="up cg">${gain(v)}</small>`}</div>
+      <div class="s">${v.s[EN.cat]}<small class="up">+${c}</small></div>
       <div class="l"><b style="color:var(--ink)">${v.label}</b><br>${v.note}</div></button>`;
   }).join('')}</div>
   <div class="actions"><button class="btn block" id="useBtn"></button>
@@ -1853,7 +1853,7 @@ function renderVariants(top) {
   $('#flowBack').style.visibility = 'visible';
   const paint = () => {
     document.querySelectorAll('#enArea [data-i]').forEach(x => x.setAttribute('aria-pressed', +x.dataset.i === EN.sel));
-    $('#useBtn').textContent = `Use version ${letters[EN.sel]} (${gain(variants[EN.sel])})`;
+    $('#useBtn').textContent = `Use version ${letters[EN.sel]} (+${variants[EN.sel].s[EN.cat] - p.s[EN.cat]})`;
   };
   document.querySelectorAll('#enArea [data-i]').forEach(x => x.onclick = () => { EN.sel = +x.dataset.i; paint(); });
   paint();
