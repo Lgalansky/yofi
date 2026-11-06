@@ -1184,6 +1184,15 @@ button.bar:hover span:first-child{color:var(--pink)}
 .rmpick button[disabled]{opacity:.45}
 .rmpick em{position:absolute;top:6px;left:6px;padding:1px 7px;border-radius:7px;background:#FF2D55;color:#fff;font-style:normal;font-size:.68rem;font-weight:800}
 .rmpick em.h{background:#E9A514}
+.earnc{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 6px;padding:14px;border-radius:20px;text-align:left;color:#fff;background:linear-gradient(120deg,#12B26B,#1689E8);box-shadow:0 12px 26px -12px rgba(18,178,107,.8)}
+.earnc .ei{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.2)}
+.earnc .ei svg{width:26px;height:26px}
+.earnc .et{flex:1;display:grid;gap:2px;min-width:0}
+.earnc .et b{font-size:1.05rem}
+.earnc .et span{font-size:.82rem;opacity:.95}
+.earnc .et .gem{width:14px;height:14px}
+.earnc .ego{flex:none;padding:9px 14px;border-radius:999px;background:#fff;color:#0E7A4C;font-weight:800}
+.orbuy{margin:10px 0 10px;text-align:center;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -2068,6 +2077,9 @@ function openStore(reason) {
   if (!S.offerEnd || S.offerEnd < Date.now()) { S.offerEnd = Date.now() + (3 * 3600 + 38 * 60 + 27) * 1000; save(); }
   openSheet(`<div class="vphead"><h2>Vibe Packs<i>.</i></h2><div class="lto"><em>Limited time offer</em><span><b id="oH">00</b><small>HRS</small></span><span><b id="oM">00</b><small>MIN</small></span><span><b id="oS">00</b><small>SEC</small></span></div></div>
     <p class="sub">${reason ? esc(reason) + ' ' : ''}More value. More photos. More wins.</p>
+    <button class="earnc" id="earnTop"><span class="ei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg></span>
+      <span class="et"><b>Earn gems free by judging</b><span>Score other people’s photos for up to ${CFG.VOTE + 5 * CFG.CLOSE} ${gemIcon()} each${reason && S.gems < CFG.COST ? `. About ${Math.ceil((CFG.COST - S.gems) / (CFG.VOTE + 2 * CFG.CLOSE))} photos gets you your next fix` : ''}.</span></span><span class="ego">Judge ›</span></button>
+    <p class="orbuy">Or get a pack</p>
     ${PACKS.map((k, i) => `<article class="vp ${k.cls}"><span class="free"><span><b>${k.free}%</b><small>FREE</small></span></span>
       <h3>${k.cls === 'pro' ? '👑 ' : ''}${k.t}</h3><p>${k.sub}</p>
       <div class="vpi"><div>${CASH_ICON}<b>$${k.cash}</b><small>Real Cash</small></div><div class="bn">${BONUS_ICON}<b>+$${k.bonus}</b><small>Bonus Cash</small></div><div>${gemIcon('')}<b>${k.gems.toLocaleString()}</b><small>Photo Gems</small></div></div>
@@ -2087,6 +2099,7 @@ function openStore(reason) {
     S.cash = (S.cash || 0) + k.cash; S.bonus = (S.bonus || 0) + k.bonus; save(); paintWallet();
     setTimeout(() => addGems(k.gems, `${k.t} pack added: $${k.cash} cash, +$${k.bonus} bonus`), 320);
   });
+  $('#earnTop').onclick = () => $('#earnBtn').click();
   $('#earnBtn').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) { if (!S.user) { openSignup(); return; } closeFlow(); } go('judge'); };
 }
 $('#gemPill').onclick = () => openStore();
