@@ -1154,6 +1154,15 @@ button.bar:hover span:first-child{color:var(--pink)}
 .bar.maxd i b{background:var(--good)!important}
 .bar .mx{font-style:normal;color:var(--good);font-weight:800}
 .cats.cc button.maxd{opacity:.55}
+.hangbar{position:absolute;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:28;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 8px;border-radius:20px;background:var(--card);box-shadow:0 0 0 1.5px color-mix(in srgb,var(--violet) 40%,var(--line)),0 14px 30px -10px rgba(0,0,0,.5);animation:btIn .3s cubic-bezier(.2,.9,.3,1.1)}
+.hangbar img{flex:none;width:48px;height:48px;border-radius:12px;object-fit:cover}
+.hangbar>div{flex:1;min-width:0;display:grid;line-height:1.2}
+.hangbar b{font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hangbar span{font-size:.8rem;color:var(--muted)}
+.hangbar .btn{flex:none}
+.hangbar .hbx{flex:none;width:36px;height:36px;border-radius:50%;color:var(--muted);font-size:1rem}
+.rv .fr2.target{animation:frPulse 1.4s ease-in-out infinite;z-index:2}
+@keyframes frPulse{0%,100%{box-shadow:1.2cqw 2.2cqw 2.6cqw -1cqw rgba(70,35,0,.45),0 0 0 .6cqw #FF2D8E}50%{box-shadow:1.2cqw 2.2cqw 2.6cqw -1cqw rgba(70,35,0,.45),0 0 0 1.6cqw rgba(255,45,142,.35)}}
 </style>
 </head>
 <body>
@@ -2548,8 +2557,20 @@ function hangPhoto(p) {
   if (!spot) { toast('There’s no frame for this category yet.'); return; }
   GV.tab = 'mine'; GV.room = spot[0]; go('gallery');
   if (hung) { toast(`Already hanging in Room ${spot[0] + 1}.`); return; }
-  setTimeout(() => openFill(spot[0], spot[1], p.id), 380);
+  setTimeout(() => showHangBar(spot[0], spot[1], p), 380);
 }
+function showHangBar(r, sIdx, p) {
+  hideHangBar();
+  const sl = ROOMS[r].slots[sIdx], old = framed(r, sIdx);
+  const f = document.querySelector(`#gallery .rv .fr2[data-s="${sIdx}"]`); if (f) { f.classList.add('target'); const g = $('#gallery'); g.scrollTo({ top: Math.max(0, f.getBoundingClientRect().top - g.getBoundingClientRect().top + g.scrollTop - g.clientHeight / 2 + f.offsetHeight / 2), behavior: 'smooth' }); }
+  const bar = document.createElement('div'); bar.className = 'hangbar'; bar.id = 'hangBar';
+  bar.innerHTML = `<img src="${p.src}" alt=""><div><b>Hang in the ${esc(sl[1])} frame</b><span>${old ? `Replaces your ${old.s.total} photo` : `+${CFG.FRAME_GEMS} gems`}</span></div>
+    <button class="btn small" id="hbGo">Hang it</button><button class="hbx" id="hbX" aria-label="Not now">✕</button>`;
+  $('#shell').appendChild(bar);
+  $('#hbGo').onclick = () => { hideHangBar(); hang(r, sIdx, p.id); };
+  $('#hbX').onclick = hideHangBar;
+}
+function hideHangBar() { const b = $('#hangBar'); if (b) b.remove(); document.querySelectorAll('#gallery .fr2.target').forEach(x => x.classList.remove('target')); }
 function openFill(r, s, pref) {
   const sl = ROOMS[r].slots[s], used = new Set(Object.values(S.frames || {}));
   const wild = !sl[2], theme = wild ? '' : sl[2].map(pcatName).join(' or ') + ' ';
@@ -2637,6 +2658,7 @@ function openVisit(i) {
 
 /* ---------- Panes: Judge / Studio with flick ---------- */
 function go(where) {
+  if (where !== 'gallery') hideHangBar();
   if ($('#flow').classList.contains('astab')) closeFlow();
   $('#panes').dataset.at = where;
   $('#segJudge').setAttribute('aria-pressed', where === 'judge'); $('#segStudio').setAttribute('aria-pressed', where === 'studio'); $('#segGallery').setAttribute('aria-pressed', where === 'gallery'); $('#segCompete').setAttribute('aria-pressed', 'false');
