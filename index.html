@@ -1798,7 +1798,7 @@ function startEnhance(p, cat) {
 }
 async function generate(jitterRound) {
   const { p, cat } = EN, nm = catBy(cat).name;
-  if (S.gems < CFG.COST) { openStore(`Each fix costs ${CFG.COST} gems and you have ${S.gems}.`); return; }
+  if (!spend(CFG.COST, `Each fix costs ${CFG.COST} gems and you have ${S.gems}.`)) return;
   $('#flowBack').style.visibility = 'hidden';
   $('#enArea').innerHTML = `<div class="gen"><div class="spin"></div>Making better ${nm.toLowerCase()} versions…</div>`;
   await sleep(50);
@@ -1824,10 +1824,11 @@ async function generate(jitterRound) {
   picks = picks.slice(0, 3).sort(rank);
   await sleep(300);
   if (!picks.length) {
+    S.gems += CFG.COST; save(); paintGems();
     $('#flowBack').style.visibility = 'visible';
     EN.variants = null; enIdle();
     const next = C.filter(c => c.k !== cat).sort((a, b) => p.s[a.k] - p.s[b.k])[0];
-    $('#enArea').insertAdjacentHTML('afterbegin', `<div class="enmax"><b>${nm} is already at its best on this photo (${p.s[cat]}).</b><span>We couldn’t find a version that scores higher. No gems were used.</span><button class="btn small" id="enNext">Try ${next.name} instead</button></div>`);
+    $('#enArea').insertAdjacentHTML('afterbegin', `<div class="enmax"><b>${nm} is already at its best on this photo (${p.s[cat]}).</b><span>We couldn’t find a version that scores higher. Your gems are back.</span><button class="btn small" id="enNext">Try ${next.name} instead</button></div>`);
     $('#genBtn') && $('#genBtn').remove();
     $('#enNext').onclick = () => { const b = document.querySelector(`#flowBody .cats button[data-c="${next.k}"]`); if (b) b.click(); };
     return;
@@ -1838,28 +1839,28 @@ async function generate(jitterRound) {
 function renderVariants(top) {
   const { p, variants } = EN;
   const letters = ['A', 'B', 'C'];
-  $('#enArea').innerHTML = `<p class="muted" style="margin:0 0 10px">Every version improves your ${catBy(EN.cat).name} score. Pick the one you like. You only spend ${CFG.COST} gems when you use it.</p>
+  const gain = v => { const d = v.s.total - p.s.total; return d > 0 ? `+${d}` : `${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}`; };
+  $('#enArea').innerHTML = `<p class="muted" style="margin:0 0 10px">Every version improves your score. Pick the one you like and it’s applied.</p>
   <div class="vgrid">${variants.map((v, i) => {
-    const d = v.s.total - p.s.total, c = v.s[EN.cat] - p.s[EN.cat], nm = catBy(EN.cat).short;
-    return `<button class="vcard" data-i="${i}" aria-pressed="${EN.sel === i}" aria-label="Version ${letters[i]}, ${v.label}, ${nm} ${v.s[EN.cat]}, overall ${v.s.total}">
+    const d = v.s.total - p.s.total;
+    return `<button class="vcard" data-i="${i}" aria-pressed="${EN.sel === i}" aria-label="Version ${letters[i]}, ${v.label}, score ${v.s.total}">
       ${i === top ? '<span class="best">Best</span>' : ''}<img src="${v.src}" alt="">
-      <div class="s"><span class="ck">${nm}</span>${v.s[EN.cat]}<small class="up">+${c}</small></div>
-      <div class="ov">Overall ${v.s.total}</div>
+      <div class="s">${v.s.total}${d > 0 ? `<small class="up">+${d}</small>` : `<small class="up cg">${gain(v)}</small>`}</div>
       <div class="l"><b style="color:var(--ink)">${v.label}</b><br>${v.note}</div></button>`;
   }).join('')}</div>
-  <div class="actions"><button class="btn block fixbtn" id="useBtn"><span id="useT"></span><span class="gpill">${gemIcon()}${CFG.COST}</span></button></div>`;
+  <div class="actions"><button class="btn block" id="useBtn"></button>
+  <button class="btn quiet block" id="moreBtn">Try 3 more <span class="cost">${gemIcon()}${CFG.COST}</span></button></div>`;
   $('#flowBack').style.visibility = 'visible';
   const paint = () => {
     document.querySelectorAll('#enArea [data-i]').forEach(x => x.setAttribute('aria-pressed', +x.dataset.i === EN.sel));
-    const v = variants[EN.sel];
-    $('#useT').textContent = `Use ${letters[EN.sel]} · ${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}`;
+    $('#useBtn').textContent = `Use version ${letters[EN.sel]} (${gain(variants[EN.sel])})`;
   };
   document.querySelectorAll('#enArea [data-i]').forEach(x => x.onclick = () => { EN.sel = +x.dataset.i; paint(); });
   paint();
+  $('#moreBtn').onclick = () => generate(2);
   $('#useBtn').onclick = () => applyVariant();
 }
 function applyVariant() {
-  if (!spend(CFG.COST, `Using a version costs ${CFG.COST} gems and you have ${S.gems}.`)) return;
   const { p, variants, sel } = EN;
   const v = variants[sel], prev = p.s, prevTotal = p.s.total;
   p.src = v.src; p.s = v.s; p.enh++; save();
