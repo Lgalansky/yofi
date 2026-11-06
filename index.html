@@ -1132,6 +1132,9 @@ button.bar:hover span:first-child{color:var(--pink)}
 .lockc span b{color:var(--ink)}
 .lockc .lockt b{color:var(--pink);font-variant-numeric:tabular-nums}
 .lockc .btn{flex:none}
+.fix{transition:opacity .45s,transform .45s,max-height .45s,margin .45s,padding .45s;max-height:220px;overflow:hidden}
+.fix.gone{opacity:0;transform:translateX(40px);max-height:0;margin:0;padding-top:0;padding-bottom:0}
+.lockc.done>svg{color:var(--good)}
 </style>
 </head>
 <body>
@@ -1799,6 +1802,34 @@ function bindCats() {
     EN.variants = null; enIdle();
   });
 }
+const isMaxed = (p, k) => !!(p && p.maxed && p.maxed[k] != null);
+const okVersion = (p, s, cat) => s.total > p.s.total || (s.total >= p.s.total && s[cat] > p.s[cat]) || (s.total >= p.s.total - 1 && s[cat] >= p.s[cat] + 5);
+let maxRun = null;
+async function checkMaxed(p) {
+  const key = `${p.enh}:${p.s.total}`;
+  if (!p || p.chk === key || maxRun === p.id) return;
+  maxRun = p.id;
+  try {
+    const img = await loadImg(p.src), base = toID(img, 480), found = [];
+    for (const c of C) {
+      if (isMaxed(p, c.k)) continue;
+      let ok = false;
+      for (const j of [1, 1.5, 0.6, 2]) {
+        for (const r of Engine.RECIPES[c.k]) {
+          if (okVersion(p, Engine.score(Engine.analyze(r.run({ width: base.width, height: base.height, data: base.data }, j))), c.k)) { ok = true; break; }
+          await sleep(5);
+        }
+        if (ok) break;
+      }
+      if (!ok) { p.maxed = p.maxed || {}; p.maxed[c.k] = p.s[c.k]; found.push(c.k); }
+    }
+    p.chk = key; save();
+    if (found.length && cur() === p && $('#panes').dataset.at === 'studio' && !$('#flow').classList.contains('on')) {
+      found.forEach(k => { const b = document.querySelector(`#studio .fix[data-c="${k}"]`); if (b) b.classList.add('gone'); });
+      setTimeout(renderStudio, 520);
+    }
+  } catch (e) { /* skip check */ } finally { maxRun = null; }
+}
 const photoLock = p => p && (S.entries || []).find(e => e.pid === p.id && !e.done && Date.now() < e.end);
 function lockToast(e) { toast(`This photo is in ${CX.find(x => x.id === e.cid).t}. You can improve it again when the results are in.`); }
 function startEnhance(p, cat) {
@@ -1821,7 +1852,7 @@ async function generate(jitterRound) {
     for (const r of recipes) {
       const id = r.run({ width: base.width, height: base.height, data: base.data }, j);
       const s = Engine.score(Engine.analyze(id));
-      if (s.total > p.s.total || (s.total >= p.s.total && s[cat] > p.s[cat]) || (s.total >= p.s.total - 1 && s[cat] >= p.s[cat] + 5)) {
+      if (okVersion(p, s, cat)) {
         const v = { label: r.label, note: r.note, s, src: toURL(id) };
         if (!best[r.label] || s.total > best[r.label].s.total || (s.total === best[r.label].s.total && s[cat] > best[r.label].s[cat])) { if (best[r.label]) extra.push(best[r.label]); best[r.label] = v; } else extra.push(v);
       }
@@ -1835,6 +1866,7 @@ async function generate(jitterRound) {
   picks = picks.slice(0, 3).sort(rank);
   await sleep(300);
   if (!picks.length) {
+    p.maxed = p.maxed || {}; p.maxed[cat] = p.s[cat]; save();
     S.gems += CFG.COST; save(); paintGems();
     $('#flowBack').style.visibility = 'visible';
     EN.variants = null; enIdle();
@@ -2756,7 +2788,7 @@ function renderStudio() {
     $('#stAdd').onclick = () => pickPhoto(true); return;
   }
   const tot = p.s.total, stage = stageOf(tot), lk = photoLock(p);
-  const sorted = C.slice().sort((a, b) => p.s[a.k] - p.s[b.k]);
+  const sorted = C.filter(c => !isMaxed(p, c.k)).sort((a, b) => p.s[a.k] - p.s[b.k]);
   const msg = stage === 2 ? `<strong>Competition ready.</strong> ${lk ? 'Entered and locked until the results are in.' : 'Keep improving it to win more battles and climb competition rankings.'} Started at ${p.start}, ${p.enh} fix${p.enh === 1 ? '' : 'es'} so far.`
     : stage === 1 ? `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions.`
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
@@ -2769,12 +2801,13 @@ function renderStudio() {
     ${lk ? `<div class="lockc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h1a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 6 10zm2.5 0h5V7.5a2.5 2.5 0 0 0-5 0z"/></svg>
       <div><b>Improvements locked</b><span>This photo is entered in <b>${esc(CX.find(x => x.id === lk.cid).t)}</b> at ${lk.score}. You can improve it again when the results are in.</span>
       <span class="lockt">Results in <b data-ll="${lk.id}">${fmtLeft(Math.max(0, lk.end - Date.now()))}</b></span></div>
-      <button class="btn small" id="stLive">View live</button></div>` : `<div class="fixes">${sorted.map((c, i) => `<button class="fix ${i === 0 ? 'top1' : ''}" data-c="${c.k}" aria-label="Improve ${c.name}, now ${p.s[c.k]}, costs ${CFG.COST} gems"><div class="t"><b>${c.name}<span class="sv">${p.s[c.k]}</span></b><i class="mb"><i style="width:${p.s[c.k]}%"></i></i><span>${c.tip}${i === 0 ? '. Biggest opportunity' : ''}</span></div><span class="imp">Improve<span class="gp">${gemIcon()}${CFG.COST}</span></span></button>`).join('')}</div>`}
+      <button class="btn small" id="stLive">View live</button></div>` : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<div class="fixes">${sorted.map((c, i) => `<button class="fix ${i === 0 ? 'top1' : ''}" data-c="${c.k}" aria-label="Improve ${c.name}, now ${p.s[c.k]}, costs ${CFG.COST} gems"><div class="t"><b>${c.name}<span class="sv">${p.s[c.k]}</span></b><i class="mb"><i style="width:${p.s[c.k]}%"></i></i><span>${c.tip}${i === 0 ? '. Biggest opportunity' : ''}</span></div><span class="imp">Improve<span class="gp">${gemIcon()}${CFG.COST}</span></span></button>`).join('')}</div>`}
     <h3 class="sec">Your photos</h3>
     <div class="strip">${S.photos.map(x => `<button data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}"><img src="${x.src}" alt=""><span>${x.s.total}</span></button>`).join('')}
     ${S.photos.length < CFG.MAX_PHOTOS ? '<button class="add" id="stNew" aria-label="Score a new photo">+</button>' : ''}</div>`;
   animateRing(st);
   st.querySelectorAll('.fix').forEach(b => b.onclick = () => startEnhance(p, b.dataset.c));
+  if (!lk) setTimeout(() => checkMaxed(p), 600);
   if ($('#stLive')) $('#stLive').onclick = () => { openComps(); openLive(lk); };
   clearInterval(window.__stLock); if (lk) window.__stLock = setInterval(() => { const el = st.querySelector(`[data-ll="${lk.id}"]`); if (!el || !document.contains(el)) { clearInterval(window.__stLock); return; } el.textContent = fmtLeft(Math.max(0, lk.end - Date.now())); if (Date.now() >= lk.end) { clearInterval(window.__stLock); renderStudio(); } }, 1000);
   st.querySelectorAll('[data-fix]').forEach(b => b.onclick = () => startEnhance(p, b.dataset.fix));
