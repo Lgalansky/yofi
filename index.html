@@ -1625,7 +1625,7 @@ function renderVariants(top) {
     return `<button class="vcard" data-i="${i}" aria-pressed="${EN.sel === i}" aria-label="Version ${letters[i]}, ${v.label}, ${nm} ${v.s[EN.cat]}, overall ${v.s.total}">
       ${i === top ? '<span class="best">Best</span>' : ''}<img src="${v.src}" alt="">
       <div class="s"><span class="ck">${nm}</span>${v.s[EN.cat]}<small class="up">+${c}</small></div>
-      <div class="ov">Overall ${v.s.total}${d > 0 ? ` <b class="up">+${d}</b>` : ''}</div>
+      <div class="ov">Overall ${v.s.total}</div>
       <div class="l"><b style="color:var(--ink)">${v.label}</b><br>${v.note}</div></button>`;
   }).join('')}</div>
   <div class="actions"><button class="btn block fixbtn" id="useBtn"><span id="useT"></span><span class="gpill">${gemIcon()}${CFG.COST}</span></button></div>`;
