@@ -499,7 +499,12 @@ button.bar:hover span:first-child{color:var(--pink)}
 .fix .mb{display:block;height:6px;border-radius:3px;background:var(--line);margin:6px 0 5px;overflow:hidden;max-width:220px}
 .fix .mb i{display:block;height:100%;background:var(--ink);border-radius:3px}
 .fix.top1 .mb i{background:linear-gradient(90deg,var(--pink),var(--violet))}
-.fix .imp{display:grid;justify-items:end;gap:2px;font-weight:800;color:var(--pink);font-size:.9rem;flex:none}
+.fix .imp{display:inline-flex;align-items:center;gap:8px;flex:none;padding:4px 4px 4px 14px;border-radius:999px;font-weight:800;font-size:.95rem;color:var(--violet);background:color-mix(in srgb,var(--violet) 11%,var(--card));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--violet) 28%,transparent)}
+.fix .imp .gp{display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 12px 0 9px;border-radius:999px;font-size:1.05rem;font-variant-numeric:tabular-nums;color:#0B4FB8;background:linear-gradient(180deg,#F2FAFF,#D6ECFF);box-shadow:inset 0 0 0 1.5px #9FD2FF,0 4px 10px -6px rgba(34,140,245,.8)}
+.fix .imp .gp .gem{width:20px;height:20px}
+.fix.top1 .imp{color:#fff;background:linear-gradient(95deg,var(--pink),var(--violet));box-shadow:0 8px 18px -8px rgba(255,45,142,.7)}
+.fix.top1 .imp .gp{color:#fff;background:rgba(40,8,70,.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.fix:active .imp{transform:scale(.96)}
 .fix .v{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.3rem;width:34px;text-align:right}
 .strip{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 6px;margin-top:20px}
 .strip button{flex:none;width:70px;height:88px;border-radius:14px;overflow:hidden;position:relative;box-shadow:inset 0 0 0 1.5px var(--line)}
@@ -2285,7 +2290,7 @@ function renderStudio() {
     <p class="to80">${p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
     ${stage === 2 ? '<div class="qrow"><button class="btn small" id="stComp">Enter a competition</button></div>' : ''}
     <h3 class="sec">Improve a category</h3>
-    <div class="fixes">${sorted.map((c, i) => `<button class="fix ${i === 0 && stage < 2 ? 'top1' : ''}" data-c="${c.k}" aria-label="Improve ${c.name}, now ${p.s[c.k]}, costs ${CFG.COST} gems"><div class="t"><b>${c.name}<span class="sv">${p.s[c.k]}</span></b><i class="mb"><i style="width:${p.s[c.k]}%"></i></i><span>${c.tip}${i === 0 && stage < 2 ? '. Biggest opportunity' : ''}</span></div><span class="imp">Improve ›<span class="cost">${gemIcon()}${CFG.COST}</span></span></button>`).join('')}</div>
+    <div class="fixes">${sorted.map((c, i) => `<button class="fix ${i === 0 && stage < 2 ? 'top1' : ''}" data-c="${c.k}" aria-label="Improve ${c.name}, now ${p.s[c.k]}, costs ${CFG.COST} gems"><div class="t"><b>${c.name}<span class="sv">${p.s[c.k]}</span></b><i class="mb"><i style="width:${p.s[c.k]}%"></i></i><span>${c.tip}${i === 0 && stage < 2 ? '. Biggest opportunity' : ''}</span></div><span class="imp">Improve<span class="gp">${gemIcon()}${CFG.COST}</span></span></button>`).join('')}</div>
     <h3 class="sec">Your photos</h3>
     <div class="strip">${S.photos.map(x => `<button data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}"><img src="${x.src}" alt=""><span>${x.s.total}</span></button>`).join('')}
     ${S.photos.length < CFG.MAX_PHOTOS ? '<button class="add" id="stNew" aria-label="Score a new photo">+</button>' : ''}</div>`;
