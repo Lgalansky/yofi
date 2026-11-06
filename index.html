@@ -1435,6 +1435,26 @@ button.bar:hover span:first-child{color:var(--pink)}
 .en2-sc em{flex:1;height:4px;border-radius:2px;background:linear-gradient(90deg,#FF2D8E,#3EE6F5);position:relative}
 .en2-sc em::after{content:"";position:absolute;right:-2px;top:50%;width:10px;height:10px;border-top:4px solid #3EE6F5;border-right:4px solid #3EE6F5;transform:translateY(-50%) rotate(45deg)}
 .en2 .fc-lab{margin-top:10px}
+/* Need gems screen */
+.ngx .ceg-top .wm{font-size:1.8rem}
+.ngx-gem{display:grid;place-items:center;width:150px;height:150px;margin:6px auto 4px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#5A2C9C,#2A1450 70%);box-shadow:0 0 0 2px rgba(214,140,255,.55),0 0 40px rgba(170,90,255,.55),inset 0 0 30px rgba(255,120,220,.35)}
+.ngx-gem svg{width:96px;height:96px;filter:drop-shadow(0 0 14px rgba(80,200,255,.8))}
+.ngx-bar{width:100%;box-sizing:border-box;display:grid;justify-items:center;gap:10px;padding:18px 22px;border-radius:24px;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1.5px rgba(190,140,255,.35)}
+.ngx-bar b{display:flex;align-items:center;gap:10px;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.6rem;color:#fff}
+.ngx-bar b svg{width:30px;height:30px}
+.ngx-bar>i{display:block;width:100%;height:16px;border-radius:8px;background:rgba(255,255,255,.12);overflow:hidden}
+.ngx-bar>i>i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#FF2D8E,#B04BFF)}
+.ngx-bar span{color:#D9CCF5}
+.ngx-h{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.3rem;color:#fff;margin:10px 0 2px}
+.ngx-opt{display:flex;align-items:center;gap:14px;width:100%;padding:16px 16px;border-radius:22px;text-align:left;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(190,140,255,.55);background:rgba(255,255,255,.03)}
+.ngx-opt.judge{background:linear-gradient(95deg,#FF3FA4,#9B3CFF);box-shadow:0 12px 30px -12px rgba(255,45,160,.8)}
+.ngx-opt .ic{flex:none;width:48px;display:grid;place-items:center;padding-right:12px;border-right:1.5px solid rgba(255,255,255,.25)}
+.ngx-opt .ic svg{width:36px;height:36px}
+.ngx-opt .tx{flex:1;display:grid;gap:2px}
+.ngx-opt b{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.12rem}
+.ngx-opt small{font-size:.92rem;opacity:.9}
+.ngx-opt .chev{flex:none;width:22px;height:22px}
+.ngx .ceg-later{margin-top:10px;text-decoration:underline;text-underline-offset:4px}
 </style>
 </head>
 <body>
@@ -2722,26 +2742,30 @@ function cxEnter(c) {
   document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.onclick = () => { sel = b.dataset.p; paint(); });
   $('#enGo').onclick = () => { closeSheet(); cxPay(c, ok.find(x => x.id === sel)); };
 }
+function showNeedGems(cost, what, back, after) {
+  const have = S.gems, short = Math.max(0, cost - have), el = $('#ceg');
+  el.innerHTML = `<div class="ceg-in ngx">
+    <div class="ceg-top"><span class="wm">Yofi</span><button class="ceg-x" id="ngX" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <span class="ngx-gem">${gemIcon('')}</span>
+    <h2 class="fc-h">You need ${short} more gems</h2>
+    <p class="fc-p">${what}</p>
+    <div class="ngx-bar"><b>${gemIcon('')}${have} / ${cost} gems</b><i><i style="width:${Math.min(100, have / cost * 100)}%"></i></i><span>${short} gems to go</span></div>
+    <h3 class="ngx-h">Choose how to get more gems</h3>
+    <button class="ngx-opt judge" id="ngJudge"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg></span><span class="tx"><b>Judge photos to earn gems</b><small>Earn up to ${CFG.VOTE + 5 * CFG.CLOSE} gems per photo</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button class="ngx-opt" id="ngBuy"><span class="ic">${gemIcon('')}</span><span class="tx"><b>Get a gem pack</b><small>${back === 'photo' ? 'Enhance sooner' : 'Enter sooner'}</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button class="ceg-later" id="ngBack">${back === 'photo' ? 'Back to my photo' : 'Back to competitions'}</button></div>`;
+  el.classList.add('on'); el.scrollTop = 0;
+  const close = () => el.classList.remove('on');
+  $('#ngX').onclick = close; $('#ngBack').onclick = close;
+  $('#ngJudge').onclick = () => { close(); closeFlow(); go('judge'); toast(after); };
+  $('#ngBuy').onclick = () => { close(); openStore(what); };
+}
 function needFixGems() {
-  const short = CFG.COST - S.gems, n = Math.ceil(short / (CFG.VOTE + 2 * CFG.CLOSE));
-  closeFlow();
-  openSheet(`<div class="ng"><span class="ngi">${gemIcon('')}</span>
-    <h2>Out of gems</h2>
-    <p class="sub">Each fix costs ${CFG.COST} gems and you have ${S.gems}. Earn more free by judging other people’s photos: score each one and get up to ${CFG.VOTE + 5 * CFG.CLOSE} gems. About <b>${n} photo${n === 1 ? '' : 's'}</b> gets you your next fix.</p>
-    <button class="btn block" id="ngJudge">Judge photos to earn gems</button>
-    <button class="link" id="ngBuy">Or get a gem pack</button></div>`);
-  $('#ngJudge').onclick = () => { closeSheet(); go('judge'); toast(`Judge ${n} photo${n === 1 ? '' : 's'}, then head back to Enhance.`); };
-  $('#ngBuy').onclick = () => { closeSheet(); openStore(`Each fix costs ${CFG.COST} gems and you have ${S.gems}.`); };
+  const n = Math.ceil(Math.max(0, CFG.COST - S.gems) / (CFG.VOTE + 2 * CFG.CLOSE));
+  showNeedGems(CFG.COST, `Enhancing your photo costs ${CFG.COST} gems.`, 'photo', `Judge about ${n} photo${n === 1 ? '' : 's'}, then head back to Enhance.`);
 }
 function needGems(c) {
-  const short = c.fee - S.gems, per = CFG.VOTE + 2 * CFG.CLOSE, n = Math.ceil(short / per);
-  openSheet(`<div class="ng"><span class="ngi">${gemIcon('')}</span>
-    <h2>You need ${short} more gems</h2>
-    <p class="sub">${esc(c.t)} costs ${c.fee} gems to enter and you have ${S.gems}. Judge other people’s photos to earn them free. About <b>${n} photo${n === 1 ? '' : 's'}</b> should do it.</p>
-    <button class="btn block" id="ngJudge">Judge photos to earn gems</button>
-    <button class="link" id="ngBuy">Or get a gem pack</button></div>`);
-  $('#ngJudge').onclick = () => { closeSheet(); closeFlow(); go('judge'); toast(`Earn ${short} gems, then come back to enter ${c.t}.`); };
-  $('#ngBuy').onclick = () => { closeSheet(); openStore(`${c.t} costs ${c.fee} gems to enter.`); };
+  showNeedGems(c.fee, `Entering ${esc(c.t)} costs ${c.fee} gems.`, 'comps', `Earn ${c.fee - S.gems} gems, then come back to enter ${c.t}.`);
 }
 function cxPay(c, q) {
   if (!S.user) { openSignup(() => cxPay(c, q)); return; }
