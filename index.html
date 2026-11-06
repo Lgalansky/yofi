@@ -1702,7 +1702,7 @@ function showResult(p, o = {}) {
   if (b('#otherFix')) b('#otherFix').onclick = () => openEnhance(p, null);
   if (b('#doneBtn')) b('#doneBtn').onclick = () => closeFlow();
   if (b('#toComps')) b('#toComps').onclick = () => { if (!S.user) { openSignup(() => openComps()); return; } closeFlow(); openComps(); };
-  if (b('#toGal')) b('#toGal').onclick = () => { if (!S.user) { openSignup(() => openGallery()); return; } closeFlow(); openGallery(); };
+  if (b('#toGal')) b('#toGal').onclick = () => { if (!S.user) { openSignup(() => hangPhoto(p)); return; } closeFlow(); hangPhoto(p); };
   if (b('#saveNow')) b('#saveNow').onclick = () => openSignup();
   if (o.delta != null && !S.user) setTimeout(() => openSignup(), crossed ? 2200 : 1400);
   if (o.win) setTimeout(() => gemExplosion(o.win, { label: o.first ? 'You made these with your first score' : 'New photo bonus', from: body.querySelector('.hero-photo') }), 450);
@@ -2225,6 +2225,7 @@ let GV = { tab: 'mine', room: 0, fresh: null };
 const fkey = (r, s) => r + '-' + s;
 const framed = (r, s) => { const id = (S.frames || {})[fkey(r, s)]; return id ? S.photos.find(p => p.id === id) || null : null; };
 const roomFilled = r => ROOMS[r].slots.filter((_, s) => framed(r, s)).length;
+const roomOpen = r => r === 0 || roomFilled(r - 1) === ROOMS[r - 1].slots.length || S.photos.some(p => p.s.total >= CFG.GALLERY && ROOMS[r].slots.some(sl => sl[2] && fitsSlot(p, sl)));
 const roomsUnlocked = () => { let u = 1; for (let r = 0; r < ROOMS.length - 1; r++) { if (roomFilled(r) === ROOMS[r].slots.length) u = r + 2; else break; } return Math.min(u, ROOMS.length); };
 const galleryTotal = () => { let t = 0; ROOMS.forEach((R, r) => R.slots.forEach((_, s) => { const p = framed(r, s); if (p) t += p.s.total; })); return t; };
 const framesTotal = () => Object.keys(S.frames || {}).filter(k => { const [r, s] = k.split('-'); return framed(+r, +s); }).length;
@@ -2360,7 +2361,7 @@ function roomViewHTML(r) {
       <span class="pr"><span><b>${filled}</b> OF <b>${R.slots.length}</b> FRAMES FILLED</span><i><i style="width:${filled / R.slots.length * 100}%"></i></i></span></div>
     ${frames}
     ${[...Array(10)].map((_, i) => `<i class="spark" style="left:${(7 + (i * 37) % 86)}%;top:${(32 + (i * 23) % 40)}%;animation-delay:${(i * .43).toFixed(2)}s"></i>`).join('')}
-    <div class="pnl gls"><div class="rtabs" role="group" aria-label="Rooms">${ROOMS.map((Rm, i) => `${i ? '<span class="vs"></span>' : ''}<button data-r="${i}" aria-pressed="${i === r}" ${i >= un ? `disabled aria-label="Room ${i + 1}, locked"` : ''}><span class="th"><img src="${roomThumb(i)}" alt=""></span><span class="tx">ROOM ${i + 1}</span>${roomFilled(i) === 5 ? `<span class="ok">${CHECK}</span>` : i >= un ? `<span class="lk">${LOCK}</span>` : ''}</button>`).join('')}</div>
+    <div class="pnl gls"><div class="rtabs" role="group" aria-label="Rooms">${ROOMS.map((Rm, i) => `${i ? '<span class="vs"></span>' : ''}<button data-r="${i}" aria-pressed="${i === r}" ${!roomOpen(i) ? `disabled aria-label="Room ${i + 1}, locked"` : ''}><span class="th"><img src="${roomThumb(i)}" alt=""></span><span class="tx">ROOM ${i + 1}</span>${roomFilled(i) === 5 ? `<span class="ok">${CHECK}</span>` : !roomOpen(i) ? `<span class="lk">${LOCK}</span>` : ''}</button>`).join('')}</div>
       ${cta}</div>
   </div>`;
 }
@@ -2380,7 +2381,7 @@ function renderGallery() {
   GV.fresh = null;
 }
 function myGalleryHTML() {
-  const un = roomsUnlocked(); if (GV.room >= un) GV.room = un - 1;
+  if (!roomOpen(GV.room)) GV.room = 0;
   const r = GV.room, R = ROOMS[r], filled = roomFilled(r), tot = galleryTotal(), rank = galleryRank(tot), nf = framesTotal();
   const lv = 1 + nf, title = LEVELS.filter(l => nf >= l[0]).pop()[1];
   const eligible = S.photos.filter(p => p.s.total >= CFG.GALLERY && !new Set(Object.values(S.frames || {})).has(p.id)).length;
@@ -2401,13 +2402,25 @@ function bindMyGallery() {
   if ($('#gNext')) $('#gNext').onclick = () => { GV.room++; renderGallery(); };
   if ($('#gBoard')) $('#gBoard').onclick = () => { GV.tab = 'board'; renderGallery(); g.scrollTop = 0; };
 }
-function openFill(r, s) {
+function hangPhoto(p) {
+  if (!p || !p.cat) { toast('Add a category to this photo first.'); return; }
+  const hung = Object.entries(S.frames || {}).find(([, id]) => id === p.id);
+  let spot = null;
+  if (hung) spot = hung[0].split('-').map(Number);
+  ROOMS.forEach((R, r) => R.slots.forEach((sl, i) => { if (!spot && sl[2] && fitsSlot(p, sl) && !framed(r, i)) spot = [r, i]; }));
+  ROOMS.forEach((R, r) => R.slots.forEach((sl, i) => { if (!spot && sl[2] && fitsSlot(p, sl)) spot = [r, i]; }));
+  if (!spot) { toast('There’s no frame for this category yet.'); return; }
+  GV.tab = 'mine'; GV.room = spot[0]; go('gallery');
+  if (hung) { toast(`Already hanging in Room ${spot[0] + 1}.`); return; }
+  setTimeout(() => openFill(spot[0], spot[1], p.id), 380);
+}
+function openFill(r, s, pref) {
   const sl = ROOMS[r].slots[s], used = new Set(Object.values(S.frames || {}));
   const wild = !sl[2], theme = wild ? '' : sl[2].map(pcatName).join(' or ') + ' ';
-  const ok = S.photos.filter(p => fitsSlot(p, sl) && p.s.total >= CFG.GALLERY && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total);
+  const ok = S.photos.filter(p => fitsSlot(p, sl) && p.s.total >= CFG.GALLERY && !used.has(p.id)).sort((a, b) => (b.id === pref) - (a.id === pref) || b.s.total - a.s.total);
   const close = S.photos.filter(p => fitsSlot(p, sl) && p.s.total < CFG.GALLERY).sort((a, b) => b.s.total - a.s.total)[0];
   openSheet(`<h2>Fill the ${sl[1]} frame</h2>
-    <p class="sub">${ok.length ? `Pick a ${CFG.GALLERY}+ ${wild ? '' : theme}photo${wild ? ' from any category' : ''}. You’ll get ${CFG.FRAME_GEMS} gems.` : `This frame takes ${wild ? 'a photo from any category' : 'a ' + theme.trim() + ' photo'} scoring ${CFG.GALLERY}+ that isn’t already hanging.${close ? ` Your best one is at ${close.s.total}, ${CFG.GALLERY - close.s.total} points away.` : wild ? '' : ` You don’t have one yet. Pick ${theme.trim()} when you upload a photo.`}`}</p>
+    <p class="sub">${ok.length ? `Pick a ${CFG.GALLERY}+ ${wild ? '' : theme}photo${wild ? ' from any category' : ''}. ${framed(r, s) ? ' It replaces the photo hanging there now.' : ` You’ll get ${CFG.FRAME_GEMS} gems.`}` : `This frame takes ${wild ? 'a photo from any category' : 'a ' + theme.trim() + ' photo'} scoring ${CFG.GALLERY}+ that isn’t already hanging.${close ? ` Your best one is at ${close.s.total}, ${CFG.GALLERY - close.s.total} points away.` : wild ? '' : ` You don’t have one yet. Pick ${theme.trim()} when you upload a photo.`}`}</p>
     ${ok.length ? `<div class="pickgrid">${ok.map(p => `<button data-p="${p.id}" aria-label="Photo scoring ${p.s.total}"><img src="${p.src}" alt=""><span>${p.s.total}</span></button>`).join('')}</div>`
       : `<div class="actions">${close ? '<button class="btn block" id="fImprove">Enhance my best photo</button>' : ''}<button class="btn ${close ? 'quiet ' : ''}block" id="fNew">Score a new photo</button></div>`}`);
   document.querySelectorAll('#sheetBody .pickgrid button').forEach(b => b.onclick = () => hang(r, s, b.dataset.p));
@@ -2672,7 +2685,7 @@ function renderStudio() {
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, true)}</div>
     <p class="to80">${p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
     ${(S.entries || []).filter(e => e.pid === p.id && !e.done).map(e => `<p class="lockn">Entered in <b>${esc(CX.find(x => x.id === e.cid).t)}</b> at ${e.score}. Changes here won’t affect that entry.</p>`).join('')}
-    ${stage === 2 ? '<div class="qrow"><button class="btn small" id="stComp">Enter a competition</button></div>' : ''}
+    ${stage >= 1 ? `<div class="qrow">${Object.values(S.frames || {}).includes(p.id) ? '' : '<button class="btn small quiet" id="stHang">Hang it in my gallery</button>'}${stage === 2 ? '<button class="btn small" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
     <h3 class="sec">Improve a category</h3>
     <div class="fixes">${sorted.map((c, i) => `<button class="fix ${i === 0 ? 'top1' : ''}" data-c="${c.k}" aria-label="Improve ${c.name}, now ${p.s[c.k]}, costs ${CFG.COST} gems"><div class="t"><b>${c.name}<span class="sv">${p.s[c.k]}</span></b><i class="mb"><i style="width:${p.s[c.k]}%"></i></i><span>${c.tip}${i === 0 ? '. Biggest opportunity' : ''}</span></div><span class="imp">Improve<span class="gp">${gemIcon()}${CFG.COST}</span></span></button>`).join('')}</div>
     <h3 class="sec">Your photos</h3>
@@ -2684,6 +2697,7 @@ function renderStudio() {
   st.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { S.cur = b.dataset.p; save(); renderStudio(); });
   if ($('#stNew')) $('#stNew').onclick = () => pickPhoto(true);
   if ($('#stComp')) $('#stComp').onclick = openComps;
+  if ($('#stHang')) $('#stHang').onclick = () => hangPhoto(p);
   st.querySelectorAll('[data-cat]').forEach(x => x.onclick = () => askCategory(p, () => { closeFlow(); renderStudio(); }, true));
   const cmp = $('#cmp'), im = $('#cmpImg');
   if (p.orig !== p.src) {
