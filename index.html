@@ -2657,7 +2657,7 @@ function openEntryGuide(c, bestP) {
   const from = bestP ? bestP.s.total : 70, have = !!bestP;
   const fee = c.k === 'gem' ? `${c.fee} gems` : c.k === 'bc' ? `$${c.fee.toFixed(2)} Bonus Cash` : `$${c.fee} Cash`;
   const prize = cxPrize(c).replace(/<[^>]+>/g, '').trim() + (c.k === 'gem' ? ' gems' : '');
-  const isNew = !S.photos.length;
+  const isNew = !have;
   el.innerHTML = isNew ? `<div class="ceg-in first">
     <div class="ceg-top"><button class="ceg-x" id="cegBack" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
       <span class="wm">Yofi</span><button class="ceg-x" id="cegX" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
