@@ -2496,7 +2496,7 @@ function openComps(forPhoto) {
   const live = (S.entries || []).filter(e => !e.done);
   const afford = c => c.k === 'gem' ? S.gems >= c.fee : c.k === 'bc' ? (S.bonus || 0) >= c.fee : (S.cash || 0) >= c.fee;
   const pool = CX.filter(c => !liveEntry(c.id) && c.k !== 'sp' && (!fp || cxOk(c, fp)));
-  const open = !fp && pool.find(c => c.k === 'gem' && !c.cats);
+  const open = pool.find(c => c.k === 'gem' && !c.cats);
   const pick = open || pool.filter(afford).sort((a, b) => cxLeft(a) - cxLeft(b))[0] || pool.filter(c => c.k === 'gem').sort((a, b) => cxLeft(a) - cxLeft(b))[0];
   const pimg = pick ? (pick.art ? SEED[1].src : SEED[pick.img].src) : '';
   const best = pick ? `<h2 class="fh">Featured competition</h2>
