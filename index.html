@@ -1455,6 +1455,12 @@ button.bar:hover span:first-child{color:var(--pink)}
 .ngx-opt small{font-size:.92rem;opacity:.9}
 .ngx-opt .chev{flex:none;width:22px;height:22px}
 .ngx .ceg-later{margin-top:10px;text-decoration:underline;text-underline-offset:4px}
+#sheet.full{top:0;max-height:none;height:100%;border-radius:0;padding-top:calc(8px + env(safe-area-inset-top,0px));transform:translateY(100%)}
+#sheet.full.on{transform:none}
+#sheet.full .grab{display:none}
+.fullbar{display:flex;align-items:center;justify-content:space-between;margin:0 -6px 8px}
+.fullbar .wm{font-size:1.7rem}
+#sheet.full .ceg-x{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -2309,8 +2315,10 @@ function applyVariant() {
 
 /* ---------- Sheets ---------- */
 let sheetAfter = null, sheetLocked = false;
-function openSheet(html, { locked = false, after = null } = {}) {
-  $('#sheetBody').innerHTML = html; $('#sheet').scrollTop = 0;
+function openSheet(html, { locked = false, after = null, full = false } = {}) {
+  $('#sheet').classList.toggle('full', full);
+  $('#sheetBody').innerHTML = (full ? `<div class="fullbar"><button class="ceg-x" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><span class="wm">Yofi</span><button class="ceg-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>` : '') + html;
+  document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); $('#sheet').scrollTop = 0;
   $('#scrim').classList.add('on'); $('#sheet').classList.add('on'); sheetLocked = locked; sheetAfter = after;
 }
 function closeSheet() {
@@ -2400,7 +2408,7 @@ function openStore(reason) {
       <button class="btn block" data-i="${i}">Get pack for $${k.cash}</button></article>`).join('')}
     <p class="note" style="text-align:center;margin-top:0">One-time offers.</p>
     <button class="btn quiet block" id="earnBtn">Earn gems by judging instead</button>
-    <p class="note">Prototype: purchases are simulated and nothing is charged. Gems have no cash value.</p>`);
+    <p class="note">Prototype: purchases are simulated and nothing is charged. Gems have no cash value.</p>`, { full: true });
   const tick = () => {
     if (!$('#oH')) { clearInterval(storeTimer); return; }
     let s = Math.max(0, Math.floor((S.offerEnd - Date.now()) / 1000));
