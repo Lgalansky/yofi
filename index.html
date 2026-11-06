@@ -1461,6 +1461,10 @@ button.bar:hover span:first-child{color:var(--pink)}
 .fullbar{display:flex;align-items:center;justify-content:space-between;margin:0 -6px 8px}
 .fullbar .wm{font-size:1.7rem}
 #sheet.full .ceg-x{color:var(--ink)}
+/* Inner screens sit under the standard header and tabs */
+.flow:not(.astab) .bar-top{padding:2px 14px 0;min-height:0}
+.flow:not(.astab) .bar-top .wm,.flow:not(.astab) #gemPill2{display:none}
+.flow:not(.astab) .bar-top .back{width:36px;height:36px;font-size:1rem}
 </style>
 </head>
 <body>
@@ -1950,7 +1954,7 @@ function burst(root) {
 }
 
 function gemExplosion(n, o = {}) {
-  const pill = $('#flow').classList.contains('on') ? $('#gemPill2') : $('#gemPill');
+  const pill = $('#gemPill');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (n <= 0 || reduce || typeof Element.prototype.animate !== 'function' || !pill.getClientRects().length) {
     paintGems(); if (o.label) toast(`+${n} gems. ${o.label}`); return;
@@ -2123,6 +2127,7 @@ let flowClose = null;
 function openFlow(html, closable = true, onClose) {
   leaveCxTab();
   $('#flowBody').innerHTML = html; $('#flowBody').scrollTop = 0; $('#flow').classList.add('on');
+  if ($('#app').classList.contains('on')) $('#flow').style.top = cxTabTop() + 'px';
   $('#flowBack').style.visibility = closable ? 'visible' : 'hidden'; flowClose = onClose || null;
 }
 function cxTabTop() { const g = $('#shell > .seg'); return g.offsetTop + g.offsetHeight + 4; }
@@ -2131,7 +2136,7 @@ function leaveCxTab() {
   f.classList.remove('cxmode', 'astab'); f.style.top = '';
   const at = $('#panes').dataset.at; ['judge', 'studio', 'gallery'].forEach(k => $('#seg' + k[0].toUpperCase() + k.slice(1)).setAttribute('aria-pressed', at === k)); $('#segCompete').setAttribute('aria-pressed', 'false');
 }
-window.addEventListener('resize', () => { const f = $('#flow'); if (f.classList.contains('astab')) f.style.top = cxTabTop() + 'px'; });
+window.addEventListener('resize', () => { const f = $('#flow'); if (f.classList.contains('on')) f.style.top = cxTabTop() + 'px'; });
 function closeFlow() { leaveCxTab(); $('#flow').classList.remove('on'); renderStudio(); renderJudge(); if (flowClose) { const f = flowClose; flowClose = null; f(); } }
 $('#flowBack').onclick = () => { if (!S.user) { openSignup(); return; } closeFlow(); };
 
@@ -3140,7 +3145,7 @@ function openVisit(i) {
 /* ---------- Panes: Judge / Studio with flick ---------- */
 function go(where) {
   if (where !== 'gallery') hideHangBar();
-  if ($('#flow').classList.contains('astab')) closeFlow();
+  if ($('#flow').classList.contains('on')) { if ($('#flowBack').style.visibility === 'hidden' && !$('#flow').classList.contains('astab')) return; closeFlow(); }
   $('#panes').dataset.at = where;
   $('#segJudge').setAttribute('aria-pressed', where === 'judge'); $('#segStudio').setAttribute('aria-pressed', where === 'studio'); $('#segGallery').setAttribute('aria-pressed', where === 'gallery'); $('#segCompete').setAttribute('aria-pressed', 'false');
   if (where === 'studio') $('#studio').scrollTop = 0;
