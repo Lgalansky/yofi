@@ -1554,6 +1554,7 @@ function save() {
 const cur = () => S.photos.find(p => p.id === S.cur) || S.photos[0] || null;
 const best = () => S.photos.reduce((a, p) => (!a || p.s.total > a.s.total ? p : a), null);
 OPP.forEach(o => { if (S.vault[o.h] == null) S.vault[o.h] = Math.round(rnd(300, 1400)); });
+if (S.user && !S.gemsSet10) { S.gems = 10; S.gemsSet10 = true; }
 S.entries = S.entries || []; Object.keys(S.entered || {}).forEach(k => { if (!S.entries.some(e => e.id === S.entered[k])) delete S.entered[k]; });
 
 /* ---------- Image helpers ---------- */
