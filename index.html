@@ -1168,6 +1168,15 @@ button.bar:hover span:first-child{color:var(--pink)}
 .bar span{white-space:nowrap}
 .qrow .btn{white-space:nowrap}
 .fixsub{margin:8px 2px 0;text-align:center;font-size:.85rem;color:var(--muted)}
+.enpick{margin-bottom:12px}
+.enpick button{box-shadow:inset 0 0 0 1.5px var(--line)}
+.enpick button[aria-pressed="true"]{outline:3px solid var(--violet);outline-offset:2px}
+.enprev{display:flex;align-items:center;gap:12px;padding:10px;margin-bottom:12px;border-radius:16px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line)}
+.enprev img{width:64px;height:64px;border-radius:12px;object-fit:cover}
+.enprev>div{display:grid;gap:2px}
+.enprev small{font-size:.75rem;font-weight:700;color:var(--muted)}
+.enprev b{font:400 1.6rem/1 "Archivo Black","Arial Black",sans-serif}
+.cx .card .im .esc{position:absolute;left:5px;right:5px;bottom:5px;padding:3px 6px;border-radius:7px;background:rgba(11,16,34,.82);color:#fff;font-size:.62rem;font-weight:800;text-align:center;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -2188,7 +2197,7 @@ function nowPrizeLine(c, e, r) {
 }
 function liveCardHTML(c, e) {
   const r = rankAt(e, Date.now()), d = rankMove(e);
-  return `<div class="card lcard k-${c.k}"><div class="im"><img src="${entrySrc(e)}" alt="Your entry"><span class="live">LIVE</span></div>
+  return `<div class="card lcard k-${c.k}"><div class="im"><img src="${entrySrc(e)}" alt="Your entry, scored ${e.score}"><span class="live">LIVE</span><span class="esc">Your entry · ${e.score}</span></div>
     <div class="tt">${cxPill(c)}<h4>${esc(c.t)}</h4></div>
     <div class="md"><div class="fp">Your rank</div><div class="rk"><b data-lr="${e.id}">#${r.toLocaleString()} ${moveHTML(d)}</b><small>of ${e.n.toLocaleString()}</small></div></div>
     <div class="lz" data-lz="${e.id}">${nowPrizeLine(c, e, r)}</div>
@@ -2309,6 +2318,18 @@ function cxEnter(c) {
     $('#cxNew').onclick = () => { closeSheet(); closeFlow(); pickPhoto(true); };
     return;
   }
+  const ok = S.photos.filter(p => cxFits(c, p) && p.s.total >= need && !photoLock(p)).sort((a, b) => b.s.total - a.s.total);
+  if (!ok.length) { toast('Your qualifying photos are already in live competitions.'); return; }
+  let sel = ok[0].id;
+  openSheet(`<h2>Enter ${esc(c.t)}</h2><p class="sub">Choose the photo to enter. It’s locked in at its current score until the results are in.</p>
+    <div class="pickgrid enpick">${ok.map(p => `<button data-p="${p.id}" aria-pressed="${p.id === sel}" aria-label="Photo scoring ${p.s.total}"><img src="${p.src}" alt=""><span>${p.s.total}</span></button>`).join('')}</div>
+    <div class="enprev"><img id="enImg" src="${ok[0].src}" alt="Selected photo"><div><small>Your entry</small><b id="enSc">${ok[0].s.total}</b><span>${cxPill(c)}</span></div></div>
+    <button class="btn block" id="enGo">Enter for ${cxFee(c)}</button>`);
+  const paint = () => { const p = ok.find(x => x.id === sel); document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === sel)); $('#enImg').src = p.src; $('#enSc').textContent = p.s.total; };
+  document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.onclick = () => { sel = b.dataset.p; paint(); });
+  $('#enGo').onclick = () => { closeSheet(); cxPay(c, ok.find(x => x.id === sel)); };
+}
+function cxPay(c, q) {
   if (c.k === 'gem') { if (!spend(c.fee, `${c.t} costs ${c.fee} gems to enter.`)) return; }
   else if (c.k === 'bc') { if ((S.bonus || 0) < c.fee) { openStore(`${c.t} costs $${c.fee.toFixed(2)} Bonus Cash to enter.`); return; } S.bonus = +(S.bonus - c.fee).toFixed(2); }
   else { if ((S.cash || 0) < c.fee) { openStore(`${c.t} costs $${c.fee} Cash to enter.`); return; } S.cash = +(S.cash - c.fee).toFixed(2); }
