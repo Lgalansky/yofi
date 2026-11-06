@@ -1426,6 +1426,15 @@ button.bar:hover span:first-child{color:var(--pink)}
 #shell > .seg button svg{display:none}
 #shell > .seg button[aria-pressed="true"]{background:var(--ink)!important;color:var(--bg)}
 #shell > .seg button[aria-pressed="true"]::after{display:none}
+.en2{padding:18px 14px}
+.en2-ph{display:block;width:100%;height:190px;position:relative}
+.en2-ph img{position:absolute;left:50%;top:6px;width:62%;height:175px;transform:translateX(-50%) rotate(-3deg);object-fit:cover;border-radius:14px;box-shadow:0 0 0 3px #fff,10px 10px 0 #5B3E9C}
+.en2-sc{display:flex;align-items:center;gap:8px;width:86%;margin-top:6px}
+.en2-sc i{font-style:normal;flex:none;padding:4px 12px;border-radius:999px;box-shadow:inset 0 0 0 1.5px #8C7BB5;color:#D9CCF5;font-weight:800}
+.en2-sc i.to{box-shadow:inset 0 0 0 2px #3EE6F5;color:#3EE6F5}
+.en2-sc em{flex:1;height:4px;border-radius:2px;background:linear-gradient(90deg,#FF2D8E,#3EE6F5);position:relative}
+.en2-sc em::after{content:"";position:absolute;right:-2px;top:50%;width:10px;height:10px;border-top:4px solid #3EE6F5;border-right:4px solid #3EE6F5;transform:translateY(-50%) rotate(45deg)}
+.en2 .fc-lab{margin-top:10px}
 </style>
 </head>
 <body>
@@ -2670,21 +2679,19 @@ function openEntryGuide(c, bestP) {
     <p class="fc-meta">1st prize ${prize} · Entry fee ${fee}</p>
     <button class="ceg-go" id="cegGo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Upload a photo &amp; get my score</button>
     <p class="ceg-fee">See your score before deciding to enter.</p>
-    <button class="ceg-later" id="cegLater">Maybe later</button></div>` : `<div class="ceg-in">
+    <button class="ceg-later" id="cegLater">Maybe later</button></div>` : `<div class="ceg-in first">
     <div class="ceg-top"><button class="ceg-x" id="cegBack" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
-      <div><span class="wm">Yofi</span><b>Enter competition</b></div><button class="ceg-x" id="cegX" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-    <h3 class="ceg-h">Enhance your photo to ${need}+</h3>
-    <p class="ceg-p">To enter ${esc(c.t)}, your photo needs a score of ${need} or higher.</p>
-    <div class="ceg-box"><div class="ceg-ph"><span></span><span></span><img src="${have ? bestP.src : SEED[0].src}" alt=""></div>
-      <div class="ceg-req"><b>${need}+</b><span>Required photo score</span></div>
-      <div class="ceg-arrow"><i>${from}</i><em></em><i class="to">${need}+</i></div></div>
-    <p class="ceg-q">You have <b>${q}</b> qualifying photo${q === 1 ? '' : 's'}${have ? ` · your best ${esc(c.cats ? c.lab : '')} photo is at <b>${bestP.s.total}</b>` : ''}</p>
-    <ol class="ceg-steps"><li class="${have ? 'done' : 'on'}"><i>${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>'}</i><span>1. Upload<br>a photo</span></li>
-      <li class="${have ? 'on' : ''}"><i>${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20L15 9l2-2"/><path d="M18 2l.8 2.2L21 5l-2.2.8L18 8l-.8-2.2L15 5l2.2-.8z"/></svg>'}</i><span>2. Enhance<br>to ${need}+</span></li>
-      <li><i>${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg>'}</i><span>3. Enter<br>to win</span></li></ol>
-    <button class="ceg-go" id="cegGo">${have ? `Enhance my ${bestP.s.total} photo to ${need}+` : `Upload &amp; enhance to ${need}+`}</button>
-    ${have ? '<button class="ceg-alt" id="cegNew">Or upload a new photo</button>' : ''}
-    <p class="ceg-fee">${c.k === 'gem' ? `${c.fee} gems` : c.k === 'bc' ? `$${c.fee.toFixed(2)} Bonus Cash` : `$${c.fee} Cash`} to enter · Charged only when you confirm</p>
+      <span class="wm">Yofi</span><button class="ceg-x" id="cegX" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <span class="fc-chip" data-cg>${IC.clock}${esc(c.t)} · Ends in ${fmtLeft(cxLeft(c))}</span>
+    <h2 class="fc-h">You’re ${need - bestP.s.total} point${need - bestP.s.total === 1 ? '' : 's'} away!</h2>
+    <p class="fc-p">Your photo scores ${bestP.s.total}. Enhance it to ${need}+ and you’re in.</p>
+    <button class="fc-box en2" id="cegBox" aria-label="Enhance this photo"><span class="en2-ph"><img src="${bestP.src}" alt=""></span>
+      <span class="en2-sc"><i>${bestP.s.total}</i><em></em><i class="to">${need}+</i></span>
+      <span class="fc-lab">Enhance in a few taps</span></button>
+    <p class="fc-need"><b>${need}+</b> Score ${need}+ to enter this competition.</p>
+    <p class="fc-meta">1st prize ${prize} · Entry fee ${fee}</p>
+    <button class="ceg-go" id="cegGo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L15 9l2-2"/><path d="M18 2l.8 2.2L21 5l-2.2.8L18 8l-.8-2.2L15 5l2.2-.8zM9 3l.5 1.5L11 5l-1.5.5L9 7l-.5-1.5L7 5l1.5-.5z"/></svg>Enhance my photo to ${need}+</button>
+    <button class="ceg-alt" id="cegNew">Or upload a new photo</button>
     <button class="ceg-later" id="cegLater">Maybe later</button></div>`;
   el.classList.add('on'); el.scrollTop = 0;
   const close = () => { el.classList.remove('on'); clearInterval(window.__ceg); };
@@ -2692,7 +2699,7 @@ function openEntryGuide(c, bestP) {
   const upload = () => { close(); closeFlow(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
   $('#cegGo').onclick = have ? () => { close(); closeFlow(); S.cur = bestP.id; S.goal = { cid: c.id, pid: bestP.id }; save(); go('studio'); } : upload;
   if ($('#cegNew')) $('#cegNew').onclick = upload;
-  if ($('#cegBox')) $('#cegBox').onclick = upload;
+  if ($('#cegBox')) $('#cegBox').onclick = () => $('#cegGo').click();
   clearInterval(window.__ceg); window.__ceg = setInterval(() => { const t = el.querySelector('[data-cg]'); if (!t || !el.classList.contains('on')) { clearInterval(window.__ceg); return; } t.innerHTML = t.classList.contains('fc-chip') ? `${IC.clock}${esc(c.t)} · Ends in ${fmtLeft(cxLeft(c))}` : `${IC.clock}Ends in ${fmtLeft(cxLeft(c))}`; }, 1000);
 }
 function cxEnter(c) {
