@@ -2746,16 +2746,18 @@ function cxEnter(c) {
     return;
   }
   const ok = S.photos.filter(p => cxOk(c, p) && !photoLock(p)).sort((a, b) => b.s.total - a.s.total);
-  if (!ok.length) { toast('Your qualifying photos are already in live competitions.'); return; }
+  if (!ok.length) { openEntryGuide(c, null); return; }
   let sel = (CXP && ok.find(x => x.id === CXP)) ? CXP : ok[0].id;
   ok.sort((a, b) => (b.id === sel) - (a.id === sel));
   openSheet(`<h2>Enter ${esc(c.t)}</h2><p class="sub">Choose the photo to enter. It’s locked in at its current score until the results are in.</p>
     <div class="pickgrid enpick">${ok.map(p => `<button data-p="${p.id}" aria-pressed="${p.id === sel}" aria-label="Photo scoring ${p.s.total}"><img src="${p.src}" alt=""><span>${p.s.total}</span></button>`).join('')}</div>
     <div class="enprev"><img id="enImg" src="${ok.find(x => x.id === sel).src}" alt="Selected photo"><div><small>Your entry</small><b id="enSc">${ok.find(x => x.id === sel).s.total}</b><span>${cxPill(c)}</span></div></div>
-    <button class="btn block" id="enGo">Enter for ${cxFee(c)}</button>`);
+    <button class="btn block" id="enGo">Enter for ${cxFee(c)}</button>
+    <div style="text-align:center"><button class="link" id="enNew">Or upload a new photo</button></div>`);
   const paint = () => { const p = ok.find(x => x.id === sel); document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === sel)); $('#enImg').src = p.src; $('#enSc').textContent = p.s.total; };
   document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.onclick = () => { sel = b.dataset.p; paint(); });
   $('#enGo').onclick = () => { closeSheet(); cxPay(c, ok.find(x => x.id === sel)); };
+  $('#enNew').onclick = () => { closeSheet(); closeFlow(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
 }
 function showNeedGems(cost, what, back, after) {
   const have = S.gems, short = Math.max(0, cost - have), el = $('#ceg');
