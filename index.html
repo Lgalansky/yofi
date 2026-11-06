@@ -1726,7 +1726,7 @@ const cxFits = (c, p) => !!p.cat && (!c.cats || c.cats.includes(p.cat));
 function askCategory(p, done, closable = false) {
   openFlow(`<div class="hero-photo" style="max-height:30vh;aspect-ratio:auto;height:30vh"><img src="${p.src}" alt="Your photo"></div>
     <h2 style="font-size:1.6rem;margin:16px 0 4px">What’s in this photo?</h2>
-    <p class="muted" style="margin:0 0 14px">Pick a category. It decides which gallery frames and competitions this photo can enter.</p>
+    <p class="muted" style="margin:0 0 14px">Pick a category. It decides who this photo battles, and which gallery frames and competitions it can enter.</p>
     <div class="pcats" role="group" aria-label="Photo category">${PCATS.map(([k, n]) => `<button data-k="${k}" aria-pressed="${p.cat === k}">${gi(k)}<span>${n}</span></button>`).join('')}</div>`, closable);
   $('#flowBody').querySelectorAll('.pcats button').forEach(b => b.onclick = () => { p.cat = b.dataset.k; save(); done(); });
 }
@@ -2112,14 +2112,26 @@ async function vote() {
 }
 
 /* ---------- Battle ---------- */
+const BATTLE_POOL = { portrait: 'People', style: 'People', pets: 'Pets', wildlife: 'Wildlife', landscape: 'Nature', sunrise: 'Nature', golden: 'Nature', night: 'Nature', city: 'Cities', street: 'Cities', arch: 'Cities', travel: 'Travel', food: 'Food', action: 'Action' };
+function battleRival(cat) {
+  const pool = SEED.filter(x => x.cat === BATTLE_POOL[cat]);
+  const list = pool.length ? pool : SEED;
+  return list[Math.floor(Math.random() * list.length)];
+}
 function openBattle() {
-  const me = best(); if (!me) return;
+  const mine = S.photos.filter(p => p.cat);
+  if (!mine.length) {
+    const p = best(); if (!p) return;
+    askCategory(p, () => { closeFlow(); openBattle(); });
+    return;
+  }
+  const me = mine.reduce((a, p) => (p.s.total > a.s.total ? p : a));
   const o = OPP[Math.floor(Math.random() * OPP.length)];
-  const theirs = SEED[Math.floor(Math.random() * SEED.length)];
+  const theirs = battleRival(me.cat);
   const their = Math.max(60, Math.min(97, theirs.score + Math.round(rnd(-4, 3))));
   const vault = S.vault[o.h];
   const win = Math.floor(vault * CFG.STEAL), lose = Math.floor(S.gems * CFG.STEAL);
-  openSheet(`<img class="blogo" src="${BATTLE_LOGO}" alt="Battle"><h2>@${esc(o.h)} wants a battle</h2><p class="sub">Your best photo against theirs. The crowd votes, and the winner takes half the loser’s gems.</p>
+  openSheet(`<img class="blogo" src="${BATTLE_LOGO}" alt="Battle"><h2>@${esc(o.h)} wants a battle</h2><p class="sub">${esc(pcatName(me.cat))} battle. Your best ${esc(pcatName(me.cat))} photo against theirs. The crowd votes, and the winner takes half the loser’s gems.</p>
     <div class="vs"><figure><img src="${me.src}" alt="Your photo"><figcaption><b>${me.s.total}</b>You</figcaption></figure><span class="x">vs</span>
     <figure><img src="${theirs.src}" alt="Their photo"><figcaption><b aria-label="Score hidden">?</b>@${esc(o.h)}</figcaption></figure></div>
     <div class="stakes"><span>Win and take<b>${gemIcon()}${win.toLocaleString()}</b></span><span style="text-align:right">Lose and give up<b style="justify-content:flex-end">${gemIcon()}${lose.toLocaleString()}</b></span></div>
