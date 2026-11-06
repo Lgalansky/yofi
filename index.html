@@ -1124,10 +1124,6 @@ button.bar:hover span:first-child{color:var(--pink)}
 .enmax b{font-size:1rem}
 .enmax span{font-size:.88rem;color:var(--muted)}
 .enmax .btn{justify-self:start;margin-top:4px}
-.vcard img{aspect-ratio:auto;height:auto;object-fit:initial}
-.vgrid{align-items:start}
-.hero-photo{aspect-ratio:auto;height:auto;display:flex;justify-content:center;background:transparent}
-.hero-photo img{width:auto;max-width:100%;height:auto;max-height:inherit;object-fit:contain;border-radius:26px}
 </style>
 </head>
 <body>
@@ -1380,35 +1376,15 @@ const Engine = (() => {
     }
     return out;
   }
-  function subjectBox(img) {
-    const { width: W, height: H, data: a } = img; let mr = 0, mg = 0, mb = 0;
-    for (let i = 0; i < a.length; i += 4) { mr += a[i]; mg += a[i + 1]; mb += a[i + 2]; }
-    const n = W * H; mr /= n; mg /= n; mb /= n;
-    const pts = [];
-    for (let y = Math.floor(H * 0.25); y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
-      const i = (y * W + x) * 4, L = v => (a[v] + a[v + 1] + a[v + 2]) / 3;
-      const e = Math.abs(4 * L(i) - L(i - 4) - L(i + 4) - L(i - W * 4) - L(i + W * 4));
-      const d = Math.hypot(a[i] - mr, a[i + 1] - mg, a[i + 2] - mb);
-      pts.push([d * (1 + e / 40), x, y]);
-    }
-    const G = 8, cell = new Float32Array(G * G);
-    pts.sort((p, q) => q[0] - p[0]);
-    pts.slice(0, Math.max(20, Math.floor(pts.length * 0.02))).forEach(([v, x, y]) => { cell[Math.min(G - 1, Math.floor(y / H * G)) * G + Math.min(G - 1, Math.floor(x / W * G))] += v; });
-    let bi = 0; for (let k = 1; k < cell.length; k++) if (cell[k] > cell[bi]) bi = k;
-    const cx = (bi % G + 0.5) / G, cy = (Math.floor(bi / G) + 0.5) / G, r = 0.75 / G;
-    return { x0: Math.max(0, cx - r), x1: Math.min(1, cx + r), y0: Math.max(0, cy - r), y1: Math.min(1, cy + r) };
-  }
   // search crop windows on a small copy, score each for composition, apply the best to the full image
   const cropCache = new WeakMap();
   function cropSearch(img) {
     if (cropCache.has(img.data)) return cropCache.get(img.data);
-    const sm = shrink(img, 260), W = sm.width, H = sm.height, res = [], box = subjectBox(sm), pad = 0.04;
-    for (let z = 1.06; z <= 1.42; z += 0.04) {
+    const sm = shrink(img, 260), W = sm.width, H = sm.height, res = [];
+    for (let z = 1.1; z <= 1.9; z += 0.08) {
       const cw = Math.round(W / z), ch = Math.round(H / z);
       for (let fx = 0; fx <= 1.0001; fx += 0.125) for (let fy = 0; fy <= 1.0001; fy += 0.125) {
-        const l = Math.round((W - cw) * fx), t = Math.round((H - ch) * fy);
-        if (l / W > Math.max(0, box.x0 - pad) + 1e-6 || (l + cw) / W < Math.min(1, box.x1 + pad) - 1e-6 || t / H > Math.max(0, box.y0 - pad) + 1e-6 || (t + ch) / H < Math.min(1, box.y1 + pad) - 1e-6) continue;
-        const sc = score(analyze(cropRect(sm, l, t, cw, ch)));
+        const l = Math.round((W - cw) * fx), t = Math.round((H - ch) * fy), sc = score(analyze(cropRect(sm, l, t, cw, ch)));
         res.push({ z, fx, fy, comp: sc.comp, total: sc.total });
       }
     }
@@ -1421,11 +1397,10 @@ const Engine = (() => {
   function crop(img, variant, j = 1) {
     const W = img.width, H = img.height;
     if (Math.min(W, H) < 60) return { width: W, height: H, data: new Uint8ClampedArray(img.data) };
-    const band = [[1.06, 1.16], [1.16, 1.28], [1.28, 1.43]][variant];
-    const lo = band[0], hi = band[1];
+    const band = [[1.1, 1.3], [1.3, 1.55], [1.55, 1.95]][variant];
+    const lo = band[0] + (j - 1) * 0.1, hi = band[1] + (j - 1) * 0.1;
     const list = cropSearch(img).filter(c => c.z >= lo - 1e-6 && c.z < hi);
-    const all = cropSearch(img); if (!all.length) return { width: W, height: H, data: new Uint8ClampedArray(img.data) };
-    const pick = list[Math.min(list.length - 1, Math.max(0, Math.round(Math.abs(j - 1) * 6)))] || all[0];
+    const pick = list[Math.min(list.length - 1, Math.max(0, Math.round((j - 1) * 6)))] || cropSearch(img)[0];
     const cw = Math.round(W / pick.z), ch = Math.round(H / pick.z);
     return cropRect(img, Math.round((W - cw) * pick.fx), Math.round((H - ch) * pick.fy), cw, ch);
   }
@@ -1462,9 +1437,9 @@ const Engine = (() => {
       { label: 'Glow', note: 'Lifted shadows, gentle contrast', run: (i, j = 1) => recover(lighting(i, 0.35 * j), 0.6 * j) }
     ],
     comp: [
-      { label: 'Light trim', note: 'Light trim', run: (i, j = 1) => crop(i, 0, j) },
-      { label: 'Balanced', note: 'Balanced', run: (i, j = 1) => crop(i, 1, j) },
-      { label: 'Closer', note: 'Closer', run: (i, j = 1) => crop(i, 2, j) }
+      { label: 'Centred', note: 'Tight centre crop', run: (i, j = 1) => crop(i, 0, j) },
+      { label: 'Thirds', note: 'Subject on a third line', run: (i, j = 1) => crop(i, 1, j) },
+      { label: 'Close-up', note: 'Closer on the subject', run: (i, j = 1) => crop(i, 2, j) }
     ],
     colour: [
       { label: 'Natural', note: 'Subtle vibrance', run: (i, j = 1) => colour(i, 0.35 * j, 0) },
@@ -1852,7 +1827,7 @@ async function generate(jitterRound) {
     $('#flowBack').style.visibility = 'visible';
     EN.variants = null; enIdle();
     const next = C.filter(c => c.k !== cat).sort((a, b) => p.s[a.k] - p.s[b.k])[0];
-    $('#enArea').insertAdjacentHTML('afterbegin', `<div class="enmax"><b>${cat === 'comp' ? 'No better crop for this photo' : `${nm} is already at its best on this photo (${p.s[cat]})`}.</b><span>${cat === 'comp' ? 'Any crop that scored higher would cut into your subject, so we left it as it is.' : 'We couldn’t find a version that scores higher.'} No gems were used.</span><button class="btn small" id="enNext">Try ${next.name} instead</button></div>`);
+    $('#enArea').insertAdjacentHTML('afterbegin', `<div class="enmax"><b>${nm} is already at its best on this photo (${p.s[cat]}).</b><span>We couldn’t find a version that scores higher. No gems were used.</span><button class="btn small" id="enNext">Try ${next.name} instead</button></div>`);
     $('#genBtn') && $('#genBtn').remove();
     $('#enNext').onclick = () => { const b = document.querySelector(`#flowBody .cats button[data-c="${next.k}"]`); if (b) b.click(); };
     return;
@@ -1868,8 +1843,9 @@ function renderVariants(top) {
     const d = v.s.total - p.s.total, c = v.s[EN.cat] - p.s[EN.cat], nm = catBy(EN.cat).short;
     return `<button class="vcard" data-i="${i}" aria-pressed="${EN.sel === i}" aria-label="Version ${letters[i]}, ${v.label}, ${nm} ${v.s[EN.cat]}, overall ${v.s.total}">
       ${i === top ? '<span class="best">Best</span>' : ''}<img src="${v.src}" alt="">
-      <div class="s">${v.s[EN.cat]}<small class="up">+${c}</small></div>
-      <div class="l"><b style="color:var(--ink)">${v.label}</b></div></button>`;
+      <div class="s"><span class="ck">${nm}</span>${v.s[EN.cat]}<small class="up">+${c}</small></div>
+      <div class="ov">Overall ${v.s.total}</div>
+      <div class="l"><b style="color:var(--ink)">${v.label}</b><br>${v.note}</div></button>`;
   }).join('')}</div>
   <div class="actions"><button class="btn block fixbtn" id="useBtn"><span id="useT"></span><span class="gpill">${gemIcon()}${CFG.COST}</span></button></div>`;
   $('#flowBack').style.visibility = 'visible';
