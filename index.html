@@ -1770,6 +1770,10 @@ button.bar:hover span:first-child{color:var(--pink)}
 .bt-st,.bt-res{padding:18px 8px 8px!important}
 .bt-st b{font-size:clamp(1.6rem,8vw,2.2rem)!important}
 #bArea #bGo{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:5}
+.rs-kick{display:block;margin:0 0 6px;font-weight:800;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:#9AA6C8;text-align:center}
+.rs-gn{margin:12px 4px 0;font-size:.95rem;line-height:1.4;color:#C9D1EA;text-align:center}
+.rs-gn b{color:#fff}
+.rs-alt{display:block;margin:10px auto 0;padding:8px;font-weight:700;color:#C9D1EA;text-decoration:underline;text-underline-offset:4px}
 </style>
 </head>
 <body>
@@ -3081,31 +3085,37 @@ function settle(e) {
 }
 function openResult(e) {
   const c = CX.find(x => x.id === e.cid), pz = e.prize, top = paidTop(e.n), climbed = e.startR - e.fin;
+  const ph = S.photos.find(x => x.id === e.pid), hungAt = ph && Object.entries(S.frames || {}).find(([, id]) => id === ph.id), spot = ph && !hungAt && frameSpot(ph);
+  const galBtn = cls => ph ? `<button class="${cls}" id="rsGal">${hungAt ? 'See it in your gallery' : spot ? 'Add to your gallery' : 'Go to your gallery'} <span aria-hidden="true">→</span></button>` : `<button class="${cls}" id="rsNext">Enter next competition <span aria-hidden="true">→</span></button>`;
+  const galNote = ph ? `<p class="rs-gn">${hungAt ? 'It’s already hanging in your gallery.' : spot ? `It can hang in your <b>${esc(ROOMS[spot[0]].slots[spot[1]][1])}</b> frame. Then upload another photo to fill the rest.` : `Fill your gallery with more photos to unlock new rooms.`}</p><button class="rs-alt" id="rsNext">Or enter another competition</button>` : '';
+  if ($('#flow').classList.contains('on') && !$('#flow').classList.contains('cxmode')) closeFlow();
+  if (!$('#flow').classList.contains('cxmode')) openComps(null);
   LV = { e: null, last: null }; e.seen = true; save();
   const ord = n => n + (['th', 'st', 'nd', 'rd'][(n % 100 - 20) % 10] || ['th', 'st', 'nd', 'rd'][n % 100] || 'th');
   const stats = `<div class="rs-stats"><div><b>${e.score}</b><small>Your score</small></div><div><b class="${climbed >= 0 ? 'up' : 'dn'}">${climbed >= 0 ? '▲' : '▼'}${Math.abs(climbed).toLocaleString()}</b><small>Places ${climbed >= 0 ? 'climbed' : 'dropped'}</small></div><div><b>Top ${Math.max(1, Math.ceil(e.fin / e.n * 100))}%</b><small>Of entries</small></div></div>`;
   const low = lowest(S.photos.find(x => x.id === e.pid)?.s || { light: 0, comp: 0, colour: 0, subject: 0, tech: 0 });
-  lvShow(pz ? `<div class="lv-in rs win">${cxPill(c)}<span class="rs-sub">${esc(c.t)} · Final</span>
+  lvShow(pz ? `<div class="lv-in rs win">${cxPill(c)}<span class="rs-kick">Competition results</span><span class="rs-sub">${esc(c.t)} · Final</span>
       <svg class="rs-tro" viewBox="0 0 96 96" aria-hidden="true"><path d="M28 12h40v22a20 20 0 0 1-40 0z" fill="#FFC93C"/><path d="M28 18H16a12 12 0 0 0 14 15M68 18h12a12 12 0 0 1-14 15" stroke="#E79A00" stroke-width="5" fill="none"/><path d="M43 52h10v14H43z" fill="#E79A00"/><path d="M30 82a18 10 0 0 1 36 0z" fill="#FFC93C"/><rect x="28" y="80" width="40" height="8" rx="3" fill="#B9761A"/></svg>
       <h2>You placed ${ord(e.fin)}</h2><p>out of ${e.n.toLocaleString()} entries</p>
       <div class="rs-won"><small>YOU WON</small><b>${fmtMoney(pz.amt, pz.cur)}</b><span>Added to your ${pz.cur === 'cash' ? 'Cash' : pz.cur === 'bonus' ? 'Bonus Cash' : 'Gems'} balance</span></div>
       ${stats}<img class="rs-img" src="${entrySrc(e)}" alt="Your winning entry">
-      <button class="bt-cta" id="rsNext">Enter the next one</button><button class="bt-no" id="rsBack">Back to competitions</button></div>`
+      ${galBtn('bt-cta')}${galNote}</div>`
     : `<div class="lv-in rs2">
-      <div class="rs2-sub"><span>${esc(c.t)} · Final</span></div>
+      <div class="rs-kick">Competition results</div><div class="rs2-sub"><span>${esc(c.t)} · Final</span></div>
       <div class="rs2-ph"><img src="${entrySrc(e)}" alt="Your entry"></div>
       <div class="rs2-lab">Your final place</div>
       <div class="rs2-pl">#${e.fin.toLocaleString()}</div>
       <div class="rs2-mv ${climbed >= 0 ? 'up' : 'dn'}"><b>${climbed >= 0 ? '↑' : '↓'} ${Math.abs(climbed).toLocaleString()}</b> places ${climbed >= 0 ? 'climbed' : 'dropped'}</div>
       <p class="rs2-of">out of ${e.n.toLocaleString()} entries</p>
       <div class="rs2-st"><div><b>${e.score}</b><small>Your score</small></div><div><b>Top ${Math.max(1, Math.ceil(e.fin / e.n * 100))}%</b><small>Of entries</small></div><div class="g"><b>Prizes to #${top.toLocaleString()}</b></div></div>
-      <button class="rs2-go" id="rsNext">Enter next competition <span aria-hidden="true">→</span></button></div>`);
-  if (!pz) { ['segJudge', 'segStudio', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segCompete').setAttribute('aria-pressed', 'true'); setTimeout(() => { $('#ptitle').textContent = 'Results'; }, 0); }
+      ${galBtn('rs2-go')}${galNote}</div>`);
+  { ['segJudge', 'segStudio', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segCompete').setAttribute('aria-pressed', 'true'); setTimeout(() => { $('#ptitle').textContent = 'Results'; }, 0); }
   $('#lv').scrollTop = 0; paintWallet(); paintGems(false);
   if (pz) setTimeout(() => celebrate({ src: entrySrc(e), score: e.score, title: `You placed ${ord(e.fin)}!`, text: `You won <b>${fmtMoney(pz.amt, pz.cur)}</b> in ${esc(c.t)}, out of ${e.n.toLocaleString()} entries. It’s in your ${pz.cur === 'cash' ? 'Cash' : pz.cur === 'bonus' ? 'Bonus Cash' : 'Gems'} balance.`, cta: 'Collect my prize', onCta: () => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize` }); }, onLater: () => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize` }); } }), 500);
   const back = () => { lvClose(); if ($('#flow').classList.contains('cxmode')) openComps(); };
   if ($('#rsBack')) $('#rsBack').onclick = back;
   $('#rsNext').onclick = () => { lvClose(); openComps(); };
+  if ($('#rsGal')) $('#rsGal').onclick = () => { lvClose(); closeFlow(); if (spot) hangPhoto(ph); else { GV.tab = 'mine'; if (hungAt) GV.room = +hungAt[0].split('-')[0]; openGallery(); } };
   if ($('#rsStudio')) $('#rsStudio').onclick = () => { lvClose(); S.cur = e.pid; save(); closeFlow(); go('studio'); };
 }
 setInterval(() => {
