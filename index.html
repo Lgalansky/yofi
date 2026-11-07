@@ -1774,6 +1774,8 @@ button.bar:hover span:first-child{color:var(--pink)}
 .rs-gn{margin:12px 4px 0;font-size:.95rem;line-height:1.4;color:#C9D1EA;text-align:center}
 .rs-gn b{color:#fff}
 .rs-alt{display:block;margin:10px auto 0;padding:8px;font-weight:700;color:#C9D1EA;text-decoration:underline;text-underline-offset:4px}
+.gprz{display:inline-flex;align-items:center;gap:4px}
+.gprz svg{width:.95em;height:.95em}
 </style>
 </head>
 <body>
@@ -2965,6 +2967,7 @@ const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(
 const curOf = c => (c.k === 'gem' ? 'gems' : c.k === 'bc' ? 'bonus' : 'cash');
 const paidTop = n => Math.max(10, Math.floor(n * 0.1));
 const fmtMoney = (amt, cur) => cur === 'gems' ? `${Math.round(amt).toLocaleString()} gems` : `$${Number.isInteger(amt) ? amt.toLocaleString() : amt.toFixed(2)}${cur === 'bonus' ? ' BC' : ''}`;
+const fmtPrize = (amt, cur) => cur === 'gems' ? `<span class="gprz">${Math.round(amt).toLocaleString()}${gemIcon()}</span>` : fmtMoney(amt, cur);
 function prizeFor(c, rank, n) {
   const cur = curOf(c), top = paidTop(n);
   if (rank === 1) return { amt: c.prize, cur };
@@ -3046,7 +3049,7 @@ function paintLive(force) {
   const last = poly.split(' ').pop().split(',');
   const lad = ladder(c, e.n), mine = lad.findIndex(t => r >= t.a && r <= t.z);
   const nextT = mine > 0 ? lad[mine - 1] : mine === -1 ? lad[lad.length - 1] : null;
-  const nextLine = nextT ? `${(r - nextT.z).toLocaleString()} place${r - nextT.z === 1 ? '' : 's'} to ${nextT.l} (${fmtMoney(nextT.p.amt, nextT.p.cur)})` : 'Top of the board!';
+  const nextLine = nextT ? `${(r - nextT.z).toLocaleString()} place${r - nextT.z === 1 ? '' : 's'} to ${nextT.l} (${fmtPrize(nextT.p.amt, nextT.p.cur)})` : 'Top of the board!';
   const h = OPP.map(o => o.h), sc = e.score;
   const row = (rank, handle, score, src, me) => `<div class="lrow2${me ? ' me' : ''}"><span class="n">${rank}</span><img src="${src}" alt=""><span class="h">${me ? 'You' : '@' + esc(handle)}</span><span class="s">${score}</span></div>`;
   let board = row(1, h[(e.seed) % 8], Math.min(99, sc + 9), SEED[(e.seed + 1) % SEED.length].src) + row(2, h[(e.seed + 3) % 8], Math.min(98, sc + 8), SEED[(e.seed + 4) % SEED.length].src) + row(3, h[(e.seed + 5) % 8], Math.min(97, sc + 6), SEED[(e.seed + 7) % SEED.length].src);
@@ -3056,7 +3059,7 @@ function paintLive(force) {
     <div class="lv-top"><button class="lv-back" id="lvBack" aria-label="Back to competitions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
       <div class="lv-t">${cxPill(c)}<h2>${esc(c.t)}</h2></div><span class="lv-live">LIVE</span></div>
     <div class="lv-cd"><span>Results in</span><b id="lvCd">${fmtClock(e.end - now)}</b></div>
-    <div class="lv-pz k-${c.k}"><div><small>1st prize</small><b>${fmtMoney(c.prize, curOf(c))}</b></div><div><small>Prizes to</small><b>#${paidTop(e.n).toLocaleString()}</b></div><div class="${prizeFor(c, r, e.n) ? 'win' : ''}"><small>${prizeFor(c, r, e.n) ? 'You’d win now' : 'To a prize'}</small><b>${prizeFor(c, r, e.n) ? fmtMoney(prizeFor(c, r, e.n).amt, prizeFor(c, r, e.n).cur) : (r - paidTop(e.n)).toLocaleString() + ' places'}</b></div></div>
+    <div class="lv-pz k-${c.k}"><div><small>1st prize</small><b>${fmtPrize(c.prize, curOf(c))}</b></div><div><small>Prizes to</small><b>#${paidTop(e.n).toLocaleString()}</b></div><div class="${prizeFor(c, r, e.n) ? 'win' : ''}"><small>${prizeFor(c, r, e.n) ? 'You’d win now' : 'To a prize'}</small><b>${prizeFor(c, r, e.n) ? fmtPrize(prizeFor(c, r, e.n).amt, prizeFor(c, r, e.n).cur) : (r - paidTop(e.n)).toLocaleString() + ' places'}</b></div></div>
     <div class="lv-hero k-${c.k}"><img src="${entrySrc(e)}" alt="Your entry"><div class="ov"><div><small>YOUR RANK</small><b>#${r.toLocaleString()}</b><span>of ${e.n.toLocaleString()} entries</span></div>
       <div class="mvb">${d ? `<i class="${d > 0 ? 'up' : 'dn'}">${d > 0 ? '▲' : '▼'} ${Math.abs(d)}</i>` : '<i>–</i>'}<span>in the last 10 min</span></div></div></div>
     <div class="lv-box"><div class="hd"><b>Your climb</b><span>Entered at #${e.startR.toLocaleString()}</span></div>
@@ -3064,7 +3067,7 @@ function paintLive(force) {
         <polyline points="${poly}" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${last[0]}" cy="${last[1]}" r="5" fill="currentColor"/></svg>
       <div class="ax"><span>Entered</span><span>Now</span></div></div>
     <div class="lv-box"><div class="hd"><b>Prizes</b><span class="nx">${nextLine}</span></div>
-      ${lad.map((t, i) => `<div class="lad${i === mine ? ' me' : ''}"><span>${t.l}${i === mine ? ` <em>YOU · #${r}</em>` : ''}</span><b>${fmtMoney(t.p.amt, t.p.cur)}${t.each ? ' each' : ''}</b></div>`).join('')}
+      ${lad.map((t, i) => `<div class="lad${i === mine ? ' me' : ''}"><span>${t.l}${i === mine ? ` <em>YOU · #${r}</em>` : ''}</span><b>${fmtPrize(t.p.amt, t.p.cur)}${t.each ? ' each' : ''}</b></div>`).join('')}
       <p class="ft">Top 10% win. ${curOf(c) === 'gems' ? 'Lower places win 25 gems.' : 'Places 11 and below in the top 10% win $1 Cash.'}</p></div>
     <div class="lv-box"><div class="hd"><b>Leaderboard</b></div>${board}</div>
     <div class="lv-lock"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h1a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 6 10zm2.5 0h5V7.5a2.5 2.5 0 0 0-5 0z"/></svg>
@@ -3097,7 +3100,7 @@ function openResult(e) {
   lvShow(pz ? `<div class="lv-in rs win">${cxPill(c)}<span class="rs-kick">Competition results</span><span class="rs-sub">${esc(c.t)} · Final</span>
       <svg class="rs-tro" viewBox="0 0 96 96" aria-hidden="true"><path d="M28 12h40v22a20 20 0 0 1-40 0z" fill="#FFC93C"/><path d="M28 18H16a12 12 0 0 0 14 15M68 18h12a12 12 0 0 1-14 15" stroke="#E79A00" stroke-width="5" fill="none"/><path d="M43 52h10v14H43z" fill="#E79A00"/><path d="M30 82a18 10 0 0 1 36 0z" fill="#FFC93C"/><rect x="28" y="80" width="40" height="8" rx="3" fill="#B9761A"/></svg>
       <h2>You placed ${ord(e.fin)}</h2><p>out of ${e.n.toLocaleString()} entries</p>
-      <div class="rs-won"><small>YOU WON</small><b>${fmtMoney(pz.amt, pz.cur)}</b><span>Added to your ${pz.cur === 'cash' ? 'Cash' : pz.cur === 'bonus' ? 'Bonus Cash' : 'Gems'} balance</span></div>
+      <div class="rs-won"><small>YOU WON</small><b>${fmtPrize(pz.amt, pz.cur)}</b><span>Added to your ${pz.cur === 'cash' ? 'Cash' : pz.cur === 'bonus' ? 'Bonus Cash' : 'Gems'} balance</span></div>
       ${stats}<img class="rs-img" src="${entrySrc(e)}" alt="Your winning entry">
       ${galBtn('bt-cta')}${galNote}</div>`
     : `<div class="lv-in rs2">
@@ -3111,7 +3114,7 @@ function openResult(e) {
       ${galBtn('rs2-go')}${galNote}</div>`);
   { ['segJudge', 'segStudio', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segCompete').setAttribute('aria-pressed', 'true'); setTimeout(() => { $('#ptitle').textContent = 'Results'; }, 0); }
   $('#lv').scrollTop = 0; paintWallet(); paintGems(false);
-  if (pz) setTimeout(() => celebrate({ src: entrySrc(e), score: e.score, title: `You placed ${ord(e.fin)}!`, text: `You won <b>${fmtMoney(pz.amt, pz.cur)}</b> in ${esc(c.t)}, out of ${e.n.toLocaleString()} entries. It’s in your ${pz.cur === 'cash' ? 'Cash' : pz.cur === 'bonus' ? 'Bonus Cash' : 'Gems'} balance.`, cta: 'Collect my prize', onCta: () => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize` }); }, onLater: () => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize` }); } }), 500);
+  if (pz) setTimeout(() => celebrate({ src: entrySrc(e), score: e.score, title: `You placed ${ord(e.fin)}!`, text: `You won <b>${fmtPrize(pz.amt, pz.cur)}</b> in ${esc(c.t)}, out of ${e.n.toLocaleString()} entries. It’s in your ${pz.cur === 'cash' ? 'Cash' : pz.cur === 'bonus' ? 'Bonus Cash' : 'Gems'} balance.`, cta: 'Collect my prize', onCta: () => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize` }); }, onLater: () => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize` }); } }), 500);
   const back = () => { lvClose(); if ($('#flow').classList.contains('cxmode')) openComps(); };
   if ($('#rsBack')) $('#rsBack').onclick = back;
   $('#rsNext').onclick = () => { lvClose(); openComps(); };
