@@ -1596,6 +1596,28 @@ button.bar:hover span:first-child{color:var(--pink)}
 /* Welcome back on the gallery */
 .gwb{margin:6px 2px 12px;font:400 clamp(1.5rem,7vw,2rem)/1.05 "Archivo Black","Arial Black",sans-serif;text-transform:uppercase;color:#fff}
 .gwb span{background:linear-gradient(180deg,#FFF3A8,#FFC93C 55%,#E79A00);-webkit-background-clip:text;background-clip:text;color:transparent;overflow-wrap:anywhere}
+/* Results (no prize) */
+.lv-in.rs2{display:block;max-width:520px;margin:0 auto;padding:22px 16px 28px;text-align:center;color:#fff}
+.rs2-sub{display:flex;align-items:center;gap:14px;justify-content:center;font-weight:800;font-size:.95rem;letter-spacing:.18em;text-transform:uppercase}
+.rs2-sub::before,.rs2-sub::after{content:"";flex:1;max-width:70px;height:2px;background:#9B3CFF}
+.rs2-ph{width:62%;max-width:240px;aspect-ratio:1.1;margin:18px auto 0;padding:4px;border-radius:24px;background:linear-gradient(135deg,#C77DFF,#8A3CF0);box-shadow:0 0 24px rgba(155,60,255,.45)}
+.rs2-ph img{width:100%;height:100%;object-fit:cover;border-radius:20px;display:block}
+.rs2-lab{margin-top:20px;font-weight:800;font-size:1rem;letter-spacing:.2em;text-transform:uppercase}
+.rs2-pl{margin-top:4px;font:400 clamp(3.4rem,17vw,5rem)/1 "Archivo Black","Arial Black",sans-serif;letter-spacing:-.02em}
+.rs2-mv{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:6px 18px;border-radius:999px;font-size:1.1rem;font-weight:600;color:#F6EEFF;background:#10172C;box-shadow:0 0 0 2px #2EE59D,0 0 0 2px transparent}
+.rs2-mv{border:2px solid transparent;background:linear-gradient(#10172C,#10172C) padding-box,linear-gradient(90deg,#2EE59D,#9B3CFF) border-box;box-shadow:none}
+.rs2-mv b{font:800 1.35rem/1 "Bricolage Grotesque",sans-serif;color:#2EE59D}
+.rs2-mv.dn{background:linear-gradient(#10172C,#10172C) padding-box,linear-gradient(90deg,#FF5C8A,#9B3CFF) border-box}
+.rs2-mv.dn b{color:#FF7A9C}
+.rs2-of{margin:8px 0 0;font-size:1.05rem;color:#C9D1EA}
+.rs2-st{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+.rs2-st>div{display:grid;place-content:center;gap:2px;min-height:72px;padding:8px 6px;border-radius:16px;background:#10172C;box-shadow:inset 0 0 0 1.5px #26304F}
+.rs2-st b{font:800 1.35rem/1.1 "Bricolage Grotesque",sans-serif}
+.rs2-st small{font-size:.85rem;color:#C9D1EA}
+.rs2-st .g b{font-size:1rem;color:#2EE59D}
+.rs2-go{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:60px;margin-top:20px;border-radius:999px;font:800 1.2rem/1 "Bricolage Grotesque",sans-serif;text-transform:uppercase;letter-spacing:.02em;color:#fff;background:linear-gradient(95deg,#FF2DA6,#B23CFF 60%,#9B3CFF);box-shadow:0 0 0 2px rgba(255,140,220,.6),0 0 24px rgba(255,45,170,.45)}
+.rs2-go span{font-size:1.4rem}
+#lv:has(.rs2){background:#080B1C}
 </style>
 </head>
 <body>
@@ -2901,15 +2923,16 @@ function openResult(e) {
       <div class="rs-won"><small>YOU WON</small><b>${fmtMoney(pz.amt, pz.cur)}</b><span>Added to your ${pz.cur === 'cash' ? 'Cash' : pz.cur === 'bonus' ? 'Bonus Cash' : 'Gems'} balance</span></div>
       ${stats}<img class="rs-img" src="${entrySrc(e)}" alt="Your winning entry">
       <button class="bt-cta" id="rsNext">Enter the next one</button><button class="bt-no" id="rsBack">Back to competitions</button></div>`
-    : `<div class="lv-in rs miss">${cxPill(c)}<span class="rs-sub">${esc(c.t)} · Final</span>
-      <img class="rs-img" src="${entrySrc(e)}" alt="Your entry">
-      <h2>You finished #${e.fin.toLocaleString()}</h2><p>out of ${e.n.toLocaleString()} entries</p>
-      <div class="rs-close"><div class="hd"><b>${e.fin - top <= 60 ? 'So close' : 'Keep going'}</b><span>${(e.fin - top).toLocaleString()} places from a prize</span></div>
-        <div class="bar"><i style="width:${Math.max(8, 100 - (e.fin - top) / e.n * 100)}%"></i></div>
-        <div class="ax"><span>You · #${e.fin.toLocaleString()}</span><span class="g">Prizes to #${top}</span></div>
-        <p>${catBy(low).name} is your lowest score, so that's the fix most likely to lift your next entry.</p></div>
-      ${stats}
-      <button class="bt-cta" id="rsNext">Enter the next one</button><button class="bt-no" id="rsStudio">Improve this photo in Enhance</button></div>`);
+    : `<div class="lv-in rs2">
+      <div class="rs2-sub"><span>${esc(c.t)} · Final</span></div>
+      <div class="rs2-ph"><img src="${entrySrc(e)}" alt="Your entry"></div>
+      <div class="rs2-lab">Your final place</div>
+      <div class="rs2-pl">#${e.fin.toLocaleString()}</div>
+      <div class="rs2-mv ${climbed >= 0 ? 'up' : 'dn'}"><b>${climbed >= 0 ? '↑' : '↓'} ${Math.abs(climbed).toLocaleString()}</b> places ${climbed >= 0 ? 'climbed' : 'dropped'}</div>
+      <p class="rs2-of">out of ${e.n.toLocaleString()} entries</p>
+      <div class="rs2-st"><div><b>${e.score}</b><small>Your score</small></div><div><b>Top ${Math.max(1, Math.ceil(e.fin / e.n * 100))}%</b><small>Of entries</small></div><div class="g"><b>Prizes to #${top.toLocaleString()}</b></div></div>
+      <button class="rs2-go" id="rsNext">Enter next competition <span aria-hidden="true">→</span></button></div>`);
+  if (!pz) { ['segJudge', 'segStudio', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segCompete').setAttribute('aria-pressed', 'true'); setTimeout(() => { $('#ptitle').textContent = 'Results'; }, 0); }
   $('#lv').scrollTop = 0; paintWallet(); paintGems(false);
   if (pz) setTimeout(() => celebrate({ src: entrySrc(e), score: e.score, title: `You placed ${ord(e.fin)}!`, text: `You won <b>${fmtMoney(pz.amt, pz.cur)}</b> in ${esc(c.t)}, out of ${e.n.toLocaleString()} entries. It’s in your ${pz.cur === 'cash' ? 'Cash' : pz.cur === 'bonus' ? 'Bonus Cash' : 'Gems'} balance.`, cta: 'Collect my prize', onCta: () => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize` }); }, onLater: () => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize` }); } }), 500);
   const back = () => { lvClose(); if ($('#flow').classList.contains('cxmode')) openComps(); };
@@ -3042,7 +3065,7 @@ const setHH = () => { const g = $('#shell > .seg'); if (g && g.offsetHeight) $('
 window.addEventListener('resize', setHH); new MutationObserver(setHH).observe($('#app'), { attributes: true, attributeFilter: ['class'] }); setTimeout(setHH, 0);
 (() => {
   const T = { segCompete: 'Competitions', segStudio: 'Enhance photo', segJudge: 'Judge photos', segGallery: 'Gallery' };
-  const upd = () => { const b = document.querySelector('.seg button[aria-pressed="true"]'); $('#ptitle').textContent = b ? T[b.id] : ($('#flow').classList.contains('homemode') ? 'Home' : ''); };
+  const upd = () => { const b = document.querySelector('.seg button[aria-pressed="true"]'); if (document.querySelector('#lv.on .rs2')) { $('#ptitle').textContent = 'Results'; return; } $('#ptitle').textContent = b ? T[b.id] : ($('#flow').classList.contains('homemode') ? 'Home' : ''); };
   new MutationObserver(upd).observe(document.querySelector('.seg'), { attributes: true, subtree: true, attributeFilter: ['aria-pressed'] });
   upd();
 })();
