@@ -3639,7 +3639,6 @@ function myGalleryHTML() {
   const eligible = S.photos.filter(p => p.s.total >= CFG.GALLERY && !new Set(Object.values(S.frames || {})).has(p.id)).length;
   const photos = R.slots.map((_, s) => { const p = framed(r, s); return p ? { src: p.src, score: p.s.total } : null; });
   return `${roomViewHTML(r)}
-${compCardsHTML('Fill your gallery', 'gem', 'Free to enter')}${compCardsHTML('Win real cash', 'cash', 'Cash prizes')}
 <div class="lvl"><div class="hex">${lv}</div><div class="t"><b>LEVEL ${lv} · <span>${title.toUpperCase()}</span></b><div class="pb"><i style="width:${filled / R.slots.length * 100}%"></i></div>
     <small>${filled === R.slots.length ? `Room ${r + 1} complete` : `${R.slots.length - filled} frame${R.slots.length - filled === 1 ? '' : 's'} to complete Room ${r + 1}`}</small></div></div>
   <p class="gnote">${TROPHY_S}<span>Hang your best photos, one per category. <b>Room 1 needs 75+</b>, Room 2 85+, Room 3 90+. Fill every frame in a room to unlock the next one. The Wildcard frame takes any photo.</span></p>`;
