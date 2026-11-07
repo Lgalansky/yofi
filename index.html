@@ -2430,6 +2430,22 @@ function openSignup(then, opts = {}) {
     if (firstTime) setTimeout(() => askAlerts(() => goalRoute(cur())), 1600);
   };
 }
+function celebrate({ src, score, title, text, cta, onCta, later, onLater }) {
+  const c = $('#coach');
+  c.innerHTML = `<div class="crbox" role="dialog" aria-modal="true" aria-labelledby="crT">
+    <div class="cr-rays" aria-hidden="true"></div>${[...Array(18)].map((_, i) => `<i class="cr-cf" style="left:${(i * 53) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('')}
+    <svg class="cr-crown" viewBox="0 0 32 24" aria-hidden="true"><path d="M3 7l6.5 6L16 3l6.5 10L29 7l-2.6 13H5.6z" fill="#FFC93C"/><rect x="5.5" y="19.5" width="21" height="3" rx="1.2" fill="#E9A514"/><circle cx="3" cy="6.5" r="2" fill="#FFC93C"/><circle cx="16" cy="2.5" r="2" fill="#FFC93C"/><circle cx="29" cy="6.5" r="2" fill="#FFC93C"/></svg>
+    <div class="cr-photo"><img src="${src}" alt="Your photo"><span class="cr-score">${score}</span></div>
+    <h2 id="crT">${title}</h2>
+    <p>${text}</p>
+    <button class="bt-cta" id="crGo">${cta}</button>
+    ${later ? `<button class="bt-no" id="crLater">${later}</button>` : ''}</div>`;
+  c.classList.add('on', 'cr');
+  const close = () => c.classList.remove('on', 'cr');
+  $('#crGo').onclick = () => { close(); if (onCta) onCta(); };
+  if ($('#crLater')) $('#crLater').onclick = () => { close(); if (onLater) onLater(); };
+  c.onclick = e => { if (e.target === c) { close(); if (onLater) onLater(); } };
+}
 function showCompReady(p, goal) {
   const c = $('#coach'), fits = CX.filter(x => x.k !== 'gem' && cxFits(x, p)), first = goal || fits[0];
   c.innerHTML = `<div class="crbox" role="dialog" aria-modal="true" aria-labelledby="crT">
@@ -2867,7 +2883,7 @@ function cxPay(c, q) {
   else { if ((S.cash || 0) < c.fee) { openStore(`${c.t} costs $${c.fee} Cash to enter.`); return; } S.cash = +(S.cash - c.fee).toFixed(2); }
   const e = makeEntry(c, q); S.entries.push(e); S.entered[c.id] = e.id; save(); paintWallet(); paintGems(false);
   const y = $('#flowBody').scrollTop; openComps(); $('#flowBody').scrollTop = y;
-  toast(`Entered ${c.t} with your ${q.s.total} photo. It's locked in. Good luck!`);
+  celebrate({ src: q.src, score: q.s.total, title: `You’re in ${esc(c.t)}!`, text: `Your ${q.s.total} photo is locked in. Results in <b>${fmtLeft(Math.max(0, e.end - Date.now()))}</b>. Good luck!`, cta: 'Watch it live', onCta: () => openLive(e), later: 'Back to competitions' });
 }
 function openMenu() {
   const qn = S.photos.filter(p => p.s.total >= CFG.QUALIFY).length;
@@ -3390,7 +3406,7 @@ function openBattle() {
         <b>${won ? '+' : '−'}${(won ? win : lose).toLocaleString()}${gemIcon('')}</b>
         <p>${me.s.total === their ? 'Tied scores. The crowd broke the tie.' : won ? `Your ${me.s.total} beat their ${their}. Half their gems are yours.` : `Their ${their} beat your ${me.s.total}. A stronger photo wins more battles.`}</p></div>
       <button class="bt-cta" id="bDone">${won ? 'Keep judging' : 'Improve my photo'}</button>`;
-    if (won) setTimeout(() => gemExplosion(win, { label: `Taken from @${o.h}` }), 250); else paintGems();
+    if (won) setTimeout(() => celebrate({ src: me.src, score: me.s.total, title: 'You won the battle!', text: `${me.s.total === their ? 'Tied scores and the crowd picked yours.' : `Your ${me.s.total} beat @${esc(o.h)}’s ${their}.`} <b>+${win.toLocaleString()} gems</b> are yours.`, cta: 'Collect my gems', onCta: () => gemExplosion(win, { label: `Taken from @${o.h}` }), onLater: () => gemExplosion(win, { label: `Taken from @${o.h}` }) }), 700); else paintGems();
     $('#bDone').onclick = () => { close(); if (!won) go('studio'); };
   };
 }
