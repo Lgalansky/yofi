@@ -2704,8 +2704,7 @@ function renderVariants(top) {
       <div class="s">${v.s[EN.cat]}<small class="up">+${c}</small></div>
       <div class="l"><b style="color:var(--ink)">${v.label}</b><br>${v.note}</div></button>`;
   }).join('')}</div>
-  <div class="actions"><button class="btn block" id="useBtn"></button>
-  <button class="btn quiet block" id="moreBtn">Try 3 more <span class="cost">${gemIcon()}${CFG.COST}</span></button></div>${engetHTML()}`;
+  <div class="actions"><button class="btn block" id="useBtn"></button></div>${engetHTML()}`;
   $('#flowBack').style.visibility = 'visible';
   const paint = () => {
     document.querySelectorAll('#enArea [data-i]').forEach(x => x.setAttribute('aria-pressed', +x.dataset.i === EN.sel));
@@ -2713,7 +2712,6 @@ function renderVariants(top) {
   };
   document.querySelectorAll('#enArea [data-i]').forEach(x => x.onclick = () => { EN.sel = +x.dataset.i; paint(); });
   paint();
-  $('#moreBtn').onclick = () => generate(2);
   $('#useBtn').onclick = () => applyVariant();
 }
 function applyVariant() {
