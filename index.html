@@ -4035,10 +4035,11 @@ function openBattle() {
     $('#bArea').innerHTML = `<div class="bt-res ${won ? 'win' : 'lose'}"><span class="tag">${won ? 'You won' : `@${esc(o.h)} won`}</span>
         <b>${won ? '+' : '−'}${(won ? win : lose).toLocaleString()}${gemIcon('')}</b>
         <p>${me.s.total === their ? 'Tied scores. The crowd broke the tie.' : won ? `Your ${me.s.total} beat their ${their}. The gems are yours.` : `Their ${their} beat your ${me.s.total}. A stronger photo wins more battles.`}</p></div>
-      <button class="bt-cta" id="bDone">${won ? 'Keep judging' : 'Improve my photo'}</button>`;
+      <button class="bt-cta" id="bDone">Keep judging</button>${won ? '' : '<button class="bt-no" id="bImp">Improve my photo</button>'}`;
     requestAnimationFrame(() => { const r = $('#bArea .bt-res'); if (r) r.scrollIntoView({ block: 'center', behavior: 'smooth' }); });
     if (won) setTimeout(() => celebrate({ src: me.src, score: me.s.total, title: S.streak >= 3 ? `${S.streak} wins in a row!` : 'You won the battle!', text: `${S.streak >= 3 ? 'You’re on fire. ' : ''}${me.s.total === their ? 'Tied scores and the crowd picked yours.' : `Your ${me.s.total} beat @${esc(o.h)}’s ${their}.`} <b>+${win.toLocaleString()} gems</b> are yours.`, cta: 'Collect my gems', onCta: () => gemExplosion(win, { label: `Taken from @${o.h}` }), onLater: () => gemExplosion(win, { label: `Taken from @${o.h}` }) }), 700); else paintGems();
-    $('#bDone').onclick = () => { close(); if (!won) { nudgeFrom = null; go('studio'); } else setTimeout(maybeEnhanceNudge, 2600); };
+    $('#bDone').onclick = () => { close(); go('judge'); if (won) setTimeout(maybeEnhanceNudge, 2600); };
+    if ($('#bImp')) $('#bImp').onclick = () => { close(); nudgeFrom = null; go('studio'); };
   };
 }
 
