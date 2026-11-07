@@ -2011,6 +2011,40 @@ button.bar:hover span:first-child{color:var(--pink)}
 .vs-row .th img{width:34px;height:34px;border-radius:8px;object-fit:cover;display:block}
 .vs-row.l .th img{opacity:.6}
 .vs-row .ago{font-size:.72rem;color:#9AA6C8;text-align:right}
+.nc-go{display:flex;width:100%;justify-content:space-between;padding:12px 16px;font-size:.95rem}
+.nc-buy{display:block;margin:10px auto 0;font-weight:700;font-size:.85rem;color:#A796C6;text-decoration:underline;text-underline-offset:3px}
+/* Show the whole photo */
+.tot-c{background:#0B0616}
+.hero-photo>img.fitfg{width:100%!important;height:100%!important;object-fit:cover!important}
+img.fitbg{position:absolute!important;inset:0;width:100%!important;height:100%!important;object-fit:cover!important;filter:blur(16px) brightness(.55);z-index:0;pointer-events:none;clip-path:inset(0 round 26px);border-radius:26px}
+.tot-c img.fitbg{clip-path:inset(0 round 20px);border-radius:20px}
+.hero-photo{border-radius:26px}
+.padd .pl{line-height:0!important;padding-bottom:3px}
+img.fitfg{position:relative;z-index:1;object-fit:contain!important}
+.hero-photo>*:not(img),.tot-c>*:not(img){z-index:2}
+#studio .swp{position:sticky;top:0;z-index:5;margin:0 -14px;padding:6px 14px 8px;background:#140A26}
+#studio #cmp{top:50px}
+#studio #cmp,#flowBody .hero-photo.rsph{box-shadow:0 0 0 100vmax #140A26!important;clip-path:inset(-24px -100vmax 0 -100vmax)}
+/* Out-of-gems swipe pop */
+.swpop{touch-action:pan-y}
+.swpop .sp-gem svg{width:56px;height:56px;filter:drop-shadow(0 6px 16px rgba(80,160,255,.6))}
+.swpop h2{margin:8px 0 6px!important;font-size:clamp(1.6rem,7vw,2rem)!important}
+.swpop .sp-bar{height:8px;margin:12px 6px 4px;border-radius:4px;background:rgba(255,255,255,.15);overflow:hidden}
+.swpop .sp-bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
+.sp-demo{position:relative;height:104px;margin:14px auto 4px;width:220px;overflow:hidden}
+.sp-cards{position:absolute;inset:8px 0;display:flex;gap:8px;animation:spSlide 2.2s ease-in-out infinite}
+.sp-cards span{flex:0 0 100%;border-radius:14px;display:grid;place-content:center;gap:4px;text-align:center;color:#fff}
+.sp-cards b{font:800 1.3rem/1 "Bricolage Grotesque",sans-serif}
+.sp-cards small{display:inline-flex;align-items:center;gap:4px;justify-content:center;font-size:.8rem;opacity:.9}
+.sp-cards small svg{width:14px;height:14px}
+.sp-cards .a{background:linear-gradient(135deg,#3A1764,#5A2BB0);box-shadow:inset 0 0 0 2px rgba(255,255,255,.2)}
+.sp-cards .b{background:linear-gradient(135deg,#21C98A,#0E9A86);box-shadow:inset 0 0 0 2px rgba(255,255,255,.3)}
+@keyframes spSlide{0%,25%{transform:translateX(0)}60%,85%{transform:translateX(calc(-100% - 8px))}100%{transform:translateX(0)}}
+.sp-hand{position:absolute;top:50px;left:55%;z-index:2;font-size:2.2rem;animation:spHand 2.2s ease-in-out infinite;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+@keyframes spHand{0%,20%{transform:translateX(40px)}60%,85%{transform:translateX(-60px)}100%{transform:translateX(40px)}}
+.sp-arrow{position:absolute;top:8px;left:14px;font-size:1.4rem;font-weight:800;color:#fff;opacity:.8}
+.sp-how{font-size:.95rem!important}
+.sp-buy{display:block;margin:8px auto 0;font-weight:700;font-size:.9rem;color:#EADBFF;text-decoration:underline;text-underline-offset:3px;position:relative}
 </style>
 </head>
 <body>
@@ -2901,13 +2935,30 @@ const fixCost = p => !p ? CFG.COST : p.s.total >= 85 ? 150 : p.s.total >= 75 ? 1
 function needCardHTML(p) {
   const cost = fixCost(p), have = S.gems, short = Math.max(0, cost - have);
   return `<div class="needc" id="needC"><div class="nc-top">${gemIcon('')}<b>${have} / ${cost} gems</b><span>${short} to go</span></div><i class="nc-bar"><i style="width:${Math.min(100, have / cost * 100)}%"></i></i>
-    <div class="nc-btns"><button class="ngx2 judge sm" data-get="judge"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg></span><b>Free gems</b><small>Judge</small></button><button class="ngx2 buy sm" data-get="store"><span class="ic">${gemIcon('')}</span><b>Buy gems</b><small>Packs</small></button></div>
-    <p class="nc-hint">← or swipe left to judge and earn</p></div>`;
+    <button class="swp-b nc-go" data-swp="judge">Swipe to Judge to earn gems<span class="ar">→</span></button>
+    <button class="nc-buy" data-get="store">or buy gems</button></div>`;
 }
+function fitPhotos(root) {
+  (root || document).querySelectorAll('.tot-c > img:not(.fitbg)').forEach(im => {
+    const box = im.parentElement; const old = box.querySelector(':scope > img.fitbg');
+    if (old) { old.src = im.src; return; }
+    const bg = document.createElement('img'); bg.className = 'fitbg'; bg.alt = ''; bg.src = im.src; bg.setAttribute('aria-hidden', 'true'); box.insertBefore(bg, im); im.classList.add('fitfg');
+  });
+  (root || document).querySelectorAll('.hero-photo > img:not(.fitbg)').forEach(im => {
+    const box = im.parentElement;
+    const shape = () => { if (!im.naturalWidth) return; const ratio = im.naturalWidth / im.naturalHeight;
+      if (!box.dataset.h) box.dataset.h = box.getBoundingClientRect().height || 300;
+      const H = +box.dataset.h, W = box.parentElement.clientWidth - 0;
+      let w = W, h = W / ratio; if (h > H) { h = H; w = H * ratio; }
+      box.style.width = Math.round(w) + 'px'; box.style.height = Math.round(h) + 'px'; box.style.marginLeft = box.style.marginRight = 'auto'; box.style.minHeight = '0'; box.style.aspectRatio = 'auto'; im.classList.add('fitfg'); };
+    if (im.complete) shape(); else im.addEventListener('load', shape, { once: true });
+  });
+}
+new MutationObserver(() => fitPhotos()).observe(document.getElementById('app'), { childList: true, subtree: true });
 function startEnhance(p, cat) {
   const lk = photoLock(p); if (lk) { lockToast(lk); return; }
   if (isMaxed(p, cat)) { const o = lowestOpen(p); if (!o) { toast('Every category is at its best on this photo.'); return; } cat = o; }
-  if (S.gems < fixCost(p) && !$('#flow').classList.contains('on') && $('#panes').dataset.at === 'studio' && $('#needC')) { const c = $('#needC'); c.classList.remove('pulse'); void c.offsetWidth; c.classList.add('pulse'); c.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+  if (S.gems < fixCost(p) && !$('#flow').classList.contains('on')) { swipePop(p); return; }
   openEnhance(p, cat);
   if (S.gems >= fixCost(p)) generate(1);
   else needFixGems(p);
@@ -3504,8 +3555,34 @@ function showNeedGems(cost, what, back, after, retry) {
   $('#ngBuy').onclick = () => { close(); openStore(what, retry && (() => S.gems >= cost && retry())); };
 }
 function needFixGems(p) {
-  const cost = fixCost(p || cur()), n = Math.ceil(Math.max(0, cost - S.gems) / CFG.VOTE);
-  showNeedGems(cost, `Enhancing this photo costs ${cost} gems.`, 'photo', `Judge about ${n} photo${n === 1 ? '' : 's'}, then head back to Enhance.`);
+  if (p) { S.cur = p.id; save(); }
+  if ($('#flow').classList.contains('on')) closeFlow();
+  go('studio'); renderStudio();
+  setTimeout(() => swipePop(p || cur()), 80);
+}
+function swipePop(p) {
+  const cost = fixCost(p), have = S.gems, short = Math.max(0, cost - have), c = $('#coach');
+  const picks = Math.ceil(short / CFG.VOTE);
+  c.innerHTML = `<div class="crbox swpop" role="dialog" aria-modal="true" aria-labelledby="spT">
+    <div class="sp-gem">${gemIcon('')}</div>
+    <h2 id="spT">You need ${short} more gems</h2>
+    <p>Improving this photo costs <b>${cost}</b>. You have <b>${have}</b>.</p>
+    <div class="sp-bar"><i style="width:${Math.min(100, have / cost * 100)}%"></i></div>
+    <div class="sp-demo" aria-hidden="true"><div class="sp-cards"><span class="a"><b>Enhance</b><small>Your photo</small></span><span class="b"><b>Judge</b><small>+${CFG.VOTE} ${gemIcon()} per right pick</small></span></div><span class="sp-hand">👆</span></div>
+    <p class="sp-how">Swipe left to Judge. Every pick you get right earns <b>+${CFG.VOTE}</b> ${gemIcon()}${picks > 1 ? ` · about ${picks} picks` : ''}.</p>
+    <button class="bt-cta" id="spGo">Swipe to Judge →</button>
+    <button class="sp-buy" data-get="store">or buy gems</button>
+    <button class="bt-no" id="spNo">Not now</button></div>`;
+  c.classList.add('on', 'cr');
+  const close = () => c.classList.remove('on', 'cr');
+  $('#spGo').onclick = () => { close(); go('judge'); };
+  $('#spNo').onclick = close;
+  c.querySelector('.sp-buy').addEventListener('click', close);
+  c.onclick = e => { if (e.target === c) close(); };
+  let x0 = null;
+  const box = c.querySelector('.swpop');
+  box.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  box.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (dx < -50) { close(); go('judge'); } }, { passive: true });
 }
 function needGems(c) {
   showNeedGems(c.fee, `Entering ${esc(c.t)} costs ${c.fee} gems.`, 'comps', `Earn ${c.fee - S.gems} gems, then come back to enter ${c.t}.`, () => cxEnter(c));
@@ -4220,13 +4297,13 @@ function renderStudio() {
   st.innerHTML = `<div class="swp r"><button class="swp-b" data-swp="judge">Swipe to Judge<span class="ar">→</span></button></div>
 ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
-    <p class="to80">${lk ? '' : p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
+    ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can go into gallery frames and competitions.</p>' : ''}
     ${stage >= 1 ? `<div class="qrow">${stage === 2 && !lk ? '<button class="btn block" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
     ${lk || !sorted.length ? '' : '<h3 class="sec">Improve your photo</h3>'}
     ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span><span class="gpill">${gemIcon()}${fixCost(p)}</span></button><p class="fixsub">${sorted[0].name} is your lowest at ${p.s[sorted[0].k]}. Tap a score bar above to pick another.</p>${S.gems < fixCost(p) ? needCardHTML(p) : ''}`}`}
 ${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCardsHTML('Win real cash', 'cash', 'Cash prizes') : ''}
     <div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
-    <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl">+</span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`;
+    <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`;
   animateRing(st);
   st.querySelectorAll('.fix').forEach(b => b.onclick = () => startEnhance(p, b.dataset.c));
   if ($('#stFix')) $('#stFix').onclick = () => startEnhance(p, $('#stFix').dataset.c);
