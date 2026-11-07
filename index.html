@@ -3630,8 +3630,7 @@ function hang(r, s, pid) {
   setTimeout(() => {
     toast(done ? `Room ${r + 1} complete!${r < ROOMS.length - 1 ? ` Room ${r + 2} unlocked.` : ''}` : `Hung in the ${ROOMS[r].slots[s][1]} frame.`);
     if (done && $('#gallery .rv')) burst($('#gallery .rv'));
-    const back = AFTER_HANG && (S.entries || []).find(x => x.id === AFTER_HANG && !x.done); AFTER_HANG = null;
-    if (back) setTimeout(() => { openComps(null); openLive(back); toast(`Hung in your gallery. Here’s your live rank.`); }, 1300);
+    AFTER_HANG = null;
   }, 300);
 }
 function openFramed(r, s) {
