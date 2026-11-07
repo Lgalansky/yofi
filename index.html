@@ -2731,7 +2731,7 @@ function openEntryGuide(c, bestP) {
   el.classList.add('on'); el.scrollTop = 0;
   const close = () => { el.classList.remove('on'); clearInterval(window.__ceg); };
   $('#cegBack').onclick = close; $('#cegX').onclick = close; $('#cegLater').onclick = close;
-  const upload = () => { close(); closeFlow(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
+  const upload = () => { close(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
   $('#cegGo').onclick = have ? () => { close(); closeFlow(); S.cur = bestP.id; S.goal = { cid: c.id, pid: bestP.id }; save(); go('studio'); } : upload;
   if ($('#cegNew')) $('#cegNew').onclick = upload;
   if ($('#cegBox')) $('#cegBox').onclick = () => $('#cegGo').click();
@@ -2757,7 +2757,7 @@ function cxEnter(c) {
   const paint = () => { const p = ok.find(x => x.id === sel); document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === sel)); $('#enImg').src = p.src; $('#enSc').textContent = p.s.total; };
   document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.onclick = () => { sel = b.dataset.p; paint(); });
   $('#enGo').onclick = () => { closeSheet(); cxPay(c, ok.find(x => x.id === sel)); };
-  $('#enNew').onclick = () => { closeSheet(); closeFlow(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
+  $('#enNew').onclick = () => { closeSheet(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
 }
 function showNeedGems(cost, what, back, after) {
   const have = S.gems, short = Math.max(0, cost - have), el = $('#ceg');
