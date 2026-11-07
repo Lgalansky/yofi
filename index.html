@@ -2542,8 +2542,7 @@ function showResult(p, o = {}) {
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
   else html += `<div class="opp"><h3>Biggest opportunity: ${lc.name}</h3><p>${stage === 2 ? `${lc.name} is your lowest at ${p.s[low]}. Higher scores win more battles and climb competition rankings.` : `Improve your overall score by <strong>${target - tot}</strong> point${target - tot === 1 ? '' : 's'} to ${target === CFG.GALLERY ? 'enter the gallery' : 'enter cash competitions'}.`}</p>
-    <button class="btn block fixbtn nocost" id="doFix"><span>${lc.verb}</span></button>
-    <div style="text-align:center;margin-top:6px"><button class="link" id="otherFix">Choose a different fix</button></div></div>`;
+    <button class="btn block fixbtn nocost" id="doFix"><span>${lc.verb}</span></button></div>`;
   html += engetHTML();
   if (S.user) html += `<div style="text-align:center"><button class="link" id="doneBtn">Done</button></div>`;
   else if (o.delta != null) html += `<div style="text-align:center"><button class="link" id="saveNow">Save my photo and continue</button></div>`;
@@ -2564,7 +2563,6 @@ function showResult(p, o = {}) {
   body.querySelectorAll('[data-cat]').forEach(x => x.onclick = () => askCategory(p, () => showResult(p), true));
   if (b('#doFix')) b('#doFix').onclick = () => startEnhance(p, low);
   body.querySelectorAll('[data-fix]').forEach(x => x.onclick = () => startEnhance(p, x.dataset.fix));
-  if (b('#otherFix')) b('#otherFix').onclick = () => openEnhance(p, null);
   if (b('#doneBtn')) b('#doneBtn').onclick = () => closeFlow();
   if (b('#toComps')) b('#toComps').onclick = () => { if (!S.user) { openSignup(() => openComps(p)); return; } closeFlow(); openComps(p); };
   if (b('#toGal')) b('#toGal').onclick = () => { if (!S.user) { openSignup(() => hangPhoto(p)); return; } closeFlow(); hangPhoto(p); };
