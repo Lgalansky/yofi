@@ -433,10 +433,10 @@ h1,h2,h3{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;margin:0
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .panes{position:relative;flex:1;overflow:hidden}
 .pane{position:absolute;inset:0;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-.panes[data-at="judge"] #judge{transform:translateY(0)}
-.panes[data-at="judge"] #studio{transform:translateY(100%)}
-.panes[data-at="studio"] #judge{transform:translateY(-100%)}
-.panes[data-at="studio"] #studio{transform:translateY(0)}
+.panes[data-at="judge"] #judge{transform:translateX(0)}
+.panes[data-at="judge"] #studio{transform:translateX(-100%)}
+.panes[data-at="studio"] #judge{transform:translateX(100%)}
+.panes[data-at="studio"] #studio{transform:translateX(0)}
 .hint{position:absolute;left:50%;transform:translateX(-50%);font-size:.82rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap}
 .hint::before{content:"";width:28px;height:4px;border-radius:2px;background:var(--line)}
 
@@ -1926,6 +1926,15 @@ button.bar:hover span:first-child{color:var(--pink)}
 #judge .jcap{margin-top:6px}
 .lvl.rmc .hex svg{width:34px;height:34px}
 .lvl.rmc small b{color:#fff}
+/* Enhance <-> Judge as a swipeable pair */
+.segpair{flex:2;display:flex;align-items:center;gap:2px;margin-left:6px;padding:3px;border-radius:999px;background:#F6E9F3;box-shadow:inset 0 0 0 1.5px #EBD3E4}
+.segpair button{flex:1}
+.segsw{flex:none;display:grid;place-items:center;width:22px;height:22px;color:#B48CD8}
+.segsw svg{width:18px;height:18px}
+#shell > .seg > button{flex:1}
+.panes #judge,.panes #studio{transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.panes,#judge,#studio{touch-action:pan-y}
+.tot-c img{-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none}
 </style>
 </head>
 <body>
@@ -1995,8 +2004,8 @@ button.bar:hover span:first-child{color:var(--pink)}
     <nav class="seg" role="group" aria-label="Switch screen">
       <button id="segGallery" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg><span>Gallery</span></button>
       <button id="segCompete" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg><span>Compete</span></button>
-      <button id="segStudio" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L15 9"/><path d="M15 9l2-2"/><path d="M18 2l.8 2.2L21 5l-2.2.8L18 8l-.8-2.2L15 5l2.2-.8zM9 3l.5 1.5L11 5l-1.5.5L9 7l-.5-1.5L7 5l1.5-.5z"/></svg><span>Enhance</span></button>
-      <button id="segJudge" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg><span>Judge</span></button>
+      <div class="segpair"><button id="segStudio" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L15 9"/><path d="M15 9l2-2"/><path d="M18 2l.8 2.2L21 5l-2.2.8L18 8l-.8-2.2L15 5l2.2-.8zM9 3l.5 1.5L11 5l-1.5.5L9 7l-.5-1.5L7 5l1.5-.5z"/></svg><span>Enhance</span></button>
+      <span class="segsw" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg></span><button id="segJudge" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg><span>Judge</span></button></div>
     </nav>
 
     <div class="flow" id="flow" role="dialog" aria-modal="true" aria-label="Photo scoring">
@@ -3889,21 +3898,18 @@ function go(where) {
 $('#segJudge').onclick = () => go('judge'); $('#segStudio').onclick = () => go('studio'); $('#segGallery').onclick = () => openGallery();
 $('#segCompete').onclick = () => { if (!S.user) { openSignup(() => openComps(null)); return; } openComps(null); };
 (() => {
-  const panes = $('#panes'); let y0 = null, t0 = 0, top0 = 0;
-  let jb0 = true; const jAtBottom = () => { const j = $('#judge'); return j.scrollTop + j.clientHeight >= j.scrollHeight - 4; };
-  panes.addEventListener('touchstart', e => { y0 = e.touches[0].clientY; t0 = Date.now(); top0 = $('#studio').scrollTop; jb0 = jAtBottom(); }, { passive: true });
+  const panes = $('#panes'); let x0 = null, y0 = null, t0 = 0;
+  panes.addEventListener('touchcancel', () => { x0 = null; }, { passive: true });
+  const edge = el => !!el.closest('.ncx-row, .pstrip, .fstrip, input');
+  panes.addEventListener('touchstart', e => { if (edge(e.target)) { x0 = null; return; } x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now(); }, { passive: true });
   panes.addEventListener('touchend', e => {
-    if (y0 == null) return; const dy = e.changedTouches[0].clientY - y0, dt = Date.now() - t0; y0 = null;
-    const flick = Math.abs(dy) > 70 || (Math.abs(dy) > 35 && dt < 250);
-    if (!flick) return;
-    if (panes.dataset.at === 'judge' && dy < 0 && jb0) go('studio');
-    else if (panes.dataset.at === 'studio' && dy > 0 && top0 <= 0) go('judge');
-  }, { passive: true });
-  let lock = 0;
-  panes.addEventListener('wheel', e => {
-    if (Date.now() < lock) return;
-    if (panes.dataset.at === 'judge' && e.deltaY > 30 && jAtBottom()) { go('studio'); lock = Date.now() + 800; }
-    else if (panes.dataset.at === 'studio' && e.deltaY < -30 && $('#studio').scrollTop <= 0) { go('judge'); lock = Date.now() + 800; }
+    if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0, dt = Date.now() - t0; x0 = null;
+    if (Math.abs(dx) < Math.abs(dy) * 1.2) return;
+    if (!(Math.abs(dx) > 50 || (Math.abs(dx) > 30 && dt < 300))) return;
+    SWIPED = Date.now();
+    const at = panes.dataset.at;
+    if (at === 'judge' && dx > 0) go('studio');
+    else if (at === 'studio' && dx < 0) go('judge');
   }, { passive: true });
 })();
 
@@ -3932,6 +3938,7 @@ function dailyState() {
 }
 const JUDGE_CAP = 20, JUDGE_LOW = 2;
 const crowdAvg = p => Math.round(JC.reduce((a, c) => a + crowdOf(p, c), 0) / JC.length) / 10;
+var SWIPED = 0;
 function renderJudge() {
   const p = seedAt(); if (!p || !p.owner) { $('#judge').innerHTML = '<div class="gen"><div class="spin"></div>Loading photos…</div>'; return; }
   const left = CFG.BATTLE_EVERY - S.since, ds = dailyState(), combo = S.combo || 0;
@@ -3946,8 +3953,8 @@ function renderJudge() {
     <div class="jcap"><i style="width:${Math.min(100, ds.D.n / JUDGE_CAP * 100)}%"></i></div>
     <div class="jres" id="jRes" aria-live="polite"></div>
     ${packOffer()}
-    <span class="hint static">Flick up to enhance your photos</span>`;
-  document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = () => vote(+b.dataset.i));
+    <span class="hint static">← Swipe right to enhance your photos</span>`;
+  document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = () => { if (Date.now() - SWIPED < 400) return; vote(+b.dataset.i); });
 }
 let nudgeFrom = null, nudgeT = null;
 function maybeEnhanceNudge() {
@@ -4101,7 +4108,7 @@ function renderStudio() {
   const msg = stage === 2 ? `${lk ? '<strong>Entered.</strong> ' : '<strong>Competition ready.</strong> '}${lk ? 'Locked until the results are in.' : !lowestOpen(p) ? 'Every category is maxed out, so it’s ready to compete.' : 'Keep improving it to win more battles and climb competition rankings.'} Started at ${p.start}, ${p.enh} fix${p.enh === 1 ? '' : 'es'} so far.`
     : stage === 1 ? `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions.`
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
-  st.innerHTML = `<span class="hint">Flick down to judge</span>
+  st.innerHTML = `<span class="hint">Swipe left to judge →</span>
 ${lk ? `<div class="entc"><img src="${p.src}" alt="Your entered photo"><div class="ei"><span class="et">${IC.clock}Entered · results in <b data-ll="${lk.id}">${fmtLeft(Math.max(0, lk.end - Date.now()))}</b></span><b class="en">${esc(CX.find(x => x.id === lk.cid).t)}</b><span class="er">Score <b>${tot}</b> · Rank <b>#${rankAt(lk, Date.now()).toLocaleString()}</b></span><button id="stLive">View live ›</button></div></div>` : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
     <p class="to80">${lk ? '' : p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
