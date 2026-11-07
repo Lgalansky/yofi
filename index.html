@@ -3978,7 +3978,6 @@ function renderJudge() {
     <p class="jsub2">${ds.D.n < JUDGE_CAP ? `<b>+${CFG.VOTE}</b> ${gemIcon()} when you agree · <b>${JUDGE_CAP - ds.D.n}</b> left today` : `Daily bonus used · <b>+${JUDGE_LOW}</b> ${gemIcon()} per pick until tomorrow`}</p>
     <div class="jcap"><i style="width:${Math.min(100, ds.D.n / JUDGE_CAP * 100)}%"></i></div>
     <div class="jres" id="jRes" aria-live="polite"></div>
-    ${packOffer()}
     <span class="hint static">← Swipe right to enhance your photos</span>`;
   document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = () => { if (Date.now() - SWIPED < 400) return; vote(+b.dataset.i); });
 }
