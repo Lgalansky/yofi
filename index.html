@@ -2314,6 +2314,18 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .vis-lbx p{margin:0;font-weight:700;color:#EADBFF}
 .vis-lbx button{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;width:42px;height:42px;border-radius:50%;font-size:1.1rem;color:#fff;background:rgba(255,255,255,.14)}
 #studio.tallp{grid-auto-rows:max-content}
+/* Compete: the photos behind the "ready" badge */
+.rdyrow{margin:0 0 18px;padding:14px;border-radius:20px;background:#121A31;box-shadow:inset 0 0 0 2px #FF2D8E,0 0 22px rgba(255,45,142,.2)}
+.rdyrow .mh{display:flex;align-items:baseline;justify-content:space-between}
+.rdyrow h3{margin:0;font:800 1.15rem/1.1 "Bricolage Grotesque",sans-serif;color:#fff}
+.rdyrow .mh span{font-weight:800;font-size:.85rem;color:#FF8FC4}
+.rdyrow>p{margin:4px 0 12px;font-size:.85rem;color:#9AA6C8}
+.rdyph{display:flex;gap:10px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.rdyph button{position:relative;flex:0 0 112px;aspect-ratio:3/4;border-radius:14px;overflow:hidden;text-align:left;box-shadow:inset 0 0 0 2px rgba(255,255,255,.15)}
+.rdyph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rdyph b{position:absolute;top:6px;right:6px;padding:2px 8px;border-radius:999px;font-weight:800;font-size:.85rem;color:#fff;background:rgba(10,6,24,.75)}
+.rdyph span{position:absolute;left:6px;bottom:30px;padding:1px 7px;border-radius:999px;font-weight:700;font-size:.72rem;color:#fff;background:rgba(10,6,24,.7)}
+.rdyph em{position:absolute;left:0;right:0;bottom:0;padding:6px 4px;font-style:normal;font-weight:800;font-size:.75rem;text-align:center;color:#fff;background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
 </style>
 </head>
 <body>
@@ -3565,7 +3577,10 @@ function openComps(forPhoto) {
         <button class="fgo" data-cx-go="${pick.id}">Enter competition</button></div></div>` : '';
   const mine = live.length ? `<div class="myent"><div class="mh"><h3>My live entries</h3><span>${live.length} live</span></div>${live.map(e => liveCardHTML(CX.find(x => x.id === e.cid), e)).join('')}</div>` : '';
   const fpBar = fp && !photoLock(fp) ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Your photo is ready</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${(() => { const n = CX.filter(c => show.includes(c.k) && !liveEntry(c.id) && cxOk(c, fp)).length; return n ? `Pick a competition below · ${n} fit${n === 1 ? 's' : ''} this photo` : 'No open competitions fit this photo right now'; })()}</span></div><button id="cxAll">See all</button></div>` : '';
-  openFlow(`<div class="cx">${wal}${fpBar}${mine}
+  const rdy = !fp && S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)).sort((a, b) => b.s.total - a.s.total) : [];
+  const rdyRow = rdy.length ? `<div class="rdyrow"><div class="mh"><h3>Ready to enter</h3><span>${rdy.length} photo${rdy.length === 1 ? '' : 's'}</span></div><p>Tap a photo to see the competitions it can enter.</p>
+    <div class="rdyph">${rdy.map(p => `<button data-rdy="${p.id}" aria-label="Photo scoring ${p.s.total}, ${esc(pcatName(p.cat) || 'no category')}. Pick a competition"><img src="${p.src}" alt=""><b>${p.s.total}</b><span>${esc(pcatName(p.cat) || 'Any')}</span><em>Pick a comp →</em></button>`).join('')}</div></div>` : '';
+  openFlow(`<div class="cx">${wal}${fpBar}${rdyRow}${mine}
     ${fpBar ? '' : best}
     <div class="mh2"><h2 class="fh">${fpBar ? 'Pick a competition' : 'Explore competitions'}</h2></div>
     <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['gem', 'Gems'], ['cash', 'Cash']].map(([k, l]) => `<button data-f="${k}" aria-pressed="${CXF === k}">${l}</button>`).join('')}</div>
@@ -3579,6 +3594,7 @@ function openComps(forPhoto) {
   body.querySelectorAll('[data-cx-go]').forEach(b => b.onclick = () => cxEnter(CX.find(c => c.id === b.dataset.cxGo)));
   body.querySelectorAll('[data-live]').forEach(b => b.onclick = () => openLive(S.entries.find(e => e.id === b.dataset.live)));
   if ($('#cxAll')) $('#cxAll').onclick = () => openComps(null);
+  document.querySelectorAll('#flowBody [data-rdy]').forEach(b => b.onclick = () => { openComps(S.photos.find(x => x.id === b.dataset.rdy)); $('#flowBody').scrollTop = 0; });
   if ($('#cxHow')) $('#cxHow').onclick = () => { if (!S.user) { openSignup(() => go('judge')); return; } closeFlow(); go('judge'); };
   if (false && $('#cxJudge')) $('#cxJudge').onclick = () => { if (!S.user) { openSignup(() => go('judge')); return; } closeFlow(); go('judge'); };
   clearInterval(cxTimer);
