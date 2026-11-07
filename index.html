@@ -1913,6 +1913,13 @@ button.bar:hover span:first-child{color:var(--pink)}
 .tot-c[disabled]{opacity:1}
 .tot-c.other[disabled]{opacity:.75}
 .jres .jearn.none{font:700 .95rem/1.2 Figtree,sans-serif;color:#A796C6}
+.ngx-two{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-top:4px}
+.ngx2{display:grid;justify-items:center;gap:4px;padding:18px 10px;border-radius:22px;color:#fff;text-align:center}
+.ngx2 .ic svg{width:40px;height:40px;display:block}
+.ngx2 b{font:800 1.25rem/1.1 "Bricolage Grotesque",sans-serif}
+.ngx2 small{font-size:.9rem;opacity:.9}
+.ngx2.judge{background:linear-gradient(135deg,#21C98A,#0E9A86);box-shadow:0 0 0 1.5px rgba(120,240,190,.6),0 12px 28px -12px rgba(30,200,140,.8)}
+.ngx2.buy{background:linear-gradient(135deg,#2BB8F0,#5B6CFF);box-shadow:0 0 0 1.5px rgba(140,220,255,.6),0 12px 28px -12px rgba(60,160,255,.8)}
 </style>
 </head>
 <body>
@@ -3362,8 +3369,8 @@ function showNeedGems(cost, what, back, after, retry) {
     <p class="fc-p">${what}</p>
     <div class="ngx-bar"><b>${gemIcon('')}${have} / ${cost} gems</b><i><i style="width:${Math.min(100, have / cost * 100)}%"></i></i><span>${short} gems to go</span></div>
     <h3 class="ngx-h">Choose how to get more gems</h3>
-    <button class="ngx-opt judge" id="ngJudge"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg></span><span class="tx"><b>Judge photos to earn gems</b><small>Earn up to ${CFG.VOTE + 5 * CFG.CLOSE} gems per photo</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-    <button class="ngx-opt" id="ngBuy"><span class="ic">${gemIcon('')}</span><span class="tx"><b>Get a gem pack</b><small>${back === 'photo' ? 'Enhance sooner' : 'Enter sooner'}</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="ngx-two"><button class="ngx2 judge" id="ngJudge"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg></span><b>Free gems</b><small>Judge photos</small></button>
+    <button class="ngx2 buy" id="ngBuy"><span class="ic">${gemIcon('')}</span><b>Buy gems</b><small>Gem packs</small></button></div>
     <button class="ceg-later" id="ngBack">${back === 'photo' ? 'Back to my photo' : 'Back to competitions'}</button></div>`;
   el.classList.add('on', 'under'); el.style.top = $('#app').classList.contains('on') ? cxTabTop() + 'px' : ''; el.scrollTop = 0;
   const close = () => { el.classList.remove('on', 'under'); el.style.top = ''; };
