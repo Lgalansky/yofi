@@ -2437,7 +2437,7 @@ function showResult(p, o = {}) {
   }
   const low = lowestOpen(p), lc = low ? catBy(low) : null, tot = p.s.total, stage = stageOf(tot);
   const crossed = o.prevTotal != null && stage > stageOf(o.prevTotal);
-  let html = `<div class="hero-photo rsph" style="max-height:40vh"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
+  let html = `<div class="hero-photo rsph" style="max-height:40vh"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
     <div class="scorebox" style="margin-top:0">${ringSVG(tot, 'r1')}${barsHTML(p.s, o.prev, true, p)}</div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
@@ -3714,14 +3714,14 @@ function renderStudio() {
   }
   const tot = p.s.total, stage = stageOf(tot), lk = photoLock(p), gc = !lk && p.cat ? goalFor(p) : null, gneed = gc ? cxNeed(gc) : 0;
   const sorted = C.filter(c => !isMaxed(p, c.k)).sort((a, b) => p.s[a.k] - p.s[b.k]);
-  const msg = stage === 2 ? `<strong>Competition ready.</strong> ${lk ? 'Entered and locked until the results are in.' : !lowestOpen(p) ? 'Every category is maxed out, so it’s ready to compete.' : 'Keep improving it to win more battles and climb competition rankings.'} Started at ${p.start}, ${p.enh} fix${p.enh === 1 ? '' : 'es'} so far.`
+  const msg = stage === 2 ? `${lk ? '<strong>Entered.</strong> ' : '<strong>Competition ready.</strong> '}${lk ? 'Locked until the results are in.' : !lowestOpen(p) ? 'Every category is maxed out, so it’s ready to compete.' : 'Keep improving it to win more battles and climb competition rankings.'} Started at ${p.start}, ${p.enh} fix${p.enh === 1 ? '' : 'es'} so far.`
     : stage === 1 ? `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions.`
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
   st.innerHTML = `<span class="hint">Flick down to judge</span>
-    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
+    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
     <p class="to80">${p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
-    ${stage >= 1 ? `<div class="qrow">${stage === 2 ? '<button class="btn block" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
+    ${stage >= 1 ? `<div class="qrow">${stage === 2 && !lk ? '<button class="btn block" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
     <h3 class="sec">Improve your photo</h3>
     ${lk ? `<div class="lockc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h1a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 6 10zm2.5 0h5V7.5a2.5 2.5 0 0 0-5 0z"/></svg>
       <div><b>Improvements locked</b><span>This photo is entered in <b>${esc(CX.find(x => x.id === lk.cid).t)}</b> at ${lk.score}. You can improve it again when the results are in.</span>
