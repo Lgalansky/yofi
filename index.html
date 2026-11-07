@@ -2045,6 +2045,14 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .sp-arrow{position:absolute;top:8px;left:14px;font-size:1.4rem;font-weight:800;color:#fff;opacity:.8}
 .sp-how{font-size:.95rem!important}
 .sp-buy{display:block;margin:8px auto 0;font-weight:700;font-size:.9rem;color:#EADBFF;text-decoration:underline;text-underline-offset:3px;position:relative}
+/* Short on gems: gesture hint */
+.panes.peek #studio{animation:peekS 1.2s cubic-bezier(.3,.7,.3,1) 1}
+.panes.peek #judge{animation:peekJ 1.2s cubic-bezier(.3,.7,.3,1) 1}
+@keyframes peekS{0%,100%{transform:translateX(0)}35%,55%{transform:translateX(-28%)}}
+@keyframes peekJ{0%,100%{transform:translateX(100%)}35%,55%{transform:translateX(72%)}}
+.swp-b.nudge{animation:pillGlow 1.4s ease-in-out 3}
+.swp-b.nudge .ar{animation:swpR .5s ease-in-out 8}
+@keyframes pillGlow{50%{box-shadow:inset 0 0 0 2px #FF3FA4,0 0 22px rgba(255,63,164,.7);transform:scale(1.05)}}
 </style>
 </head>
 <body>
@@ -3561,28 +3569,11 @@ function needFixGems(p) {
   setTimeout(() => swipePop(p || cur()), 80);
 }
 function swipePop(p) {
-  const cost = fixCost(p), have = S.gems, short = Math.max(0, cost - have), c = $('#coach');
-  const picks = Math.ceil(short / CFG.VOTE);
-  c.innerHTML = `<div class="crbox swpop" role="dialog" aria-modal="true" aria-labelledby="spT">
-    <div class="sp-gem">${gemIcon('')}</div>
-    <h2 id="spT">You need ${short} more gems</h2>
-    <p>Improving this photo costs <b>${cost}</b>. You have <b>${have}</b>.</p>
-    <div class="sp-bar"><i style="width:${Math.min(100, have / cost * 100)}%"></i></div>
-    <div class="sp-demo" aria-hidden="true"><div class="sp-cards"><span class="a"><b>Enhance</b><small>Your photo</small></span><span class="b"><b>Judge</b><small>+${CFG.VOTE} ${gemIcon()} per right pick</small></span></div><span class="sp-hand">👆</span></div>
-    <p class="sp-how">Swipe left to Judge. Every pick you get right earns <b>+${CFG.VOTE}</b> ${gemIcon()}${picks > 1 ? ` · about ${picks} picks` : ''}.</p>
-    <button class="bt-cta" id="spGo">Swipe to Judge →</button>
-    <button class="sp-buy" data-get="store">or buy gems</button>
-    <button class="bt-no" id="spNo">Not now</button></div>`;
-  c.classList.add('on', 'cr');
-  const close = () => c.classList.remove('on', 'cr');
-  $('#spGo').onclick = () => { close(); go('judge'); };
-  $('#spNo').onclick = close;
-  c.querySelector('.sp-buy').addEventListener('click', close);
-  c.onclick = e => { if (e.target === c) close(); };
-  let x0 = null;
-  const box = c.querySelector('.swpop');
-  box.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
-  box.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (dx < -50) { close(); go('judge'); } }, { passive: true });
+  const short = Math.max(0, fixCost(p) - S.gems), st = $('#studio');
+  st.scrollTo({ top: 0, behavior: 'smooth' });
+  toast(`Need ${short} more gems · swipe to Judge to earn`);
+  const pill = st.querySelector('.swp-b'); if (pill) { pill.classList.remove('nudge'); void pill.offsetWidth; pill.classList.add('nudge'); }
+  const panes = $('#panes'); panes.classList.remove('peek'); void panes.offsetWidth; panes.classList.add('peek'); setTimeout(() => panes.classList.remove('peek'), 1300);
 }
 function needGems(c) {
   showNeedGems(c.fee, `Entering ${esc(c.t)} costs ${c.fee} gems.`, 'comps', `Earn ${c.fee - S.gems} gems, then come back to enter ${c.t}.`, () => cxEnter(c));
