@@ -1770,12 +1770,51 @@ button.bar:hover span:first-child{color:var(--pink)}
 .bt-st,.bt-res{padding:18px 8px 8px!important}
 .bt-st b{font-size:clamp(1.6rem,8vw,2.2rem)!important}
 #bArea #bGo{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:5}
+.jcap{height:6px;margin:8px 0 0;border-radius:3px;background:#33204F;overflow:hidden}
+.jcap i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#5BE7F5,#2EE59D)}
+.pkoffer{display:flex;align-items:center;gap:10px;width:100%;margin-top:12px;padding:10px 12px;border-radius:18px;text-align:left;color:#fff;background:linear-gradient(135deg,#3A1764,#251046);box-shadow:inset 0 0 0 1.5px #FFC93C,0 0 18px rgba(255,190,60,.25)}
+.pkoffer .pi svg{width:30px;height:30px;display:block}
+.pkoffer .pt{flex:1;display:grid;gap:2px}
+.pkoffer b{font-size:.98rem}
+.pkoffer small{font-size:.8rem;color:#D9C8FF}
+.pkoffer .pp{flex:none;padding:8px 14px;border-radius:999px;font-weight:800;color:#2A1600;background:linear-gradient(180deg,#FFE27A,#FFC93C 55%,#F2A50C)}
+#stFix{justify-content:space-between;padding:0 8px 0 26px}
 .rs-kick{display:block;margin:0 0 6px;font-weight:800;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:#9AA6C8;text-align:center}
 .rs-gn{margin:12px 4px 0;font-size:.95rem;line-height:1.4;color:#C9D1EA;text-align:center}
 .rs-gn b{color:#fff}
 .rs-alt{display:block;margin:10px auto 0;padding:8px;font-weight:700;color:#C9D1EA;text-decoration:underline;text-underline-offset:4px}
 .gprz{display:inline-flex;align-items:center;gap:4px}
 .gprz svg{width:.95em;height:.95em}
+/* Visiting another player's gallery */
+.vis{padding-bottom:18px}
+.vis-hero{position:relative;height:230px;border-radius:24px;overflow:hidden;box-shadow:0 0 0 2px var(--c1),0 18px 40px -16px var(--c2)}
+.vis-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.vis-ov{position:absolute;inset:auto 0 0 0;padding:40px 18px 16px;background:linear-gradient(180deg,transparent,rgba(12,4,26,.92))}
+.vis-rk{position:absolute;top:14px;left:14px;z-index:2;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:999px;font:400 1.3rem/1 "Archivo Black","Arial Black",sans-serif;color:#2A1600;background:radial-gradient(circle at 35% 30%,#FFF3A8,#FFC93C 55%,#E79A00);box-shadow:0 0 0 3px #fff}
+.vis-rk svg{width:26px;height:auto}
+.vis-ov h2{margin:0;font:400 clamp(1.7rem,8vw,2.3rem)/1.05 "Archivo Black","Arial Black",sans-serif;text-transform:uppercase;background:linear-gradient(180deg,#FFF3A8,#FFC93C 55%,#E79A00);-webkit-background-clip:text;background-clip:text;color:transparent}
+.vis-ov p{margin:4px 0 0;color:#EADBFF}
+.vis-st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 4px}
+.vis-st>div{display:grid;justify-items:center;padding:10px 4px;border-radius:16px;background:#211339;box-shadow:inset 0 0 0 1.5px #33204F}
+.vis-st b{font:800 1.3rem/1.1 "Bricolage Grotesque",sans-serif}
+.vis-st small{font-size:.72rem;color:#A796C6}
+.vis-room{margin-top:18px}
+.vis-rh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.vis-rh b{font:800 1.1rem/1 "Bricolage Grotesque",sans-serif}
+.vis-rh span{padding:3px 10px;border-radius:999px;font-weight:800;font-size:.8rem;color:#2A1600;background:#FFC93C}
+.vis-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.vis-ph{display:grid;gap:6px;text-align:left;color:#fff}
+.vis-ph .fr{display:block;aspect-ratio:4/5;padding:6px;border-radius:6px;background:linear-gradient(135deg,#FFF0C2 0%,#C99135 20%,#F6D88A 45%,#A8701F 68%,#E9C56E 100%);box-shadow:0 14px 26px -12px rgba(0,0,0,.8)}
+.vis-room.r3 .fr{background:linear-gradient(135deg,#F2E2FF,#9A6BD8 30%,#FFF3A8 55%,#7E4FC0 80%,#E8D2FF)}
+.vis-ph img{width:100%;height:100%;object-fit:cover;display:block;border-radius:2px}
+.vis-ph .cap{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.vis-ph em{display:inline-flex;align-items:center;gap:5px;font-style:normal;font-size:.85rem;font-weight:700;color:#D9C8FF}
+.vis-ph em svg{width:15px;height:15px}
+.vis-ph b{padding:2px 10px;border-radius:999px;font-weight:800;color:#2A1600;background:linear-gradient(180deg,#FFE27A,#FFC93C)}
+.vis-lock{display:flex;align-items:center;gap:8px;justify-content:center;margin:18px 0 0;color:#A796C6}
+.vis-lock svg{width:16px;height:16px}
+.vis-lbx{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:rgba(6,2,14,.92)}
+.vis-lbx img{max-width:100%;max-height:100%;border-radius:12px}
 .lv-gal{display:flex;align-items:center;gap:12px;width:100%;margin:10px 0 12px;padding:12px 14px;border-radius:18px;text-align:left;color:#fff;background:linear-gradient(135deg,#3A1764,#251046);box-shadow:inset 0 0 0 1.5px #FFC93C}
 .lv-gal .ic svg{width:30px;height:30px;display:block}
 .lv-gal .tx{flex:1;display:grid;gap:2px}
@@ -1787,6 +1826,59 @@ button.bar:hover span:first-child{color:var(--pink)}
 #shell > .wallet .wb b{font:800 1.12rem/1 "Bricolage Grotesque",sans-serif!important;letter-spacing:-.01em}
 #shell > .wallet .wb.cash b{color:#0E9F5E}
 #shell > .wallet .wb.gems b{color:#2F6BFF}
+/* Locked photo: slim status, photo strip first */
+.lockline{display:flex;align-items:center;gap:10px;margin:14px 0 4px;padding:10px 12px;border-radius:16px;background:#211339;box-shadow:inset 0 0 0 1.5px #33204F;font-size:.92rem;color:#D9C8FF}
+.lockline>svg{width:18px;height:18px;flex:none;color:#B98CFF}
+.lockline span{flex:1}
+.lockline b{color:#fff}
+.lockline button{flex:none;padding:8px 12px;border-radius:999px;font-weight:800;font-size:.85rem;color:#fff;background:linear-gradient(95deg,#FF3FA4,#9B3CFF)}
+.phead{display:flex;align-items:baseline;justify-content:space-between;margin-top:18px}
+.phead .sec{margin:0}
+.phead small{color:#A796C6;font-weight:700}
+.pstrip{display:flex;gap:10px;overflow-x:auto;padding:10px 2px 8px;scrollbar-width:none}
+.pstrip::-webkit-scrollbar{display:none}
+.pstrip>button{flex:none;position:relative;width:118px;height:150px;border-radius:18px;overflow:hidden}
+.pph img{width:100%;height:100%;object-fit:cover;display:block}
+.pph[aria-current="true"]{outline:3px solid #B98CFF;outline-offset:2px}
+.pph .sc{position:absolute;top:6px;right:6px;padding:2px 8px;border-radius:999px;font-weight:800;font-size:.85rem;color:#fff;background:rgba(20,10,38,.85)}
+.pph .tg{position:absolute;left:0;right:0;bottom:0;padding:6px 4px;font-weight:800;font-size:.75rem;text-align:center;color:#fff;background:rgba(20,10,38,.82)}
+.pph.go .tg{background:linear-gradient(95deg,#FF3FA4,#9B3CFF)}
+.pph.gal .tg{background:#1F8F5F}
+.pph.ent .tg{background:#2B4A9C}
+.pph.ent img,.pph.done img{filter:saturate(.7)}
+.padd{display:grid;align-content:center;justify-items:center;gap:6px;padding:10px;text-align:center;color:#fff;background:linear-gradient(160deg,#3A1764,#251046);box-shadow:inset 0 0 0 2px #FF3FA4,0 0 18px rgba(255,63,164,.3)}
+.padd .pl{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;font-size:1.8rem;line-height:1;background:linear-gradient(135deg,#FF3FA4,#9B3CFF)}
+.padd b{font-size:.88rem;line-height:1.15}
+.padd small{font-size:.7rem;line-height:1.2;color:#D9C8FF}
+/* Competition-driven uploads */
+.ncx{margin:18px 0 6px}
+.ncx-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+.ncx-h b{font:800 1.15rem/1 "Bricolage Grotesque",sans-serif;color:#fff}
+.ncx-h span{font-size:.82rem;color:#A796C6}
+.ncx-row{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}
+.ncx-row::-webkit-scrollbar{display:none}
+.ncx-c{flex:0 0 84%;scroll-snap-align:start;display:grid;grid-template-columns:96px 1fr;gap:12px;padding:12px;border-radius:20px;background:#0E152A;box-shadow:inset 0 0 0 1px #26304F;color:#fff}
+.ncx-c>img{width:96px;height:112px;border-radius:14px;object-fit:cover}
+.ncx-i{display:grid;gap:3px;align-content:start;min-width:0}
+.ncx-cat{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-weight:700;color:#D9C8FF}
+.ncx-cat svg{width:13px;height:13px}
+.ncx-i>b{font:800 1.1rem/1.1 "Bricolage Grotesque",sans-serif}
+.ncx-pz{display:inline-flex;align-items:center;gap:4px;font:800 1.2rem/1 "Bricolage Grotesque",sans-serif;color:var(--k,#5BE7F5)}
+.ncx-pz svg{width:18px;height:18px}
+.ncx-pz small{font:600 .75rem Figtree,sans-serif;color:#C9D1EA}
+.ncx-end{display:inline-flex;align-items:center;gap:4px;font-size:.78rem;font-weight:700;color:#FFC93C}
+.ncx-end svg{width:13px;height:13px}
+.ncx-fr{font-size:.75rem;font-weight:700;color:#2EE59D}
+.ncx-go{grid-column:1/-1;min-height:46px;border-radius:999px;font:800 1.02rem/1 "Bricolage Grotesque",sans-serif;color:#fff;background:linear-gradient(180deg,#FF3FB4 0%,#E40B9A 45%,#A21CCB 100%);box-shadow:0 0 0 1.5px rgba(255,120,210,.6)}
+.ncx-c.k-cash{--k:#2EE59D}.ncx-c.k-gem{--k:#5BE7F5}
+#gallery .ncx{margin:14px 0 14px}
+.ncx-fee{font-size:.78rem;font-weight:700;color:#C9D1EA}
+.ncx-cash .ncx-h b{color:#2EE59D}
+.ncx-cash .ncx-c{box-shadow:inset 0 0 0 1px rgba(46,229,157,.4)}
+.ncx-cash .ncx-go{background:linear-gradient(180deg,#2EE59D,#13A86A);color:#06261A;box-shadow:0 0 0 1.5px rgba(120,255,190,.5)}
+.empty.emp2{padding:18px 4px 4px;text-align:left}
+.empty.emp2 h2{font-size:1.5rem;margin:0 0 6px}
+.empty.emp2 p{margin:0}
 </style>
 </head>
 <body>
@@ -2457,6 +2549,20 @@ function goalRoute(p) {
   if (c && goalReady(c, p)) { CXF = c.k === 'gem' ? 'gem' : 'all'; openComps(p); cxEnter(c); }
   else { if (p) { S.cur = p.id; save(); } go('studio'); }
 }
+function nextComps(n = 3, kind = null) {
+  const afford = c => c.k === 'gem' || (c.k === 'cash' || c.k === 'sp') && (S.cash || 0) >= c.fee;
+  const emptyCats = new Set();
+  ROOMS.forEach((Rm, r) => { if (roomOpen(r)) Rm.slots.forEach((sl, i) => { if (!framed(r, i) && sl[2]) sl[2].forEach(k => emptyCats.add(k)); }); });
+  const score = c => (afford(c) ? 0 : 1e9) + (c.cats && c.cats.some(k => emptyCats.has(k)) ? 0 : 5e8) + cxLeft(c);
+  return CX.filter(c => !liveEntry(c.id) && (kind ? (kind === 'cash' ? c.k === 'cash' || c.k === 'sp' : c.k === kind) : c.k !== 'sp')).sort((a, b) => score(a) - score(b)).slice(0, n);
+}
+const compFrame = c => { let f = null; ROOMS.forEach((Rm, r) => { if (!f && roomOpen(r)) Rm.slots.forEach((sl, i) => { if (!f && !framed(r, i) && sl[2] && c.cats && c.cats.some(k => sl[2].includes(k))) f = sl[1]; }); }); return f; };
+function uploadFor(c) { S.goal = { cid: c.id, pid: null }; save(); if ($('#sheet').classList.contains('on')) closeSheet(); pickPhoto(true); }
+function compCardsHTML(title, kind = null, sub = 'Upload a photo for one') {
+  const list = nextComps(kind === 'cash' ? 4 : 3, kind); if (!list.length) return '';
+  return `<div class="ncx ${kind ? 'ncx-' + kind : ''}"><div class="ncx-h"><b>${title}</b><span>${sub}</span></div><div class="ncx-row">${list.map(c => { const fr = compFrame(c); return `<div class="ncx-c k-${c.k}"><img src="${c.art ? SEED[1].src : SEED[c.img].src}" alt=""><div class="ncx-i"><span class="ncx-cat">${gi(c.cats ? c.cats[0] : 'star')}${esc(c.cats ? c.lab : 'Any photo')}</span><b>${esc(c.t)}</b><span class="ncx-pz">${cxPrize(c)} <small>1st prize</small></span>${c.k === 'gem' ? '' : `<span class="ncx-fee">Entry ${cxFee(c)}</span>`}<span class="ncx-end" data-cx="${c.id}" data-endpill>${IC.clock}Ends in ${fmtLeft(cxLeft(c))}</span>${fr ? `<span class="ncx-fr">+ fills your ${esc(fr)} frame</span>` : ''}</div><button class="ncx-go" data-upfor="${c.id}">Upload for this</button></div>`; }).join('')}</div></div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-upfor]'); if (!b) return; const c = CX.find(x => x.id === b.dataset.upfor); if (c) uploadFor(c); });
 function homeCompete(c) {
   openApp(); CXF = 'all'; openComps(null);
   if (!c) return;
@@ -2520,6 +2626,7 @@ $('#file').addEventListener('change', async e => {
   const gc = S.goal && !S.goal.pid && CX.find(c => c.id === S.goal.cid);
   if (gc) { S.goal.pid = p.id; save(); }
   const fh = !gc && S.frameHint; S.frameHint = null; save();
+  if (gc && gc.cats) { p.cat = gc.cats.find(k => PICKCATS.includes(k)) || gc.cats[0]; save(); showResult(p, { win, first }); return; }
   askCategory(p, () => showResult(p, { win, first }), false, gc && gc.cats ? gc : fh ? { cats: fh.cats, lab: fh.lab, t: `the ${fh.frame} frame`, frame: true } : null);
 });
 
@@ -2592,7 +2699,7 @@ function showResult(p, o = {}) {
 let EN = null; // { p, cat, variants, sel }
 function enhanceShell(p, cat) {
   return `<h2 style="font-size:1.7rem;margin:4px 0 4px">${cat ? catBy(cat).verb : 'Pick a fix'}</h2>
-    <p class="muted" id="enSub" style="margin:0 0 12px">${cat ? `${catBy(cat).tip}. Three versions, pick the one you like.` : 'Every fix costs ' + CFG.COST + ' gems and gives you three versions to choose from.'}</p>
+    <p class="muted" id="enSub" style="margin:0 0 12px">${cat ? `${catBy(cat).tip}. Three versions, pick the one you like.` : 'Every fix costs ' + fixCost(p) + ' gems and gives you three versions to choose from.'}</p>
     <div class="cats cc" role="group" aria-label="Fix type">${C.filter(c => c.k === cat || !isMaxed(p, c.k)).map(c => `<button data-c="${c.k}" aria-pressed="${c.k === cat}" aria-label="${c.name}, ${p.s[c.k]} out of 100"><small>${c.name}</small><b>${p.s[c.k]}<span>/100</span></b><i><i style="width:${p.s[c.k]}%"></i></i></button>`).join('')}</div>
     <div id="enArea"></div>`;
 }
@@ -2612,10 +2719,10 @@ document.addEventListener('click', e => {
   go('judge');
 });
 function enIdle() {
-  const { p, cat } = EN, short = S.gems < CFG.COST;
+  const { p, cat } = EN, cost = fixCost(p), short = S.gems < cost;
   $('#enArea').innerHTML = `<div class="hero-photo" style="max-height:44vh;margin-bottom:12px"><img src="${p.src}" alt="Your photo"></div>
-    ${cat ? `<button class="btn block fixbtn" id="genBtn"><span>${catBy(cat).verb}</span><span class="gpill">${gemIcon()}${CFG.COST}</span></button>` : '<p class="muted" style="text-align:center;margin:0">Pick a fix above.</p>'}
-    ${short ? `<p class="muted" style="text-align:center;margin:12px 0 4px">You have ${S.gems} gems. Each fix costs ${CFG.COST}.</p>` : ''}`;
+    ${cat ? `<button class="btn block fixbtn" id="genBtn"><span>${catBy(cat).verb}</span><span class="gpill">${gemIcon()}${cost}</span></button>` : '<p class="muted" style="text-align:center;margin:0">Pick a fix above.</p>'}
+    ${short ? `<p class="muted" style="text-align:center;margin:12px 0 4px">You have ${S.gems} gems. This fix costs ${cost}.</p>${packOffer(p.s.total >= 78 && p.s.total < 80 ? 'close' : 'fix')}` : ''}`;
   if ($('#genBtn')) $('#genBtn').onclick = () => generate(1);
 }
 function bindCats() {
@@ -2657,16 +2764,19 @@ async function checkMaxed(p) {
 }
 const photoLock = p => p && (S.entries || []).find(e => e.pid === p.id && !e.done && Date.now() < e.end);
 function lockToast(e) { toast(`This photo is in ${CX.find(x => x.id === e.cid).t}. You can improve it again when the results are in.`); }
+const fixCost = p => !p ? CFG.COST : p.s.total >= 85 ? 150 : p.s.total >= 75 ? 100 : 50;
 function startEnhance(p, cat) {
   const lk = photoLock(p); if (lk) { lockToast(lk); return; }
   if (isMaxed(p, cat)) { const o = lowestOpen(p); if (!o) { toast('Every category is at its best on this photo.'); return; } cat = o; }
   openEnhance(p, cat);
-  if (S.gems >= CFG.COST) generate(1);
-  else needFixGems();
+  if (S.gems >= fixCost(p)) generate(1);
+  else needFixGems(p);
 }
 async function generate(jitterRound) {
   const { p, cat } = EN, nm = catBy(cat).name;
-  if (!spend(CFG.COST, `Each fix costs ${CFG.COST} gems and you have ${S.gems}.`)) return;
+  const cost = fixCost(p);
+  if (S.gems < cost) { needFixGems(p); return; }
+  S.gems -= cost; save(); paintGems();
   $('#flowBack').style.visibility = 'hidden';
   $('#enArea').innerHTML = `<div class="gen"><div class="spin"></div>Making better ${nm.toLowerCase()} versions…</div>`;
   await sleep(50);
@@ -2693,7 +2803,7 @@ async function generate(jitterRound) {
   await sleep(300);
   if (!picks.length) {
     p.maxed = p.maxed || {}; p.maxed[cat] = p.s[cat]; save();
-    S.gems += CFG.COST; save(); paintGems();
+    S.gems += cost; save(); paintGems();
     $('#flowBack').style.visibility = 'visible';
     EN.variants = null; enIdle();
     const next = C.filter(c => c.k !== cat && !isMaxed(p, c.k)).sort((a, b) => p.s[a.k] - p.s[b.k])[0];
@@ -3227,9 +3337,9 @@ function showNeedGems(cost, what, back, after, retry) {
   $('#ngJudge').onclick = () => { close(); closeFlow(); go('judge'); toast(after); };
   $('#ngBuy').onclick = () => { close(); openStore(what, retry && (() => S.gems >= cost && retry())); };
 }
-function needFixGems() {
-  const n = Math.ceil(Math.max(0, CFG.COST - S.gems) / (CFG.VOTE + 2 * CFG.CLOSE));
-  showNeedGems(CFG.COST, `Enhancing your photo costs ${CFG.COST} gems.`, 'photo', `Judge about ${n} photo${n === 1 ? '' : 's'}, then head back to Enhance.`);
+function needFixGems(p) {
+  const cost = fixCost(p || cur()), n = Math.ceil(Math.max(0, cost - S.gems) / CFG.VOTE);
+  showNeedGems(cost, `Enhancing this photo costs ${cost} gems.`, 'photo', `Judge about ${n} photo${n === 1 ? '' : 's'}, then head back to Enhance.`);
 }
 function needGems(c) {
   showNeedGems(c.fee, `Entering ${esc(c.t)} costs ${c.fee} gems.`, 'comps', `Earn ${c.fee - S.gems} gems, then come back to enter ${c.t}.`, () => cxEnter(c));
@@ -3529,6 +3639,7 @@ function myGalleryHTML() {
   const eligible = S.photos.filter(p => p.s.total >= CFG.GALLERY && !new Set(Object.values(S.frames || {})).has(p.id)).length;
   const photos = R.slots.map((_, s) => { const p = framed(r, s); return p ? { src: p.src, score: p.s.total } : null; });
   return `${roomViewHTML(r)}
+${compCardsHTML('Fill your gallery', 'gem', 'Free to enter')}${compCardsHTML('Win real cash', 'cash', 'Cash prizes')}
 <div class="lvl"><div class="hex">${lv}</div><div class="t"><b>LEVEL ${lv} · <span>${title.toUpperCase()}</span></b><div class="pb"><i style="width:${filled / R.slots.length * 100}%"></i></div>
     <small>${filled === R.slots.length ? `Room ${r + 1} complete` : `${R.slots.length - filled} frame${R.slots.length - filled === 1 ? '' : 's'} to complete Room ${r + 1}`}</small></div></div>
   <p class="gnote">${TROPHY_S}<span>Hang your best photos, one per category. <b>Room 1 needs 75+</b>, Room 2 85+, Room 3 90+. Fill every frame in a room to unlock the next one. The Wildcard frame takes any photo.</span></p>`;
@@ -3604,7 +3715,7 @@ function openAddAll() {
     if (x.st === 'ok') { closeSheet(); GV.room = x.sp[0]; hang(x.sp[0], x.sp[1], x.p.id); }
     else if (x.st === 'low') { closeSheet(); S.cur = x.p.id; save(); go('studio'); }
   });
-  $('#aaNew').onclick = () => { closeSheet(); pickPhoto(true); };
+  { const nc = nextComps(1)[0]; if (nc) { $('#aaNew').innerHTML = `Upload for ${esc(nc.t)}`; $('#aaNew').onclick = () => uploadFor(nc); } else $('#aaNew').onclick = () => { closeSheet(); pickPhoto(true); }; }
 }
 function openUnlock(r, s, sl, wild, theme, close) {
   const R = ROOMS[r], filled = roomFilled(r), el = $('#ceg');
@@ -3693,13 +3804,30 @@ function bindBoard() {
   document.querySelectorAll('#gallery [data-v]').forEach(b => b.onclick = () => openVisit(+b.dataset.v));
   $('#gMine').onclick = () => { GV.tab = 'mine'; renderGallery(); $('#gallery').scrollTop = 0; };
 }
+const VISIT_CAT = { portrait: 'People', pets: 'Pets', landscape: 'Nature', wildlife: 'Wildlife', travel: 'Travel', food: 'Food', city: 'Cities', action: 'Action', style: 'People' };
 function openVisit(i) {
-  const b = BOARD[i];
-  const photos = b.ph.map(k => ({ src: SEED[k].src, score: SEED[k].score }));
-  openSheet(`<h2>${esc(b.g)}</h2><p class="sub">${esc(b.n)}’s gallery, #${i + 1} with ${b.pts.toLocaleString()} points.</p>
-    <div class="hall mini r3">${hallSVG('r3', 'v' + i, { mini: true })}
-      <div class="hchips" style="top:6%"><span class="hchip nm glass">${HOUSE}<span>ROOM 3 · <em>HALL OF FAME</em></span></span><span class="hchip pr glass"><span><b>5 / 5</b> FRAMES</span><i><i style="width:100%"></i></i></span></div>
-      ${wallHTML(2, photos, false)}${sparks(8)}</div>`);
+  const b = BOARD[i], R = mulberry(i * 97 + 13), full = i < 3, used = new Set();
+  const rooms = ROOMS.map((Rm, r) => ({ Rm, r, frames: (full || r < 2) ? Rm.slots.map((sl, si) => {
+    const want = VISIT_CAT[sl[0]], pool = SEED.map((x, k) => k).filter(k => !want || SEED[k].cat === want);
+    const pk = pool.filter(k => !used.has(k)), all = SEED.map((x, k) => k).filter(k => !used.has(k)), src = pk.length ? pk : (all.length ? all : pool); const k = src[(i + si * 3 + r) % src.length]; used.add(k);
+    const lo = ROOM_MIN[r], sc = Math.min(99, lo + Math.floor(R() * (r === 2 ? 8 : 9)) + (i === 0 ? 2 : 0));
+    return { sl, src: SEED[k].src, title: SEED[k].title, sc };
+  }) : null })).filter(x => x.frames);
+  const nFr = rooms.reduce((a, x) => a + x.frames.length, 0), tot = ROOMS.reduce((a, Rm) => a + Rm.slots.length, 0);
+  const avg = Math.round(rooms.reduce((a, x) => a + x.frames.reduce((c, f) => c + f.sc, 0), 0) / nFr);
+  const best = rooms.flatMap(x => x.frames).sort((a, z) => z.sc - a.sc)[0];
+  openSheet(`<div class="vis">
+    <div class="vis-hero" style="--c1:${b.c[0]};--c2:${b.c[1]}"><img src="${best.src}" alt=""><span class="vis-rk">${i === 0 ? CROWN('#2A1600', 22) : ''}#${i + 1}</span>
+      <div class="vis-ov">
+        <h2>${esc(b.g)}</h2><p>by <b>@${esc(b.n.toLowerCase())}</b></p></div></div>
+    <div class="vis-st"><div><b>${b.pts.toLocaleString()}</b><small>Gallery points</small></div><div><b>${nFr}/${tot}</b><small>Frames filled</small></div><div><b>${avg}</b><small>Avg score</small></div></div>
+    ${rooms.map(x => `<section class="vis-room ${x.Rm.theme}"><div class="vis-rh"><b>Room ${x.r + 1} · ${esc(x.Rm.name)}</b><span>${ROOM_MIN[x.r]}+</span></div>
+      <div class="vis-grid">${x.frames.map(f => `<button class="vis-ph" data-src="${f.src}" aria-label="${esc(f.sl[1])}, ${f.sc} points"><span class="fr"><img src="${f.src}" alt=""></span><span class="cap"><em>${gi(f.sl[0])}${esc(f.sl[1])}</em><b>${f.sc}</b></span></button>`).join('')}</div></section>`).join('')}
+    ${!full ? `<p class="vis-lock">${LOCK} Room 3 · Hall of Fame not unlocked yet</p>` : ''}
+  </div>`, { full: true });
+  document.querySelectorAll('#sheetBody .vis-ph').forEach(el => el.onclick = () => {
+    const l = document.createElement('div'); l.className = 'vis-lbx'; l.innerHTML = `<img src="${el.dataset.src}" alt="">`; l.onclick = () => l.remove(); $('#sheet').appendChild(l);
+  });
 }
 
 /* ---------- Panes: Judge / Studio with flick ---------- */
@@ -3751,10 +3879,11 @@ const todayKey = (d = new Date()) => `${d.getFullYear()}-${d.getMonth() + 1}-${d
 function dailyState() {
   const t = todayKey(), y = todayKey(new Date(Date.now() - 864e5));
   const D = S.daily || (S.daily = { day: t, n: 0, streak: 0, last: null });
-  if (D.day !== t) { D.day = t; D.n = 0; }
+  if (D.day !== t) { D.day = t; D.n = 0; D.offered = false; }
   const alive = D.last === t || D.last === y;
   return { D, t, y, streak: alive ? D.streak : 0, doneToday: D.last === t };
 }
+const JUDGE_CAP = 20, JUDGE_LOW = 2;
 const crowdAvg = p => Math.round(JC.reduce((a, c) => a + crowdOf(p, c), 0) / JC.length) / 10;
 function renderJudge() {
   const p = seedAt(); if (!p || !p.owner) { $('#judge').innerHTML = '<div class="gen"><div class="spin"></div>Loading photos…</div>'; return; }
@@ -3769,7 +3898,9 @@ function renderJudge() {
     </div>
     <h2 class="jq">How good is it?</h2>
     <div class="jscore" role="group" aria-label="Your score from 1 to 10">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `<button data-n="${n}" aria-label="Score ${n}">${n}</button>`).join('')}</div>
-    <p class="jsub2">Tap a number. You earn <b>+${CFG.VOTE}</b> ${gemIcon()} for every photo.</p>
+    <p class="jsub2">${ds.D.n < JUDGE_CAP ? `Tap a number. You earn <b>+${CFG.VOTE}</b> ${gemIcon()} per photo · <b>${JUDGE_CAP - ds.D.n}</b> full-reward judges left today` : `Daily bonus used. Judging now pays <b>+${JUDGE_LOW}</b> ${gemIcon()} until tomorrow.`}</p>
+    <div class="jcap"><i style="width:${Math.min(100, ds.D.n / JUDGE_CAP * 100)}%"></i></div>
+    ${ds.D.n >= JUDGE_CAP ? packOffer('cap') : ''}
     <div class="jres" id="jRes" aria-live="polite"></div>
     <button class="jbuy" id="jBuy">${gemIcon()}Buy more gems</button>
     <span class="hint static">Flick up to enhance your photos</span>`;
@@ -3779,10 +3910,10 @@ function renderJudge() {
 let nudgeFrom = null, nudgeT = null;
 function maybeEnhanceNudge() {
   const from = nudgeFrom; nudgeFrom = null;
-  if (from == null || from >= CFG.COST || S.gems < CFG.COST) return;
-  const p = cur(); if (!p || !lowestOpen(p) || photoLock(p)) return;
+  const p = cur(), cost = fixCost(p);
+  if (from == null || from >= cost || S.gems < cost) return; if (!p || !lowestOpen(p) || photoLock(p)) return;
   const n = $('#enNudge');
-  n.innerHTML = `<span class="ic">${gemIcon('')}</span><span class="tx"><b>You can enhance again</b><small>${S.gems} gems · a fix costs ${CFG.COST}</small></span><span class="go">Enhance ›</span>`;
+  n.innerHTML = `<span class="ic">${gemIcon('')}</span><span class="tx"><b>You can enhance again</b><small>${S.gems} gems · a fix costs ${cost}</small></span><span class="go">Enhance ›</span>`;
   n.classList.add('on'); clearTimeout(nudgeT); nudgeT = setTimeout(() => n.classList.remove('on'), 5000);
   n.onclick = () => { n.classList.remove('on'); go('studio'); };
 }
@@ -3790,7 +3921,7 @@ async function vote(score) {
   if (judging) return; judging = true;
   const p = seedAt(), crowd = crowdAvg(p), diff = Math.abs(score - crowd);
   document.querySelectorAll('#judge .jscore button').forEach(b => { b.disabled = true; b.classList.toggle('mine', +b.dataset.n === score); b.classList.toggle('crowd', +b.dataset.n === Math.round(crowd)); });
-  const earn = CFG.VOTE;
+  const ds0 = dailyState(), earn = ds0.D.n < JUDGE_CAP ? CFG.VOTE : JUDGE_LOW, capNow = ds0.D.n === JUDGE_CAP - 1;
   if (nudgeFrom == null) nudgeFrom = S.gems;
   S.votes++; S.since++; S.jIdx++; S.gems += earn;
   S.combo = (S.combo || 0) + 1; const comboHit = S.combo >= 10; if (comboHit) S.combo = 0;
@@ -3807,7 +3938,16 @@ async function vote(score) {
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
   if (streakHit) { const rw = Math.min(100, 10 * streakHit); celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} day streak!`, text: `You judged 3 photos today. <b>+${rw} gems</b>. Come back tomorrow to keep it going${streakHit < 10 ? ` and earn ${Math.min(100, 10 * (streakHit + 1))}` : ''}.`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
   if (comboHit) { luckyDrop(); return; }
+  if (capNow) { capOffer(); return; }
   maybeEnhanceNudge();
+}
+function packOffer(why) {
+  const k = PACKS[0], t = why === 'cap' ? 'Keep earning at full speed' : why === 'close' ? 'You’re 1 fix from competing' : 'Short on gems?';
+  return `<button class="pkoffer" data-get="store"><span class="pi">${gemIcon('')}</span><span class="pt"><b>${t}</b><small>${k.t} pack: ${k.gems} gems + $${k.cash} cash</small></span><span class="pp">$${k.cash}</span></button>`;
+}
+function capOffer() {
+  const p = cur();
+  celebrate({ src: p ? p.src : SEED[3].src, score: '20', title: 'Daily bonus done!', text: `You judged ${JUDGE_CAP} photos today. Judging now pays +${JUDGE_LOW} gems until tomorrow. Want gems now? The <b>${PACKS[0].t} pack</b> has ${PACKS[0].gems} gems and $${PACKS[0].cash} cash.`, cta: 'See gem packs', onCta: () => openStore('Your daily judging bonus is used up.'), later: 'Keep judging' });
 }
 function luckyDrop() {
   const sure = 30, c = $('#coach');
@@ -3856,7 +3996,7 @@ function openBattle() {
   const theirs = battleRival(me.cat);
   const their = Math.max(55, Math.min(97, Math.round((theirs.score + me.s.total) / 2 + rnd(-5, 5))));
   const vault = S.vault[o.h];
-  const win = Math.floor(vault * CFG.STEAL), lose = Math.floor(S.gems * CFG.STEAL);
+  const win = Math.min(100, Math.floor(vault * CFG.STEAL)), lose = Math.min(50, Math.floor(S.gems * CFG.STEAL));
   const cat = pcatName(me.cat);
   const bt = $('#battle');
   bt.style.top = cxTabTop() + 'px';
@@ -3895,7 +4035,7 @@ function openBattle() {
     bt.querySelector(won ? '.bt-card.me' : '.bt-card.them').classList.add('won');
     $('#bArea').innerHTML = `<div class="bt-res ${won ? 'win' : 'lose'}"><span class="tag">${won ? 'You won' : `@${esc(o.h)} won`}</span>
         <b>${won ? '+' : '−'}${(won ? win : lose).toLocaleString()}${gemIcon('')}</b>
-        <p>${me.s.total === their ? 'Tied scores. The crowd broke the tie.' : won ? `Your ${me.s.total} beat their ${their}. Half their gems are yours.` : `Their ${their} beat your ${me.s.total}. A stronger photo wins more battles.`}</p></div>
+        <p>${me.s.total === their ? 'Tied scores. The crowd broke the tie.' : won ? `Your ${me.s.total} beat their ${their}. The gems are yours.` : `Their ${their} beat your ${me.s.total}. A stronger photo wins more battles.`}</p></div>
       <button class="bt-cta" id="bDone">${won ? 'Keep judging' : 'Improve my photo'}</button>`;
     requestAnimationFrame(() => { const r = $('#bArea .bt-res'); if (r) r.scrollIntoView({ block: 'center', behavior: 'smooth' }); });
     if (won) setTimeout(() => celebrate({ src: me.src, score: me.s.total, title: S.streak >= 3 ? `${S.streak} wins in a row!` : 'You won the battle!', text: `${S.streak >= 3 ? 'You’re on fire. ' : ''}${me.s.total === their ? 'Tied scores and the crowd picked yours.' : `Your ${me.s.total} beat @${esc(o.h)}’s ${their}.`} <b>+${win.toLocaleString()} gems</b> are yours.`, cta: 'Collect my gems', onCta: () => gemExplosion(win, { label: `Taken from @${o.h}` }), onLater: () => gemExplosion(win, { label: `Taken from @${o.h}` }) }), 700); else paintGems();
@@ -3909,7 +4049,7 @@ function renderStudio() {
   if (S.user) $('#avatar').textContent = S.user.h[0].toUpperCase();
   const p = cur();
   if (!p) {
-    st.innerHTML = `<span class="hint">Flick down to judge</span><div class="empty"><h2>No photos yet</h2><p>Score your first photo to start enhancing it.</p><button class="btn" id="stAdd">Score a photo</button></div>`;
+    st.innerHTML = `<div class="empty emp2"><h2>Pick a competition to start</h2><p>Upload a photo for one, get it scored, then enhance it to 80+ to enter.</p></div>${compCardsHTML('Free competitions', 'gem', 'Win gems')}${compCardsHTML('Win real cash', 'cash', 'Cash prizes')}<div style="text-align:center;margin:6px 0 20px"><button class="link" id="stAdd">Or just score a photo</button></div>`;
     $('#stAdd').onclick = () => pickPhoto(true); return;
   }
   const tot = p.s.total, stage = stageOf(tot), lk = photoLock(p), gc = !lk && p.cat ? goalFor(p) : null, gneed = gc ? cxNeed(gc) : 0;
@@ -3920,16 +4060,12 @@ function renderStudio() {
   st.innerHTML = `<span class="hint">Flick down to judge</span>
     <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
-    <p class="to80">${p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
+    <p class="to80">${lk ? '' : p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
     ${stage >= 1 ? `<div class="qrow">${stage === 2 && !lk ? '<button class="btn block" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
-    <h3 class="sec">Improve your photo</h3>
-    ${lk ? `<div class="lockc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h1a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 6 10zm2.5 0h5V7.5a2.5 2.5 0 0 0-5 0z"/></svg>
-      <div><b>Improvements locked</b><span>This photo is entered in <b>${esc(CX.find(x => x.id === lk.cid).t)}</b> at ${lk.score}. You can improve it again when the results are in.</span>
-      <span class="lockt">Results in <b data-ll="${lk.id}">${fmtLeft(Math.max(0, lk.end - Date.now()))}</b></span></div>
-      <button class="btn small" id="stLive">View live</button></div>` : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}"><span>${sorted[0].verb}</span></button><p class="fixsub">${sorted[0].name} is your lowest at ${p.s[sorted[0].k]}. Tap a score bar above to pick another.</p>`}
-    <h3 class="sec">Your photos</h3>
-    <div class="strip">${S.photos.map(x => `<button data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}"><img src="${x.src}" alt=""><span>${x.s.total}</span></button>`).join('')}
-    ${S.photos.length < CFG.MAX_PHOTOS ? '<button class="add" id="stNew" aria-label="Score a new photo">+</button>' : ''}</div>`;
+    ${lk || !sorted.length ? '' : '<h3 class="sec">Improve your photo</h3>'}
+    ${lk ? `<div class="lockline"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h1a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 6 10zm2.5 0h5V7.5a2.5 2.5 0 0 0-5 0z"/></svg><span>In <b>${esc(CX.find(x => x.id === lk.cid).t)}</b> · results in <b data-ll="${lk.id}">${fmtLeft(Math.max(0, lk.end - Date.now()))}</b></span><button id="stLive">View live ›</button></div>` : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}"><span>${sorted[0].verb}</span><span class="gpill">${gemIcon()}${fixCost(p)}</span></button><p class="fixsub">${sorted[0].name} is your lowest at ${p.s[sorted[0].k]}. Tap a score bar above to pick another.</p>`}
+    <div class="phead"><h3 class="sec">${lk || !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
+    <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `${(() => { const nc = nextComps(1)[0]; return nc ? `<button class="padd" id="stNew" data-upfor="${nc.id}" aria-label="Upload for ${esc(nc.t)}"><span class="pl">+</span><b>Upload for ${esc(nc.t)}</b><small>${cxPrize(nc)} · ends in ${fmtLeft(cxLeft(nc))}</small></button>` : `<button class="padd" id="stNew" aria-label="Upload a new photo"><span class="pl">+</span><b>Upload a new photo</b></button>`; })()}` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCardsHTML('Win real cash', 'cash', 'Cash prizes') : compCardsHTML('Next competitions')}`;
   animateRing(st);
   st.querySelectorAll('.fix').forEach(b => b.onclick = () => startEnhance(p, b.dataset.c));
   if ($('#stFix')) $('#stFix').onclick = () => startEnhance(p, $('#stFix').dataset.c);
@@ -3938,7 +4074,7 @@ function renderStudio() {
   clearInterval(window.__stLock); if (lk) window.__stLock = setInterval(() => { const el = st.querySelector(`[data-ll="${lk.id}"]`); if (!el || !document.contains(el)) { clearInterval(window.__stLock); return; } el.textContent = fmtLeft(Math.max(0, lk.end - Date.now())); if (Date.now() >= lk.end) { clearInterval(window.__stLock); renderStudio(); } }, 1000);
   st.querySelectorAll('[data-fix]').forEach(b => b.onclick = () => startEnhance(p, b.dataset.fix));
   st.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { S.cur = b.dataset.p; save(); renderStudio(); });
-  if ($('#stNew')) $('#stNew').onclick = () => pickPhoto(true);
+  if ($('#stNew') && !$('#stNew').dataset.upfor) $('#stNew').onclick = () => pickPhoto(true);
   if ($('#stComp')) $('#stComp').onclick = () => openComps(p);
   if ($('#gEnter')) $('#gEnter').onclick = () => { CXF = gc.k === 'gem' ? 'gem' : 'all'; openComps(p); cxEnter(gc); };
   if ($('#gChange')) $('#gChange').onclick = () => openComps(p);
