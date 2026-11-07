@@ -1669,6 +1669,7 @@ button.bar:hover span:first-child{color:var(--pink)}
 .bar .d.dn{color:var(--muted)}
 .bar.hi i b{background:var(--good)!important}
 #stComp{background:linear-gradient(135deg,#2BD9C9,#1597E5);color:#06222B;box-shadow:0 0 0 1.5px rgba(140,240,255,.6),0 8px 22px -8px rgba(40,200,230,.8)}
+#stComp{min-height:62px;font-size:1.25rem;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;width:100%}
 </style>
 </head>
 <body>
@@ -3718,7 +3719,7 @@ function renderStudio() {
     <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
     <p class="to80">${p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
-    ${stage >= 1 ? `<div class="qrow">${stage === 2 ? '<button class="btn small" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
+    ${stage >= 1 ? `<div class="qrow">${stage === 2 ? '<button class="btn block" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
     <h3 class="sec">Improve your photo</h3>
     ${lk ? `<div class="lockc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h1a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 6 10zm2.5 0h5V7.5a2.5 2.5 0 0 0-5 0z"/></svg>
       <div><b>Improvements locked</b><span>This photo is entered in <b>${esc(CX.find(x => x.id === lk.cid).t)}</b> at ${lk.score}. You can improve it again when the results are in.</span>
