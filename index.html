@@ -3847,11 +3847,11 @@ function cxEnter(c) {
     openEntryGuide(c, bestP);
     return;
   }
-  const used = new Set(c.k === 'gem' ? (S.entries || []).filter(e => e.cid === c.id).map(e => e.pid) : []);
+  const used = new Set(c.k === 'gem' ? (S.entries || []).filter(e => (CX.find(x => x.id === e.cid) || {}).k === 'gem').map(e => e.pid) : []);
   const ok = S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total);
   if (!ok.length && S.photos.some(p => cxOk(c, p) && used.has(p.id))) {
     openSheet(`<div class="en2"><span class="en-tag">🏆 Photo competition</span><h2>${esc(c.t)}</h2>
-      <p class="sub">Each photo can enter ${esc(c.t)} once. Your qualifying photos have already been in it, so upload a new photo to enter again.</p>
+      <p class="sub">Each photo can enter one free competition. Your photos that fit ${esc(c.t)} have already used theirs, so upload a new photo to enter.</p>
       <button class="btn block" id="enNew">Upload a new photo</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`);
     $('#enNew').onclick = () => { closeSheet(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
     return;
