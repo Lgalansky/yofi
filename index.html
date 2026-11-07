@@ -1667,6 +1667,8 @@ button.bar:hover span:first-child{color:var(--pink)}
 .bar.low i b{background:var(--ink)}
 .bar.low span:first-child{color:inherit}
 .bar .d.dn{color:var(--muted)}
+.bar.maxd i b{background:var(--ink)!important}
+.bar.hi i b{background:var(--good)!important}
 </style>
 </head>
 <body>
@@ -2142,7 +2144,7 @@ function barsHTML(s, prev, tap, p) {
   return `<div class="bars">${C.map(c => {
     const d = prev ? s[c.k] - prev[c.k] : 0;
     const t = tap && !(p && isMaxed(p, c.k));
-    return `<${t ? 'button' : 'div'} class="bar ${c.k === low ? 'low' : ''} ${p && isMaxed(p, c.k) ? 'maxd' : ''}" ${t ? `data-fix="${c.k}" aria-label="Improve ${c.name}, now ${s[c.k]}"` : ''}><span>${c.short || c.name}${p && isMaxed(p, c.k) ? ' <i class="mx" aria-label="at its best">✓</i>' : ''}</span><i><b style="width:${prev ? prev[c.k] : 0}%" data-w="${s[c.k]}"></b></i><em>${s[c.k]}${d ? `<span class="d ${d < 0 ? 'dn' : ''}">${d > 0 ? '+' : ''}${d}</span>` : ''}</em></${t ? 'button' : 'div'}>`;
+    return `<${t ? 'button' : 'div'} class="bar ${c.k === low ? 'low' : ''} ${p && isMaxed(p, c.k) ? 'maxd' : ''} ${s[c.k] >= 80 ? 'hi' : ''}" ${t ? `data-fix="${c.k}" aria-label="Improve ${c.name}, now ${s[c.k]}"` : ''}><span>${c.short || c.name}${p && isMaxed(p, c.k) && s[c.k] >= 80 ? ' <i class="mx" aria-label="at its best">✓</i>' : ''}</span><i><b style="width:${prev ? prev[c.k] : 0}%" data-w="${s[c.k]}"></b></i><em>${s[c.k]}${d ? `<span class="d ${d < 0 ? 'dn' : ''}">${d > 0 ? '+' : ''}${d}</span>` : ''}</em></${t ? 'button' : 'div'}>`;
   }).join('')}</div>`;
 }
 const lowest = s => C.reduce((a, c) => (s[c.k] < s[a] ? c.k : a), C[0].k);
