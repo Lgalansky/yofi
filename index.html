@@ -2048,6 +2048,9 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 /* Short on gems: gesture hint */
 .swp-b.nudge{animation:pillBump 1s cubic-bezier(.3,.7,.3,1) 3}
 .swp-b.nudge .ar{animation:swpR .5s ease-in-out 6}
+.swp.l .swp-b.nudge{animation-name:pillBumpL}
+.swp.l .swp-b.nudge .ar{animation:swpL .5s ease-in-out 6}
+@keyframes pillBumpL{0%,100%{transform:none;box-shadow:inset 0 0 0 1.5px #5A3D8C}20%{transform:translateX(6px)}45%{transform:translateX(-5px) scale(1.04);box-shadow:inset 0 0 0 2px #2EE59D,0 0 22px rgba(46,229,157,.6)}70%{transform:translateX(0) scale(1.03);box-shadow:inset 0 0 0 2px #2EE59D,0 0 14px rgba(46,229,157,.45)}}
 @keyframes pillBump{0%,100%{transform:none;box-shadow:inset 0 0 0 1.5px #5A3D8C}20%{transform:translateX(-6px)}45%{transform:translateX(5px) scale(1.04);box-shadow:inset 0 0 0 2px #FF3FA4,0 0 22px rgba(255,63,164,.7)}70%{transform:translateX(0) scale(1.03);box-shadow:inset 0 0 0 2px #FF3FA4,0 0 14px rgba(255,63,164,.5)}}
 /* Enhance: portrait photo sits beside the score */
 #studio.tallp{display:grid;grid-template-columns:1fr 1fr;column-gap:14px;align-content:start}
@@ -2128,6 +2131,41 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .swg.add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#D9C8FF;box-shadow:inset 0 0 0 2px #5A3D8C;background:transparent}
 .swg.add small{font-weight:700;font-size:.8rem}
 .swlink{display:block;margin:12px auto 0;padding:8px 12px;font-weight:700;font-size:.9rem;color:#D9C8FF;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(217,200,255,.45)}
+/* Judge: result on the card, buy gems after the daily bonus */
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tot-v{display:inline-flex;align-items:center;gap:5px;margin-bottom:6px;padding:6px 11px;border-radius:999px;font-weight:800;font-size:.85rem;color:#fff;white-space:nowrap;animation:cpop .35s cubic-bezier(.3,1.4,.5,1)}
+.tot-v.hit{background:#18A873;box-shadow:0 4px 14px rgba(46,229,157,.4)}
+.tot-v.miss{background:rgba(60,40,90,.9);color:#EADBFF}
+.tot-v i{font-style:normal;display:inline-flex;align-items:center;gap:2px;padding-left:6px;border-left:1px solid rgba(255,255,255,.35)}
+.tot-v svg{width:13px;height:13px}
+.jf-buy{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;padding:11px 14px;border-radius:14px;font-weight:800;font-size:.95rem;color:#fff;background:linear-gradient(90deg,#FF3FA4,#9B3CFF);box-shadow:0 6px 18px rgba(155,60,255,.35)}
+.jf-buy svg{width:18px;height:18px}
+.jf-buy small{font-weight:600;font-size:.75rem;opacity:.85;margin-left:4px}
+/* Judge: clearer question, gem packs after the daily bonus */
+.tot-h h2{font-size:1.9rem;color:#fff}
+.tot-h p{margin-top:4px;font-size:1rem;font-weight:600;color:#E4D8FA}
+.tot-h p b{color:#FF7CC8;font-weight:800}
+.jf-packs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.jpk{position:relative;min-width:0;width:auto;display:flex;flex-direction:column;align-items:center;gap:1px;padding:14px 6px 10px;border-radius:16px;color:#fff;background:linear-gradient(180deg,#2E1A52,#1B0F33);box-shadow:inset 0 0 0 1.5px #4A3275;transition:transform .12s}
+.jpk:active{transform:scale(.95)}
+.jpk .gi svg{width:42px;height:42px;filter:drop-shadow(0 4px 10px rgba(80,160,255,.55))}
+.jpk b{margin-top:4px;font:800 1.35rem/1 "Bricolage Grotesque",sans-serif}
+.jpk small{font-size:.72rem;font-weight:700;color:#B9A9D6}
+.jpk .csh{margin-top:6px;padding:2px 8px;border-radius:999px;font-weight:800;font-size:.78rem;color:#2EE59D;background:rgba(46,229,157,.12);white-space:nowrap}
+.jpk .pr{margin-top:8px;width:100%;display:flex;justify-content:center;padding:7px 0;border-radius:10px;font-weight:800;font-size:.95rem;background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
+.jpk.pro{box-shadow:inset 0 0 0 2px #FFC93C,0 0 18px rgba(255,201,60,.25)}
+.jpk .bv{position:absolute;top:-9px;left:50%;transform:translateX(-50%);padding:2px 8px;border-radius:999px;font-size:.62rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;color:#3A2400;background:#FFC93C}
+/* Pack tiles: cash icon, names, wallet screen */
+.jpk .csh{display:inline-flex;align-items:center;gap:4px}
+.jpk .csh svg{width:24px;height:18px}
+.jpk .nm{font-weight:800;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:#D9C8FF;margin-bottom:6px}
+.jf-packs.named{margin:16px 0 4px;gap:10px}
+.jf-packs.named .jpk{padding-top:16px}
+.jf-packs.named .jpk.plus{box-shadow:inset 0 0 0 1.5px #9B3CFF}
+.note.qb{text-align:center;margin:8px 0 14px}
+/* Competition-ready pop: say it's a competition */
+.cr-comp{position:relative;display:inline-block;margin:22px 0 -18px;padding:6px 14px;border-radius:999px;font-weight:800;font-size:.85rem;letter-spacing:.02em;color:#3A2400;background:linear-gradient(90deg,#FFE27A,#FFC93C);box-shadow:0 4px 14px rgba(255,201,60,.35)}
+.crbox .cr-prz{color:#FFD86B}
 </style>
 </head>
 <body>
@@ -3193,9 +3231,10 @@ function showCompReady(p, goal) {
     <div class="cr-rays" aria-hidden="true"></div>${[...Array(18)].map((_, i) => `<i class="cr-cf" style="left:${(i * 53) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('')}
     <svg class="cr-crown" viewBox="0 0 32 24" aria-hidden="true"><path d="M3 7l6.5 6L16 3l6.5 10L29 7l-2.6 13H5.6z" fill="#FFC93C"/><rect x="5.5" y="19.5" width="21" height="3" rx="1.2" fill="#E9A514"/><circle cx="3" cy="6.5" r="2" fill="#FFC93C"/><circle cx="16" cy="2.5" r="2" fill="#FFC93C"/><circle cx="29" cy="6.5" r="2" fill="#FFC93C"/></svg>
     <div class="cr-photo"><img src="${p.src}" alt="Your photo"><span class="cr-score">${p.s.total}</span></div>
-    <h2 id="crT">${goal ? `Ready for ${esc(goal.t)}!` : 'Competition ready!'}</h2>
-    <p>${goal ? `Your photo scored ${p.s.total}. That’s enough to enter <b>${esc(goal.t)}</b>, ${cxPrize(goal).replace(/<[^>]+>/g, '')} 1st prize.` : `Your photo scored ${p.s.total}. It can now enter real cash competitions${first ? `, like <b>${esc(first.t)}</b> with a ${cxPrize(first).replace(/<[^>]+>/g, '')} 1st prize` : ''}.`}</p>
-    <button class="bt-cta" id="crGo">${goal ? `Enter ${esc(goal.t)}` : 'Enter a competition'}</button>
+    ${(goal || first) ? `<span class="cr-comp">🏆 Photo competition · ${esc((goal || first).t)}</span>` : ''}
+    <h2 id="crT">Ready to compete!</h2>
+    <p>Your photo scored <b>${p.s.total}</b>. That’s enough to enter ${goal ? `the <b>${esc(goal.t)}</b> photo competition. 1st prize: <b class="cr-prz">${prizeWords(goal)}</b>` : `photo competitions${first ? `, like <b>${esc(first.t)}</b> with <b class="cr-prz">${prizeWords(first)}</b> for 1st place` : ''}`}.</p>
+    <button class="bt-cta" id="crGo">${goal ? 'Enter the competition' : 'See competitions'}</button>
     <button class="bt-no" id="crLater">Keep improving</button></div>`;
   c.classList.add('on', 'cr');
   const close = () => c.classList.remove('on', 'cr');
@@ -3231,16 +3270,16 @@ const PACKS = [
   { t: 'Pro', sub: 'Best value. Bigger wins.', cash: 50, bonus: 7, gems: 1000, free: 60, cls: 'pro' }
 ];
 let storeTimer = null;
+function packTiles(attr, named) {
+  return `<div class="jf-packs ${named ? 'named' : ''}">${PACKS.map((k, i) => `<button class="jpk ${k.cls}" data-${attr}="${i}" aria-label="${k.t} pack: ${k.gems} gems plus $${k.cash} cash for $${k.cash}">${i === 2 ? '<span class="bv">Best value</span>' : ''}${named ? `<span class="nm">${k.t}</span>` : ''}<span class="gi">${gemIcon('')}</span><b>${k.gems.toLocaleString()}</b><small>gems</small><span class="csh">${CASH_ICON}+$${k.cash}</span><span class="pr">$${k.cash}</span></button>`).join('')}</div>`;
+}
 function openStore(reason, onBuy) {
   if (!S.offerEnd || S.offerEnd < Date.now()) { S.offerEnd = Date.now() + (3 * 3600 + 38 * 60 + 27) * 1000; save(); }
   openSheet(`<div class="sbal" aria-label="Your balances"><span class="c">${CASH_ICON}<span><small>Cash</small><b>$${(S.cash || 0).toFixed(2)}</b></span></span><span class="g">${gemIcon('')}<span><small>Gems</small><b>${S.gems.toLocaleString()}</b></span></span></div>
     <div class="vphead"><h2>Vibe Packs<i>.</i></h2><div class="lto"><em>Limited time offer</em><span><b id="oH">00</b><small>HRS</small></span><span><b id="oM">00</b><small>MIN</small></span><span><b id="oS">00</b><small>SEC</small></span></div></div>
     <p class="sub">${reason ? esc(reason) + ' ' : ''}More value. More photos. More wins.</p>
-    ${PACKS.map((k, i) => `<article class="vp ${k.cls}"><span class="free"><span><b>${k.free}%</b><small>FREE</small></span></span>
-      <h3>${k.cls === 'pro' ? '👑 ' : ''}${k.t}</h3><p>${k.sub}</p>
-      <div class="vpi"><div>${CASH_ICON}<b>$${k.cash}</b><small>Real Cash</small></div><div>${gemIcon('')}<b>${k.gems.toLocaleString()}</b><small>Photo Gems</small></div></div>
-      <button class="btn block" data-i="${i}">Get pack for $${k.cash}</button></article>`).join('')}
-    <p class="note" style="text-align:center;margin-top:0">One-time offers.</p>
+    ${packTiles('buy', true)}
+    <p class="note qb">Tap a pack to buy it.</p>
     <button class="btn quiet block" id="earnBtn">Earn gems by judging instead</button>
     <p class="note">Prototype: purchases are simulated and nothing is charged. Gems have no cash value.</p>`, { full: true });
   const tick = () => {
@@ -3250,8 +3289,8 @@ function openStore(reason, onBuy) {
     $('#oM').textContent = String(Math.floor(s / 60)).padStart(2, '0'); $('#oS').textContent = String(s % 60).padStart(2, '0');
   };
   clearInterval(storeTimer); tick(); storeTimer = setInterval(tick, 1000);
-  document.querySelectorAll('#sheetBody .vp [data-i]').forEach(b => b.onclick = () => {
-    const k = PACKS[+b.dataset.i]; closeSheet();
+  document.querySelectorAll('#sheetBody [data-buy]').forEach(b => b.onclick = () => {
+    const k = PACKS[+b.dataset.buy]; closeSheet();
     S.cash = (S.cash || 0) + k.cash; save(); paintWallet();
     setTimeout(() => addGems(k.gems, `${k.t} pack added: $${k.cash} cash`), 320);
     if (onBuy) setTimeout(onBuy, 2300);
@@ -3300,6 +3339,7 @@ const cxArt = a => a === 'trophy'
   : '<svg viewBox="0 0 100 110" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="cxb1" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#FF7A3C"/><stop offset=".55" stop-color="#7A1E6E"/><stop offset="1" stop-color="#1B0B38"/></radialGradient><linearGradient id="cxb2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF6C0"/><stop offset=".55" stop-color="#FFC02E"/><stop offset="1" stop-color="#C77800"/></linearGradient></defs><rect width="100" height="110" fill="url(#cxb1)"/><path d="M50 0L30 110M50 0L70 110" stroke="#FFD59A" stroke-opacity=".2" stroke-width="8"/><ellipse cx="50" cy="94" rx="38" ry="9" fill="#5A1A4E"/><ellipse cx="50" cy="90" rx="34" ry="7" fill="#C2457A"/><path d="M50 20l9.5 19.5 21.5 3.1-15.5 15.1 3.7 21.3L50 69 30.8 79l3.7-21.3L19 42.6l21.5-3.1z" fill="url(#cxb2)" stroke="#FFE9A0" stroke-width="1.4"/><path d="M50 20l-4 40 4 9 4-9z" fill="#fff" opacity=".18"/><circle cx="18" cy="22" r="1.4" fill="#fff"/><circle cx="84" cy="18" r="1.6" fill="#FFE27A"/></svg>';
 const cxLeft = c => { const P = c.per * MIN, now = Date.now() + c.off * MIN; return P - (now % P); };
 const fmtLeft = ms => { const m = Math.floor(ms / MIN), d = Math.floor(m / 1440), h = Math.floor((m % 1440) / 60), mm = m % 60; return d ? `${d}d ${h}h` : h ? `${h}h ${mm}m` : mm ? `${mm}m ${String(Math.floor(ms / 1000) % 60).padStart(2, '0')}s` : `${Math.floor(ms / 1000)}s`; };
+const prizeWords = c => c.k === 'gem' ? `${c.prize.toLocaleString()} gems` : `$${c.prize.toLocaleString()}${c.k === 'bc' ? ' BC' : ' cash'}`;
 const cxPrize = c => c.k === 'gem' ? `${c.prize.toLocaleString()}${gemIcon()}` : c.k === 'bc' ? `$${c.prize.toLocaleString()}<small>BC</small>` : `$${c.prize.toLocaleString()}`;
 const cxFee = c => c.k === 'gem' ? `<span class="freefee">Free</span>` : c.k === 'bc' ? `$${c.fee.toFixed(2)} BC` : `$${c.fee} Cash`;
 const cxNeed = c => c.min || CFG.QUALIFY;
@@ -4211,15 +4251,16 @@ function renderJudge() {
   const p = seedAt(); if (!p || !p.owner) { $('#judge').innerHTML = '<div class="gen"><div class="spin"></div>Loading photos…</div>'; return; }
   const left = CFG.BATTLE_EVERY - S.since, ds = dailyState(), combo = S.combo || 0;
   const [pa, pb] = seedPair();
-  $('#judge').innerHTML = `<div class="swp l"><button class="swp-b" data-swp="studio"><span class="ar">←</span>Swipe to Enhance</button></div><div class="tot-h"><span class="jtag2">${S.photos.length ? (left <= 1 ? 'Battle after this one' : `${left} picks to a battle`) : 'Score a photo to battle'}</span><h2>Which is better?</h2><p>${esc(CHAL[pa.cat] || 'Photo challenge')} · tap your pick</p></div>
+  $('#judge').innerHTML = `<div class="swp l"><button class="swp-b" data-swp="studio"><span class="ar">←</span>Swipe to Enhance</button></div><div class="tot-h"><span class="jtag2">${S.photos.length ? (left <= 1 ? 'Battle after this one' : `${left} picks to a battle`) : 'Score a photo to battle'}</span><h2>Which is better?</h2><p><b>${esc(CHAL[pa.cat] || 'Photo challenge')}</b> · tap your pick</p></div>
     <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
     <div class="jfoot">
       <div class="jf-combo"><b>Combo ${combo}/10</b><span class="dots">${[...Array(10)].map((_, i) => `<i class="${i < combo ? 'on' : ''}"></i>`).join('')}</span><small>Lucky drop at 10</small></div>
       <div class="jf-gems"><div class="jf-l">${ds.D.n < JUDGE_CAP ? `<span><b>+${CFG.VOTE}</b> ${gemIcon()} when you agree</span><span class="r"><b>${JUDGE_CAP - ds.D.n}</b> of ${JUDGE_CAP} left today</span>` : `<span>Daily bonus used</span><span class="r"><b>+${JUDGE_LOW}</b> ${gemIcon()} per pick</span>`}</div>
-      <div class="jcap"><i style="width:${Math.min(100, (JUDGE_CAP - Math.min(ds.D.n, JUDGE_CAP)) / JUDGE_CAP * 100)}%"></i></div></div>
+      ${ds.D.n < JUDGE_CAP ? `<div class="jcap"><i style="width:${Math.min(100, (JUDGE_CAP - ds.D.n) / JUDGE_CAP * 100)}%"></i></div>` : packTiles('pk')}</div>
     </div>
-    <div class="jres" id="jRes" aria-live="polite"></div>
+    <div class="vh" id="jRes" aria-live="polite"></div>
 `;
+  document.querySelectorAll('#judge [data-pk]').forEach(b => b.onclick = () => openStore());
   document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = () => { if (Date.now() - SWIPED < 400) return; vote(+b.dataset.i); });
 }
 let nudgeFrom = null, nudgeT = null;
@@ -4227,10 +4268,8 @@ function maybeEnhanceNudge() {
   const from = nudgeFrom; nudgeFrom = null;
   const p = cur(), cost = fixCost(p);
   if (from == null || from >= cost || S.gems < cost) return; if (!p || !lowestOpen(p) || photoLock(p)) return;
-  const n = $('#enNudge');
-  n.innerHTML = `<span class="ic">${gemIcon('')}</span><span class="tx"><b>You can enhance again</b><small>${S.gems} gems · a fix costs ${cost}</small></span><span class="go">Enhance ›</span>`;
-  n.classList.add('on'); clearTimeout(nudgeT); nudgeT = setTimeout(() => n.classList.remove('on'), 5000);
-  n.onclick = () => { n.classList.remove('on'); go('studio'); };
+  toast(`You have ${S.gems} gems · swipe to Enhance`);
+  const pill = $('#judge .swp-b'); if (pill) { pill.classList.remove('nudge'); void pill.offsetWidth; pill.classList.add('nudge'); }
 }
 async function vote(pick) {
   if (judging) return; judging = true;
@@ -4246,16 +4285,17 @@ async function vote(pick) {
   let streakHit = 0;
   if (ds.D.n >= 3 && ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; streakHit = ds.D.streak; S.gems += Math.min(100, 10 * streakHit); paintFlame(); }
   save();
-  document.querySelectorAll('#judge .jf-combo i').forEach((d, i) => d.classList.toggle('on', comboHit || i < S.combo));
-  $('#jRes').innerHTML = `<div class="jr ${agree ? 'hit' : ''}"><span>${agree ? `You picked with <b>${mine}%</b> of judges` : `Only <b>${mine}%</b> agreed with you`}</span><em>${mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : mine >= 35 ? 'Close call' : 'Missed it'}</em></div><div class="jearn ${earn ? '' : 'none'}">${earn ? `+${earn} ${gemIcon()}` : 'No gems this time · combo reset'}</div>`;
-  if (earn) gemExplosion(earn, { small: true, from: $('#jRes') });
+  document.querySelectorAll('#judge .jf-combo i').forEach((d, i) => d.classList.toggle('on', comboHit || i < S.combo)); const cl = $('#judge .jf-combo b'); if (cl) cl.textContent = `Combo ${comboHit ? 10 : S.combo}/10`;
+  const mc = document.querySelectorAll('#judge .tot-c')[pick], word = mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : mine >= 35 ? 'Close call' : 'Missed it';
+  mc.querySelector('.tot-r').insertAdjacentHTML('afterbegin', `<span class="tot-v ${agree ? 'hit' : 'miss'}">${agree ? '✓' : '✕'} ${word}${earn ? ` <i>+${earn}${gemIcon()}</i>` : ''}</span>`);
+  $('#jRes').textContent = `${word} ${mine}% of judges picked this one.${earn ? ` Plus ${earn} gems.` : ''}`;
+  if (earn) gemExplosion(earn, { small: true, from: mc });
   await sleep(1900);
   if (S.photos.length && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); return; }
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
   if (streakHit) { const rw = Math.min(100, 10 * streakHit); celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} day streak!`, text: `You judged 3 photos today. <b>+${rw} gems</b>. Come back tomorrow to keep it going${streakHit < 10 ? ` and earn ${Math.min(100, 10 * (streakHit + 1))}` : ''}.`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
   if (comboHit) { luckyDrop(); return; }
-  if (capNow) { capOffer(); return; }
   maybeEnhanceNudge();
 }
 function packOffer() {
