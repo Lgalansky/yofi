@@ -3554,7 +3554,7 @@ function openComps(forPhoto) {
   if (fp && photoLock(fp)) fp = null;
   if (!fp) CXP = null;
   if ($('#sheet').classList.contains('on')) closeSheet();
-  const cards = k => CX.filter(c => c.k === k && (!fp || liveEntry(c.id) || cxOk(c, fp))).map(c => { const e = liveEntry(c.id), left = cxLeft(c);
+  const cards = k => CX.filter(c => c.k === k && !(!fp && pick && c.id === pick.id) && (!fp || liveEntry(c.id) || cxOk(c, fp))).map(c => { const e = liveEntry(c.id), left = cxLeft(c);
     if (e) return '';
     return ccard(c); }).join('');
   const sec = (k, i) => cards(k); const _sec0 = (k, i) => `<section class="sec k-${k}"><div class="sh"><span class="si">${CXI[k]}</span><div class="tt"><h3>${CXSEC[k].h}</h3></div>${i === 0 ? '<button class="hwl" id="cxHow">How it works</button>' : ''}</div>${cards(k)}</section>`;
