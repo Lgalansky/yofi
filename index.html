@@ -2298,10 +2298,10 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
       <section class="pane" id="gallery" aria-label="Gallery"></section>
     </div>
     <nav class="seg" role="group" aria-label="Switch screen">
-      <button id="segGallery" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg><span>Gallery</span></button>
       <button id="segCompete" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg><span>Compete</span></button>
       <div class="segpair"><button id="segStudio" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L15 9"/><path d="M15 9l2-2"/><path d="M18 2l.8 2.2L21 5l-2.2.8L18 8l-.8-2.2L15 5l2.2-.8zM9 3l.5 1.5L11 5l-1.5.5L9 7l-.5-1.5L7 5l1.5-.5z"/></svg><span>Enhance</span></button>
       <span class="segsw" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg></span><button id="segJudge" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg><span>Judge</span></button></div>
+      <button id="segGallery" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg><span>Gallery</span></button>
     </nav>
 
     <div class="flow" id="flow" role="dialog" aria-modal="true" aria-label="Photo scoring">
@@ -4122,7 +4122,7 @@ function openAddAll() {
   }).sort((a, b) => ({ ok: 0, low: 1, full: 2, hung: 3 }[a.st] - { ok: 0, low: 1, full: 2, hung: 3 }[b.st]) || b.p.s.total - a.p.s.total);
   const ready = rows.filter(x => x.st === 'ok').length;
   openSheet(`<h2>Add a photo to your gallery</h2>
-    <p class="sub">${!S.photos.length ? 'You haven’t scored any photos yet.' : ready ? `Tap a photo to hang it. Room 1 needs 75+, Room 2 85+, Room 3 90+.` : `None of your photos can hang yet. Room 1 needs 75+, Room 2 85+, Room 3 90+.`}</p>
+    <p class="sub">${!S.photos.length ? 'You haven’t scored any photos yet.' : ready ? `Tap a photo to hang it. Room 1 needs 75+, Room 2 85+, Room 3 90+.` : rows.every(x => x.st === 'hung') ? `All your photos are already hanging. Upload a new photo to fill another frame.` : `None of your photos can hang yet. Room 1 needs 75+, Room 2 85+, Room 3 90+.`}</p>
     ${rows.length ? `<div class="aag">${rows.map(x => `<button class="aa ${x.st}" data-p="${x.p.id}" ${x.st === 'hung' || x.st === 'full' ? 'disabled' : ''}><span class="im"><img src="${x.p.src}" alt=""><b>${x.p.s.total}</b></span><span class="ct">${x.p.cat ? gi(x.p.cat) + esc(pcatName(x.p.cat) || 'Any') : 'No category'}</span><span class="wh">${esc(x.why)}</span></button>`).join('')}</div>` : ''}
     <button class="btn block" id="aaNew" style="margin-top:14px">Upload a new photo</button>`, { full: true });
   document.querySelectorAll('#sheetBody .aa').forEach(b => b.onclick = () => {
@@ -4130,7 +4130,7 @@ function openAddAll() {
     if (x.st === 'ok') { closeSheet(); GV.room = x.sp[0]; hang(x.sp[0], x.sp[1], x.p.id); }
     else if (x.st === 'low') { closeSheet(); S.cur = x.p.id; save(); go('studio'); }
   });
-  { const nc = nextComps(1)[0]; if (nc) { $('#aaNew').innerHTML = `Upload for ${esc(nc.t)}`; $('#aaNew').onclick = () => uploadFor(nc); } else $('#aaNew').onclick = () => { closeSheet(); pickPhoto(true); }; }
+  $('#aaNew').onclick = () => { closeSheet(); pickPhoto(true); };
 }
 function openUnlock(r, s, sl, wild, theme, close) {
   const R = ROOMS[r], filled = roomFilled(r), el = $('#ceg');
