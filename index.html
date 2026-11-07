@@ -3725,8 +3725,9 @@ function settle(e) {
 function openResult(e) {
   const c = CX.find(x => x.id === e.cid), pz = e.prize, top = paidTop(e.n), climbed = e.startR - e.fin;
   const ph = S.photos.find(x => x.id === e.pid), hungAt = ph && Object.entries(S.frames || {}).find(([, id]) => id === ph.id), spot = ph && !hungAt && frameSpot(ph);
-  const galBtn = cls => spot ? `<button class="${cls}" id="rsGal">Add photo to gallery <span aria-hidden="true">→</span></button>` : `<button class="${cls}" id="rsNext">Enter next competition <span aria-hidden="true">→</span></button>`;
-  const galNote = spot ? `<button class="rs-alt" id="rsNext">Or enter the next competition</button>` : '';
+  const swap = ph && !hungAt && !spot ? swapSpot(ph) : null;
+  const galBtn = cls => ph ? `<button class="${cls}" id="rsGal">${hungAt ? 'See it in your gallery' : spot ? 'Add photo to gallery' : swap ? 'Add photo to gallery' : 'Go to your gallery'} <span aria-hidden="true">→</span></button>` : `<button class="${cls}" id="rsNext">Enter next competition <span aria-hidden="true">→</span></button>`;
+  const galNote = ph ? `${swap ? `<p class="rs-gn">It replaces your ${framed(swap[0], swap[1]).s.total} photo in the ${esc(ROOMS[swap[0]].slots[swap[1]][1])} frame.</p>` : ''}<button class="rs-alt" id="rsNext">Or enter the next competition</button>` : '';
   if ($('#flow').classList.contains('on') && !$('#flow').classList.contains('cxmode')) closeFlow();
   if (!$('#flow').classList.contains('cxmode')) openComps(null);
   LV = { e: null, last: null }; e.seen = true; save();
@@ -3757,7 +3758,10 @@ function openResult(e) {
   const back = () => { lvClose(); if ($('#flow').classList.contains('cxmode')) openComps(); };
   if ($('#rsBack')) $('#rsBack').onclick = back;
   $('#rsNext').onclick = () => { lvClose(); openComps(); };
-  if ($('#rsGal')) $('#rsGal').onclick = () => { lvClose(); closeFlow(); if (spot) hangPhoto(ph); else { GV.tab = 'mine'; if (hungAt) GV.room = +hungAt[0].split('-')[0]; openGallery(); } };
+  if ($('#rsGal')) $('#rsGal').onclick = () => { lvClose(); closeFlow(); GV.tab = 'mine';
+    if (hungAt) { GV.fresh = hungAt[0]; go('gallery'); return; }
+    const t = spot || swap; if (t) { go('gallery'); hang(t[0], t[1], ph.id); return; }
+    go('gallery'); toast(ph.s.total < roomMin(0) ? `Gallery photos need ${roomMin(0)}+. This one scores ${ph.s.total}.` : 'No open frame fits this photo yet. Fill Room 1 to unlock more.'); };
   if ($('#rsStudio')) $('#rsStudio').onclick = () => { lvClose(); S.cur = e.pid; save(); closeFlow(); go('studio'); };
 }
 setInterval(() => {
@@ -4228,6 +4232,11 @@ function openFill(r, s, pref) {
   document.querySelectorAll('#sheetBody .pickgrid button').forEach(b => b.onclick = () => hang(r, s, b.dataset.p));
   if ($('#fImprove')) $('#fImprove').onclick = () => { closeSheet(); S.cur = close.id; save(); go('studio'); };
   if ($('#fNew')) $('#fNew').onclick = () => { closeSheet(); pickPhoto(true); };
+}
+function swapSpot(p) {
+  let best = null;
+  ROOMS.forEach((R, r) => { if (!roomOpen(r) || p.s.total < roomMin(r)) return; R.slots.forEach((sl, i) => { const q = framed(r, i); if (q && q.id !== p.id && fitsSlot(p, sl) && q.s.total < p.s.total && (!best || q.s.total < framed(best[0], best[1]).s.total)) best = [r, i]; }); });
+  return best;
 }
 function frameSpot(p) {
   let spot = null;
