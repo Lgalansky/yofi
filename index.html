@@ -1531,6 +1531,10 @@ button.bar:hover span:first-child{color:var(--pink)}
 #sheet.full.under .fullbar{margin-bottom:2px}
 .ceg.under{bottom:0}
 .ceg.under .ceg-top .wm{visibility:hidden}
+/* Score bars: number and change on one line */
+.bar{grid-template-columns:92px 1fr minmax(30px,auto)}
+.bar em{white-space:nowrap}
+.bar em .d{margin-left:4px}
 </style>
 </head>
 <body>
@@ -2002,7 +2006,7 @@ function barsHTML(s, prev, tap, p) {
   return `<div class="bars">${C.map(c => {
     const d = prev ? s[c.k] - prev[c.k] : 0;
     const t = tap && !(p && isMaxed(p, c.k));
-    return `<${t ? 'button' : 'div'} class="bar ${c.k === low ? 'low' : ''} ${p && isMaxed(p, c.k) ? 'maxd' : ''}" ${t ? `data-fix="${c.k}" aria-label="Improve ${c.name}, now ${s[c.k]}"` : ''}><span>${c.short || c.name}${p && isMaxed(p, c.k) ? ' <i class="mx" aria-label="at its best">✓</i>' : ''}</span><i><b style="width:${prev ? prev[c.k] : 0}%" data-w="${s[c.k]}"></b></i><em>${s[c.k]}${d ? `<br><span class="d ${d < 0 ? 'dn' : ''}">${d > 0 ? '+' : ''}${d}</span>` : ''}</em></${t ? 'button' : 'div'}>`;
+    return `<${t ? 'button' : 'div'} class="bar ${c.k === low ? 'low' : ''} ${p && isMaxed(p, c.k) ? 'maxd' : ''}" ${t ? `data-fix="${c.k}" aria-label="Improve ${c.name}, now ${s[c.k]}"` : ''}><span>${c.short || c.name}${p && isMaxed(p, c.k) ? ' <i class="mx" aria-label="at its best">✓</i>' : ''}</span><i><b style="width:${prev ? prev[c.k] : 0}%" data-w="${s[c.k]}"></b></i><em>${s[c.k]}${d ? `<span class="d ${d < 0 ? 'dn' : ''}">${d > 0 ? '+' : ''}${d}</span>` : ''}</em></${t ? 'button' : 'div'}>`;
   }).join('')}</div>${tap && (!p || lowestOpen(p)) ? '<p class="taphint">Tap a category to improve it</p>' : ''}`;
 }
 const lowest = s => C.reduce((a, c) => (s[c.k] < s[a] ? c.k : a), C[0].k);
@@ -2128,7 +2132,7 @@ function goalRoute(p) {
   if (c && goalReady(c, p)) { CXF = c.k === 'gem' ? 'gem' : 'all'; openComps(p); cxEnter(c); }
   else { if (p) { S.cur = p.id; save(); } go('studio'); }
 }
-function homeCompete(c) { openApp(); CXF = 'all'; openComps(null); if (c) cxEnter(c); }
+function homeCompete(c) { openApp(); CXF = 'all'; openComps(null); }
 $('#lScore').onclick = () => homeCompete();
 $('#lUpload').onclick = () => pickPhoto();
 $('#lOpen').onclick = () => { openApp(); if (!S.user) openSignup(() => {}, { locked: false }); };
@@ -2163,6 +2167,7 @@ function pickPhoto(fromStudio) {
 }
 $('#file').addEventListener('change', async e => {
   const f = e.target.files && e.target.files[0]; if (!f) return;
+  if ($('#ceg').classList.contains('on')) { $('#ceg').classList.remove('on', 'under'); $('#ceg').style.top = ''; clearInterval(window.__ceg); }
   if (!/^image\//.test(f.type)) { toast('That file isn’t an image. Pick a JPG, PNG or HEIC.'); return; }
   const url = URL.createObjectURL(f);
   let img;
@@ -2579,7 +2584,7 @@ function openComps(forPhoto) {
         <div class="fst"><div><small>1st prize</small><b>${cxPrize(pick)}</b></div><div><small>Entry fee</small><b>${cxFee(pick)}</b></div></div>
         <button class="fgo" data-cx-go="${pick.id}">Enter competition</button></div></div>` : '';
   const mine = live.length ? `<div class="myent"><div class="mh"><h3>My live entries</h3><span>${live.length} live</span></div><div class="mrow">${live.map(e => { const c = CX.find(x => x.id === e.cid), r = rankAt(e, Date.now()), d = rankMove(e); return `<button class="mcard k-${c.k}" data-live="${e.id}"><img src="${entrySrc(e)}" alt=""><span><small>${esc(c.t)}</small><b data-lr="${e.id}">#${r.toLocaleString()} ${moveHTML(d)}</b><em data-ll="${e.id}">${fmtLeft(Math.max(0, e.end - Date.now()))} left</em></span></button>`; }).join('')}</div></div>` : '';
-  const fpBar = fp ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Entering with</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${show.some(k => cards(k)) ? 'Competitions this photo can enter' : 'No open competitions fit this photo right now'}</span></div><button id="cxAll">See all</button></div>` : '';
+  const fpBar = fp && !photoLock(fp) ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Entering with</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${show.some(k => cards(k)) ? 'Competitions this photo can enter' : 'No open competitions fit this photo right now'}</span></div><button id="cxAll">See all</button></div>` : '';
   openFlow(`<div class="cx">${wal}${fpBar}${mine}
     ${best}
     <div class="mh2"><h2 class="fh">Explore competitions</h2><button class="hwl jl" id="cxHow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg>Judge to earn gems</button></div>
@@ -2801,7 +2806,7 @@ function openEntryGuide(c, bestP) {
   el.classList.add('on'); el.scrollTop = 0;
   const close = () => { el.classList.remove('on'); clearInterval(window.__ceg); };
   $('#cegBack').onclick = close; $('#cegX').onclick = close; $('#cegLater').onclick = close;
-  const upload = () => { close(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
+  const upload = () => { if (S.photos.length >= CFG.MAX_PHOTOS) close(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
   $('#cegGo').onclick = have ? () => { close(); closeFlow(); S.cur = bestP.id; S.goal = { cid: c.id, pid: bestP.id }; save(); go('studio'); } : upload;
   if ($('#cegNew')) $('#cegNew').onclick = upload;
   if ($('#cegBox')) $('#cegBox').onclick = () => $('#cegGo').click();
