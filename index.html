@@ -1663,6 +1663,10 @@ button.bar:hover span:first-child{color:var(--pink)}
 #shell > .wallet{grid-template-columns:repeat(2,minmax(0,1fr))}
 .sbal{grid-template-columns:repeat(2,minmax(0,1fr))}
 .vpi{grid-template-columns:repeat(2,1fr)}
+/* Bars: white, green when maxed */
+.bar.low i b{background:var(--ink)}
+.bar.low span:first-child{color:inherit}
+.bar .d.dn{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -2139,7 +2143,7 @@ function barsHTML(s, prev, tap, p) {
     const d = prev ? s[c.k] - prev[c.k] : 0;
     const t = tap && !(p && isMaxed(p, c.k));
     return `<${t ? 'button' : 'div'} class="bar ${c.k === low ? 'low' : ''} ${p && isMaxed(p, c.k) ? 'maxd' : ''}" ${t ? `data-fix="${c.k}" aria-label="Improve ${c.name}, now ${s[c.k]}"` : ''}><span>${c.short || c.name}${p && isMaxed(p, c.k) ? ' <i class="mx" aria-label="at its best">✓</i>' : ''}</span><i><b style="width:${prev ? prev[c.k] : 0}%" data-w="${s[c.k]}"></b></i><em>${s[c.k]}${d ? `<span class="d ${d < 0 ? 'dn' : ''}">${d > 0 ? '+' : ''}${d}</span>` : ''}</em></${t ? 'button' : 'div'}>`;
-  }).join('')}</div>${tap && (!p || lowestOpen(p)) ? '<p class="taphint">Tap a category to improve it</p>' : ''}`;
+  }).join('')}</div>`;
 }
 const lowest = s => C.reduce((a, c) => (s[c.k] < s[a] ? c.k : a), C[0].k);
 const lowestOpen = p => { const o = C.filter(c => !isMaxed(p, c.k)); return o.length ? o.reduce((a, c) => (p.s[c.k] < p.s[a.k] ? c : a)).k : null; };
@@ -2431,7 +2435,6 @@ function showResult(p, o = {}) {
   const crossed = o.prevTotal != null && stage > stageOf(o.prevTotal);
   let html = `<div class="hero-photo rsph" style="max-height:40vh"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
     <div class="scorebox" style="margin-top:0">${ringSVG(tot, 'r1')}${barsHTML(p.s, o.prev, true, p)}</div>`;
-  if (o.delta != null) html += `<p class="to80" style="text-align:center;margin-top:10px">${o.delta > 0 ? `Up <strong>${o.delta}</strong> point${o.delta === 1 ? '' : 's'} with that fix.` : o.delta === 0 ? 'Same score. Your photo didn’t change.' : `Down ${-o.delta}.`}</p>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
   else html += `<div class="opp"><h3>Biggest opportunity: ${lc.name}</h3><p>${stage === 2 ? `${lc.name} is your lowest at ${p.s[low]}. Higher scores win more battles and climb competition rankings.` : `Improve your overall score by <strong>${target - tot}</strong> point${target - tot === 1 ? '' : 's'} to ${target === CFG.GALLERY ? 'enter the gallery' : 'enter cash competitions'}.`}</p>
