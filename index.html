@@ -1879,6 +1879,17 @@ button.bar:hover span:first-child{color:var(--pink)}
 .empty.emp2{padding:18px 4px 4px;text-align:left}
 .empty.emp2 h2{font-size:1.5rem;margin:0 0 6px}
 .empty.emp2 p{margin:0}
+/* Entered photo: compact card */
+.entc{display:flex;gap:14px;align-items:center;margin:6px 0 4px;padding:12px;border-radius:22px;background:linear-gradient(135deg,#2A1650,#1A0D33);box-shadow:inset 0 0 0 1.5px #5BE7F5,0 0 22px rgba(91,231,245,.18)}
+.entc>img{flex:none;width:108px;height:128px;border-radius:16px;object-fit:cover}
+.entc .ei{flex:1;min-width:0;display:grid;gap:5px;justify-items:start}
+.entc .et{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:700;color:#5BE7F5}
+.entc .et svg{width:14px;height:14px}
+.entc .et b{color:#fff}
+.entc .en{font:800 1.3rem/1.1 "Bricolage Grotesque",sans-serif;color:#fff}
+.entc .er{font-size:.9rem;color:#C9D1EA}
+.entc .er b{color:#fff}
+.entc button{margin-top:2px;padding:9px 16px;border-radius:999px;font-weight:800;font-size:.9rem;color:#fff;background:linear-gradient(95deg,#FF3FA4,#9B3CFF)}
 </style>
 </head>
 <body>
@@ -4058,12 +4069,12 @@ function renderStudio() {
     : stage === 1 ? `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions.`
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
   st.innerHTML = `<span class="hint">Flick down to judge</span>
-    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
+${lk ? `<div class="entc"><img src="${p.src}" alt="Your entered photo"><div class="ei"><span class="et">${IC.clock}Entered · results in <b data-ll="${lk.id}">${fmtLeft(Math.max(0, lk.end - Date.now()))}</b></span><b class="en">${esc(CX.find(x => x.id === lk.cid).t)}</b><span class="er">Score <b>${tot}</b> · Rank <b>#${rankAt(lk, Date.now()).toLocaleString()}</b></span><button id="stLive">View live ›</button></div></div>` : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
     <p class="to80">${lk ? '' : p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
     ${stage >= 1 ? `<div class="qrow">${stage === 2 && !lk ? '<button class="btn block" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
     ${lk || !sorted.length ? '' : '<h3 class="sec">Improve your photo</h3>'}
-    ${lk ? `<div class="lockline"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h1a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 6 10zm2.5 0h5V7.5a2.5 2.5 0 0 0-5 0z"/></svg><span>In <b>${esc(CX.find(x => x.id === lk.cid).t)}</b> · results in <b data-ll="${lk.id}">${fmtLeft(Math.max(0, lk.end - Date.now()))}</b></span><button id="stLive">View live ›</button></div>` : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}"><span>${sorted[0].verb}</span><span class="gpill">${gemIcon()}${fixCost(p)}</span></button><p class="fixsub">${sorted[0].name} is your lowest at ${p.s[sorted[0].k]}. Tap a score bar above to pick another.</p>`}
+    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}"><span>${sorted[0].verb}</span><span class="gpill">${gemIcon()}${fixCost(p)}</span></button><p class="fixsub">${sorted[0].name} is your lowest at ${p.s[sorted[0].k]}. Tap a score bar above to pick another.</p>`}`}
     <div class="phead"><h3 class="sec">${lk || !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
     <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `${(() => { const nc = nextComps(1)[0]; return nc ? `<button class="padd" id="stNew" data-upfor="${nc.id}" aria-label="Upload for ${esc(nc.t)}"><span class="pl">+</span><b>Upload for ${esc(nc.t)}</b><small>${cxPrize(nc)} · ends in ${fmtLeft(cxLeft(nc))}</small></button>` : `<button class="padd" id="stNew" aria-label="Upload a new photo"><span class="pl">+</span><b>Upload a new photo</b></button>`; })()}` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCardsHTML('Win real cash', 'cash', 'Cash prizes') : ''}`;
   animateRing(st);
@@ -4082,7 +4093,7 @@ function renderStudio() {
   if ($('#stHang')) $('#stHang').onclick = () => hangPhoto(p);
   st.querySelectorAll('[data-cat]').forEach(x => x.onclick = () => askCategory(p, () => { closeFlow(); renderStudio(); }, true));
   const cmp = $('#cmp'), im = $('#cmpImg');
-  if (p.orig !== p.src) {
+  if (cmp && p.orig !== p.src) {
     const show = e => { e.preventDefault(); im.src = p.orig; }, hide = () => { im.src = p.src; };
     cmp.addEventListener('pointerdown', show); ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => cmp.addEventListener(ev, hide));
   }
