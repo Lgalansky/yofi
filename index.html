@@ -2107,6 +2107,14 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .shello b{display:block;font-size:1rem}
 .shello small{display:block;font-size:.8rem;color:#CDBEE8;margin-top:2px}
 .shello .go{margin-left:auto;font-weight:800;font-size:.85rem;color:#FFB35C;white-space:nowrap}
+/* Streak flame beside the logo */
+.top .wm{margin-right:0}
+.sflame{display:inline-flex;align-items:center;gap:2px;height:30px;padding:0 9px 0 6px;margin-right:auto;border-radius:999px;font-weight:800;font-size:.95rem;color:#B5651D;background:#FFF0E0;box-shadow:inset 0 0 0 1.5px #FFD3A6;transition:transform .15s}
+.sflame .fl{font-size:1.05rem;line-height:1;filter:grayscale(.55) opacity(.75)}
+.sflame.lit{color:#fff;background:linear-gradient(135deg,#FF9F43,#FF3F6C);box-shadow:0 4px 12px rgba(255,110,60,.35)}
+.sflame.lit .fl{filter:none}
+.sflame.cold{color:#9C8AB8;background:#F3ECFA;box-shadow:inset 0 0 0 1.5px #E2D6F0}
+.sflame:active{transform:scale(.93)}
 </style>
 </head>
 <body>
@@ -2159,7 +2167,7 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 <div id="app" aria-live="polite">
   <div class="shell" id="shell">
     <header class="top">
-      <span class="wm">Yofi</span>
+      <span class="wm">Yofi</span><button class="sflame" id="sFlame" aria-label="Daily streak"><span class="fl">🔥</span><b id="sFlameN">0</b></button>
       <span class="ptitle" id="ptitle">Judge photos</span>
       <button class="av" id="avatar" aria-label="Profile and menu">Y</button>
     </header>
@@ -4177,7 +4185,16 @@ function dailyState() {
 const JUDGE_CAP = 20, JUDGE_LOW = 2;
 const crowdAvg = p => Math.round(JC.reduce((a, c) => a + crowdOf(p, c), 0) / JC.length) / 10;
 var SWIPED = 0;
+function paintFlame() {
+  const ds = dailyState(), b = $('#sFlame'); if (!b) return;
+  $('#sFlameN').textContent = ds.streak; b.classList.toggle('lit', ds.doneToday); b.classList.toggle('cold', !ds.streak);
+  b.setAttribute('aria-label', `${ds.streak} day streak${ds.doneToday ? ', done for today' : ''}`);
+}
+$('#sFlame').onclick = () => { const ds = dailyState(), left = Math.max(0, 3 - ds.D.n);
+  toast(ds.doneToday ? `🔥 ${ds.streak} day streak · done for today` : ds.streak ? `🔥 ${ds.streak} day streak · judge ${left} more today to keep it` : `Judge ${left} photos today to start a streak`);
+  if (!ds.doneToday) go('judge'); };
 function renderJudge() {
+  paintFlame();
   const p = seedAt(); if (!p || !p.owner) { $('#judge').innerHTML = '<div class="gen"><div class="spin"></div>Loading photos…</div>'; return; }
   const left = CFG.BATTLE_EVERY - S.since, ds = dailyState(), combo = S.combo || 0;
   const [pa, pb] = seedPair();
@@ -4214,7 +4231,7 @@ async function vote(pick) {
   S.combo = agree ? (S.combo || 0) + 1 : 0; const comboHit = S.combo >= 10; if (comboHit) S.combo = 0;
   const ds = dailyState(); ds.D.n++;
   let streakHit = 0;
-  if (ds.D.n >= 3 && ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; streakHit = ds.D.streak; S.gems += Math.min(100, 10 * streakHit); }
+  if (ds.D.n >= 3 && ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; streakHit = ds.D.streak; S.gems += Math.min(100, 10 * streakHit); paintFlame(); }
   save();
   document.querySelectorAll('#judge .jf-combo i').forEach((d, i) => d.classList.toggle('on', comboHit || i < S.combo));
   $('#jRes').innerHTML = `<div class="jr ${agree ? 'hit' : ''}"><span>${agree ? `You picked with <b>${mine}%</b> of judges` : `Only <b>${mine}%</b> agreed with you`}</span><em>${mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : mine >= 35 ? 'Close call' : 'Missed it'}</em></div><div class="jearn ${earn ? '' : 'none'}">${earn ? `+${earn} ${gemIcon()}` : 'No gems this time · combo reset'}</div>`;
