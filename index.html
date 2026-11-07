@@ -1551,6 +1551,10 @@ button.bar:hover span:first-child{color:var(--pink)}
 .bt-vs{color:#FFC93C;text-shadow:0 0 0 #2A0C4E,0 2px 0 #2A0C4E,0 -2px 0 #2A0C4E,2px 0 0 #2A0C4E,-2px 0 0 #2A0C4E,0 0 18px rgba(255,190,60,.8);animation:btvs 1.6s ease-in-out infinite}
 @keyframes btvs{50%{transform:translate(-50%,-50%) scale(1.15)}}
 @media (prefers-reduced-motion:reduce){.bt-fx{display:none}.bt-vs{animation:none}}
+/* Suggested category for the competition you're entering */
+.pcats button.sug{position:relative;box-shadow:inset 0 0 0 2px #FFC93C,0 0 16px rgba(255,190,60,.35)}
+.pcats .sugtag{position:absolute;top:-9px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:2px 8px;border-radius:999px;background:#FFC93C;color:#2A1600;font-style:normal;font-weight:800;font-size:.62rem;letter-spacing:.03em}
+.pcats{padding-top:6px}
 </style>
 </head>
 <body>
@@ -2204,8 +2208,7 @@ $('#file').addEventListener('change', async e => {
   S.gems += win; save();
   const gc = S.goal && !S.goal.pid && CX.find(c => c.id === S.goal.cid);
   if (gc) { S.goal.pid = p.id; save(); }
-  if (gc && gc.cats && gc.cats.length === 1) { p.cat = gc.cats[0]; save(); showResult(p, { win, first }); }
-  else askCategory(p, () => showResult(p, { win, first }));
+  askCategory(p, () => showResult(p, { win, first }), false, gc && gc.cats ? gc : null);
 });
 
 /* ---------- Flow overlay ---------- */
@@ -2955,11 +2958,12 @@ const PICKCATS = ['pets', 'wildlife', 'landscape', 'travel', 'food', 'style', 'c
 const pcatName = k => (PCATS.find(c => c[0] === k) || [])[1] || '';
 const fitsSlot = (p, sl) => !!p.cat && (!sl[2] || sl[2].includes(p.cat));
 const cxFits = (c, p) => !!p.cat && (!c.cats || c.cats.includes(p.cat));
-function askCategory(p, done, closable = false) {
+function askCategory(p, done, closable = false, hint = null) {
+  const sug = hint ? hint.cats : [];
   openFlow(`<div class="hero-photo" style="max-height:30vh;aspect-ratio:auto;height:30vh"><img src="${p.src}" alt="Your photo"></div>
     <h2 style="font-size:1.6rem;margin:16px 0 4px">Pick your competition category</h2>
-    <p class="muted" style="margin:0 0 14px">Pick the competition category it fits. Not sure? Choose Any category and it can enter the open competitions.</p>
-    <div class="pcats" role="group" aria-label="Competition category">${PICKCATS.map(k => `<button data-k="${k}" class="${k === 'any' ? 'anyc' : ''}" aria-pressed="${p.cat === k}">${gi(k)}<span>${pcatName(k)}</span></button>`).join('')}</div>`, closable);
+    <p class="muted" style="margin:0 0 14px">${hint ? `Entering <b>${esc(hint.t)}</b>? Pick <b>${esc(hint.lab)}</b> if that’s what your photo shows. Otherwise pick the category it fits.` : 'Pick the competition category it fits. Not sure? Choose Any category and it can enter the open competitions.'}</p>
+    <div class="pcats" role="group" aria-label="Competition category">${PICKCATS.map(k => `<button data-k="${k}" class="${k === 'any' ? 'anyc' : ''}${sug.includes(k) ? ' sug' : ''}" aria-pressed="${p.cat === k}">${sug.includes(k) ? '<em class="sugtag">For this competition</em>' : ''}${gi(k)}<span>${pcatName(k)}</span></button>`).join('')}</div>`, closable);
   $('#flowBody').querySelectorAll('.pcats button').forEach(b => b.onclick = () => { p.cat = b.dataset.k; save(); done(); });
 }
 const gi = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GICON[k] || GICON.star}</svg>`;
