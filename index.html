@@ -1519,6 +1519,8 @@ button.bar:hover span:first-child{color:var(--pink)}
 #landing #lComps{background:none;padding:0}
 #landing .lwin figcaption{color:#A796C6}
 #landing .lwin figcaption strong{color:#fff}
+.jbuy{display:flex;align-items:center;justify-content:center;gap:6px;margin:10px auto 0;padding:9px 18px;min-height:40px;border-radius:999px;font-weight:700;font-size:.9rem;color:#C9D1EA;background:transparent;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.22)}
+.jbuy svg{width:16px;height:16px}
 </style>
 </head>
 <body>
@@ -3260,6 +3262,7 @@ function renderJudge() {
       <span class="pm"><button class="tb minus" data-d="-10" aria-label="Lower ${c.name}">−</button><span class="val">50</span><button class="tb plus" data-d="10" aria-label="Raise ${c.name}">+</button></span></div>`).join('')}</div>
     <div class="jprog">${gemIcon()}<span>Submit to collect up to ${CFG.VOTE + 5 * CFG.CLOSE} gems</span><b id="jCount">0 / 5 adjusted</b></div>
     <button class="btn block" id="jGo">Submit my scores</button>
+    <button class="jbuy" id="jBuy">${gemIcon()}Buy more credits</button>
     <p class="jlegend" id="jLeg"></p>
     <span class="hint static">Flick up to enhance your photos</span>`;
   document.querySelectorAll('#judge .tb').forEach(b => b.onclick = () => nudge(b.closest('.tcard'), +b.dataset.d));
@@ -3269,6 +3272,7 @@ function renderJudge() {
     paintCard(document.querySelector(`#judge .tcard[data-k="${h.k}"]`)); paintJudgeFoot();
   };
   $('#jGo').onclick = vote;
+  $('#jBuy').onclick = () => openStore();
 }
 function nudge(card, d) {
   if (judging) return;
