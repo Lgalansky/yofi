@@ -1776,7 +1776,7 @@ button.bar:hover span:first-child{color:var(--pink)}
 .rs-alt{display:block;margin:10px auto 0;padding:8px;font-weight:700;color:#C9D1EA;text-decoration:underline;text-underline-offset:4px}
 .gprz{display:inline-flex;align-items:center;gap:4px}
 .gprz svg{width:.95em;height:.95em}
-.lv-gal{display:flex;align-items:center;gap:12px;width:100%;margin:10px 0 0;padding:12px 14px;border-radius:18px;text-align:left;color:#fff;background:linear-gradient(135deg,#3A1764,#251046);box-shadow:inset 0 0 0 1.5px #FFC93C}
+.lv-gal{display:flex;align-items:center;gap:12px;width:100%;margin:10px 0 12px;padding:12px 14px;border-radius:18px;text-align:left;color:#fff;background:linear-gradient(135deg,#3A1764,#251046);box-shadow:inset 0 0 0 1.5px #FFC93C}
 .lv-gal .ic svg{width:30px;height:30px;display:block}
 .lv-gal .tx{flex:1;display:grid;gap:2px}
 .lv-gal small{font-size:.82rem;color:#D9C8FF}
@@ -3065,9 +3065,9 @@ function paintLive(force) {
       <div class="lv-t">${cxPill(c)}<h2>${esc(c.t)}</h2></div><span class="lv-live">LIVE</span></div>
     <div class="lv-cd"><span>Results in</span><b id="lvCd">${fmtClock(e.end - now)}</b></div>
     <div class="lv-pz k-${c.k}"><div><small>1st prize</small><b>${fmtPrize(c.prize, curOf(c))}</b></div><div><small>Prizes to</small><b>#${paidTop(e.n).toLocaleString()}</b></div><div class="${prizeFor(c, r, e.n) ? 'win' : ''}"><small>${prizeFor(c, r, e.n) ? 'You’d win now' : 'To a prize'}</small><b>${prizeFor(c, r, e.n) ? fmtPrize(prizeFor(c, r, e.n).amt, prizeFor(c, r, e.n).cur) : (r - paidTop(e.n)).toLocaleString() + ' places'}</b></div></div>
+    ${(() => { const ph = S.photos.find(x => x.id === e.pid); return ph && !Object.values(S.frames || {}).includes(ph.id) && frameSpot(ph) ? `<button class="lv-gal" id="lvGal"><span class="ic">${TROPHY_S}</span><span class="tx"><b>Hang it in your gallery</b><small>It fits your ${esc(ROOMS[frameSpot(ph)[0]].slots[frameSpot(ph)[1]][1])} frame</small></span><span class="go">Add ›</span></button>` : ''; })()}
     <div class="lv-hero k-${c.k}"><img src="${entrySrc(e)}" alt="Your entry"><div class="ov"><div><small>YOUR RANK</small><b>#${r.toLocaleString()}</b><span>of ${e.n.toLocaleString()} entries</span></div>
       <div class="mvb">${d ? `<i class="${d > 0 ? 'up' : 'dn'}">${d > 0 ? '▲' : '▼'} ${Math.abs(d)}</i>` : '<i>–</i>'}<span>in the last 10 min</span></div></div></div>
-    ${(() => { const ph = S.photos.find(x => x.id === e.pid); return ph && !Object.values(S.frames || {}).includes(ph.id) && frameSpot(ph) ? `<button class="lv-gal" id="lvGal"><span class="ic">${TROPHY_S}</span><span class="tx"><b>Hang it in your gallery</b><small>It fits your ${esc(ROOMS[frameSpot(ph)[0]].slots[frameSpot(ph)[1]][1])} frame</small></span><span class="go">Add ›</span></button>` : ''; })()}
     <div class="lv-box"><div class="hd"><b>Your climb</b><span>Entered at #${e.startR.toLocaleString()}</span></div>
       <svg viewBox="0 0 340 90" class="lv-chart" role="img" aria-label="Rank chart from ${pts[0]} to ${r}"><line x1="0" y1="88" x2="340" y2="88" stroke="#202A48"/><line x1="0" y1="45" x2="340" y2="45" stroke="#202A48" stroke-dasharray="3 4"/>
         <polyline points="${poly}" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${last[0]}" cy="${last[1]}" r="5" fill="currentColor"/></svg>
@@ -3237,7 +3237,7 @@ function cxPay(c, q) {
   const e = makeEntry(c, q); S.entries.push(e); S.entered[c.id] = e.id; save(); paintWallet(); paintGems(false);
   const y = $('#flowBody').scrollTop; openComps(); $('#flowBody').scrollTop = y;
   const hung = Object.values(S.frames || {}).includes(q.id), spot = !hung && frameSpot(q);
-  if (spot) celebrate({ src: q.src, score: q.s.total, title: `You’re in ${esc(c.t)}!`, text: `Your ${q.s.total} photo is locked in. Results in <b>${fmtLeft(Math.max(0, e.end - Date.now()))}</b>.<br>It can also hang in your <b>${esc(ROOMS[spot[0]].slots[spot[1]][1])}</b> frame. Hang it now, then upload another to fill your gallery.`, cta: 'Add to your gallery', onCta: () => { AFTER_HANG = e.id; closeFlow(); hangPhoto(q); }, later: 'Watch it live', onLater: () => openLive(e) });
+  if (spot) celebrate({ src: q.src, score: q.s.total, title: `You’re in ${esc(c.t)}!`, text: `Your ${q.s.total} photo is locked in. Results in <b>${fmtLeft(Math.max(0, e.end - Date.now()))}</b>. Watch your rank climb live, and hang it in your gallery from there.`, cta: 'Watch it live', onCta: () => openLive(e), later: 'Back to competitions' });
   else celebrate({ src: q.src, score: q.s.total, title: `You’re in ${esc(c.t)}!`, text: `Your ${q.s.total} photo is locked in. Results in <b>${fmtLeft(Math.max(0, e.end - Date.now()))}</b>. Good luck!`, cta: 'Watch it live', onCta: () => openLive(e), later: 'Back to competitions' });
 }
 async function resetPrototype() {
