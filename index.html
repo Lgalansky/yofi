@@ -2093,6 +2093,20 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .jfoot .jf-t+.jf-t{box-shadow:inset 1.5px 0 0 #33204F}
 #judge .jfoot .jcap{height:6px;margin:8px 0 0;background:#3A2760}
 #judge .jfoot .jcap i{background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
+/* Judge footer: combo line */
+.jf-combo{display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:.85rem;color:#A796C6}
+.jf-combo b{color:#fff;font-size:.9rem;white-space:nowrap}
+.jf-combo small{margin-left:auto;font-size:.8rem;white-space:nowrap}
+.jf-combo .dots{display:flex;gap:3px}
+.jf-combo .dots i{width:9px;height:6px;border-radius:3px;background:#3A2760}
+.jf-combo .dots i.on{background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
+/* Once-a-day streak hello */
+.shello{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:90;width:min(92vw,380px);display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;text-align:left;color:#fff;background:#211339;box-shadow:inset 0 0 0 1.5px #FF9F43,0 12px 30px rgba(0,0,0,.45);transform:translate(-50%,-140%);transition:transform .45s cubic-bezier(.3,1.3,.5,1)}
+.shello.on{transform:translate(-50%,0)}
+.shello .fl{font-size:1.7rem;line-height:1}
+.shello b{display:block;font-size:1rem}
+.shello small{display:block;font-size:.8rem;color:#CDBEE8;margin-top:2px}
+.shello .go{margin-left:auto;font-weight:800;font-size:.85rem;color:#FFB35C;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -4170,10 +4184,7 @@ function renderJudge() {
   $('#judge').innerHTML = `<div class="swp l"><button class="swp-b" data-swp="studio"><span class="ar">←</span>Swipe to Enhance</button></div><div class="tot-h"><span class="jtag2">${S.photos.length ? (left <= 1 ? 'Battle after this one' : `${left} picks to a battle`) : 'Score a photo to battle'}</span><h2>Which is better?</h2><p>${esc(CHAL[pa.cat] || 'Photo challenge')} · tap your pick</p></div>
     <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
     <div class="jfoot">
-      <div class="jf-row">
-        <div class="jf-t ${ds.doneToday ? 'done' : ''}"><span class="fl">🔥</span><span><b>${ds.streak ? `${ds.streak} day streak` : 'Start a streak'}</b><small>${ds.doneToday ? 'Done for today' : `Today ${Math.min(3, ds.D.n)} / 3`}</small></span></div>
-        <div class="jf-t jcombo"><span><b>Combo ${combo}/10</b><span class="dots">${[...Array(10)].map((_, i) => `<i class="${i < combo ? 'on' : ''}"></i>`).join('')}</span><small>Lucky drop at 10</small></span></div>
-      </div>
+      <div class="jf-combo"><b>Combo ${combo}/10</b><span class="dots">${[...Array(10)].map((_, i) => `<i class="${i < combo ? 'on' : ''}"></i>`).join('')}</span><small>Lucky drop at 10</small></div>
       <div class="jf-gems"><div class="jf-l">${ds.D.n < JUDGE_CAP ? `<span><b>+${CFG.VOTE}</b> ${gemIcon()} when you agree</span><span class="r"><b>${JUDGE_CAP - ds.D.n}</b> of ${JUDGE_CAP} left today</span>` : `<span>Daily bonus used</span><span class="r"><b>+${JUDGE_LOW}</b> ${gemIcon()} per pick</span>`}</div>
       <div class="jcap"><i style="width:${Math.min(100, (JUDGE_CAP - Math.min(ds.D.n, JUDGE_CAP)) / JUDGE_CAP * 100)}%"></i></div></div>
     </div>
@@ -4205,7 +4216,7 @@ async function vote(pick) {
   let streakHit = 0;
   if (ds.D.n >= 3 && ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; streakHit = ds.D.streak; S.gems += Math.min(100, 10 * streakHit); }
   save();
-  document.querySelectorAll('#judge .jcombo i').forEach((d, i) => d.classList.toggle('on', comboHit || i < S.combo));
+  document.querySelectorAll('#judge .jf-combo i').forEach((d, i) => d.classList.toggle('on', comboHit || i < S.combo));
   $('#jRes').innerHTML = `<div class="jr ${agree ? 'hit' : ''}"><span>${agree ? `You picked with <b>${mine}%</b> of judges` : `Only <b>${mine}%</b> agreed with you`}</span><em>${mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : mine >= 35 ? 'Close call' : 'Missed it'}</em></div><div class="jearn ${earn ? '' : 'none'}">${earn ? `+${earn} ${gemIcon()}` : 'No gems this time · combo reset'}</div>`;
   if (earn) gemExplosion(earn, { small: true, from: $('#jRes') });
   await sleep(1900);
@@ -4365,6 +4376,16 @@ ${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCard
   }
 }
 
+function streakHello() {
+  const ds = dailyState(); if (ds.D.hello === ds.t) return; ds.D.hello = ds.t; save();
+  const had = (ds.D.streak || 0) > 0 && !ds.streak, left = Math.max(0, 3 - ds.D.n);
+  if (ds.doneToday) return;
+  const b = document.createElement('button'); b.className = 'shello';
+  b.innerHTML = `<span class="fl">🔥</span><span><b>${ds.streak ? `${ds.streak} day streak` : had ? 'Your streak ended' : 'Start a streak'}</b><small>${ds.streak ? `Judge ${left} photo${left === 1 ? '' : 's'} today to keep it going` : `Judge ${left} photos today to ${had ? 'start again' : 'start one'}`}</small></span><span class="go">Judge →</span>`;
+  document.body.appendChild(b); requestAnimationFrame(() => b.classList.add('on'));
+  const bye = () => { b.classList.remove('on'); setTimeout(() => b.remove(), 400); };
+  b.onclick = () => { bye(); go('judge'); }; setTimeout(bye, 5000);
+}
 /* ---------- Boot ---------- */
 (async () => {
   await prepSeeds();
@@ -4373,6 +4394,7 @@ ${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCard
   renderLanding();
   if (S.user) { $('#landing').style.display = 'none'; $('#app').classList.add('on'); renderJudge(); renderStudio(); paintGems(false); if ((S.entries || []).length) { WB_SHOW = true; openGallery(); } else go(S.photos.length ? 'studio' : 'judge'); }
   if ($('#app').classList.contains('on')) { renderJudge(); }
+  if (S.user) setTimeout(streakHello, 1200);
   if (S.user) $('#avatar').textContent = S.user.h[0].toUpperCase();
   shownGems = S.gems;
 })();
