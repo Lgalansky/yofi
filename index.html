@@ -3035,7 +3035,7 @@ function showResult(p, o = {}) {
   p.q = stage === 2; save();
   const gc = goalFor(p), need = gc ? cxNeed(gc) : 0;
   const hitGoal = gc && goalReady(gc, p) && (o.prevTotal != null ? !(o.prevTotal >= need && (p.enh - 1) >= (gc.enh || 0)) : !!o.win);
-  const hit80 = stage === 2 && (crossed || (o.prevTotal == null && 'win' in o));
+  const hit80 = stage === 2 && !photoLock(p) && (crossed || !p.readyShown) && (o.prevTotal != null || 'win' in o);
   if (S.user && hitGoal) setTimeout(() => showCompReady(p, gc), o.win ? 2600 : 900);
   else if (S.user && hit80) setTimeout(() => showCompReady(p), o.win ? 2600 : 1400);
   else if (S.user && o.win && o.prevTotal == null) setTimeout(() => { if ($('#flow').classList.contains('on') && !$('#coach').classList.contains('on')) goalRoute(p); }, 3000);
@@ -3292,6 +3292,7 @@ function celebrate({ src, score, title, text, cta, onCta, later, onLater }) {
   c.onclick = e => { if (e.target === c) { close(); if (onLater) onLater(); } };
 }
 function showCompReady(p, goal) {
+  if (p) { p.readyShown = true; save(); }
   const c = $('#coach'), fits = CX.filter(x => x.k !== 'gem' && cxFits(x, p)), first = goal || fits[0];
   c.innerHTML = `<div class="crbox" role="dialog" aria-modal="true" aria-labelledby="crT">
     <div class="cr-rays" aria-hidden="true"></div>${[...Array(18)].map((_, i) => `<i class="cr-cf" style="left:${(i * 53) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('')}
@@ -4498,6 +4499,7 @@ ${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCard
   st.querySelectorAll('.fix').forEach(b => b.onclick = () => startEnhance(p, b.dataset.c));
   if ($('#stFix')) $('#stFix').onclick = () => startEnhance(p, $('#stFix').dataset.c);
   if (!lk) setTimeout(() => checkMaxed(p), 600);
+  if (S.user && !lk && tot >= CFG.QUALIFY && !p.readyShown) setTimeout(() => { if (cur() === p && !p.readyShown && $('#panes').dataset.at === 'studio' && !$('#coach').classList.contains('on') && !$('#flow').classList.contains('on')) showCompReady(p); }, 900);
   if ($('#stLive')) $('#stLive').onclick = () => { openComps(); openLive(lk); };
   clearInterval(window.__stLock); if (lk) window.__stLock = setInterval(() => { const el = st.querySelector(`[data-ll="${lk.id}"]`); if (!el || !document.contains(el)) { clearInterval(window.__stLock); return; } el.textContent = fmtLeft(Math.max(0, lk.end - Date.now())); if (Date.now() >= lk.end) { clearInterval(window.__stLock); renderStudio(); } }, 1000);
   st.querySelectorAll('[data-fix]').forEach(b => b.onclick = () => startEnhance(p, b.dataset.fix));
