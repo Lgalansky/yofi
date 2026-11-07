@@ -1667,7 +1667,6 @@ button.bar:hover span:first-child{color:var(--pink)}
 .bar.low i b{background:var(--ink)}
 .bar.low span:first-child{color:inherit}
 .bar .d.dn{color:var(--muted)}
-.bar.maxd i b{background:var(--ink)!important}
 .bar.hi i b{background:var(--good)!important}
 </style>
 </head>
@@ -2144,7 +2143,7 @@ function barsHTML(s, prev, tap, p) {
   return `<div class="bars">${C.map(c => {
     const d = prev ? s[c.k] - prev[c.k] : 0;
     const t = tap && !(p && isMaxed(p, c.k));
-    return `<${t ? 'button' : 'div'} class="bar ${c.k === low ? 'low' : ''} ${p && isMaxed(p, c.k) ? 'maxd' : ''} ${s[c.k] >= 80 ? 'hi' : ''}" ${t ? `data-fix="${c.k}" aria-label="Improve ${c.name}, now ${s[c.k]}"` : ''}><span>${c.short || c.name}${p && isMaxed(p, c.k) && s[c.k] >= 80 ? ' <i class="mx" aria-label="at its best">✓</i>' : ''}</span><i><b style="width:${prev ? prev[c.k] : 0}%" data-w="${s[c.k]}"></b></i><em>${s[c.k]}${d ? `<span class="d ${d < 0 ? 'dn' : ''}">${d > 0 ? '+' : ''}${d}</span>` : ''}</em></${t ? 'button' : 'div'}>`;
+    return `<${t ? 'button' : 'div'} class="bar ${c.k === low ? 'low' : ''} ${p && isMaxed(p, c.k) ? 'maxd' : ''} ${s[c.k] >= 80 ? 'hi' : ''}" ${t ? `data-fix="${c.k}" aria-label="Improve ${c.name}, now ${s[c.k]}"` : ''}><span>${c.short || c.name}${p && isMaxed(p, c.k) ? ' <i class="mx" aria-label="at its best">✓</i>' : ''}</span><i><b style="width:${prev ? prev[c.k] : 0}%" data-w="${s[c.k]}"></b></i><em>${s[c.k]}${d ? `<span class="d ${d < 0 ? 'dn' : ''}">${d > 0 ? '+' : ''}${d}</span>` : ''}</em></${t ? 'button' : 'div'}>`;
   }).join('')}</div>`;
 }
 const lowest = s => C.reduce((a, c) => (s[c.k] < s[a] ? c.k : a), C[0].k);
@@ -2504,7 +2503,7 @@ function bindCats() {
     EN.variants = null; enIdle();
   });
 }
-const isMaxed = (p, k) => !!(p && p.maxed && p.maxed[k] != null && p.s[k] >= 80);
+const isMaxed = (p, k) => !!(p && p.maxed && p.maxed[k] != null);
 const okVersion = (p, s, cat) => s.total > p.s.total || (s.total >= p.s.total && s[cat] > p.s[cat]) || (s.total >= p.s.total - 1 && s[cat] >= p.s[cat] + 5);
 let maxRun = null;
 async function checkMaxed(p) {
@@ -2523,7 +2522,7 @@ async function checkMaxed(p) {
         }
         if (ok) break;
       }
-      if (!ok && p.s[c.k] >= 80) { p.maxed = p.maxed || {}; p.maxed[c.k] = p.s[c.k]; found.push(c.k); }
+      if (!ok) { p.maxed = p.maxed || {}; p.maxed[c.k] = p.s[c.k]; found.push(c.k); }
     }
     p.chk = key; save();
     if (found.length && cur() === p && $('#panes').dataset.at === 'studio' && !$('#flow').classList.contains('on')) {
@@ -2550,12 +2549,11 @@ async function generate(jitterRound) {
   const img = await loadImg(p.src); const base = toID(img, 960);
   const recipes = Engine.RECIPES[cat];
   const rounds = (jitterRound === 1 ? [1, 0.8, 1.25, 1.5] : [rnd(0.75, 1.3), rnd(0.6, 1.5), rnd(0.9, 1.6), rnd(0.5, 1.2)]).concat([0.5, 0.3, 2, 2.5]);
-  const best = {}, extra = [], tried = [];
+  const best = {}, extra = [];
   for (const j of rounds) {
     for (const r of recipes) {
       const id = r.run({ width: base.width, height: base.height, data: base.data }, j);
       const s = Engine.score(Engine.analyze(id));
-      if (p.s[cat] < 80 && tried.length < 24) tried.push({ label: r.label, note: r.note, s, id });
       if (okVersion(p, s, cat)) {
         const v = { label: r.label, note: r.note, s, src: toURL(id) };
         if (!best[r.label] || s.total > best[r.label].s.total || (s.total === best[r.label].s.total && s[cat] > best[r.label].s[cat])) { if (best[r.label]) extra.push(best[r.label]); best[r.label] = v; } else extra.push(v);
@@ -2569,15 +2567,6 @@ async function generate(jitterRound) {
   extra.sort(rank).forEach(v => { if (picks.length < 3 && !picks.some(x => x.s.total === v.s.total && x.label === v.label)) picks.push(v); });
   picks = picks.slice(0, 3).sort(rank);
   await sleep(300);
-  if (!picks.length && p.s[cat] < 80 && tried.length) {
-    // under 80 there is always room to improve: take the strongest attempts and give a modest lift
-    const seen = new Set();
-    picks = tried.sort((a, b) => b.s[cat] - a.s[cat] || b.s.total - a.s.total).filter(t => !seen.has(t.label) && seen.add(t.label)).slice(0, 3).map((t, i) => {
-      const gain = Math.max(2, Math.round(rnd(6, 10) - i * 2)), v = Math.min(80, p.s[cat] + gain);
-      const ns = Object.assign({}, p.s, { [cat]: v }); ns.total = Math.min(99, p.s.total + Math.max(1, Math.round((v - p.s[cat]) / 5)));
-      return { label: t.label, note: t.note, s: ns, src: toURL(t.id) };
-    });
-  }
   if (!picks.length) {
     p.maxed = p.maxed || {}; p.maxed[cat] = p.s[cat]; save();
     S.gems += CFG.COST; save(); paintGems();
