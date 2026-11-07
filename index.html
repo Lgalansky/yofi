@@ -1954,6 +1954,15 @@ button.bar:hover span:first-child{color:var(--pink)}
 .nc-hint{margin:10px 0 0;text-align:center;font-size:.82rem;color:#A796C6}
 #stFix[data-short] .gpill{opacity:.55}
 #stFix[data-short]{filter:saturate(.75)}
+.swp{display:flex;margin:2px 0 8px}
+.swp.r{justify-content:flex-end}
+.swp.l{justify-content:flex-start}
+.swp-b{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;font-weight:800;font-size:.85rem;color:#F6EEFF;background:#2A1748;box-shadow:inset 0 0 0 1.5px #5A3D8C}
+.swp-b .ar{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;font-size:.9rem;color:#fff;background:linear-gradient(135deg,#FF3FA4,#9B3CFF)}
+.swp.r .swp-b .ar{animation:swpR 1.6s ease-in-out 3}
+.swp.l .swp-b .ar{animation:swpL 1.6s ease-in-out 3}
+@keyframes swpR{50%{transform:translateX(4px)}}
+@keyframes swpL{50%{transform:translateX(-4px)}}
 </style>
 </head>
 <body>
@@ -2637,6 +2646,7 @@ function compCardsHTML(title, kind = null, sub = 'Upload a photo for one') {
   const list = nextComps(kind === 'cash' ? 4 : 3, kind); if (!list.length) return '';
   return `<div class="ncx ${kind ? 'ncx-' + kind : ''}"><div class="ncx-h"><b>${title}</b><span>${sub}</span></div><div class="ncx-row">${list.map(c => { const fr = compFrame(c); return `<div class="ncx-c k-${c.k}"><img src="${c.art ? SEED[1].src : SEED[c.img].src}" alt=""><div class="ncx-i"><span class="ncx-cat">${gi(c.cats ? c.cats[0] : 'star')}${esc(c.cats ? c.lab : 'Any photo')}</span><b>${esc(c.t)}</b><span class="ncx-pz">${cxPrize(c)} <small>1st prize</small></span>${c.k === 'gem' ? '' : `<span class="ncx-fee">Entry ${cxFee(c)}</span>`}<span class="ncx-end" data-cx="${c.id}" data-endpill>${IC.clock}Ends in ${fmtLeft(cxLeft(c))}</span>${fr ? `<span class="ncx-fr">+ fills your ${esc(fr)} frame</span>` : ''}</div><button class="ncx-go" data-upfor="${c.id}">Upload for this</button></div>`; }).join('')}</div></div>`;
 }
+document.addEventListener('click', e => { const sw = e.target.closest('[data-swp]'); if (sw) { go(sw.dataset.swp); return; } });
 document.addEventListener('click', e => { const b = e.target.closest('[data-upfor]'); if (!b) return; const c = CX.find(x => x.id === b.dataset.upfor); if (c) uploadFor(c); });
 function homeCompete(c) {
   openApp(); CXF = 'all'; openComps(null);
@@ -3969,7 +3979,7 @@ function renderJudge() {
   const p = seedAt(); if (!p || !p.owner) { $('#judge').innerHTML = '<div class="gen"><div class="spin"></div>Loading photos…</div>'; return; }
   const left = CFG.BATTLE_EVERY - S.since, ds = dailyState(), combo = S.combo || 0;
   const [pa, pb] = seedPair();
-  $('#judge').innerHTML = `<div class="tot-h"><span class="jtag2">${S.photos.length ? (left <= 1 ? 'Battle after this one' : `${left} picks to a battle`) : 'Score a photo to battle'}</span><h2>Which is better?</h2><p>${esc(CHAL[pa.cat] || 'Photo challenge')} · tap your pick</p></div>
+  $('#judge').innerHTML = `<div class="swp l"><button class="swp-b" data-swp="studio"><span class="ar">←</span>Swipe to Enhance</button></div><div class="tot-h"><span class="jtag2">${S.photos.length ? (left <= 1 ? 'Battle after this one' : `${left} picks to a battle`) : 'Score a photo to battle'}</span><h2>Which is better?</h2><p>${esc(CHAL[pa.cat] || 'Photo challenge')} · tap your pick</p></div>
     <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
     <div class="jgbar">
       <div class="jstreak ${ds.doneToday ? 'done' : ''}"><span class="fl">🔥</span><span><b>${ds.streak ? `${ds.streak} day streak` : 'Start a streak'}</b><small>${ds.doneToday ? 'Done for today' : `Today ${Math.min(3, ds.D.n)} / 3`}</small></span></div>
@@ -3978,7 +3988,7 @@ function renderJudge() {
     <p class="jsub2">${ds.D.n < JUDGE_CAP ? `<b>+${CFG.VOTE}</b> ${gemIcon()} when you agree · <b>${JUDGE_CAP - ds.D.n}</b> left today` : `Daily bonus used · <b>+${JUDGE_LOW}</b> ${gemIcon()} per pick until tomorrow`}</p>
     <div class="jcap"><i style="width:${Math.min(100, ds.D.n / JUDGE_CAP * 100)}%"></i></div>
     <div class="jres" id="jRes" aria-live="polite"></div>
-    <span class="hint static">← Swipe right to enhance your photos</span>`;
+`;
   document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = () => { if (Date.now() - SWIPED < 400) return; vote(+b.dataset.i); });
 }
 let nudgeFrom = null, nudgeT = null;
@@ -4125,7 +4135,7 @@ function renderStudio() {
   if (S.user) $('#avatar').textContent = S.user.h[0].toUpperCase();
   const p = cur();
   if (!p) {
-    st.innerHTML = `<div class="empty emp2"><h2>Pick a competition to start</h2><p>Upload a photo for one, get it scored, then enhance it to 80+ to enter.</p></div>${compCardsHTML('Free competitions', 'gem', 'Win gems')}${compCardsHTML('Win real cash', 'cash', 'Cash prizes')}<div style="text-align:center;margin:6px 0 20px"><button class="link" id="stAdd">Or just score a photo</button></div>`;
+    st.innerHTML = `<div class="swp r"><button class="swp-b" data-swp="judge">Swipe to Judge<span class="ar">→</span></button></div><div class="empty emp2"><h2>Pick a competition to start</h2><p>Upload a photo for one, get it scored, then enhance it to 80+ to enter.</p></div>${compCardsHTML('Free competitions', 'gem', 'Win gems')}${compCardsHTML('Win real cash', 'cash', 'Cash prizes')}<div style="text-align:center;margin:6px 0 20px"><button class="link" id="stAdd">Or just score a photo</button></div>`;
     $('#stAdd').onclick = () => pickPhoto(true); return;
   }
   const tot = p.s.total, stage = stageOf(tot), lk = photoLock(p), gc = !lk && p.cat ? goalFor(p) : null, gneed = gc ? cxNeed(gc) : 0;
@@ -4133,7 +4143,7 @@ function renderStudio() {
   const msg = stage === 2 ? `${lk ? '<strong>Entered.</strong> ' : '<strong>Competition ready.</strong> '}${lk ? 'Locked until the results are in.' : !lowestOpen(p) ? 'Every category is maxed out, so it’s ready to compete.' : 'Keep improving it to win more battles and climb competition rankings.'} Started at ${p.start}, ${p.enh} fix${p.enh === 1 ? '' : 'es'} so far.`
     : stage === 1 ? `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions.`
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
-  st.innerHTML = `<span class="hint">Swipe left to judge →</span>
+  st.innerHTML = `<div class="swp r"><button class="swp-b" data-swp="judge">Swipe to Judge<span class="ar">→</span></button></div>
 ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
     <p class="to80">${lk ? '' : p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
