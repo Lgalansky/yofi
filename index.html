@@ -2326,8 +2326,52 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .rdyph b{position:absolute;top:6px;right:6px;padding:2px 8px;border-radius:999px;font-weight:800;font-size:.85rem;color:#fff;background:rgba(10,6,24,.75)}
 .rdyph span{position:absolute;left:6px;bottom:30px;padding:1px 7px;border-radius:999px;font-weight:700;font-size:.72rem;color:#fff;background:rgba(10,6,24,.7)}
 .rdyph em{position:absolute;left:0;right:0;bottom:0;padding:6px 4px;font-style:normal;font-weight:800;font-size:.75rem;text-align:center;color:#fff;background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
+/* After entering: boost by judging, enter another */
+.lv-next{margin:14px 0 4px;padding:14px;border-radius:20px;background:#121A31;box-shadow:inset 0 0 0 1px #202A48}
+.lv-next h3{margin:0 0 10px;font:800 1.1rem/1 "Bricolage Grotesque",sans-serif;color:#fff}
+.lvn-boost{display:flex;align-items:center;gap:12px;width:100%;margin-bottom:12px;padding:12px;border-radius:16px;text-align:left;color:#fff;background:linear-gradient(135deg,#3A1764,#251046);box-shadow:inset 0 0 0 1.5px #FFC93C}
+.lvn-boost .z,.jboost .z{display:grid;place-items:center;flex:none;width:40px;height:40px;border-radius:12px;font-size:1.3rem;background:rgba(255,201,60,.16)}
+.lvn-boost .tx{flex:1;display:grid;gap:2px;min-width:0}
+.lvn-boost small{font-size:.8rem;color:#D9C8FF}
+.lvn-boost .go{flex:none;padding:8px 12px;border-radius:999px;font-weight:800;color:#2A1600;background:linear-gradient(180deg,#FFE27A,#FFC93C)}
+.lvn-boost .dots,.jboost .dots{display:flex;gap:4px;margin-top:4px}
+.lvn-boost .dots i,.jboost .dots i{width:16px;height:6px;border-radius:3px;background:#3A2760}
+.lvn-boost .dots i.on,.jboost .dots i.on{background:linear-gradient(90deg,#FFE27A,#FFC93C)}
+.lv-next .link{display:block;margin:8px auto 0;color:#C9D1EA}
+.jboost{display:flex;align-items:center;gap:10px;margin:14px 0 0;padding:10px 12px;border-radius:16px;background:#211339;box-shadow:inset 0 0 0 1.5px #FFC93C}
+.jboost .tx{flex:1;display:grid;gap:1px;min-width:0}
+.jboost b{font-size:.92rem;color:#fff}
+.jboost small{font-size:.75rem;color:#A796C6}
+.jboost .dots{margin:0}
+.jboost .dots i{width:10px}
+.lv-next .lvn-boost{margin-bottom:0}
 /* Cash competitions: green Enter buttons */
 .ccard.k-cash .cc-go,.ccard.k-bc .cc-go,.ccard.k-sp .cc-go,.feat.k-cash .fgo,.feat.k-bc .fgo,.feat.k-sp .fgo{color:#04281A!important;background:linear-gradient(180deg,#5BF0A8 0%,#21C77A 55%,#139A5C 100%)!important;box-shadow:0 10px 24px -10px rgba(33,199,122,.85),inset 0 1px 0 rgba(255,255,255,.45)!important}
+/* Compete: show eligibility on each card */
+.cc-ok{display:flex;align-items:center;gap:10px;margin-top:12px;padding:8px 10px;border-radius:14px;background:rgba(46,229,157,.12);box-shadow:inset 0 0 0 1.5px rgba(46,229,157,.55);color:#D8FFEC;font-size:.9rem}
+.cc-ok img{flex:none;width:34px;height:44px;object-fit:cover;border-radius:7px}
+.cc-ok b{color:#2EE59D}
+.cc-no{margin-top:12px;padding:8px 12px;border-radius:14px;background:#1A2140;color:#9AA6C8;font-size:.85rem}
+.cx .chips button.mine{color:#04281A;background:#2EE59D}
+.cx .chips button.mine[aria-pressed="false"]{color:#2EE59D;background:transparent;box-shadow:inset 0 0 0 1.5px #2EE59D}
+.rdy-s{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.rdy-th{display:flex;flex:none}
+.rdy-th img{width:40px;height:52px;object-fit:cover;border-radius:8px;box-shadow:0 0 0 2px #121A31}
+.rdy-th img+img{margin-left:-14px}
+.rdy-s .tx{display:grid;gap:2px}
+.rdy-s b{font:800 1.1rem/1.1 "Bricolage Grotesque",sans-serif;color:#fff}
+.rdy-s span{font-size:.88rem;color:#9AA6C8}
+.rdy-on{margin:0;font-size:.85rem;color:#2EE59D}
+.cx .chips{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.cx .chips button{vertical-align:middle;margin:0}
+.rdy-on .link{padding:4px 2px;color:#fff;font-weight:800}
+/* Ready bar stays pinned at the top of Compete */
+.rdyrow.rdystick{position:sticky;top:0;z-index:7;margin:0 -2px 16px;padding:10px 12px;border-radius:18px;background:#121A31;box-shadow:inset 0 0 0 2px #FF2D8E,0 10px 24px -8px rgba(6,10,26,.9)}
+.rdystick .rdy-s{margin:0}
+.rdystick .tx{flex:1;min-width:0}
+.rdystick .rdy-th img{width:34px;height:44px}
+.rdy-btn{flex:none;min-height:44px;padding:0 16px;border-radius:999px;font-weight:800;font-size:.92rem;color:#fff;background:linear-gradient(95deg,#FF3FA4,#9B3CFF)}
+.rdy-btn.ghost{background:#202A48;color:#EEF2FF}
 </style>
 </head>
 <body>
@@ -3170,7 +3214,7 @@ function showResult(p, o = {}) {
   if (b('#doFix')) b('#doFix').onclick = () => startEnhance(p, low);
   body.querySelectorAll('[data-fix]').forEach(x => x.onclick = () => startEnhance(p, x.dataset.fix));
   if (b('#doneBtn')) b('#doneBtn').onclick = () => closeFlow();
-  if (b('#rsComp')) b('#rsComp').onclick = () => { closeFlow(); openComps(p); };
+  if (b('#rsComp')) b('#rsComp').onclick = () => { closeFlow(); goEligible(); };
   if (b('#toComps')) b('#toComps').onclick = () => { if (!S.user) { openSignup(() => openComps(p)); return; } closeFlow(); openComps(p); };
   if (b('#toGal')) b('#toGal').onclick = () => { if (!S.user) { openSignup(() => hangPhoto(p)); return; } closeFlow(); hangPhoto(p); };
   if (b('#saveNow')) b('#saveNow').onclick = () => openSignup();
@@ -3437,7 +3481,7 @@ function showCompReady(p, goal) {
     <button class="bt-no" id="crLater">Improve first, enter later</button></div>`;
   c.classList.add('on', 'cr');
   const close = () => c.classList.remove('on', 'cr');
-  $('#crGo').onclick = () => { close(); const go2 = () => { closeFlow(); openComps(p); }; if (!S.user) { openSignup(go2); return; } go2(); };
+  $('#crGo').onclick = () => { close(); const go2 = () => { closeFlow(); goEligible(); }; if (!S.user) { openSignup(go2); return; } go2(); };
   $('#crLater').onclick = close;
   c.onclick = e => { if (e.target === c) close(); };
 }
@@ -3543,6 +3587,10 @@ const cxPrize = c => c.k === 'gem' ? `${c.prize.toLocaleString()}${gemIcon()}` :
 const cxFee = c => c.k === 'gem' ? `<span class="freefee">Free</span>` : c.k === 'bc' ? `$${c.fee.toFixed(2)} BC` : `$${c.fee} Cash`;
 const cxNeed = c => c.min || CFG.QUALIFY;
 let CXF = 'all', cxTimer = null, CXP = null;
+const freeUsed = () => new Set((S.entries || []).filter(e => (CX.find(x => x.id === e.cid) || {}).k === 'gem').map(e => e.pid));
+const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used = c.k === 'gem' ? freeUsed() : new Set(); return S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total)[0] || null; };
+const readyPhotos = () => S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)) : [];
+function goEligible() { CXF = 'mine'; CXP = null; openComps(null); const b = $('#flowBody'); if (b) b.scrollTop = 0; }
 const ccard = c => { const left = cxLeft(c), fee = cxFee(c).replace(/<span class="gfee">/, '').replace(/<\/span>$/, '');
   return `<div class="ccard k-${c.k}"><div class="cc-top"><img src="${c.art ? SEED[1].src : SEED[c.img].src}" alt="">
     <div class="cc-i"><b>${esc(c.t)}</b><span class="cc-cat">${gi(c.cats ? c.cats[0] : 'star')}${esc(c.cats ? c.lab : 'Any category')}</span><span class="cc-pz">${cxPrize(c)}<small>1st prize</small></span><span class="cc-fee">Entry <em>${cxFee(c)}</em></span>
@@ -3554,12 +3602,13 @@ function openComps(forPhoto) {
   if (fp && photoLock(fp)) fp = null;
   if (!fp) CXP = null;
   if ($('#sheet').classList.contains('on')) closeSheet();
-  const cards = k => CX.filter(c => c.k === k && !(!fp && pick && c.id === pick.id) && (!fp || liveEntry(c.id) || cxOk(c, fp))).map(c => { const e = liveEntry(c.id), left = cxLeft(c);
+  const cards = k => CX.filter(c => c.k === k && !(!fp && CXF !== 'mine' && pick && c.id === pick.id) && (CXF !== 'mine' || canEnter(c)) && (!fp || liveEntry(c.id) || cxOk(c, fp))).map(c => { const e = liveEntry(c.id), left = cxLeft(c);
     if (e) return '';
     return ccard(c); }).join('');
   const sec = (k, i) => cards(k); const _sec0 = (k, i) => `<section class="sec k-${k}"><div class="sh"><span class="si">${CXI[k]}</span><div class="tt"><h3>${CXSEC[k].h}</h3></div>${i === 0 ? '<button class="hwl" id="cxHow">How it works</button>' : ''}</div>${cards(k)}</section>`;
-  if (!['all', 'gem', 'cash'].includes(CXF)) CXF = 'all';
-  const show = { all: ['gem', 'cash', 'bc', 'sp'], cash: ['cash', 'bc', 'sp'], gem: ['gem'] }[CXF];
+  const nCan = CX.filter(c => canEnter(c)).length;
+  if (!['all', 'gem', 'cash', 'mine'].includes(CXF) || (CXF === 'mine' && !nCan)) CXF = 'all';
+  const show = { all: ['gem', 'cash', 'bc', 'sp'], cash: ['cash', 'bc', 'sp'], gem: ['gem'], mine: ['gem', 'cash', 'bc', 'sp'] }[CXF];
   const wal = `<div class="wallet cxw" aria-label="Wallet"><button class="wb cash" data-w aria-label="Cash balance">${CASH_ICON}<span><small>Cash</small><b>$${(S.cash || 0).toFixed(2)}</b></span></button>
     <button class="wb gems" data-w aria-label="Gems balance">${gemIcon('')}<span><small>Gems</small><b>${S.gems.toLocaleString()}</b></span></button>
     <button class="wplus" data-w aria-label="Add funds">+</button></div>`;
@@ -3580,12 +3629,11 @@ function openComps(forPhoto) {
   const mine = live.length ? `<div class="myent"><div class="mh"><h3>My live entries</h3><span>${live.length} live</span></div>${live.map(e => liveCardHTML(CX.find(x => x.id === e.cid), e)).join('')}</div>` : '';
   const fpBar = fp && !photoLock(fp) ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Your photo is ready</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${(() => { const n = CX.filter(c => show.includes(c.k) && !liveEntry(c.id) && cxOk(c, fp)).length; return n ? `Pick a competition below · ${n} fit${n === 1 ? 's' : ''} this photo` : 'No open competitions fit this photo right now'; })()}</span></div><button id="cxAll">See all</button></div>` : '';
   const rdy = !fp && S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)).sort((a, b) => b.s.total - a.s.total) : [];
-  const rdyRow = rdy.length ? `<div class="rdyrow"><div class="mh"><h3>Ready to enter</h3><span>${rdy.length} photo${rdy.length === 1 ? '' : 's'}</span></div><p>Tap a photo to see the competitions it can enter.</p>
-    <div class="rdyph">${rdy.map(p => `<button data-rdy="${p.id}" aria-label="Photo scoring ${p.s.total}, ${esc(pcatName(p.cat) || 'no category')}. Pick a competition"><img src="${p.src}" alt=""><b>${p.s.total}</b><span>${esc(pcatName(p.cat) || 'Any')}</span><em>Pick a comp →</em></button>`).join('')}</div></div>` : '';
+  const rdyRow = rdy.length ? `<div class="rdyrow rdystick"><div class="rdy-s"><div class="rdy-th">${rdy.slice(0, 3).map(p => `<img src="${p.src}" alt="">`).join('')}</div><div class="tx"><b>${rdy.length} photo${rdy.length === 1 ? '' : 's'} ready</b><span>${nCan ? (CXF === 'mine' ? `Showing the ${nCan} you can enter` : `${nCan} competition${nCan === 1 ? '' : 's'} you can enter`) : 'No open competitions fit them right now'}</span></div>${nCan ? (CXF === 'mine' ? '<button class="rdy-btn ghost" id="rdyAll">Show all</button>' : '<button class="rdy-btn" id="rdyShow">Show them</button>') : ''}</div></div>` : '';
   openFlow(`<div class="cx">${wal}${fpBar}${rdyRow}${mine}
-    ${fpBar ? '' : best}
-    <div class="mh2"><h2 class="fh">${fpBar ? 'Pick a competition' : 'Explore competitions'}</h2></div>
-    <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['gem', 'Gems'], ['cash', 'Cash']].map(([k, l]) => `<button data-f="${k}" aria-pressed="${CXF === k}">${l}</button>`).join('')}</div>
+    ${fpBar || CXF === 'mine' ? '' : best}
+    <div class="mh2"><h2 class="fh">${fpBar ? 'Pick a competition' : CXF === 'mine' ? 'Competitions you can enter' : 'Explore competitions'}</h2></div>
+    <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['gem', 'Gems'], ['cash', 'Cash']].map(([k, l]) => `<button data-f="${k}" class="${k === 'mine' ? 'mine' : ''}" aria-pressed="${CXF === k || (CXF === 'mine' && k === 'all' && false)}">${l}</button>`).join('')}</div>
     <div class="clist">${show.map(k => cards(k)).join('') || `<p class="cxempty">You’ve entered every ${CXF === 'gem' ? 'gem ' : CXF === 'cash' ? 'cash ' : ''}competition that’s open right now. New ones start every 30 minutes.</p>`}</div>
     <p class="note">Prototype: entry fees and prizes use your simulated wallet. Nothing is charged or paid out for real.</p></div>`, true);
   $('#flow').classList.add('cxmode', 'astab'); $('#flow').style.top = cxTabTop() + 'px';
@@ -3596,7 +3644,8 @@ function openComps(forPhoto) {
   body.querySelectorAll('[data-cx-go]').forEach(b => b.onclick = () => cxEnter(CX.find(c => c.id === b.dataset.cxGo)));
   body.querySelectorAll('[data-live]').forEach(b => b.onclick = () => openLive(S.entries.find(e => e.id === b.dataset.live)));
   if ($('#cxAll')) $('#cxAll').onclick = () => openComps(null);
-  document.querySelectorAll('#flowBody [data-rdy]').forEach(b => b.onclick = () => { openComps(S.photos.find(x => x.id === b.dataset.rdy)); $('#flowBody').scrollTop = 0; });
+  if ($('#rdyShow')) $('#rdyShow').onclick = goEligible;
+  if ($('#rdyAll')) $('#rdyAll').onclick = () => { CXF = 'all'; openComps(null); $('#flowBody').scrollTop = 0; };
   if ($('#cxHow')) $('#cxHow').onclick = () => { if (!S.user) { openSignup(() => go('judge')); return; } closeFlow(); go('judge'); };
   if (false && $('#cxJudge')) $('#cxJudge').onclick = () => { if (!S.user) { openSignup(() => go('judge')); return; } closeFlow(); go('judge'); };
   clearInterval(cxTimer);
@@ -3647,6 +3696,16 @@ function rankAt(e, t) {
 }
 const rankMove = e => { const now = Math.min(Date.now(), e.end); return rankAt(e, Math.max(e.start, now - 10 * MIN)) - rankAt(e, now); };
 const moveHTML = d => d > 0 ? `<i class="mv mup">▲${d}</i>` : d < 0 ? `<i class="mv mdn">▼${-d}</i>` : '<i class="mv">–</i>';
+const BOOST_EVERY = 5;
+const liveEntries = () => (S.entries || []).filter(e => !e.done && Date.now() < e.end);
+function boostTick() {
+  const live = liveEntries(); if (!live.length) return null;
+  S.boostN = (S.boostN || 0) + 1;
+  if (S.boostN < BOOST_EVERY) return null;
+  S.boostN = 0; let moved = 0;
+  live.forEach(e => { const r = rankAt(e, Date.now()), d = Math.max(5, Math.round(r * 0.06)); e.startR = Math.max(1, e.startR - d); e.fin = Math.max(1, e.fin - d); e.boosts = (e.boosts || 0) + 1; moved = Math.max(moved, d); });
+  return moved;
+}
 const liveEntry = cid => (S.entries || []).find(e => e.cid === cid && !e.done);
 const entrySrc = e => { const p = S.photos.find(x => x.id === e.pid); return p ? p.src : SEED[0].src; };
 const cxPill = c => `<span class="cpill k-${c.k}">${c.cats ? gi(c.cats[0]) : gi('star')}${esc((c.lab || 'Any category').toUpperCase())}</span>`;
@@ -3710,6 +3769,10 @@ function paintLive(force) {
       return `<div class="lv-hero2 k-${c.k}"><div class="lh-ph"><img src="${entrySrc(e)}" alt="Your entry">${canHang ? `<button class="lh-gal" id="lvGal">${TROPHY_S}Add to gallery</button>` : ''}</div>
       <div class="lh-rk"><small>Your rank</small><b>#${r.toLocaleString()}</b><span>of ${e.n.toLocaleString()} entries</span>
       ${d ? `<i class="${d > 0 ? 'up' : 'dn'}">${d > 0 ? '▲' : '▼'} ${Math.abs(d)}</i>` : '<i>–</i>'}<em>in the last 10 min</em></div></div>`; })()}
+    ${(() => { const rdy = S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)).length, bn = S.boostN || 0;
+      return `<div class="lv-next"><h3>While you wait</h3>
+        <button class="lvn-boost" id="lvBoost"><span class="z">⚡</span><span class="tx"><b>Boost this entry</b><small>Judge ${BOOST_EVERY - bn} more photo${BOOST_EVERY - bn === 1 ? '' : 's'} to move up the ranks${e.boosts ? ` · boosted ${e.boosts}×` : ''}</small><span class="dots">${[...Array(BOOST_EVERY)].map((_, i) => `<i class="${i < bn ? 'on' : ''}"></i>`).join('')}</span></span><span class="go">Judge →</span></button>
+</div>`; })()}
     ${(() => {
       const lg = v => Math.log(Math.max(1, v)), pos = v => Math.max(2, Math.min(98, (1 - lg(v) / lg(e.n)) * 100));
       const me = pos(r), cut = pos(top), inZone = r <= top, gap = r - top;
@@ -3734,6 +3797,7 @@ function paintLive(force) {
   </div>`);
   $('#lv').scrollTop = y;
   $('#lvBack').onclick = lvClose;
+  if ($('#lvBoost')) $('#lvBoost').onclick = () => { lvClose(); closeFlow(); go('judge'); };
   if ($('#lvGal')) $('#lvGal').onclick = () => { const ph = S.photos.find(x => x.id === e.pid); AFTER_HANG = e.id; lvClose(); closeFlow(); hangPhoto(ph); };
 }
 
@@ -4414,7 +4478,7 @@ function go(where) {
   if (where === 'gallery') { renderGallery(); $('#gallery').scrollTop = 0; }
 }
 $('#segJudge').onclick = () => go('judge'); $('#segStudio').onclick = () => go('studio'); $('#segGallery').onclick = () => openGallery();
-$('#segCompete').onclick = () => { if (!S.user) { openSignup(() => openComps(null)); return; } openComps(null); };
+$('#segCompete').onclick = () => { if (!S.user) { openSignup(() => openComps(null)); return; } if (CX.some(c => canEnter(c))) goEligible(); else openComps(null); };
 (() => {
   const panes = $('#panes'); let x0 = null, y0 = null, t0 = 0;
   panes.addEventListener('touchcancel', () => { x0 = null; }, { passive: true });
@@ -4472,6 +4536,7 @@ function renderJudge() {
   const [pa, pb] = seedPair();
   $('#judge').innerHTML = `<div class="swp l"><button class="swp-b" data-swp="studio"><span class="ar">←</span>Swipe to Enhance</button></div><div class="tot-h"><span class="jtag2">${S.photos.length ? (left <= 1 ? 'Battle after this one' : `${left} picks to a battle`) : 'Score a photo to battle'}</span><h2>Which is better?</h2><p><b>${esc(CHAL[pa.cat] || 'Photo challenge')}</b> · tap your pick</p></div>
     <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
+    ${liveEntries().length ? `<div class="jboost"><span class="z">⚡</span><span class="tx"><b>Boost your entry</b><small>Every ${BOOST_EVERY} picks moves your live entry up the ranks</small></span><span class="dots">${[...Array(BOOST_EVERY)].map((_, i) => `<i class="${i < (S.boostN || 0) ? 'on' : ''}"></i>`).join('')}</span></div>` : ''}
     <div class="jfoot">
       <div class="jf-combo"><b>Combo ${combo}/5</b><span class="dots">${[...Array(5)].map((_, i) => `<i class="${i < combo ? 'on' : ''}"></i>`).join('')}</span><small>Lucky drop at 5</small></div>
       <div class="jf-gems"><div class="jf-l">${ds.D.n < JUDGE_CAP ? `<span><b>+${CFG.VOTE}</b> ${gemIcon()} when you agree</span><span class="r"><b>${JUDGE_CAP - ds.D.n}</b> of ${JUDGE_CAP} left today</span>` : `<span>Daily bonus used</span><span class="r"><b>+${JUDGE_LOW}</b> ${gemIcon()} per pick</span>`}</div>
@@ -4501,6 +4566,7 @@ async function vote(pick) {
   S.votes++; S.since++; S.jIdx += 2; S.gems += earn;
   S.combo = agree ? (S.combo || 0) + 1 : 0; const comboHit = S.combo >= 5; if (comboHit) S.combo = 0;
   const ds = dailyState(); ds.D.n++;
+  const boosted = boostTick();
   let streakHit = 0;
   if (ds.D.n >= 3 && ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; streakHit = ds.D.streak; S.gems += Math.min(100, 10 * streakHit); paintFlame(); }
   save();
@@ -4514,6 +4580,7 @@ async function vote(pick) {
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
   if (streakHit) { const rw = Math.min(100, 10 * streakHit); celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} day streak!`, text: `You judged 3 photos today. <b>+${rw} gems</b>. Come back tomorrow to keep it going${streakHit < 10 ? ` and earn ${Math.min(100, 10 * (streakHit + 1))}` : ''}.`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
+  if (boosted) toast(`⚡ Entry boosted! Up ${boosted} places`);
   if (comboHit) { luckyDrop(); return; }
   maybeEnhanceNudge();
 }
@@ -4664,8 +4731,8 @@ ${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCard
   if ($('#stNew') && !$('#stNew').dataset.upfor) $('#stNew').onclick = () => pickPhoto(true);
   if ($('#stComp')) $('#stComp').onclick = () => openComps(p);
   if ($('#stSwL')) $('#stSwL').onclick = photoSwitcher;
-  if ($('#stReady')) $('#stReady').onclick = () => openComps(p);
-  st.querySelectorAll('.hero-photo .qbadge').forEach(q => { if (!lk && tot >= CFG.QUALIFY) { q.classList.add('tap'); q.addEventListener('pointerdown', e => e.stopPropagation()); q.onclick = e => { e.stopPropagation(); openComps(p); }; } });
+  if ($('#stReady')) $('#stReady').onclick = () => goEligible();
+  st.querySelectorAll('.hero-photo .qbadge').forEach(q => { if (!lk && tot >= CFG.QUALIFY) { q.classList.add('tap'); q.addEventListener('pointerdown', e => e.stopPropagation()); q.onclick = e => { e.stopPropagation(); goEligible(); }; } });
   if ($('#gEnter')) $('#gEnter').onclick = () => { CXF = gc.k === 'gem' ? 'gem' : 'all'; openComps(p); cxEnter(gc); };
   if ($('#gChange')) $('#gChange').onclick = () => openComps(p);
   clearInterval(window.__gl); if (gc) window.__gl = setInterval(() => { const el = st.querySelector('[data-gl]'); if (!el || !document.contains(el)) { clearInterval(window.__gl); return; } el.textContent = fmtLeft(cxLeft(gc)); }, 1000);
