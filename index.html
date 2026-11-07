@@ -1525,6 +1525,12 @@ button.bar:hover span:first-child{color:var(--pink)}
 #studio #cmp{position:sticky;top:0;z-index:3;overflow:visible;height:32vh;min-height:180px;box-shadow:0 14px 24px -10px #140A26}
 #studio #cmp img{border-radius:26px}
 #studio #cmp::before{content:"";position:absolute;left:-14px;right:-14px;top:-24px;height:24px;background:#140A26}
+/* Full screens under the standard header */
+#sheet.full.under{height:auto;bottom:0;padding-top:6px;box-shadow:none}
+#sheet.full.under .fullbar .wm,#sheet.full.under .sbal{display:none}
+#sheet.full.under .fullbar{margin-bottom:2px}
+.ceg.under{bottom:0}
+.ceg.under .ceg-top .wm{visibility:hidden}
 </style>
 </head>
 <body>
@@ -2084,6 +2090,7 @@ function renderLanding() {
 }
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
 function askAlerts(next) {
+  next(); return;
   if (S.alertsAsked) { next(); return; }
   const c = goalFor(cur());
   openSheet(`<div class="ng"><span class="ngi bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg></span>
@@ -2189,6 +2196,7 @@ function openFlow(html, closable = true, onClose) {
   $('#flowBack').style.visibility = closable ? 'visible' : 'hidden'; flowClose = onClose || null;
   ['segCompete', 'segJudge', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segStudio').setAttribute('aria-pressed', 'true');
 }
+$('#shell').addEventListener('click', e => { if (!e.target.closest('#shell > .seg')) return; if ($('#sheet').classList.contains('under') && $('#sheet').classList.contains('on')) closeSheet(); const g = $('#ceg'); if (g.classList.contains('under')) { g.classList.remove('on', 'under'); g.style.top = ''; } }, true);
 function cxTabTop() { const g = $('#shell > .seg'); return g.offsetTop + g.offsetHeight + 4; }
 function leaveCxTab() {
   const f = $('#flow'); if (!f.classList.contains('astab')) { f.classList.remove('cxmode'); return; }
@@ -2247,6 +2255,7 @@ function openEnhance(p, cat) {
   EN = { p, cat, variants: null, sel: -1 };
   openFlow(enhanceShell(p, cat), true, null);
   bindCats();
+  const on = document.querySelector('#flowBody .cats button[aria-pressed="true"]'); if (on) { const r = on.parentElement; r.scrollLeft = on.offsetLeft - r.offsetLeft - (r.clientWidth - on.offsetWidth) / 2; }
   enIdle();
 }
 function enIdle() {
@@ -2381,9 +2390,11 @@ function applyVariant() {
 let sheetAfter = null, sheetLocked = false;
 function openSheet(html, { locked = false, after = null, full = false } = {}) {
   $('#sheet').classList.toggle('full', full);
+  const under = full && $('#app').classList.contains('on');
+  $('#sheet').classList.toggle('under', under); $('#sheet').style.top = under ? cxTabTop() + 'px' : '';
   $('#sheetBody').innerHTML = (full ? `<div class="fullbar"><button class="ceg-x" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><span class="wm">Yofi</span><button class="ceg-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>` : '') + html;
   document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); $('#sheet').scrollTop = 0;
-  $('#scrim').classList.add('on'); $('#sheet').classList.add('on'); sheetLocked = locked; sheetAfter = after;
+  if (!full) $('#scrim').classList.add('on'); $('#sheet').classList.add('on'); sheetLocked = locked; sheetAfter = after;
 }
 function closeSheet() {
   $('#scrim').classList.remove('on'); $('#sheet').classList.remove('on');
@@ -2830,8 +2841,8 @@ function showNeedGems(cost, what, back, after) {
     <button class="ngx-opt judge" id="ngJudge"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg></span><span class="tx"><b>Judge photos to earn gems</b><small>Earn up to ${CFG.VOTE + 5 * CFG.CLOSE} gems per photo</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
     <button class="ngx-opt" id="ngBuy"><span class="ic">${gemIcon('')}</span><span class="tx"><b>Get a gem pack</b><small>${back === 'photo' ? 'Enhance sooner' : 'Enter sooner'}</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
     <button class="ceg-later" id="ngBack">${back === 'photo' ? 'Back to my photo' : 'Back to competitions'}</button></div>`;
-  el.classList.add('on'); el.scrollTop = 0;
-  const close = () => el.classList.remove('on');
+  el.classList.add('on', 'under'); el.style.top = $('#app').classList.contains('on') ? cxTabTop() + 'px' : ''; el.scrollTop = 0;
+  const close = () => { el.classList.remove('on', 'under'); el.style.top = ''; };
   $('#ngX').onclick = close; $('#ngBack').onclick = close;
   $('#ngJudge').onclick = () => { close(); closeFlow(); go('judge'); toast(after); };
   $('#ngBuy').onclick = () => { close(); openStore(what); };
