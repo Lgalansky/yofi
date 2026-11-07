@@ -1890,6 +1890,8 @@ button.bar:hover span:first-child{color:var(--pink)}
 .entc .er{font-size:.9rem;color:#C9D1EA}
 .entc .er b{color:#fff}
 .entc button{margin-top:2px;padding:9px 16px;border-radius:999px;font-weight:800;font-size:.9rem;color:#fff;background:linear-gradient(95deg,#FF3FA4,#9B3CFF)}
+.padd.plain{width:96px!important;align-content:center}
+.padd.plain .pl{width:52px;height:52px;font-size:2.2rem}
 </style>
 </head>
 <body>
@@ -4075,8 +4077,9 @@ ${lk ? `<div class="entc"><img src="${p.src}" alt="Your entered photo"><div clas
     ${stage >= 1 ? `<div class="qrow">${stage === 2 && !lk ? '<button class="btn block" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
     ${lk || !sorted.length ? '' : '<h3 class="sec">Improve your photo</h3>'}
     ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}"><span>${sorted[0].verb}</span><span class="gpill">${gemIcon()}${fixCost(p)}</span></button><p class="fixsub">${sorted[0].name} is your lowest at ${p.s[sorted[0].k]}. Tap a score bar above to pick another.</p>`}`}
-    <div class="phead"><h3 class="sec">${lk || !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
-    <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `${(() => { const nc = nextComps(1)[0]; return nc ? `<button class="padd" id="stNew" data-upfor="${nc.id}" aria-label="Upload for ${esc(nc.t)}"><span class="pl">+</span><b>Upload for ${esc(nc.t)}</b><small>${cxPrize(nc)} · ends in ${fmtLeft(cxLeft(nc))}</small></button>` : `<button class="padd" id="stNew" aria-label="Upload a new photo"><span class="pl">+</span><b>Upload a new photo</b></button>`; })()}` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCardsHTML('Win real cash', 'cash', 'Cash prizes') : ''}`;
+${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCardsHTML('Win real cash', 'cash', 'Cash prizes') : ''}
+    <div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
+    <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl">+</span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`;
   animateRing(st);
   st.querySelectorAll('.fix').forEach(b => b.onclick = () => startEnhance(p, b.dataset.c));
   if ($('#stFix')) $('#stFix').onclick = () => startEnhance(p, $('#stFix').dataset.c);
