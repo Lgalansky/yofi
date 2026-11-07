@@ -2209,6 +2209,28 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .r3-ph img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:20px;box-shadow:0 0 0 4px #fff,0 0 0 7px #2EE59D,0 0 24px rgba(46,229,157,.35)}
 .r3-ph span{position:absolute;top:-14px;left:50%;transform:translateX(-50%);z-index:1;padding:3px 14px;border-radius:999px;font-weight:800;font-size:.85rem;white-space:nowrap;color:#2A1150;background:#E8FFF3;box-shadow:0 0 0 2px #2EE59D}
 .rs3 .r3-go{margin-top:14px!important;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;font-size:1.25rem!important;text-transform:none!important;letter-spacing:0!important;white-space:nowrap}
+/* Enter competition sheet */
+.en2{text-align:left}
+.en-tag{display:inline-block;padding:5px 12px;border-radius:999px;font-weight:800;font-size:.8rem;color:#3A2400;background:linear-gradient(90deg,#FFE27A,#FFC93C)}
+.en2 h2{margin:8px 0 12px}
+.en-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.en-facts div{padding:10px 8px;border-radius:14px;text-align:center;background:#211339;box-shadow:inset 0 0 0 1.5px #33204F}
+.en-facts small{display:block;font-weight:800;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:#A796C6}
+.en-facts b{display:block;margin-top:3px;font-weight:800;font-size:1rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.en-facts b.pz{color:#FFD86B}
+.en-h{margin:18px 0 8px;font-size:1rem;color:#fff}
+.en-pick{display:grid;grid-template-columns:42% 1fr;gap:14px;align-items:start;margin-bottom:16px}
+.en-big{position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;box-shadow:0 0 0 3px #9B3CFF}
+.en-big img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.en-big span{position:absolute;right:8px;bottom:8px;padding:3px 10px;border-radius:999px;font-weight:800;color:#fff;background:rgba(20,10,38,.8)}
+.en-cat{margin-bottom:10px}
+.en-side p{margin:0 0 12px;font-size:.88rem;line-height:1.4;color:#CDBEE8}
+.en-side small{display:block;margin-bottom:6px;font-weight:700;font-size:.78rem;color:#A796C6}
+.en-side .enpick{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.en-side .enpick button{position:relative;aspect-ratio:3/4;border-radius:10px;overflow:hidden;box-shadow:inset 0 0 0 1.5px #33204F}
+.en-side .enpick button[aria-pressed="true"]{box-shadow:0 0 0 2.5px #FF3FA4}
+.en-side .enpick img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.en-side .enpick span{position:absolute;left:3px;bottom:3px;padding:0 5px;border-radius:999px;font-weight:800;font-size:.7rem;color:#fff;background:rgba(20,10,38,.75)}
 </style>
 </head>
 <body>
@@ -3689,11 +3711,17 @@ function cxEnter(c) {
   if (!ok.length) { openEntryGuide(c, null); return; }
   let sel = (CXP && ok.find(x => x.id === CXP)) ? CXP : ok[0].id;
   ok.sort((a, b) => (b.id === sel) - (a.id === sel));
-  openSheet(`<h2>Enter ${esc(c.t)}</h2><p class="sub">Choose the photo to enter. It’s locked in at its current score until the results are in.</p>
-    <div class="pickgrid enpick">${ok.map(p => `<button data-p="${p.id}" aria-pressed="${p.id === sel}" aria-label="Photo scoring ${p.s.total}"><img src="${p.src}" alt=""><span>${p.s.total}</span></button>`).join('')}</div>
-    <div class="enprev"><img id="enImg" src="${ok.find(x => x.id === sel).src}" alt="Selected photo"><div><small>Your entry</small><b id="enSc">${ok.find(x => x.id === sel).s.total}</b><span>${cxPill(c)}</span></div></div>
-    <button class="btn block" id="enGo">${c.k === 'gem' ? 'Enter for free' : `Enter for ${cxFee(c)}`}</button>
-    <div style="text-align:center"><button class="link" id="enNew">Or upload a new photo</button></div>`);
+  const fee = c.k === 'gem' ? 'Free' : cxFee(c).replace(/<[^>]+>/g, '');
+  openSheet(`<div class="en2">
+    <span class="en-tag">🏆 Photo competition</span>
+    <h2>${esc(c.t)}</h2>
+    <div class="en-facts"><div><small>1st prize</small><b class="pz">${prizeWords(c)}</b></div><div><small>Entry</small><b>${fee}</b></div><div><small>Ends in</small><b data-enl>${fmtLeft(cxLeft(c))}</b></div></div>
+    <h3 class="en-h">Your entry</h3>
+    <div class="en-pick"><div class="en-big"><img id="enImg" src="${ok.find(x => x.id === sel).src}" alt="Selected photo"><span id="enSc">${ok.find(x => x.id === sel).s.total}</span></div>
+      <div class="en-side"><div class="en-cat">${cxPill(c)}</div><p>Judges vote on it against other entries. Its score is locked in until the results are in.</p>${ok.length > 1 ? `<small>Or pick another photo</small><div class="enpick">${ok.map(p => `<button data-p="${p.id}" aria-pressed="${p.id === sel}" aria-label="Photo scoring ${p.s.total}"><img src="${p.src}" alt=""><span>${p.s.total}</span></button>`).join('')}</div>` : ''}</div></div>
+    <button class="btn block" id="enGo">Enter competition · ${fee}</button>
+    <div style="text-align:center"><button class="link" id="enNew">Or upload a new photo</button></div></div>`);
+  clearInterval(window.__enl); window.__enl = setInterval(() => { const el = document.querySelector('#sheetBody [data-enl]'); if (!el) { clearInterval(window.__enl); return; } el.textContent = fmtLeft(cxLeft(c)); }, 1000);
   const paint = () => { const p = ok.find(x => x.id === sel); document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === sel)); $('#enImg').src = p.src; $('#enSc').textContent = p.s.total; };
   document.querySelectorAll('#sheetBody .enpick button').forEach(b => b.onclick = () => { sel = b.dataset.p; paint(); });
   $('#enGo').onclick = () => { closeSheet(); cxPay(c, ok.find(x => x.id === sel)); };
