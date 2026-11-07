@@ -1963,6 +1963,54 @@ button.bar:hover span:first-child{color:var(--pink)}
 .swp.l .swp-b .ar{animation:swpL 1.6s ease-in-out 3}
 @keyframes swpR{50%{transform:translateX(4px)}}
 @keyframes swpL{50%{transform:translateX(-4px)}}
+/* Live trackers */
+.trk .hd span{font-weight:700;color:#FFC93C}
+.trk .hd span.ok{color:#2EE59D}
+.pl{padding:26px 4px 2px}
+.pl-track{position:relative;height:12px;border-radius:6px;background:linear-gradient(90deg,#2A2F52,#3A2E6E)}
+.pl-zone{position:absolute;top:0;bottom:0;right:0;border-radius:0 6px 6px 0;background:linear-gradient(90deg,rgba(46,229,157,.35),#2EE59D)}
+.pl-cut{position:absolute;top:-8px;bottom:-8px;width:2px;background:#2EE59D}
+.pl-cut em{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:2px;font-style:normal;font-size:.7rem;font-weight:800;color:#2EE59D;white-space:nowrap}
+.pl-me{position:absolute;top:50%;transform:translate(-50%,-50%);display:grid;justify-items:center;transition:left .8s cubic-bezier(.2,.8,.2,1)}
+.pl-me img{width:34px;height:34px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px #FF3FA4,0 0 14px rgba(255,63,164,.6)}
+.pl-me.in img{box-shadow:0 0 0 3px #2EE59D,0 0 14px rgba(46,229,157,.6)}
+.pl-me b{position:absolute;top:100%;margin-top:4px;font-size:.75rem;color:#fff;white-space:nowrap}
+.pl-ax{display:flex;justify-content:space-between;margin-top:40px;font-size:.72rem;color:#9AA6C8}
+.pl-ax .z{color:#2EE59D;font-weight:700;margin-left:auto;margin-right:10px}
+.pr{display:grid;grid-template-columns:48px 28px 1fr 40px;align-items:center;gap:8px;margin-top:8px}
+.pr .n{font-weight:800;font-size:.85rem;color:#9AA6C8;text-align:center}
+.pr img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.pr .pbar{height:22px;border-radius:11px;background:#1A2140;overflow:hidden}
+.pr .pbar i{display:flex;min-width:44px;align-items:center;height:100%;border-radius:11px;background:linear-gradient(90deg,#5B6CFF,#9B3CFF);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.pr .pbar em{padding-left:10px;font-style:normal;font-size:.75rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pr b{font-size:.85rem;text-align:right}
+.pr.p1 .pbar i{background:linear-gradient(90deg,#FFC93C,#F2A50C)}
+.pr.p1 .pbar em{color:#2A1600}
+.pr.me{margin-top:12px;padding-top:10px;border-top:1px dashed #2A3358}
+.pr.me .pbar i{background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
+.pr-ft{margin:10px 0 0;font-size:.75rem;color:#9AA6C8}
+/* Vote stream */
+.live-dot{display:inline-flex;align-items:center;gap:6px;color:#FF5C8A!important}
+.live-dot::before{content:"";width:8px;height:8px;border-radius:50%;background:#FF5C8A;animation:ldot 1.2s ease-in-out infinite}
+@keyframes ldot{50%{opacity:.3}}
+.vs-sum{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 8px}
+.vs-sum>div{display:grid;gap:2px;padding:10px;border-radius:14px;background:#1A2140}
+.vs-sum b{font:800 1.4rem/1 "Bricolage Grotesque",sans-serif;color:#2EE59D}
+.vs-sum>div:last-child b{color:#5BE7F5}
+.vs-sum small{font-size:.75rem;color:#9AA6C8}
+.vs-feed{display:grid;gap:6px}
+.vs-row{display:grid;grid-template-columns:26px 1fr 34px 30px;align-items:center;gap:8px;padding:7px 8px;border-radius:12px;background:#151C36}
+.vs-row.new{animation:vsin .5s cubic-bezier(.2,1.2,.4,1)}
+@keyframes vsin{from{opacity:0;transform:translateY(-8px)}}
+.vs-row .ic{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font-weight:800;font-size:.8rem}
+.vs-row.w .ic{color:#06261A;background:#2EE59D}
+.vs-row.l .ic{color:#C9D1EA;background:#2A3358}
+.vs-row .tx{font-size:.82rem;color:#C9D1EA;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vs-row .tx b{color:#fff}
+.vs-row .tx em{font-style:normal;font-weight:800;color:#2EE59D}
+.vs-row .th img{width:34px;height:34px;border-radius:8px;object-fit:cover;display:block}
+.vs-row.l .th img{opacity:.6}
+.vs-row .ago{font-size:.72rem;color:#9AA6C8;text-align:right}
 </style>
 </head>
 <body>
@@ -3253,8 +3301,9 @@ function paintLive(force) {
   if (e.done) { openResult(e); return; }
   const c = CX.find(x => x.id === e.cid), now = Date.now(), r = rankAt(e, now);
   const cd = $('#lvCd'); if (cd) cd.textContent = fmtClock(e.end - now);
-  if (!force && r === LV.last) return;
-  LV.last = r;
+  const tick = Math.floor(now / 3000);
+  if (!force && r === LV.last && tick === LV.tick) return;
+  LV.last = r; LV.tick = tick;
   const y = $('#lv').scrollTop, d = rankMove(e), top = paidTop(e.n);
   const pts = [...Array(14)].map((_, i) => rankAt(e, e.start + (Math.min(now, e.end) - e.start) * i / 13));
   const lo = Math.min(...pts), hi = Math.max(...pts, lo + 1);
@@ -3276,6 +3325,31 @@ function paintLive(force) {
     ${(() => { const ph = S.photos.find(x => x.id === e.pid); return ph && !Object.values(S.frames || {}).includes(ph.id) && frameSpot(ph) ? `<button class="lv-gal" id="lvGal"><span class="ic">${TROPHY_S}</span><span class="tx"><b>Hang it in your gallery</b><small>It fits your ${esc(ROOMS[frameSpot(ph)[0]].slots[frameSpot(ph)[1]][1])} frame</small></span><span class="go">Add ›</span></button>` : ''; })()}
     <div class="lv-hero k-${c.k}"><img src="${entrySrc(e)}" alt="Your entry"><div class="ov"><div><small>YOUR RANK</small><b>#${r.toLocaleString()}</b><span>of ${e.n.toLocaleString()} entries</span></div>
       <div class="mvb">${d ? `<i class="${d > 0 ? 'up' : 'dn'}">${d > 0 ? '▲' : '▼'} ${Math.abs(d)}</i>` : '<i>–</i>'}<span>in the last 10 min</span></div></div></div>
+    ${(() => {
+      const lg = v => Math.log(Math.max(1, v)), pos = v => Math.max(2, Math.min(98, (1 - lg(v) / lg(e.n)) * 100));
+      const me = pos(r), cut = pos(top), inZone = r <= top, gap = r - top;
+      return `<div class="lv-box trk"><div class="hd"><b>Prize line</b><span class="${inZone ? 'ok' : ''}">${inZone ? 'You’re in the prizes!' : `${gap.toLocaleString()} places to go`}</span></div>
+        <div class="pl"><div class="pl-track"><i class="pl-zone" style="left:${cut}%"></i><i class="pl-cut" style="left:${cut}%"><em>#${top.toLocaleString()}</em></i><i class="pl-me ${inZone ? 'in' : ''}" style="left:${me}%"><img src="${entrySrc(e)}" alt=""><b>#${r.toLocaleString()}</b></i></div>
+        <div class="pl-ax"><span>#${e.n.toLocaleString()}</span><span class="z">Prize zone</span><span>#1</span></div></div></div>`;
+    })()}
+    ${(() => {
+      const N = ['mia.snaps','jayden_k','sofia.lens','noah.pix','ava_shoots','leo.frames','zoe.clicks','ethan.view','lily.focus','max.raw','emma.glow','kai.light'], t = Math.floor(now / 3000), wr = Math.max(.35, Math.min(.8, .55 + (e.startR - r) / e.n * 2));
+      const rows = [...Array(6)].map((_, i) => { const R = mulberry(e.seed * 31 + (t - i) * 7); const won = R() < wr; return { who: N[Math.floor(R() * N.length)], won, vs: SEED[Math.floor(R() * SEED.length)].src, ago: i === 0 ? 'now' : `${i * 3 + Math.floor(R() * 3)}s` }; });
+      const recent = 8 + Math.floor(mulberry(e.seed + Math.floor(now / 60000))() * 14), wins = rows.filter(x => x.won).length;
+      return `<div class="lv-box trk vs-box"><div class="hd"><b>Vote stream</b><span class="live-dot">live</span></div>
+        <div class="vs-sum"><div><b>+${recent}</b><small>votes in the last 5 min</small></div><div><b>${Math.round(wr * 100)}%</b><small>picked your photo</small></div></div>
+        <div class="vs-feed">${rows.map((x, i) => `<div class="vs-row ${x.won ? 'w' : 'l'} ${i === 0 ? 'new' : ''}"><span class="ic">${x.won ? '✓' : '✕'}</span><span class="tx"><b>@${x.who}</b> ${x.won ? 'picked <em>your photo</em>' : 'picked the rival'}</span><span class="th"><img src="${x.won ? entrySrc(e) : x.vs}" alt=""></span><span class="ago">${x.ago}</span></div>`).join('')}</div></div>`;
+    })()}
+    ${(() => {
+      const h = OPP.map(o => o.h), t = Math.floor(now / 4000), sc = e.score, R = mulberry(e.seed * 7 + t);
+      const base = [96, 93, 91, 88, 86].map((v, i) => v + Math.round((R() - .5) * 4));
+      const rows = base.map((v, i) => ({ h: h[(e.seed + i * 3) % 8], v, src: SEED[(e.seed + i * 4 + 1) % SEED.length].src })).sort((a, b) => b.v - a.v);
+      const mx = rows[0].v, myPct = Math.max(12, Math.min(96, 100 - Math.log(r) / Math.log(e.n) * 70));
+      return `<div class="lv-box trk"><div class="hd"><b>Race to the top</b><span>live</span></div>
+        ${rows.map((x, i) => `<div class="pr ${i ? '' : 'p1'}"><span class="n">${i + 1}</span><img src="${x.src}" alt=""><span class="pbar"><i style="width:${(x.v / mx * 100).toFixed(1)}%"><em>@${esc(x.h)}</em></i></span><b>${x.v}%</b></div>`).join('')}
+        <div class="pr me"><span class="n">#${r.toLocaleString()}</span><img src="${entrySrc(e)}" alt=""><span class="pbar"><i style="width:${myPct.toFixed(1)}%"><em>You</em></i></span><b>${Math.round(myPct * .9)}%</b></div>
+        <p class="pr-ft">Share of judge picks won. Bars update as votes come in.</p></div>`;
+    })()}
     <div class="lv-box"><div class="hd"><b>Your climb</b><span>Entered at #${e.startR.toLocaleString()}</span></div>
       <svg viewBox="0 0 340 90" class="lv-chart" role="img" aria-label="Rank chart from ${pts[0]} to ${r}"><line x1="0" y1="88" x2="340" y2="88" stroke="#202A48"/><line x1="0" y1="45" x2="340" y2="45" stroke="#202A48" stroke-dasharray="3 4"/>
         <polyline points="${poly}" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${last[0]}" cy="${last[1]}" r="5" fill="currentColor"/></svg>
