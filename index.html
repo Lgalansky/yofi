@@ -3081,7 +3081,7 @@ function paintLive(force) {
   </div>`);
   $('#lv').scrollTop = y;
   $('#lvBack').onclick = lvClose;
-  if ($('#lvGal')) $('#lvGal').onclick = () => { const ph = S.photos.find(x => x.id === e.pid); lvClose(); closeFlow(); hangPhoto(ph); };
+  if ($('#lvGal')) $('#lvGal').onclick = () => { const ph = S.photos.find(x => x.id === e.pid); AFTER_HANG = e.id; lvClose(); closeFlow(); hangPhoto(ph); };
 }
 
 /* results */
@@ -3096,8 +3096,8 @@ function settle(e) {
 function openResult(e) {
   const c = CX.find(x => x.id === e.cid), pz = e.prize, top = paidTop(e.n), climbed = e.startR - e.fin;
   const ph = S.photos.find(x => x.id === e.pid), hungAt = ph && Object.entries(S.frames || {}).find(([, id]) => id === ph.id), spot = ph && !hungAt && frameSpot(ph);
-  const galBtn = cls => ph ? `<button class="${cls}" id="rsGal">${hungAt ? 'See it in your gallery' : spot ? 'Add to your gallery' : 'Go to your gallery'} <span aria-hidden="true">→</span></button>` : `<button class="${cls}" id="rsNext">Enter next competition <span aria-hidden="true">→</span></button>`;
-  const galNote = ph ? `<p class="rs-gn">${hungAt ? 'It’s already hanging in your gallery.' : spot ? `It can hang in your <b>${esc(ROOMS[spot[0]].slots[spot[1]][1])}</b> frame. Then upload another photo to fill the rest.` : `Fill your gallery with more photos to unlock new rooms.`}</p><button class="rs-alt" id="rsNext">Or enter another competition</button>` : '';
+  const galBtn = cls => false ? `<button class="${cls}" id="rsGal">${hungAt ? 'See it in your gallery' : spot ? 'Add to your gallery' : 'Go to your gallery'} <span aria-hidden="true">→</span></button>` : `<button class="${cls}" id="rsNext">Enter next competition <span aria-hidden="true">→</span></button>`;
+  const galNote = false ? `<p class="rs-gn">${hungAt ? 'It’s already hanging in your gallery.' : spot ? `It can hang in your <b>${esc(ROOMS[spot[0]].slots[spot[1]][1])}</b> frame. Then upload another photo to fill the rest.` : `Fill your gallery with more photos to unlock new rooms.`}</p><button class="rs-alt" id="rsNext">Or enter another competition</button>` : '';
   if ($('#flow').classList.contains('on') && !$('#flow').classList.contains('cxmode')) closeFlow();
   if (!$('#flow').classList.contains('cxmode')) openComps(null);
   LV = { e: null, last: null }; e.seen = true; save();
@@ -3237,7 +3237,7 @@ function cxPay(c, q) {
   const e = makeEntry(c, q); S.entries.push(e); S.entered[c.id] = e.id; save(); paintWallet(); paintGems(false);
   const y = $('#flowBody').scrollTop; openComps(); $('#flowBody').scrollTop = y;
   const hung = Object.values(S.frames || {}).includes(q.id), spot = !hung && frameSpot(q);
-  if (spot) celebrate({ src: q.src, score: q.s.total, title: `You’re in ${esc(c.t)}!`, text: `Your ${q.s.total} photo is locked in. Results in <b>${fmtLeft(Math.max(0, e.end - Date.now()))}</b>.<br>It can also hang in your <b>${esc(ROOMS[spot[0]].slots[spot[1]][1])}</b> frame. Hang it now, then upload another to fill your gallery.`, cta: 'Add to your gallery', onCta: () => { closeFlow(); hangPhoto(q); }, later: 'Watch it live', onLater: () => openLive(e) });
+  if (spot) celebrate({ src: q.src, score: q.s.total, title: `You’re in ${esc(c.t)}!`, text: `Your ${q.s.total} photo is locked in. Results in <b>${fmtLeft(Math.max(0, e.end - Date.now()))}</b>.<br>It can also hang in your <b>${esc(ROOMS[spot[0]].slots[spot[1]][1])}</b> frame. Hang it now, then upload another to fill your gallery.`, cta: 'Add to your gallery', onCta: () => { AFTER_HANG = e.id; closeFlow(); hangPhoto(q); }, later: 'Watch it live', onLater: () => openLive(e) });
   else celebrate({ src: q.src, score: q.s.total, title: `You’re in ${esc(c.t)}!`, text: `Your ${q.s.total} photo is locked in. Results in <b>${fmtLeft(Math.max(0, e.end - Date.now()))}</b>. Good luck!`, cta: 'Watch it live', onCta: () => openLive(e), later: 'Back to competitions' });
 }
 async function resetPrototype() {
@@ -3622,6 +3622,7 @@ function openUnlock(r, s, sl, wild, theme, close) {
   $('#unGo').onclick = close ? () => { shut(); S.cur = close.id; save(); go('studio'); } : upload;
   if ($('#unNew')) $('#unNew').onclick = upload;
 }
+var AFTER_HANG = null;
 function hang(r, s, pid) {
   S.frames = S.frames || {}; S.frames[fkey(r, s)] = pid;
   const done = roomFilled(r) === ROOMS[r].slots.length;
@@ -3629,6 +3630,8 @@ function hang(r, s, pid) {
   setTimeout(() => {
     toast(done ? `Room ${r + 1} complete!${r < ROOMS.length - 1 ? ` Room ${r + 2} unlocked.` : ''}` : `Hung in the ${ROOMS[r].slots[s][1]} frame.`);
     if (done && $('#gallery .rv')) burst($('#gallery .rv'));
+    const back = AFTER_HANG && (S.entries || []).find(x => x.id === AFTER_HANG && !x.done); AFTER_HANG = null;
+    if (back) setTimeout(() => { openComps(null); openLive(back); toast(`Hung in your gallery. Here’s your live rank.`); }, 1300);
   }, 300);
 }
 function openFramed(r, s) {
