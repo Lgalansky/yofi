@@ -1892,6 +1892,27 @@ button.bar:hover span:first-child{color:var(--pink)}
 .entc button{margin-top:2px;padding:9px 16px;border-radius:999px;font-weight:800;font-size:.9rem;color:#fff;background:linear-gradient(95deg,#FF3FA4,#9B3CFF)}
 .padd.plain{width:96px!important;align-content:center}
 .padd.plain .pl{width:52px;height:52px;font-size:2.2rem}
+/* This or That judging */
+.tot-h{text-align:center;margin:6px 0 10px}
+.tot-h h2{margin:6px 0 2px;font:800 1.7rem/1.05 "Bricolage Grotesque",sans-serif}
+.tot-h p{margin:0;color:#A796C6;font-size:.9rem}
+.jtag2{display:inline-block;padding:4px 12px;border-radius:999px;font-size:.78rem;font-weight:800;color:#D9C8FF;background:#211339;box-shadow:inset 0 0 0 1px #33204F}
+.tot{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tot-c{position:relative;aspect-ratio:3/4.2;border-radius:20px;overflow:hidden;box-shadow:inset 0 0 0 2px #33204F;transition:transform .15s,box-shadow .2s,opacity .3s}
+.tot-c:active{transform:scale(.97)}
+.tot-c img{width:100%;height:100%;object-fit:cover;display:block}
+.tot-o{position:absolute;left:8px;bottom:8px;padding:3px 9px;border-radius:999px;font-size:.75rem;font-weight:700;color:#fff;background:rgba(12,4,26,.7)}
+.tot-vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;font:800 1rem/1 "Bricolage Grotesque",sans-serif;color:#fff;background:linear-gradient(135deg,#FF3FA4,#9B3CFF);box-shadow:0 0 0 3px #140A26}
+.tot-r{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:2px;opacity:0;transition:opacity .3s;background:linear-gradient(180deg,rgba(12,4,26,.15),rgba(12,4,26,.7))}
+.tot-r b{font:400 2.4rem/1 "Archivo Black","Arial Black",sans-serif;color:#fff}
+.tot-r small{font-weight:700;font-size:.8rem;color:#EADBFF}
+.tot-c[disabled] .tot-r{opacity:1}
+.tot-c.mine{box-shadow:0 0 0 3px #FF3FA4,0 0 22px rgba(255,63,164,.5)}
+.tot-c.win .tot-r b{color:#2EE59D}
+.tot-c.other{opacity:.8}
+.tot-c[disabled]{opacity:1}
+.tot-c.other[disabled]{opacity:.75}
+.jres .jearn.none{font:700 .95rem/1.2 Figtree,sans-serif;color:#A796C6}
 </style>
 </head>
 <body>
@@ -3876,6 +3897,7 @@ $('#segCompete').onclick = () => { if (!S.user) { openSignup(() => openComps(nul
 /* ---------- Judge ---------- */
 let judging = false, JR = {}, JHist = [];
 function seedAt() { return S.order ? SEED[S.order[S.jIdx % S.order.length]] : null; }
+function seedPair() { if (!S.order) return [null, null]; const n = S.order.length, a = SEED[S.order[S.jIdx % n]]; let k = 1, b = SEED[S.order[(S.jIdx + k) % n]]; while (b === a && k < n) { k++; b = SEED[S.order[(S.jIdx + k) % n]]; } return [a, b]; }
 const JICON = {"expr": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 14.5c1 1.2 2.1 1.8 3.5 1.8s2.5-.6 3.5-1.8\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/></svg>", "comp": "<svg viewBox=\"0 0 24 24\"><path d=\"M6 2v14a2 2 0 0 0 2 2h14\"/><path d=\"M18 22V8a2 2 0 0 0-2-2H2\"/></svg>", "light": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"/></svg>", "tech": "<svg viewBox=\"0 0 24 24\"><path d=\"M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3\"/><path d=\"M8 12h8\"/></svg>", "theme": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"5\"/><circle cx=\"12\" cy=\"12\" r=\"1.2\"/></svg>"};
 const HEART = '<svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.2-9.3C1.6 7.9 3.8 4.5 7.2 4.5c2 0 3.6 1.1 4.8 2.8 1.2-1.7 2.8-2.8 4.8-2.8 3.4 0 5.6 3.4 4.4 6.7-1.7 4.7-9.2 9.3-9.2 9.3z"/></svg>';
 const JC = [
@@ -3900,23 +3922,20 @@ const crowdAvg = p => Math.round(JC.reduce((a, c) => a + crowdOf(p, c), 0) / JC.
 function renderJudge() {
   const p = seedAt(); if (!p || !p.owner) { $('#judge').innerHTML = '<div class="gen"><div class="spin"></div>Loading photos…</div>'; return; }
   const left = CFG.BATTLE_EVERY - S.since, ds = dailyState(), combo = S.combo || 0;
-  $('#judge').innerHTML = `<div class="jcard" id="jcard"><img src="${p.src}" alt="${esc(p.title)} by @${esc(p.owner.h)}">
-    <span class="jtag">${S.photos.length ? (left <= 1 ? 'Battle after this one' : `${left} photos to a battle`) : 'Score a photo to battle'}</span>
-    <span class="jsample">@${esc(p.owner.h)}</span>
-    <div class="jchal"><span>Photo challenge</span><h3>${esc(CHAL[p.cat] || 'Golden Hour')}</h3></div></div>
+  const [pa, pb] = seedPair();
+  $('#judge').innerHTML = `<div class="tot-h"><span class="jtag2">${S.photos.length ? (left <= 1 ? 'Battle after this one' : `${left} picks to a battle`) : 'Score a photo to battle'}</span><h2>Which is better?</h2><p>${esc(CHAL[pa.cat] || 'Photo challenge')} · tap your pick</p></div>
+    <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
     <div class="jgbar">
       <div class="jstreak ${ds.doneToday ? 'done' : ''}"><span class="fl">🔥</span><span><b>${ds.streak ? `${ds.streak} day streak` : 'Start a streak'}</b><small>${ds.doneToday ? 'Done for today' : `Today ${Math.min(3, ds.D.n)} / 3`}</small></span></div>
-      <div class="jcombo"><span class="lb">Combo</span><span class="dots">${[...Array(10)].map((_, i) => `<i class="${i < combo ? 'on' : ''}"></i>`).join('')}</span><small>${10 - combo} to a lucky drop</small></div>
+      <div class="jcombo"><span class="lb">Combo</span><span class="dots">${[...Array(10)].map((_, i) => `<i class="${i < combo ? 'on' : ''}"></i>`).join('')}</span><small>${10 - combo} right in a row to a lucky drop</small></div>
     </div>
-    <h2 class="jq">How good is it?</h2>
-    <div class="jscore" role="group" aria-label="Your score from 1 to 10">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `<button data-n="${n}" aria-label="Score ${n}">${n}</button>`).join('')}</div>
-    <p class="jsub2">${ds.D.n < JUDGE_CAP ? `Tap a number. You earn <b>+${CFG.VOTE}</b> ${gemIcon()} per photo · <b>${JUDGE_CAP - ds.D.n}</b> full-reward judges left today` : `Daily bonus used. Judging now pays <b>+${JUDGE_LOW}</b> ${gemIcon()} until tomorrow.`}</p>
+    <p class="jsub2">${ds.D.n < JUDGE_CAP ? `Pick the one most people will. <b>+${CFG.VOTE}</b> ${gemIcon()} when you agree · <b>${JUDGE_CAP - ds.D.n}</b> full-reward judges left today` : `Daily bonus used. Judging now pays <b>+${JUDGE_LOW}</b> ${gemIcon()} until tomorrow.`}</p>
     <div class="jcap"><i style="width:${Math.min(100, ds.D.n / JUDGE_CAP * 100)}%"></i></div>
     ${ds.D.n >= JUDGE_CAP ? packOffer('cap') : ''}
     <div class="jres" id="jRes" aria-live="polite"></div>
     <button class="jbuy" id="jBuy">${gemIcon()}Buy more gems</button>
     <span class="hint static">Flick up to enhance your photos</span>`;
-  document.querySelectorAll('#judge .jscore button').forEach(b => b.onclick = () => vote(+b.dataset.n));
+  document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = () => vote(+b.dataset.i));
   $('#jBuy').onclick = () => openStore();
 }
 let nudgeFrom = null, nudgeT = null;
@@ -3929,22 +3948,24 @@ function maybeEnhanceNudge() {
   n.classList.add('on'); clearTimeout(nudgeT); nudgeT = setTimeout(() => n.classList.remove('on'), 5000);
   n.onclick = () => { n.classList.remove('on'); go('studio'); };
 }
-async function vote(score) {
+async function vote(pick) {
   if (judging) return; judging = true;
-  const p = seedAt(), crowd = crowdAvg(p), diff = Math.abs(score - crowd);
-  document.querySelectorAll('#judge .jscore button').forEach(b => { b.disabled = true; b.classList.toggle('mine', +b.dataset.n === score); b.classList.toggle('crowd', +b.dataset.n === Math.round(crowd)); });
-  const ds0 = dailyState(), earn = ds0.D.n < JUDGE_CAP ? CFG.VOTE : JUDGE_LOW, capNow = ds0.D.n === JUDGE_CAP - 1;
+  const pair = seedPair(), p = pair[pick], ca = crowdAvg(pair[0]), cb = crowdAvg(pair[1]);
+  const pctA = Math.max(8, Math.min(92, Math.round(50 + (ca - cb) * 32 + (((S.jIdx * 37) % 23) - 11)))), pct = [pctA, 100 - pctA];
+  const agree = pct[pick] >= 50, mine = pct[pick];
+  document.querySelectorAll('#judge .tot-c').forEach((b, i) => { b.disabled = true; b.classList.add(i === pick ? 'mine' : 'other'); b.classList.toggle('win', pct[i] >= 50); b.querySelector('.tot-r').innerHTML = `<b>${pct[i]}%</b><small>picked this</small>`; });
+  const ds0 = dailyState(), earn = !agree ? 0 : ds0.D.n < JUDGE_CAP ? CFG.VOTE : JUDGE_LOW, capNow = ds0.D.n === JUDGE_CAP - 1;
   if (nudgeFrom == null) nudgeFrom = S.gems;
-  S.votes++; S.since++; S.jIdx++; S.gems += earn;
-  S.combo = (S.combo || 0) + 1; const comboHit = S.combo >= 10; if (comboHit) S.combo = 0;
+  S.votes++; S.since++; S.jIdx += 2; S.gems += earn;
+  S.combo = agree ? (S.combo || 0) + 1 : 0; const comboHit = S.combo >= 10; if (comboHit) S.combo = 0;
   const ds = dailyState(); ds.D.n++;
   let streakHit = 0;
   if (ds.D.n >= 3 && ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; streakHit = ds.D.streak; S.gems += Math.min(100, 10 * streakHit); }
   save();
   document.querySelectorAll('#judge .jcombo i').forEach((d, i) => d.classList.toggle('on', comboHit || i < S.combo));
-  $('#jRes').innerHTML = `<div class="jr ${diff <= 1 ? 'hit' : ''}"><span>Crowd says <b>${crowd.toFixed(1)}</b> · you said <b>${score}</b></span><em>${diff <= 0.5 ? 'Spot on!' : diff <= 1 ? 'So close!' : diff <= 2.5 ? 'Not far off' : 'Bold call!'}</em></div><div class="jearn">+${earn} ${gemIcon()}</div>`;
-  gemExplosion(earn, { small: true, from: $('#jRes') });
-  await sleep(1700);
+  $('#jRes').innerHTML = `<div class="jr ${agree ? 'hit' : ''}"><span>${agree ? `You picked with <b>${mine}%</b> of judges` : `Only <b>${mine}%</b> agreed with you`}</span><em>${mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : mine >= 35 ? 'Close call' : 'Missed it'}</em></div><div class="jearn ${earn ? '' : 'none'}">${earn ? `+${earn} ${gemIcon()}` : 'No gems this time · combo reset'}</div>`;
+  if (earn) gemExplosion(earn, { small: true, from: $('#jRes') });
+  await sleep(1900);
   if (S.photos.length && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); return; }
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
@@ -3968,7 +3989,7 @@ function luckyDrop() {
   c.innerHTML = `<div class="crbox lucky" role="dialog" aria-modal="true" aria-labelledby="crT">
     <div class="cr-rays" aria-hidden="true"></div>${[...Array(14)].map((_, i) => `<i class="cr-cf" style="left:${(i * 53) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('')}
     <div class="lk-gift" aria-hidden="true">🎁</div>
-    <h2 id="crT">Lucky drop!</h2><p class="lk-sub">You judged 10 in a row.</p>
+    <h2 id="crT">Lucky drop!</h2><p class="lk-sub">10 right picks in a row!</p>
     <p>Take <b>${sure} gems</b> now, or risk them on a mystery box. It could hold 0, 15, 60 or <b>120</b> gems.</p>
     <div id="lkArea"><button class="bt-cta" id="lkTake">Take ${sure} gems</button><button class="lk-risk" id="lkRisk">Risk it: open a box</button></div></div>`;
   c.classList.add('on', 'cr');
