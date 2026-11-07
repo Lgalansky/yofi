@@ -1920,6 +1920,10 @@ button.bar:hover span:first-child{color:var(--pink)}
 .ngx2 small{font-size:.9rem;opacity:.9}
 .ngx2.judge{background:linear-gradient(135deg,#21C98A,#0E9A86);box-shadow:0 0 0 1.5px rgba(120,240,190,.6),0 12px 28px -12px rgba(30,200,140,.8)}
 .ngx2.buy{background:linear-gradient(135deg,#2BB8F0,#5B6CFF);box-shadow:0 0 0 1.5px rgba(140,220,255,.6),0 12px 28px -12px rgba(60,160,255,.8)}
+.ngx2.wide{grid-template-columns:auto auto 1fr;grid-auto-flow:column;justify-items:start;align-items:center;gap:10px;width:100%;margin-top:14px;padding:12px 18px;text-align:left}
+.ngx2.wide .ic svg{width:30px;height:30px}
+.ngx2.wide small{justify-self:end}
+#judge .jcap{margin-top:6px}
 </style>
 </head>
 <body>
@@ -2763,7 +2767,7 @@ function enIdle() {
   const { p, cat } = EN, cost = fixCost(p), short = S.gems < cost;
   $('#enArea').innerHTML = `<div class="hero-photo" style="max-height:44vh;margin-bottom:12px"><img src="${p.src}" alt="Your photo"></div>
     ${cat ? `<button class="btn block fixbtn" id="genBtn"><span>${catBy(cat).verb}</span><span class="gpill">${gemIcon()}${cost}</span></button>` : '<p class="muted" style="text-align:center;margin:0">Pick a fix above.</p>'}
-    ${short ? `<p class="muted" style="text-align:center;margin:12px 0 4px">You have ${S.gems} gems. This fix costs ${cost}.</p>${packOffer(p.s.total >= 78 && p.s.total < 80 ? 'close' : 'fix')}` : ''}`;
+    ${short ? `<p class="muted" style="text-align:center;margin:12px 0 4px">You have ${S.gems} gems. This fix costs ${cost}.</p>${packOffer()}` : ''}`;
   if ($('#genBtn')) $('#genBtn').onclick = () => generate(1);
 }
 function bindCats() {
@@ -2986,9 +2990,9 @@ function showCoach() {
 }
 
 const PACKS = [
-  { t: 'Starter', sub: 'Great way to get started.', cash: 10, bonus: 1, gems: 25, free: 25, cls: '' },
-  { t: 'Plus', sub: 'More photos. More chances.', cash: 25, bonus: 3, gems: 50, free: 40, cls: 'plus' },
-  { t: 'Pro', sub: 'Best value. Bigger wins.', cash: 50, bonus: 7, gems: 100, free: 60, cls: 'pro' }
+  { t: 'Starter', sub: 'Great way to get started.', cash: 10, bonus: 1, gems: 150, free: 25, cls: '' },
+  { t: 'Plus', sub: 'More photos. More chances.', cash: 25, bonus: 3, gems: 400, free: 40, cls: 'plus' },
+  { t: 'Pro', sub: 'Best value. Bigger wins.', cash: 50, bonus: 7, gems: 1000, free: 60, cls: 'pro' }
 ];
 let storeTimer = null;
 function openStore(reason, onBuy) {
@@ -3936,14 +3940,12 @@ function renderJudge() {
       <div class="jstreak ${ds.doneToday ? 'done' : ''}"><span class="fl">🔥</span><span><b>${ds.streak ? `${ds.streak} day streak` : 'Start a streak'}</b><small>${ds.doneToday ? 'Done for today' : `Today ${Math.min(3, ds.D.n)} / 3`}</small></span></div>
       <div class="jcombo"><span class="lb">Combo</span><span class="dots">${[...Array(10)].map((_, i) => `<i class="${i < combo ? 'on' : ''}"></i>`).join('')}</span><small>${10 - combo} right in a row to a lucky drop</small></div>
     </div>
-    <p class="jsub2">${ds.D.n < JUDGE_CAP ? `Pick the one most people will. <b>+${CFG.VOTE}</b> ${gemIcon()} when you agree · <b>${JUDGE_CAP - ds.D.n}</b> full-reward judges left today` : `Daily bonus used. Judging now pays <b>+${JUDGE_LOW}</b> ${gemIcon()} until tomorrow.`}</p>
+    <p class="jsub2">${ds.D.n < JUDGE_CAP ? `<b>+${CFG.VOTE}</b> ${gemIcon()} when you agree · <b>${JUDGE_CAP - ds.D.n}</b> left today` : `Daily bonus used · <b>+${JUDGE_LOW}</b> ${gemIcon()} per pick until tomorrow`}</p>
     <div class="jcap"><i style="width:${Math.min(100, ds.D.n / JUDGE_CAP * 100)}%"></i></div>
-    ${ds.D.n >= JUDGE_CAP ? packOffer('cap') : ''}
     <div class="jres" id="jRes" aria-live="polite"></div>
-    <button class="jbuy" id="jBuy">${gemIcon()}Buy more gems</button>
+    ${packOffer()}
     <span class="hint static">Flick up to enhance your photos</span>`;
   document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = () => vote(+b.dataset.i));
-  $('#jBuy').onclick = () => openStore();
 }
 let nudgeFrom = null, nudgeT = null;
 function maybeEnhanceNudge() {
@@ -3981,9 +3983,8 @@ async function vote(pick) {
   if (capNow) { capOffer(); return; }
   maybeEnhanceNudge();
 }
-function packOffer(why) {
-  const k = PACKS[0], t = why === 'cap' ? 'Keep earning at full speed' : why === 'close' ? 'You’re 1 fix from competing' : 'Short on gems?';
-  return `<button class="pkoffer" data-get="store"><span class="pi">${gemIcon('')}</span><span class="pt"><b>${t}</b><small>${k.t} pack: ${k.gems} gems + $${k.cash} cash</small></span><span class="pp">$${k.cash}</span></button>`;
+function packOffer() {
+  return `<button class="ngx2 buy wide" data-get="store"><span class="ic">${gemIcon('')}</span><b>Buy gems</b><small>Gem packs</small></button>`;
 }
 function capOffer() {
   const p = cur();
