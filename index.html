@@ -1535,6 +1535,22 @@ button.bar:hover span:first-child{color:var(--pink)}
 .bar{grid-template-columns:92px 1fr minmax(30px,auto)}
 .bar em{white-space:nowrap}
 .bar em .d{margin-left:4px}
+/* Battle: celebration look */
+.battle{color:#fff;background:radial-gradient(90% 45% at 50% 28%,#5A1E8C,#2A0C4E 65%,#1C0835);box-shadow:inset 0 0 0 2px #FFC93C,inset 0 0 40px rgba(255,190,60,.35)}
+.bt-fx{position:sticky;top:0;height:0;overflow:visible;z-index:0;pointer-events:none}
+.bt-fx .cr-rays{top:320px;width:900px;height:900px;margin:-450px 0 0 -450px}
+.bt-fx .cr-cf{top:-14px}
+.bt-fx .cr-cf{animation-name:btfall;animation-duration:3.4s}
+@keyframes btfall{to{transform:translateY(900px) rotate(620deg);opacity:0}}
+.bt-in{position:relative;z-index:1}
+.bt-h{text-transform:uppercase;font:400 clamp(1.5rem,7.4vw,2.2rem)/1.05 "Archivo Black","Arial Black",sans-serif;background:linear-gradient(180deg,#FFF3A8,#FFC93C 55%,#E79A00);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 rgba(90,10,60,.6))}
+.bt-rule{background:rgba(255,255,255,.1);color:#FFE7A0;box-shadow:inset 0 0 0 1.5px rgba(255,201,60,.45)}
+.bt-rule::before,.bt-rule::after{background:#FFC93C}
+.bt-note{color:#EADBFF}
+.bt-no{color:#EADBFF}
+.bt-vs{color:#FFC93C;text-shadow:0 0 0 #2A0C4E,0 2px 0 #2A0C4E,0 -2px 0 #2A0C4E,2px 0 0 #2A0C4E,-2px 0 0 #2A0C4E,0 0 18px rgba(255,190,60,.8);animation:btvs 1.6s ease-in-out infinite}
+@keyframes btvs{50%{transform:translate(-50%,-50%) scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.bt-fx{display:none}.bt-vs{animation:none}}
 </style>
 </head>
 <body>
@@ -2234,6 +2250,10 @@ function showResult(p, o = {}) {
   if (S.user && hitGoal) setTimeout(() => showCompReady(p, gc), o.win ? 2600 : 900);
   else if (S.user && o.win && o.prevTotal == null) setTimeout(() => { if ($('#flow').classList.contains('on') && !$('#coach').classList.contains('on')) goalRoute(p); }, 3000);
   else if (S.user && hit80) setTimeout(() => showCompReady(p), o.win ? 2600 : 900);
+  else if (S.user && o.prev) {
+    const big = C.map(c => ({ c, g: p.s[c.k] - o.prev[c.k] })).sort((a, b) => b.g - a.g)[0];
+    if (big && big.g >= 10) setTimeout(() => { if (!$('#coach').classList.contains('on')) celebrate({ src: p.src, score: tot, title: `+${big.g} ${big.c.name}!`, text: `Huge fix. ${big.c.name} jumped from ${o.prev[big.c.k]} to <b>${p.s[big.c.k]}</b>. Your photo now scores ${tot}.`, cta: 'Keep improving' }); }, 1400);
+  }
   const b = id => body.querySelector(id);
   body.querySelectorAll('[data-cat]').forEach(x => x.onclick = () => askCategory(p, () => showResult(p), true));
   if (b('#doFix')) b('#doFix').onclick = () => startEnhance(p, low);
@@ -2425,6 +2445,12 @@ function openSignup(then, opts = {}) {
     const firstTime = !S.onboarded; S.onboarded = true; save();
     $('#avatar').textContent = h[0].toUpperCase();
     sheetLocked = false; closeSheet();
+    const p0 = cur();
+    if (firstTime && p0) {
+      const cont = () => { gemExplosion(CFG.SIGNUP, { label: `Welcome, @${h}` }); if (then) { closeFlow(); then(); } else setTimeout(() => askAlerts(() => goalRoute(cur())), 1600); };
+      setTimeout(() => celebrate({ src: p0.src, score: p0.s.total, title: `Welcome, @${esc(h)}!`, text: `Your photo scored ${p0.s.total}. Here are <b>${CFG.SIGNUP} free gems</b> to make it even better.`, cta: 'Collect my gems', onCta: cont, onLater: cont }), 380);
+      return;
+    }
     setTimeout(() => gemExplosion(CFG.SIGNUP, { label: `Welcome, @${h}` }), 380);
     if (then) { closeFlow(); then(); return; }
     if (firstTime) setTimeout(() => askAlerts(() => goalRoute(cur())), 1600);
@@ -2490,7 +2516,7 @@ const PACKS = [
   { t: 'Pro', sub: 'Best value. Bigger wins.', cash: 50, bonus: 7, gems: 100, free: 60, cls: 'pro' }
 ];
 let storeTimer = null;
-function openStore(reason) {
+function openStore(reason, onBuy) {
   if (!S.offerEnd || S.offerEnd < Date.now()) { S.offerEnd = Date.now() + (3 * 3600 + 38 * 60 + 27) * 1000; save(); }
   openSheet(`<div class="sbal" aria-label="Your balances"><span class="c">${CASH_ICON}<span><small>Cash</small><b>$${(S.cash || 0).toFixed(2)}</b></span></span><span class="bn">${BONUS_ICON}<span><small>Bonus</small><b>$${(S.bonus || 0).toFixed(2)}</b></span></span><span class="g">${gemIcon('')}<span><small>Gems</small><b>${S.gems.toLocaleString()}</b></span></span></div>
     <div class="vphead"><h2>Vibe Packs<i>.</i></h2><div class="lto"><em>Limited time offer</em><span><b id="oH">00</b><small>HRS</small></span><span><b id="oM">00</b><small>MIN</small></span><span><b id="oS">00</b><small>SEC</small></span></div></div>
@@ -2516,6 +2542,7 @@ function openStore(reason) {
     const k = PACKS[+b.dataset.i]; closeSheet();
     S.cash = (S.cash || 0) + k.cash; S.bonus = (S.bonus || 0) + k.bonus; save(); paintWallet();
     setTimeout(() => addGems(k.gems, `${k.t} pack added: $${k.cash} cash, +$${k.bonus} bonus`), 320);
+    if (onBuy) setTimeout(onBuy, 2300);
   });
   $('#earnTop').onclick = () => $('#earnBtn').click();
   $('#earnBtn').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) { if (!S.user) { openSignup(); return; } closeFlow(); } go('judge'); };
@@ -2769,7 +2796,7 @@ function openResult(e) {
       ${stats}
       <button class="bt-cta" id="rsNext">Enter the next one</button><button class="bt-no" id="rsStudio">Improve this photo in Enhance</button></div>`);
   $('#lv').scrollTop = 0; paintWallet(); paintGems(false);
-  if (pz && pz.cur === 'gems') setTimeout(() => gemExplosion(pz.amt, { label: `${c.t} prize` }), 400);
+  if (pz) setTimeout(() => celebrate({ src: entrySrc(e), score: e.score, title: `You placed ${ord(e.fin)}!`, text: `You won <b>${fmtMoney(pz.amt, pz.cur)}</b> in ${esc(c.t)}, out of ${e.n.toLocaleString()} entries. It’s in your ${pz.cur === 'cash' ? 'Cash' : pz.cur === 'bonus' ? 'Bonus Cash' : 'Gems'} balance.`, cta: 'Collect my prize', onCta: () => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize` }); }, onLater: () => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize` }); } }), 500);
   const back = () => { lvClose(); if ($('#flow').classList.contains('cxmode')) openComps(); };
   if ($('#rsBack')) $('#rsBack').onclick = back;
   $('#rsNext').onclick = () => { lvClose(); openComps(); };
@@ -2850,7 +2877,7 @@ function cxEnter(c) {
   $('#enGo').onclick = () => { closeSheet(); cxPay(c, ok.find(x => x.id === sel)); };
   $('#enNew').onclick = () => { closeSheet(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
 }
-function showNeedGems(cost, what, back, after) {
+function showNeedGems(cost, what, back, after, retry) {
   const have = S.gems, short = Math.max(0, cost - have), el = $('#ceg');
   el.innerHTML = `<div class="ceg-in ngx">
     <div class="ceg-top"><span class="wm">Yofi</span><button class="ceg-x" id="ngX" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -2866,14 +2893,14 @@ function showNeedGems(cost, what, back, after) {
   const close = () => { el.classList.remove('on', 'under'); el.style.top = ''; };
   $('#ngX').onclick = close; $('#ngBack').onclick = close;
   $('#ngJudge').onclick = () => { close(); closeFlow(); go('judge'); toast(after); };
-  $('#ngBuy').onclick = () => { close(); openStore(what); };
+  $('#ngBuy').onclick = () => { close(); openStore(what, retry && (() => S.gems >= cost && retry())); };
 }
 function needFixGems() {
   const n = Math.ceil(Math.max(0, CFG.COST - S.gems) / (CFG.VOTE + 2 * CFG.CLOSE));
   showNeedGems(CFG.COST, `Enhancing your photo costs ${CFG.COST} gems.`, 'photo', `Judge about ${n} photo${n === 1 ? '' : 's'}, then head back to Enhance.`);
 }
 function needGems(c) {
-  showNeedGems(c.fee, `Entering ${esc(c.t)} costs ${c.fee} gems.`, 'comps', `Earn ${c.fee - S.gems} gems, then come back to enter ${c.t}.`);
+  showNeedGems(c.fee, `Entering ${esc(c.t)} costs ${c.fee} gems.`, 'comps', `Earn ${c.fee - S.gems} gems, then come back to enter ${c.t}.`, () => cxEnter(c));
 }
 function cxPay(c, q) {
   if (!S.user) { openSignup(() => cxPay(c, q)); return; }
@@ -3370,7 +3397,7 @@ function openBattle() {
   const cat = pcatName(me.cat);
   const bt = $('#battle');
   bt.style.top = cxTabTop() + 'px';
-  bt.innerHTML = `<div class="bt-in">
+  bt.innerHTML = `<div class="bt-fx" aria-hidden="true"><div class="cr-rays"></div>${[...Array(22)].map((_, i) => `<i class="cr-cf" style="left:${(i * 47) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .17).toFixed(2)}s"></i>`).join('')}</div><div class="bt-in">
     <img class="bt-logo" src="${BATTLE_LOGO}" alt="Battle">
     <h2 class="bt-h">@${esc(o.h)} challenges you</h2>
     <div class="bt-rib">${gi(me.cat)}<span>${esc(cat)} battle</span>${gi(me.cat)}</div>
@@ -3399,14 +3426,14 @@ function openBattle() {
     await new Promise(res => { const step = now => { const k = (now - t0) / 1800; if (k < 1) { el.textContent = Math.round(rnd(55, 97)); requestAnimationFrame(step); } else res(); }; requestAnimationFrame(step); });
     el.classList.remove('spin'); el.textContent = their;
     const won = me.s.total > their || (me.s.total === their && Math.random() < 0.5);
-    if (won) { S.gems += win; S.vault[o.h] = vault - win; S.bw++; } else { S.gems -= lose; S.vault[o.h] = vault + lose; S.bl++; }
+    if (won) { S.gems += win; S.vault[o.h] = vault - win; S.bw++; S.streak = (S.streak || 0) + 1; } else { S.gems -= lose; S.vault[o.h] = vault + lose; S.bl++; S.streak = 0; }
     save();
     bt.querySelector(won ? '.bt-card.me' : '.bt-card.them').classList.add('won');
     $('#bArea').innerHTML = `<div class="bt-res ${won ? 'win' : 'lose'}"><span class="tag">${won ? 'You won' : `@${esc(o.h)} won`}</span>
         <b>${won ? '+' : '−'}${(won ? win : lose).toLocaleString()}${gemIcon('')}</b>
         <p>${me.s.total === their ? 'Tied scores. The crowd broke the tie.' : won ? `Your ${me.s.total} beat their ${their}. Half their gems are yours.` : `Their ${their} beat your ${me.s.total}. A stronger photo wins more battles.`}</p></div>
       <button class="bt-cta" id="bDone">${won ? 'Keep judging' : 'Improve my photo'}</button>`;
-    if (won) setTimeout(() => celebrate({ src: me.src, score: me.s.total, title: 'You won the battle!', text: `${me.s.total === their ? 'Tied scores and the crowd picked yours.' : `Your ${me.s.total} beat @${esc(o.h)}’s ${their}.`} <b>+${win.toLocaleString()} gems</b> are yours.`, cta: 'Collect my gems', onCta: () => gemExplosion(win, { label: `Taken from @${o.h}` }), onLater: () => gemExplosion(win, { label: `Taken from @${o.h}` }) }), 700); else paintGems();
+    if (won) setTimeout(() => celebrate({ src: me.src, score: me.s.total, title: S.streak >= 3 ? `${S.streak} wins in a row!` : 'You won the battle!', text: `${S.streak >= 3 ? 'You’re on fire. ' : ''}${me.s.total === their ? 'Tied scores and the crowd picked yours.' : `Your ${me.s.total} beat @${esc(o.h)}’s ${their}.`} <b>+${win.toLocaleString()} gems</b> are yours.`, cta: 'Collect my gems', onCta: () => gemExplosion(win, { label: `Taken from @${o.h}` }), onLater: () => gemExplosion(win, { label: `Taken from @${o.h}` }) }), 700); else paintGems();
     $('#bDone').onclick = () => { close(); if (!won) go('studio'); };
   };
 }
