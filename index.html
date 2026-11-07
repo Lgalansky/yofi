@@ -3237,7 +3237,7 @@ function renderJudge() {
   const left = CFG.BATTLE_EVERY - S.since;
   JR = {}; JHist = []; JC.forEach(c => { JR[c.k] = 50; });
   $('#judge').innerHTML = `<div class="jcard" id="jcard"><img src="${p.src}" alt="${esc(p.title)} by @${esc(p.owner.h)}">
-    <span class="jtag">${S.photos.length ? (left <= 1 ? 'Challenger next photo' : `Battle in ${left} photos`) : 'Score a photo to battle'}</span>
+    <span class="jtag">${S.photos.length ? (left <= 1 ? '1 photo left to judge' : `${left} photos left to judge`) : 'Score a photo to battle'}</span>
     <span class="jsample">@${esc(p.owner.h)}</span>
     <div class="jchal"><span>Photo challenge</span><h3>${esc(CHAL[p.cat] || 'Golden Hour')}</h3></div></div>
     <div class="jhead"><h2>Feel it? Tap it.</h2><button class="undo" id="jUndo" disabled>↶ Undo</button></div>
