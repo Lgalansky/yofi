@@ -2250,6 +2250,64 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .fixshort b{color:#fff}
 .toast{top:auto!important;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px)!important;width:max-content;max-width:calc(100% - 32px);text-align:center;border-radius:18px!important}
 .toast.on{transform:translate(-50%,0)!important}
+/* Gallery: tabs that read clearly */
+#gallery .gtabs{margin:10px 14px 12px;padding:5px;border-radius:18px;background:#211339;box-shadow:inset 0 0 0 1.5px #4A3275}
+#gallery .gtabs button{display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:14px;font-size:1.02rem;color:#fff;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.18)}
+#gallery .gtabs button svg{width:20px;height:20px}
+#gallery .gtabs button[aria-pressed="true"]{background:linear-gradient(95deg,#FF3FA4,#9B3CFF);box-shadow:0 8px 18px -8px rgba(155,60,255,.9)}
+/* My Gallery: same look as a visited gallery */
+.mg{padding:2px 14px 28px;background:#140A26;color:#fff;min-height:100%}
+.mg .vis-hero{height:220px}
+.mg-empty{display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#3A1E64,#1B0F33)}
+.mg-eic svg{width:72px;height:72px;margin-top:-40px;opacity:.9}
+.mg-add{margin:14px 0 2px}
+.mg .vis-room{margin-top:22px}
+.mg-rs{display:flex;align-items:center;gap:6px;margin:-4px 0 10px;font-size:.85rem;color:#A796C6}
+.mg-rs svg{width:14px;height:14px}
+.mg-slot .fr{background:linear-gradient(135deg,#5A3D8C,#2A1748)!important;box-shadow:none!important}
+.mg-in{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:100%;height:100%;border-radius:2px;border:2px dashed rgba(255,255,255,.28);background:#1B0F33;color:#D9C8FF}
+.mg-in i{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;font-style:normal;font-size:1.8rem;font-weight:800;color:#fff;background:linear-gradient(135deg,#FF3FA4,#9B3CFF);box-shadow:0 6px 16px rgba(155,60,255,.5)}
+.mg-in small{font-weight:800;font-size:.85rem}
+.mg-in svg{width:26px;height:26px;opacity:.6}
+.mg .locked .vis-ph{opacity:.55}
+.mg .mg-min{background:#33204F!important;color:#D9C8FF!important}
+.mg .vis-ph.fresh .fr{animation:mgPop .7s cubic-bezier(.3,1.4,.5,1);box-shadow:0 0 0 3px #2EE59D,0 0 26px rgba(46,229,157,.6)}
+@keyframes mgPop{0%{transform:scale(.7);opacity:0}100%{transform:none;opacity:1}}
+.mg-note{margin:22px 2px 0;font-size:.85rem;line-height:1.45;color:#A796C6}
+/* Leaderboard podium: whole card is a button */
+.pod[data-v]{cursor:pointer;transition:transform .15s}
+.pod[data-v]:active{transform:scale(.97)}
+.pod .vbtn{display:block}
+/* Swipe pills: a clearer, repeating hint */
+.swp .swp-b .ar{animation:none!important}
+.swp.r .swp-b:not(.nudge){animation:swpHintR 4.5s ease-in-out infinite}
+.swp.l .swp-b:not(.nudge){animation:swpHintL 4.5s ease-in-out infinite}
+.swp.r .swp-b:not(.nudge) .ar{animation:swpArR 4.5s ease-in-out infinite!important}
+.swp.l .swp-b:not(.nudge) .ar{animation:swpArL 4.5s ease-in-out infinite!important}
+@keyframes swpHintR{0%,62%,100%{transform:none;box-shadow:inset 0 0 0 1.5px #5A3D8C}70%{transform:translateX(10px);box-shadow:inset 0 0 0 2px #FF3FA4,0 0 18px rgba(255,63,164,.55)}78%{transform:translateX(-3px)}86%{transform:translateX(5px)}94%{transform:none}}
+@keyframes swpHintL{0%,62%,100%{transform:none;box-shadow:inset 0 0 0 1.5px #5A3D8C}70%{transform:translateX(-10px);box-shadow:inset 0 0 0 2px #FF3FA4,0 0 18px rgba(255,63,164,.55)}78%{transform:translateX(3px)}86%{transform:translateX(-5px)}94%{transform:none}}
+@keyframes swpArR{0%,62%,100%{transform:none}70%,86%{transform:translateX(6px)}}
+@keyframes swpArL{0%,62%,100%{transform:none}70%,86%{transform:translateX(-6px)}}
+@media (prefers-reduced-motion:reduce){.swp .swp-b,.swp .swp-b .ar{animation:none!important}}
+.swp-b.nudge,.swp-b.nudge .ar{animation-delay:0s!important}
+/* Judge: Swipe to Enhance stays pinned at the top */
+#judge .swp{position:sticky;top:0;z-index:6;margin:0 -14px 8px;padding:8px 14px 8px;background:#140A26}
+/* Getting ready photos to Compete */
+#segCompete{position:relative}
+#segCompete .rdot{position:absolute;top:-6px;right:2px;padding:2px 7px;border-radius:999px;font-style:normal;font-weight:800;font-size:.68rem;line-height:1.3;white-space:nowrap;color:#fff;background:linear-gradient(90deg,#FF3FA4,#9B3CFF);box-shadow:0 0 0 2px #fff,0 4px 10px rgba(155,60,255,.45);animation:rdotPulse 2.4s ease-in-out infinite}
+@keyframes rdotPulse{50%{transform:scale(1.12)}}
+.rdybar{display:flex;align-items:center;gap:12px;width:100%;margin:12px 0 4px;padding:11px 14px;border-radius:18px;text-align:left;color:#fff;background:linear-gradient(135deg,#3A1764,#251046);box-shadow:inset 0 0 0 1.5px #FFC93C,0 0 20px rgba(255,201,60,.18)}
+.rdybar .ic svg{width:30px;height:30px;display:block}
+.rdybar .tx{flex:1;display:grid;gap:1px}
+.rdybar b{font-size:1rem}
+.rdybar small{font-size:.8rem;color:#D9C8FF}
+.rdybar .go{padding:8px 14px;border-radius:999px;font-weight:800;color:#2A1600;background:linear-gradient(180deg,#FFE27A,#FFC93C)}
+#studio.tallp>.rdybar{grid-column:1/-1;grid-row:3}
+#studio.tallp>.scorebox>.bars{grid-row:4!important}
+.qbadge.tap{cursor:pointer;pointer-events:auto}
+.rdygo{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 4px;color:#2A1600!important;background:linear-gradient(180deg,#FFE27A,#FFC93C)!important}
+.rdygo svg{width:22px;height:22px}
+@media (prefers-reduced-motion:reduce){#segCompete .rdot{animation:none}}
 </style>
 </head>
 <body>
@@ -2289,7 +2347,7 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
   <section class="steps">
     <ol>
       <li><b><span class="n">1</span>Score it free</b><span class="muted">Upload any photo. It’s scored out of 100 in seconds, and your first score wins you gems.</span></li>
-      <li><b><span class="n">2</span>Get it to 75, then 80</b><span class="muted">Spend gems on fixes, three versions each time. At 75 your photo can hang in the gallery. At 80 it can enter competitions.</span></li>
+      <li><b><span class="n">2</span>Get it to 75, then 80</b><span class="muted">Spend gems on fixes, three versions each time. At 75 your photo can go in your gallery. At 80 it can enter competitions.</span></li>
       <li><b><span class="n">3</span>Enter and get judged</b><span class="muted">Real people score every entry category by category. The top photos split the prize pool.</span></li>
       <li><b><span class="n">4</span>Earn while you wait</b><span class="muted">Judge other people’s photos to earn gems, and battle challengers to take theirs.</span></li>
     </ol>
@@ -3071,6 +3129,7 @@ function showResult(p, o = {}) {
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
   else html += `<div class="opp"><h3>Biggest opportunity: ${lc.name}</h3>
     <button class="btn block fixbtn nocost" id="doFix"><span>${lc.verb}</span></button></div>`;
+  if (S.user && stage === 2 && !photoLock(p)) html += `<button class="btn block rdygo" id="rsComp">${TROPHY_S}Go to competitions</button>`;
   if (S.user) html += `<div style="text-align:center"><button class="link" id="doneBtn">Done</button></div>`;
   else if (o.delta != null) html += `<div style="text-align:center"><button class="link" id="saveNow">Save my photo and continue</button></div>`;
   openFlow(html, true);
@@ -3091,6 +3150,7 @@ function showResult(p, o = {}) {
   if (b('#doFix')) b('#doFix').onclick = () => startEnhance(p, low);
   body.querySelectorAll('[data-fix]').forEach(x => x.onclick = () => startEnhance(p, x.dataset.fix));
   if (b('#doneBtn')) b('#doneBtn').onclick = () => closeFlow();
+  if (b('#rsComp')) b('#rsComp').onclick = () => { closeFlow(); openComps(p); };
   if (b('#toComps')) b('#toComps').onclick = () => { if (!S.user) { openSignup(() => openComps(p)); return; } closeFlow(); openComps(p); };
   if (b('#toGal')) b('#toGal').onclick = () => { if (!S.user) { openSignup(() => hangPhoto(p)); return; } closeFlow(); hangPhoto(p); };
   if (b('#saveNow')) b('#saveNow').onclick = () => openSignup();
@@ -3191,7 +3251,16 @@ function fitPhotos(root) {
     if (im.complete) shape(); else im.addEventListener('load', shape, { once: true });
   });
 }
-new MutationObserver(() => fitPhotos()).observe(document.getElementById('app'), { childList: true, subtree: true });
+function paintReady() {
+  const b = document.getElementById('segCompete'); if (!b) return;
+  const n = S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)).length : 0;
+  let d = b.querySelector('.rdot');
+  if (!n) { if (d) d.remove(); return; }
+  if (!d) { d = document.createElement('i'); d.className = 'rdot'; b.appendChild(d); }
+  const t = `${n} ready`; if (d.textContent !== t) { d.textContent = t; b.setAttribute('aria-label', `Compete, ${n} photo${n === 1 ? '' : 's'} ready to enter`); }
+}
+function syncSwp() { const d = `-${((performance.now() % 4500) / 1000).toFixed(2)}s`; document.querySelectorAll('.swp .swp-b:not([data-sw]), .swp .swp-b:not([data-sw]) .ar').forEach(el => { el.style.animationDelay = d; el.dataset.sw = '1'; }); }
+new MutationObserver(() => { fitPhotos(); syncSwp(); paintReady(); }).observe(document.getElementById('app'), { childList: true, subtree: true });
 function startEnhance(p, cat) {
   const lk = photoLock(p); if (lk) { lockToast(lk); return; }
   if (isMaxed(p, cat)) { const o = lowestOpen(p); if (!o) { toast('Every category is at its best on this photo.'); return; } cat = o; }
@@ -3345,7 +3414,7 @@ function showCompReady(p, goal) {
     <h2 id="crT">Ready to compete!</h2>
     <p>Your photo scored <b>${p.s.total}</b>. That’s enough to enter ${goal ? `the <b>${esc(goal.t)}</b> photo competition. 1st prize: <b class="cr-prz">${prizeWords(goal)}</b>` : `photo competitions${first ? `, like <b>${esc(first.t)}</b> with <b class="cr-prz">${prizeWords(first)}</b> for 1st place` : ''}`}.</p>
     <button class="bt-cta" id="crGo">Go to competitions</button>
-    <button class="bt-no" id="crLater">Keep improving</button></div>`;
+    <button class="bt-no" id="crLater">Improve first, enter later</button></div>`;
   c.classList.add('on', 'cr');
   const close = () => c.classList.remove('on', 'cr');
   $('#crGo').onclick = () => { close(); const go2 = () => { closeFlow(); openComps(p); }; if (!S.user) { openSignup(go2); return; } go2(); };
@@ -3822,7 +3891,7 @@ function cxPay(c, q) {
   const e = makeEntry(c, q); S.entries.push(e); S.entered[c.id] = e.id; save(); paintWallet(); paintGems(false);
   const y = $('#flowBody').scrollTop; openComps(); $('#flowBody').scrollTop = y;
   const hung = Object.values(S.frames || {}).includes(q.id), spot = !hung && frameSpot(q);
-  if (spot) celebrate({ src: q.src, score: q.s.total, title: `You’re in ${esc(c.t)}!`, text: `Your ${q.s.total} photo is locked in. Results in <b>${fmtLeft(Math.max(0, e.end - Date.now()))}</b>. Watch your rank climb live, and hang it in your gallery from there.`, cta: 'Watch it live', onCta: () => openLive(e), later: 'Back to competitions' });
+  if (spot) celebrate({ src: q.src, score: q.s.total, title: `You’re in ${esc(c.t)}!`, text: `Your ${q.s.total} photo is locked in. Results in <b>${fmtLeft(Math.max(0, e.end - Date.now()))}</b>. Watch your rank climb live, and add it to your gallery from there.`, cta: 'Watch it live', onCta: () => openLive(e), later: 'Back to competitions' });
   else celebrate({ src: q.src, score: q.s.total, title: `You’re in ${esc(c.t)}!`, text: `Your ${q.s.total} photo is locked in. Results in <b>${fmtLeft(Math.max(0, e.end - Date.now()))}</b>. Good luck!`, cta: 'Watch it live', onCta: () => openLive(e), later: 'Back to competitions' });
 }
 async function resetPrototype() {
@@ -4042,7 +4111,7 @@ function nextStep(r) {
   const R = ROOMS[r], used = new Set(Object.values(S.frames || {}));
   const empty = R.slots.map((sl, i) => ({ sl, i })).filter(x => !framed(r, x.i));
   const ready = empty.find(x => S.photos.some(p => fitsSlot(p, x.sl) && p.s.total >= roomMin(r) && !used.has(p.id)));
-  if (ready) return { s: ready.i, label: `Hang a photo in ${ready.sl[1]}` };
+  if (ready) return { s: ready.i, label: `Add a photo to ${ready.sl[1]}` };
   let best = null;
   empty.forEach(x => S.photos.forEach(p => { if (fitsSlot(p, x.sl) && p.s.total < roomMin(r) && !used.has(p.id) && (!best || p.s.total > best.p.s.total)) best = { p, x }; }));
   if (best) return { s: best.x.i, label: best.x.sl[2] ? `Enhance your ${best.x.sl[1]} photo to ${roomMin(r)}` : `Enhance a photo to ${roomMin(r)}` };
@@ -4094,7 +4163,7 @@ var WB_SHOW = false;
 function openGallery() { if ($('#sheet').classList.contains('on')) closeSheet(); GV.tab = 'mine'; go('gallery'); }
 function renderGallery() {
   const g = $('#gallery');
-  const tabs = `<div class="gtabs" role="group" aria-label="Gallery view"><button data-t="mine" aria-pressed="${GV.tab === 'mine'}">My Gallery</button><button data-t="board" aria-pressed="${GV.tab === 'board'}">Leaderboard</button></div>`;
+  const tabs = `<div class="gtabs" role="group" aria-label="Gallery view"><button data-t="mine" aria-pressed="${GV.tab === 'mine'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 16l-5-5-9 9"/></svg>My Gallery</button><button data-t="board" aria-pressed="${GV.tab === 'board'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg>Leaderboard</button></div>`;
   const wbh = WB_SHOW && S.user ? `<h1 class="gwb">Welcome back, <span>@${esc(S.user.h)}</span></h1>` : '';
   g.innerHTML = wbh + tabs + (GV.tab === 'mine' ? myGalleryHTML() : boardHTML());
   g.querySelectorAll('.gtabs button').forEach(b => b.onclick = () => { GV.tab = b.dataset.t; renderGallery(); g.scrollTop = 0; });
@@ -4102,46 +4171,48 @@ function renderGallery() {
   GV.fresh = null;
 }
 function myGalleryHTML() {
-  if (GV.room == null || GV.room < 0 || GV.room >= ROOMS.length) GV.room = 0;
-  const r = GV.room, R = ROOMS[r], filled = roomFilled(r), tot = galleryTotal(), rank = galleryRank(tot), nf = framesTotal();
-  const lv = 1 + nf, title = LEVELS.filter(l => nf >= l[0]).pop()[1];
-  const eligible = S.photos.filter(p => p.s.total >= CFG.GALLERY && !new Set(Object.values(S.frames || {})).has(p.id)).length;
-  const photos = R.slots.map((_, s) => { const p = framed(r, s); return p ? { src: p.src, score: p.s.total } : null; });
-  return `${roomViewHTML(r)}
-<div class="lvl rmc"><div class="hex">${roomFilled(r) === R.slots.length ? CHECK : `${r + 1}`}</div><div class="t"><b>ROOM ${r + 1} · <span>${R.name.toUpperCase()}</span></b><div class="pb"><i style="width:${filled / R.slots.length * 100}%"></i></div>
-    <small>${!roomOpen(r) ? `Complete Room ${r} to unlock · needs ${roomMin(r)}+` : filled === R.slots.length ? (r < ROOMS.length - 1 ? `Room ${r + 1} complete ✓ · Room ${r + 2} unlocked` : 'Hall of Fame complete ✓') : `${filled} of ${R.slots.length} frames filled · ${r < ROOMS.length - 1 ? `fill ${R.slots.length - filled} more to unlock <b>Room ${r + 2} · ${esc(ROOMS[r + 1].name)}</b> (${roomMin(r + 1)}+)` : `${R.slots.length - filled} to complete the Hall of Fame`}`}</small></div></div>
-  <p class="gnote">${TROPHY_S}<span>Hang your best photos, one per category. <b>Room 1 needs 75+</b>, Room 2 85+, Room 3 90+. Fill every frame in a room to unlock the next one. The Wildcard frame takes any photo.</span></p>`;
+  const tot = galleryTotal(), rank = galleryRank(tot), nf = framesTotal(), all = ROOMS.reduce((a, R) => a + R.slots.length, 0);
+  const hung = ROOMS.flatMap((R, r) => R.slots.map((_, s) => framed(r, s))).filter(Boolean);
+  const avg = hung.length ? Math.round(hung.reduce((a, p) => a + p.s.total, 0) / hung.length) : 0;
+  const best = hung.slice().sort((a, b) => b.s.total - a.s.total)[0];
+  const me = S.user ? S.user.h : 'you';
+  const ready = S.photos.some(p => !Object.values(S.frames || {}).includes(p.id) && frameSpot(p));
+  const hero = best
+    ? `<div class="vis-hero" style="--c1:#FF3FA4;--c2:#9B3CFF"><img src="${best.src}" alt="Your best photo"><span class="vis-rk">${rank ? '#' + rank.toLocaleString() : 'Unranked'}</span><div class="vis-ov"><h2>My Gallery</h2><p>by <b>@${esc(me)}</b></p></div></div>`
+    : `<div class="vis-hero mg-empty" style="--c1:#5A3D8C;--c2:#2A1748"><div class="mg-eic">${TROPHY_S}</div><div class="vis-ov"><h2>My Gallery</h2><p>Add your best photos to get on the leaderboard</p></div></div>`;
+  const rooms = ROOMS.map((R, r) => {
+    const open = roomOpen(r), filled = roomFilled(r);
+    return `<section class="vis-room ${R.theme || ''} ${open ? '' : 'locked'}"><div class="vis-rh"><b>Room ${r + 1} · ${esc(R.name)}</b><span>${roomMin(r)}+</span></div>
+      <p class="mg-rs">${!open ? `${LOCK} Fill every frame in Room ${r} to unlock` : filled === R.slots.length ? 'Room complete ✓' : `${filled} of ${R.slots.length} filled`}</p>
+      <div class="vis-grid">${R.slots.map((sl, si) => { const p = framed(r, si), k = fkey(r, si);
+        return p ? `<button class="vis-ph ${GV.fresh === k ? 'fresh' : ''}" data-r="${r}" data-s="${si}" aria-label="${esc(sl[1])}, ${p.s.total} points"><span class="fr"><img src="${p.src}" alt=""></span><span class="cap"><em>${gi(sl[0])}${esc(sl[1])}</em><b>${p.s.total}</b></span></button>`
+          : `<button class="vis-ph mg-slot" data-r="${r}" data-s="${si}" ${open ? '' : 'disabled'} aria-label="${open ? 'Add a photo to the ' + esc(sl[1]) + ' frame' : esc(sl[1]) + ' frame, locked'}"><span class="fr"><span class="mg-in">${open ? `<i>+</i><small>Add ${esc(sl[1])}</small>` : LOCK}</span></span><span class="cap"><em>${gi(sl[0])}${esc(sl[1])}</em><b class="mg-min">${roomMin(r)}+</b></span></button>`; }).join('')}</div></section>`;
+  }).join('');
+  return `<div class="mg vis">${hero}
+    <div class="vis-st"><div><b>${tot.toLocaleString()}</b><small>Gallery points</small></div><div><b>${nf}/${all}</b><small>Frames filled</small></div><div><b>${avg || '—'}</b><small>Avg score</small></div></div>
+    <button class="btn block mg-add" id="gFill">${ready ? 'Add a photo to your gallery' : 'Upload a photo for your gallery'}</button>
+    ${rooms}
+    <p class="mg-note">One photo per frame. Room 1 takes ${roomMin(0)}+ photos, Room 2 ${roomMin(1)}+, Room 3 ${roomMin(2)}+. Fill a room to unlock the next. Wildcard takes any category.</p></div>`;
 }
+
 function bindMyGallery() {
   const g = $('#gallery');
-  bindRoomView();
   if ($('#gFill')) $('#gFill').onclick = () => openAddAll();
-  if ($('#gNext')) $('#gNext').onclick = () => { GV.room++; renderGallery(); };
-  if ($('#gBoard')) $('#gBoard').onclick = () => { GV.tab = 'board'; renderGallery(); g.scrollTop = 0; };
+  g.querySelectorAll('.mg .vis-ph').forEach(b => b.onclick = () => { const r = +b.dataset.r, si = +b.dataset.s; if (framed(r, si)) openFramed(r, si); else openFill(r, si); });
+  const f = g.querySelector('.mg .vis-ph.fresh'); if (f) setTimeout(() => g.scrollTo({ top: Math.max(0, f.offsetTop - g.clientHeight / 3), behavior: 'smooth' }), 120);
 }
+
 function hangPhoto(p) {
   if (!p || !p.cat) { toast('Add a category to this photo first.'); return; }
   const hung = Object.entries(S.frames || {}).find(([, id]) => id === p.id);
-  let spot = null;
-  if (hung) spot = hung[0].split('-').map(Number);
-  if (!spot) { const f = frameSpot(p); if (f) spot = f; }
-  if (!spot) { toast(`Not ready for the gallery yet. Room 1 needs ${roomMin(0)}+, Room 2 ${roomMin(1)}+, Room 3 ${roomMin(2)}+.`); return; }
-  if (!spot) { toast('There’s no frame for this category yet.'); return; }
-  GV.tab = 'mine'; GV.room = spot[0]; go('gallery');
-  if (hung) { toast(`Already hanging in Room ${spot[0] + 1}.`); return; }
-  setTimeout(() => showHangBar(spot[0], spot[1], p), 380);
+  GV.tab = 'mine';
+  if (hung) { GV.fresh = hung[0]; go('gallery'); toast('This photo is already in your gallery.'); return; }
+  const spot = frameSpot(p);
+  if (!spot) { toast(`Not ready for the gallery yet. Room 1 takes ${roomMin(0)}+, Room 2 ${roomMin(1)}+, Room 3 ${roomMin(2)}+.`); return; }
+  go('gallery'); hang(spot[0], spot[1], p.id);
 }
-function showHangBar(r, sIdx, p) {
-  hideHangBar();
-  const sl = ROOMS[r].slots[sIdx], old = framed(r, sIdx);
-  const f = document.querySelector(`#gallery .rv .fr2[data-r="${r}"][data-s="${sIdx}"]`); if (f) { f.classList.add('target'); const g = $('#gallery'); g.scrollTo({ top: Math.max(0, f.getBoundingClientRect().top - g.getBoundingClientRect().top + g.scrollTop - g.clientHeight / 2 + f.offsetHeight / 2), behavior: 'smooth' }); }
-  const bar = document.createElement('div'); bar.className = 'hangbar'; bar.id = 'hangBar';
-  bar.innerHTML = `<img src="${p.src}" alt=""><div><b>Hang in the ${esc(sl[1])} frame</b><span>${old ? `Replaces your ${old.s.total} photo` : `Score ${p.s.total}`}</span></div>
-    <button class="btn small" id="hbGo">Hang it</button><button class="hbx" id="hbX" aria-label="Not now">✕</button>`;
-  $('#shell').appendChild(bar);
-  $('#hbGo').onclick = () => { hideHangBar(); hang(r, sIdx, p.id); };
-  $('#hbX').onclick = hideHangBar;
-}
+function showHangBar(r, sIdx, p) { hang(r, sIdx, p.id); }
+
 function hideHangBar() { const b = $('#hangBar'); if (b) b.remove(); document.querySelectorAll('#gallery .fr2.target').forEach(x => x.classList.remove('target')); }
 function openFill(r, s, pref) {
   const sl = ROOMS[r].slots[s], used = new Set(Object.values(S.frames || {}));
@@ -4150,8 +4221,8 @@ function openFill(r, s, pref) {
   const ok = S.photos.filter(p => fitsSlot(p, sl) && p.s.total >= mn && !used.has(p.id)).sort((a, b) => (b.id === pref) - (a.id === pref) || b.s.total - a.s.total);
   const close = S.photos.filter(p => fitsSlot(p, sl) && p.s.total < mn).sort((a, b) => b.s.total - a.s.total)[0];
   if (!ok.length) { openUnlock(r, s, sl, wild, theme.trim(), close); return; }
-  openSheet(`<h2>Fill the ${sl[1]} frame</h2>
-    <p class="sub">${ok.length ? `Pick a ${mn}+ ${wild ? '' : theme}photo${wild ? ' from any category' : ''}. ${framed(r, s) ? ' It replaces the photo hanging there now.' : ''}` : `This frame takes ${wild ? 'a photo from any category' : 'a ' + theme.trim() + ' photo'} scoring ${mn}+ that isn’t already hanging.${close ? ` Your best one is at ${close.s.total}, ${mn - close.s.total} points away.` : wild ? '' : ` You don’t have one yet. Pick ${theme.trim()} when you upload a photo.`}`}</p>
+  openSheet(`<h2>Add to the ${sl[1]} frame</h2>
+    <p class="sub">${ok.length ? `Pick a ${mn}+ ${wild ? '' : theme}photo${wild ? ' from any category' : ''}. ${framed(r, s) ? ' It replaces the photo in that frame now.' : ''}` : `This frame takes ${wild ? 'a photo from any category' : 'a ' + theme.trim() + ' photo'} scoring ${mn}+ that isn’t already hanging.${close ? ` Your best one is at ${close.s.total}, ${mn - close.s.total} points away.` : wild ? '' : ` You don’t have one yet. Pick ${theme.trim()} when you upload a photo.`}`}</p>
     ${ok.length ? `<div class="pickgrid">${ok.map(p => `<button data-p="${p.id}" aria-label="Photo scoring ${p.s.total}"><img src="${p.src}" alt=""><span>${p.s.total}</span></button>`).join('')}</div>`
       : `<div class="actions">${close ? '<button class="btn block" id="fImprove">Enhance my best photo</button>' : ''}<button class="btn ${close ? 'quiet ' : ''}block" id="fNew">Upload a new photo</button></div>`}`);
   document.querySelectorAll('#sheetBody .pickgrid button').forEach(b => b.onclick = () => hang(r, s, b.dataset.p));
@@ -4167,15 +4238,15 @@ function frameSpot(p) {
 function openAddAll() {
   const used = new Set(Object.values(S.frames || {}));
   const rows = S.photos.map(p => {
-    if (used.has(p.id)) return { p, st: 'hung', why: 'Already hanging' };
+    if (used.has(p.id)) return { p, st: 'hung', why: 'Already in your gallery' };
     if (p.s.total < CFG.GALLERY) return { p, st: 'low', why: `Needs ${CFG.GALLERY}+, ${CFG.GALLERY - p.s.total} to go` };
     const sp = frameSpot(p);
     if (!sp) { const nxt = ROOMS.findIndex((R, r) => roomOpen(r) && R.slots.some((sl, i) => !framed(r, i) && (!sl[2] || fitsSlot(p, sl)))); return nxt >= 0 && p.s.total < roomMin(nxt) ? { p, st: 'low', why: `Needs ${roomMin(nxt)}+ for Room ${nxt + 1}` } : { p, st: 'full', why: ROOMS.some((R, r) => !roomOpen(r)) ? 'Fill this room to unlock the next' : 'No empty frame for it' }; }
-    return { p, st: 'ok', sp, why: `Hang in ${ROOMS[sp[0]].slots[sp[1]][1]}` };
+    return { p, st: 'ok', sp, why: `Goes in ${ROOMS[sp[0]].slots[sp[1]][1]}` };
   }).sort((a, b) => ({ ok: 0, low: 1, full: 2, hung: 3 }[a.st] - { ok: 0, low: 1, full: 2, hung: 3 }[b.st]) || b.p.s.total - a.p.s.total);
   const ready = rows.filter(x => x.st === 'ok').length;
   openSheet(`<h2>Add a photo to your gallery</h2>
-    <p class="sub">${!S.photos.length ? 'You haven’t scored any photos yet.' : ready ? `Tap a photo to hang it. Room 1 needs 75+, Room 2 85+, Room 3 90+.` : rows.every(x => x.st === 'hung') ? `All your photos are already hanging. Upload a new photo to fill another frame.` : `None of your photos can hang yet. Room 1 needs 75+, Room 2 85+, Room 3 90+.`}</p>
+    <p class="sub">${!S.photos.length ? 'You haven’t scored any photos yet.' : ready ? `Tap a photo to add it. Room 1 needs 75+, Room 2 85+, Room 3 90+.` : rows.every(x => x.st === 'hung') ? `All your photos are already in your gallery. Upload a new photo to fill another frame.` : `None of your photos can go in yet. Room 1 needs 75+, Room 2 85+, Room 3 90+.`}</p>
     ${rows.length ? `<div class="aag">${rows.map(x => `<button class="aa ${x.st}" data-p="${x.p.id}" ${x.st === 'hung' || x.st === 'full' ? 'disabled' : ''}><span class="im"><img src="${x.p.src}" alt=""><b>${x.p.s.total}</b></span><span class="ct">${x.p.cat ? gi(x.p.cat) + esc(pcatName(x.p.cat) || 'Any') : 'No category'}</span><span class="wh">${esc(x.why)}</span></button>`).join('')}</div>` : ''}
     <button class="btn block" id="aaNew" style="margin-top:14px">Upload a new photo</button>`, { full: true });
   document.querySelectorAll('#sheetBody .aa').forEach(b => b.onclick = () => {
@@ -4195,7 +4266,7 @@ function openUnlock(r, s, sl, wild, theme, close) {
     <div class="unl-wall"><span class="unl-lamp" aria-hidden="true"></span>
       <div class="unl-frame">${close ? `<img src="${close.src}" alt=""><span class="unl-sc">${close.s.total}</span>` : `<span class="unl-ic">${gi(sl[0])}</span><span class="unl-pl" aria-hidden="true">+</span><span class="unl-em">Empty frame</span>`}</div></div>
     <div class="unl-prog"><span>${filled} of ${R.slots.length} frames filled</span><i><i style="width:${filled / R.slots.length * 100}%"></i></i></div>
-    <p class="unl-p">${close ? `Your best ${wild ? '' : esc(theme) + ' '}photo scores ${close.s.total}. Enhance it to ${roomMin(r)}+ to hang it here.` : `Upload ${what} and score ${roomMin(r)}+ to hang it here.`}</p>
+    <p class="unl-p">${close ? `Your best ${wild ? '' : esc(theme) + ' '}photo scores ${close.s.total}. Enhance it to ${roomMin(r)}+ to add it here.` : `Upload ${what} and score ${roomMin(r)}+ to add it here.`}</p>
     <div class="unl-req">${gi(sl[0])}<span>${wild ? 'Any category' : esc(theme)}</span><i></i><span>Minimum score: ${roomMin(r)}</span></div>
     <button class="ceg-go" id="unGo">${close ? `Enhance my ${close.s.total} photo` : `Upload ${wild ? 'a photo' : 'a ' + esc(theme) + ' photo'}`}</button>
     ${close ? '<button class="ceg-alt" id="unNew">Or upload a new photo</button>' : ''}
@@ -4213,8 +4284,8 @@ function hang(r, s, pid) {
   const done = roomFilled(r) === ROOMS[r].slots.length;
   save(); closeSheet(); GV.fresh = fkey(r, s); renderGallery();
   setTimeout(() => {
-    toast(done ? `Room ${r + 1} complete!${r < ROOMS.length - 1 ? ` Room ${r + 2} unlocked.` : ''}` : `Hung in the ${ROOMS[r].slots[s][1]} frame.`);
-    if (done && $('#gallery .rv')) burst($('#gallery .rv'));
+    toast(done ? `Room ${r + 1} complete!${r < ROOMS.length - 1 ? ` Room ${r + 2} unlocked.` : ''}` : `Added to your gallery · ${ROOMS[r].slots[s][1]} frame`);
+    if (done && $('#gallery .mg')) burst($('#gallery .mg'));
     AFTER_HANG = null;
   }, 300);
 }
@@ -4222,9 +4293,9 @@ function openFramed(r, s) {
   const p = framed(r, s), sl = ROOMS[r].slots[s];
   openSheet(`<h2>${sl[1]}</h2><p class="sub">Score ${p.s.total}. ${p.s.total >= CFG.QUALIFY ? 'This one can also enter cash competitions.' : `${CFG.QUALIFY - p.s.total} points from entering cash competitions.`}</p>
     <div class="hero-photo" style="max-height:46vh;margin-bottom:12px"><img src="${p.src}" alt=""></div>
-    <div class="actions"><button class="btn block" id="frImp">Improve it in Enhance</button><button class="btn quiet block" id="frOff">Take it down</button></div>`);
+    <div class="actions"><button class="btn block" id="frImp">Improve it in Enhance</button><button class="btn quiet block" id="frOff">Remove from gallery</button></div>`);
   $('#frImp').onclick = () => { closeSheet(); S.cur = p.id; save(); go('studio'); };
-  $('#frOff').onclick = () => { delete S.frames[fkey(r, s)]; save(); closeSheet(); renderGallery(); toast('Frame cleared.'); };
+  $('#frOff').onclick = () => { delete S.frames[fkey(r, s)]; save(); closeSheet(); renderGallery(); toast('Removed from your gallery.'); };
 }
 
 /* Leaderboard */
@@ -4249,9 +4320,9 @@ function boardHTML() {
   const tot = galleryTotal(), rank = galleryRank(tot);
   const RANKC = [{ crown: '#F2B637', laurel: '#E7B347', wall: ['#FFF9EE', '#F1E3CF'] }, { crown: '#B7AEDB', laurel: '#BFA9EE', wall: ['#F8F5FF', '#E4DCF2'] }, { crown: '#E3A27A', laurel: '#E7A57E', wall: ['#FFF6F0', '#EEDCCF'] }];
   const pod = (b, i) => { const C = RANKC[i];
-    return `<div class="pod p${i + 1}"><div class="av">${laurel(C.laurel)}<span class="face" style="background:linear-gradient(135deg,${b.c[0]},${b.c[1]})"><img src="${LB_FACE[i]}" alt=""></span><span style="position:absolute;left:50%;top:-26%;transform:translateX(-50%)">${CROWN(C.crown, i === 0 ? 34 : 28)}</span></div>
+    return `<div class="pod p${i + 1}" data-v="${BOARD.indexOf(b)}" role="button" tabindex="0" aria-label="Visit ${esc(b.n)}’s gallery"><div class="av">${laurel(C.laurel)}<span class="face" style="background:linear-gradient(135deg,${b.c[0]},${b.c[1]})"><img src="${LB_FACE[i]}" alt=""></span><span style="position:absolute;left:50%;top:-26%;transform:translateX(-50%)">${CROWN(C.crown, i === 0 ? 34 : 28)}</span></div>
       <figure class="gal"><img class="room" src="${LB_ROOM[i]}" alt="${esc(b.n)}’s gallery"><span class="ribbon">#${i + 1}</span></figure>
-      <b>${esc(b.n)}</b><small>${esc(b.g)}</small><div class="pts">${b.pts.toLocaleString()}<em>points</em></div><button data-v="${i}">VISIT GALLERY →</button></div>`; };
+      <b>${esc(b.n)}</b><small>${esc(b.g)}</small><div class="pts">${b.pts.toLocaleString()}<em>points</em></div><span class="vbtn">VISIT GALLERY →</span></div>`; };
   const rows = BOARD.slice(3).map((b, i) => `<button class="lrow" data-v="${i + 3}"><span class="n">#${i + 4}</span><img src="${LB_ROW[i] || SEED[b.img].src}" alt=""><span class="nm">${esc(b.g)}<small>${esc(b.n)}</small></span><span class="p">${b.pts.toLocaleString()} <em>pts</em></span><span class="ar">→</span></button>`).join('');
   const conf = [...Array(16)].map((_, i) => `<i class="conf" style="left:${(i * 61) % 100}%;background:${['#F2B637', '#FF5FB0', '#9B5CFF', '#FFD86B'][i % 4]};animation-delay:${(-i * .37).toFixed(2)}s;animation-duration:${(5 + (i % 5)).toFixed(1)}s"></i>`).join('');
   const bg = `<svg class="bg" viewBox="0 0 400 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><radialGradient id="lbG" cx=".5" cy=".35" r=".6"><stop offset="0" stop-color="#FFE3A8" stop-opacity=".9"/><stop offset="1" stop-color="#FFE3A8" stop-opacity="0"/></radialGradient><filter id="lbB"><feGaussianBlur stdDeviation="8"/></filter></defs>
@@ -4265,11 +4336,11 @@ function boardHTML() {
     <div class="podium">${pod(BOARD[1], 1)}${pod(BOARD[0], 0)}${pod(BOARD[2], 2)}</div>${stage}
     ${rows}
     <div class="mine"><div class="r"><span class="me">${me}</span><div class="rk"><small>YOUR GALLERY</small><div>${CROWN('#F2B637', 26)}<b>${rank ? '#' + rank.toLocaleString() : '—'}</b>${rank ? `<span class="tp">TOP ${Math.max(1, Math.ceil(rank / POP * 100))}%</span>` : ''}</div></div>
-      <div class="pts"><b>${tot.toLocaleString()}</b> <small style="display:inline;font-weight:800;color:#6A2FE0;font-size:.95rem">pts</small><small>${tot ? 'Keep collecting to climb the ranks' : 'Hang a 70+ photo to get ranked'}</small></div></div>
+      <div class="pts"><b>${tot.toLocaleString()}</b> <small style="display:inline;font-weight:800;color:#6A2FE0;font-size:.95rem">pts</small><small>${tot ? 'Keep collecting to climb the ranks' : 'Add a ' + roomMin(0) + '+ photo to get ranked'}</small></div></div>
       <button class="btn" id="gMine"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 16l-5-5-9 9"/></svg>VIEW MY GALLERY →</button></div></div>`;
 }
 function bindBoard() {
-  document.querySelectorAll('#gallery [data-v]').forEach(b => b.onclick = () => openVisit(+b.dataset.v));
+  document.querySelectorAll('#gallery [data-v]').forEach(b => { b.onclick = () => openVisit(+b.dataset.v); b.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openVisit(+b.dataset.v); } }; });
   $('#gMine').onclick = () => { GV.tab = 'mine'; renderGallery(); $('#gallery').scrollTop = 0; };
 }
 const VISIT_CAT = { portrait: 'People', pets: 'Pets', landscape: 'Nature', wildlife: 'Wildlife', travel: 'Travel', food: 'Food', city: 'Cities', action: 'Action', style: 'People' };
@@ -4538,6 +4609,7 @@ function renderStudio() {
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
   st.innerHTML = `<div class="swp r"><button class="swp-b" data-swp="judge">Swipe to Judge<span class="ar">→</span></button></div>
 ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
+    ${!lk && tot >= CFG.QUALIFY ? `<button class="rdybar" id="stReady"><span class="ic">${TROPHY_S}</span><span class="tx"><b>Competition ready</b><small>Pick a competition for this photo</small></span><span class="go">Go →</span></button>` : ''}
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can go into gallery frames and competitions.</p>' : ''}
     
@@ -4558,6 +4630,8 @@ ${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCard
   if ($('#stNew') && !$('#stNew').dataset.upfor) $('#stNew').onclick = () => pickPhoto(true);
   if ($('#stComp')) $('#stComp').onclick = () => openComps(p);
   if ($('#stSwL')) $('#stSwL').onclick = photoSwitcher;
+  if ($('#stReady')) $('#stReady').onclick = () => openComps(p);
+  st.querySelectorAll('.hero-photo .qbadge').forEach(q => { if (!lk && tot >= CFG.QUALIFY) { q.classList.add('tap'); q.addEventListener('pointerdown', e => e.stopPropagation()); q.onclick = e => { e.stopPropagation(); openComps(p); }; } });
   if ($('#gEnter')) $('#gEnter').onclick = () => { CXF = gc.k === 'gem' ? 'gem' : 'all'; openComps(p); cxEnter(gc); };
   if ($('#gChange')) $('#gChange').onclick = () => openComps(p);
   clearInterval(window.__gl); if (gc) window.__gl = setInterval(() => { const el = st.querySelector('[data-gl]'); if (!el || !document.contains(el)) { clearInterval(window.__gl); return; } el.textContent = fmtLeft(cxLeft(gc)); }, 1000);
