@@ -2943,8 +2943,7 @@ const fixCost = p => !p ? CFG.COST : p.s.total >= 85 ? 150 : p.s.total >= 75 ? 1
 function needCardHTML(p) {
   const cost = fixCost(p), have = S.gems, short = Math.max(0, cost - have);
   return `<div class="needc" id="needC"><div class="nc-top">${gemIcon('')}<b>${have} / ${cost} gems</b><span>${short} to go</span></div><i class="nc-bar"><i style="width:${Math.min(100, have / cost * 100)}%"></i></i>
-    <button class="swp-b nc-go" data-swp="judge">Swipe to Judge to earn gems<span class="ar">→</span></button>
-    <button class="nc-buy" data-get="store">or buy gems</button></div>`;
+    <button class="swp-b nc-go" data-swp="judge">Swipe to Judge to earn gems<span class="ar">→</span></button></div>`;
 }
 function fitPhotos(root) {
   (root || document).querySelectorAll('.tot-c > img:not(.fitbg)').forEach(im => {
@@ -4070,7 +4069,7 @@ function go(where) {
   if ($('#flow').classList.contains('on')) { if ($('#flowBack').style.visibility === 'hidden' && !$('#flow').classList.contains('astab')) return; closeFlow(); }
   $('#panes').dataset.at = where;
   $('#segJudge').setAttribute('aria-pressed', where === 'judge'); $('#segStudio').setAttribute('aria-pressed', where === 'studio'); $('#segGallery').setAttribute('aria-pressed', where === 'gallery'); $('#segCompete').setAttribute('aria-pressed', 'false');
-  if (where === 'studio') $('#studio').scrollTop = 0;
+  if (where === 'studio') { renderStudio(); $('#studio').scrollTop = 0; }
   if (where === 'gallery') { renderGallery(); $('#gallery').scrollTop = 0; }
 }
 $('#segJudge').onclick = () => go('judge'); $('#segStudio').onclick = () => go('studio'); $('#segGallery').onclick = () => openGallery();
