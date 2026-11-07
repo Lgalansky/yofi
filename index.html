@@ -2415,7 +2415,7 @@ function openFlow(html, closable = true, onClose) {
   $('#flowBack').style.visibility = closable ? 'visible' : 'hidden'; flowClose = onClose || null;
   ['segCompete', 'segJudge', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segStudio').setAttribute('aria-pressed', 'true');
 }
-$('#shell').addEventListener('click', e => { if (!e.target.closest('#shell > .seg')) return; if ($('#sheet').classList.contains('under') && $('#sheet').classList.contains('on')) closeSheet(); const g = $('#ceg'); if (g.classList.contains('under')) { g.classList.remove('on', 'under'); g.style.top = ''; } }, true);
+$('#shell').addEventListener('click', e => { if (!e.target.closest('#shell > .seg')) return; if ($('#lv').classList.contains('on')) lvClose(); if ($('#battle').classList.contains('on')) $('#battle').classList.remove('on'); if ($('#coach').classList.contains('on')) $('#coach').classList.remove('on', 'cr'); if ($('#sheet').classList.contains('under') && $('#sheet').classList.contains('on')) closeSheet(); const g = $('#ceg'); if (g.classList.contains('under')) { g.classList.remove('on', 'under'); g.style.top = ''; } }, true);
 function cxTabTop() { const g = $('#shell > .seg'); return g.offsetTop + g.offsetHeight + 4; }
 function leaveCxTab() {
   const f = $('#flow'); if (!f.classList.contains('astab')) { f.classList.remove('cxmode'); return; }
