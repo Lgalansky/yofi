@@ -1473,6 +1473,36 @@ button.bar:hover span:first-child{color:var(--pink)}
 #shell > .top,#shell > .wallet,#shell > .seg{position:relative;z-index:1;--bg:#FFF5FA;--bg2:#FBE9F4;--ink:#23113D;--muted:#76658F;--card:#FFFFFF;--line:#F1DCEB;color:#23113D;color-scheme:light}
 #shell > .top .ptitle{color:#3A1E66}
 #app .panes{background:#140A26}
+/* Competition cards (non-featured) */
+.ccard{padding:12px;margin-bottom:12px;border-radius:22px;background:#0E152A;box-shadow:inset 0 0 0 1px #26304F;color:#fff}
+.cc-top{display:flex;gap:14px;align-items:center}
+.cc-top>img{flex:none;width:38%;max-width:150px;aspect-ratio:1.05;border-radius:16px;object-fit:cover}
+.cc-i{flex:1;min-width:0;display:grid;gap:4px;justify-items:start}
+.cc-i b{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.3rem;line-height:1.1;color:#fff}
+.cc-pz{display:flex;align-items:center;gap:6px;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.9rem;line-height:1;color:var(--k,#5BE7F5)}
+.cc-pz svg{width:26px;height:26px}
+.cc-pz small{font-family:Figtree,sans-serif;font-weight:600;font-size:.85rem;color:#C9D1EA;margin-left:4px}
+.cc-fee{display:flex;align-items:center;gap:5px;font-size:.95rem;color:#C9D1EA}
+.cc-fee em{font-style:normal;display:inline-flex;align-items:center;gap:3px;font-weight:800;font-size:1.05rem;color:var(--k,#5BE7F5)}
+.cc-fee em .gfee{background:none;padding:0;margin:0;color:inherit;display:inline-flex;flex-direction:row-reverse;gap:3px}
+.cc-fee em svg{width:16px;height:16px}
+.ccard .fend{margin-top:4px}
+.ccard .fend.soon{color:#FF8FA3;box-shadow:inset 0 0 0 1.5px #FF8FA3}
+.cc-go{display:block;width:100%;min-height:52px;margin-top:12px;border-radius:999px;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.2rem;color:#fff;background:linear-gradient(180deg,#FF3FB4 0%,#E40B9A 45%,#A21CCB 100%);box-shadow:0 0 0 1.5px rgba(255,120,210,.65),0 0 22px rgba(255,45,170,.45),inset 0 1px 0 rgba(255,255,255,.35)}
+.ccard.k-cash{--k:#2EE59D}.ccard.k-bc{--k:#FFC93C}.ccard.k-gem{--k:#5BE7F5}
+.cx .mh2 .hwl.jl{display:inline-flex;align-items:center;gap:6px;color:#5BE7F5;text-decoration:underline;text-underline-offset:4px;font-size:.85rem}
+.cx .mh2 .hwl.jl svg{width:20px;height:20px;color:#B98CFF;flex:none}
+.cx .mh2{align-items:center;gap:10px;flex-wrap:wrap}
+#lComps{display:block;padding:14px;border-radius:24px;background:#140A26}
+#lComps .ccard{max-width:560px;margin-left:auto;margin-right:auto}
+.cx .mh2{flex-wrap:nowrap;margin-bottom:10px}
+.cx .mh2 .fh{font-size:1.2rem;white-space:nowrap;margin:0}
+.cx .mh2 .hwl.jl{font-size:.78rem;white-space:nowrap;padding:4px 0}
+.cx .mh2 .hwl.jl svg{width:18px;height:18px}
+.cx .mh2{gap:6px}
+.cx .mh2 .fh{font-size:1.1rem}
+.cx .mh2 .hwl.jl{font-size:.74rem;gap:4px;margin-left:auto}
+.cx .mh2 .hwl.jl svg{width:16px;height:16px}
 </style>
 </head>
 <body>
@@ -2010,13 +2040,11 @@ function renderLanding() {
   if (S.user) { $('#lOpen').setAttribute('aria-label', 'Open the app');  }
   $('#hxEnter').onclick = () => pickPhoto();
   const now = Date.now();
-  $('#lComps').innerHTML = COMPS.map(c => `<article class="lcomp"><figure><img src="${c.src || SEED[c.img].src}" alt=""><span class="live">Live</span></figure>
-    <div class="bd"><h3>${c.t}</h3><div class="prize">$${c.prize.toLocaleString()}<small>prize pool</small></div><p class="muted" style="margin:0">${c.p}</p>
-    <div class="lmeta"><span>${c.n.toLocaleString()} entries</span><span data-end="${now + c.h * 3600e3}"></span></div>
-    <button class="btn small" data-enter>Enter with my photo</button></div></article>`).join('');
+  $('#lComps').innerHTML = CX.filter(c => c.id !== 'snap' && c.k !== 'sp').slice(0, 4).map(ccard).join('');
   const wins = [[3, 'pawprincess', 'Best Pet Smile', 250], [7, 'catlover22', 'Cutest Paws', 200], [2, 'max.adventures', 'Wild Eyes', 150], [6, 'dogdad', 'Too Cool', 100], [4, 'luna_loves', 'Best Pet Smile', 75]];
   $('#lWin').innerHTML = wins.map(w => `<figure><img src="${SEED[w[0]].src}" alt=""><figcaption><b>$${w[3]}</b><strong>@${w[1]}</strong><br>${w[2]}</figcaption></figure>`).join('');
-  document.querySelectorAll('#lComps [data-enter]').forEach(b => b.onclick = () => homeCompete());
+  document.querySelectorAll('#lComps [data-cx-go]').forEach(b => b.onclick = () => homeCompete(CX.find(c => c.id === b.dataset.cxGo)));
+  setInterval(() => document.querySelectorAll('#lComps [data-cx]').forEach(el => { const left = cxLeft(CX.find(c => c.id === el.dataset.cx)); el.innerHTML = `${IC.clock}Ends in ${fmtLeft(left)}`; }), 1000);
   $('#nextCat').onclick = () => { const n = $('#nextName').textContent; homeCompete(CX.find(c => c.id === (n === 'Pets' ? 'petpals' : 'snap'))); };
   const SLOTS = [['🐾', 'Pets', 500], ['✈️', 'Travel', 300], ['🍜', 'Food', 250], ['🙂', 'Portraits', 300], ['🌆', 'Cities', 250], ['🏄', 'Action', 300]];
   const tick = () => {
@@ -2168,8 +2196,7 @@ function showResult(p, o = {}) {
   const gc = goalFor(p), need = gc ? cxNeed(gc) : 0;
   const hitGoal = gc && goalReady(gc, p) && (o.prevTotal != null ? !(o.prevTotal >= need && (p.enh - 1) >= (gc.enh || 0)) : !!o.win);
   const hit80 = stage === 2 && (crossed || (o.win && o.prevTotal == null));
-  if (!S.user && o.win) setTimeout(() => { if (!S.user) openSignup(); }, 2700);
-  else if (S.user && hitGoal) setTimeout(() => showCompReady(p, gc), o.win ? 2600 : 900);
+  if (S.user && hitGoal) setTimeout(() => showCompReady(p, gc), o.win ? 2600 : 900);
   else if (S.user && o.win && o.prevTotal == null) setTimeout(() => { if ($('#flow').classList.contains('on') && !$('#coach').classList.contains('on')) goalRoute(p); }, 3000);
   else if (S.user && hit80) setTimeout(() => showCompReady(p), o.win ? 2600 : 900);
   const b = id => body.querySelector(id);
@@ -2181,7 +2208,7 @@ function showResult(p, o = {}) {
   if (b('#toComps')) b('#toComps').onclick = () => { if (!S.user) { openSignup(() => openComps(p)); return; } closeFlow(); openComps(p); };
   if (b('#toGal')) b('#toGal').onclick = () => { if (!S.user) { openSignup(() => hangPhoto(p)); return; } closeFlow(); hangPhoto(p); };
   if (b('#saveNow')) b('#saveNow').onclick = () => openSignup();
-  if (o.delta != null && !S.user) setTimeout(() => openSignup(), crossed ? 2200 : 1400);
+  if (!S.user) body.addEventListener('click', e => { if (S.user) return; const t = e.target.closest('button'); if (!t || t.matches('[data-cat]')) return; e.preventDefault(); e.stopImmediatePropagation(); openSignup(); }, true);
   if (o.win) setTimeout(() => gemExplosion(o.win, { label: o.first ? 'You made these with your first score' : 'New photo bonus', from: body.querySelector('.hero-photo') }), 450);
   else paintGems();
 }
@@ -2484,6 +2511,11 @@ const cxPrize = c => c.k === 'gem' ? `${c.prize.toLocaleString()}${gemIcon()}` :
 const cxFee = c => c.k === 'gem' ? `<span class="gfee">${gemIcon()}${c.fee}</span>` : c.k === 'bc' ? `$${c.fee.toFixed(2)} BC` : `$${c.fee} Cash`;
 const cxNeed = c => c.min || (c.k === 'gem' ? CFG.GALLERY : CFG.QUALIFY);
 let CXF = 'all', cxTimer = null, CXP = null;
+const ccard = c => { const left = cxLeft(c), fee = cxFee(c).replace(/<span class="gfee">/, '').replace(/<\/span>$/, '');
+  return `<div class="ccard k-${c.k}"><div class="cc-top"><img src="${c.art ? SEED[1].src : SEED[c.img].src}" alt="">
+    <div class="cc-i"><b>${esc(c.t)}</b><span class="cc-pz">${cxPrize(c)}<small>1st prize</small></span><span class="cc-fee">Entry <em>${cxFee(c)}</em></span>
+      <span class="fend ${left < 5 * MIN ? 'soon' : ''}" data-cx="${c.id}" data-endpill>${IC.clock}Ends in ${fmtLeft(left)}</span></div></div>
+    <button class="cc-go" data-cx-go="${c.id}">Enter competition</button></div>`; };
 function openComps(forPhoto) {
   if (forPhoto !== undefined) CXP = forPhoto ? forPhoto.id : null;
   const fp = CXP && S.photos.find(x => x.id === CXP);
@@ -2491,11 +2523,7 @@ function openComps(forPhoto) {
   if ($('#sheet').classList.contains('on')) closeSheet();
   const cards = k => CX.filter(c => c.k === k && (!fp || liveEntry(c.id) || cxOk(c, fp))).map(c => { const e = liveEntry(c.id), left = cxLeft(c);
     if (e) return liveCardHTML(c, e);
-    return `<div class="crow k-${c.k}"><img src="${c.art ? SEED[1].src : SEED[c.img].src}" alt="">
-      <div class="ci"><b>${esc(c.t)}</b><span class="csub">${c.cats ? esc(c.lab) : 'Any photo'}</span>
-        <div class="cst"><div><small>1st prize</small><em>${cxPrize(c)}</em></div><div><small>Entry fee</small><em>${cxFee(c)}</em></div></div>
-        <span class="cd ${left < 5 * MIN ? 'soon' : ''}" data-cx="${c.id}">${IC.clock}${fmtLeft(left)} left</span></div>
-      <button class="ce" data-cx-go="${c.id}">Enter<br>competition</button></div>`; }).join('');
+    return ccard(c); }).join('');
   const sec = (k, i) => cards(k); const _sec0 = (k, i) => `<section class="sec k-${k}"><div class="sh"><span class="si">${CXI[k]}</span><div class="tt"><h3>${CXSEC[k].h}</h3></div>${i === 0 ? '<button class="hwl" id="cxHow">How it works</button>' : ''}</div>${cards(k)}</section>`;
   if (!['all', 'gem', 'cash'].includes(CXF)) CXF = 'all';
   const show = { all: ['gem', 'cash', 'bc', 'sp'], cash: ['cash', 'bc', 'sp'], gem: ['gem'] }[CXF];
@@ -2516,13 +2544,12 @@ function openComps(forPhoto) {
       <div class="fb"><div class="ft"><span class="fpill">Photo competition</span><span class="fend" data-cx="${pick.id}">${IC.clock}Ends in ${fmtLeft(cxLeft(pick))}</span></div>
         <h3>${esc(pick.t)}</h3><span class="fsub">${pick.cats ? esc(pick.lab) : 'Any photo'}</span>
         <div class="fst"><div><small>1st prize</small><b>${cxPrize(pick)}</b></div><div><small>Entry fee</small><b>${cxFee(pick)}</b></div></div>
-        <button class="fgo" data-cx-go="${pick.id}">Enter competition</button></div></div>
-    <div class="fjudge"><span>${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg>'}Need gems? Judge photos to earn</span><button id="cxJudge">Judge now</button></div>` : '';
+        <button class="fgo" data-cx-go="${pick.id}">Enter competition</button></div></div>` : '';
   const mine = live.length ? `<div class="myent"><div class="mh"><h3>My live entries</h3><span>${live.length} live</span></div><div class="mrow">${live.map(e => { const c = CX.find(x => x.id === e.cid), r = rankAt(e, Date.now()), d = rankMove(e); return `<button class="mcard k-${c.k}" data-live="${e.id}"><img src="${entrySrc(e)}" alt=""><span><small>${esc(c.t)}</small><b data-lr="${e.id}">#${r.toLocaleString()} ${moveHTML(d)}</b><em data-ll="${e.id}">${fmtLeft(Math.max(0, e.end - Date.now()))} left</em></span></button>`; }).join('')}</div></div>` : '';
   const fpBar = fp ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Entering with</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${show.some(k => cards(k)) ? 'Competitions this photo can enter' : 'No open competitions fit this photo right now'}</span></div><button id="cxAll">See all</button></div>` : '';
   openFlow(`<div class="cx">${wal}${fpBar}${mine}
     ${best}
-    <div class="mh2"><h2 class="fh">More competitions</h2><button class="hwl" id="cxHow">How it works</button></div>
+    <div class="mh2"><h2 class="fh">Explore competitions</h2><button class="hwl jl" id="cxHow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg>Judge to earn gems</button></div>
     <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['gem', 'Gems'], ['cash', 'Cash']].map(([k, l]) => `<button data-f="${k}" aria-pressed="${CXF === k}">${l}</button>`).join('')}</div>
     <div class="clist">${show.map(k => cards(k)).join('')}</div>
     <p class="note">Prototype: entry fees and prizes use your simulated wallet. Nothing is charged or paid out for real.</p></div>`, true);
@@ -2534,12 +2561,12 @@ function openComps(forPhoto) {
   body.querySelectorAll('[data-cx-go]').forEach(b => b.onclick = () => cxEnter(CX.find(c => c.id === b.dataset.cxGo)));
   body.querySelectorAll('[data-live]').forEach(b => b.onclick = () => openLive(S.entries.find(e => e.id === b.dataset.live)));
   if ($('#cxAll')) $('#cxAll').onclick = () => openComps(null);
-  $('#cxHow').onclick = showCoach;
-  if ($('#cxJudge')) $('#cxJudge').onclick = () => { if (!S.user) { openSignup(() => go('judge')); return; } closeFlow(); go('judge'); };
+  $('#cxHow').onclick = () => { if (!S.user) { openSignup(() => go('judge')); return; } closeFlow(); go('judge'); };
+  if (false && $('#cxJudge')) $('#cxJudge').onclick = () => { if (!S.user) { openSignup(() => go('judge')); return; } closeFlow(); go('judge'); };
   clearInterval(cxTimer);
   cxTimer = setInterval(() => {
     if (!$('#flow').classList.contains('cxmode')) { clearInterval(cxTimer); return; }
-    body.querySelectorAll('[data-cx]').forEach(el => { const left = cxLeft(CX.find(c => c.id === el.dataset.cx)); el.innerHTML = el.classList.contains('fend') ? `${IC.clock}Ends in ${fmtLeft(left)}` : `${IC.clock}${fmtLeft(left)}${el.closest('.crow') ? ' left' : ''}`; el.classList.toggle('soon', left < 5 * MIN); });
+    body.querySelectorAll('[data-cx]').forEach(el => { const left = cxLeft(CX.find(c => c.id === el.dataset.cx)); el.innerHTML = el.classList.contains('fend') || el.hasAttribute('data-endpill') ? `${IC.clock}Ends in ${fmtLeft(left)}` : `${IC.clock}${fmtLeft(left)}${el.closest('.crow') ? ' left' : ''}`; el.classList.toggle('soon', left < 5 * MIN); });
     paintLiveBits(body);
   }, 1000);
   const unseen = (S.entries || []).find(e => e.done && !e.seen); if (unseen) openResult(unseen);
@@ -2849,7 +2876,7 @@ const fitsSlot = (p, sl) => !!p.cat && (!sl[2] || sl[2].includes(p.cat));
 const cxFits = (c, p) => !!p.cat && (!c.cats || c.cats.includes(p.cat));
 function askCategory(p, done, closable = false) {
   openFlow(`<div class="hero-photo" style="max-height:30vh;aspect-ratio:auto;height:30vh"><img src="${p.src}" alt="Your photo"></div>
-    <h2 style="font-size:1.6rem;margin:16px 0 4px">What’s in this photo?</h2>
+    <h2 style="font-size:1.6rem;margin:16px 0 4px">Pick your competition category</h2>
     <p class="muted" style="margin:0 0 14px">Pick the competition category it fits. Not sure? Choose Any category and it can enter the open competitions.</p>
     <div class="pcats" role="group" aria-label="Competition category">${PICKCATS.map(k => `<button data-k="${k}" class="${k === 'any' ? 'anyc' : ''}" aria-pressed="${p.cat === k}">${gi(k)}<span>${pcatName(k)}</span></button>`).join('')}</div>`, closable);
   $('#flowBody').querySelectorAll('.pcats button').forEach(b => b.onclick = () => { p.cat = b.dataset.k; save(); done(); });
