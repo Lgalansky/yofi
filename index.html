@@ -1601,6 +1601,14 @@ button.bar:hover span:first-child{color:var(--pink)}
 #studio,#judge{isolation:isolate}
 .wbk-room>*{pointer-events:none}
 .home .wbk-up{margin:16px 0 8px}
+/* Subtle "you can enhance again" nudge while judging */
+.ennudge{position:absolute;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:30;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:18px;text-align:left;color:#F6EEFF;background:rgba(33,19,57,.96);box-shadow:inset 0 0 0 1.5px rgba(91,231,245,.55),0 12px 28px -8px rgba(0,0,0,.7);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transform:translateY(140%);opacity:0;pointer-events:none;transition:transform .4s cubic-bezier(.2,1.2,.4,1),opacity .3s}
+.ennudge.on{transform:none;opacity:1;pointer-events:auto}
+.ennudge .ic svg{width:28px;height:28px;display:block}
+.ennudge .tx{flex:1;display:grid;gap:1px}
+.ennudge b{font-size:.95rem}
+.ennudge small{font-size:.8rem;color:#A796C6}
+.ennudge .go{flex:none;padding:8px 14px;border-radius:999px;font-weight:800;font-size:.9rem;color:#fff;background:linear-gradient(95deg,#FF3FA4,#9B3CFF)}
 </style>
 </head>
 <body>
@@ -1686,6 +1694,7 @@ button.bar:hover span:first-child{color:var(--pink)}
     <div class="coach" id="coach"></div>
     <div class="battle" id="battle" role="dialog" aria-modal="true" aria-label="Battle"></div>
     <div class="lv" id="lv" role="dialog" aria-modal="true" aria-label="Live competition"></div>
+    <button class="ennudge" id="enNudge" type="button"></button>
     <div class="ceg" id="ceg" role="dialog" aria-modal="true" aria-label="Enter competition"></div>
     <div class="toast" id="toast" role="status"></div>
   </div>
@@ -3476,6 +3485,16 @@ function paintJudgeFoot() {
   const n = JC.filter(c => JR[c.k] !== 50).length;
   $('#jCount').textContent = `${n} / 5 adjusted`; $('#jUndo').disabled = !JHist.length;
 }
+let nudgeFrom = null, nudgeT = null;
+function maybeEnhanceNudge() {
+  const from = nudgeFrom; nudgeFrom = null;
+  if (from == null || from >= CFG.COST || S.gems < CFG.COST) return;
+  const p = cur(); if (!p || !lowestOpen(p) || photoLock(p)) return;
+  const n = $('#enNudge');
+  n.innerHTML = `<span class="ic">${gemIcon('')}</span><span class="tx"><b>You can enhance again</b><small>${S.gems} gems · a fix costs ${CFG.COST}</small></span><span class="go">Enhance ›</span>`;
+  n.classList.add('on'); clearTimeout(nudgeT); nudgeT = setTimeout(() => n.classList.remove('on'), 5000);
+  n.onclick = () => { n.classList.remove('on'); go('studio'); };
+}
 async function vote() {
   if (judging) return; judging = true;
   const p = seedAt(); let close = 0;
@@ -3485,6 +3504,7 @@ async function vote() {
     card.classList.add('rev'); card.querySelector('.crowdline').textContent = `Crowd ${cr}${hit ? ', you matched' : ''}`;
   });
   const earn = CFG.VOTE + close * CFG.CLOSE;
+  if (nudgeFrom == null) nudgeFrom = S.gems;
   S.votes++; S.since++; S.jIdx++; S.gems += earn; save();
   const go = $('#jGo'); go.disabled = true; go.textContent = `+${earn} gems`; $('#jUndo').disabled = true;
   $('#jLeg').textContent = close ? `You matched the crowd on ${close} of 5.` : 'No crowd matches this time.';
@@ -3493,6 +3513,7 @@ async function vote() {
   if (S.photos.length && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); return; }
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
+  maybeEnhanceNudge();
 }
 
 /* ---------- Battle ---------- */
@@ -3539,7 +3560,7 @@ function openBattle() {
     </div></div>`;
   bt.scrollTop = 0; bt.classList.add('on');
   const close = () => bt.classList.remove('on');
-  $('#bNo').onclick = close;
+  $('#bNo').onclick = () => { close(); maybeEnhanceNudge(); };
   $('#bGo').onclick = async () => {
     $('#bGo').disabled = true; $('#bNo').style.visibility = 'hidden';
     const el = $('#btTheir'), t0 = performance.now();
@@ -3555,7 +3576,7 @@ function openBattle() {
         <p>${me.s.total === their ? 'Tied scores. The crowd broke the tie.' : won ? `Your ${me.s.total} beat their ${their}. Half their gems are yours.` : `Their ${their} beat your ${me.s.total}. A stronger photo wins more battles.`}</p></div>
       <button class="bt-cta" id="bDone">${won ? 'Keep judging' : 'Improve my photo'}</button>`;
     if (won) setTimeout(() => celebrate({ src: me.src, score: me.s.total, title: S.streak >= 3 ? `${S.streak} wins in a row!` : 'You won the battle!', text: `${S.streak >= 3 ? 'You’re on fire. ' : ''}${me.s.total === their ? 'Tied scores and the crowd picked yours.' : `Your ${me.s.total} beat @${esc(o.h)}’s ${their}.`} <b>+${win.toLocaleString()} gems</b> are yours.`, cta: 'Collect my gems', onCta: () => gemExplosion(win, { label: `Taken from @${o.h}` }), onLater: () => gemExplosion(win, { label: `Taken from @${o.h}` }) }), 700); else paintGems();
-    $('#bDone').onclick = () => { close(); if (!won) go('studio'); };
+    $('#bDone').onclick = () => { close(); if (!won) { nudgeFrom = null; go('studio'); } else setTimeout(maybeEnhanceNudge, 2600); };
   };
 }
 
