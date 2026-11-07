@@ -2245,6 +2245,11 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .crp-box .g{position:absolute;inset:0;background:linear-gradient(90deg,transparent 33.2%,rgba(255,255,255,.35) 33.3%,transparent 33.6%,transparent 66.4%,rgba(255,255,255,.35) 66.5%,transparent 66.8%)}
 .crp-box .h{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:42px;height:42px;border-radius:50%;font-weight:800;font-size:1.2rem;color:#2A1150;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.4)}
 .crp-in .btn{margin-top:16px}
+/* Short of gems: say the price; toast sits low, off the balances */
+.fixshort{margin:10px 4px 0;text-align:center;font-size:.9rem;line-height:1.4;color:#CDBEE8}
+.fixshort b{color:#fff}
+.toast{top:auto!important;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px)!important;width:max-content;max-width:calc(100% - 32px);text-align:center;border-radius:18px!important}
+.toast.on{transform:translate(-50%,0)!important}
 </style>
 </head>
 <body>
@@ -3064,7 +3069,7 @@ function showResult(p, o = {}) {
     <div class="scorebox" style="margin-top:0">${ringSVG(tot, 'r1')}${barsHTML(p.s, o.prev, true, p)}</div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
-  else html += `<div class="opp"><h3>Biggest opportunity: ${lc.name}</h3><p>${stage === 2 ? `${lc.name} is your lowest at ${p.s[low]}. Higher scores win more battles and climb competition rankings.` : `Improve your overall score by <strong>${target - tot}</strong> point${target - tot === 1 ? '' : 's'} to ${target === CFG.GALLERY ? 'enter the gallery' : 'enter cash competitions'}.`}</p>
+  else html += `<div class="opp"><h3>Biggest opportunity: ${lc.name}</h3>
     <button class="btn block fixbtn nocost" id="doFix"><span>${lc.verb}</span></button></div>`;
   if (S.user) html += `<div style="text-align:center"><button class="link" id="doneBtn">Done</button></div>`;
   else if (o.delta != null) html += `<div style="text-align:center"><button class="link" id="saveNow">Save my photo and continue</button></div>`;
@@ -3163,7 +3168,7 @@ async function checkMaxed(p) {
 }
 const photoLock = p => p && (S.entries || []).find(e => e.pid === p.id && !e.done && Date.now() < e.end);
 function lockToast(e) { toast(`This photo is in ${CX.find(x => x.id === e.cid).t}. You can improve it again when the results are in.`); }
-const fixCost = p => !p ? CFG.COST : p.s.total >= 85 ? 150 : p.s.total >= 75 ? 100 : 50;
+const fixCost = p => !p ? CFG.COST : p.s.total >= 90 ? 150 : p.s.total >= CFG.QUALIFY ? 100 : 50;
 function needCardHTML(p) {
   const cost = fixCost(p), have = S.gems, short = Math.max(0, cost - have);
   return `<div class="needc" id="needC"><div class="nc-top">${gemIcon('')}<b>${have} / ${cost} gems</b><span>${short} to go</span></div><i class="nc-bar"><i style="width:${Math.min(100, have / cost * 100)}%"></i></i>
@@ -3484,10 +3489,10 @@ function openComps(forPhoto) {
         <div class="fst"><div><small>1st prize</small><b>${cxPrize(pick)}</b></div><div><small>Entry fee</small><b>${cxFee(pick)}</b></div></div>
         <button class="fgo" data-cx-go="${pick.id}">Enter competition</button></div></div>` : '';
   const mine = live.length ? `<div class="myent"><div class="mh"><h3>My live entries</h3><span>${live.length} live</span></div>${live.map(e => liveCardHTML(CX.find(x => x.id === e.cid), e)).join('')}</div>` : '';
-  const fpBar = fp && !photoLock(fp) ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Entering with</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${show.some(k => cards(k)) ? 'Competitions this photo can enter' : 'No open competitions fit this photo right now'}</span></div><button id="cxAll">See all</button></div>` : '';
+  const fpBar = fp && !photoLock(fp) ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Your photo is ready</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${(() => { const n = CX.filter(c => show.includes(c.k) && !liveEntry(c.id) && cxOk(c, fp)).length; return n ? `Pick a competition below · ${n} fit${n === 1 ? 's' : ''} this photo` : 'No open competitions fit this photo right now'; })()}</span></div><button id="cxAll">See all</button></div>` : '';
   openFlow(`<div class="cx">${wal}${fpBar}${mine}
-    ${best}
-    <div class="mh2"><h2 class="fh">Explore competitions</h2><button class="hwl jl" id="cxHow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg>Judge to earn gems</button></div>
+    ${fpBar ? '' : best}
+    <div class="mh2"><h2 class="fh">${fpBar ? 'Pick a competition' : 'Explore competitions'}</h2></div>
     <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['gem', 'Gems'], ['cash', 'Cash']].map(([k, l]) => `<button data-f="${k}" aria-pressed="${CXF === k}">${l}</button>`).join('')}</div>
     <div class="clist">${show.map(k => cards(k)).join('') || `<p class="cxempty">You’ve entered every ${CXF === 'gem' ? 'gem ' : CXF === 'cash' ? 'cash ' : ''}competition that’s open right now. New ones start every 30 minutes.</p>`}</div>
     <p class="note">Prototype: entry fees and prizes use your simulated wallet. Nothing is charged or paid out for real.</p></div>`, true);
@@ -3499,7 +3504,7 @@ function openComps(forPhoto) {
   body.querySelectorAll('[data-cx-go]').forEach(b => b.onclick = () => cxEnter(CX.find(c => c.id === b.dataset.cxGo)));
   body.querySelectorAll('[data-live]').forEach(b => b.onclick = () => openLive(S.entries.find(e => e.id === b.dataset.live)));
   if ($('#cxAll')) $('#cxAll').onclick = () => openComps(null);
-  $('#cxHow').onclick = () => { if (!S.user) { openSignup(() => go('judge')); return; } closeFlow(); go('judge'); };
+  if ($('#cxHow')) $('#cxHow').onclick = () => { if (!S.user) { openSignup(() => go('judge')); return; } closeFlow(); go('judge'); };
   if (false && $('#cxJudge')) $('#cxJudge').onclick = () => { if (!S.user) { openSignup(() => go('judge')); return; } closeFlow(); go('judge'); };
   clearInterval(cxTimer);
   cxTimer = setInterval(() => {
@@ -3747,7 +3752,15 @@ function cxEnter(c) {
     openEntryGuide(c, bestP);
     return;
   }
-  const ok = S.photos.filter(p => cxOk(c, p) && !photoLock(p)).sort((a, b) => b.s.total - a.s.total);
+  const used = new Set(c.k === 'gem' ? (S.entries || []).filter(e => e.cid === c.id).map(e => e.pid) : []);
+  const ok = S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total);
+  if (!ok.length && S.photos.some(p => cxOk(c, p) && used.has(p.id))) {
+    openSheet(`<div class="en2"><span class="en-tag">🏆 Photo competition</span><h2>${esc(c.t)}</h2>
+      <p class="sub">Each photo can enter ${esc(c.t)} once. Your qualifying photos have already been in it, so upload a new photo to enter again.</p>
+      <button class="btn block" id="enNew">Upload a new photo</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`);
+    $('#enNew').onclick = () => { closeSheet(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
+    return;
+  }
   if (!ok.length) { openEntryGuide(c, null); return; }
   let sel = (CXP && ok.find(x => x.id === CXP)) ? CXP : ok[0].id;
   ok.sort((a, b) => (b.id === sel) - (a.id === sel));
@@ -3794,7 +3807,7 @@ function needFixGems(p) {
 function swipePop(p) {
   const short = Math.max(0, fixCost(p) - S.gems), st = $('#studio');
   st.scrollTo({ top: 0, behavior: 'smooth' });
-  toast(`Need ${short} more gems · swipe to Judge to earn`);
+  toast(`This costs ${fixCost(p)} gems. You have ${S.gems}. Swipe to Judge to earn ${short} more`);
   const pill = st.querySelector('.swp-b'); if (pill) { pill.classList.remove('nudge'); void pill.offsetWidth; pill.classList.add('nudge'); }
 }
 function needGems(c) {
@@ -4529,7 +4542,7 @@ ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your 
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can go into gallery frames and competitions.</p>' : ''}
     
     ${lk || !sorted.length ? '' : '<h3 class="sec">Improve your photo</h3>'}
-    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span>${S.gems < fixCost(p) ? `<span class="gpill need">Need ${fixCost(p) - S.gems}${gemIcon()}</span>` : `<span class="gpill">${gemIcon()}${fixCost(p)}</span>`}</button><button class="swlink" id="stSwL">Switch photo · ${S.photos.length}/${CFG.MAX_PHOTOS}</button>`}`}
+    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>${S.gems < fixCost(p) ? `<p class="fixshort">Costs <b>${fixCost(p)}</b> gems${p.s.total >= CFG.QUALIFY ? ` at ${p.s.total >= 90 ? 90 : CFG.QUALIFY}+` : ''}. You have <b>${S.gems}</b>, so you need <b>${fixCost(p) - S.gems} more</b>. Swipe to Judge to earn them.</p>` : ''}<button class="swlink" id="stSwL">Switch photo · ${S.photos.length}/${CFG.MAX_PHOTOS}</button>`}`}
 ${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCardsHTML('Win real cash', 'cash', 'Cash prizes') : ''}
     ${!lk && sorted.length ? '' : `<div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
     <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`}`;
