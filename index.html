@@ -2010,7 +2010,9 @@ const fresh = () => ({ gems: 0, cash: 0, bonus: 0, frames: {}, user: null, photo
 let S = fresh();
 try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) { /* storage unavailable: run in memory */ }
 let warnedStorage = false;
+let RESETTING = false;
 function save() {
+  if (RESETTING) return;
   try { localStorage.setItem(KEY, JSON.stringify(S)); }
   catch (e) {
     try { // trim stored originals and older photos, then retry
@@ -3064,6 +3066,25 @@ function cxPay(c, q) {
   const y = $('#flowBody').scrollTop; openComps(); $('#flowBody').scrollTop = y;
   celebrate({ src: q.src, score: q.s.total, title: `You’re in ${esc(c.t)}!`, text: `Your ${q.s.total} photo is locked in. Results in <b>${fmtLeft(Math.max(0, e.end - Date.now()))}</b>. Good luck!`, cta: 'Watch it live', onCta: () => openLive(e), later: 'Back to competitions' });
 }
+async function resetPrototype() {
+  RESETTING = true;
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  try { location.reload(); } catch (e) {}
+  await sleep(700);
+  // still here (reload blocked, e.g. inside an app viewer): reset in place and go to the home page
+  S = fresh();
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  ['#lv', '#battle', '#ceg', '#coach', '#enNudge'].forEach(q => { const el = $(q); if (el) el.classList.remove('on', 'cr', 'under'); });
+  sheetLocked = false; closeSheet();
+  $('#flow').classList.remove('on', 'cxmode', 'astab', 'homemode'); $('#flow').style.top = '';
+  CXP = null; GV.room = 0; GV.tab = 'mine'; WB_SHOW = false;
+  $('#avatar').textContent = 'Y';
+  try { await prepSeeds(); } catch (e) {}
+  RESETTING = false; save();
+  $('#app').classList.remove('on'); $('#landing').style.display = '';
+  renderLanding(); renderJudge(); renderStudio(); paintWallet(); paintGems(false);
+  window.scrollTo(0, 0); const l = $('#landing'); if (l) l.scrollTop = 0;
+}
 function openMenu() {
   const qn = S.photos.filter(p => p.s.total >= CFG.QUALIFY).length;
   openSheet(`<h2>${S.user ? '@' + esc(S.user.h) : 'Your profile'}</h2><p class="sub">${S.user ? esc(S.user.em) : 'Not signed up yet.'}</p>
@@ -3071,7 +3092,12 @@ function openMenu() {
     <div class="menu"><button class="btn quiet block" id="mG">Gallery</button><button class="btn quiet block" id="mC">Competitions</button><button class="btn quiet block" id="mS">Gem store</button>
     <button class="link" id="mR" style="margin-top:6px">Reset prototype</button></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => openComps(null); $('#mS').onclick = () => openStore();
-  $('#mR').onclick = () => { if (confirm('Delete your photos, gems and account from this device?')) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } };
+  $('#mR').onclick = () => {
+    openSheet(`<h2>Start again as a new player?</h2><p class="sub">This deletes your photos, gems, entries and account from this device.</p>
+      <button class="btn block" id="rsYes">Reset and start again</button><button class="btn quiet block" id="rsNo" style="margin-top:10px">Cancel</button>`);
+    $('#rsNo').onclick = closeSheet;
+    $('#rsYes').onclick = () => resetPrototype();
+  };
 }
 $('#avatar').onclick = openMenu;
 $('#shell .top .wm').style.cursor = 'pointer'; $('#shell .top .wm').onclick = () => { if (S.user) openGallery(); };
