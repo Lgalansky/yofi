@@ -3035,10 +3035,10 @@ function showResult(p, o = {}) {
   p.q = stage === 2; save();
   const gc = goalFor(p), need = gc ? cxNeed(gc) : 0;
   const hitGoal = gc && goalReady(gc, p) && (o.prevTotal != null ? !(o.prevTotal >= need && (p.enh - 1) >= (gc.enh || 0)) : !!o.win);
-  const hit80 = stage === 2 && (crossed || (o.win && o.prevTotal == null));
+  const hit80 = stage === 2 && (crossed || (o.prevTotal == null && 'win' in o));
   if (S.user && hitGoal) setTimeout(() => showCompReady(p, gc), o.win ? 2600 : 900);
+  else if (S.user && hit80) setTimeout(() => showCompReady(p), o.win ? 2600 : 1400);
   else if (S.user && o.win && o.prevTotal == null) setTimeout(() => { if ($('#flow').classList.contains('on') && !$('#coach').classList.contains('on')) goalRoute(p); }, 3000);
-  else if (S.user && hit80) setTimeout(() => showCompReady(p), o.win ? 2600 : 900);
   else if (S.user && o.prev) {
     const big = C.map(c => ({ c, g: p.s[c.k] - o.prev[c.k] })).sort((a, b) => b.g - a.g)[0];
     if (big && big.g >= 10) setTimeout(() => { if (!$('#coach').classList.contains('on')) celebrate({ src: p.src, score: tot, title: `+${big.g} ${big.c.name}!`, text: `Huge fix. ${big.c.name} jumped from ${o.prev[big.c.k]} to <b>${p.s[big.c.k]}</b>. Your photo now scores ${tot}.`, cta: 'Keep improving' }); }, 1400);
