@@ -1618,6 +1618,20 @@ button.bar:hover span:first-child{color:var(--pink)}
 .rs2-go{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:60px;margin-top:20px;border-radius:999px;font:800 1.2rem/1 "Bricolage Grotesque",sans-serif;text-transform:uppercase;letter-spacing:.02em;color:#fff;background:linear-gradient(95deg,#FF2DA6,#B23CFF 60%,#9B3CFF);box-shadow:0 0 0 2px rgba(255,140,220,.6),0 0 24px rgba(255,45,170,.45)}
 .rs2-go span{font-size:1.4rem}
 #lv:has(.rs2){background:#080B1C}
+/* Gallery: swipeable frames, 3 per room */
+.rv .fstrip{position:absolute;left:0;right:0;top:36.6%;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding-top:1.6%}
+.rv .fstrip::-webkit-scrollbar{display:none}
+.rv .fpage{flex:0 0 100%;display:grid;grid-template-columns:repeat(3,26%);justify-content:space-evenly;scroll-snap-align:start}
+.rv .fslot{display:grid;justify-items:center;gap:1.4cqw}
+.rv .fstrip .fr2{position:relative;left:auto;top:auto;width:100%;aspect-ratio:26/35.5;height:auto}
+.rv .fstrip .ptp{position:absolute;left:50%;top:100%;transform:translate(-50%,-50%);z-index:2}
+.rv .fstrip .lb{position:static;transform:none;margin-top:3.4cqw;text-align:center;white-space:normal;line-height:1.1}
+.rv .fstrip .fr2.vac>span{gap:3cqw}
+.rv .fr2.lockd>span{filter:grayscale(.5);opacity:.85}
+.rv .lkf{display:grid;place-items:center;width:5.8cqw;height:5.8cqw;border-radius:50%;color:#fff;background:rgba(60,40,90,.7)}
+.rv .lkf svg{width:3.2cqw;height:3.2cqw}
+.rv .cta[disabled]{opacity:.75;filter:grayscale(.3)}
+.rv .cta[disabled] svg{width:1em;height:1em}
 </style>
 </head>
 <body>
@@ -3240,14 +3254,14 @@ function fillableSlot(r) {
 function roomViewHTML(r) {
   const un = roomsUnlocked(), R = ROOMS[r], filled = roomFilled(r), tot = galleryTotal(), rank = galleryRank(tot);
   const eligible = fillableSlot(r) >= 0;
-  const frames = R.slots.map((sl, s) => {
-    const p = framed(r, s), [x, y, w, h] = RV_POS[s], fresh = GV.fresh === fkey(r, s);
-    return `<div class="fr2 ${p ? '' : 'vac'} ${fresh ? 'new' : ''}" data-s="${s}" role="button" tabindex="0" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%" aria-label="${sl[1]} frame${p ? ', ' + p.s.total + ' points' : ', empty, add a photo'}">
-      <span>${p ? `<img src="${p.src}" alt="">` : `${gi(sl[0])}<span class="em">Empty</span><span class="pl" aria-hidden="true">+</span>`}</span></div>
-      ${p ? `<span class="ptp gls" style="left:${x + w / 2}%">${TROPHY_S}<b>${p.s.total}</b><small>pts</small></span>` : ''}
-      <span class="lb" style="left:${x + w / 2}%">${sl[1]}</span>`;
-  }).join('');
-  const cta = filled < R.slots.length ? `<button class="cta" id="gFill">${eligible ? 'Fill a frame' : 'Earn your next frame'} ${ARROW}</button>`
+  const frames = `<div class="fstrip" id="fStrip">${ROOMS.map((Rm, ri) => `<div class="fpage" data-page="${ri}">${Rm.slots.map((sl, si) => {
+    const p = framed(ri, si), fresh = GV.fresh === fkey(ri, si), open = roomOpen(ri);
+    return `<div class="fslot"><div class="fr2 ${p ? '' : 'vac'} ${fresh ? 'new' : ''} ${open ? '' : 'lockd'}" data-r="${ri}" data-s="${si}" role="button" tabindex="0" aria-label="${sl[1]} frame${p ? ', ' + p.s.total + ' points' : open ? ', empty, add a photo' : ', locked'}">
+      <span>${p ? `<img src="${p.src}" alt="">` : `${gi(sl[0])}${open ? '<span class="pl" aria-hidden="true">+</span>' : `<span class="lkf" aria-hidden="true">${LOCK}</span>`}`}</span>
+      ${p ? `<div class="ptp gls">${TROPHY_S}<b>${p.s.total}</b><small>pts</small></div>` : ''}</div>
+      <span class="lb">${sl[1]}</span></div>`;
+  }).join('')}</div>`).join('')}</div>`;
+  const cta = !roomOpen(r) ? `<button class="cta" disabled>Complete Room ${r} to unlock ${LOCK}</button>` : filled < R.slots.length ? `<button class="cta" id="gFill">${eligible ? 'Fill a frame' : 'Earn your next frame'} ${ARROW}</button>`
     : r < ROOMS.length - 1 ? `<button class="cta" id="gNext">Enter Room ${r + 2} ${ARROW}</button>` : `<button class="cta" id="gBoard">See the leaderboard ${ARROW}</button>`;
   return `<div class="rv ${R.theme}"><img class="bgi" src="${HALL_BG}" alt="">
     <div class="stat gls"><div class="a">${TROPHY_S}<div><span class="num">${tot.toLocaleString()}</span><span class="cap">Total gallery points</span></div></div>
@@ -3256,13 +3270,22 @@ function roomViewHTML(r) {
       <span class="pr"><span><b>${filled}</b> OF <b>${R.slots.length}</b> FRAMES FILLED</span><i><i style="width:${filled / R.slots.length * 100}%"></i></i></span></div>
     ${frames}
     ${[...Array(10)].map((_, i) => `<i class="spark" style="left:${(7 + (i * 37) % 86)}%;top:${(32 + (i * 23) % 40)}%;animation-delay:${(i * .43).toFixed(2)}s"></i>`).join('')}
-    <div class="pnl gls"><div class="rtabs" role="group" aria-label="Rooms">${ROOMS.map((Rm, i) => `${i ? '<span class="vs"></span>' : ''}<button data-r="${i}" aria-pressed="${i === r}" ${!roomOpen(i) ? `disabled aria-label="Room ${i + 1}, locked"` : ''}><span class="th"><img src="${roomThumb(i)}" alt=""></span><span class="tx">ROOM ${i + 1}</span>${roomFilled(i) === Rm.slots.length ? `<span class="ok">${CHECK}</span>` : !roomOpen(i) ? `<span class="lk">${LOCK}</span>` : ''}</button>`).join('')}</div>
+    <div class="pnl gls"><div class="rtabs" role="group" aria-label="Rooms">${ROOMS.map((Rm, i) => `${i ? '<span class="vs"></span>' : ''}<button data-r="${i}" aria-pressed="${i === r}" ${!roomOpen(i) ? `aria-label="Room ${i + 1}, locked"` : ''}><span class="th"><img src="${roomThumb(i)}" alt=""></span><span class="tx">ROOM ${i + 1}</span>${roomFilled(i) === Rm.slots.length ? `<span class="ok">${CHECK}</span>` : !roomOpen(i) ? `<span class="lk">${LOCK}</span>` : ''}</button>`).join('')}</div>
       ${cta}</div>
   </div>`;
 }
 function bindRoomView() {
   const g = $('#gallery');
-  g.querySelectorAll('.rv .fr2').forEach(f => { f.onclick = () => { const s = +f.dataset.s; framed(GV.room, s) ? openFramed(GV.room, s) : openFill(GV.room, s); }; f.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); f.click(); } }; });
+  g.querySelectorAll('.rv .fr2').forEach(f => { const go2 = () => { const r = +f.dataset.r, s = +f.dataset.s; if (!roomOpen(r)) { toast(`Complete Room ${r} to unlock Room ${r + 1}.`); return; } GV.room = r; framed(r, s) ? openFramed(r, s) : openFill(r, s); }; f.onclick = go2; f.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go2(); } }; });
+  const st = g.querySelector('#fStrip');
+  if (st) {
+    st.scrollLeft = GV.room * st.clientWidth;
+    let t = null;
+    st.addEventListener('scroll', () => { clearTimeout(t); t = setTimeout(() => {
+      const pg = Math.round(st.scrollLeft / st.clientWidth);
+      if (pg !== GV.room && pg >= 0 && pg < ROOMS.length) { const y = g.scrollTop; GV.room = pg; renderGallery(); g.scrollTop = y; }
+    }, 140); }, { passive: true });
+  }
   g.querySelectorAll('.rv .rtabs button').forEach(b => b.onclick = () => { GV.room = +b.dataset.r; renderGallery(); });
   if ($('#gRank')) $('#gRank').onclick = () => { GV.tab = 'board'; renderGallery(); g.scrollTop = 0; };
 }
@@ -3278,7 +3301,7 @@ function renderGallery() {
   GV.fresh = null;
 }
 function myGalleryHTML() {
-  if (!roomOpen(GV.room)) GV.room = 0;
+  if (GV.room == null || GV.room < 0 || GV.room >= ROOMS.length) GV.room = 0;
   const r = GV.room, R = ROOMS[r], filled = roomFilled(r), tot = galleryTotal(), rank = galleryRank(tot), nf = framesTotal();
   const lv = 1 + nf, title = LEVELS.filter(l => nf >= l[0]).pop()[1];
   const eligible = S.photos.filter(p => p.s.total >= CFG.GALLERY && !new Set(Object.values(S.frames || {})).has(p.id)).length;
@@ -3314,7 +3337,7 @@ function hangPhoto(p) {
 function showHangBar(r, sIdx, p) {
   hideHangBar();
   const sl = ROOMS[r].slots[sIdx], old = framed(r, sIdx);
-  const f = document.querySelector(`#gallery .rv .fr2[data-s="${sIdx}"]`); if (f) { f.classList.add('target'); const g = $('#gallery'); g.scrollTo({ top: Math.max(0, f.getBoundingClientRect().top - g.getBoundingClientRect().top + g.scrollTop - g.clientHeight / 2 + f.offsetHeight / 2), behavior: 'smooth' }); }
+  const f = document.querySelector(`#gallery .rv .fr2[data-r="${r}"][data-s="${sIdx}"]`); if (f) { f.classList.add('target'); const g = $('#gallery'); g.scrollTo({ top: Math.max(0, f.getBoundingClientRect().top - g.getBoundingClientRect().top + g.scrollTop - g.clientHeight / 2 + f.offsetHeight / 2), behavior: 'smooth' }); }
   const bar = document.createElement('div'); bar.className = 'hangbar'; bar.id = 'hangBar';
   bar.innerHTML = `<img src="${p.src}" alt=""><div><b>Hang in the ${esc(sl[1])} frame</b><span>${old ? `Replaces your ${old.s.total} photo` : `+${CFG.FRAME_GEMS} gems`}</span></div>
     <button class="btn small" id="hbGo">Hang it</button><button class="hbx" id="hbX" aria-label="Not now">✕</button>`;
