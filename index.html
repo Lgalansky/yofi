@@ -1593,6 +1593,9 @@ button.bar:hover span:first-child{color:var(--pink)}
 .ennudge b{font-size:.95rem}
 .ennudge small{font-size:.8rem;color:#A796C6}
 .ennudge .go{flex:none;padding:8px 14px;border-radius:999px;font-weight:800;font-size:.9rem;color:#fff;background:linear-gradient(95deg,#FF3FA4,#9B3CFF)}
+/* Welcome back on the gallery */
+.gwb{margin:6px 2px 12px;font:400 clamp(1.5rem,7vw,2rem)/1.05 "Archivo Black","Arial Black",sans-serif;text-transform:uppercase;color:#fff}
+.gwb span{background:linear-gradient(180deg,#FFF3A8,#FFC93C 55%,#E79A00);-webkit-background-clip:text;background-clip:text;color:transparent;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
@@ -1661,10 +1664,10 @@ button.bar:hover span:first-child{color:var(--pink)}
       <section class="pane" id="gallery" aria-label="Gallery"></section>
     </div>
     <nav class="seg" role="group" aria-label="Switch screen">
+      <button id="segGallery" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg><span>Gallery</span></button>
       <button id="segCompete" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg><span>Compete</span></button>
       <button id="segStudio" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L15 9"/><path d="M15 9l2-2"/><path d="M18 2l.8 2.2L21 5l-2.2.8L18 8l-.8-2.2L15 5l2.2-.8zM9 3l.5 1.5L11 5l-1.5.5L9 7l-.5-1.5L7 5l1.5-.5z"/></svg><span>Enhance</span></button>
       <button id="segJudge" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg><span>Judge</span></button>
-      <button id="segGallery" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg><span>Gallery</span></button>
     </nav>
 
     <div class="flow" id="flow" role="dialog" aria-modal="true" aria-label="Photo scoring">
@@ -3034,7 +3037,7 @@ function openMenu() {
   $('#mR').onclick = () => { if (confirm('Delete your photos, gems and account from this device?')) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } };
 }
 $('#avatar').onclick = openMenu;
-$('#shell .top .wm').style.cursor = 'pointer'; $('#shell .top .wm').onclick = () => { if (S.user) openHome(); };
+$('#shell .top .wm').style.cursor = 'pointer'; $('#shell .top .wm').onclick = () => { if (S.user) openGallery(); };
 const setHH = () => { const g = $('#shell > .seg'); if (g && g.offsetHeight) $('#shell').style.setProperty('--hh', (g.offsetTop + g.offsetHeight + 8) + 'px'); };
 window.addEventListener('resize', setHH); new MutationObserver(setHH).observe($('#app'), { attributes: true, attributeFilter: ['class'] }); setTimeout(setHH, 0);
 (() => {
@@ -3240,11 +3243,13 @@ function bindRoomView() {
   g.querySelectorAll('.rv .rtabs button').forEach(b => b.onclick = () => { GV.room = +b.dataset.r; renderGallery(); });
   if ($('#gRank')) $('#gRank').onclick = () => { GV.tab = 'board'; renderGallery(); g.scrollTop = 0; };
 }
+var WB_SHOW = false;
 function openGallery() { if ($('#sheet').classList.contains('on')) closeSheet(); GV.tab = 'mine'; go('gallery'); }
 function renderGallery() {
   const g = $('#gallery');
   const tabs = `<div class="gtabs" role="group" aria-label="Gallery view"><button data-t="mine" aria-pressed="${GV.tab === 'mine'}">My Gallery</button><button data-t="board" aria-pressed="${GV.tab === 'board'}">Leaderboard</button></div>`;
-  g.innerHTML = tabs + (GV.tab === 'mine' ? myGalleryHTML() : boardHTML());
+  const wbh = WB_SHOW && S.user ? `<h1 class="gwb">Welcome back, <span>@${esc(S.user.h)}</span></h1>` : '';
+  g.innerHTML = wbh + tabs + (GV.tab === 'mine' ? myGalleryHTML() : boardHTML());
   g.querySelectorAll('.gtabs button').forEach(b => b.onclick = () => { GV.tab = b.dataset.t; renderGallery(); g.scrollTop = 0; });
   if (GV.tab === 'mine') bindMyGallery(); else bindBoard();
   GV.fresh = null;
@@ -3382,6 +3387,7 @@ function openVisit(i) {
 
 /* ---------- Panes: Judge / Studio with flick ---------- */
 function go(where) {
+  if (where !== 'gallery') WB_SHOW = false;
   if (where !== 'gallery') hideHangBar();
   if ($('#flow').classList.contains('on')) { if ($('#flowBack').style.visibility === 'hidden' && !$('#flow').classList.contains('astab')) return; closeFlow(); }
   $('#panes').dataset.at = where;
@@ -3618,7 +3624,7 @@ function renderStudio() {
 (async () => {
   await prepSeeds(); save();
   renderLanding();
-  if (S.user) { $('#landing').style.display = 'none'; $('#app').classList.add('on'); renderJudge(); renderStudio(); paintGems(false); openHome(); }
+  if (S.user) { $('#landing').style.display = 'none'; $('#app').classList.add('on'); renderJudge(); renderStudio(); paintGems(false); WB_SHOW = true; openGallery(); }
   if ($('#app').classList.contains('on')) { renderJudge(); }
   if (S.user) $('#avatar').textContent = S.user.h[0].toUpperCase();
   shownGems = S.gems;
