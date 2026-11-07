@@ -4524,20 +4524,20 @@ function capOffer() {
 }
 function luckyDrop() {
   const sure = 30, c = $('#coach');
-  const PRIZES = [0, 15, 60, 120], W = [0.3, 0.3, 0.3, 0.1];
+  const PRIZES = [15, 60, 120], W = [0.45, 0.4, 0.15];
   const roll = () => { let r = Math.random(), i = 0; while (r > W[i]) { r -= W[i]; i++; } return PRIZES[i]; };
   c.innerHTML = `<div class="crbox lucky" role="dialog" aria-modal="true" aria-labelledby="crT">
     <div class="cr-rays" aria-hidden="true"></div>${[...Array(14)].map((_, i) => `<i class="cr-cf" style="left:${(i * 53) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('')}
     <div class="lk-gift" aria-hidden="true">🎁</div>
     <h2 id="crT">Lucky drop!</h2><p class="lk-sub">5 right picks in a row!</p>
-    <p>Take <b>${sure} gems</b> now, or risk them on a mystery box. It could hold 0, 15, 60 or <b>120</b> gems.</p>
+    <p>Take <b>${sure} gems</b> now, or risk them on a mystery box. One of the three boxes is empty. The others hold 15, 60 or <b>120</b> gems.</p>
     <div id="lkArea"><button class="bt-cta" id="lkTake">Take ${sure} gems</button><button class="lk-risk" id="lkRisk">Risk it: open a box</button></div></div>`;
   c.classList.add('on', 'cr');
   const close = () => c.classList.remove('on', 'cr');
   c.onclick = null;
   $('#lkTake').onclick = () => { close(); S.gems += sure; save(); gemExplosion(sure, { label: 'Lucky drop' }); };
   $('#lkRisk').onclick = () => {
-    const prizes = [roll(), roll(), roll()];
+    const prizes = [0, roll(), roll()].sort(() => Math.random() - 0.5);
     $('#lkArea').innerHTML = `<p class="lk-pick">Pick a box</p><div class="lk-boxes">${[0, 1, 2].map(i => `<button class="lk-box" data-i="${i}" aria-label="Box ${i + 1}">🎁</button>`).join('')}</div>`;
     c.querySelectorAll('.lk-box').forEach(b => b.onclick = () => {
       const i = +b.dataset.i, won = prizes[i];
