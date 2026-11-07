@@ -2231,6 +2231,20 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .en-side .enpick button[aria-pressed="true"]{box-shadow:0 0 0 2.5px #FF3FA4}
 .en-side .enpick img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .en-side .enpick span{position:absolute;left:3px;bottom:3px;padding:0 5px;border-radius:999px;font-weight:800;font-size:.7rem;color:#fff;background:rgba(20,10,38,.75)}
+/* Crop a landscape photo to portrait */
+.crp{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(10,4,22,.97)}
+.crp-in{width:min(100%,440px);text-align:center;color:#fff}
+.crp-in h2{margin:0 0 6px;font:800 1.6rem/1.1 "Bricolage Grotesque",sans-serif}
+.crp-in p{margin:0 0 14px;color:#CDBEE8;font-size:.95rem}
+.crp-st{position:relative;border-radius:14px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.crp-st img{display:block;width:100%;height:auto;pointer-events:none;-webkit-user-drag:none}
+.crp-dim{position:absolute;top:0;bottom:0;background:rgba(10,4,22,.62);pointer-events:none}
+.crp-dim.l{left:0}.crp-dim.r{right:0}
+.crp-box{position:absolute;top:0;bottom:0;box-shadow:inset 0 0 0 3px #fff;border-radius:6px;outline:none}
+.crp-box:focus-visible{box-shadow:inset 0 0 0 3px #FF3FA4}
+.crp-box .g{position:absolute;inset:0;background:linear-gradient(90deg,transparent 33.2%,rgba(255,255,255,.35) 33.3%,transparent 33.6%,transparent 66.4%,rgba(255,255,255,.35) 66.5%,transparent 66.8%)}
+.crp-box .h{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:42px;height:42px;border-radius:50%;font-weight:800;font-size:1.2rem;color:#2A1150;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.crp-in .btn{margin-top:16px}
 </style>
 </head>
 <body>
@@ -2952,6 +2966,30 @@ function makeRoom(fromStudio) {
     intakeFromStudio = !!fromStudio; $('#file').value = ''; $('#file').click();
   };
 }
+function cropPortrait(img) {
+  return new Promise(done => {
+    const W = img.naturalWidth, H = img.naturalHeight, cw = Math.round(H * 3 / 4);
+    const el = document.createElement('div'); el.className = 'crp'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'crpT');
+    el.innerHTML = `<div class="crp-in"><h2 id="crpT">Crop to portrait</h2><p>Yofi photos are upright. Drag the frame to choose the part to keep.</p>
+      <div class="crp-st"><img src="${img.src}" alt="Your photo"><i class="crp-dim l"></i><i class="crp-dim r"></i><b class="crp-box" tabindex="0" aria-label="Crop frame. Use left and right arrow keys to move it"><span class="g"></span><span class="h">⇆</span></b></div>
+      <button class="btn block" id="crpGo">Use this crop</button><button class="ceg-later" id="crpNo">Cancel</button></div>`;
+    document.body.appendChild(el);
+    const st = el.querySelector('.crp-st'), box = el.querySelector('.crp-box'), dl = el.querySelector('.crp-dim.l'), dr = el.querySelector('.crp-dim.r');
+    let x = (W - cw) / 2;
+    const paint = () => { const k = st.clientWidth / W, bw = cw * k, bx = x * k; box.style.width = bw + 'px'; box.style.left = bx + 'px'; dl.style.width = bx + 'px'; dr.style.left = (bx + bw) + 'px'; };
+    const clamp = v => Math.max(0, Math.min(W - cw, v));
+    requestAnimationFrame(paint); window.addEventListener('resize', paint);
+    let sx = null, x0 = 0;
+    st.addEventListener('pointerdown', e => { sx = e.clientX; x0 = x; st.setPointerCapture(e.pointerId); const r = st.getBoundingClientRect(), k = st.clientWidth / W; if (!box.contains(e.target)) { x = clamp((e.clientX - r.left) / k - cw / 2); x0 = x; paint(); } });
+    st.addEventListener('pointermove', e => { if (sx == null) return; x = clamp(x0 + (e.clientX - sx) / (st.clientWidth / W)); paint(); });
+    ['pointerup', 'pointercancel'].forEach(t => st.addEventListener(t, () => { sx = null; }));
+    box.addEventListener('keydown', e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); x = clamp(x + (e.key === 'ArrowLeft' ? -1 : 1) * W / 40); paint(); } });
+    const end = v => { window.removeEventListener('resize', paint); el.remove(); done(v); };
+    el.querySelector('#crpNo').onclick = () => end(null);
+    el.querySelector('#crpGo').onclick = () => { const c = document.createElement('canvas'); c.width = cw; c.height = H; c.getContext('2d').drawImage(img, Math.round(x), 0, cw, H, 0, 0, cw, H); end(c); };
+    setTimeout(() => box.focus(), 50);
+  });
+}
 function portraitOnly() {
   openSheet(`<div class="po"><div class="po-ph" aria-hidden="true"><span class="no"></span><span class="ok"></span></div>
     <h2>Portrait photos only</h2><p class="sub">Yofi photos are upright, so every photo shows in full when two go head to head. This one is wider than it is tall. Pick a photo taken with your phone held upright.</p>
@@ -2969,7 +3007,7 @@ $('#file').addEventListener('change', async e => {
   const url = URL.createObjectURL(f);
   let img;
   try { img = await loadImg(url); } catch (err) { toast('This photo couldn’t be opened. Try a JPG or PNG.'); return; }
-  if (img.naturalWidth / img.naturalHeight > CFG.MAX_RATIO) { URL.revokeObjectURL(url); portraitOnly(); return; }
+  if (img.naturalWidth / img.naturalHeight > CFG.MAX_RATIO) { const cut = await cropPortrait(img); if (!cut) { URL.revokeObjectURL(url); return; } img = cut; }
   $('#landing').style.display = 'none'; $('#app').classList.add('on'); paintGems(false);
   const id = toID(img, 960); URL.revokeObjectURL(url);
   const src = toURL(id);
