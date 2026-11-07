@@ -1935,6 +1935,25 @@ button.bar:hover span:first-child{color:var(--pink)}
 .panes #judge,.panes #studio{transition:transform .32s cubic-bezier(.2,.8,.2,1)}
 .panes,#judge,#studio{touch-action:pan-y}
 .tot-c img{-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none}
+/* Inline need-gems card on Enhance */
+.needc{margin:14px 0 6px;padding:14px;border-radius:20px;background:#211339;box-shadow:inset 0 0 0 1.5px #3C2A63}
+.needc.pulse{animation:ncpulse .7s ease-out 1}
+@keyframes ncpulse{0%{box-shadow:inset 0 0 0 1.5px #3C2A63,0 0 0 0 rgba(255,63,164,.7)}40%{box-shadow:inset 0 0 0 2px #FF3FA4,0 0 0 8px rgba(255,63,164,0)}100%{box-shadow:inset 0 0 0 1.5px #3C2A63}}
+.nc-top{display:flex;align-items:center;gap:8px}
+.nc-top svg{width:22px;height:22px}
+.nc-top b{font:800 1.1rem/1 "Bricolage Grotesque",sans-serif}
+.nc-top span{margin-left:auto;font-size:.85rem;font-weight:700;color:#FFC93C}
+.nc-bar{display:block;height:8px;margin:10px 0 12px;border-radius:4px;background:#33204F;overflow:hidden}
+.nc-bar>i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
+.nc-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ngx2.sm{padding:10px 8px;grid-template-columns:auto 1fr;grid-auto-flow:row;justify-items:start;align-items:center;column-gap:8px;row-gap:0;text-align:left;border-radius:16px}
+.ngx2.sm .ic{grid-row:span 2}
+.ngx2.sm .ic svg{width:28px;height:28px}
+.ngx2.sm b{font-size:1rem}
+.ngx2.sm small{font-size:.78rem}
+.nc-hint{margin:10px 0 0;text-align:center;font-size:.82rem;color:#A796C6}
+#stFix[data-short] .gpill{opacity:.55}
+#stFix[data-short]{filter:saturate(.75)}
 </style>
 </head>
 <body>
@@ -2821,9 +2840,16 @@ async function checkMaxed(p) {
 const photoLock = p => p && (S.entries || []).find(e => e.pid === p.id && !e.done && Date.now() < e.end);
 function lockToast(e) { toast(`This photo is in ${CX.find(x => x.id === e.cid).t}. You can improve it again when the results are in.`); }
 const fixCost = p => !p ? CFG.COST : p.s.total >= 85 ? 150 : p.s.total >= 75 ? 100 : 50;
+function needCardHTML(p) {
+  const cost = fixCost(p), have = S.gems, short = Math.max(0, cost - have);
+  return `<div class="needc" id="needC"><div class="nc-top">${gemIcon('')}<b>${have} / ${cost} gems</b><span>${short} to go</span></div><i class="nc-bar"><i style="width:${Math.min(100, have / cost * 100)}%"></i></i>
+    <div class="nc-btns"><button class="ngx2 judge sm" data-get="judge"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg></span><b>Free gems</b><small>Judge</small></button><button class="ngx2 buy sm" data-get="store"><span class="ic">${gemIcon('')}</span><b>Buy gems</b><small>Packs</small></button></div>
+    <p class="nc-hint">← or swipe left to judge and earn</p></div>`;
+}
 function startEnhance(p, cat) {
   const lk = photoLock(p); if (lk) { lockToast(lk); return; }
   if (isMaxed(p, cat)) { const o = lowestOpen(p); if (!o) { toast('Every category is at its best on this photo.'); return; } cat = o; }
+  if (S.gems < fixCost(p) && !$('#flow').classList.contains('on') && $('#panes').dataset.at === 'studio' && $('#needC')) { const c = $('#needC'); c.classList.remove('pulse'); void c.offsetWidth; c.classList.add('pulse'); c.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   openEnhance(p, cat);
   if (S.gems >= fixCost(p)) generate(1);
   else needFixGems(p);
@@ -4114,7 +4140,7 @@ ${lk ? `<div class="entc"><img src="${p.src}" alt="Your entered photo"><div clas
     <p class="to80">${lk ? '' : p.cat ? msg : '<strong>Add a category</strong> so this photo can go into gallery frames and competitions.'}</p>
     ${stage >= 1 ? `<div class="qrow">${stage === 2 && !lk ? '<button class="btn block" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
     ${lk || !sorted.length ? '' : '<h3 class="sec">Improve your photo</h3>'}
-    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}"><span>${sorted[0].verb}</span><span class="gpill">${gemIcon()}${fixCost(p)}</span></button><p class="fixsub">${sorted[0].name} is your lowest at ${p.s[sorted[0].k]}. Tap a score bar above to pick another.</p>`}`}
+    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span><span class="gpill">${gemIcon()}${fixCost(p)}</span></button><p class="fixsub">${sorted[0].name} is your lowest at ${p.s[sorted[0].k]}. Tap a score bar above to pick another.</p>${S.gems < fixCost(p) ? needCardHTML(p) : ''}`}`}
 ${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCardsHTML('Win real cash', 'cash', 'Cash prizes') : ''}
     <div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
     <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl">+</span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`;
