@@ -2115,6 +2115,19 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .sflame.lit .fl{filter:none}
 .sflame.cold{color:#9C8AB8;background:#F3ECFA;box-shadow:inset 0 0 0 1.5px #E2D6F0}
 .sflame:active{transform:scale(.93)}
+/* Enhance: switch photo chip + sheet, short-of-gems pill */
+.swph{position:absolute;top:10px;right:10px;z-index:3;display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 10px;border-radius:999px;font-weight:800;font-size:.8rem;color:#fff;background:rgba(20,10,38,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.swph svg{width:16px;height:16px}
+.gpill.need{background:rgba(20,10,38,.45)!important;color:#FFD3E8!important;font-size:.95rem}
+.swgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 6px}
+.swg{position:relative;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#211339;box-shadow:inset 0 0 0 2px #33204F}
+.swg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.swg.on{box-shadow:0 0 0 3px #FF3FA4}
+.swg .sc{position:absolute;left:6px;bottom:6px;padding:2px 7px;border-radius:999px;font-weight:800;font-size:.8rem;color:#fff;background:rgba(20,10,38,.7)}
+.swg .tg{position:absolute;right:6px;top:6px;padding:2px 6px;border-radius:999px;font-weight:700;font-size:.65rem;color:#fff;background:rgba(20,10,38,.7)}
+.swg.add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#D9C8FF;box-shadow:inset 0 0 0 2px #5A3D8C;background:transparent}
+.swg.add small{font-weight:700;font-size:.8rem}
+.swlink{display:block;margin:12px auto 0;padding:8px 12px;font-weight:700;font-size:.9rem;color:#D9C8FF;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(217,200,255,.45)}
 </style>
 </head>
 <body>
@@ -4348,6 +4361,14 @@ function openBattle() {
 }
 
 /* ---------- Studio ---------- */
+function photoSwitcher() {
+  const p = cur();
+  openSheet(`<h2>Your photos</h2><p class="sub">${S.photos.length} of ${CFG.MAX_PHOTOS} · pick one to work on</p>
+    <div class="swgrid">${S.photos.map(x => { const xl = photoLock(x), tg = xl ? 'Entered' : lowestOpen(x) ? '' : 'Maxed'; return `<button class="swg ${x.id === p.id ? 'on' : ''}" data-sw="${x.id}" aria-label="Photo scoring ${x.s.total}${tg ? ', ' + tg : ''}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span>${tg ? `<span class="tg">${tg}</span>` : ''}</button>`; }).join('')}
+    ${S.photos.length < CFG.MAX_PHOTOS ? `<button class="swg add" id="swNew" aria-label="Upload a new photo"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><small>Upload</small></button>` : ''}</div>`);
+  document.querySelectorAll('#sheetBody [data-sw]').forEach(b => b.onclick = () => { S.cur = b.dataset.sw; save(); closeSheet(); renderStudio(); $('#studio').scrollTop = 0; });
+  if ($('#swNew')) $('#swNew').onclick = () => { closeSheet(); pickPhoto(true); };
+}
 function renderStudio() {
   const st = $('#studio');
   if (S.user) $('#avatar').textContent = S.user.h[0].toUpperCase();
@@ -4367,10 +4388,10 @@ ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your 
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can go into gallery frames and competitions.</p>' : ''}
     ${stage >= 1 ? `<div class="qrow">${stage === 2 && !lk ? '<button class="btn block" id="stComp">Enter a competition</button>' : ''}</div>` : ''}
     ${lk || !sorted.length ? '' : '<h3 class="sec">Improve your photo</h3>'}
-    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span><span class="gpill">${gemIcon()}${fixCost(p)}</span></button><p class="fixsub">${sorted[0].name} is your lowest at ${p.s[sorted[0].k]}. Tap a score bar above to pick another.</p>${S.gems < fixCost(p) ? needCardHTML(p) : ''}`}`}
+    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span>${S.gems < fixCost(p) ? `<span class="gpill need">Need ${fixCost(p) - S.gems}${gemIcon()}</span>` : `<span class="gpill">${gemIcon()}${fixCost(p)}</span>`}</button><button class="swlink" id="stSwL">Switch photo · ${S.photos.length}/${CFG.MAX_PHOTOS}</button>`}`}
 ${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCardsHTML('Win real cash', 'cash', 'Cash prizes') : ''}
-    <div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
-    <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`;
+    ${!lk && sorted.length ? '' : `<div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
+    <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`}`;
   animateRing(st);
   st.querySelectorAll('.fix').forEach(b => b.onclick = () => startEnhance(p, b.dataset.c));
   if ($('#stFix')) $('#stFix').onclick = () => startEnhance(p, $('#stFix').dataset.c);
@@ -4381,6 +4402,7 @@ ${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCard
   st.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { S.cur = b.dataset.p; save(); renderStudio(); });
   if ($('#stNew') && !$('#stNew').dataset.upfor) $('#stNew').onclick = () => pickPhoto(true);
   if ($('#stComp')) $('#stComp').onclick = () => openComps(p);
+  if ($('#stSwL')) $('#stSwL').onclick = photoSwitcher;
   if ($('#gEnter')) $('#gEnter').onclick = () => { CXF = gc.k === 'gem' ? 'gem' : 'all'; openComps(p); cxEnter(gc); };
   if ($('#gChange')) $('#gChange').onclick = () => openComps(p);
   clearInterval(window.__gl); if (gc) window.__gl = setInterval(() => { const el = st.querySelector('[data-gl]'); if (!el || !document.contains(el)) { clearInterval(window.__gl); return; } el.textContent = fmtLeft(cxLeft(gc)); }, 1000);
