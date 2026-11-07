@@ -1590,6 +1590,17 @@ button.bar:hover span:first-child{color:var(--pink)}
 .wbk-go{display:block;width:100%;min-height:58px;margin-top:20px;border-radius:999px;font:800 1.3rem/1 "Bricolage Grotesque",sans-serif;color:#fff;background:linear-gradient(180deg,#FF3FB4 0%,#E40B9A 45%,#A21CCB 100%);box-shadow:0 0 0 1.5px rgba(255,120,210,.65),0 0 22px rgba(255,45,170,.45),inset 0 1px 0 rgba(255,255,255,.35)}
 .wbk-up{display:block;width:100%;min-height:50px;margin-top:10px;border-radius:999px;font-weight:700;font-size:1rem;color:#F6EEFF;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.25)}
 #landing.returning #lUpload{display:none}
+/* In-app Home for returning players */
+.home .wbk-h{margin:6px 0 12px;font-size:clamp(1.6rem,7.6vw,2.2rem)}
+.home .fh{margin-top:20px}
+.wbk-gh{display:flex;align-items:center;justify-content:space-between;margin-top:20px}
+.wbk-gh .wbk-sh{margin:0}
+.wbk-more{color:#5BE7F5;font-weight:700;font-size:.9rem;text-decoration:underline;text-underline-offset:4px}
+.wbk-room{display:block;width:100%;margin-top:10px;padding:0;border-radius:22px;overflow:hidden;text-align:left;cursor:pointer}
+.wbk-room .rv{margin:0}
+#studio,#judge{isolation:isolate}
+.wbk-room>*{pointer-events:none}
+.home .wbk-up{margin:16px 0 8px}
 </style>
 </head>
 <body>
@@ -2125,7 +2136,7 @@ function gemExplosion(n, o = {}) {
 
 /* ---------- Landing ---------- */
 function renderWelcomeBack() {
-  const wb = $('#wb'), on = !!S.user;
+  const wb = $('#wb'), on = false;
   $('#landing').classList.toggle('returning', on); wb.hidden = !on;
   if (!on) return;
   const now = Date.now(), ents = (S.entries || []);
@@ -2148,6 +2159,49 @@ function renderWelcomeBack() {
   wb.querySelectorAll('[data-wbl]').forEach(b => b.onclick = () => { openApp(); openComps(null); openLive(ents.find(e => e.id === b.dataset.wbl)); });
   wb.querySelectorAll('[data-wbp]').forEach(b => b.onclick = () => { S.cur = b.dataset.wbp; save(); openApp(); closeFlow(); go('studio'); });
   clearInterval(window.__wb); window.__wb = setInterval(() => { if (wb.hidden || $('#landing').style.display === 'none') return; wb.querySelectorAll('[data-wbt]').forEach(el => { const e = ents.find(x => x.id === el.dataset.wbt); if (e) el.textContent = `${fmtLeft(Math.max(0, e.end - Date.now()))} left`; }); }, 1000);
+}
+function featuredPick() {
+  const afford = c => c.k === 'gem' ? S.gems >= c.fee : c.k === 'bc' ? (S.bonus || 0) >= c.fee : (S.cash || 0) >= c.fee;
+  const pool = CX.filter(c => !liveEntry(c.id) && c.k !== 'sp');
+  const newbie = !(S.entries || []).some(e => e.cid === 'snap');
+  const open = newbie && pool.find(c => c.id === 'snap');
+  const fpool = newbie ? pool : pool.filter(c => c.id !== 'snap');
+  return open || fpool.filter(afford).sort((a, b) => cxLeft(a) - cxLeft(b))[0] || fpool.filter(c => c.k === 'gem').sort((a, b) => cxLeft(a) - cxLeft(b))[0];
+}
+function openHome() {
+  if (!S.user) return;
+  const now = Date.now(), ents = S.entries || [];
+  const live = ents.filter(e => !e.done).sort((a, b) => a.end - b.end);
+  const fresh = ents.filter(e => e.done && !e.seen);
+  const pick = featuredPick(), pimg = pick ? (pick.art ? SEED[1].src : SEED[pick.img].src) : '';
+  const nf = framesTotal();
+  openFlow(`<div class="cx wbk home">
+    <h1 class="wbk-h">Welcome back, <span>@${esc(S.user.h)}</span></h1>
+    ${fresh.length ? `<button class="wbk-res" id="wbRes"><span class="wbk-tro">🏆</span><span><b>Results are in!</b><small>${esc(CX.find(c => c.id === fresh[0].cid).t)}${fresh.length > 1 ? ` and ${fresh.length - 1} more` : ''}. Tap to see how you did.</small></span><span class="chev">›</span></button>` : ''}
+    ${live.length ? `<h2 class="wbk-sh">Your live entries</h2><div class="wbk-live">${live.map(e => { const c = CX.find(x => x.id === e.cid); return `<button class="wbk-ent" data-wbl="${e.id}"><img src="${entrySrc(e)}" alt=""><span><small>${esc(c.t)}</small><b>#${rankAt(e, now).toLocaleString()}</b><em data-wbt="${e.id}">${fmtLeft(Math.max(0, e.end - now))} left</em></span></button>`; }).join('')}</div>` : ''}
+    ${pick ? `<h2 class="fh">Featured competition</h2>
+    <div class="feat k-${pick.k}"><div class="fimg"><img src="${pimg}" alt=""></div>
+      <div class="fb"><div class="ft"><span class="fpill">Photo competition</span><span class="fend" data-cx="${pick.id}">${IC.clock}Ends in ${fmtLeft(cxLeft(pick))}</span></div>
+        <h3>${esc(pick.t)}</h3><span class="fsub">${pick.cats ? esc(pick.lab) : 'Any photo'}</span>
+        <div class="fst"><div><small>1st prize</small><b>${cxPrize(pick)}</b></div><div><small>Entry fee</small><b>${cxFee(pick)}</b></div></div>
+        <button class="fgo" data-cx-go="${pick.id}">Enter competition</button></div></div>` : ''}
+    <div class="wbk-gh"><h2 class="wbk-sh">Your gallery</h2><button class="wbk-more" id="wbGal">${nf ? `${nf} framed · Open ›` : 'Open ›'}</button></div>
+    <div class="wbk-room" id="wbRoom" role="link" tabindex="0" aria-label="Open your gallery">${roomViewHTML(roomOpen(GV.room) ? GV.room : 0)}</div>
+    <button class="wbk-up" id="wbUp">Upload a new photo</button></div>`, true);
+  $('#flow').classList.add('cxmode', 'astab', 'homemode'); $('#flow').style.top = cxTabTop() + 'px';
+  ['segJudge', 'segStudio', 'segGallery', 'segCompete'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false'));
+  $('#ptitle').textContent = 'Home';
+  const body = $('#flowBody');
+  body.querySelectorAll('[data-cx-go]').forEach(b => b.onclick = () => { const c = CX.find(x => x.id === b.dataset.cxGo); openComps(null); cxEnter(c); });
+  if ($('#wbRes')) $('#wbRes').onclick = () => { openComps(null); openResult(fresh[0]); };
+  body.querySelectorAll('[data-wbl]').forEach(b => b.onclick = () => { openComps(null); openLive(ents.find(e => e.id === b.dataset.wbl)); });
+  $('#wbGal').onclick = $('#wbRoom').onclick = () => openGallery();
+  $('#wbUp').onclick = () => pickPhoto(true);
+  clearInterval(window.__wb); window.__wb = setInterval(() => {
+    if (!$('#flow').classList.contains('homemode')) { clearInterval(window.__wb); return; }
+    body.querySelectorAll('[data-wbt]').forEach(el => { const e = ents.find(x => x.id === el.dataset.wbt); if (e) el.textContent = `${fmtLeft(Math.max(0, e.end - Date.now()))} left`; });
+    body.querySelectorAll('.fend[data-cx]').forEach(el => { const c = CX.find(x => x.id === el.dataset.cx); if (c) el.innerHTML = `${IC.clock}Ends in ${fmtLeft(cxLeft(c))}`; });
+  }, 1000);
 }
 function renderLanding() {
   renderWelcomeBack();
@@ -2276,7 +2330,7 @@ $('#file').addEventListener('change', async e => {
 /* ---------- Flow overlay ---------- */
 let flowClose = null;
 function openFlow(html, closable = true, onClose) {
-  leaveCxTab();
+  leaveCxTab(); $('#flow').classList.remove('homemode');
   $('#flowBody').innerHTML = html; $('#flowBody').scrollTop = 0; $('#flow').classList.add('on');
   if ($('#app').classList.contains('on')) $('#flow').style.top = cxTabTop() + 'px';
   $('#flowBack').style.visibility = closable ? 'visible' : 'hidden'; flowClose = onClose || null;
@@ -2290,7 +2344,7 @@ function leaveCxTab() {
   const at = $('#panes').dataset.at; ['judge', 'studio', 'gallery'].forEach(k => $('#seg' + k[0].toUpperCase() + k.slice(1)).setAttribute('aria-pressed', at === k)); $('#segCompete').setAttribute('aria-pressed', 'false');
 }
 window.addEventListener('resize', () => { const f = $('#flow'); if (f.classList.contains('on')) f.style.top = cxTabTop() + 'px'; });
-function closeFlow() { leaveCxTab(); $('#flow').classList.remove('on'); renderStudio(); renderJudge(); if (flowClose) { const f = flowClose; flowClose = null; f(); } }
+function closeFlow() { leaveCxTab(); $('#flow').classList.remove('homemode'); $('#flow').classList.remove('on'); renderStudio(); renderJudge(); if (flowClose) { const f = flowClose; flowClose = null; f(); } }
 $('#flowBack').onclick = () => { if (!S.user) { openSignup(); return; } closeFlow(); };
 
 function showResult(p, o = {}) {
@@ -2987,11 +3041,12 @@ function openMenu() {
   $('#mR').onclick = () => { if (confirm('Delete your photos, gems and account from this device?')) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } };
 }
 $('#avatar').onclick = openMenu;
+$('#shell .top .wm').style.cursor = 'pointer'; $('#shell .top .wm').onclick = () => { if (S.user) openHome(); };
 const setHH = () => { const g = $('#shell > .seg'); if (g && g.offsetHeight) $('#shell').style.setProperty('--hh', (g.offsetTop + g.offsetHeight + 8) + 'px'); };
 window.addEventListener('resize', setHH); new MutationObserver(setHH).observe($('#app'), { attributes: true, attributeFilter: ['class'] }); setTimeout(setHH, 0);
 (() => {
   const T = { segCompete: 'Competitions', segStudio: 'Enhance photo', segJudge: 'Judge photos', segGallery: 'Gallery' };
-  const upd = () => { const b = document.querySelector('.seg button[aria-pressed="true"]'); $('#ptitle').textContent = b ? T[b.id] : ''; };
+  const upd = () => { const b = document.querySelector('.seg button[aria-pressed="true"]'); $('#ptitle').textContent = b ? T[b.id] : ($('#flow').classList.contains('homemode') ? 'Home' : ''); };
   new MutationObserver(upd).observe(document.querySelector('.seg'), { attributes: true, subtree: true, attributeFilter: ['aria-pressed'] });
   upd();
 })();
@@ -3557,6 +3612,7 @@ function renderStudio() {
 (async () => {
   await prepSeeds(); save();
   renderLanding();
+  if (S.user) { $('#landing').style.display = 'none'; $('#app').classList.add('on'); renderJudge(); renderStudio(); paintGems(false); openHome(); }
   if ($('#app').classList.contains('on')) { renderJudge(); }
   if (S.user) $('#avatar').textContent = S.user.h[0].toUpperCase();
   shownGems = S.gems;
