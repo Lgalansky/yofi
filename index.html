@@ -2392,6 +2392,17 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .sflame.cold{background:#24143D!important;color:#A796C6!important;box-shadow:inset 0 0 0 1.5px #3A2760!important}
 .sflame.lit{color:#fff!important;background:linear-gradient(135deg,#FF9F43,#FF3F6C)!important;box-shadow:0 4px 12px rgba(255,110,60,.35)!important}
 #segCompete .rdot{box-shadow:0 0 0 2px #140A26,0 4px 10px rgba(155,60,255,.45)!important}
+/* Enhance with no photo: explain, then point to Compete */
+.enh0{padding:18px 4px 24px;color:#fff}
+.enh0 h2{margin:6px 0 6px;font:800 1.8rem/1.1 "Bricolage Grotesque",sans-serif}
+.enh0>p{margin:0 0 18px;font-size:1rem;line-height:1.45;color:#CDBEE8}
+.enh0-st{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:10px}
+.enh0-st li{display:grid;grid-template-columns:40px 1fr;column-gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:#211339;box-shadow:inset 0 0 0 1.5px #33204F}
+.enh0-st .n{grid-row:span 2;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;font-weight:800;color:#fff;background:linear-gradient(135deg,#FF3FA4,#9B3CFF)}
+.enh0-st b{font-size:1.02rem}
+.enh0-st small{font-size:.85rem;color:#A796C6}
+.enh0 .link{margin-top:6px;color:#D9C8FF}
+.enh-more{margin:18px 0 6px}
 </style>
 </head>
 <body>
@@ -4709,8 +4720,12 @@ function renderStudio() {
   if (S.user) $('#avatar').textContent = S.user.h[0].toUpperCase();
   const p = cur();
   if (!p) {
-    st.innerHTML = `<div class="swp r"><button class="swp-b" data-swp="judge">Swipe to Judge<span class="ar">→</span></button></div><div class="empty emp2"><h2>Pick a competition to start</h2><p>Upload a photo for one, get it scored, then enhance it to 80+ to enter.</p></div>${compCardsHTML('Free competitions', 'gem', 'Win gems')}${compCardsHTML('Win real cash', 'cash', 'Cash prizes')}<div style="text-align:center;margin:6px 0 20px"><button class="link" id="stAdd">Or just score a photo</button></div>`;
-    $('#stAdd').onclick = () => pickPhoto(true); return;
+    st.innerHTML = `<div class="swp r"><button class="swp-b" data-swp="judge">Swipe to Judge<span class="ar">→</span></button></div>
+    <div class="enh0"><h2>Enhance your photos</h2><p>Upload a photo, get an AI score, then improve it to 80+ to compete.</p>
+      <ol class="enh0-st"><li><span class="n">1</span><b>Upload</b><small>Pick a competition, then add a photo for it</small></li><li><span class="n">2</span><b>Score</b><small>AI rates it out of 100</small></li><li><span class="n">3</span><b>Improve to 80+</b><small>Fix your weakest category with gems</small></li></ol>
+      <button class="btn block" id="stFind">Find a competition to enter</button>
+      <div style="text-align:center"><button class="link" id="stAdd">Or just score a photo</button></div></div>`;
+    $('#stAdd').onclick = () => pickPhoto(true); $('#stFind').onclick = () => { CXF = 'all'; CXP = null; openComps(null); }; return;
   }
   const tot = p.s.total, stage = stageOf(tot), lk = photoLock(p), gc = !lk && p.cat ? goalFor(p) : null, gneed = gc ? cxNeed(gc) : 0;
   const sorted = C.filter(c => !isMaxed(p, c.k)).sort((a, b) => p.s[a.k] - p.s[b.k]);
@@ -4725,7 +4740,7 @@ ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your 
     
     
     ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>${S.gems < fixCost(p) ? `<p class="fixshort">Costs <b>${fixCost(p)}</b> gems${p.s.total >= CFG.QUALIFY ? ` at ${p.s.total >= 90 ? 90 : CFG.QUALIFY}+` : ''}. You have <b>${S.gems}</b>, so you need <b>${fixCost(p) - S.gems} more</b>. Swipe to Judge to earn them.</p>` : ''}<button class="swlink" id="stSwL">Switch photo · ${S.photos.length}/${CFG.MAX_PHOTOS}</button>`}`}
-${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCardsHTML('Win real cash', 'cash', 'Cash prizes') : ''}
+${lk ? `<button class="btn block enh-more" id="stMore">Enter another competition</button>` : ''}
     ${!lk && sorted.length ? '' : `<div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
     <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`}`;
   animateRing(st);
@@ -4740,6 +4755,7 @@ ${lk ? compCardsHTML('Your next competition', 'gem', 'Free to enter') + compCard
   if ($('#stNew') && !$('#stNew').dataset.upfor) $('#stNew').onclick = () => pickPhoto(true);
   if ($('#stComp')) $('#stComp').onclick = () => openComps(p);
   if ($('#stSwL')) $('#stSwL').onclick = photoSwitcher;
+  if ($('#stMore')) $('#stMore').onclick = () => { if (CX.some(c => canEnter(c))) goEligible(); else { CXF = 'all'; CXP = null; openComps(null); } };
   if ($('#stReady')) $('#stReady').onclick = () => goEligible();
   st.querySelectorAll('.hero-photo .qbadge').forEach(q => { if (!lk && tot >= CFG.QUALIFY) { q.classList.add('tap'); q.addEventListener('pointerdown', e => e.stopPropagation()); q.onclick = e => { e.stopPropagation(); goEligible(); }; } });
   if ($('#gEnter')) $('#gEnter').onclick = () => { CXF = gc.k === 'gem' ? 'gem' : 'all'; openComps(p); cxEnter(gc); };
