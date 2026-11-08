@@ -2433,6 +2433,12 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 #flowBody .rs-ring{display:flex;justify-content:center}
 #flowBody .rs-ring>*{width:min(150px,100%)!important;height:auto}
 #flowBody .rs-bars{display:block;margin-top:18px}
+/* Gems + in the nav, top-up packs when short */
+#gemPill{position:relative}
+#gemPill .gplus{display:grid;place-items:center;flex:none;width:22px;height:22px;margin-left:6px;border-radius:50%;font-weight:800;font-size:1rem;line-height:1;color:#fff;background:linear-gradient(135deg,#FF3FA4,#9B3CFF)}
+.topup{margin:16px 0 4px;padding:14px 12px 12px;border-radius:20px;background:#1B1030;box-shadow:inset 0 0 0 1.5px #FFC93C}
+.topup h3{margin:0;font:800 1.05rem/1.1 "Bricolage Grotesque",sans-serif;color:#fff}
+.topup .jf-packs{margin-top:14px}
 </style>
 </head>
 <body>
@@ -2491,7 +2497,7 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
     </header>
     <div class="wallet" aria-label="Wallet">
       <button class="wb cash" id="wCash" aria-label="Cash balance"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="8" width="28" height="17" rx="3" fill="#21C77A"/><rect x="5" y="11" width="22" height="11" rx="2" fill="none" stroke="#0E8F55" stroke-width="1.5"/><circle cx="16" cy="16.5" r="4.2" fill="#FFD84D"/><path d="M16 14v5M17.4 14.9c-.4-.5-2.8-.7-2.8.6 0 1.4 2.8.7 2.8 2.1 0 1.2-2.4 1.1-2.9.5" stroke="#0E8F55" stroke-width="1.1" fill="none" stroke-linecap="round"/></svg><span><small>Cash</small><b id="cashNum">$0.00</b></span></button>
-      <button class="wb gems" id="gemPill" aria-label="Gems balance"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#gemPath"/></svg><span><small>Gems</small><b id="gemNum">0</b></span></button>
+      <button class="wb gems" id="gemPill" aria-label="Gems balance. Buy gems"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#gemPath"/></svg><span><small>Gems</small><b id="gemNum">0</b></span><span class="gplus" aria-hidden="true">+</span></button>
       <button class="wplus" id="walletPlus" aria-label="Add funds">+</button>
     </div>
     <div class="panes" id="panes" data-at="judge">
@@ -3635,6 +3641,8 @@ const PACKS = [
   { t: 'Pro', sub: 'Best value. Bigger wins.', cash: 50, bonus: 7, gems: 1000, free: 60, cls: 'pro' }
 ];
 let storeTimer = null;
+const shortOfGems = () => S.user && S.photos.length && cur() && lowestOpen(cur()) && !photoLock(cur()) && S.gems < fixCost(cur());
+const topUpHTML = () => `<div class="topup"><h3>Out of gems? Top up</h3>${packTiles('pk')}</div>`;
 function packTiles(attr, named) {
   return `<div class="jf-packs ${named ? 'named' : ''}">${PACKS.map((k, i) => `<button class="jpk ${k.cls}" data-${attr}="${i}" aria-label="${k.t} pack: ${k.gems} gems plus $${k.cash} cash for $${k.cash}">${i === 2 ? '<span class="bv">Best value</span>' : ''}${named ? `<span class="nm">${k.t}</span>` : ''}<span class="gi">${gemIcon('')}</span><b>${k.gems.toLocaleString()}</b><small>gems</small><span class="csh">${CASH_ICON}+$${k.cash}</span><span class="pr">$${k.cash}</span></button>`).join('')}</div>`;
 }
@@ -4653,7 +4661,7 @@ function renderJudge() {
     <div class="jfoot">
       <div class="jf-combo"><b>Combo ${combo}/5</b><span class="dots">${[...Array(5)].map((_, i) => `<i class="${i < combo ? 'on' : ''}"></i>`).join('')}</span><small>Lucky drop at 5</small></div>
       <div class="jf-gems"><div class="jf-l">${ds.D.n < JUDGE_CAP ? `<span><b>+${CFG.VOTE}</b> ${gemIcon()} when you agree</span><span class="r"><b>${JUDGE_CAP - ds.D.n}</b> of ${JUDGE_CAP} left today</span>` : `<span>Daily bonus used</span><span class="r"><b>+${JUDGE_LOW}</b> ${gemIcon()} per pick</span>`}</div>
-      ${ds.D.n < JUDGE_CAP ? `<div class="jcap"><i style="width:${Math.min(100, (JUDGE_CAP - ds.D.n) / JUDGE_CAP * 100)}%"></i></div>` : packTiles('pk')}</div>
+      ${ds.D.n < JUDGE_CAP ? `<div class="jcap"><i style="width:${Math.min(100, (JUDGE_CAP - ds.D.n) / JUDGE_CAP * 100)}%"></i></div>` : packTiles('pk')}</div>${ds.D.n < JUDGE_CAP && shortOfGems() ? topUpHTML() : ''}
     </div>
     <div class="vh" id="jRes" aria-live="polite"></div>
 `;
@@ -4830,7 +4838,7 @@ ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your 
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can go into gallery frames and competitions.</p>' : ''}
     
     
-    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>${S.gems < fixCost(p) ? `<p class="fixshort">Costs <b>${fixCost(p)}</b> gems${p.s.total >= CFG.QUALIFY ? ` at ${p.s.total >= 90 ? 90 : CFG.QUALIFY}+` : ''}. You have <b>${S.gems}</b>, so you need <b>${fixCost(p) - S.gems} more</b>. Swipe to Judge to earn them.</p>` : ''}<button class="swlink" id="stSwL">Switch photo · ${S.photos.length}/${CFG.MAX_PHOTOS}</button>`}`}
+    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>${S.gems < fixCost(p) ? `<p class="fixshort">Costs <b>${fixCost(p)}</b> gems${p.s.total >= CFG.QUALIFY ? ` at ${p.s.total >= 90 ? 90 : CFG.QUALIFY}+` : ''}. You have <b>${S.gems}</b>, so you need <b>${fixCost(p) - S.gems} more</b>. Swipe to Judge to earn them.</p>` : ''}${S.gems < fixCost(p) ? topUpHTML() : ''}<button class="swlink" id="stSwL">Switch photo · ${S.photos.length}/${CFG.MAX_PHOTOS}</button>`}`}
 ${lk ? `<button class="btn block enh-more" id="stMore">Enter another competition</button>` : ''}
     ${!lk && sorted.length ? '' : `<div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
     <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`}`;
@@ -4846,6 +4854,7 @@ ${lk ? `<button class="btn block enh-more" id="stMore">Enter another competition
   if ($('#stNew') && !$('#stNew').dataset.upfor) $('#stNew').onclick = () => pickPhoto(true);
   if ($('#stComp')) $('#stComp').onclick = () => openComps(p);
   if ($('#stSwL')) $('#stSwL').onclick = photoSwitcher;
+  st.querySelectorAll('[data-pk]').forEach(b => b.onclick = () => openStore());
   if ($('#stMore')) $('#stMore').onclick = () => { if (CX.some(c => canEnter(c))) goEligible(); else { CXF = 'all'; CXP = null; openComps(null); } };
   if ($('#stReady')) $('#stReady').onclick = () => goEligible();
   st.querySelectorAll('.hero-photo .qbadge').forEach(q => { if (!lk && tot >= CFG.QUALIFY) { q.classList.add('tap'); q.addEventListener('pointerdown', e => e.stopPropagation()); q.onclick = e => { e.stopPropagation(); goEligible(); }; } });
