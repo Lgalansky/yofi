@@ -2528,7 +2528,8 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 @keyframes gring{to{transform:scale(5);opacity:0}}
 #gemPill.bump{animation:bump .5s;box-shadow:inset 0 0 0 1.5px #5BC8FF,0 0 18px rgba(91,200,255,.6)!important}
 @media (prefers-reduced-motion:reduce){.gemfloat,.gemring{display:none}}
-.tot-r .tot-v{position:absolute;top:12px;left:50%;transform:translateX(-50%);margin:0}
+.tot-r .tot-v{position:absolute;top:12px;left:0;right:0;width:max-content;margin:0 auto;transform:none;animation:tvIn .35s cubic-bezier(.3,1.4,.5,1)}
+@keyframes tvIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
 /* White section headings like Judge */
 .sec-h{margin:2px 0 14px}
 .sec-h h2{color:#fff!important}
