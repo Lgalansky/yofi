@@ -4217,7 +4217,7 @@ const cxFee = c => c.k === 'gem' ? `<span class="freefee">Free</span>` : c.k ===
 const cxNeed = c => c.min || CFG.QUALIFY;
 let CXF = 'all', cxTimer = null, CXP = null, CXT = 'enter';
 const freeUsed = () => new Set((S.entries || []).filter(e => (CX.find(x => x.id === e.cid) || {}).k === 'gem').map(e => e.pid));
-const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used = c.k === 'gem' ? freeUsed() : new Set(); return S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total)[0] || null; };
+const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used = c.k === 'gem' ? freeUsed() : new Set(); return S.photos.filter(p => cxOk(c, p) && (c.k !== 'gem' || !photoLock(p)) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total)[0] || null; };
 const readyPhotos = () => S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)) : [];
 function goEligible() { CXF = 'mine'; CXP = null; openComps(null); const b = $('#flowBody'); if (b) b.scrollTop = 0; }
 const ccard = c => { const left = cxLeft(c), fee = cxFee(c).replace(/<span class="gfee">/, '').replace(/<\/span>$/, '');
@@ -4331,7 +4331,7 @@ const rankMove = e => { const now = Math.min(Date.now(), e.end); return rankAt(e
 const moveHTML = d => d > 0 ? `<i class="mv mup">▲${d}</i>` : d < 0 ? `<i class="mv mdn">▼${-d}</i>` : '<i class="mv">–</i>';
 const BOOST_EVERY = 5;
 const liveEntries = () => (S.entries || []).filter(e => !e.done && Date.now() < e.end);
-const liveEntry = cid => { const c = CX.find(x => x.id === cid); if (c && c.multi) return null; return (S.entries || []).find(e => e.cid === cid && !e.done); };
+const liveEntry = cid => { const c = CX.find(x => x.id === cid); if (c && (c.multi || c.k !== 'gem')) return null; return (S.entries || []).find(e => e.cid === cid && !e.done); };
 const entrySrc = e => { const p = S.photos.find(x => x.id === e.pid); return p ? p.src : SEED[0].src; };
 const cxPill = c => `<span class="cpill k-${c.k}">${c.cats ? gi(c.cats[0]) : gi('star')}${esc((c.lab || 'Any category').toUpperCase())}</span>`;
 const fmtClock = ms => { const t = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s2 = t % 60; return h ? `${h}:${String(m).padStart(2, '0')}:${String(s2).padStart(2, '0')}` : `${m}:${String(s2).padStart(2, '0')}`; };
@@ -4532,7 +4532,7 @@ function cxEnter(c) {
     return;
   }
   const used = new Set(c.k === 'gem' ? (S.entries || []).filter(e => (CX.find(x => x.id === e.cid) || {}).k === 'gem').map(e => e.pid) : []);
-  const ok = S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total);
+  const ok = S.photos.filter(p => cxOk(c, p) && (c.k !== 'gem' || !photoLock(p)) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total);
   if (!ok.length && S.photos.some(p => cxOk(c, p) && used.has(p.id))) { openEntryGuide(c, null); return; }
   if (false) {
     const gemT = id => (CX.find(x => x.id === id) || {}).k === 'gem' ? CX.find(x => x.id === id).t : null;
