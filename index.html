@@ -2444,6 +2444,7 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 #shell > .wallet #gemPill{padding-right:40px}
 #gemPill .gplus{position:absolute;right:10px;top:50%;transform:translateY(-50%);margin:0!important}
 #gemPill .gplus svg{display:block;width:12px!important;height:12px!important}
+#flowBody .rs-fix{margin:18px 0 6px;display:flex;align-items:center;justify-content:space-between;padding-left:26px;padding-right:12px;text-align:left}
 </style>
 </head>
 <body>
@@ -3324,8 +3325,7 @@ function showResult(p, o = {}) {
     <div class="scorebox rs-bars">${barsHTML(p.s, o.prev, true, p)}</div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
-  else html += `<div class="opp">
-    <button class="btn block fixbtn nocost" id="doFix"><span>${lc.verb}</span></button></div>`;
+  else html += `<button class="btn block fixbtn nocost rs-fix" id="doFix"><span>${lc.verb}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>`;
   if (S.user && stage === 2 && !photoLock(p)) html += `<button class="btn block rdygo" id="rsComp">${TROPHY_S}Go to competitions</button>`;
   if (S.user) html += `<div style="text-align:center"><button class="link" id="doneBtn">Done</button></div>`;
   else if (o.delta != null) html += `<div style="text-align:center"><button class="link" id="saveNow">Save my photo and continue</button></div>`;
@@ -3526,7 +3526,7 @@ function renderVariants(top) {
   $('#flowBack').style.visibility = 'visible';
   const paint = () => {
     document.querySelectorAll('#enArea [data-i]').forEach(x => x.setAttribute('aria-pressed', +x.dataset.i === EN.sel));
-    $('#useBtn').textContent = `Use version ${letters[EN.sel]} (+${variants[EN.sel].s[EN.cat] - p.s[EN.cat]})`;
+    $('#useBtn').textContent = `Select version ${letters[EN.sel]} (+${variants[EN.sel].s[EN.cat] - p.s[EN.cat]})`;
   };
   document.querySelectorAll('#enArea [data-i]').forEach(x => x.onclick = () => { EN.sel = +x.dataset.i; paint(); });
   paint();
