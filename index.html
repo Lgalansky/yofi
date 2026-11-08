@@ -3419,7 +3419,7 @@ function showResult(p, o = {}) {
   }
   const low = lowestOpen(p), lc = low ? catBy(low) : null, tot = p.s.total, stage = stageOf(tot);
   const crossed = o.prevTotal != null && stage > stageOf(o.prevTotal);
-  let html = `<div class="rs-top"><div class="hero-photo rsph"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
+  let html = `<div class="tot-h sec-h"><h2>Enhance your photo</h2></div><div class="rs-top"><div class="hero-photo rsph"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
     <div class="rs-side"><div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small>Overall score</small><div><b>${tot}</b><em>/100</em>${o.prevTotal != null && tot !== o.prevTotal ? `<i class="${tot > o.prevTotal ? 'up' : 'dn'}">${tot > o.prevTotal ? '+' : ''}${tot - o.prevTotal}</i>` : ''}</div></div>${barsHTML(p.s, o.prev, true, p)}</div></div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
