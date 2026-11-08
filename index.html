@@ -2763,6 +2763,17 @@ body.tabsliding #shell{overflow:hidden}
 .us-need span{flex:none;padding:4px 10px;border-radius:999px;font-weight:800;color:#3EE6F5;box-shadow:inset 0 0 0 2px #3EE6F5}
 .us-used{display:flex;justify-content:center;gap:8px;margin:2px 0 12px}
 .us-used img{width:54px;height:68px;object-fit:cover;border-radius:10px;box-shadow:0 0 0 2px #5A3D8C;filter:saturate(.85)}
+/* Version picked: outline the whole card */
+.vcard[aria-pressed="true"]{box-shadow:none!important}
+.vcard::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2}
+.vcard[aria-pressed="true"]::after{box-shadow:inset 0 0 0 3px #B07CFF,0 0 18px rgba(155,60,255,.55)}
+/* Category picked: same dark card, just highlighted */
+.cats.cc button[aria-pressed="true"]{background:var(--card)!important;color:var(--ink)!important;box-shadow:inset 0 0 0 2.5px #FF3FA4,0 0 16px rgba(255,63,164,.35)!important}
+.cats.cc button[aria-pressed="true"] small{color:#FF9BD0!important}
+.cats.cc button[aria-pressed="true"] b span{color:var(--muted)!important}
+.cats.cc button[aria-pressed="true"] i{background:color-mix(in srgb,var(--ink) 14%,transparent)!important}
+.cats.cc button[aria-pressed="true"] i i{background:linear-gradient(90deg,#FF3FA4,#B23CFF)!important}
+#rsComp[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -3658,7 +3669,7 @@ function showResult(p, o = {}) {
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
   else html += `<button class="btn block fixbtn nocost rs-fix" id="doFix"><span>${lc.verb}<b class="fxs">${p.s[lc.k]}</b></span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>`;
   html += '<div class="rs-ex">';
-  if (S.user && stage === 2 && !photoLock(p)) html += `<button class="btn block rdygo" id="rsComp">${TROPHY_S}Go to competitions</button>`;
+  if (S.user && stage === 2 && !photoLock(p)) html += `<button class="btn block rdygo" id="rsComp" ${p.readyShown ? '' : 'hidden'}>${TROPHY_S}Go to competitions</button>`;
   if (S.user) html += `<div style="text-align:center"><button class="link" id="doneBtn">Done</button></div>`;
   else if (o.delta != null) html += `<div style="text-align:center"><button class="link" id="saveNow">Save my photo and continue</button></div>`;
   html += '</div>';
@@ -3963,6 +3974,7 @@ function improveChoice(waiting, lost, open) {
 }
 function showCompReady(p, goal) {
   if (p) { p.readyShown = true; save(); }
+  const rb = document.querySelector('#flowBody #rsComp'); if (rb) rb.hidden = false;
   const c = $('#coach'), fits = CX.filter(x => x.k !== 'gem' && cxFits(x, p)), first = goal || fits[0];
   c.innerHTML = `<div class="crbox" role="dialog" aria-modal="true" aria-labelledby="crT">
     <div class="cr-rays" aria-hidden="true"></div>${[...Array(18)].map((_, i) => `<i class="cr-cf" style="left:${(i * 53) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('')}
