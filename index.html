@@ -2514,6 +2514,8 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 /* Judge: no animation on Swipe to Enhance */
 #judge .swp-b,#judge .swp-b .ar,#judge .swp-b.nudge,#judge .swp-b.nudge .ar{animation:none!important;transform:none!important}
 #judge{padding-top:14px}
+.scr2 b.pop{animation:cpop .5s cubic-bezier(.3,1.4,.5,1)}
+.scr2 b{display:inline-block;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -2976,7 +2978,13 @@ function ringSVG(v, id) {
 const stageOf = v => (v >= CFG.QUALIFY ? 2 : v >= CFG.GALLERY ? 1 : 0);
 function animateRing(root, from) {
   const val = root.querySelector('.ring .val'), num = root.querySelector('.ring .num');
-  if (!val) return;
+  const big = root.querySelector('.scr2 b'), bigD = root.querySelector('.scr2 i');
+  if (big) { const to2 = +big.textContent, f2 = from == null ? 0 : from, t2 = performance.now(), ok = big.closest('.scr2').classList.contains('ok');
+    big.closest('.scr2').classList.remove('ok'); if (bigD) bigD.style.opacity = '0';
+    const st2 = now => { const k = Math.min(1, (now - t2) / 1400), v = Math.round(f2 + (to2 - f2) * (1 - Math.pow(1 - k, 3))); big.textContent = v;
+      if (k < 1) requestAnimationFrame(st2); else { if (ok) big.closest('.scr2').classList.add('ok'); big.classList.add('pop'); if (bigD) { bigD.style.transition = 'opacity .4s'; bigD.style.opacity = '1'; } } };
+    big.textContent = f2; requestAnimationFrame(st2); }
+  if (!val) { root.querySelectorAll('.bar i b').forEach(b => requestAnimationFrame(() => requestAnimationFrame(() => { b.style.width = b.dataset.w + '%'; }))); return; }
   const to = +num.dataset.to;
   if (from != null) val.setAttribute('stroke-dashoffset', (2 * Math.PI * 52 * (1 - from / 100)).toFixed(1));
   requestAnimationFrame(() => requestAnimationFrame(() => val.setAttribute('stroke-dashoffset', val.dataset.off)));
