@@ -4886,8 +4886,8 @@ function openBattle() {
 /* ---------- Studio ---------- */
 function photoSwitcher() {
   const p = cur();
-  openSheet(`<h2>Your photos</h2><p class="sub">${S.photos.length} of ${CFG.MAX_PHOTOS} · pick one to work on</p>
-    <div class="swgrid">${S.photos.map(x => { const xl = photoLock(x), tg = xl ? 'Entered' : lowestOpen(x) ? '' : 'Maxed'; return `<button class="swg ${x.id === p.id ? 'on' : ''}" data-sw="${x.id}" aria-label="Photo scoring ${x.s.total}${tg ? ', ' + tg : ''}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span>${tg ? `<span class="tg">${tg}</span>` : ''}</button>`; }).join('')}
+  openSheet(`<h2>Your photos</h2><p class="sub">Photos you can still improve. ${S.photos.some(x => photoLock(x) || !lowestOpen(x)) ? 'Entered and finished photos are in your Gallery.' : ''}</p>
+    <div class="swgrid">${S.photos.filter(x => !photoLock(x) && lowestOpen(x)).map(x => { const xl = photoLock(x), tg = xl ? 'Entered' : lowestOpen(x) ? '' : 'Maxed'; return `<button class="swg ${x.id === p.id ? 'on' : ''}" data-sw="${x.id}" aria-label="Photo scoring ${x.s.total}${tg ? ', ' + tg : ''}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span>${tg ? `<span class="tg">${tg}</span>` : ''}</button>`; }).join('')}
     ${S.photos.length < CFG.MAX_PHOTOS ? `<button class="swg add" id="swNew" aria-label="Upload a new photo"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><small>Upload</small></button>` : ''}</div>`);
   document.querySelectorAll('#sheetBody [data-sw]').forEach(b => b.onclick = () => { S.cur = b.dataset.sw; save(); closeSheet(); renderStudio(); $('#studio').scrollTop = 0; });
   if ($('#swNew')) $('#swNew').onclick = () => { closeSheet(); pickPhoto(true); };
@@ -4895,10 +4895,13 @@ function photoSwitcher() {
 function renderStudio() {
   const st = $('#studio');
   if (S.user) $('#avatar').textContent = S.user.h[0].toUpperCase();
-  const p = cur();
+  const canEnh = x => x && !photoLock(x) && !!lowestOpen(x);
+  let p = cur();
+  if (p && !canEnh(p)) { const nx = S.photos.find(canEnh); if (nx) { S.cur = nx.id; save(); p = nx; } else p = null; }
   if (!p) {
+    const busy = S.photos.length > 0;
     st.innerHTML = `
-    <div class="enh0"><h2>Enhance your photos</h2><p>Upload a photo, get an AI score, then improve it to 80+ to compete.</p>
+    <div class="enh0"><h2>Enhance your photos</h2><p>${busy ? 'None of your photos need work right now. They’re entered in competitions or already at their best, so you’ll find them in your Gallery.' : 'Upload a photo, get an AI score, then improve it to 80+ to compete.'}</p>
       <ol class="enh0-st"><li><span class="n">1</span><b>Upload</b><small>Pick a competition, then add a photo for it</small></li><li><span class="n">2</span><b>Score</b><small>AI rates it out of 100</small></li><li><span class="n">3</span><b>Improve to 80+</b><small>Fix your weakest category with gems</small></li></ol>
       <button class="btn block" id="stFind">Find a competition to enter</button>
       <div style="text-align:center"><button class="link" id="stAdd">Or just score a photo</button></div></div>`;
@@ -4916,7 +4919,7 @@ ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your 
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can go into gallery frames and competitions.</p>' : ''}
     
     
-    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button><button class="swlink" id="stSwL">Switch photo · ${S.photos.length}/${CFG.MAX_PHOTOS}</button>`}`}
+    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button><button class="swlink" id="stSwL">Switch photo · ${S.photos.filter(canEnh).length} to improve</button>`}`}
 ${lk ? `<button class="btn block enh-more" id="stMore">Enter another competition</button>` : ''}
     ${!lk && sorted.length ? '' : `<div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
     <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`}`;
