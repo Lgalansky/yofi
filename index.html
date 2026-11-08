@@ -4044,7 +4044,7 @@ const CX = [
   { id: 'style', cats: ['style'], lab: 'Fashion & Style', k: 'cash', t: 'Style & Fashion', img: 11, prize: 250, fee: 2, n: 640, per: 90, off: 18 },
   { id: 'food', cats: ['food'], lab: 'Food', k: 'cash', t: 'Foodie Favourites', img: 10, prize: 50, fee: 1, n: 1127, per: 30, off: 12 },
   { id: 'animals', cats: ['pets', 'wildlife'], lab: 'Pets or Wildlife', k: 'cash', t: 'Amazing Animals', img: 2, prize: 25, fee: 1, n: 756, per: 120, off: 32 },
-  { id: 'snap', lab: 'Any category', k: 'gem', t: 'Snap Anything', img: 5, prize: 250, fee: 25, n: 2410, per: 30, off: 21, min: 80 },
+  { id: 'snap', lab: 'Any category', k: 'gem', t: 'Snap Anything', img: 5, prize: 250, fee: 25, n: 2410, per: 30, off: 21, min: 1 },
   { id: 'nature', cats: ['landscape', 'sunrise', 'golden', 'night', 'wildlife'], lab: 'Nature', k: 'gem', t: 'Nature Vibes', img: 0, prize: 1000, fee: 100, n: 3892, per: 30, off: 25 },
   { id: 'citylife', cats: ['city', 'street', 'arch'], lab: 'City & Street', k: 'gem', t: 'City Life', img: 12, prize: 500, fee: 50, n: 2144, per: 60, off: 25 },
   { id: 'petpals', cats: ['pets', 'wildlife'], lab: 'Pets or Wildlife', k: 'gem', t: 'Pet Pals', img: 6, prize: 300, fee: 25, n: 1876, per: 30, off: 9 },
@@ -4080,7 +4080,7 @@ const cxFee = c => c.k === 'gem' ? `<span class="freefee">Free</span>` : c.k ===
 const cxNeed = c => c.min || CFG.QUALIFY;
 let CXF = 'all', cxTimer = null, CXP = null;
 const freeUsed = () => new Set((S.entries || []).filter(e => (CX.find(x => x.id === e.cid) || {}).k === 'gem').map(e => e.pid));
-const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used = c.k === 'gem' ? freeUsed() : new Set(); return S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total)[0] || null; };
+const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used = c.k === 'gem' ? freeUsed() : new Set(); return S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total)[0] || (!c.cats && c.k === 'gem' && S.photos.length ? 'new' : null); };
 const readyPhotos = () => S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)) : [];
 function goEligible() { CXF = 'mine'; CXP = null; openComps(null); const b = $('#flowBody'); if (b) b.scrollTop = 0; }
 const ccard = c => { const left = cxLeft(c), fee = cxFee(c).replace(/<span class="gfee">/, '').replace(/<\/span>$/, '');
@@ -4362,7 +4362,7 @@ function openEntryGuide(c, bestP) {
     <p class="fc-p">Upload any photo and discover your Yofi score.</p>
     <button class="fc-box" id="cegBox" aria-label="Upload a photo"><span class="fc-fan"><img src="${SEED[7].src}" alt=""><img src="${SEED[0].src}" alt=""><img src="${SEED[5].src}" alt=""></span>
       <span class="fc-up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg></span><span class="fc-lab">Your first photo starts here</span></button>
-    <p class="fc-need"><b>${need}+</b> Score ${need}+ to enter this competition.</p>
+    <p class="fc-need">${need <= 1 ? '<b>Any</b> Any photo, any score, gets in.' : `<b>${need}+</b> Score ${need}+ to enter this competition.`}</p>
     <p class="fc-meta">1st prize ${prize} · Entry fee ${fee}</p>
     <button class="ceg-go" id="cegGo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Upload a photo &amp; get my score</button>
     <p class="ceg-fee">See your score before deciding to enter.</p>
@@ -4375,7 +4375,7 @@ function openEntryGuide(c, bestP) {
     <button class="fc-box en2" id="cegBox" aria-label="Enhance this photo"><span class="en2-ph"><img src="${bestP.src}" alt=""></span>
       <span class="en2-sc"><i>${bestP.s.total}</i><em></em><i class="to">${need}+</i></span>
       <span class="fc-lab">Enhance in a few taps</span></button>
-    <p class="fc-need"><b>${need}+</b> Score ${need}+ to enter this competition.</p>
+    <p class="fc-need">${need <= 1 ? '<b>Any</b> Any photo, any score, gets in.' : `<b>${need}+</b> Score ${need}+ to enter this competition.`}</p>
     <p class="fc-meta">1st prize ${prize} · Entry fee ${fee}</p>
     <button class="ceg-go" id="cegGo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L15 9l2-2"/><path d="M18 2l.8 2.2L21 5l-2.2.8L18 8l-.8-2.2L15 5l2.2-.8zM9 3l.5 1.5L11 5l-1.5.5L9 7l-.5-1.5L7 5l1.5-.5z"/></svg>Enhance my photo to ${need}+</button>
     <button class="ceg-alt" id="cegNew">Or upload a new photo</button>
@@ -4400,6 +4400,7 @@ function cxEnter(c) {
   const used = new Set(c.k === 'gem' ? (S.entries || []).filter(e => (CX.find(x => x.id === e.cid) || {}).k === 'gem').map(e => e.pid) : []);
   const ok = S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total);
   if (!ok.length && S.photos.some(p => cxOk(c, p) && used.has(p.id))) {
+    if (!c.cats) { S.goal = { cid: c.id, pid: null }; save(); toast(`Each photo gets one free entry. Choose a new photo for ${c.t}.`); pickPhoto(true); return; }
     const gemT = id => (CX.find(x => x.id === id) || {}).k === 'gem' ? CX.find(x => x.id === id).t : null;
     const usedIn = [...new Set((S.entries || []).filter(e => gemT(e.cid) && S.photos.some(p => p.id === e.pid && cxFits(c, p))).map(e => gemT(e.cid)))];
     const nUsed = S.photos.filter(p => cxOk(c, p) && used.has(p.id)).length;
