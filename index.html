@@ -2889,6 +2889,19 @@ body.tabsliding #shell{overflow:hidden}
 .cxtabs button[aria-selected="true"]{color:#fff;background:linear-gradient(95deg,#FF3FA4,#9B3CFF)}
 .cxtabs i{font-style:normal;min-width:20px;padding:1px 6px;border-radius:999px;font-size:.75rem;color:#fff;background:#FF2D8E}
 .cxtabs button[aria-selected="true"] i{background:rgba(255,255,255,.25)}
+/* Featured: compact, just a bit bigger than a list card */
+.cx .feat{display:grid;grid-template-columns:42% 1fr;align-items:stretch}
+.cx .feat .fimg img{height:100%;min-height:150px}
+.cx .feat .fb{padding:12px 12px 12px;gap:4px}
+.cx .feat .ft{flex-direction:column;align-items:flex-start;gap:6px}
+.cx .feat .ft .fpill{display:none}
+.cx .feat h3{font-size:1.35rem;line-height:1.1}
+.cx .feat .fsub{font-size:.85rem}
+.cx .feat .fst{margin:2px 0}
+.cx .feat .fst div+div{padding-left:10px}
+.cx .feat .fst b{font-size:1.1rem}
+.cx .feat .fgo{grid-column:1/-1;margin-top:4px;min-height:46px!important;font-size:1rem!important}
+.cx h2.fh{margin-bottom:8px}
 .rt-hd{position:sticky;top:-8px;z-index:5;margin:-8px -14px 0;padding:10px 14px 8px;background:#0B1022}
 </style>
 </head>
