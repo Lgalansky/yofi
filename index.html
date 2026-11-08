@@ -3909,9 +3909,10 @@ function fitPhotos(root) {
     if (im.complete) shape(); else im.addEventListener('load', shape, { once: true });
   });
 }
+const photoCanEnter = p => !photoLock(p) && CX.some(c => !liveEntry(c.id) && cxOk(c, p) && !(c.k === 'gem' && freeUsed().has(p.id)));
 function paintReady() {
   const b = document.getElementById('segCompete'); if (!b) return;
-  const n = S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)).length : 0;
+  const n = S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && photoCanEnter(p)).length : 0;
   let d = b.querySelector('.rdot');
   if (!n) { if (d) d.remove(); return; }
   if (!d) { d = document.createElement('i'); d.className = 'rdot'; b.appendChild(d); }
@@ -4258,7 +4259,7 @@ function openComps(forPhoto) {
   const tabs = live.length && !fp ? `<div class="cxtabs" role="tablist"><button role="tab" data-cxt="enter" aria-selected="${!liveTab}">Enter competitions</button><button role="tab" data-cxt="live" aria-selected="${liveTab}">My live entries <i>${live.length}</i></button></div>` : '';
   const mine = live.length ? `<div class="myent">${live.map(e => liveCardHTML(CX.find(x => x.id === e.cid), e)).join('')}</div>` : '';
   const fpBar = fp && !photoLock(fp) ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Your photo is ready</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${(() => { const n = CX.filter(c => show.includes(c.k) && !liveEntry(c.id) && cxOk(c, fp)).length; return n ? `Pick a competition below · ${n} fit${n === 1 ? 's' : ''} this photo` : 'No open competitions fit this photo right now'; })()}</span></div><button id="cxAll">See all</button></div>` : '';
-  const rdy = !fp && S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)).sort((a, b) => b.s.total - a.s.total) : [];
+  const rdy = !fp && S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && photoCanEnter(p)).sort((a, b) => b.s.total - a.s.total) : [];
   const rdyRow = rdy.length ? `<div class="rdyrow rdystick"><div class="rdy-s"><div class="rdy-th">${rdy.slice(0, 3).map(p => `<img src="${p.src}" alt="">`).join('')}</div><div class="tx"><b>${rdy.length} photo${rdy.length === 1 ? '' : 's'} ready</b><span>${nCan ? (CXF === 'mine' ? `Filtered to the ${nCan} you can enter` : `${nCan} competition${nCan === 1 ? '' : 's'} you can enter`) : 'No open competitions fit them right now'}</span></div>${nCan ? (CXF === 'mine' ? '<button class="rdy-btn ghost" id="rdyAll">Clear filter</button>' : '<button class="rdy-btn" id="rdyShow">Filter eligible comps</button>') : ''}</div></div>` : '';
   openFlow(`<div class="cx"><div class="cxtop${rdyRow ? ' stk' : ''}">${fpBar ? '' : CX_WB && S.user ? `<div class="tot-h sec-h cx-wb"><h2>Welcome back, <span>@${esc(S.user.h)}</span></h2></div>` : '<div class="tot-h sec-h"><h2>Enter free competitions</h2></div>'}${wal}${fpBar}${rdyRow}</div>${tabs}${liveTab ? mine : `
     ${fpBar || CXF === 'mine' ? '' : best}
