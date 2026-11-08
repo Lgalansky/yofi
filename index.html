@@ -4175,6 +4175,7 @@ $('#gemPill2').onclick = () => openStore();
 /* ---------- Competitions hub ---------- */
 const MIN = 60e3;
 const CX = [
+  { id: 'anygo', lab: 'Any category', k: 'cash', t: 'Anything Goes', img: 9, prize: 500, fee: 2, n: 1890, per: 60, off: 30, multi: true },
   { id: 'pets', cats: ['pets'], lab: 'Pets', k: 'cash', t: 'Cute Pets', img: 1, prize: 1000, fee: 5, n: 1284, per: 30, off: 18 },
   { id: 'travel', cats: ['travel'], lab: 'Travel', k: 'cash', t: 'Travel the World', img: 9, prize: 500, fee: 3, n: 892, per: 60, off: 18 },
   { id: 'style', cats: ['style'], lab: 'Fashion & Style', k: 'cash', t: 'Style & Fashion', img: 11, prize: 250, fee: 2, n: 640, per: 90, off: 18 },
@@ -4330,7 +4331,7 @@ const rankMove = e => { const now = Math.min(Date.now(), e.end); return rankAt(e
 const moveHTML = d => d > 0 ? `<i class="mv mup">▲${d}</i>` : d < 0 ? `<i class="mv mdn">▼${-d}</i>` : '<i class="mv">–</i>';
 const BOOST_EVERY = 5;
 const liveEntries = () => (S.entries || []).filter(e => !e.done && Date.now() < e.end);
-const liveEntry = cid => (S.entries || []).find(e => e.cid === cid && !e.done);
+const liveEntry = cid => { const c = CX.find(x => x.id === cid); if (c && c.multi) return null; return (S.entries || []).find(e => e.cid === cid && !e.done); };
 const entrySrc = e => { const p = S.photos.find(x => x.id === e.pid); return p ? p.src : SEED[0].src; };
 const cxPill = c => `<span class="cpill k-${c.k}">${c.cats ? gi(c.cats[0]) : gi('star')}${esc((c.lab || 'Any category').toUpperCase())}</span>`;
 const fmtClock = ms => { const t = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s2 = t % 60; return h ? `${h}:${String(m).padStart(2, '0')}:${String(s2).padStart(2, '0')}` : `${m}:${String(s2).padStart(2, '0')}`; };
