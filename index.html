@@ -2761,6 +2761,8 @@ body.tabsliding #shell{overflow:hidden}
 .flow.astab .cxtop .rdyrow.rdystick::before{display:none}
 .us-need{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;font-weight:700;font-size:.95rem;color:#E9DEFF}
 .us-need span{flex:none;padding:4px 10px;border-radius:999px;font-weight:800;color:#3EE6F5;box-shadow:inset 0 0 0 2px #3EE6F5}
+.us-used{display:flex;justify-content:center;gap:8px;margin:2px 0 12px}
+.us-used img{width:54px;height:68px;object-fit:cover;border-radius:10px;box-shadow:0 0 0 2px #5A3D8C;filter:saturate(.85)}
 </style>
 </head>
 <body>
@@ -4407,14 +4409,17 @@ function cxEnter(c) {
   const ok = S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total);
   if (!ok.length && S.photos.some(p => cxOk(c, p) && used.has(p.id))) {
     const gemT = id => (CX.find(x => x.id === id) || {}).k === 'gem' ? CX.find(x => x.id === id).t : null;
-    const usedIn = [...new Set((S.entries || []).filter(e => gemT(e.cid) && S.photos.some(p => p.id === e.pid && cxFits(c, p))).map(e => gemT(e.cid)))];
+    const usedE = (S.entries || []).filter(e => gemT(e.cid) && S.photos.some(p => p.id === e.pid && cxOk(c, p)));
+    const where = e => (e.cid === c.id ? `an earlier round of ${esc(c.t)}` : esc(gemT(e.cid))) + (e.done || Date.now() >= e.end ? ' (finished)' : ' (still running)');
+    const usedIn = [...new Set(usedE.map(where))];
     const nUsed = S.photos.filter(p => cxOk(c, p) && used.has(p.id)).length;
-    const usedWhere = `Your ${nUsed > 1 ? 'photos that fit have' : 'photo that fits has'} already used ${nUsed > 1 ? 'their' : 'its'} free entry${usedIn.length ? ` in ${usedIn.length > 1 ? usedIn.slice(0, -1).map(esc).join(', ') + ' and ' + esc(usedIn[usedIn.length - 1]) : esc(usedIn[0])}` : ''}.`;
+    const usedWhere = `Your ${nUsed > 1 ? 'photos that fit have' : 'photo that fits has'} already used ${nUsed > 1 ? 'their' : 'its'} free entry${usedIn.length ? ` in ${usedIn.length > 1 ? usedIn.slice(0, -1).join(', ') + ' and ' + usedIn[usedIn.length - 1] : usedIn[0]}` : ''}.`;
+    const usedPh = S.photos.filter(p => cxOk(c, p) && used.has(p.id)).slice(0, 3);
     openSheet(`<div class="en2 used">
       <div class="us-top"><button class="us-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div><b>${esc(c.t)}</b><small>Photo competition</small></div></div>
       <div class="us-ph"><img src="${compArt(c)}" alt=""></div>
       <div class="us-card"><span class="en-tag">🏆 Photo competition</span><h2>${c.cats ? 'Your free entry is used' : 'Enter with a new photo'}</h2>
-        <p>Each photo gets one free competition entry. ${usedWhere}</p><b>Upload another photo to join ${esc(c.t)}.</b><div class="us-need"><span>${cxNeed(c)}+</span>Your new photo needs to score ${cxNeed(c)}+ to enter.</div></div>
+        <div class="us-used">${usedPh.map(p => `<img src="${p.src}" alt="">`).join('')}</div><p>Each photo gets one free competition entry. ${usedWhere}</p><b>Upload another photo to join ${esc(c.t)}.</b><div class="us-need"><span>${cxNeed(c)}+</span>Your new photo needs to score ${cxNeed(c)}+ to enter.</div></div>
       <button class="btn block" id="enNew">Upload a new photo</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
     $('#enNew').onclick = () => { closeSheet(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
     return;
