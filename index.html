@@ -4395,9 +4395,9 @@ function paintLive(force) {
       return `<div class="lv-hero2 k-${c.k}"><div class="lh-ph"><img src="${entrySrc(e)}" alt="Your entry">${canHang ? `<button class="lh-gal" id="lvGal">${TROPHY_S}Add to gallery</button>` : ''}</div>
       <div class="lh-rk"><small>Your rank</small><b>#${r.toLocaleString()}</b><span>of ${e.n.toLocaleString()} entries</span>
       ${d ? `<i class="${d > 0 ? 'up' : 'dn'}">${d > 0 ? '▲' : '▼'} ${Math.abs(d)}</i>` : '<i>–</i>'}<em>in the last 10 min</em></div></div>`; })()}
-    ${(() => { const n = CX.filter(c => canEnter(c)).length;
-      return `<div class="lv-next"><h3>While you wait</h3>
-        <button class="lvn-boost" id="lvMore"><span class="z">🏆</span><span class="tx"><b>Enter another competition</b><small>${n ? `Your ready photos can enter ${n} more` : `${CX.filter(c => !liveEntry(c.id)).length} competitions running now. Pick one to shoot for`}</small></span><span class="go">See them →</span></button>
+    ${(() => { const n = S.photos.filter(x => !photoLock(x) && lowestOpen(x)).length;
+      return `<div class="lv-next"><h3>Continue enhancing photos</h3>
+        <button class="lvn-boost" id="lvMore"><span class="z">✨</span><span class="tx"><b>${n ? 'Keep enhancing' : 'Upload a new photo'}</b><small>${n ? `${n} photo${n === 1 ? '' : 's'} you can still improve` : 'Score it and improve it to 80+'}</small></span><span class="go">${n ? 'Enhance →' : 'Upload →'}</span></button>
 </div>`; })()}
     ${(() => {
       const lg = v => Math.log(Math.max(1, v)), pos = v => Math.max(2, Math.min(98, (1 - lg(v) / lg(e.n)) * 100));
@@ -4423,7 +4423,7 @@ function paintLive(force) {
   </div>`);
   $('#lv').scrollTop = y;
   $('#lvBack').onclick = lvClose;
-  if ($('#lvMore')) $('#lvMore').onclick = () => { lvClose(); if (CX.some(c => canEnter(c))) goEligible(); else { CXF = 'all'; CXP = null; openComps(null); $('#flowBody').scrollTop = 0; } };
+  if ($('#lvMore')) $('#lvMore').onclick = () => { lvClose(); closeFlow(); if (S.photos.some(x => !photoLock(x) && lowestOpen(x))) { go('studio'); return; } openEntryGuide(CX.find(x => x.id === 'snap') || CX[0], null); };
   if ($('#lvGal')) $('#lvGal').onclick = () => { const ph = S.photos.find(x => x.id === e.pid); AFTER_HANG = e.id; lvClose(); closeFlow(); hangPhoto(ph); };
 }
 
