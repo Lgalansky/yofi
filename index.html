@@ -2403,6 +2403,10 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .enh0-st small{font-size:.85rem;color:#A796C6}
 .enh0 .link{margin-top:6px;color:#D9C8FF}
 .enh-more{margin:18px 0 6px}
+.fxc{filter:drop-shadow(0 4px 10px rgba(33,199,122,.55))}
+.fxc svg{width:100%;height:100%;display:block}
+.cashbig b{background:linear-gradient(100deg,#2EE59D,#13A86A)!important;-webkit-background-clip:text!important;background-clip:text!important}
+#wCash.bump{animation:bump .5s}
 </style>
 </head>
 <body>
@@ -2905,7 +2909,8 @@ function gemExplosion(n, o = {}) {
   const shell = $('#shell'), sr = shell.getBoundingClientRect(), pr = pill.getBoundingClientRect();
   let ox = sr.width / 2, oy = sr.height * 0.4;
   if (o.from) { const fr = o.from.getBoundingClientRect(); ox = fr.left - sr.left + fr.width / 2; oy = fr.top - sr.top + fr.height / 2; }
-  const tx = pr.left - sr.left + 22, ty = pr.top - sr.top + pr.height / 2;
+  const gi0 = pill.querySelector('svg'), ir = gi0 ? gi0.getBoundingClientRect() : pr;
+  const tx = ir.left - sr.left + ir.width / 2, ty = ir.top - sr.top + ir.height / 2;
   const layer = document.createElement('div'); layer.className = 'gemfx'; shell.appendChild(layer);
   if (!o.small) {
     const big = document.createElement('div'); big.className = 'gembig';
@@ -2938,6 +2943,38 @@ function gemExplosion(n, o = {}) {
     anim.onfinish = () => { g.remove(); step(); };
   }
   setTimeout(() => layer.remove(), o.small ? 2200 : 4200);
+}
+
+function cashExplosion(amt, o = {}) {
+  const pill = $('#wCash'), num = $('#cashNum');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fmt = v => '$' + v.toFixed(2);
+  if (amt <= 0 || reduce || typeof Element.prototype.animate !== 'function' || !pill || !pill.getClientRects().length) { paintWallet(); if (o.label) toast(`+$${amt} cash. ${o.label}`); return; }
+  const shell = $('#shell'), sr = shell.getBoundingClientRect(), ic = pill.querySelector('svg'), ir = (ic || pill).getBoundingClientRect();
+  let ox = sr.width / 2, oy = sr.height * 0.4;
+  if (o.from) { const fr = o.from.getBoundingClientRect(); ox = fr.left - sr.left + fr.width / 2; oy = fr.top - sr.top + fr.height / 2; }
+  const tx = ir.left - sr.left + ir.width / 2, ty = ir.top - sr.top + ir.height / 2;
+  const layer = document.createElement('div'); layer.className = 'gemfx'; shell.appendChild(layer);
+  if (!o.small) { const big = document.createElement('div'); big.className = 'gembig cashbig'; big.style.left = ox + 'px'; big.style.top = oy + 'px'; big.innerHTML = `<b>+$${amt.toLocaleString()}</b><span>${esc(o.label || 'cash added')}</span>`; layer.appendChild(big); }
+  const count = o.small ? 6 : Math.min(18, Math.max(10, Math.round(amt / 3)));
+  const end = S.cash || 0, base = Math.max(0, end - amt); let arrived = 0;
+  num.textContent = fmt(base);
+  for (let i = 0; i < count; i++) {
+    const g = document.createElement('i'); g.className = 'fxg fxc';
+    const sz = o.small ? rnd(18, 26) : rnd(28, 44);
+    g.style.cssText = `left:${ox}px;top:${oy}px;width:${sz}px;height:${sz * 0.62}px;margin:${-sz * 0.31}px 0 0 ${-sz / 2}px`;
+    g.innerHTML = CASH_ICON; layer.appendChild(g);
+    const a = Math.random() * Math.PI * 2, d = o.small ? rnd(28, 70) : rnd(80, 190), dx = Math.cos(a) * d, dy = Math.sin(a) * d * 0.85, rot = rnd(-40, 40);
+    const anim = g.animate([
+      { transform: 'translate(0,0) scale(.1)', opacity: 0 },
+      { transform: `translate(${dx}px,${dy}px) scale(1.1) rotate(${rot}deg)`, opacity: 1, offset: 0.3 },
+      { transform: `translate(${dx * 1.05}px,${dy + 10}px) scale(1) rotate(${rot}deg)`, opacity: 1, offset: 0.55 },
+      { transform: `translate(${tx - ox}px,${ty - oy}px) scale(.35) rotate(0deg)`, opacity: 0.9 }
+    ], { duration: 1800 + i * 45, easing: 'cubic-bezier(.3,.6,.3,1)', fill: 'forwards' });
+    anim.onfinish = () => { g.remove(); arrived++; num.textContent = fmt(arrived >= count ? end : base + amt * arrived / count); pill.classList.remove('bump'); void pill.offsetWidth; pill.classList.add('bump'); };
+  }
+  setTimeout(() => { const bg = layer.querySelector('.cashbig'); if (bg) bg.remove(); }, 2200);
+  setTimeout(() => { layer.remove(); paintWallet(); }, 4200);
 }
 
 /* ---------- Landing ---------- */
@@ -3565,8 +3602,8 @@ function openStore(reason, onBuy) {
   clearInterval(storeTimer); tick(); storeTimer = setInterval(tick, 1000);
   document.querySelectorAll('#sheetBody [data-buy]').forEach(b => b.onclick = () => {
     const k = PACKS[+b.dataset.buy]; closeSheet();
-    S.cash = (S.cash || 0) + k.cash; save(); paintWallet();
-    setTimeout(() => addGems(k.gems, `${k.t} pack added: $${k.cash} cash`), 320);
+    S.cash = (S.cash || 0) + k.cash; save(); cashExplosion(k.cash, { label: `${k.t} pack` });
+    setTimeout(() => addGems(k.gems, `${k.t} pack`), 2300);
     if (onBuy) setTimeout(onBuy, 2300);
   });
   $('#earnBtn').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) { if (!S.user) { openSignup(); return; } closeFlow(); } go('judge'); };
@@ -3865,7 +3902,7 @@ function openResult(e) {
       ${galBtn('rs2-go')}${galNote}</div>`);
   { ['segJudge', 'segStudio', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segCompete').setAttribute('aria-pressed', 'true'); setTimeout(() => { $('#ptitle').textContent = 'Results'; }, 0); }
   $('#lv').scrollTop = 0; paintWallet(); paintGems(false);
-  if (pz) setTimeout(() => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize` }); else { const w = $('#lv .r3-won'); w && w.classList.add('pop'); } }, 450);
+  if (pz) setTimeout(() => { if (pz.cur === 'gems') gemExplosion(pz.amt, { label: `${c.t} prize`, from: $('#lv .r3-won') }); else { const w = $('#lv .r3-won'); w && w.classList.add('pop'); if (pz.cur === 'cash') cashExplosion(pz.amt, { label: `${c.t} prize`, from: w, small: true }); } }, 450);
   const back = () => { lvClose(); if ($('#flow').classList.contains('cxmode')) openComps(); };
   if ($('#rsBack')) $('#rsBack').onclick = back;
   $('#rsNext').onclick = () => { lvClose(); openComps(); };
