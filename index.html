@@ -4989,7 +4989,7 @@ function openVisit(i) {
   const b = BOARD[i], R = mulberry(i * 97 + 13), full = i < 3, used = new Set();
   const rooms = ROOMS.map((Rm, r) => ({ Rm, r, frames: (full || r < 2) ? Rm.slots.map((sl, si) => {
     const want = VISIT_CAT[sl[0]], pool = SEED.map((x, k) => k).filter(k => !LOWRES.includes(SEED[k].id) && (!want || SEED[k].cat === want));
-    const pk = pool.filter(k => !used.has(k)), all = SEED.map((x, k) => k).filter(k => !used.has(k) && !LOWRES.includes(SEED[k].id)), src = pk.length ? pk : (all.length ? all : pool); const k = src[(i + si * 3 + r) % src.length]; used.add(k);
+    const pk = pool.filter(k => !used.has(k)), all = SEED.map((x, k) => k).filter(k => !used.has(k) && !LOWRES.includes(SEED[k].id)), anyK = SEED.map((x, k) => k).filter(k => !LOWRES.includes(SEED[k].id)), src = pk.length ? pk : all.length ? all : pool.length ? pool : anyK; const k = src[(i + si * 3 + r) % src.length]; used.add(k);
     const lo = ROOM_MIN[r], sc = Math.min(99, lo + Math.floor(R() * (r >= 3 ? 5 : 9)) + (i === 0 ? 2 : 0));
     return { sl, src: SEED[k].src, title: SEED[k].title, sc };
   }) : null })).filter(x => x.frames);
