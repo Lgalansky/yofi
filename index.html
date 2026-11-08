@@ -2326,7 +2326,7 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .rdyph b{position:absolute;top:6px;right:6px;padding:2px 8px;border-radius:999px;font-weight:800;font-size:.85rem;color:#fff;background:rgba(10,6,24,.75)}
 .rdyph span{position:absolute;left:6px;bottom:30px;padding:1px 7px;border-radius:999px;font-weight:700;font-size:.72rem;color:#fff;background:rgba(10,6,24,.7)}
 .rdyph em{position:absolute;left:0;right:0;bottom:0;padding:6px 4px;font-style:normal;font-weight:800;font-size:.75rem;text-align:center;color:#fff;background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
-/* After entering: boost by judging, enter another */
+/* After entering: enter another competition */
 .lv-next{margin:14px 0 4px;padding:14px;border-radius:20px;background:#121A31;box-shadow:inset 0 0 0 1px #202A48}
 .lv-next h3{margin:0 0 10px;font:800 1.1rem/1 "Bricolage Grotesque",sans-serif;color:#fff}
 .lvn-boost{display:flex;align-items:center;gap:12px;width:100%;margin-bottom:12px;padding:12px;border-radius:16px;text-align:left;color:#fff;background:linear-gradient(135deg,#3A1764,#251046);box-shadow:inset 0 0 0 1.5px #FFC93C}
@@ -3698,14 +3698,6 @@ const rankMove = e => { const now = Math.min(Date.now(), e.end); return rankAt(e
 const moveHTML = d => d > 0 ? `<i class="mv mup">▲${d}</i>` : d < 0 ? `<i class="mv mdn">▼${-d}</i>` : '<i class="mv">–</i>';
 const BOOST_EVERY = 5;
 const liveEntries = () => (S.entries || []).filter(e => !e.done && Date.now() < e.end);
-function boostTick() {
-  const live = liveEntries(); if (!live.length) return null;
-  S.boostN = (S.boostN || 0) + 1;
-  if (S.boostN < BOOST_EVERY) return null;
-  S.boostN = 0; let moved = 0;
-  live.forEach(e => { const r = rankAt(e, Date.now()), d = Math.max(5, Math.round(r * 0.06)); e.startR = Math.max(1, e.startR - d); e.fin = Math.max(1, e.fin - d); e.boosts = (e.boosts || 0) + 1; moved = Math.max(moved, d); });
-  return moved;
-}
 const liveEntry = cid => (S.entries || []).find(e => e.cid === cid && !e.done);
 const entrySrc = e => { const p = S.photos.find(x => x.id === e.pid); return p ? p.src : SEED[0].src; };
 const cxPill = c => `<span class="cpill k-${c.k}">${c.cats ? gi(c.cats[0]) : gi('star')}${esc((c.lab || 'Any category').toUpperCase())}</span>`;
@@ -3769,9 +3761,9 @@ function paintLive(force) {
       return `<div class="lv-hero2 k-${c.k}"><div class="lh-ph"><img src="${entrySrc(e)}" alt="Your entry">${canHang ? `<button class="lh-gal" id="lvGal">${TROPHY_S}Add to gallery</button>` : ''}</div>
       <div class="lh-rk"><small>Your rank</small><b>#${r.toLocaleString()}</b><span>of ${e.n.toLocaleString()} entries</span>
       ${d ? `<i class="${d > 0 ? 'up' : 'dn'}">${d > 0 ? '▲' : '▼'} ${Math.abs(d)}</i>` : '<i>–</i>'}<em>in the last 10 min</em></div></div>`; })()}
-    ${(() => { const rdy = S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)).length, bn = S.boostN || 0;
+    ${(() => { const n = CX.filter(c => canEnter(c)).length;
       return `<div class="lv-next"><h3>While you wait</h3>
-        <button class="lvn-boost" id="lvBoost"><span class="z">⚡</span><span class="tx"><b>Boost this entry</b><small>Judge ${BOOST_EVERY - bn} more photo${BOOST_EVERY - bn === 1 ? '' : 's'} to move up the ranks${e.boosts ? ` · boosted ${e.boosts}×` : ''}</small><span class="dots">${[...Array(BOOST_EVERY)].map((_, i) => `<i class="${i < bn ? 'on' : ''}"></i>`).join('')}</span></span><span class="go">Judge →</span></button>
+        <button class="lvn-boost" id="lvMore"><span class="z">🏆</span><span class="tx"><b>Enter another competition</b><small>${n ? `Your ready photos can enter ${n} more` : 'Upload a new photo and get it to 80+'}</small></span><span class="go">${n ? 'Show me →' : 'Upload →'}</span></button>
 </div>`; })()}
     ${(() => {
       const lg = v => Math.log(Math.max(1, v)), pos = v => Math.max(2, Math.min(98, (1 - lg(v) / lg(e.n)) * 100));
@@ -3797,7 +3789,7 @@ function paintLive(force) {
   </div>`);
   $('#lv').scrollTop = y;
   $('#lvBack').onclick = lvClose;
-  if ($('#lvBoost')) $('#lvBoost').onclick = () => { lvClose(); closeFlow(); go('judge'); };
+  if ($('#lvMore')) $('#lvMore').onclick = () => { lvClose(); if (CX.some(c => canEnter(c))) goEligible(); else { closeFlow(); pickPhoto(true); } };
   if ($('#lvGal')) $('#lvGal').onclick = () => { const ph = S.photos.find(x => x.id === e.pid); AFTER_HANG = e.id; lvClose(); closeFlow(); hangPhoto(ph); };
 }
 
@@ -4536,7 +4528,6 @@ function renderJudge() {
   const [pa, pb] = seedPair();
   $('#judge').innerHTML = `<div class="swp l"><button class="swp-b" data-swp="studio"><span class="ar">←</span>Swipe to Enhance</button></div><div class="tot-h"><span class="jtag2">${S.photos.length ? (left <= 1 ? 'Battle after this one' : `${left} picks to a battle`) : 'Score a photo to battle'}</span><h2>Which is better?</h2><p><b>${esc(CHAL[pa.cat] || 'Photo challenge')}</b> · tap your pick</p></div>
     <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
-    ${liveEntries().length ? `<div class="jboost"><span class="z">⚡</span><span class="tx"><b>Boost your entry</b><small>Every ${BOOST_EVERY} picks moves your live entry up the ranks</small></span><span class="dots">${[...Array(BOOST_EVERY)].map((_, i) => `<i class="${i < (S.boostN || 0) ? 'on' : ''}"></i>`).join('')}</span></div>` : ''}
     <div class="jfoot">
       <div class="jf-combo"><b>Combo ${combo}/5</b><span class="dots">${[...Array(5)].map((_, i) => `<i class="${i < combo ? 'on' : ''}"></i>`).join('')}</span><small>Lucky drop at 5</small></div>
       <div class="jf-gems"><div class="jf-l">${ds.D.n < JUDGE_CAP ? `<span><b>+${CFG.VOTE}</b> ${gemIcon()} when you agree</span><span class="r"><b>${JUDGE_CAP - ds.D.n}</b> of ${JUDGE_CAP} left today</span>` : `<span>Daily bonus used</span><span class="r"><b>+${JUDGE_LOW}</b> ${gemIcon()} per pick</span>`}</div>
@@ -4566,7 +4557,6 @@ async function vote(pick) {
   S.votes++; S.since++; S.jIdx += 2; S.gems += earn;
   S.combo = agree ? (S.combo || 0) + 1 : 0; const comboHit = S.combo >= 5; if (comboHit) S.combo = 0;
   const ds = dailyState(); ds.D.n++;
-  const boosted = boostTick();
   let streakHit = 0;
   if (ds.D.n >= 3 && ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; streakHit = ds.D.streak; S.gems += Math.min(100, 10 * streakHit); paintFlame(); }
   save();
@@ -4580,7 +4570,6 @@ async function vote(pick) {
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
   if (streakHit) { const rw = Math.min(100, 10 * streakHit); celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} day streak!`, text: `You judged 3 photos today. <b>+${rw} gems</b>. Come back tomorrow to keep it going${streakHit < 10 ? ` and earn ${Math.min(100, 10 * (streakHit + 1))}` : ''}.`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
-  if (boosted) toast(`⚡ Entry boosted! Up ${boosted} places`);
   if (comboHit) { luckyDrop(); return; }
   maybeEnhanceNudge();
 }
