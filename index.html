@@ -2537,6 +2537,53 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 #studio.tallp>#cmp{grid-row:2/4!important}
 #studio.tallp .scr2{grid-row:2!important}
 #studio.tallp>.scorebox>.bars{grid-row:3!important}
+/* Tab bar at the bottom */
+#app.on #shell{display:flex;flex-direction:column}
+#shell > .seg{order:9!important;margin:0!important;padding:6px 8px calc(8px + env(safe-area-inset-bottom,0px))!important;border-radius:22px 22px 0 0!important;background:#1B1030!important;box-shadow:0 -1px 0 #33204F,0 -12px 30px -16px rgba(0,0,0,.8)!important}
+#shell > .seg button{position:relative;flex-direction:column!important;height:auto!important;min-height:56px!important;gap:3px!important;font-size:.74rem!important;border-radius:14px!important;background:none!important;box-shadow:none!important;color:#A796C6!important}
+#shell > .seg button svg{display:block!important;width:24px!important;height:24px!important}
+#shell > .seg button[aria-pressed="true"]{color:#FF7CC8!important;background:none!important;box-shadow:none!important}
+#shell > .seg button[aria-pressed="true"]::after{display:block!important;content:"";position:absolute;top:0;bottom:auto!important;left:30%!important;right:30%!important;height:3px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
+.segpair{flex:2!important;margin:0!important;padding:0!important;background:none!important;box-shadow:none!important;gap:0!important}
+.segsw{width:16px!important;color:#5A3D8C!important}
+#segCompete .rdot{top:2px!important;right:calc(50% - 24px)!important}
+.flow.astab,#flow.astab,.lv,.battle,#sheet.full.under,.ceg.under{bottom:var(--botnav,72px)!important}
+#shell > .wallet{margin-bottom:6px!important}
+/* balance: even breathing room under the header on every tab */
+#studio,#judge,#gallery{padding-top:16px!important}
+.flow.astab .body{padding-top:10px!important}
+#judge .tot-h,#studio .sec-h,.cx .sec-h{margin-top:0!important}
+#app.on .flow{bottom:var(--botnav,72px)}
+#gallery .mg{padding-left:0!important;padding-right:0!important}
+#gallery .gtabs{margin-left:0!important;margin-right:0!important;margin-top:0!important}
+/* More room under the header; stronger tab labels */
+#studio,#judge,#gallery{padding-top:40px!important}
+.flow.astab .body{padding-top:34px!important}
+#app.on .flow:not(.astab) .body{padding-top:14px}
+#shell > .seg button{font-size:.86rem!important;font-weight:800!important;color:#E4D8FA!important;letter-spacing:.01em}
+#shell > .seg button svg{width:26px!important;height:26px!important}
+#shell > .seg button[aria-pressed="true"]{color:#FF5FB8!important}
+/* Header breathing room; stronger current tab */
+#shell > .top{padding-top:34px!important;padding-bottom:14px!important}
+#shell > .top .ptitle{visibility:hidden}
+#shell > .wallet{margin-top:4px!important}
+#shell > .seg button[aria-pressed="true"]{color:#fff!important;background:linear-gradient(160deg,rgba(255,63,164,.95),rgba(155,60,255,.95))!important;box-shadow:0 6px 18px -6px rgba(255,63,164,.7)!important;border-radius:16px!important}
+#shell > .seg button[aria-pressed="true"]::after{display:none!important}
+#shell > .seg button[aria-pressed="true"] svg{color:#fff}
+#shell > .seg button{margin:0 3px}
+/* Bottom bar always on top of screens; headings a little higher */
+#shell > .seg{position:relative!important;z-index:30!important;padding-bottom:8px!important}
+#studio,#judge,#gallery{padding-top:22px!important}
+.flow.astab .body{padding-top:16px!important}
+#app.on .flow .body{padding-bottom:24px}
+/* Sheets never peek out under or over the bottom bar */
+#sheet:not(.on){visibility:hidden;transition:transform .3s,visibility 0s .3s}
+#sheet.on{visibility:visible}
+#sheet.full.under{z-index:25}
+/* Tab slide: one consistent push for every tab */
+.panes .pane,.panes #judge,.panes #studio,.panes #gallery{transition:none!important}
+.tabghost{z-index:19!important;display:flex!important}
+body.tabsliding #shell{overflow:hidden}
 .cx-wb h2 span{background:linear-gradient(180deg,#FFF3A8,#FFC93C 55%,#E79A00);-webkit-background-clip:text;background-clip:text;color:transparent}
 </style>
 </head>
@@ -2638,7 +2685,7 @@ const Engine = (() => {
     { k: 'comp', name: 'Composition', short: 'Composition', verb: 'Improve Composition', tip: 'Reframes and crops around your subject' },
     { k: 'colour', name: 'Colour', short: 'Colour', verb: 'Improve Colour', tip: 'Boosts vibrance and warmth' },
     { k: 'subject', name: 'Expression', short: 'Expression', verb: 'Improve Expression', tip: 'Makes your subject pop and draws the eye' },
-    { k: 'tech', name: 'Technical Quality', short: 'Technical', verb: 'Improve Technical Quality', tip: 'Sharpens detail and clarity' }
+    { k: 'tech', name: 'Technical Quality', short: 'Technical', verb: 'Improve Technical', tip: 'Sharpens detail and clarity' }
   ];
 
   function down(img, maxSide) {
@@ -3401,7 +3448,9 @@ function openFlow(html, closable = true, onClose) {
   ['segCompete', 'segJudge', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segStudio').setAttribute('aria-pressed', 'true');
 }
 $('#shell').addEventListener('click', e => { if (!e.target.closest('#shell > .seg')) return; if ($('#lv').classList.contains('on')) lvClose(); if ($('#battle').classList.contains('on')) $('#battle').classList.remove('on'); if ($('#coach').classList.contains('on')) $('#coach').classList.remove('on', 'cr'); if ($('#sheet').classList.contains('under') && $('#sheet').classList.contains('on')) closeSheet(); const g = $('#ceg'); if (g.classList.contains('under')) { g.classList.remove('on', 'under'); g.style.top = ''; } }, true);
-function cxTabTop() { const g = $('#shell > .seg'); return g.offsetTop + g.offsetHeight + 4; }
+function cxTabTop() { const g = $('#shell > .wallet'); return g.offsetTop + g.offsetHeight + 6; }
+function navH() { const g = $('#shell > .seg'); return g ? g.offsetHeight : 0; }
+new ResizeObserver(() => document.documentElement.style.setProperty('--botnav', navH() + 'px')).observe(document.querySelector('#shell > .seg'));
 function leaveCxTab() {
   const f = $('#flow'); if (!f.classList.contains('astab')) { f.classList.remove('cxmode'); return; }
   f.classList.remove('cxmode', 'astab'); f.style.top = '';
@@ -3460,7 +3509,7 @@ function showResult(p, o = {}) {
 /* ---------- Enhance ---------- */
 let EN = null; // { p, cat, variants, sel }
 function enhanceShell(p, cat) {
-  return `<h2 style="font-size:1.7rem;margin:4px 0 4px">${cat ? catBy(cat).verb : 'Pick a fix'}</h2>
+  return `<div class="tot-h sec-h"><h2>${cat ? catBy(cat).verb : 'Pick a fix'}</h2></div>
     <p class="muted" id="enSub" style="margin:0 0 12px">${cat ? '' : 'Every fix costs ' + fixCost(p) + ' gems and gives you three versions to choose from.'}</p>
     <div class="cats cc" role="group" aria-label="Fix type">${C.filter(c => c.k === cat || !isMaxed(p, c.k)).map(c => `<button data-c="${c.k}" aria-pressed="${c.k === cat}" aria-label="${c.name}, ${p.s[c.k]} out of 100"><small>${c.name}</small><b>${p.s[c.k]}<span>/100</span></b><i><i style="width:${p.s[c.k]}%"></i></i></button>`).join('')}</div>
     <div id="enArea"></div>`;
@@ -4716,6 +4765,7 @@ function go(where) {
   if (where === 'studio') { renderStudio(); $('#studio').scrollTop = 0; }
   if (where === 'gallery') { renderGallery(); $('#gallery').scrollTop = 0; }
 }
+document.querySelectorAll('#shell > .seg button').forEach(b => b.addEventListener('click', () => { if ($('#sheet').classList.contains('on') && !$('#sheet').classList.contains('cover')) closeSheet(); if ($('#ceg').classList.contains('on')) { $('#ceg').classList.remove('on', 'under'); $('#ceg').style.top = ''; } }, true));
 $('#segJudge').onclick = () => go('judge'); $('#segStudio').onclick = () => go('studio'); $('#segGallery').onclick = () => openGallery();
 $('#segCompete').onclick = () => { CX_WB = false; if (!S.user) { openSignup(() => openComps(null)); return; } if (CX.some(c => canEnter(c))) goEligible(); else openComps(null); };
 (() => {
@@ -4997,6 +5047,29 @@ function streakHello() {
   const bye = () => { b.classList.remove('on'); setTimeout(() => b.remove(), 400); };
   b.onclick = () => { bye(); go('judge'); }; setTimeout(bye, 5000);
 }
+
+/* One slide transition for every tab change (the Enhance -> Judge push) */
+(() => {
+  const ORDER = { compete: 0, studio: 1, judge: 2, gallery: 3 }, BTN = { segCompete: 'compete', segStudio: 'studio', segJudge: 'judge', segGallery: 'gallery' };
+  const curTab = () => ($('#flow').classList.contains('on') && $('#flow').classList.contains('astab')) ? 'compete' : $('#panes').dataset.at;
+  const elFor = t => t === 'compete' ? $('#flow') : document.getElementById(t);
+  const ease = 'cubic-bezier(.2,.8,.2,1)', dur = 320;
+  document.querySelectorAll('#shell > .seg button').forEach(b => b.addEventListener('click', () => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || typeof Element.prototype.animate !== 'function') return;
+    const from = curTab(), to = BTN[b.id]; if (!to || from === to || ORDER[from] == null) return;
+    const dir = ORDER[to] > ORDER[from] ? 1 : -1;
+    let ghost = null;
+    if (from === 'compete') { const f = $('#flow'); ghost = f.cloneNode(true); ghost.removeAttribute('id'); ghost.querySelectorAll('[id]').forEach(x => x.removeAttribute('id')); ghost.style.pointerEvents = 'none'; ghost.style.top = f.style.top; ghost.classList.add('tabghost'); const sc = f.querySelector('.body') && f.querySelector('.body').scrollTop; f.parentNode.insertBefore(ghost, f); const gb = ghost.querySelector('.body'); if (gb) gb.scrollTop = sc; }
+    const out = from === 'compete' ? ghost : elFor(from);
+    requestAnimationFrame(() => {
+      const inn = elFor(to);
+      document.body.classList.add('tabsliding');
+      if (out) out.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${-dir * 100}%)` }], { duration: dur, easing: ease });
+      if (inn) inn.animate([{ transform: `translateX(${dir * 100}%)` }, { transform: 'translateX(0)' }], { duration: dur, easing: ease });
+      setTimeout(() => { if (ghost) ghost.remove(); document.body.classList.remove('tabsliding'); }, dur + 30);
+    });
+  }, true));
+})();
 /* ---------- Boot ---------- */
 (async () => {
   await prepSeeds();
