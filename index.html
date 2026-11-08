@@ -4819,7 +4819,7 @@ function paintFlame() {
   b.setAttribute('aria-label', `${ds.streak} day streak${ds.doneToday ? ', done for today' : ''}`);
 }
 $('#sFlame').onclick = () => { const ds = dailyState(), left = Math.max(0, 3 - ds.D.n);
-  toast(ds.doneToday ? `🔥 ${ds.streak} day streak · done for today` : ds.streak ? `🔥 ${ds.streak} day streak · judge ${left} more today to keep it` : `Judge ${left} photos today to start a streak`);
+  toast(ds.doneToday ? `🔥 ${ds.streak} day streak · done for today` : ds.streak ? `🔥 ${ds.streak} day streak · judge ${left} more today for +50 gems` : `Judge ${left} photos today for +50 gems`);
   if (!ds.doneToday) go('judge'); };
 function renderJudge() {
   paintFlame();
@@ -4857,7 +4857,7 @@ async function vote(pick) {
   S.combo = agree ? (S.combo || 0) + 1 : 0; const comboHit = S.combo >= 5; if (comboHit) S.combo = 0;
   const ds = dailyState(); ds.D.n++;
   let streakHit = 0;
-  if (ds.D.n >= 3 && ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; streakHit = ds.D.streak; S.gems += Math.min(100, 10 * streakHit); paintFlame(); }
+  if (ds.D.n >= 3 && ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; streakHit = ds.D.streak; S.gems += STREAK_GEMS; paintFlame(); }
   save();
   document.querySelectorAll('#judge .jf-combo i').forEach((d, i) => d.classList.toggle('on', comboHit || i < S.combo)); const cl = $('#judge .jf-combo b'); if (cl) cl.textContent = `Combo ${comboHit ? 5 : S.combo}/5`;
   const mc = document.querySelectorAll('#judge .tot-c')[pick], word = mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : mine >= 35 ? 'Close call' : 'Missed it';
@@ -4868,7 +4868,7 @@ async function vote(pick) {
   if (S.photos.length && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); return; }
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
-  if (streakHit) { const rw = Math.min(100, 10 * streakHit); celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} day streak!`, text: `You judged 3 photos today. <b>+${rw} gems</b>. Come back tomorrow to keep it going${streakHit < 10 ? ` and earn ${Math.min(100, 10 * (streakHit + 1))}` : ''}.`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
+  if (streakHit) { const rw = STREAK_GEMS; celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} day streak!`, text: `You judged 3 photos today. <b>+${rw} gems</b>. Come back tomorrow for another 50.`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
   if (comboHit) { luckyDrop(); return; }
   maybeEnhanceNudge();
 }
@@ -5042,12 +5042,13 @@ ${lk ? `<button class="btn block enh-more" id="stMore">Enter another competition
   }
 }
 
+const STREAK_GEMS = 50;
 function streakHello() {
   const ds = dailyState(); if (ds.D.hello === ds.t) return; ds.D.hello = ds.t; save();
   const had = (ds.D.streak || 0) > 0 && !ds.streak, left = Math.max(0, 3 - ds.D.n);
   if (ds.doneToday) return;
   const b = document.createElement('button'); b.className = 'shello';
-  b.innerHTML = `<span class="fl">🔥</span><span><b>${ds.streak ? `${ds.streak} day streak` : had ? 'Your streak ended' : 'Start a streak'}</b><small>${ds.streak ? `Judge ${left} photo${left === 1 ? '' : 's'} today to keep it going` : `Judge ${left} photos today to ${had ? 'start again' : 'start one'}`}</small></span><span class="go">Judge →</span>`;
+  b.innerHTML = `<span class="fl">🔥</span><span><b>${ds.streak ? `${ds.streak} day streak` : had ? 'Your streak ended' : 'Start a streak'}</b><small>${ds.streak ? `Judge ${left} photo${left === 1 ? '' : 's'} today · <b>+50 gems</b>` : `Judge ${left} photos today · <b>+50 gems</b> a day`}</small></span><span class="go">Judge →</span>`;
   document.body.appendChild(b); requestAnimationFrame(() => b.classList.add('on'));
   const bye = () => { b.classList.remove('on'); setTimeout(() => b.remove(), 400); };
   b.onclick = () => { bye(); go('judge'); }; setTimeout(bye, 5000);
