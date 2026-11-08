@@ -2469,6 +2469,11 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .gpop .note .link{padding:2px 0;font-weight:800;color:#FFD86B;text-decoration:underline;text-underline-offset:3px}
 #gemPill .gplus{display:grid!important;place-items:center!important;justify-content:center!important;padding:0!important;gap:0!important}
 .vp-why{margin:12px 0 4px;padding:10px 14px;border-radius:14px;font-weight:700;font-size:.95rem;line-height:1.4;color:#fff;background:rgba(255,63,164,.14);box-shadow:inset 0 0 0 1.5px rgba(255,63,164,.5)}
+#sheet.full.cover{top:0!important;z-index:200}
+#studio{padding-top:16px}
+#sheet.cover .sbal,#sheet.cover .fullbar .wm,#sheet.cover .fullbar .ceg-x[aria-label="Back"]{display:none!important}
+#sheet.cover .fullbar{justify-content:flex-end}
+#sheet.cover .vphead{margin-top:0}
 </style>
 </head>
 <body>
@@ -3564,9 +3569,10 @@ function applyVariant() {
 
 /* ---------- Sheets ---------- */
 let sheetAfter = null, sheetLocked = false;
-function openSheet(html, { locked = false, after = null, full = false } = {}) {
+function openSheet(html, { locked = false, after = null, full = false, cover = false } = {}) {
   $('#sheet').classList.toggle('full', full);
-  const under = full && $('#app').classList.contains('on');
+  const under = full && !cover && $('#app').classList.contains('on');
+  $('#sheet').classList.toggle('cover', !!cover);
   $('#sheet').classList.toggle('under', under); $('#sheet').style.top = under ? cxTabTop() + 'px' : '';
   $('#sheetBody').innerHTML = (full ? `<div class="fullbar"><button class="ceg-x" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><span class="wm">Yofi</span><button class="ceg-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>` : '') + html;
   document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); $('#sheet').scrollTop = 0;
@@ -3689,7 +3695,7 @@ function openStore(reason, onBuy) {
     ${packTiles('buy', true)}
     <p class="note qb">Tap a pack to buy it. Or earn free gems by judging.</p>
     <button class="btn quiet block" id="earnBtn">Earn gems by judging instead</button>
-    <p class="note">Prototype: purchases are simulated and nothing is charged. Gems have no cash value.</p>`, { full: true });
+    <p class="note">Prototype: purchases are simulated and nothing is charged. Gems have no cash value.</p>`, { full: true, cover: true });
   const tick = () => {
     if (!$('#oH')) { clearInterval(storeTimer); return; }
     let s = Math.max(0, Math.floor((S.offerEnd - Date.now()) / 1000));
@@ -4650,7 +4656,6 @@ $('#segCompete').onclick = () => { if (!S.user) { openSignup(() => openComps(nul
     SWIPED = Date.now();
     const at = panes.dataset.at;
     if (at === 'judge' && dx > 0) go('studio');
-    else if (at === 'studio' && dx < 0) go('judge');
   }, { passive: true });
 })();
 
@@ -4855,7 +4860,7 @@ function renderStudio() {
   if (S.user) $('#avatar').textContent = S.user.h[0].toUpperCase();
   const p = cur();
   if (!p) {
-    st.innerHTML = `<div class="swp r"><button class="swp-b" data-swp="judge">Swipe to Judge<span class="ar">→</span></button></div>
+    st.innerHTML = `
     <div class="enh0"><h2>Enhance your photos</h2><p>Upload a photo, get an AI score, then improve it to 80+ to compete.</p>
       <ol class="enh0-st"><li><span class="n">1</span><b>Upload</b><small>Pick a competition, then add a photo for it</small></li><li><span class="n">2</span><b>Score</b><small>AI rates it out of 100</small></li><li><span class="n">3</span><b>Improve to 80+</b><small>Fix your weakest category with gems</small></li></ol>
       <button class="btn block" id="stFind">Find a competition to enter</button>
@@ -4867,7 +4872,7 @@ function renderStudio() {
   const msg = stage === 2 ? `${lk ? '<strong>Entered.</strong> ' : '<strong>Competition ready.</strong> '}${lk ? 'Locked until the results are in.' : !lowestOpen(p) ? 'Every category is maxed out, so it’s ready to compete.' : 'Keep improving it to win more battles and climb competition rankings.'} Started at ${p.start}, ${p.enh} fix${p.enh === 1 ? '' : 'es'} so far.`
     : stage === 1 ? `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions.`
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
-  st.innerHTML = `<div class="swp r"><button class="swp-b" data-swp="judge">Swipe to Judge<span class="ar">→</span></button></div>
+  st.innerHTML = `
 ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
     ${!lk && tot >= CFG.QUALIFY ? `<button class="rdybar" id="stReady"><span class="ic">${TROPHY_S}</span><span class="tx"><b>Competition ready</b><small>Pick a competition for this photo</small></span><span class="go">Go →</span></button>` : ''}
     <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
