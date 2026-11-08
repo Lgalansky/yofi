@@ -2462,6 +2462,11 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 #studio.tallp .bar .mx,#flowBody .rs-side .bar .mx{transform:scale(.8)}
 #studio.tallp .bars.has-d .bar>em,#flowBody .rs-side .bars.has-d .bar>em{display:grid!important;grid-template-columns:auto 30px;column-gap:4px}
 #flowBody .rs-side .bars.has-d .bar em .v{text-align:right}
+.gpop h2{margin:4px 0 6px}
+.gpop .sub b{color:#fff}
+.gpop .jf-packs{margin:18px 0 6px}
+.gpop .note.qb{margin:12px 0 4px}
+.gpop .note .link{padding:2px 0;font-weight:800;color:#FFD86B;text-decoration:underline;text-underline-offset:3px}
 </style>
 </head>
 <body>
@@ -3477,7 +3482,7 @@ new MutationObserver(() => { fitPhotos(); syncSwp(); paintReady(); }).observe(do
 function startEnhance(p, cat) {
   const lk = photoLock(p); if (lk) { lockToast(lk); return; }
   if (isMaxed(p, cat)) { const o = lowestOpen(p); if (!o) { toast('Every category is at its best on this photo.'); return; } cat = o; }
-  if (S.gems < fixCost(p) && !$('#flow').classList.contains('on')) { swipePop(p); return; }
+  if (S.gems < fixCost(p)) { gemsPop(p); return; }
   openEnhance(p, cat);
   if (S.gems >= fixCost(p)) generate(1);
   else needFixGems(p);
@@ -4110,7 +4115,15 @@ function needFixGems(p) {
   if (p) { S.cur = p.id; save(); }
   if ($('#flow').classList.contains('on')) closeFlow();
   go('studio'); renderStudio();
-  setTimeout(() => swipePop(p || cur()), 80);
+  setTimeout(() => gemsPop(p || cur()), 80);
+}
+function gemsPop(p) {
+  const cost = fixCost(p), short = Math.max(0, cost - S.gems);
+  openSheet(`<div class="gpop"><h2>Out of gems</h2><p class="sub">This improvement costs <b>${cost}</b> gems. You have <b>${S.gems}</b>, so you need <b>${short}</b> more.</p>
+    ${packTiles('gp', true)}
+    <p class="note qb">Tap a pack to buy it. Or <button class="link" id="gpEarn">earn free gems by judging</button>.</p></div>`);
+  document.querySelectorAll('#sheetBody [data-gp]').forEach(b => b.onclick = () => { if ($('#flow').classList.contains('on')) closeFlow(); buyPack(+b.dataset.gp); });
+  $('#gpEarn').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); go('judge'); };
 }
 function swipePop(p) {
   const short = Math.max(0, fixCost(p) - S.gems), st = $('#studio');
@@ -4862,7 +4875,7 @@ ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your 
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can go into gallery frames and competitions.</p>' : ''}
     
     
-    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>${S.gems < fixCost(p) ? topUpHTML() : ''}<button class="swlink" id="stSwL">Switch photo · ${S.photos.length}/${CFG.MAX_PHOTOS}</button>`}`}
+    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${sorted[0].k}" ${S.gems < fixCost(p) ? 'data-short="1"' : ''}><span>${sorted[0].verb}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button><button class="swlink" id="stSwL">Switch photo · ${S.photos.length}/${CFG.MAX_PHOTOS}</button>`}`}
 ${lk ? `<button class="btn block enh-more" id="stMore">Enter another competition</button>` : ''}
     ${!lk && sorted.length ? '' : `<div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
     <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = Object.values(S.frames || {}).includes(x.id); const st = xl ? ['ent', 'Entered'] : xh ? ['gal', 'In gallery'] : lowestOpen(x) ? ['go', 'Enhance'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`}`;
