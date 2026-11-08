@@ -2537,6 +2537,7 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 #studio.tallp>#cmp{grid-row:2/4!important}
 #studio.tallp .scr2{grid-row:2!important}
 #studio.tallp>.scorebox>.bars{grid-row:3!important}
+.cx-wb h2 span{background:linear-gradient(180deg,#FFF3A8,#FFC93C 55%,#E79A00);-webkit-background-clip:text;background-clip:text;color:transparent}
 </style>
 </head>
 <body>
@@ -3870,7 +3871,7 @@ function openComps(forPhoto) {
   const fpBar = fp && !photoLock(fp) ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Your photo is ready</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${(() => { const n = CX.filter(c => show.includes(c.k) && !liveEntry(c.id) && cxOk(c, fp)).length; return n ? `Pick a competition below · ${n} fit${n === 1 ? 's' : ''} this photo` : 'No open competitions fit this photo right now'; })()}</span></div><button id="cxAll">See all</button></div>` : '';
   const rdy = !fp && S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)).sort((a, b) => b.s.total - a.s.total) : [];
   const rdyRow = rdy.length ? `<div class="rdyrow rdystick"><div class="rdy-s"><div class="rdy-th">${rdy.slice(0, 3).map(p => `<img src="${p.src}" alt="">`).join('')}</div><div class="tx"><b>${rdy.length} photo${rdy.length === 1 ? '' : 's'} ready</b><span>${nCan ? (CXF === 'mine' ? `Filtered to the ${nCan} you can enter` : `${nCan} competition${nCan === 1 ? '' : 's'} you can enter`) : 'No open competitions fit them right now'}</span></div>${nCan ? (CXF === 'mine' ? '<button class="rdy-btn ghost" id="rdyAll">Clear filter</button>' : '<button class="rdy-btn" id="rdyShow">Filter eligible comps</button>') : ''}</div></div>` : '';
-  openFlow(`<div class="cx">${fpBar ? '' : '<div class="tot-h sec-h"><h2>Enter a competition</h2></div>'}${wal}${fpBar}${rdyRow}${CXF === 'mine' ? '' : mine}
+  openFlow(`<div class="cx">${fpBar ? '' : CX_WB && S.user ? `<div class="tot-h sec-h cx-wb"><h2>Welcome back, <span>@${esc(S.user.h)}</span></h2></div>` : '<div class="tot-h sec-h"><h2>Enter a competition</h2></div>'}${wal}${fpBar}${rdyRow}${CXF === 'mine' ? '' : mine}
     ${fpBar || CXF === 'mine' ? '' : best}
     <div class="mh2"><h2 class="fh">${fpBar ? 'Pick a competition' : CXF === 'mine' ? 'Competitions you can enter' : 'Explore competitions'}</h2></div>
     <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['gem', 'Gems'], ['cash', 'Cash']].map(([k, l]) => `<button data-f="${k}" class="${k === 'mine' ? 'mine' : ''}" aria-pressed="${CXF === k || (CXF === 'mine' && k === 'all' && false)}">${l}</button>`).join('')}</div>
@@ -4488,7 +4489,7 @@ function bindRoomView() {
   g.querySelectorAll('.rv .rtabs button').forEach(b => b.onclick = () => { GV.room = +b.dataset.r; renderGallery(); });
   if ($('#gRank')) $('#gRank').onclick = () => { GV.tab = 'board'; renderGallery(); g.scrollTop = 0; };
 }
-var WB_SHOW = false;
+var WB_SHOW = false, CX_WB = false;
 function openGallery() { if ($('#sheet').classList.contains('on')) closeSheet(); GV.tab = 'mine'; go('gallery'); }
 function renderGallery() {
   const g = $('#gallery');
@@ -4706,6 +4707,7 @@ function openVisit(i) {
 
 /* ---------- Panes: Judge / Studio with flick ---------- */
 function go(where) {
+  CX_WB = false;
   if (where !== 'gallery') WB_SHOW = false;
   if (where !== 'gallery') hideHangBar();
   if ($('#flow').classList.contains('on')) { if ($('#flowBack').style.visibility === 'hidden' && !$('#flow').classList.contains('astab')) return; closeFlow(); }
@@ -4715,7 +4717,7 @@ function go(where) {
   if (where === 'gallery') { renderGallery(); $('#gallery').scrollTop = 0; }
 }
 $('#segJudge').onclick = () => go('judge'); $('#segStudio').onclick = () => go('studio'); $('#segGallery').onclick = () => openGallery();
-$('#segCompete').onclick = () => { if (!S.user) { openSignup(() => openComps(null)); return; } if (CX.some(c => canEnter(c))) goEligible(); else openComps(null); };
+$('#segCompete').onclick = () => { CX_WB = false; if (!S.user) { openSignup(() => openComps(null)); return; } if (CX.some(c => canEnter(c))) goEligible(); else openComps(null); };
 (() => {
   const panes = $('#panes'); let x0 = null, y0 = null, t0 = 0;
   panes.addEventListener('touchcancel', () => { x0 = null; }, { passive: true });
@@ -5001,7 +5003,7 @@ function streakHello() {
   Object.keys(S.frames || {}).forEach(k => { const [r, i] = k.split('-').map(Number), ph = S.photos.find(x => x.id === S.frames[k]), sl = ROOMS[r] && ROOMS[r].slots[i]; if (!sl || !ph || !fitsSlot(ph, sl) || ph.s.total < roomMin(r)) delete S.frames[k]; });
   save();
   renderLanding();
-  if (S.user) { $('#landing').style.display = 'none'; $('#app').classList.add('on'); renderJudge(); renderStudio(); paintGems(false); if ((S.entries || []).length) { WB_SHOW = true; openGallery(); } else go(S.photos.length ? 'studio' : 'judge'); }
+  if (S.user) { $('#landing').style.display = 'none'; $('#app').classList.add('on'); renderJudge(); renderStudio(); paintGems(false); CX_WB = true; openComps(null); }
   if ($('#app').classList.contains('on')) { renderJudge(); }
   if (S.user) setTimeout(streakHello, 1200);
   if (S.user) $('#avatar').textContent = S.user.h[0].toUpperCase();
