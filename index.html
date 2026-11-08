@@ -2517,6 +2517,7 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .scr2 b.pop{animation:cpop .5s cubic-bezier(.3,1.4,.5,1)}
 .scr2 b{display:inline-block;font-variant-numeric:tabular-nums}
 .rdystick .rdy-btn{white-space:nowrap;font-size:.85rem;padding:0 14px}
+#enSub:empty{display:none}
 </style>
 </head>
 <body>
@@ -3437,7 +3438,7 @@ function showResult(p, o = {}) {
 let EN = null; // { p, cat, variants, sel }
 function enhanceShell(p, cat) {
   return `<h2 style="font-size:1.7rem;margin:4px 0 4px">${cat ? catBy(cat).verb : 'Pick a fix'}</h2>
-    <p class="muted" id="enSub" style="margin:0 0 12px">${cat ? `${catBy(cat).tip}. Three versions, pick the one you like.` : 'Every fix costs ' + fixCost(p) + ' gems and gives you three versions to choose from.'}</p>
+    <p class="muted" id="enSub" style="margin:0 0 12px">${cat ? '' : 'Every fix costs ' + fixCost(p) + ' gems and gives you three versions to choose from.'}</p>
     <div class="cats cc" role="group" aria-label="Fix type">${C.filter(c => c.k === cat || !isMaxed(p, c.k)).map(c => `<button data-c="${c.k}" aria-pressed="${c.k === cat}" aria-label="${c.name}, ${p.s[c.k]} out of 100"><small>${c.name}</small><b>${p.s[c.k]}<span>/100</span></b><i><i style="width:${p.s[c.k]}%"></i></i></button>`).join('')}</div>
     <div id="enArea"></div>`;
 }
@@ -3468,7 +3469,7 @@ function bindCats() {
     const c = btn.dataset.c; EN.cat = c;
     document.querySelectorAll('#flowBody .cats button').forEach(x => x.setAttribute('aria-pressed', x.dataset.c === c));
     $('#flowBody h2').textContent = catBy(c).verb;
-    $('#enSub').textContent = `${catBy(c).tip}. Three versions, pick the one you like.`;
+    $('#enSub').textContent = '';
     EN.variants = null; enIdle();
   });
 }
