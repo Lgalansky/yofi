@@ -4914,7 +4914,6 @@ function renderStudio() {
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
   st.innerHTML = `
 ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg"><span class="scb ${tot >= CFG.QUALIFY ? 'ok' : ''}" aria-label="Score ${tot} of 100"><b>${tot}</b><small>/100</small></span>${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
-    ${!lk && tot >= CFG.QUALIFY ? `<button class="rdybar" id="stReady"><span class="ic">${TROPHY_S}</span><span class="tx"><b>Competition ready</b><small>Pick a competition for this photo</small></span><span class="go">Go →</span></button>` : ''}
     <div class="scorebox">${ringSVG(tot, 'r2')}<div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small>Overall score</small><div><b>${tot}</b><em>/100</em></div></div>${barsHTML(p.s, null, !lk, p)}</div>
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can go into gallery frames and competitions.</p>' : ''}
     
