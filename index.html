@@ -2755,6 +2755,10 @@ body.tabsliding #shell{overflow:hidden}
 .us-card h2{margin:14px 0 10px;font:800 1.75rem/1.1 "Bricolage Grotesque",Figtree,sans-serif;color:#F6EEFF}
 .us-card p{margin:0 0 14px;font-size:1.02rem;line-height:1.5;color:#D9CCF3}
 .us-card b{display:block;font-size:1.05rem;color:#fff}
+/* Compete: heading and ready banner stick together */
+.flow.astab .cxtop.stk{position:sticky;top:-16px;z-index:7;margin:-16px -16px 0;padding:16px 16px 2px;background:#0B1022}
+.flow.astab .cxtop .rdyrow.rdystick{position:relative;top:auto!important;margin-bottom:14px}
+.flow.astab .cxtop .rdyrow.rdystick::before{display:none}
 </style>
 </head>
 <body>
@@ -4080,7 +4084,7 @@ const cxFee = c => c.k === 'gem' ? `<span class="freefee">Free</span>` : c.k ===
 const cxNeed = c => c.min || CFG.QUALIFY;
 let CXF = 'all', cxTimer = null, CXP = null;
 const freeUsed = () => new Set((S.entries || []).filter(e => (CX.find(x => x.id === e.cid) || {}).k === 'gem').map(e => e.pid));
-const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used = c.k === 'gem' ? freeUsed() : new Set(); return S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total)[0] || (!c.cats && c.k === 'gem' && S.photos.length ? 'new' : null); };
+const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used = c.k === 'gem' ? freeUsed() : new Set(); return S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total)[0] || null; };
 const readyPhotos = () => S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)) : [];
 function goEligible() { CXF = 'mine'; CXP = null; openComps(null); const b = $('#flowBody'); if (b) b.scrollTop = 0; }
 const ccard = c => { const left = cxLeft(c), fee = cxFee(c).replace(/<span class="gfee">/, '').replace(/<\/span>$/, '');
@@ -4122,7 +4126,7 @@ function openComps(forPhoto) {
   const fpBar = fp && !photoLock(fp) ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Your photo is ready</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${(() => { const n = CX.filter(c => show.includes(c.k) && !liveEntry(c.id) && cxOk(c, fp)).length; return n ? `Pick a competition below · ${n} fit${n === 1 ? 's' : ''} this photo` : 'No open competitions fit this photo right now'; })()}</span></div><button id="cxAll">See all</button></div>` : '';
   const rdy = !fp && S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)).sort((a, b) => b.s.total - a.s.total) : [];
   const rdyRow = rdy.length ? `<div class="rdyrow rdystick"><div class="rdy-s"><div class="rdy-th">${rdy.slice(0, 3).map(p => `<img src="${p.src}" alt="">`).join('')}</div><div class="tx"><b>${rdy.length} photo${rdy.length === 1 ? '' : 's'} ready</b><span>${nCan ? (CXF === 'mine' ? `Filtered to the ${nCan} you can enter` : `${nCan} competition${nCan === 1 ? '' : 's'} you can enter`) : 'No open competitions fit them right now'}</span></div>${nCan ? (CXF === 'mine' ? '<button class="rdy-btn ghost" id="rdyAll">Clear filter</button>' : '<button class="rdy-btn" id="rdyShow">Filter eligible comps</button>') : ''}</div></div>` : '';
-  openFlow(`<div class="cx">${fpBar ? '' : CX_WB && S.user ? `<div class="tot-h sec-h cx-wb"><h2>Welcome back, <span>@${esc(S.user.h)}</span></h2></div>` : '<div class="tot-h sec-h"><h2>Enter free competitions</h2></div>'}${wal}${fpBar}${rdyRow}${CXF === 'mine' ? '' : mine}
+  openFlow(`<div class="cx"><div class="cxtop${rdyRow ? ' stk' : ''}">${fpBar ? '' : CX_WB && S.user ? `<div class="tot-h sec-h cx-wb"><h2>Welcome back, <span>@${esc(S.user.h)}</span></h2></div>` : '<div class="tot-h sec-h"><h2>Enter free competitions</h2></div>'}${wal}${fpBar}${rdyRow}</div>${CXF === 'mine' ? '' : mine}
     ${fpBar || CXF === 'mine' ? '' : best}
     <div class="mh2"><h2 class="fh">${fpBar ? 'Pick a competition' : CXF === 'mine' ? 'Competitions you can enter' : 'Explore competitions'}</h2></div>
     <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['gem', 'Gems'], ['cash', 'Cash']].map(([k, l]) => `<button data-f="${k}" class="${k === 'mine' ? 'mine' : ''}" aria-pressed="${CXF === k || (CXF === 'mine' && k === 'all' && false)}">${l}</button>`).join('')}</div>
