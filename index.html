@@ -2585,6 +2585,9 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .tabghost{z-index:19!important;display:flex!important}
 body.tabsliding #shell{overflow:hidden}
 .cx-wb h2 span{background:linear-gradient(180deg,#FFF3A8,#FFC93C 55%,#E79A00);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* Sticky ready bar sits flush at the top so nothing shows through above it */
+.flow.astab .rdyrow.rdystick{top:-16px!important}
+.flow.astab .rdyrow.rdystick::before{content:"";position:absolute;left:-16px;right:-16px;top:-18px;height:18px;background:#0B1022;pointer-events:none}
 </style>
 </head>
 <body>
