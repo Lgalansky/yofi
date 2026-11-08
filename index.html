@@ -2477,6 +2477,40 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 #useBtn.fixbtn{display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 26px;text-align:left}
 .flow:not(.astab) .bar-top .back{width:32px!important;height:32px!important;background:none!important;box-shadow:none!important;color:#E4D8FA}
 .flow:not(.astab) .bar-top .back svg{display:block}
+/* Enhance: score badge on the photo, photo and ratings bottom-aligned */
+#studio .scb{display:none}
+#studio.tallp .scb{position:absolute;top:10px;left:10px;z-index:3;display:flex;align-items:baseline;gap:2px;padding:6px 11px;border-radius:14px;background:rgba(16,8,32,.82);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:inset 0 0 0 1.5px rgba(255,63,164,.7)}
+#studio.tallp .scb b{font:800 1.7rem/1 "Bricolage Grotesque",sans-serif;color:#fff}
+#studio.tallp .scb small{font-weight:700;font-size:.75rem;color:#CDBEE8}
+#studio.tallp .scb.ok{box-shadow:inset 0 0 0 1.5px #2EE59D}
+#studio.tallp #cmp .catchip{top:auto;left:auto;right:10px;bottom:10px}
+#studio.tallp #cmp .hold{bottom:54px}
+#studio.tallp>.scorebox>svg,#studio.tallp>.scorebox>.ring,#studio.tallp>.scorebox>:first-child{display:none!important}
+#studio.tallp>#cmp{grid-row:1!important;align-self:end!important}
+#studio.tallp>.scorebox>.bars{grid-row:1!important;align-self:end!important;margin-top:0!important}
+#studio.tallp #cmp .qbadge{display:none!important}
+/* Score above the ratings instead of on the photo */
+#studio.tallp .scb{display:none!important}
+#studio .scr2{display:none}
+#studio.tallp .scr2{display:block;grid-column:2;grid-row:1;align-self:end;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #33204F}
+#studio.tallp .scr2 small{display:block;font-weight:800;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#A796C6}
+#studio.tallp .scr2 div{display:flex;align-items:baseline;gap:4px;margin-top:2px}
+#studio.tallp .scr2 b{font:800 2.6rem/1 "Bricolage Grotesque",sans-serif;color:#fff}
+#studio.tallp .scr2 em{font-style:normal;font-weight:700;font-size:.9rem;color:#A796C6}
+#studio.tallp .scr2.ok b{color:#2EE59D}
+#studio.tallp>#cmp{grid-row:1/3!important}
+#studio.tallp>.scorebox>.bars{grid-row:2!important}
+#studio.tallp #cmp .catchip{top:10px;left:10px;right:auto;bottom:auto}
+#studio.tallp #cmp .hold{bottom:12px}
+#flowBody .rs-side .scr2{display:block;margin-bottom:2px;padding-bottom:10px;border-bottom:1px solid #33204F}
+#flowBody .scr2 small{display:block;font-weight:800;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#A796C6}
+#flowBody .scr2 div{display:flex;align-items:baseline;gap:4px;margin-top:2px}
+#flowBody .scr2 b{font:800 2.6rem/1 "Bricolage Grotesque",sans-serif;color:#fff}
+#flowBody .scr2 em{font-style:normal;font-weight:700;font-size:.9rem;color:#A796C6}
+#flowBody .scr2.ok b{color:#2EE59D}
+#flowBody .scr2 i{font-style:normal;margin-left:6px;font-weight:800;font-size:1rem;color:#2EE59D}
+#flowBody .scr2 i.dn{color:#FF8FA3}
+#flowBody .rs-top{align-items:end}
 </style>
 </head>
 <body>
@@ -3353,7 +3387,7 @@ function showResult(p, o = {}) {
   const low = lowestOpen(p), lc = low ? catBy(low) : null, tot = p.s.total, stage = stageOf(tot);
   const crossed = o.prevTotal != null && stage > stageOf(o.prevTotal);
   let html = `<div class="rs-top"><div class="hero-photo rsph"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
-    <div class="rs-side"><div class="rs-ring">${ringSVG(tot, 'r1')}</div>${barsHTML(p.s, o.prev, true, p)}</div></div>`;
+    <div class="rs-side"><div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small>Overall score</small><div><b>${tot}</b><em>/100</em>${o.prevTotal != null && tot !== o.prevTotal ? `<i class="${tot > o.prevTotal ? 'up' : 'dn'}">${tot > o.prevTotal ? '+' : ''}${tot - o.prevTotal}</i>` : ''}</div></div>${barsHTML(p.s, o.prev, true, p)}</div></div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
   else html += `<button class="btn block fixbtn nocost rs-fix" id="doFix"><span>${lc.verb}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>`;
@@ -4876,9 +4910,9 @@ function renderStudio() {
     : stage === 1 ? `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions.`
     : `<strong>${CFG.GALLERY - tot} points</strong> to get into the gallery, ${CFG.QUALIFY - tot} to enter cash competitions. Started at ${p.start}.`;
   st.innerHTML = `
-${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
+${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg"><span class="scb ${tot >= CFG.QUALIFY ? 'ok' : ''}" aria-label="Score ${tot} of 100"><b>${tot}</b><small>/100</small></span>${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
     ${!lk && tot >= CFG.QUALIFY ? `<button class="rdybar" id="stReady"><span class="ic">${TROPHY_S}</span><span class="tx"><b>Competition ready</b><small>Pick a competition for this photo</small></span><span class="go">Go →</span></button>` : ''}
-    <div class="scorebox">${ringSVG(tot, 'r2')}${barsHTML(p.s, null, !lk, p)}</div>
+    <div class="scorebox">${ringSVG(tot, 'r2')}<div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small>Overall score</small><div><b>${tot}</b><em>/100</em></div></div>${barsHTML(p.s, null, !lk, p)}</div>
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can go into gallery frames and competitions.</p>' : ''}
     
     
