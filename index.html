@@ -2518,6 +2518,8 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .scr2 b{display:inline-block;font-variant-numeric:tabular-nums}
 .rdystick .rdy-btn{white-space:nowrap;font-size:.85rem;padding:0 14px}
 #enSub:empty{display:none}
+/* Compete tab: small number badge */
+#segCompete .rdot{top:-4px!important;right:-2px!important;left:auto!important;min-width:20px;height:20px;padding:0 5px!important;display:grid;place-items:center;border-radius:999px;font-size:.72rem!important;line-height:1!important;animation:none!important;box-shadow:0 0 0 2px #140A26!important}
 </style>
 </head>
 <body>
@@ -3532,7 +3534,7 @@ function paintReady() {
   let d = b.querySelector('.rdot');
   if (!n) { if (d) d.remove(); return; }
   if (!d) { d = document.createElement('i'); d.className = 'rdot'; b.appendChild(d); }
-  const t = `${n} ready`; if (d.textContent !== t) { d.textContent = t; b.setAttribute('aria-label', `Compete, ${n} photo${n === 1 ? '' : 's'} ready to enter`); }
+  const t = String(n); if (d.textContent !== t) { d.textContent = t; b.setAttribute('aria-label', `Compete, ${n} photo${n === 1 ? '' : 's'} ready to enter`); }
 }
 function syncSwp() { const d = `-${((performance.now() % 4500) / 1000).toFixed(2)}s`; document.querySelectorAll('.swp .swp-b:not([data-sw]), .swp .swp-b:not([data-sw]) .ar').forEach(el => { el.style.animationDelay = d; el.dataset.sw = '1'; }); }
 new MutationObserver(() => { fitPhotos(); syncSwp(); paintReady(); }).observe(document.getElementById('app'), { childList: true, subtree: true });
