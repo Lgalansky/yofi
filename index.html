@@ -2881,6 +2881,9 @@ body.tabsliding #shell{overflow:hidden}
 .enhp #stEnh[disabled]{opacity:.5}
 .rt-won b .gprz{display:inline-flex;align-items:center;gap:6px;font:inherit;color:inherit}
 .rt-won b .gprz svg{width:.75em;height:.75em;flex:none}
+.enh0-st li.go{position:relative;cursor:pointer}
+.enh0-st li.go i{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-style:normal;font-size:1.3rem;color:#D9C8FF}
+.enh0 #stAdd{gap:10px}
 </style>
 </head>
 <body>
@@ -5420,9 +5423,8 @@ function renderStudio() {
     }
     st.innerHTML = `
     <div class="enh0"><h2>Enhance your photos</h2><p>${busy ? 'None of your photos need work right now. They’re entered in competitions or already at their best, so you’ll find them in your Gallery.' : 'Upload a photo, get an AI score, then improve it to 80+ to compete.'}</p>
-      <ol class="enh0-st"><li><span class="n">1</span><b>Upload</b><small>Pick a competition, then add a photo for it</small></li><li><span class="n">2</span><b>Score</b><small>AI rates it out of 100</small></li><li><span class="n">3</span><b>Improve to 80+</b><small>Fix your weakest category with gems</small></li></ol>
-      <button class="btn block" id="stFind">Find a competition to enter</button>
-      <button class="btn block st-up" id="stAdd"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Upload a new photo</button></div>`;
+      <ol class="enh0-st"><li><span class="n">1</span><b>Upload</b><small>Pick a competition, then add a photo for it</small></li><li><span class="n">2</span><b>Score</b><small>AI rates it out of 100</small></li><li><span class="n">3</span><b>Improve to 80+</b><small>Fix your weakest category with gems</small></li><li class="go" id="stFind" role="button" tabindex="0"><span class="n">4</span><b>Enter a competition</b><small>Find one to enter</small><i aria-hidden="true">→</i></li></ol>
+      <button class="btn block" id="stAdd"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Upload a new photo</button></div>`;
     $('#stAdd').onclick = () => { const c = CX.find(x => x.id === 'snap') || CX[0]; if (!S.user) { pickPhoto(true); return; } openEntryGuide(c, null); }; $('#stFind').onclick = () => { CXF = 'all'; CXP = null; openComps(null); }; return;
   }
   const tot = p.s.total, stage = stageOf(tot), lk = photoLock(p), gc = !lk && p.cat ? goalFor(p) : null, gneed = gc ? cxNeed(gc) : 0;
