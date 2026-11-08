@@ -2418,6 +2418,21 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 #flowBody .scorebox{grid-template-columns:1fr;justify-items:center;gap:14px}
 #flowBody .scorebox>.bars{width:100%}
 #studio #stFix{margin-top:18px}
+/* Crop a very tall photo */
+.crp-v{width:auto;max-width:100%;display:inline-block}
+.crp-v img{width:auto!important;max-width:100%;height:58vh!important;object-fit:contain}
+.crp-dim.t{top:0;left:0;right:0;bottom:auto}
+.crp-dim.b{left:0;right:0;bottom:0;top:auto}
+.crp-v .crp-dim{width:auto!important}
+.crp-v .crp-box{left:0!important;right:0;width:auto!important}
+/* After an improvement: same layout as Enhance */
+#flowBody .rs-top{display:grid;grid-template-columns:1fr 1fr;column-gap:14px;align-items:center;margin:4px 0 0}
+#flowBody .rs-top .hero-photo.rsph{position:relative!important;top:auto!important;height:auto!important;min-height:0!important;max-height:52vh!important;aspect-ratio:3/4;width:100%!important;margin:0!important;box-shadow:none!important;clip-path:none!important}
+#flowBody .rs-top .hero-photo.rsph::before{display:none}
+#flowBody .rs-top .hero-photo.rsph img{width:100%!important;height:100%!important;object-fit:cover!important}
+#flowBody .rs-ring{display:flex;justify-content:center}
+#flowBody .rs-ring>*{width:min(150px,100%)!important;height:auto}
+#flowBody .rs-bars{display:block;margin-top:18px}
 </style>
 </head>
 <body>
@@ -3197,6 +3212,31 @@ function cropPortrait(img) {
     setTimeout(() => box.focus(), 50);
   });
 }
+function cropTall(img) {
+  return new Promise(done => {
+    const W = img.naturalWidth, H = img.naturalHeight, ch = Math.round(W * 4 / 3);
+    const el = document.createElement('div'); el.className = 'crp'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'crpT');
+    el.innerHTML = `<div class="crp-in"><h2 id="crpT">Crop your photo</h2><p>This photo is very tall. Drag the frame up or down to choose the part to keep.</p>
+      <div class="crp-st crp-v"><img src="${img.src}" alt="Your photo"><i class="crp-dim t"></i><i class="crp-dim b"></i><b class="crp-box" tabindex="0" aria-label="Crop frame. Use up and down arrow keys to move it"><span class="g"></span><span class="h">⇅</span></b></div>
+      <button class="btn block" id="crpGo">Use this crop</button><button class="ceg-later" id="crpNo">Cancel</button></div>`;
+    document.body.appendChild(el);
+    const st = el.querySelector('.crp-st'), box = el.querySelector('.crp-box'), dt = el.querySelector('.crp-dim.t'), db = el.querySelector('.crp-dim.b');
+    let y = (H - ch) / 2;
+    const k = () => st.clientHeight / H;
+    const paint = () => { const bh = ch * k(), by = y * k(); box.style.height = bh + 'px'; box.style.top = by + 'px'; dt.style.height = by + 'px'; db.style.top = (by + bh) + 'px'; };
+    const clamp = v => Math.max(0, Math.min(H - ch, v));
+    const im = st.querySelector('img'); if (im.complete) requestAnimationFrame(paint); else im.onload = paint; window.addEventListener('resize', paint);
+    let sy = null, y0 = 0;
+    st.addEventListener('pointerdown', e => { sy = e.clientY; y0 = y; st.setPointerCapture(e.pointerId); if (!box.contains(e.target)) { const r = st.getBoundingClientRect(); y = clamp((e.clientY - r.top) / k() - ch / 2); y0 = y; paint(); } });
+    st.addEventListener('pointermove', e => { if (sy == null) return; y = clamp(y0 + (e.clientY - sy) / k()); paint(); });
+    ['pointerup', 'pointercancel'].forEach(t => st.addEventListener(t, () => { sy = null; }));
+    box.addEventListener('keydown', e => { if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { e.preventDefault(); y = clamp(y + (e.key === 'ArrowUp' ? -1 : 1) * H / 40); paint(); } });
+    const end = v => { window.removeEventListener('resize', paint); el.remove(); done(v); };
+    el.querySelector('#crpNo').onclick = () => end(null);
+    el.querySelector('#crpGo').onclick = () => { const c = document.createElement('canvas'); c.width = W; c.height = ch; c.getContext('2d').drawImage(img, 0, Math.round(y), W, ch, 0, 0, W, ch); end(c); };
+    setTimeout(() => box.focus(), 50);
+  });
+}
 function portraitOnly() {
   openSheet(`<div class="po"><div class="po-ph" aria-hidden="true"><span class="no"></span><span class="ok"></span></div>
     <h2>Portrait photos only</h2><p class="sub">Yofi photos are upright, so every photo shows in full when two go head to head. This one is wider than it is tall. Pick a photo taken with your phone held upright.</p>
@@ -3215,6 +3255,7 @@ $('#file').addEventListener('change', async e => {
   let img;
   try { img = await loadImg(url); } catch (err) { toast('This photo couldn’t be opened. Try a JPG or PNG.'); return; }
   if (img.naturalWidth / img.naturalHeight > CFG.MAX_RATIO) { const cut = await cropPortrait(img); if (!cut) { URL.revokeObjectURL(url); return; } img = cut; }
+  else if (img.naturalWidth / img.naturalHeight < 0.62) { const cut = await cropTall(img); if (!cut) { URL.revokeObjectURL(url); return; } img = cut; }
   $('#landing').style.display = 'none'; $('#app').classList.add('on'); paintGems(false);
   const id = toID(img, 960); URL.revokeObjectURL(url);
   const src = toURL(id);
@@ -3267,8 +3308,9 @@ function showResult(p, o = {}) {
   }
   const low = lowestOpen(p), lc = low ? catBy(low) : null, tot = p.s.total, stage = stageOf(tot);
   const crossed = o.prevTotal != null && stage > stageOf(o.prevTotal);
-  let html = `<div class="hero-photo rsph" style="max-height:40vh"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
-    <div class="scorebox" style="margin-top:0">${ringSVG(tot, 'r1')}${barsHTML(p.s, o.prev, true, p)}</div>`;
+  let html = `<div class="rs-top"><div class="hero-photo rsph"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
+    <div class="rs-ring">${ringSVG(tot, 'r1')}</div></div>
+    <div class="scorebox rs-bars">${barsHTML(p.s, o.prev, true, p)}</div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
   else html += `<div class="opp">
