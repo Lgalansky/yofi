@@ -2059,7 +2059,7 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 #studio.tallp>#cmp::before{display:none}
 #studio.tallp>.scorebox{display:contents}
 #studio.tallp>.scorebox>svg,#studio.tallp>.scorebox>.ring,#studio.tallp>.scorebox>:first-child{grid-column:2;grid-row:2;align-self:center;justify-self:center;width:min(150px,100%)!important;height:auto}
-#studio.tallp>.scorebox>.bars{grid-column:1/-1;grid-row:3;margin-top:18px}
+#studio.tallp>.scorebox>.bars{grid-column:1/-1;margin-top:18px}
 #studio.tallp>.swp{grid-row:1}
 #studio.tallp .tallsc{grid-column:2;grid-row:2;align-self:start;margin-top:24px!important;justify-self:center;margin-top:8px;font-weight:800;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#A796C6}
 #studio:not(.tallp) .tallsc{display:none}
@@ -2302,8 +2302,7 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .rdybar b{font-size:1rem}
 .rdybar small{font-size:.8rem;color:#D9C8FF}
 .rdybar .go{padding:8px 14px;border-radius:999px;font-weight:800;color:#2A1600;background:linear-gradient(180deg,#FFE27A,#FFC93C)}
-#studio.tallp>.rdybar{grid-column:1/-1;grid-row:3}
-#studio.tallp>.scorebox>.bars{grid-row:4!important}
+#studio.tallp>.rdybar{grid-column:1/-1}
 .qbadge.tap{cursor:pointer;pointer-events:auto}
 .rdygo{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 4px;color:#2A1600!important;background:linear-gradient(180deg,#FFE27A,#FFC93C)!important}
 .rdygo svg{width:22px;height:22px}
@@ -2407,6 +2406,18 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 .fxc svg{width:100%;height:100%;display:block}
 .cashbig b{background:linear-gradient(100deg,#2EE59D,#13A86A)!important;-webkit-background-clip:text!important;background-clip:text!important}
 #wCash.bump{animation:bump .5s}
+/* Score bars: every number lines up */
+.bar{grid-template-columns:118px minmax(0,1fr) 34px!important}
+.bar>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar em{display:block;text-align:right}
+.bars.has-d .bar{grid-template-columns:118px minmax(0,1fr) 72px!important}
+.bars.has-d .bar em{display:grid;grid-template-columns:28px 1fr;column-gap:6px;text-align:left}
+.bars.has-d .bar em .v{text-align:right}
+.bar em .d{margin-left:0!important}
+/* After an improvement: ring above, bars full width (same as Enhance) */
+#flowBody .scorebox{grid-template-columns:1fr;justify-items:center;gap:14px}
+#flowBody .scorebox>.bars{width:100%}
+#studio #stFix{margin-top:18px}
 </style>
 </head>
 <body>
@@ -2880,10 +2891,11 @@ function animateRing(root, from) {
 }
 function barsHTML(s, prev, tap, p) {
   const low = p ? lowestOpen(p) : lowest(s);
-  return `<div class="bars">${C.map(c => {
+  const hasD = !!prev && C.some(c => s[c.k] !== prev[c.k]);
+  return `<div class="bars ${hasD ? 'has-d' : ''}">${C.map(c => {
     const d = prev ? s[c.k] - prev[c.k] : 0;
     const t = tap && !(p && isMaxed(p, c.k));
-    return `<${t ? 'button' : 'div'} class="bar ${c.k === low ? 'low' : ''} ${p && isMaxed(p, c.k) ? 'maxd' : ''} ${s[c.k] >= 80 ? 'hi' : ''}" ${t ? `data-fix="${c.k}" aria-label="Improve ${c.name}, now ${s[c.k]}"` : ''}><span>${c.short || c.name}${p && isMaxed(p, c.k) ? ' <i class="mx" aria-label="at its best">✓</i>' : ''}</span><i><b style="width:${prev ? prev[c.k] : 0}%" data-w="${s[c.k]}"></b></i><em>${s[c.k]}${d ? `<span class="d ${d < 0 ? 'dn' : ''}">${d > 0 ? '+' : ''}${d}</span>` : ''}</em></${t ? 'button' : 'div'}>`;
+    return `<${t ? 'button' : 'div'} class="bar ${c.k === low ? 'low' : ''} ${p && isMaxed(p, c.k) ? 'maxd' : ''} ${s[c.k] >= 80 ? 'hi' : ''}" ${t ? `data-fix="${c.k}" aria-label="Improve ${c.name}, now ${s[c.k]}"` : ''}><span>${c.short || c.name}${p && isMaxed(p, c.k) ? ' <i class="mx" aria-label="at its best">✓</i>' : ''}</span><i><b style="width:${prev ? prev[c.k] : 0}%" data-w="${s[c.k]}"></b></i><em><span class="v">${s[c.k]}</span>${hasD ? `<span class="d ${d < 0 ? 'dn' : ''}">${d ? (d > 0 ? '+' : '') + d : ''}</span>` : ''}</em></${t ? 'button' : 'div'}>`;
   }).join('')}</div>`;
 }
 const lowest = s => C.reduce((a, c) => (s[c.k] < s[a] ? c.k : a), C[0].k);
