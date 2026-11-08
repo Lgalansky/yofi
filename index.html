@@ -2884,6 +2884,11 @@ body.tabsliding #shell{overflow:hidden}
 .enh0-st li.go{position:relative;cursor:pointer}
 .enh0-st li.go i{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-style:normal;font-size:1.3rem;color:#D9C8FF}
 .enh0 #stAdd{gap:10px}
+.cxtabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:4px 0 14px;padding:4px;border-radius:16px;background:#121A31;box-shadow:inset 0 0 0 1.5px #26304F}
+.cxtabs button{display:flex;align-items:center;justify-content:center;gap:6px;height:40px;border-radius:12px;font-weight:800;font-size:.9rem;color:#9AA6C8}
+.cxtabs button[aria-selected="true"]{color:#fff;background:linear-gradient(95deg,#FF3FA4,#9B3CFF)}
+.cxtabs i{font-style:normal;min-width:20px;padding:1px 6px;border-radius:999px;font-size:.75rem;color:#fff;background:#FF2D8E}
+.cxtabs button[aria-selected="true"] i{background:rgba(255,255,255,.25)}
 </style>
 </head>
 <body>
@@ -4208,7 +4213,7 @@ const prizeWords = c => c.k === 'gem' ? `${c.prize.toLocaleString()} gems` : `$$
 const cxPrize = c => c.k === 'gem' ? `${c.prize.toLocaleString()}${gemIcon()}` : c.k === 'bc' ? `$${c.prize.toLocaleString()}<small>BC</small>` : `$${c.prize.toLocaleString()}`;
 const cxFee = c => c.k === 'gem' ? `<span class="freefee">Free</span>` : c.k === 'bc' ? `$${c.fee.toFixed(2)} BC` : `$${c.fee} Cash`;
 const cxNeed = c => c.min || CFG.QUALIFY;
-let CXF = 'all', cxTimer = null, CXP = null;
+let CXF = 'all', cxTimer = null, CXP = null, CXT = 'enter';
 const freeUsed = () => new Set((S.entries || []).filter(e => (CX.find(x => x.id === e.cid) || {}).k === 'gem').map(e => e.pid));
 const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used = c.k === 'gem' ? freeUsed() : new Set(); return S.photos.filter(p => cxOk(c, p) && !photoLock(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total)[0] || null; };
 const readyPhotos = () => S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)) : [];
@@ -4248,17 +4253,21 @@ function openComps(forPhoto) {
         <h3>${esc(pick.t)}</h3><span class="fsub">${pick.cats ? esc(pick.lab) : 'Any photo'}</span>
         <div class="fst"><div><small>1st prize</small><b>${cxPrize(pick)}</b></div><div><small>Entry fee</small><b>${cxFee(pick)}</b></div></div>
         <button class="fgo" data-cx-go="${pick.id}">${pick.k === 'gem' ? 'Free entry' : 'Enter competition'}</button></div></div>` : '';
-  const mine = live.length ? `<div class="myent"><div class="mh"><h3>My live entries</h3><span>${live.length} live</span></div>${live.map(e => liveCardHTML(CX.find(x => x.id === e.cid), e)).join('')}</div>` : '';
+  if (!live.length || fp) CXT = 'enter';
+  const liveTab = CXT === 'live';
+  const tabs = live.length && !fp ? `<div class="cxtabs" role="tablist"><button role="tab" data-cxt="enter" aria-selected="${!liveTab}">Enter competitions</button><button role="tab" data-cxt="live" aria-selected="${liveTab}">My live entries <i>${live.length}</i></button></div>` : '';
+  const mine = live.length ? `<div class="myent">${live.map(e => liveCardHTML(CX.find(x => x.id === e.cid), e)).join('')}</div>` : '';
   const fpBar = fp && !photoLock(fp) ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Your photo is ready</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${(() => { const n = CX.filter(c => show.includes(c.k) && !liveEntry(c.id) && cxOk(c, fp)).length; return n ? `Pick a competition below · ${n} fit${n === 1 ? 's' : ''} this photo` : 'No open competitions fit this photo right now'; })()}</span></div><button id="cxAll">See all</button></div>` : '';
   const rdy = !fp && S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)).sort((a, b) => b.s.total - a.s.total) : [];
   const rdyRow = rdy.length ? `<div class="rdyrow rdystick"><div class="rdy-s"><div class="rdy-th">${rdy.slice(0, 3).map(p => `<img src="${p.src}" alt="">`).join('')}</div><div class="tx"><b>${rdy.length} photo${rdy.length === 1 ? '' : 's'} ready</b><span>${nCan ? (CXF === 'mine' ? `Filtered to the ${nCan} you can enter` : `${nCan} competition${nCan === 1 ? '' : 's'} you can enter`) : 'No open competitions fit them right now'}</span></div>${nCan ? (CXF === 'mine' ? '<button class="rdy-btn ghost" id="rdyAll">Clear filter</button>' : '<button class="rdy-btn" id="rdyShow">Filter eligible comps</button>') : ''}</div></div>` : '';
-  openFlow(`<div class="cx"><div class="cxtop${rdyRow ? ' stk' : ''}">${fpBar ? '' : CX_WB && S.user ? `<div class="tot-h sec-h cx-wb"><h2>Welcome back, <span>@${esc(S.user.h)}</span></h2></div>` : '<div class="tot-h sec-h"><h2>Enter free competitions</h2></div>'}${wal}${fpBar}${rdyRow}</div>${CXF === 'mine' ? '' : mine}
+  openFlow(`<div class="cx"><div class="cxtop${rdyRow ? ' stk' : ''}">${fpBar ? '' : CX_WB && S.user ? `<div class="tot-h sec-h cx-wb"><h2>Welcome back, <span>@${esc(S.user.h)}</span></h2></div>` : '<div class="tot-h sec-h"><h2>Enter free competitions</h2></div>'}${wal}${fpBar}${rdyRow}</div>${tabs}${liveTab ? mine : `
     ${fpBar || CXF === 'mine' ? '' : best}
     <div class="mh2"><h2 class="fh">${fpBar ? 'Pick a competition' : CXF === 'mine' ? 'Competitions you can enter' : 'Explore competitions'}</h2></div>
     <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['gem', 'Gems'], ['cash', 'Cash']].map(([k, l]) => `<button data-f="${k}" class="${k === 'mine' ? 'mine' : ''}" aria-pressed="${CXF === k || (CXF === 'mine' && k === 'all' && false)}">${l}</button>`).join('')}</div>
-    <div class="clist">${show.map(k => cards(k)).join('') || `<p class="cxempty">You’ve entered every ${CXF === 'gem' ? 'gem ' : CXF === 'cash' ? 'cash ' : ''}competition that’s open right now. New ones start every 30 minutes.</p>`}</div>
+    <div class="clist">${show.map(k => cards(k)).join('') || `<p class="cxempty">You’ve entered every ${CXF === 'gem' ? 'gem ' : CXF === 'cash' ? 'cash ' : ''}competition that’s open right now. New ones start every 30 minutes.</p>`}</div>`}
     <p class="note">Prototype: entry fees and prizes use your simulated wallet. Nothing is charged or paid out for real.</p></div>`, true);
   $('#flow').classList.add('cxmode', 'astab'); $('#flow').style.top = cxTabTop() + 'px';
+  document.querySelectorAll('#flowBody [data-cxt]').forEach(b => b.onclick = () => { CXT = b.dataset.cxt; openComps(); $('#flowBody').scrollTop = 0; });
   ['segJudge', 'segStudio', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segCompete').setAttribute('aria-pressed', 'true');
   const body = $('#flowBody');
   body.querySelectorAll('[data-w]').forEach(b => b.onclick = () => openStore());
@@ -5423,9 +5432,9 @@ function renderStudio() {
     }
     st.innerHTML = `
     <div class="enh0"><h2>Enhance your photos</h2><p>${busy ? 'None of your photos need work right now. They’re entered in competitions or already at their best, so you’ll find them in your Gallery.' : 'Upload a photo, get an AI score, then improve it to 80+ to compete.'}</p>
-      <ol class="enh0-st"><li><span class="n">1</span><b>Upload</b><small>Pick a competition, then add a photo for it</small></li><li><span class="n">2</span><b>Score</b><small>AI rates it out of 100</small></li><li><span class="n">3</span><b>Improve to 80+</b><small>Fix your weakest category with gems</small></li><li class="go" id="stFind" role="button" tabindex="0"><span class="n">4</span><b>Enter a competition</b><small>Find one to enter</small><i aria-hidden="true">→</i></li></ol>
+      <ol class="enh0-st"><li><span class="n">1</span><b>Upload</b><small>Pick a competition, then add a photo for it</small></li><li><span class="n">2</span><b>Score</b><small>AI rates it out of 100</small></li><li><span class="n">3</span><b>Improve to 80+</b><small>Fix your weakest category with gems</small></li></ol>
       <button class="btn block" id="stAdd"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Upload a new photo</button></div>`;
-    $('#stAdd').onclick = () => { const c = CX.find(x => x.id === 'snap') || CX[0]; if (!S.user) { pickPhoto(true); return; } openEntryGuide(c, null); }; $('#stFind').onclick = () => { CXF = 'all'; CXP = null; openComps(null); }; return;
+    $('#stAdd').onclick = () => { const c = CX.find(x => x.id === 'snap') || CX[0]; if (!S.user) { pickPhoto(true); return; } openEntryGuide(c, null); }; return;
   }
   const tot = p.s.total, stage = stageOf(tot), lk = photoLock(p), gc = !lk && p.cat ? goalFor(p) : null, gneed = gc ? cxNeed(gc) : 0;
   const sorted = C.filter(c => !isMaxed(p, c.k)).sort((a, b) => p.s[a.k] - p.s[b.k]);
