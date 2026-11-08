@@ -2445,6 +2445,23 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 #gemPill .gplus{position:absolute;right:10px;top:50%;transform:translateY(-50%);margin:0!important}
 #gemPill .gplus svg{display:block;width:12px!important;height:12px!important}
 #flowBody .rs-fix{margin:18px 0 6px;display:flex;align-items:center;justify-content:space-between;padding-left:26px;padding-right:12px;text-align:left}
+/* Score + bars to the right of the photo */
+#studio.tallp>#cmp{grid-row:2/4!important;align-self:start}
+#studio.tallp>.scorebox>svg,#studio.tallp>.scorebox>.ring,#studio.tallp>.scorebox>:first-child{grid-row:2!important;align-self:end!important;width:min(104px,100%)!important}
+#studio.tallp>.scorebox>.bars{grid-column:2!important;grid-row:3!important;margin-top:10px!important;align-self:start}
+#flowBody .rs-top{align-items:start}
+#flowBody .rs-side{display:flex;flex-direction:column;align-items:stretch;gap:10px;min-width:0}
+#flowBody .rs-side .rs-ring>*{width:min(104px,100%)!important}
+/* compact bars */
+#studio.tallp .bars,#flowBody .rs-side .bars{gap:8px!important}
+#studio.tallp .bar,#flowBody .rs-side .bar{grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"l v" "t t";row-gap:4px;column-gap:6px;font-size:.82rem}
+#studio.tallp .bar>span,#flowBody .rs-side .bar>span{grid-area:l}
+#studio.tallp .bar>i,#flowBody .rs-side .bar>i{grid-area:t;height:6px}
+#studio.tallp .bar>em,#flowBody .rs-side .bar>em{grid-area:v;display:flex!important;gap:4px;align-items:baseline;font-size:.85rem}
+#studio.tallp .bar em .d,#flowBody .rs-side .bar em .d{font-size:.72rem}
+#studio.tallp .bar .mx,#flowBody .rs-side .bar .mx{transform:scale(.8)}
+#studio.tallp .bars.has-d .bar>em,#flowBody .rs-side .bars.has-d .bar>em{display:grid!important;grid-template-columns:auto 30px;column-gap:4px}
+#flowBody .rs-side .bars.has-d .bar em .v{text-align:right}
 </style>
 </head>
 <body>
@@ -3321,8 +3338,7 @@ function showResult(p, o = {}) {
   const low = lowestOpen(p), lc = low ? catBy(low) : null, tot = p.s.total, stage = stageOf(tot);
   const crossed = o.prevTotal != null && stage > stageOf(o.prevTotal);
   let html = `<div class="rs-top"><div class="hero-photo rsph"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
-    <div class="rs-ring">${ringSVG(tot, 'r1')}</div></div>
-    <div class="scorebox rs-bars">${barsHTML(p.s, o.prev, true, p)}</div>`;
+    <div class="rs-side"><div class="rs-ring">${ringSVG(tot, 'r1')}</div>${barsHTML(p.s, o.prev, true, p)}</div></div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
   else html += `<button class="btn block fixbtn nocost rs-fix" id="doFix"><span>${lc.verb}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>`;
