@@ -2516,6 +2516,7 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 #judge{padding-top:14px}
 .scr2 b.pop{animation:cpop .5s cubic-bezier(.3,1.4,.5,1)}
 .scr2 b{display:inline-block;font-variant-numeric:tabular-nums}
+.rdystick .rdy-btn{white-space:nowrap;font-size:.85rem;padding:0 14px}
 </style>
 </head>
 <body>
@@ -3845,8 +3846,8 @@ function openComps(forPhoto) {
   const mine = live.length ? `<div class="myent"><div class="mh"><h3>My live entries</h3><span>${live.length} live</span></div>${live.map(e => liveCardHTML(CX.find(x => x.id === e.cid), e)).join('')}</div>` : '';
   const fpBar = fp && !photoLock(fp) ? `<div class="forp"><img src="${fp.src}" alt="Selected photo"><div><small>Your photo is ready</small><b>${fp.s.total} · ${esc(pcatName(fp.cat) || 'No category')}</b><span>${(() => { const n = CX.filter(c => show.includes(c.k) && !liveEntry(c.id) && cxOk(c, fp)).length; return n ? `Pick a competition below · ${n} fit${n === 1 ? 's' : ''} this photo` : 'No open competitions fit this photo right now'; })()}</span></div><button id="cxAll">See all</button></div>` : '';
   const rdy = !fp && S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)).sort((a, b) => b.s.total - a.s.total) : [];
-  const rdyRow = rdy.length ? `<div class="rdyrow rdystick"><div class="rdy-s"><div class="rdy-th">${rdy.slice(0, 3).map(p => `<img src="${p.src}" alt="">`).join('')}</div><div class="tx"><b>${rdy.length} photo${rdy.length === 1 ? '' : 's'} ready</b><span>${nCan ? (CXF === 'mine' ? `Showing the ${nCan} you can enter` : `${nCan} competition${nCan === 1 ? '' : 's'} you can enter`) : 'No open competitions fit them right now'}</span></div>${nCan ? (CXF === 'mine' ? '<button class="rdy-btn ghost" id="rdyAll">Show all</button>' : '<button class="rdy-btn" id="rdyShow">Show them</button>') : ''}</div></div>` : '';
-  openFlow(`<div class="cx">${wal}${fpBar}${rdyRow}${mine}
+  const rdyRow = rdy.length ? `<div class="rdyrow rdystick"><div class="rdy-s"><div class="rdy-th">${rdy.slice(0, 3).map(p => `<img src="${p.src}" alt="">`).join('')}</div><div class="tx"><b>${rdy.length} photo${rdy.length === 1 ? '' : 's'} ready</b><span>${nCan ? (CXF === 'mine' ? `Filtered to the ${nCan} you can enter` : `${nCan} competition${nCan === 1 ? '' : 's'} you can enter`) : 'No open competitions fit them right now'}</span></div>${nCan ? (CXF === 'mine' ? '<button class="rdy-btn ghost" id="rdyAll">Clear filter</button>' : '<button class="rdy-btn" id="rdyShow">Filter eligible comps</button>') : ''}</div></div>` : '';
+  openFlow(`<div class="cx">${wal}${fpBar}${rdyRow}${CXF === 'mine' ? '' : mine}
     ${fpBar || CXF === 'mine' ? '' : best}
     <div class="mh2"><h2 class="fh">${fpBar ? 'Pick a competition' : CXF === 'mine' ? 'Competitions you can enter' : 'Explore competitions'}</h2></div>
     <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['gem', 'Gems'], ['cash', 'Cash']].map(([k, l]) => `<button data-f="${k}" class="${k === 'mine' ? 'mine' : ''}" aria-pressed="${CXF === k || (CXF === 'mine' && k === 'all' && false)}">${l}</button>`).join('')}</div>
