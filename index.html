@@ -3763,7 +3763,7 @@ function paintLive(force) {
       ${d ? `<i class="${d > 0 ? 'up' : 'dn'}">${d > 0 ? '▲' : '▼'} ${Math.abs(d)}</i>` : '<i>–</i>'}<em>in the last 10 min</em></div></div>`; })()}
     ${(() => { const n = CX.filter(c => canEnter(c)).length;
       return `<div class="lv-next"><h3>While you wait</h3>
-        <button class="lvn-boost" id="lvMore"><span class="z">🏆</span><span class="tx"><b>Enter another competition</b><small>${n ? `Your ready photos can enter ${n} more` : 'Upload a new photo and get it to 80+'}</small></span><span class="go">${n ? 'Show me →' : 'Upload →'}</span></button>
+        <button class="lvn-boost" id="lvMore"><span class="z">🏆</span><span class="tx"><b>Enter another competition</b><small>${n ? `Your ready photos can enter ${n} more` : `${CX.filter(c => !liveEntry(c.id)).length} competitions running now. Pick one to shoot for`}</small></span><span class="go">See them →</span></button>
 </div>`; })()}
     ${(() => {
       const lg = v => Math.log(Math.max(1, v)), pos = v => Math.max(2, Math.min(98, (1 - lg(v) / lg(e.n)) * 100));
@@ -3789,7 +3789,7 @@ function paintLive(force) {
   </div>`);
   $('#lv').scrollTop = y;
   $('#lvBack').onclick = lvClose;
-  if ($('#lvMore')) $('#lvMore').onclick = () => { lvClose(); if (CX.some(c => canEnter(c))) goEligible(); else { closeFlow(); pickPhoto(true); } };
+  if ($('#lvMore')) $('#lvMore').onclick = () => { lvClose(); if (CX.some(c => canEnter(c))) goEligible(); else { CXF = 'all'; CXP = null; openComps(null); $('#flowBody').scrollTop = 0; } };
   if ($('#lvGal')) $('#lvGal').onclick = () => { const ph = S.photos.find(x => x.id === e.pid); AFTER_HANG = e.id; lvClose(); closeFlow(); hangPhoto(ph); };
 }
 
