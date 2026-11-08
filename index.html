@@ -2375,6 +2375,23 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 /* Enhance: competition cards stacked vertically */
 #studio .ncx-row{flex-direction:column;overflow:visible;scroll-snap-type:none;padding-bottom:0}
 #studio .ncx-c{flex:none;width:100%;box-sizing:border-box}
+/* Dark header everywhere (matches the rest of the app) */
+#shell::before{background:#140A26!important}
+#shell > .top,#shell > .wallet,#shell > .seg{--bg:#140A26;--bg2:#1D1036;--ink:#F6EEFF;--muted:#C9BCE3;--card:#1B1030;--line:#33204F;color:#F6EEFF!important;color-scheme:dark!important}
+#shell > .top .ptitle{color:#fff!important}
+#shell > .wallet .wb{background:#1B1030;box-shadow:inset 0 0 0 1.5px #33204F}
+#shell > .wallet .wb small{color:#E4D8FA}
+#shell > .wallet .wb.cash b{color:#2EE59D!important}
+#shell > .wallet .wb.gems b{color:#5BC8FF!important}
+#shell > .seg{background:#1B1030!important;box-shadow:inset 0 0 0 1.5px #33204F!important}
+#shell > .seg button{color:#E4D8FA!important}
+#shell > .seg button[aria-pressed="true"]{color:#fff!important;background:linear-gradient(95deg,#FF3FA4,#9B3CFF)!important;box-shadow:0 6px 16px -6px rgba(255,63,164,.6)}
+.segpair{background:#24143D!important;box-shadow:inset 0 0 0 1.5px #3A2760!important}
+.segsw{color:#B48CD8}
+.sflame{background:#2A1A3E!important;color:#FFB35C!important;box-shadow:inset 0 0 0 1.5px #4A3060!important}
+.sflame.cold{background:#24143D!important;color:#A796C6!important;box-shadow:inset 0 0 0 1.5px #3A2760!important}
+.sflame.lit{color:#fff!important;background:linear-gradient(135deg,#FF9F43,#FF3F6C)!important;box-shadow:0 4px 12px rgba(255,110,60,.35)!important}
+#segCompete .rdot{box-shadow:0 0 0 2px #140A26,0 4px 10px rgba(155,60,255,.45)!important}
 </style>
 </head>
 <body>
