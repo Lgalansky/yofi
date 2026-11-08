@@ -3591,13 +3591,13 @@ function renderVariants(top) {
   const { p, variants } = EN;
   const letters = ['A', 'B', 'C'];
   const nm = catBy(EN.cat).name, gain = v => `${catBy(EN.cat).short} +${v.s[EN.cat] - p.s[EN.cat]}`;
-  $('#enArea').innerHTML = `<p class="muted" style="margin:0 0 10px">Every version improves your ${nm} score. Pick the one you like and it’s applied.</p>
+  $('#enArea').innerHTML = `
   <div class="vgrid">${variants.map((v, i) => {
     const c = v.s[EN.cat] - p.s[EN.cat];
     return `<button class="vcard" data-i="${i}" aria-pressed="${EN.sel === i}" aria-label="Version ${letters[i]}, ${v.label}, ${nm} ${v.s[EN.cat]}">
       ${i === top ? '<span class="best">Best</span>' : ''}<img src="${v.src}" alt="">
       <div class="s">${v.s[EN.cat]}<small class="up">+${c}</small></div>
-      <div class="l"><b style="color:var(--ink)">${v.label}</b><br>${v.note}</div></button>`;
+      <div class="l"><b style="color:var(--ink)">${v.label}</b></div></button>`;
   }).join('')}</div>
   <div class="actions"><button class="btn block fixbtn nocost" id="useBtn"></button></div>`;
   $('#flowBack').style.visibility = 'visible';
