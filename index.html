@@ -3000,19 +3000,20 @@ const stageOf = v => (v >= CFG.QUALIFY ? 2 : v >= CFG.GALLERY ? 1 : 0);
 function animateRing(root, from) {
   const val = root.querySelector('.ring .val'), num = root.querySelector('.ring .num');
   const big = root.querySelector('.scr2 b'), bigD = root.querySelector('.scr2 i');
-  if (big) { const to2 = +big.textContent, f2 = from == null ? 0 : from, t2 = performance.now(), ok = big.closest('.scr2').classList.contains('ok');
+  const bars = [...root.querySelectorAll('.bar i b')], BAR_MS = 550, GAP = 110, barsDone = bars.length ? BAR_MS + GAP * (bars.length - 1) : 0;
+  bars.forEach((b, i) => { b.style.transition = `width ${BAR_MS}ms cubic-bezier(.2,.8,.2,1) ${i * GAP}ms`; requestAnimationFrame(() => requestAnimationFrame(() => { b.style.width = b.dataset.w + '%'; })); });
+  if (big) { const to2 = +big.textContent, f2 = from == null ? 0 : from, ok = big.closest('.scr2').classList.contains('ok'); let t2 = 0;
     big.closest('.scr2').classList.remove('ok'); if (bigD) bigD.style.opacity = '0';
-    const st2 = now => { const k = Math.min(1, (now - t2) / 1400), v = Math.round(f2 + (to2 - f2) * (1 - Math.pow(1 - k, 3))); big.textContent = v;
+    const st2 = now => { if (!t2) t2 = now; const k = Math.min(1, (now - t2) / 1000), v = Math.round(f2 + (to2 - f2) * (1 - Math.pow(1 - k, 3))); big.textContent = v;
       if (k < 1) requestAnimationFrame(st2); else { if (ok) big.closest('.scr2').classList.add('ok'); big.classList.add('pop'); if (bigD) { bigD.style.transition = 'opacity .4s'; bigD.style.opacity = '1'; } } };
-    big.textContent = f2; requestAnimationFrame(st2); }
-  if (!val) { root.querySelectorAll('.bar i b').forEach(b => requestAnimationFrame(() => requestAnimationFrame(() => { b.style.width = b.dataset.w + '%'; }))); return; }
+    big.textContent = f2; setTimeout(() => requestAnimationFrame(st2), barsDone + 80); }
+  if (!val) return;
   const to = +num.dataset.to;
   if (from != null) val.setAttribute('stroke-dashoffset', (2 * Math.PI * 52 * (1 - from / 100)).toFixed(1));
   requestAnimationFrame(() => requestAnimationFrame(() => val.setAttribute('stroke-dashoffset', val.dataset.off)));
   const f = from == null ? 0 : from, t0 = performance.now();
   const step = now => { const k = Math.min(1, (now - t0) / 1100); num.textContent = Math.round(f + (to - f) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
   requestAnimationFrame(step);
-  root.querySelectorAll('.bar i b').forEach(b => requestAnimationFrame(() => requestAnimationFrame(() => { b.style.width = b.dataset.w + '%'; })));
 }
 function barsHTML(s, prev, tap, p) {
   const low = p ? lowestOpen(p) : lowest(s);
