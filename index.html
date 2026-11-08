@@ -2475,6 +2475,8 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
 #sheet.cover .fullbar{justify-content:flex-end}
 #sheet.cover .vphead{margin-top:0}
 #useBtn.fixbtn{display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 26px;text-align:left}
+.flow:not(.astab) .bar-top .back{width:32px!important;height:32px!important;background:none!important;box-shadow:none!important;color:#E4D8FA}
+.flow:not(.astab) .bar-top .back svg{display:block}
 </style>
 </head>
 <body>
@@ -2549,7 +2551,7 @@ img.fitfg{position:relative;z-index:1;object-fit:contain!important}
     </nav>
 
     <div class="flow" id="flow" role="dialog" aria-modal="true" aria-label="Photo scoring">
-      <div class="bar-top"><button class="back" id="flowBack" aria-label="Close">✕</button><span class="wm">Yofi</span>
+      <div class="bar-top"><button class="back" id="flowBack" aria-label="Back"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="wm">Yofi</span>
         <button class="pill" id="gemPill2" aria-label="Gems balance, open store"><svg class="gem" viewBox="0 0 24 24"><use href="#gemPath"/></svg><span id="gemNum2">0</span></button></div>
       <div class="body" id="flowBody"></div>
     </div>
