@@ -2759,6 +2759,8 @@ body.tabsliding #shell{overflow:hidden}
 .flow.astab .cxtop.stk{position:sticky;top:-16px;z-index:7;margin:-16px -16px 0;padding:16px 16px 2px;background:#0B1022}
 .flow.astab .cxtop .rdyrow.rdystick{position:relative;top:auto!important;margin-bottom:14px}
 .flow.astab .cxtop .rdyrow.rdystick::before{display:none}
+.us-need{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;font-weight:700;font-size:.95rem;color:#E9DEFF}
+.us-need span{flex:none;padding:4px 10px;border-radius:999px;font-weight:800;color:#3EE6F5;box-shadow:inset 0 0 0 2px #3EE6F5}
 </style>
 </head>
 <body>
@@ -4412,7 +4414,7 @@ function cxEnter(c) {
       <div class="us-top"><button class="us-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div><b>${esc(c.t)}</b><small>Photo competition</small></div></div>
       <div class="us-ph"><img src="${compArt(c)}" alt=""></div>
       <div class="us-card"><span class="en-tag">🏆 Photo competition</span><h2>${c.cats ? 'Your free entry is used' : 'Enter with a new photo'}</h2>
-        <p>Each photo gets one free competition entry. ${usedWhere}</p><b>Upload another photo to join ${esc(c.t)}.</b></div>
+        <p>Each photo gets one free competition entry. ${usedWhere}</p><b>Upload another photo to join ${esc(c.t)}.</b><div class="us-need"><span>${cxNeed(c)}+</span>Your new photo needs to score ${cxNeed(c)}+ to enter.</div></div>
       <button class="btn block" id="enNew">Upload a new photo</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
     $('#enNew').onclick = () => { closeSheet(); S.goal = { cid: c.id, pid: null }; save(); pickPhoto(true); };
     return;
