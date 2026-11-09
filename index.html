@@ -3014,6 +3014,8 @@ body.tabsliding #shell{overflow:hidden}
 .enh0-st li.cash5::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-100%);animation:cash5s 2.6s ease-in-out infinite}
 @keyframes cash5s{0%,40%{transform:translateX(-100%)}80%,100%{transform:translateX(100%)}}
 @media (prefers-reduced-motion:reduce){.enh0-st li.cash5::after{animation:none}}
+.sk-week.sk4{grid-template-columns:repeat(4,1fr)!important}
+.sk-d.miss{opacity:.45}
 .vh-rk{font-weight:700;font-size:.95rem;color:#CDBEE8}
 .vis-rh span{color:#D9C8FF!important;background:transparent!important;box-shadow:inset 0 0 0 1.5px #4A3275}
 .en-over{margin:10px 2px 0;font-size:.85rem;line-height:1.4;color:var(--muted);text-align:center}
@@ -5417,12 +5419,18 @@ const JC = [
 const CHAL = { Pets: 'Best Pet Smile', Nature: 'Golden Hour', Wildlife: 'Wild Moments', People: 'Real Smiles', Travel: 'Somewhere New', Food: 'Food Close-ups', Cities: 'City Lights', Action: 'Catch the Moment' };
 const crowdOf = (p, c) => c.src === 'total' ? Math.round(p.score / 10) * 10 : p.cc[c.src] * 10;
 const todayKey = (d = new Date()) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+/* Streaks: four sessions a day. Judge 3 photos in a session to earn it. The streak only resets after a whole day with no session. */
+const SESS = ['Night', 'Morning', 'Afternoon', 'Evening'], SESS_AT = ['midnight', '6am', 'noon', '6pm'], SESS_IC = ['🌙', '🌅', '☀️', '🌆'];
+const sessIdx = (d = new Date()) => Math.floor(d.getHours() / 6);
 function dailyState() {
   const t = todayKey(), y = todayKey(new Date(Date.now() - 864e5));
+  const si = sessIdx(), sk = t + '#' + si;
   const D = S.daily || (S.daily = { day: t, n: 0, streak: 0, last: null });
-  if (D.day !== t) { D.day = t; D.n = 0; D.offered = false; }
+  if (D.day !== t) { D.day = t; D.n = 0; D.offered = false; D.got = []; }
+  if (!Array.isArray(D.got)) D.got = D.last === t ? [si] : [];
+  if (D.slot !== sk) { D.slot = sk; D.sn = 0; }
   const alive = D.last === t || D.last === y;
-  return { D, t, y, streak: alive ? D.streak : 0, doneToday: D.last === t };
+  return { D, t, y, si, sk, streak: alive ? D.streak : 0, doneToday: D.got.includes(si), gotToday: D.got.length };
 }
 const JUDGE_CAP = 20, JUDGE_LOW = 2;
 const crowdAvg = p => Math.round(JC.reduce((a, c) => a + crowdOf(p, c), 0) / JC.length) / 10;
@@ -5430,7 +5438,7 @@ var SWIPED = 0;
 function paintFlame() {
   const ds = dailyState(), b = $('#sFlame'); if (!b) return;
   $('#sFlameN').textContent = ds.streak; b.classList.toggle('lit', ds.doneToday); b.classList.toggle('cold', !ds.streak);
-  b.setAttribute('aria-label', `${ds.streak} day streak${ds.doneToday ? ', done for today' : ''}`);
+  b.setAttribute('aria-label', `${ds.streak} streak${ds.doneToday ? ', done for this session' : ''}`);
 }
 $('#sFlame').onclick = () => streakPop();
 function renderJudge() {
@@ -5483,9 +5491,9 @@ async function vote(pick) {
   if (nudgeFrom == null) nudgeFrom = S.gems;
   S.votes++; S.since++; S.jIdx += 2; S.gems += earn;
   S.combo = agree ? (S.combo || 0) + 1 : 0; const comboHit = S.combo >= 5; if (comboHit) S.combo = 0;
-  const ds = dailyState(); ds.D.n++;
+  const ds = dailyState(); ds.D.n++; ds.D.sn = (ds.D.sn || 0) + 1;
   let streakHit = 0;
-  if (ds.D.n >= 3 && ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; streakHit = ds.D.streak; S.gems += STREAK_GEMS; paintFlame(); }
+  if (ds.D.sn >= 3 && !ds.D.got.includes(ds.si)) { ds.D.streak = (ds.D.last === ds.t || ds.D.last === ds.y) ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; ds.D.got.push(ds.si); streakHit = ds.D.streak; S.gems += STREAK_GEMS; paintFlame(); }
   save();
   document.querySelectorAll('#judge .jf-combo i').forEach((d, i) => d.classList.toggle('on', comboHit || i < S.combo)); const cl = $('#judge .jf-combo b'); if (cl) cl.textContent = `Combo ${comboHit ? 5 : S.combo}/5`;
   const mc = document.querySelectorAll('#judge .tot-c')[pick], word = mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : mine >= 35 ? 'Close call' : 'Missed it';
@@ -5496,7 +5504,7 @@ async function vote(pick) {
   if (S.photos.length && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); return; }
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
-  if (streakHit) { const rw = STREAK_GEMS; celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} day streak!`, text: `You judged 3 photos today. <b>+${rw} gems</b>. Come back tomorrow for another 50.`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Daily streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
+  if (streakHit) { const rw = STREAK_GEMS; celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} streak!`, text: `You judged 3 photos this ${SESS[ds.si].toLowerCase()}. <b>+${rw} gems</b>. ${ds.si < 3 ? `Come back from ${SESS_AT[ds.si + 1]} for another ${rw}.` : `Come back after midnight for another ${rw}.`}`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
   if (comboHit) { luckyDrop(); return; }
   maybeEnhanceNudge();
 }
@@ -5747,24 +5755,23 @@ ${lk ? `<button class="btn block enh-more" id="stMore">Enter another competition
   }
 }
 
-const STREAK_GEMS = 50;
+const STREAK_GEMS = 25;
 function streakPop() {
-  const ds = dailyState(), n = Math.min(3, ds.D.n), done = ds.doneToday;
+  const ds = dailyState(), n = Math.min(3, ds.D.sn || 0), done = ds.doneToday;
   const had = (ds.D.streak || 0) > 0 && !ds.streak;
-  const cur = done ? ds.streak : ds.streak + 1, start = Math.floor((cur - 1) / 7) * 7;
-  const days = [...Array(7)].map((_, i) => { const d = start + i + 1, st = d < cur || (d === cur && done) ? 'got' : d === cur ? 'now' : '';
-    return `<div class="sk-d ${st}"><small>Day ${d}</small><span class="sk-i">${st === 'got' ? '🔥' : gemIcon('')}</span><b>${st === 'got' ? '✓' : '+' + STREAK_GEMS}</b></div>`; }).join('');
-  const title = done ? `${ds.streak} day streak!` : ds.streak ? `${ds.streak} day streak` : had ? 'Streak ended' : 'Daily streak';
-  const sub = done ? `Today's <b>+${STREAK_GEMS} gems</b> are in. Come back tomorrow for another ${STREAK_GEMS}.`
-    : `Judge 3 photos today to earn <b>+${STREAK_GEMS} gems</b>. ${had ? 'Start a new streak today.' : 'Every day, no limit.'}`;
+  const days = SESS.map((nm, i) => { const st = ds.D.got.includes(i) ? 'got' : i === ds.si ? 'now' : i < ds.si ? 'miss' : '';
+    return `<div class="sk-d ${st}"><small>${nm}</small><span class="sk-i">${st === 'got' ? '🔥' : SESS_IC[i]}</span><b>${st === 'got' ? '✓' : st === 'miss' ? '–' : '+' + STREAK_GEMS}</b></div>`; }).join('');
+  const title = done ? `${ds.streak} streak!` : ds.streak ? `${ds.streak} streak` : had ? 'Streak ended' : 'Streaks';
+  const sub = done ? `This ${SESS[ds.si].toLowerCase()}'s <b>+${STREAK_GEMS} gems</b> are in. ${ds.si < 3 ? `Next session from ${SESS_AT[ds.si + 1]}.` : 'Next session after midnight.'}`
+    : `Judge 3 photos this ${SESS[ds.si].toLowerCase()} to earn <b>+${STREAK_GEMS} gems</b>. 4 sessions a day.${had ? ' Start a new streak now.' : ''}`;
   const c = $('#coach');
   c.innerHTML = `<div class="crbox skbox" role="dialog" aria-modal="true" aria-labelledby="crT">
     <div class="cr-rays" aria-hidden="true"></div>
     <div class="sk-fl" aria-hidden="true">🔥</div>
     <h2 id="crT">${title}</h2>
     <p>${sub}</p>
-    <div class="sk-week">${days}</div>
-    ${done ? '' : `<div class="sk-prog"><span>Today</span><div class="sk-bar"><i style="width:${n / 3 * 100}%"></i></div><b>${n}/3 judged</b></div>`}
+    <div class="sk-week sk4">${days}</div>
+    ${done ? '' : `<div class="sk-prog"><span>${SESS[ds.si]}</span><div class="sk-bar"><i style="width:${n / 3 * 100}%"></i></div><b>${n}/3 judged</b></div>`}
     <button class="bt-cta" id="crGo">${done ? 'Keep judging' : n ? `Judge ${3 - n} more` : 'Start judging'}</button>
     <button class="bt-no" id="crLater">Later</button></div>`;
   c.classList.add('on', 'cr');
@@ -5774,7 +5781,7 @@ function streakPop() {
   c.onclick = e => { if (e.target === c) close(); };
 }
 function streakHello() {
-  const ds = dailyState(); if (ds.D.hello === ds.t) return; ds.D.hello = ds.t; save();
+  const ds = dailyState(); if (ds.D.hello === ds.sk) return; ds.D.hello = ds.sk; save();
   if (ds.doneToday) return;
   streakPop();
 }
