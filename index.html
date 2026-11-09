@@ -5034,7 +5034,7 @@ function myGalleryHTML() {
   const room = `<section class="vis-room gr-room ${R.theme}"><div class="vis-rh"><b>${esc(R.name)}</b><span>${R.by}</span></div><p class="gr-rule">${R.rule}</p>
     ${list.length ? `<div class="vis-grid">${list.map((o, i) => `<button class="vis-ph gr-ph ${GV.fresh === o.id ? 'fresh' : ''}" data-p="${o.id}" aria-label="Number ${i + 1}, ${gValText(R.k, o)}"><span class="fr"><img src="${o.src}" alt=""><i class="gr-rk">#${i + 1}</i></span><span class="cap"><em>${o.cat ? gi(o.cat) + esc(pcatName(o.cat)) : `${o.n} entr${o.n === 1 ? 'y' : 'ies'}`}</em><b>${gVal(R.k, o)}</b></span></button>`).join('')}</div>`
       : `<div class="gr-empty">${TROPHY_S}<p>${R.empty}</p><button class="btn" id="gComp">Find a competition</button></div>`}</section>`;
-  return `<div class="mg vis">${hero}
+  return `<div class="mg vis">
     <div class="vis-st"><div><b>${D.gems.length + D.cash.filter(o => !o.gems).length}</b><small>Winning photos</small></div><div><b>${Math.round(wonGems()).toLocaleString()}</b><small>Gems won</small></div><div><b>${fmtMoney(wonCash(), 'cash')}</b><small>Cash won</small></div></div>
     ${tabs}${room}
     <p class="mg-note">Photos that win a prize hang here once the results are in. Cash winners go in Top Cash Won and gem winners go in Top Gems Won.</p></div>`;
@@ -5549,7 +5549,7 @@ function renderStudio() {
     }
     st.innerHTML = `
     <div class="enh0"><h2>Enhance your photos</h2><p>${busy ? 'None of your photos need work right now. They’re entered in competitions or already at their best, so you’ll find them in your Gallery.' : 'Upload a photo, get an AI score, then improve it to 70+ to compete.'}</p>
-      <ol class="enh0-st"><li><span class="n">1</span><b>Upload</b><small>Pick a competition, then add a photo for it</small></li><li><span class="n">2</span><b>Score</b><small>AI rates it out of 100</small></li><li><span class="n">3</span><b>Improve to 70+</b><small>Fix your weakest category with gems</small></li></ol>
+      <ol class="enh0-st"><li><span class="n">1</span><b>Upload</b><small>Pick a competition, then add a photo for it</small></li><li><span class="n">2</span><b>Score</b><small>AI rates it out of 100</small></li><li><span class="n">3</span><b>Improve to 70+</b><small>Fix your weakest category with gems</small></li><li><span class="n">4</span><b>Enter a competition</b><small>Win gems or cash to hang it in your gallery</small></li></ol>
       <button class="btn block" id="stAdd"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Upload a new photo</button></div>`;
     $('#stAdd').onclick = () => { const c = CX.find(x => x.id === 'snap') || CX[0]; if (!S.user) { pickPhoto(true); return; } openEntryGuide(c, null); }; return;
   }
