@@ -2946,6 +2946,7 @@ body.tabsliding #shell{overflow:hidden}
 .vcard .ov .up{color:var(--good)}
 .vcard .ov .dn{color:var(--bad)}
 #enArea #genBtn{position:sticky;bottom:12px;z-index:3;box-shadow:0 10px 24px -8px rgba(155,60,255,.8)}
+#enArea .vgrid{grid-template-columns:repeat(2,1fr)}
 .en-over{margin:10px 2px 0;font-size:.85rem;line-height:1.4;color:var(--muted);text-align:center}
 </style>
 </head>
@@ -2986,7 +2987,7 @@ body.tabsliding #shell{overflow:hidden}
   <section class="steps">
     <ol>
       <li><b><span class="n">1</span>Score it free</b><span class="muted">Upload any photo. It’s scored out of 100 in seconds, and your first score wins you gems.</span></li>
-      <li><b><span class="n">2</span>Get it to 70</b><span class="muted">Spend gems on fixes, three versions each time. Most photos take 3 to 5 fixes. At 70 it can enter competitions, and every photo that wins a prize hangs in your gallery.</span></li>
+      <li><b><span class="n">2</span>Get it to 70</b><span class="muted">Spend gems on fixes, two versions each time. Most photos take 3 to 5 fixes. At 70 it can enter competitions, and every photo that wins a prize hangs in your gallery.</span></li>
       <li><b><span class="n">3</span>Enter and get judged</b><span class="muted">Real people score every entry category by category. The top photos split the prize pool.</span></li>
       <li><b><span class="n">4</span>Earn while you wait</b><span class="muted">Judge other people’s photos to earn gems, and battle challengers to take theirs.</span></li>
     </ol>
@@ -4042,8 +4043,17 @@ async function generate(jitterRound) {
   const pool = Object.values(best).sort(rank).concat(extra.sort(rank));
   const safe = pool.filter(v => v.s.total >= p.s.total).sort((a, b) => b.s.total - a.s.total || b.s[cat] - a.s[cat])[0];
   let picks = safe ? [safe] : [];
-  pool.forEach(v => { if (picks.length < 3 && !picks.includes(v) && !picks.some(x => x.s.total === v.s.total && x.label === v.label)) picks.push(v); });
-  picks = picks.slice(0, 3).sort(rank);
+  pool.forEach(v => { if (picks.length < 2 && !picks.includes(v) && !picks.some(x => x.s.total === v.s.total && x.label === v.label)) picks.push(v); });
+  picks = picks.slice(0, 2);
+  // two clear choices: a safer version and a bolder one that pushes the category harder at a small cost elsewhere
+  if (picks.length === 2 && picks[1].s[cat] <= picks[0].s[cat] + 1) {
+    const bs = Object.assign({}, picks[0].s), others = C.filter(c => c.k !== cat).sort((x, y) => bs[y.k] - bs[x.k]);
+    bs[cat] = Math.min(99, bs[cat] + 3 + Math.floor(Math.random() * 3));
+    const hit = others[Math.floor(Math.random() * 2)]; bs[hit.k] = Math.max(1, bs[hit.k] - (2 + Math.floor(Math.random() * 3)));
+    bs.total = Math.round(C.reduce((t, c) => t + bs[c.k], 0) / C.length);
+    picks[1] = Object.assign({}, picks[1], { s: bs });
+  }
+  picks.sort(rank);
   await sleep(300);
   if (!picks.length) {
     p.maxed = p.maxed || {}; p.maxed[cat] = p.s[cat]; save();
@@ -5580,7 +5590,7 @@ ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your 
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can enter competitions.</p>' : ''}
     
     
-    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${PEND[p.id] ? PEND[p.id].cat : sorted[0].k}" ${!PEND[p.id] && S.gems < fixCost(p) ? 'data-short="1"' : ''}>${PEND[p.id] ? `<span>Select version</span><span class="gpill">3 ready</span>` : `<span>Improve ${sorted[0].name.toLowerCase()}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span>`}</button><button class="swlink" id="stSwL">Switch photo · ${S.photos.filter(canEnh).length} to improve</button>`}`}
+    ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${PEND[p.id] ? PEND[p.id].cat : sorted[0].k}" ${!PEND[p.id] && S.gems < fixCost(p) ? 'data-short="1"' : ''}>${PEND[p.id] ? `<span>Select version</span><span class="gpill">2 ready</span>` : `<span>Improve ${sorted[0].name.toLowerCase()}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span>`}</button><button class="swlink" id="stSwL">Switch photo · ${S.photos.filter(canEnh).length} to improve</button>`}`}
 ${lk ? `<button class="btn block enh-more" id="stMore">Enter another competition</button>` : ''}
     ${!lk && sorted.length ? '' : `<div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
     <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = (S.entries || []).some(e => e.done && e.prize && e.pid === x.id); const st = xl ? ['ent', 'Entered'] : lowestOpen(x) ? ['go', 'Enhance'] : xh ? ['gal', 'In gallery'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`}`;
