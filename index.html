@@ -4068,6 +4068,7 @@ function fitPhotos(root) {
 }
 const photoCanEnter = p => !photoLock(p) && CX.some(c => !liveEntry(c.id) && cxOk(c, p) && !(c.k === 'gem' && freeUsed().has(p.id)));
 function paintReady() {
+  { const d0 = document.querySelector('#segCompete .rdot'); if (d0) d0.remove(); return; } // no count badge on the Compete tab
   const b = document.getElementById('segCompete'); if (!b) return;
   const n = S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && photoCanEnter(p)).length : 0;
   let d = b.querySelector('.rdot');
