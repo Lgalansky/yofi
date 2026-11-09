@@ -2973,6 +2973,12 @@ body.tabsliding #shell{overflow:hidden}
 .vh-who b{font:800 1.4rem/1.1 "Bricolage Grotesque",sans-serif;color:#fff}
 .vh-who .vav{width:34px;height:34px}
 .vh-pl{font:800 1.5rem/1 "Bricolage Grotesque",sans-serif;letter-spacing:.02em;text-transform:uppercase;color:var(--e)}
+.vh-pl sup{font-size:.5em;text-transform:lowercase;vertical-align:.7em;margin-left:1px;letter-spacing:0}
+.gsw{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:0 0 12px;padding:5px;border-radius:999px;background:#211339;box-shadow:inset 0 0 0 1.5px #33204F}
+.gsw button{display:flex;align-items:center;justify-content:center;gap:6px;height:46px;border-radius:999px;font-weight:800;font-size:1rem;color:#D9C8FF}
+.gsw button[aria-selected="true"]{color:#fff;background:linear-gradient(95deg,#FF3FA4,#9B3CFF);box-shadow:0 6px 14px -6px rgba(155,60,255,.9)}
+.gsw .gc{display:grid;place-items:center;min-width:24px;height:24px;padding:0 7px;border-radius:999px;font-size:.8rem;background:rgba(255,255,255,.14)}
+.gsw .gic{margin-right:0}
 .vh-rk{font-weight:700;font-size:.95rem;color:#CDBEE8}
 .vis-rh span{color:#D9C8FF!important;background:transparent!important;box-shadow:inset 0 0 0 1.5px #4A3275}
 .en-over{margin:10px 2px 0;font-size:.85rem;line-height:1.4;color:var(--muted);text-align:center}
@@ -5089,19 +5095,22 @@ function myGalleryHTML() {
   const hero = hb
     ? `<div class="vis-hero" style="--c1:#FF3FA4;--c2:#9B3CFF"><img src="${hb.src}" alt="Your top photo"><div class="vis-ov"><h2>My Gallery</h2>${by}</div></div>`
     : `<div class="vis-hero mg-empty" style="--c1:#5A3D8C;--c2:#2A1748"><div class="mg-eic">${TROPHY_S}</div><div class="vis-ov"><h2>My Gallery</h2>${by}</div></div>`;
-  const tabs = `<div class="grooms" role="tablist" aria-label="Gallery rooms">${GROOMS.map((Rm, i) => `<button role="tab" data-r="${i}" aria-selected="${i === r}" class="k-${Rm.k}"><span class="gc">${D[Rm.k].length}</span><b>${gIco(Rm.k)}${Rm.name}</b></button>`).join('')}</div>`;
+  const tabs = `<div class="gsw" role="tablist" aria-label="Gallery rooms">${GROOMS.map((Rm, i) => `<button role="tab" data-r="${i}" aria-selected="${i === r}">${gIco(Rm.k)}${Rm.k === 'cash' ? 'Cash Won' : 'Gems Won'}<span class="gc">${D[Rm.k].length}</span></button>`).join('')}</div>`;
   const room = `<section class="vis-room gr-room ${R.theme}"><div class="vis-rh"><b>${esc(R.name)}</b><span>${R.by}</span></div><p class="gr-rule">${R.rule}</p>
     ${list.length ? `<div class="vis-grid">${list.map((o, i) => `<button class="vis-ph gr-ph ${GV.fresh === o.id ? 'fresh' : ''}" data-p="${o.id}" aria-label="Number ${i + 1}, ${gValText(R.k, o)}"><span class="fr"><img src="${o.src}" alt=""><i class="gr-rk">#${i + 1}</i></span><span class="cap"><em>${o.cat ? gi(o.cat) + esc(pcatName(o.cat)) : `${o.n} entr${o.n === 1 ? 'y' : 'ies'}`}</em><b>${gVal(R.k, o)}</b></span></button>`).join('')}</div>`
       : `<div class="gr-empty">${TROPHY_S}<p>${R.empty}</p><button class="btn" id="gComp">Find a competition</button></div>`}</section>`;
-  return `<div class="mg vis">
-    <div class="vis-st"><div><b>${D.gems.length + D.cash.filter(o => !o.gems).length}</b><small>Winning photos</small></div><div><b>${gIco('gems')}${Math.round(wonGems()).toLocaleString()}</b><small>Gems won</small></div><div><b>${gIco('cash')}${fmtMoney(wonCash(), 'cash')}</b><small>Cash won</small></div></div>
-    ${tabs}${room}
+  const hk = R.k, myTot = hk === 'cash' ? wonCash() : wonGems(), rk = hofRank(hk, myTot);
+  const card = `<div class="vhd m${rk ? Math.min(rk, 4) : 4}"><span class="vh-pl">${rk ? ordH(rk) + ' place' : 'Not ranked yet'}</span><div class="vh-tr">${podTrophy(rk ? Math.min(rk, 4) - 1 : 3)}</div>
+      <div class="vh-who"><b>@${esc(me)}</b></div><span class="vh-rk">${rk ? `${hk === 'cash' ? 'Cash Won' : 'Gems Won'} Hall of Fame` : `Win ${hk === 'cash' ? 'cash' : 'gems'} in a competition to get ranked`}</span></div>`;
+  return `<div class="mg vis">${tabs}${card}
+    <div class="vis-st" style="grid-template-columns:1fr 1fr"><div><b>${D.gems.length + D.cash.filter(o => !o.gems).length}</b><small>Winning photos</small></div>${hk === 'cash' ? `<div><b>${gIco('cash')}${fmtMoney(wonCash(), 'cash')}</b><small>Cash won</small></div>` : `<div><b>${gIco('gems')}${Math.round(wonGems()).toLocaleString()}</b><small>Gems won</small></div>`}</div>
+    ${room}
     <p class="mg-note">Photos that win a prize hang here once the results are in. Cash winners go in Top Cash Won and gem winners go in Top Gems Won.</p></div>`;
 }
 
 function bindMyGallery() {
   const g = $('#gallery');
-  g.querySelectorAll('.grooms button').forEach(b => b.onclick = () => { GV.room = +b.dataset.r; renderGallery(); });
+  g.querySelectorAll('.gsw button').forEach(b => b.onclick = () => { GV.room = +b.dataset.r; renderGallery(); });
   if ($('#gComp')) $('#gComp').onclick = () => { if (!S.user) { openSignup(() => openComps(null)); return; } if (CX.some(c => canEnter(c))) goEligible(); else openComps(null); };
   g.querySelectorAll('.gr-ph').forEach(b => b.onclick = () => openGalPhoto(b.dataset.p));
   const f = g.querySelector('.gr-ph.fresh'); if (f) setTimeout(() => g.scrollTo({ top: Math.max(0, f.offsetTop - g.clientHeight / 3), behavior: 'smooth' }), 120);
@@ -5239,6 +5248,7 @@ const LB_ROW = ['data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMD
 const POD_MET = [['#FFF3B8', '#F2B637', '#A8690F'], ['#FFFFFF', '#C9CFDB', '#7C8496'], ['#FFD9B8', '#D58A4F', '#8A4A1E'], ['#E6DAFF', '#9B7BE0', '#5B3BA8']];
 const podTrophy = i => { const [a, m, d] = POD_MET[i], id = 'pt' + i;
   return `<svg viewBox="-10 -6 68 64" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset=".5" stop-color="${m}"/><stop offset="1" stop-color="${d}"/></linearGradient></defs><path d="M14 6h20v11a10 10 0 0 1-20 0z" fill="url(#${id})"/><path d="M14 9H8.5a5.5 5.5 0 0 0 7 7.5M34 9h5.5a5.5 5.5 0 0 1-7 7.5" stroke="${m}" stroke-width="2.6" fill="none"/><path d="M21.5 26h5v7h-5z" fill="${d}"/><path d="M15 41a9 6 0 0 1 18 0z" fill="url(#${id})"/><rect x="13" y="40" width="22" height="4" rx="1.5" fill="${d}"/><path d="M18 9.5c0 4 1.2 7 3.4 8.6" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>`; };
+const ordH = n => `${n.toLocaleString()}<sup>${['th', 'st', 'nd', 'rd'][(n % 100 - 20) % 10] || ['th', 'st', 'nd', 'rd'][n % 100] || 'th'}</sup>`;
 const hofVal = (k, b) => k === 'cash' ? b.cw : b.gw;
 const hofFmt = (k, v) => k === 'cash' ? fmtMoney(v, 'cash') : Math.round(v).toLocaleString();
 function hofRank(k, v) {
@@ -5289,7 +5299,7 @@ function openVisit(i) {
   const rooms = { score: top, gems, cash }, hk = GV.hof === 'cash' ? 'cash' : 'gems';
   const rk = 1 + BOARD.slice().sort((x, y) => hofVal(hk, y) - hofVal(hk, x)).indexOf(b);
   openSheet(`<div class="vis">
-    <div class="vhd m${Math.min(rk, 4)}"><span class="vh-pl">${rk <= 3 ? ['1st', '2nd', '3rd'][rk - 1] + ' place' : rk + 'th place'}</span><div class="vh-tr">${podTrophy(Math.min(rk, 4) - 1)}</div>
+    <div class="vhd m${Math.min(rk, 4)}"><span class="vh-pl">${ordH(rk)} place</span><div class="vh-tr">${podTrophy(Math.min(rk, 4) - 1)}</div>
       <div class="vh-who"><b>@${esc(b.n.toLowerCase())}</b></div>
       <span class="vh-rk">${hk === 'cash' ? 'Cash Won' : 'Gems Won'} Hall of Fame</span></div>
     <div class="vis-st" style="grid-template-columns:1fr 1fr"><div><b>${gems.length + cash.length}</b><small>Winning photos</small></div>${hk === 'cash' ? `<div><b>${gIco('cash')}${fmtMoney(b.cw, 'cash')}</b><small>Cash won</small></div>` : `<div><b>${gIco('gems')}${b.gw.toLocaleString()}</b><small>Gems won</small></div>`}</div>
