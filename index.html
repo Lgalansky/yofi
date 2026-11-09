@@ -3851,7 +3851,8 @@ function showResult(p, o = {}) {
   else if (S.user && o.win && o.prevTotal == null) setTimeout(() => { if ($('#flow').classList.contains('on') && !$('#coach').classList.contains('on')) goalRoute(p); }, Math.max(3000, AFTER + 400));
   else if (S.user && o.prev) {
     const big = C.map(c => ({ c, g: p.s[c.k] - o.prev[c.k] })).sort((a, b) => b.g - a.g)[0];
-    if (big && big.g >= 10) setTimeout(() => { if (!$('#coach').classList.contains('on')) celebrate({ src: p.src, score: tot, title: `+${big.g} ${big.c.name}!`, text: `Huge fix. ${big.c.name} jumped from ${o.prev[big.c.k]} to <b>${p.s[big.c.k]}</b>. Your photo now scores ${tot}.`, cta: 'Keep improving' }); }, AFTER);
+    const dt = tot - o.prevTotal;
+    if (big && (dt > 0 || (dt === 0 && big.g >= 5))) setTimeout(() => { if (!$('#coach').classList.contains('on')) celebrate({ src: p.src, score: tot, title: big.g >= 10 || dt <= 0 ? `+${big.g} ${big.c.name}!` : `+${dt} overall!`, text: `${big.c.name} went from ${o.prev[big.c.k]} to <b>${p.s[big.c.k]}</b>. Your photo now scores ${tot}.${tot < CFG.QUALIFY ? ` Just <b>${CFG.QUALIFY - tot} more</b> to enter competitions.` : ''}`, cta: 'Keep improving' }); }, AFTER);
   }
   const b = id => body.querySelector(id);
   body.querySelectorAll('[data-cat]').forEach(x => x.onclick = () => askCategory(p, () => showResult(p), true));
@@ -3913,7 +3914,7 @@ const okVersion = (p, s, cat) => s[cat] > p.s[cat];
 /* Gains get smaller with each fix, so a photo takes 3-5 fixes to reach its best.
    Strong versions can over-enhance: the chosen category goes up, but other
    categories can slip and the overall score can drop a little. */
-const enhCap = p => Math.max(4, 18 - 3 * (p.enh || 0));
+const enhCap = p => Math.max(4, 18 - 2 * (p.enh || 0));
 function shapeVersion(p, raw, cat, j) {
   const g = raw[cat] - p.s[cat]; if (g <= 0) return null;
   const s = Object.assign({}, p.s);
@@ -3921,7 +3922,7 @@ function shapeVersion(p, raw, cat, j) {
   const push = Math.max(0, j - 1) * 2.4 + (p.enh || 0) * 0.45;
   C.forEach(c => {
     if (c.k === cat) return;
-    let d = Math.max(-2, Math.min(1, raw[c.k] - p.s[c.k]));
+    let d = Math.max(-2, Math.min(1, raw[c.k] - p.s[c.k])) + Math.max(0, 2 - Math.floor((p.enh || 0) / 2));
     if (Math.random() < 0.3 + push * 0.12) d -= Math.round(Math.random() * (1 + push));
     s[c.k] = Math.max(1, Math.min(99, p.s[c.k] + Math.max(-7, d)));
   });
