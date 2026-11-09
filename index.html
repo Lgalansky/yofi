@@ -2991,6 +2991,22 @@ body.tabsliding #shell{overflow:hidden}
 .scr2 small.osc .qready{font-size:.7rem;padding:3px 8px}
 .qready{padding:4px 9px;letter-spacing:0;text-transform:none;border-radius:999px;font-weight:800;font-size:.78rem;line-height:1;white-space:nowrap;color:#fff;background:linear-gradient(95deg,var(--pink),var(--violet));cursor:pointer}
 .qready.lk{cursor:default;background:#3A2466}
+.tot-c{position:relative}
+.jrep{position:absolute;top:8px;right:8px;z-index:3;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;color:#fff;background:rgba(10,6,24,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);cursor:pointer}
+.jrep svg{width:16px;height:16px}
+.rep-hd{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.rep-hd img{width:64px;height:80px;object-fit:cover;border-radius:12px;flex:none}
+.rep-hd h2{margin:0}
+.rep-hd .sub{margin:4px 0 0}
+.rep-list{display:grid;gap:8px;margin-bottom:12px}
+.rep-list button{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg2);box-shadow:inset 0 0 0 1.5px var(--line)}
+.rep-list button i{width:20px;height:20px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 2px var(--muted)}
+.rep-list button[aria-checked="true"]{box-shadow:inset 0 0 0 2px var(--pink)}
+.rep-list button[aria-checked="true"] i{box-shadow:inset 0 0 0 6px var(--pink)}
+#repNote{width:100%;margin:0 0 12px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg2);color:var(--ink);font:inherit}
+.rep-fine{margin:10px 2px 0;font-size:.8rem;color:var(--muted);text-align:center}
+.rep-ok{text-align:center;padding:10px 0}
+.rep-tick{display:inline-grid;place-items:center;width:56px;height:56px;margin-bottom:8px;border-radius:50%;font-size:1.6rem;font-weight:800;color:#06281B;background:#2EE59D}
 .vh-rk{font-weight:700;font-size:.95rem;color:#CDBEE8}
 .vis-rh span{color:#D9C8FF!important;background:transparent!important;box-shadow:inset 0 0 0 1.5px #4A3275}
 .en-over{margin:10px 2px 0;font-size:.85rem;line-height:1.4;color:var(--muted);text-align:center}
@@ -5416,7 +5432,7 @@ function renderJudge() {
   const left = CFG.BATTLE_EVERY - S.since, ds = dailyState(), combo = S.combo || 0;
   const [pa, pb] = seedPair();
   $('#judge').innerHTML = `<div class="tot-h"><span class="jtag2">${S.photos.length ? (left <= 1 ? 'Battle after this one' : `${left} picks to a battle`) : 'Score a photo to battle'}</span><h2>Which is better?</h2><p><b>${esc(CHAL[pa.cat] || 'Photo challenge')}</b> · tap your pick</p></div>
-    <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
+    <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span><span class="jrep" role="button" tabindex="0" data-rep="${i}" aria-label="Report this photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
     <div class="jfoot">
       <div class="jf-combo"><b>Combo ${combo}/5</b><span class="dots">${[...Array(5)].map((_, i) => `<i class="${i < combo ? 'on' : ''}"></i>`).join('')}</span><small>Lucky drop at 5</small></div>
       <div class="jf-gems"><div class="jf-l">${ds.D.n < JUDGE_CAP ? `<span><b>+${CFG.VOTE}</b> ${gemIcon()} when you agree</span><span class="r"><b>${JUDGE_CAP - ds.D.n}</b> of ${JUDGE_CAP} left today</span>` : `<span>Daily bonus used</span><span class="r"><b>+${JUDGE_LOW}</b> ${gemIcon()} per pick</span>`}</div>
@@ -5424,7 +5440,23 @@ function renderJudge() {
     </div>
     <div class="vh" id="jRes" aria-live="polite"></div>
 `;
-  document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = () => { if (Date.now() - SWIPED < 400) return; vote(+b.dataset.i); });
+  document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = e => { if (e.target.closest('.jrep')) return; if (Date.now() - SWIPED < 400) return; vote(+b.dataset.i); });
+  document.querySelectorAll('#judge .jrep').forEach(r => r.onclick = e => { e.stopPropagation(); openReport([pa, pb][+r.dataset.rep]); });
+}
+const REPORT_WHY = [['nude', 'Nudity or sexual content'], ['minor', 'Puts a child at risk'], ['violence', 'Violence or gore'], ['hate', 'Hate or harassment'], ['stolen', 'Not their photo (stolen or copied)'], ['spam', 'Spam, ads or scam'], ['other', 'Something else']];
+function openReport(p) {
+  let why = null;
+  openSheet(`<div class="rep"><div class="rep-hd"><img src="${p.src}" alt=""><div><h2>Report this photo</h2><p class="sub">by @${esc(p.owner ? p.owner.h : 'yofi')}. Reports are anonymous.</p></div></div>
+    <div class="rep-list" role="radiogroup" aria-label="Reason">${REPORT_WHY.map(([k, l]) => `<button role="radio" aria-checked="false" data-w="${k}"><i></i>${l}</button>`).join('')}</div>
+    <textarea id="repNote" rows="2" placeholder="Add details (optional)" hidden></textarea>
+    <button class="btn block" id="repGo" disabled>Send report</button>
+    <p class="rep-fine">We hide reported photos while our team reviews them. False reports can limit your account.</p></div>`);
+  document.querySelectorAll('#sheetBody .rep-list button').forEach(b => b.onclick = () => { why = b.dataset.w; document.querySelectorAll('#sheetBody .rep-list button').forEach(x => x.setAttribute('aria-checked', x === b)); $('#repNote').hidden = why !== 'other'; $('#repGo').disabled = false; });
+  $('#repGo').onclick = () => {
+    S.reports = S.reports || []; S.reports.push({ id: p.id, why, at: Date.now() }); save();
+    $('#sheetBody').innerHTML = `<div class="rep rep-ok"><span class="rep-tick">✓</span><h2>Thanks for reporting</h2><p class="sub">We've hidden this photo for you, and our team will review it within 24 hours. You'll still get your judging gems.</p><button class="btn block" id="repDone">Keep judging</button></div>`;
+    $('#repDone').onclick = () => { closeSheet(); S.jIdx = (S.jIdx || 0) + 1; save(); renderJudge(); };
+  };
 }
 let nudgeFrom = null, nudgeT = null;
 function maybeEnhanceNudge() {
