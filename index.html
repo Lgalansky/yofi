@@ -3788,7 +3788,7 @@ $('#file').addEventListener('change', async e => {
   const msgs = ['Checking lighting…', 'Reading composition…', 'Measuring colour…', 'Finding your subject…', 'Testing sharpness…'];
   let k = 0; const iv = setInterval(() => { const m = $('#scanMsg'); if (m) m.textContent = msgs[++k % msgs.length]; }, 420);
   await sleep(60);
-  const s = Engine.score(Engine.analyze(id));
+  const s = capUpload(Engine.score(Engine.analyze(id)));
   await sleep(2000); clearInterval(iv);
   const p = { id: uid(), src, orig: src, s, start: s.total, enh: 0, q: s.total >= CFG.QUALIFY, at: Date.now() };
   S.photos.unshift(p); S.cur = p.id;
@@ -3920,6 +3920,15 @@ const okVersion = (p, s, cat) => s[cat] > p.s[cat];
 /* Gains get smaller with each fix, so a photo takes 3-5 fixes to reach its best.
    Strong versions can over-enhance: the chosen category goes up, but other
    categories can slip and the overall score can drop a little. */
+/* A new upload always lands below competition level: scores above 60 are squeezed into 60-69, best photos highest, so every photo needs fixes to compete */
+function capUpload(s) {
+  const max = CFG.QUALIFY - 1, lo = max - 9;
+  if (s.total <= lo) return s;
+  const want = Math.min(max, lo + Math.round((s.total - lo) * 9 / (100 - lo))), o = Object.assign({}, s), d = s.total - want;
+  C.forEach(c => { o[c.k] = Math.max(1, o[c.k] - d); });
+  o.total = Math.min(max, Math.round(C.reduce((a, c) => a + o[c.k], 0) / C.length));
+  return o;
+}
 const enhCap = p => Math.max(4, 18 - 2 * (p.enh || 0));
 function shapeVersion(p, raw, cat, j) {
   const g = raw[cat] - p.s[cat]; if (g <= 0) return null;
