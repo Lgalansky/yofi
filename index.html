@@ -2904,7 +2904,7 @@ body.tabsliding #shell{overflow:hidden}
 .cx h2.fh{margin-bottom:8px}
 .rt-hd{position:sticky;top:-8px;z-index:5;margin:-8px -14px 0;padding:10px 14px 8px;background:#0B1022}
 /* Gallery: three rooms from competition results */
-.grooms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 4px}
+.grooms{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:14px 0 4px}
 .grooms button{display:grid;justify-items:center;align-content:start;gap:6px;padding:12px 6px 10px;border-radius:18px;text-align:center;color:#D9C8FF;background:#211339;box-shadow:inset 0 0 0 1.5px #33204F}
 .grooms .gc{display:grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border-radius:999px;font:800 1rem/1 "Bricolage Grotesque",sans-serif;color:#fff;background:#2E1D4F}
 .grooms b{font-size:.84rem;line-height:1.15}
@@ -2923,7 +2923,7 @@ body.tabsliding #shell{overflow:hidden}
 .gr-hist li{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--bg2);font-size:.9rem}
 .gr-hist em{font-style:normal;font-weight:800}
 .gr-hist .gem{width:14px;height:14px}
-.gpk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:12px;border-radius:22px;background:#211339;box-shadow:inset 0 0 0 1.5px #33204F}
+.gpk{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px;border-radius:22px;background:#211339;box-shadow:inset 0 0 0 1.5px #33204F}
 .gpk-t{display:grid;gap:4px;min-width:0;color:#fff}
 .gpk-t .im{width:100%;min-width:0;overflow:hidden;display:grid;place-items:center;aspect-ratio:4/5;padding:4px;border-radius:6px;background:linear-gradient(135deg,#F4F0FF,#B9A5E8 28%,#FFFFFF 52%,#8E78C8 78%,#E9E2FF)}
 .gpk-t.k-gems .im{background:linear-gradient(135deg,#F2E2FF,#9A6BD8 30%,#FFF3A8 55%,#7E4FC0 80%,#E8D2FF)}
@@ -2980,7 +2980,7 @@ body.tabsliding #shell{overflow:hidden}
   <section class="steps">
     <ol>
       <li><b><span class="n">1</span>Score it free</b><span class="muted">Upload any photo. It’s scored out of 100 in seconds, and your first score wins you gems.</span></li>
-      <li><b><span class="n">2</span>Get it to 70</b><span class="muted">Spend gems on fixes, three versions each time. Most photos take 3 to 5 fixes. At 70 it can enter competitions, and every photo that competes hangs in your gallery.</span></li>
+      <li><b><span class="n">2</span>Get it to 70</b><span class="muted">Spend gems on fixes, three versions each time. Most photos take 3 to 5 fixes. At 70 it can enter competitions, and every photo that wins a prize hangs in your gallery.</span></li>
       <li><b><span class="n">3</span>Enter and get judged</b><span class="muted">Real people score every entry category by category. The top photos split the prize pool.</span></li>
       <li><b><span class="n">4</span>Earn while you wait</b><span class="muted">Judge other people’s photos to earn gems, and battle challengers to take theirs.</span></li>
     </ol>
@@ -3692,7 +3692,7 @@ function makeRoom(fromStudio) {
   if (!can.length) { toast('All your photos are in live competitions. Try again when the results are in.'); return; }
   let sel = null;
   openSheet(`<h2>Your photos are full</h2><p class="sub">You can keep ${CFG.MAX_PHOTOS} photos. Pick one to remove and you can upload a new one.</p>
-    <div class="pickgrid rmpick">${S.photos.map(p => { const lk = photoLock(p), hung = (S.entries || []).some(e => e.done && e.pid === p.id);
+    <div class="pickgrid rmpick">${S.photos.map(p => { const lk = photoLock(p), hung = (S.entries || []).some(e => e.done && e.prize && e.pid === p.id);
       return `<button data-p="${p.id}" ${lk ? 'disabled' : ''} aria-label="Photo scoring ${p.s.total}${lk ? ', in a live competition' : ''}"><img src="${p.src}" alt=""><span>${p.s.total}</span>${lk ? '<em>Live</em>' : hung ? '<em class="h">In gallery</em>' : ''}</button>`; }).join('')}</div>
     <button class="btn block" id="rmGo" disabled>Remove and upload</button>`);
   document.querySelectorAll('#sheetBody .rmpick button:not([disabled])').forEach(b => b.onclick = () => {
@@ -4512,7 +4512,7 @@ function settle(e) {
 }
 function openResult(e) {
   const c = CX.find(x => x.id === e.cid), pz = e.prize, top = paidTop(e.n), climbed = e.startR - e.fin;
-  const ph = S.photos.find(x => x.id === e.pid), hungAt = !!ph, spot = null, swap = null;
+  const ph0 = S.photos.find(x => x.id === e.pid), inGal = galleryData().all.some(o => o.id === e.pid && (o.gems || o.cash)), ph = inGal ? ph0 : null, hungAt = !!ph, spot = null, swap = null;
   const galBtn = cls => ph ? `<button class="${cls}" id="rsGal">${hungAt ? 'See it in your gallery' : spot ? 'Add photo to gallery' : swap ? 'Add photo to gallery' : 'Go to your gallery'} <span aria-hidden="true">→</span></button>` : `<button class="${cls}" id="rsNext">Enter next competition <span aria-hidden="true">→</span></button>`;
   const galNote = ph ? `${swap ? `<p class="rs-gn">It replaces your ${framed(swap[0], swap[1]).s.total} photo in the ${esc(ROOMS[swap[0]].slots[swap[1]][1])} frame.</p>` : ''}<button class="rs-alt" id="rsNext">Or enter the next competition</button>` : '';
   if ($('#flow').classList.contains('on') && !$('#flow').classList.contains('cxmode')) closeFlow();
@@ -4538,7 +4538,7 @@ function openResult(e) {
   const back = () => { lvClose(); if ($('#flow').classList.contains('cxmode')) openComps(); };
   if ($('#rsBack')) $('#rsBack').onclick = back;
   $('#rsNext').onclick = () => { lvClose(); openComps(); };
-  if ($('#rsGal')) $('#rsGal').onclick = () => { lvClose(); closeFlow(); GV.tab = 'mine'; GV.room = pz ? (pz.cur === 'gems' ? 1 : 2) : roomOfPhoto(galleryData(), e.pid); GV.fresh = e.pid; go('gallery'); };
+  if ($('#rsGal')) $('#rsGal').onclick = () => { lvClose(); closeFlow(); GV.tab = 'mine'; GV.room = pz ? (pz.cur === 'gems' ? 0 : 1) : roomOfPhoto(galleryData(), e.pid); GV.fresh = e.pid; go('gallery'); };
   if ($('#rsStudio')) $('#rsStudio').onclick = () => { lvClose(); S.cur = e.pid; save(); closeFlow(); go('studio'); };
 }
 setInterval(() => {
@@ -4984,7 +4984,6 @@ function renderGallery() {
 }
 /* Gallery: three rooms filled from competition results */
 const GROOMS = [
-  { k: 'score', name: 'Top Score', theme: 'r4', by: 'Ranked by score', rule: 'Photos that competed but didn’t place.', empty: 'Enter a competition. Photos that don’t place hang here, highest score first.' },
   { k: 'gems', name: 'Top Gems Won', theme: 'r3', by: 'Ranked by gems won', rule: 'Photos that won gems in competitions.', empty: 'Win gems in a competition and the photo hangs here.' },
   { k: 'cash', name: 'Top Cash Won', theme: 'r5', by: 'Ranked by cash won', rule: 'Photos that won cash in competitions.', empty: 'Win cash in a competition and the photo hangs here.' }
 ];
@@ -5007,7 +5006,7 @@ const wonGems = () => (S.entries || []).reduce((a, e) => a + (e.done && e.prize 
 const wonCash = () => +(S.entries || []).reduce((a, e) => a + (e.done && e.prize && e.prize.cur !== 'gems' ? e.prize.amt : 0), 0).toFixed(2);
 const gVal = (k, o) => k === 'gems' ? `${Math.round(o.gems).toLocaleString()}${gemIcon()}` : k === 'cash' ? fmtMoney(o.cash, 'cash') : String(o.score);
 const gValText = (k, o) => k === 'gems' ? `${Math.round(o.gems).toLocaleString()} gems` : k === 'cash' ? fmtMoney(o.cash, 'cash') : `Score ${o.score}`;
-const roomOfPhoto = (D, id) => D.cash.some(o => o.id === id) ? 2 : D.gems.some(o => o.id === id) ? 1 : 0;
+const roomOfPhoto = (D, id) => D.cash.some(o => o.id === id) ? 1 : 0;
 function snapThumb(e) {
   if (!e || e.th || (S.entries || []).some(x => x.pid === e.pid && x.th)) return;
   const ph = S.photos.find(x => x.id === e.pid); if (!ph) return;
@@ -5027,7 +5026,7 @@ function myGalleryHTML() {
   const r = GV.room, R = GROOMS[r], list = D[R.k];
   const me = S.user ? S.user.h : 'you';
   const by = `<p class="by"><span class="vav">${avatarInner()}</span>by <b>@${esc(me)}</b></p>`;
-  const hb = D.cash[0] || D.gems[0] || D.score[0];
+  const hb = D.cash[0] || D.gems[0];
   const hero = hb
     ? `<div class="vis-hero" style="--c1:#FF3FA4;--c2:#9B3CFF"><img src="${hb.src}" alt="Your top photo"><div class="vis-ov"><h2>My Gallery</h2>${by}</div></div>`
     : `<div class="vis-hero mg-empty" style="--c1:#5A3D8C;--c2:#2A1748"><div class="mg-eic">${TROPHY_S}</div><div class="vis-ov"><h2>My Gallery</h2>${by}</div></div>`;
@@ -5036,9 +5035,9 @@ function myGalleryHTML() {
     ${list.length ? `<div class="vis-grid">${list.map((o, i) => `<button class="vis-ph gr-ph ${GV.fresh === o.id ? 'fresh' : ''}" data-p="${o.id}" aria-label="Number ${i + 1}, ${gValText(R.k, o)}"><span class="fr"><img src="${o.src}" alt=""><i class="gr-rk">#${i + 1}</i></span><span class="cap"><em>${o.cat ? gi(o.cat) + esc(pcatName(o.cat)) : `${o.n} entr${o.n === 1 ? 'y' : 'ies'}`}</em><b>${gVal(R.k, o)}</b></span></button>`).join('')}</div>`
       : `<div class="gr-empty">${TROPHY_S}<p>${R.empty}</p><button class="btn" id="gComp">Find a competition</button></div>`}</section>`;
   return `<div class="mg vis">${hero}
-    <div class="vis-st"><div><b>${D.all.length}</b><small>Photos competed</small></div><div><b>${Math.round(wonGems()).toLocaleString()}</b><small>Gems won</small></div><div><b>${fmtMoney(wonCash(), 'cash')}</b><small>Cash won</small></div></div>
+    <div class="vis-st"><div><b>${D.gems.length + D.cash.filter(o => !o.gems).length}</b><small>Winning photos</small></div><div><b>${Math.round(wonGems()).toLocaleString()}</b><small>Gems won</small></div><div><b>${fmtMoney(wonCash(), 'cash')}</b><small>Cash won</small></div></div>
     ${tabs}${room}
-    <p class="mg-note">Every photo you enter in a competition hangs here once the results are in. Cash winners go in Top Cash Won, gem winners go in Top Gems Won, and photos that didn’t place go in Top Score.</p></div>`;
+    <p class="mg-note">Photos that win a prize hang here once the results are in. Cash winners go in Top Cash Won and gem winners go in Top Gems Won.</p></div>`;
 }
 
 function bindMyGallery() {
@@ -5231,7 +5230,7 @@ function openVisit(i) {
     <div class="vis-hero" style="--c1:${b.c[0]};--c2:${b.c[1]}"><img src="${cash[0].src}" alt=""><span class="vis-rk">${rk === 1 ? CROWN('#2A1600', 22) : ''}#${rk}</span>
       <div class="vis-ov">
         <h2>${esc(b.g)}</h2><p class="by"><span class="vav" style="background:linear-gradient(135deg,${b.c[0]},${b.c[1]})">${esc(b.n[0])}</span>by <b>@${esc(b.n.toLowerCase())}</b></p></div></div>
-    <div class="vis-st"><div><b>${top.length + gems.length + cash.length}</b><small>Photos competed</small></div><div><b>${b.gw.toLocaleString()}</b><small>Gems won</small></div><div><b>${fmtMoney(b.cw, 'cash')}</b><small>Cash won</small></div></div>
+    <div class="vis-st"><div><b>${gems.length + cash.length}</b><small>Winning photos</small></div><div><b>${b.gw.toLocaleString()}</b><small>Gems won</small></div><div><b>${fmtMoney(b.cw, 'cash')}</b><small>Cash won</small></div></div>
     ${GROOMS.map(Rm => `<section class="vis-room ${Rm.theme}"><div class="vis-rh"><b>${esc(Rm.name)}</b><span>${Rm.by}</span></div>
       <div class="vis-grid">${rooms[Rm.k].map((f, j) => `<button class="vis-ph gr-ph" data-src="${f.src}" aria-label="${esc(Rm.name)} number ${j + 1}, score ${f.sc}"><span class="fr"><img src="${f.src}" alt=""><i class="gr-rk">#${j + 1}</i></span><span class="cap"><em>${esc(f.cat || '')}</em><b>${f.v}</b></span></button>`).join('')}</div></section>`).join('')}
   </div>`, { full: true });
@@ -5568,7 +5567,7 @@ ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your 
     ${lk ? '' : !sorted.length ? `<div class="lockc done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Every category is at its best</b><span>There’s nothing left to improve on this photo. Enter it in a competition or upload a new one.</span></div></div>` : `<button class="btn block fixbtn nocost" id="stFix" data-c="${PEND[p.id] ? PEND[p.id].cat : sorted[0].k}" ${!PEND[p.id] && S.gems < fixCost(p) ? 'data-short="1"' : ''}>${PEND[p.id] ? `<span>Select version</span><span class="gpill">3 ready</span>` : `<span>Improve ${sorted[0].name.toLowerCase()}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span>`}</button><button class="swlink" id="stSwL">Switch photo · ${S.photos.filter(canEnh).length} to improve</button>`}`}
 ${lk ? `<button class="btn block enh-more" id="stMore">Enter another competition</button>` : ''}
     ${!lk && sorted.length ? '' : `<div class="phead"><h3 class="sec">${lk ? 'Your photos' : !sorted.length ? 'Pick your next photo' : 'Your photos'}</h3><small>${S.photos.length} / ${CFG.MAX_PHOTOS}</small></div>
-    <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = (S.entries || []).some(e => e.done && e.pid === x.id); const st = xl ? ['ent', 'Entered'] : lowestOpen(x) ? ['go', 'Enhance'] : xh ? ['gal', 'In gallery'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`}`;
+    <div class="pstrip">${S.photos.length < CFG.MAX_PHOTOS ? `<button class="padd plain" id="stNew" aria-label="Upload a new photo"><span class="pl"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>` : ''}${S.photos.map(x => { const xl = photoLock(x), xh = (S.entries || []).some(e => e.done && e.prize && e.pid === x.id); const st = xl ? ['ent', 'Entered'] : lowestOpen(x) ? ['go', 'Enhance'] : xh ? ['gal', 'In gallery'] : ['done', 'Maxed']; return `<button class="pph ${st[0]}" data-p="${x.id}" aria-current="${x.id === p.id}" aria-label="Photo scoring ${x.s.total}, ${st[1]}"><img src="${x.src}" alt=""><span class="sc">${x.s.total}</span><span class="tg">${st[1]}</span></button>`; }).join('')}</div>`}`;
   animateRing(st);
   st.querySelectorAll('.fix').forEach(b => b.onclick = () => startEnhance(p, b.dataset.c));
   if ($('#stFix')) $('#stFix').onclick = () => startEnhance(p, $('#stFix').dataset.c);
