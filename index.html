@@ -2947,6 +2947,18 @@ body.tabsliding #shell{overflow:hidden}
 .vcard .ov .dn{color:var(--bad)}
 #enArea #genBtn{position:sticky;bottom:12px;z-index:3;box-shadow:0 10px 24px -8px rgba(155,60,255,.8)}
 #enArea .vgrid{grid-template-columns:repeat(2,1fr)}
+.rt-vs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 4px 0}
+.rt-vs figure{position:relative;margin:0;display:grid;gap:8px;text-align:center}
+.rt-vs img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:16px}
+.rt-w img{box-shadow:0 0 0 3px #fff,0 0 0 7px #FFC93C,0 0 26px rgba(255,201,60,.45)}
+.rt-me img{box-shadow:0 0 0 3px #fff,0 0 0 7px #9B5CFF,0 0 20px rgba(155,92,255,.35)}
+.rt-vs figure>span{position:absolute;top:-14px;left:50%;transform:translateX(-50%);z-index:1;padding:3px 12px;border-radius:999px;font-weight:800;font-size:.82rem;white-space:nowrap}
+.rt-w>span{color:#2A1600;background:linear-gradient(180deg,#FFE27A,#FFC93C)}
+.rt-me>span{color:#fff;background:#6A2FE0}
+.rt-vs figcaption{display:grid;gap:1px}
+.rt-vs figcaption b{font:800 1rem/1.2 "Bricolage Grotesque",sans-serif;color:#fff}
+.rt-vs figcaption small{display:inline-flex;justify-content:center;align-items:center;gap:3px;font-size:.8rem;color:#CDBEE8}
+.rt-vs figcaption .gem{width:14px;height:14px}
 .en-over{margin:10px 2px 0;font-size:.85rem;line-height:1.4;color:var(--muted);text-align:center}
 </style>
 </head>
@@ -4557,7 +4569,9 @@ function openResult(e) {
         <div class="rt-rank"><small>Final rank</small><b>${ord(e.fin)} place</b><span>out of ${e.n.toLocaleString()} entries</span><i>TOP ${pct}%</i></div>
       </div>
       <div class="rt-st"><div><b>${e.score}</b><small>Photo score</small></div><div><b class="${climbed >= 0 ? 'up' : 'dn'}"><em>${climbed >= 0 ? '▲' : '▼'}</em> ${climbed >= 0 ? '+' : '−'}${Math.abs(climbed).toLocaleString()}</b><small>Places ${climbed >= 0 ? 'climbed' : 'dropped'}</small></div></div>
-      <div class="rt-ph"><span>Your entry</span><img src="${entrySrc(e)}" alt="Your entry"></div>
+      ${e.fin === 1 ? `<div class="rt-ph"><span>🏆 1st place · You</span><img src="${entrySrc(e)}" alt="Your winning entry"></div>` : (() => { const wh = OPP[e.seed % OPP.length].h, ws = Math.min(99, e.score + 9), wsrc = SEED[(e.seed + 1) % SEED.length].src, wp = prizeFor(c, 1, e.n);
+        return `<div class="rt-vs"><figure class="rt-w"><span>🏆 Winner</span><img src="${wsrc}" alt="Winning photo"><figcaption><b>@${esc(wh)}</b><small>Score ${ws} · ${wp ? fmtPrize(wp.amt, wp.cur) : ''}</small></figcaption></figure>
+          <figure class="rt-me"><span>Your entry</span><img src="${entrySrc(e)}" alt="Your entry"><figcaption><b>${ord(e.fin)} place</b><small>Score ${e.score}${pz ? ' · ' + fmtPrize(pz.amt, pz.cur) : ''}</small></figcaption></figure></div>`; })()}
       ${galBtn('bt-cta rt-go')}${galNote2}</div>`);
   { ['segJudge', 'segStudio', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segCompete').setAttribute('aria-pressed', 'true'); setTimeout(() => { $('#ptitle').textContent = 'Results'; }, 0); }
   $('#lv').scrollTop = 0; paintWallet(); paintGems(false);
