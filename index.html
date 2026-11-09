@@ -408,7 +408,7 @@ h1,h2,h3{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;margin:0
 .lrow{display:flex;align-items:center;gap:12px;width:100%;padding:9px 12px;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 8px 20px -14px rgba(80,30,120,.5),inset 0 0 0 1px rgba(255,255,255,.9);margin-bottom:8px;text-align:left;color:#23113D}
 .lrow .n{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.25rem;width:34px}
 .lrow img{width:70px;height:46px;object-fit:cover;border-radius:10px}
-.lrow .nm{flex:1;font-weight:800;font-size:.95rem;min-width:0;line-height:1.2}
+.lrow .nm{flex:1;font-weight:800;font-size:1.05rem;min-width:0;line-height:1.2}
 .lrow .nm small{display:block;color:#7A6C93;font-weight:600;font-size:.78rem}
 .lrow .p{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;color:#6A2FE0;font-size:1.25rem}
 .lrow .p em{font-style:normal;font-size:.75rem;color:#7A6C93;font-family:Figtree,sans-serif}
@@ -5330,8 +5330,8 @@ function boardHTML() {
   const pod = (b, i) => { const C = RANKC[i];
     return `<div class="pod p${i + 1}" data-v="${BOARD.indexOf(b)}" role="button" tabindex="0" aria-label="Visit ${esc(b.n)}’s gallery"><div class="av crownonly"><span class="cw">${CROWN(C.crown, i === 0 ? 40 : 32)}</span></div>
       <figure class="gal tro t${i + 1}">${podTrophy(i)}<span class="ribbon">#${i + 1}</span></figure>
-      <b>${esc(b.n)}</b><small>${esc(b.g)}</small><div class="pts">${hofFmt(k, hofVal(k, b))}<em>${gIco(k)}</em></div><span class="vbtn">VISIT GALLERY →</span></div>`; };
-  const rows = L.slice(3).map((b, i) => `<button class="lrow" data-v="${BOARD.indexOf(b)}"><span class="n">#${i + 4}</span><span class="lav" style="background:linear-gradient(135deg,${b.c[0]},${b.c[1]})">${esc(b.n[0])}</span><img src="${LB_ROW[i] || SEED[b.img].src}" alt=""><span class="nm">${esc(b.g)}<small>${esc(b.n)}</small></span><span class="p">${gIco(k)}${hofFmt(k, hofVal(k, b))} <em>${k === 'cash' ? 'won' : 'gems'}</em></span><span class="ar">→</span></button>`).join('');
+      <b>@${esc(b.n.toLowerCase())}</b><div class="pts">${hofFmt(k, hofVal(k, b))}<em>${gIco(k)}</em></div><span class="vbtn">VISIT GALLERY →</span></div>`; };
+  const rows = L.slice(3).map((b, i) => `<button class="lrow" data-v="${BOARD.indexOf(b)}"><span class="n">#${i + 4}</span><span class="nm">@${esc(b.n.toLowerCase())}</span><span class="p">${gIco(k)}${hofFmt(k, hofVal(k, b))} <em>${k === 'cash' ? 'won' : 'gems'}</em></span><span class="ar">→</span></button>`).join('');
   const conf = [...Array(16)].map((_, i) => `<i class="conf" style="left:${(i * 61) % 100}%;background:${['#F2B637', '#FF5FB0', '#9B5CFF', '#FFD86B'][i % 4]};animation-delay:${(-i * .37).toFixed(2)}s;animation-duration:${(5 + (i % 5)).toFixed(1)}s"></i>`).join('');
   const bg = `<svg class="bg" viewBox="0 0 400 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><radialGradient id="lbG" cx=".5" cy=".35" r=".6"><stop offset="0" stop-color="#FFE3A8" stop-opacity=".9"/><stop offset="1" stop-color="#FFE3A8" stop-opacity="0"/></radialGradient><filter id="lbB"><feGaussianBlur stdDeviation="8"/></filter></defs>
     <circle cx="200" cy="300" r="260" fill="url(#lbG)"/>${[60, 200, 340].map(x => `<rect x="${x - 14}" y="-6" width="28" height="22" rx="4" fill="#C9973F"/><path d="M${x - 12} 16 L${x - 70} 260 H${x + 70} L${x + 12} 16z" fill="#FFF1C9" opacity=".35" filter="url(#lbB)"/>`).join('')}
@@ -5344,7 +5344,7 @@ function boardHTML() {
     <div class="podium">${pod(L[1], 1)}${pod(L[0], 0)}${pod(L[2], 2)}</div>${stage}
     ${rows}
     <div class="mine"><div class="r"><span class="me">${me}</span><div class="rk"><small>YOUR RANK</small><div>${CROWN('#F2B637', 26)}<b>${rank ? '#' + rank.toLocaleString() : '—'}</b>${rank ? `<span class="tp">TOP ${Math.max(1, Math.ceil(rank / POP * 100))}%</span>` : ''}</div></div>
-      <div class="pts"><b>${hofFmt(k, tot)}</b> ${gIco(k)} <small style="display:inline;font-weight:800;color:#6A2FE0;font-size:.95rem">${unit}</small><small>${tot ? 'Win more competitions to climb the ranks' : `Win ${k === 'cash' ? 'cash' : 'gems'} in a competition to get ranked`}</small></div></div>
+      <div class="pts"><b>${hofFmt(k, tot)}</b> ${gIco(k)} <small style="display:inline;font-weight:800;color:#6A2FE0;font-size:.95rem">${unit}</small></div></div>
       <button class="btn" id="gMine"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 16l-5-5-9 9"/></svg>VIEW MY GALLERY →</button></div></div>`;
 }
 function bindBoard() {
