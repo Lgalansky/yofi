@@ -3994,7 +3994,9 @@ function startEnhance(p, cat) {
   const lk = photoLock(p); if (lk) { lockToast(lk); return; }
   const pd = PEND[p.id]; if (pd) { openEnhance(p, pd.cat); EN.variants = pd.variants; EN.sel = Math.max(0, pd.sel); renderVariants(0); return; }
   if (isMaxed(p, cat)) { const o = lowestOpen(p); if (!o) { toast('Every category is at its best on this photo.'); return; } cat = o; }
+  if (S.gems < fixCost(p)) { gemsPop(p); return; }
   openEnhance(p, cat);
+  generate(1);
 }
 async function generate(jitterRound) {
   const { p, cat } = EN, nm = catBy(cat).name;
