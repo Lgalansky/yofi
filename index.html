@@ -3932,7 +3932,7 @@ function showResult(p, o = {}) {
   const low = lowestOpen(p), lc = low ? catBy(low) : null, tot = p.s.total, stage = stageOf(tot);
   const crossed = o.prevTotal != null && stage > stageOf(o.prevTotal);
   let html = `<div class="tot-h sec-h"><h2>Enhance your photo</h2></div><div class="rs-top"><div class="hero-photo rsph"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}</div>
-    <div class="rs-side"><div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small class="osc">Overall score${photoLock(p) ? '<span class="qready lk">Entered</span>' : tot >= CFG.QUALIFY ? '<button class="qready" data-ready>🏆 Ready</button>' : ''}</small><div><b>${tot}</b><em>/100</em></div></div>${barsHTML(p.s, o.prev, true, p)}</div></div>`;
+    <div class="rs-side"><div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small class="osc">${tot < CFG.QUALIFY ? 'Score to compete' : 'Overall score'}${photoLock(p) ? '<span class="qready lk">Entered</span>' : tot >= CFG.QUALIFY ? '<button class="qready" data-ready>🏆 Ready</button>' : ''}</small><div><b>${tot}</b><em>${tot < CFG.QUALIFY ? '/' + CFG.QUALIFY + ' goal' : '/100'}</em></div></div>${barsHTML(p.s, o.prev, true, p)}</div></div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
   else html += `<button class="btn block fixbtn nocost rs-fix" id="doFix"><span>Improve ${lc.k === 'comp' ? 'focus' : lc.short.toLowerCase()}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>`;
@@ -5718,7 +5718,7 @@ function renderStudio() {
     : `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions. Started at ${p.start}.`;
   st.innerHTML = `<div class="tot-h sec-h"><h2>Enhance your photo</h2></div>
 ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg"><span class="scb ${tot >= CFG.QUALIFY ? 'ok' : ''}" aria-label="Score ${tot} of 100"><b>${tot}</b><small>/100</small></span>${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
-    <div class="scorebox">${ringSVG(tot, 'r2')}<div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small class="osc">Overall score${photoLock(p) ? '<span class="qready lk">Entered</span>' : tot >= CFG.QUALIFY ? '<button class="qready" data-ready>🏆 Ready</button>' : ''}</small><div><b>${tot}</b><em>/100</em></div></div>${barsHTML(p.s, null, !lk, p)}</div>
+    <div class="scorebox">${ringSVG(tot, 'r2')}<div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small class="osc">${tot < CFG.QUALIFY ? 'Score to compete' : 'Overall score'}${photoLock(p) ? '<span class="qready lk">Entered</span>' : tot >= CFG.QUALIFY ? '<button class="qready" data-ready>🏆 Ready</button>' : ''}</small><div><b>${tot}</b><em>${tot < CFG.QUALIFY ? '/' + CFG.QUALIFY + ' goal' : '/100'}</em></div></div>${barsHTML(p.s, null, !lk, p)}</div>
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can enter competitions.</p>' : ''}
     
     
