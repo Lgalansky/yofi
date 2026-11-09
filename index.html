@@ -3908,7 +3908,7 @@ function bindCats() {
   });
 }
 const isMaxed = (p, k) => !!(p && p.maxed && p.maxed[k] != null);
-const enSubText = p => `Each fix costs ${fixCost(p)} gems and gives you three versions. Pick the one that looks best.`;
+const enSubText = p => '';
 const okVersion = (p, s, cat) => s[cat] > p.s[cat];
 /* Gains get smaller with each fix, so a photo takes 3-5 fixes to reach its best.
    Strong versions can over-enhance: the chosen category goes up, but other
