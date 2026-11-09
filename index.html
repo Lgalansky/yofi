@@ -2986,6 +2986,15 @@ body.tabsliding #shell{overflow:hidden}
 #flow:has(#flowBody > .tot-h:first-child) .bar-top>*{pointer-events:auto}
 #flow:has(#flowBody > .tot-h:first-child) #flowBody > .tot-h:first-child{padding-top:8px!important}
 #flowBody .rs-top{margin-top:-2px!important}
+/* Photo tags sit under the photo, never on it */
+.hero-photo:has(> .ph-tags){overflow:visible!important;margin-bottom:var(--tagh,46px)!important}
+.hero-photo > .ph-tags{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:4;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-start}
+.hero-photo > .ph-tags > *{position:static!important;inset:auto!important;margin:0!important}
+.hero-photo > .ph-tags .catchip{height:30px;padding:0 11px 0 8px;font-size:.82rem;background:#2A1A4A;-webkit-backdrop-filter:none;backdrop-filter:none}
+.hero-photo > .ph-tags .catchip svg{width:16px;height:16px}
+.hero-photo > .ph-tags .qbadge{display:inline-flex;align-items:center;height:30px;padding:0 11px;font-size:.8rem}
+.hero-photo > .ph-tags .hold{display:inline-flex;align-items:center;height:30px;padding:0 11px;font-size:.78rem;background:#2A1A4A}
+.hero-photo:has(> .ph-tags) > img{border-radius:26px}
 .vh-rk{font-weight:700;font-size:.95rem;color:#CDBEE8}
 .vis-rh span{color:#D9C8FF!important;background:transparent!important;box-shadow:inset 0 0 0 1.5px #4A3275}
 .en-over{margin:10px 2px 0;font-size:.85rem;line-height:1.4;color:var(--muted);text-align:center}
@@ -3250,7 +3259,7 @@ const Engine = (() => {
   function cropSearch(img) {
     if (cropCache.has(img.data)) return cropCache.get(img.data);
     const sm = shrink(img, 260), W = sm.width, H = sm.height, res = [];
-    for (let z = 1.1; z <= 1.9; z += 0.08) {
+    for (let z = 1.04; z <= 1.3; z += 0.04) {
       const cw = Math.round(W / z), ch = Math.round(H / z);
       for (let fx = 0; fx <= 1.0001; fx += 0.125) for (let fy = 0; fy <= 1.0001; fy += 0.125) {
         const l = Math.round((W - cw) * fx), t = Math.round((H - ch) * fy), sc = score(analyze(cropRect(sm, l, t, cw, ch)));
@@ -3266,8 +3275,8 @@ const Engine = (() => {
   function crop(img, variant, j = 1) {
     const W = img.width, H = img.height;
     if (Math.min(W, H) < 60) return { width: W, height: H, data: new Uint8ClampedArray(img.data) };
-    const band = [[1.1, 1.3], [1.3, 1.55], [1.55, 1.95]][variant];
-    const lo = band[0] + (j - 1) * 0.1, hi = band[1] + (j - 1) * 0.1;
+    const band = [[1.04, 1.12], [1.1, 1.2], [1.16, 1.28]][variant];
+    const lo = band[0], hi = band[1];
     const list = cropSearch(img).filter(c => c.z >= lo - 1e-6 && c.z < hi);
     const pick = list[Math.min(list.length - 1, Math.max(0, Math.round((j - 1) * 6)))] || cropSearch(img)[0];
     const cw = Math.round(W / pick.z), ch = Math.round(H / pick.z);
@@ -3877,7 +3886,7 @@ function showResult(p, o = {}) {
   }
   const low = lowestOpen(p), lc = low ? catBy(low) : null, tot = p.s.total, stage = stageOf(tot);
   const crossed = o.prevTotal != null && stage > stageOf(o.prevTotal);
-  let html = `<div class="tot-h sec-h"><h2>Enhance your photo</h2></div><div class="rs-top"><div class="hero-photo rsph"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div>
+  let html = `<div class="tot-h sec-h"><h2>Enhance your photo</h2></div><div class="rs-top"><div class="hero-photo rsph"><img src="${p.src}" alt="Your photo"><div class="ph-tags">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}</div></div>
     <div class="rs-side"><div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small>Overall score</small><div><b>${tot}</b><em>/100</em>${o.prevTotal != null && tot !== o.prevTotal ? `<i class="${tot > o.prevTotal ? 'up' : 'dn'}">${tot > o.prevTotal ? '+' : ''}${tot - o.prevTotal}</i>` : ''}</div></div>${barsHTML(p.s, o.prev, true, p)}</div></div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
@@ -4020,7 +4029,11 @@ function needCardHTML(p) {
   return `<div class="needc" id="needC"><div class="nc-top">${gemIcon('')}<b>${have} / ${cost} gems</b><span>${short} to go</span></div><i class="nc-bar"><i style="width:${Math.min(100, have / cost * 100)}%"></i></i>
     <button class="swp-b nc-go" data-swp="judge">Swipe to Judge to earn gems<span class="ar">→</span></button></div>`;
 }
+function fitTags(root) {
+  (root || document).querySelectorAll('.hero-photo > .ph-tags').forEach(t => { const h = t.offsetHeight; if (h) t.parentElement.style.setProperty('--tagh', (h + 14) + 'px'); });
+}
 function fitPhotos(root) {
+  setTimeout(() => fitTags(root), 0);
   if (0) (root || document).querySelectorAll('.tot-c > img:not(.fitbg)').forEach(im => {
     const box = im.parentElement; const old = box.querySelector(':scope > img.fitbg');
     if (old) { old.src = im.src; return; }
@@ -4065,7 +4078,8 @@ async function generate(jitterRound) {
   $('#enArea').innerHTML = `<div class="gen"><div class="spin"></div>Making better ${nm.toLowerCase()} versions…</div>`;
   await sleep(50);
   const img = await loadImg(p.src); const base = toID(img, 960);
-  const recipes = Engine.RECIPES[cat];
+  let recipes = Engine.RECIPES[cat];
+  if (cat === 'comp') { try { const o = await loadImg(p.orig); if ((img.naturalWidth * img.naturalHeight) / Math.max(1, o.naturalWidth * o.naturalHeight) < 0.6) recipes = []; } catch (e) { /* keep going */ } }
   const rounds = (jitterRound === 1 ? [1, 0.8, 1.25, 1.5] : [rnd(0.75, 1.3), rnd(0.6, 1.5), rnd(0.9, 1.6), rnd(0.5, 1.2)]).concat([0.5, 0.3, 2, 2.5]);
   const best = {}, extra = [];
   for (const j of rounds) {
@@ -5639,7 +5653,7 @@ function renderStudio() {
     : stage === 1 ? `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions.`
     : `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions. Started at ${p.start}.`;
   st.innerHTML = `<div class="tot-h sec-h"><h2>Enhance your photo</h2></div>
-${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg"><span class="scb ${tot >= CFG.QUALIFY ? 'ok' : ''}" aria-label="Score ${tot} of 100"><b>${tot}</b><small>/100</small></span>${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
+${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg"><span class="scb ${tot >= CFG.QUALIFY ? 'ok' : ''}" aria-label="Score ${tot} of 100"><b>${tot}</b><small>/100</small></span><div class="ph-tags">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${photoLock(p) ? '<span class="qbadge">Entered</span>' : stage === 2 ? '<span class="qbadge">Competition ready</span>' : ''}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div></div>
     <div class="scorebox">${ringSVG(tot, 'r2')}<div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small>Overall score</small><div><b>${tot}</b><em>/100</em></div></div>${barsHTML(p.s, null, !lk, p)}</div>
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can enter competitions.</p>' : ''}
     
