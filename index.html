@@ -2979,6 +2979,8 @@ body.tabsliding #shell{overflow:hidden}
 .gsw button[aria-selected="true"]{color:#fff;background:linear-gradient(95deg,#FF3FA4,#9B3CFF);box-shadow:0 6px 14px -6px rgba(155,60,255,.9)}
 .gsw .gc{display:grid;place-items:center;min-width:24px;height:24px;padding:0 7px;border-radius:999px;font-size:.8rem;background:rgba(255,255,255,.14)}
 .gsw .gic{margin-right:0}
+.gback{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px;padding:8px 14px 8px 10px;border-radius:999px;font-weight:800;font-size:.95rem;color:#EADBFF;background:#211339;box-shadow:inset 0 0 0 1.5px #33204F}
+.gback svg{width:18px;height:18px}
 .vh-rk{font-weight:700;font-size:.95rem;color:#CDBEE8}
 .vis-rh span{color:#D9C8FF!important;background:transparent!important;box-shadow:inset 0 0 0 1.5px #4A3275}
 .en-over{margin:10px 2px 0;font-size:.85rem;line-height:1.4;color:var(--muted);text-align:center}
@@ -5036,13 +5038,14 @@ function bindRoomView() {
   if ($('#gRank')) $('#gRank').onclick = () => { GV.tab = 'board'; renderGallery(); g.scrollTop = 0; };
 }
 var WB_SHOW = false, CX_WB = false;
-function openGallery() { if ($('#sheet').classList.contains('on')) closeSheet(); GV.tab = 'mine'; if (!(GV.room >= 0 && GV.room < GROOMS.length)) GV.room = 0; go('gallery'); }
+function openGallery() { if ($('#sheet').classList.contains('on')) closeSheet(); GV.tab = 'board'; if (!(GV.room >= 0 && GV.room < GROOMS.length)) GV.room = 0; go('gallery'); }
 function renderGallery() {
   const g = $('#gallery');
   const tabs = `<div class="gtabs" role="group" aria-label="Gallery view"><button data-t="mine" aria-pressed="${GV.tab === 'mine'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 16l-5-5-9 9"/></svg>My Gallery</button><button data-t="board" aria-pressed="${GV.tab === 'board'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg>Halls of Fame</button></div>`;
   const wbh = WB_SHOW && S.user ? `<h1 class="gwb">Welcome back, <span>@${esc(S.user.h)}</span></h1>` : '';
-  g.innerHTML = wbh + tabs + (GV.tab === 'mine' ? myGalleryHTML() : boardHTML());
-  g.querySelectorAll('.gtabs button').forEach(b => b.onclick = () => { GV.tab = b.dataset.t; renderGallery(); g.scrollTop = 0; });
+  const back = GV.tab === 'mine' ? `<button class="gback" id="gBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Hall of Fame</button>` : '';
+  g.innerHTML = wbh + back + (GV.tab === 'mine' ? myGalleryHTML() : boardHTML());
+  if ($('#gBack')) $('#gBack').onclick = () => { GV.tab = 'board'; renderGallery(); g.scrollTop = 0; };
   if (GV.tab === 'mine') bindMyGallery(); else bindBoard();
   GV.fresh = null;
 }
@@ -5283,7 +5286,7 @@ function boardHTML() {
 }
 function bindBoard() {
   document.querySelectorAll('#gallery [data-v]').forEach(b => { b.onclick = () => openVisit(+b.dataset.v); b.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openVisit(+b.dataset.v); } }; });
-  $('#gMine').onclick = () => { GV.tab = 'mine'; renderGallery(); $('#gallery').scrollTop = 0; };
+  $('#gMine').onclick = () => { GV.tab = 'mine'; GV.room = GV.hof === 'cash' ? 1 : 0; renderGallery(); $('#gallery').scrollTop = 0; };
   document.querySelectorAll('#gallery [data-hof]').forEach(b => b.onclick = () => { GV.hof = b.dataset.hof; const y = $('#gallery').scrollTop; renderGallery(); $('#gallery').scrollTop = y; });
 }
 const LOWRES = ['hatdog', 'feast', 'city', 'surf', 'beachdog'];
