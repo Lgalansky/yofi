@@ -3872,7 +3872,7 @@ let EN = null; // { p, cat, variants, sel }
 const PEND = {}; // paid-for versions not yet picked, by photo id
 function enhanceShell(p, cat) {
   return `<div class="tot-h sec-h"><h2>${cat ? catBy(cat).verb : 'Pick a fix'}</h2></div>
-    <p class="muted" id="enSub" style="margin:0 0 12px">${enSubText(p)}</p>
+    <p class="muted" id="enSub" style="margin:0 0 12px" hidden></p>
     <div class="cats cc" role="group" aria-label="Fix type">${C.filter(c => c.k === cat || !isMaxed(p, c.k)).map(c => `<button data-c="${c.k}" aria-pressed="${c.k === cat}" aria-label="${c.name}, ${p.s[c.k]} out of 100"><small>${c.name}</small><b>${p.s[c.k]}<span>/100</span></b><i><i style="width:${p.s[c.k]}%"></i></i></button>`).join('')}</div>
     <div id="enArea"></div>`;
 }
@@ -4057,7 +4057,6 @@ function renderVariants(top) {
       <div class="ov">Overall <b>${v.s.total}</b> <span class="${dt > 0 ? 'up' : dt < 0 ? 'dn' : ''}">${dt > 0 ? '+' : dt < 0 ? '−' : '±'}${Math.abs(dt)}</span></div>
       <div class="l"><b style="color:var(--ink)">${v.label}</b></div></button>`;
   }).join('')}</div>
-  ${over ? `<p class="en-over">Pushing ${nm.toLowerCase()} hard can cost points elsewhere. Pick the version that looks best to you.</p>` : ''}
   <div class="actions"><button class="btn block fixbtn nocost" id="useBtn"></button></div>`;
   $('#flowBack').style.visibility = 'visible';
   const paint = () => {
