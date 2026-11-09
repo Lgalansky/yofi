@@ -2981,6 +2981,11 @@ body.tabsliding #shell{overflow:hidden}
 .gsw .gic{margin-right:0}
 .gback{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px;padding:8px 14px 8px 10px;border-radius:999px;font-weight:800;font-size:.95rem;color:#EADBFF;background:#211339;box-shadow:inset 0 0 0 1.5px #33204F}
 .gback svg{width:18px;height:18px}
+/* Enhance screens: back arrow floats beside the heading so every Enhance heading sits in the same place */
+#flow:has(#flowBody > .tot-h:first-child) .bar-top{position:absolute;top:12px;left:0;right:0;z-index:5;pointer-events:none}
+#flow:has(#flowBody > .tot-h:first-child) .bar-top>*{pointer-events:auto}
+#flow:has(#flowBody > .tot-h:first-child) #flowBody > .tot-h:first-child{padding-top:8px!important}
+#flowBody .rs-top{margin-top:-2px!important}
 .vh-rk{font-weight:700;font-size:.95rem;color:#CDBEE8}
 .vis-rh span{color:#D9C8FF!important;background:transparent!important;box-shadow:inset 0 0 0 1.5px #4A3275}
 .en-over{margin:10px 2px 0;font-size:.85rem;line-height:1.4;color:var(--muted);text-align:center}
