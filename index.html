@@ -4623,7 +4623,7 @@ function paintLive(force) {
   </div>`);
   $('#lv').scrollTop = y;
   $('#lvBack').onclick = lvClose;
-  if ($('#lvMore')) $('#lvMore').onclick = () => { lvClose(); closeFlow(); if (S.photos.some(x => !photoLock(x) && lowestOpen(x))) { go('studio'); return; } openEntryGuide(CX.find(x => x.id === 'snap') || CX[0], null); };
+  if ($('#lvMore')) $('#lvMore').onclick = () => { lvClose(); closeFlow(); go('studio'); };
   if ($('#lvGal')) $('#lvGal').onclick = () => { const ph = S.photos.find(x => x.id === e.pid); AFTER_HANG = e.id; lvClose(); closeFlow(); hangPhoto(ph); };
 }
 
