@@ -4276,12 +4276,14 @@ $('#gemPill2').onclick = () => openStore();
 const MIN = 60e3;
 const CX = [
   { id: 'anygo', lab: 'Any category', k: 'cash', t: 'Anything Goes', img: 9, prize: 500, fee: 2, n: 1890, per: 60, off: 30, multi: true },
+  { id: 'selfie', cats: ['selfie'], lab: 'Selfies', k: 'cash', t: 'Selfie Star', img: 11, prize: 250, fee: 2, n: 1530, per: 60, off: 14 },
   { id: 'pets', cats: ['pets'], lab: 'Pets', k: 'cash', t: 'Cute Pets', img: 1, prize: 1000, fee: 5, n: 1284, per: 30, off: 18 },
   { id: 'travel', cats: ['travel'], lab: 'Travel', k: 'cash', t: 'Travel the World', img: 9, prize: 500, fee: 3, n: 892, per: 60, off: 18 },
   { id: 'style', cats: ['style'], lab: 'Fashion & Style', k: 'cash', t: 'Style & Fashion', img: 11, prize: 250, fee: 2, n: 640, per: 90, off: 18 },
   { id: 'food', cats: ['food'], lab: 'Food', k: 'cash', t: 'Foodie Favourites', img: 10, prize: 50, fee: 1, n: 1127, per: 30, off: 12 },
   { id: 'animals', cats: ['pets', 'wildlife'], lab: 'Pets or Wildlife', k: 'cash', t: 'Amazing Animals', img: 2, prize: 25, fee: 1, n: 756, per: 120, off: 32 },
   { id: 'snap', lab: 'Any category', k: 'gem', t: 'Snap Anything', img: 5, prize: 250, fee: 25, n: 2410, per: 30, off: 21 },
+  { id: 'selfgem', cats: ['selfie'], lab: 'Selfies', k: 'gem', t: 'Best Selfie', img: 14, prize: 300, fee: 25, n: 2050, per: 30, off: 6 },
   { id: 'nature', cats: ['landscape', 'sunrise', 'golden', 'night', 'wildlife'], lab: 'Nature', k: 'gem', t: 'Nature Vibes', img: 0, prize: 1000, fee: 100, n: 3892, per: 30, off: 25 },
   { id: 'citylife', cats: ['city', 'street', 'arch'], lab: 'City & Street', k: 'gem', t: 'City Life', img: 12, prize: 500, fee: 50, n: 2144, per: 60, off: 25 },
   { id: 'petpals', cats: ['pets', 'wildlife'], lab: 'Pets or Wildlife', k: 'gem', t: 'Pet Pals', img: 6, prize: 300, fee: 25, n: 1876, per: 30, off: 9 },
@@ -4765,6 +4767,7 @@ window.addEventListener('resize', setHH); new MutationObserver(setHH).observe($(
 const GICON = {
   sunrise: '<path d="M3 17h18M6 17a6 6 0 0 1 12 0"/><path d="M12 5v3M4.6 9.6l2 2M19.4 9.6l-2 2M8 21h8"/>',
   city: '<path d="M3 21V9l5-3v15M8 21V4h7v17M15 21v-9h6v9M2 21h20"/><path d="M11 8h1M11 11h1M11 14h1M18 15h1M18 18h1"/>',
+  selfie: '<rect x="6" y="2" width="12" height="20" rx="2.5"/><circle cx="12" cy="10" r="2.6"/><path d="M8.4 16.5c.8-1.8 2.1-2.6 3.6-2.6s2.8.8 3.6 2.6M10.5 4.5h3"/>',
   portrait: '<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.4 4.2-6.5 8-6.5s7 2.1 8 6.5"/>',
   pets: '<ellipse cx="12" cy="16.5" rx="4.6" ry="3.8"/><circle cx="5.5" cy="11" r="2"/><circle cx="9" cy="6.5" r="2"/><circle cx="15" cy="6.5" r="2"/><circle cx="18.5" cy="11" r="2"/>',
   night: '<path d="M18.5 15.5A7.5 7.5 0 0 1 8.5 5.5a7.5 7.5 0 1 0 10 10z"/><path d="M17 3.5l.7 1.8 1.8.7-1.8.7L17 8.5l-.7-1.8-1.8-.7 1.8-.7zM20.5 9l.4 1 1 .4-1 .4-.4 1-.4-1-1-.4 1-.4z"/>',
@@ -4780,8 +4783,8 @@ const GICON = {
   style: '<path d="M9 4l3 2 3-2 5 3-2 4-2-1v10H8V10l-2 1-2-4z"/>',
   star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'
 };
-const PCATS = [['portrait', 'People'], ['pets', 'Pets'], ['wildlife', 'Wildlife'], ['landscape', 'Nature'], ['sunrise', 'Sunrise'], ['golden', 'Golden Hour'], ['night', 'Night Sky'], ['city', 'City & Street'], ['street', 'Street'], ['arch', 'Architecture'], ['travel', 'Travel'], ['food', 'Food'], ['style', 'Fashion & Style'], ['action', 'Action & Sport'], ['bw', 'Black & White'], ['any', 'Any category']];
-const PICKCATS = ['pets', 'wildlife', 'landscape', 'travel', 'food', 'style', 'city', 'portrait', 'action', 'any'];
+const PCATS = [['selfie', 'Selfies'], ['portrait', 'People'], ['pets', 'Pets'], ['wildlife', 'Wildlife'], ['landscape', 'Nature'], ['sunrise', 'Sunrise'], ['golden', 'Golden Hour'], ['night', 'Night Sky'], ['city', 'City & Street'], ['street', 'Street'], ['arch', 'Architecture'], ['travel', 'Travel'], ['food', 'Food'], ['style', 'Fashion & Style'], ['action', 'Action & Sport'], ['bw', 'Black & White'], ['any', 'Any category']];
+const PICKCATS = ['selfie', 'pets', 'wildlife', 'landscape', 'travel', 'food', 'style', 'city', 'portrait', 'action', 'any'];
 const pcatName = k => (PCATS.find(c => c[0] === k) || [])[1] || '';
 const fitsSlot = (p, sl) => !sl[2] || (!!p.cat && sl[2].includes(p.cat));
 const cxFits = (c, p) => !!p.cat && (!c.cats || c.cats.includes(p.cat));
