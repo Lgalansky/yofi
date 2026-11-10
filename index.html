@@ -5562,9 +5562,7 @@ function battleRival(cat) {
 /* ---------- Cash Battles (real money players only) ---------- */
 const CASH_FEE = 0.1;
 const isCashPlayer = () => !!S.user && ((S.entries || []).some(e => { const c = CX.find(x => x.id === e.cid); return c && c.k !== 'gem'; }) || !!S.paidCash);
-/* Judging win rate: share of head-to-head judge votes a photo has won. Prototype: simulated from the photo's score until real vote counts exist. */
-const judgeRate = p => { if (p.jr != null) return p.jr; let h = 0; for (const ch of String(p.id)) h = (h * 31 + ch.charCodeAt(0)) % 997; return Math.max(20, Math.min(85, Math.round(50 + (p.s.total - 75) * 1.1 + (h % 7) - 3))); };
-const avgScore = () => S.photos.length ? Math.round(S.photos.reduce((a, p) => a + judgeRate(p), 0) / S.photos.length) : 0;
+const avgScore = () => S.photos.length ? Math.round(S.photos.reduce((a, p) => a + p.s.total, 0) / S.photos.length) : 0;
 function openCashBattle(stake) {
   if (!S.photos.length) return;
   stake = stake || 1;
@@ -5579,11 +5577,11 @@ function openCashBattle(stake) {
     bt.innerHTML = `<div class="bt-in">
       <div class="cb-badge"><span>${CASH_ICON}</span>REAL CASH BATTLE</div>
       <h2 class="bt-h">@${esc(o.h)} wants a cash battle</h2>
-      <p class="cb-rule">Highest <b>judging win rate</b> wins: the share of real judge votes your photos win. You’re matched with players at your level.</p>
+      <p class="cb-rule">Highest <b>average photo score</b> wins. You’re matched with players at your level.</p>
       <div class="cb-vs">
-        <div class="cb-p me"><div class="cb-fan">${myPics.map(p => `<img src="${p.src}" alt="">`).join('')}</div><small>Your win rate</small><b>${me}%</b><span>${BT_USER}You</span></div>
+        <div class="cb-p me"><div class="cb-fan">${myPics.map(p => `<img src="${p.src}" alt="">`).join('')}</div><small>Your average</small><b>${me}%</b><span>${BT_USER}You</span></div>
         <span class="bt-vs">vs</span>
-        <div class="cb-p them"><div class="cb-fan">${theirPics.map(src => `<img src="${src}" alt="">`).join('')}</div><small>Their win rate</small><b id="cbTheir">?</b><span>${BT_USER}@${esc(o.h)}</span></div>
+        <div class="cb-p them"><div class="cb-fan">${theirPics.map(src => `<img src="${src}" alt="">`).join('')}</div><small>Their average</small><b id="cbTheir">?</b><span>${BT_USER}@${esc(o.h)}</span></div>
       </div>
       <div id="cbArea">
         <div class="cb-stake" role="group" aria-label="Stake">${[1, 5].map(v => `<button data-st="${v}" aria-pressed="${v === stake}"><b>$${v}</b><small>Win $${pot(v).toFixed(2)}</small></button>`).join('')}</div>
@@ -5606,7 +5604,7 @@ function openCashBattle(stake) {
       if (won) { S.cash = +((S.cash || 0) + win).toFixed(2); save(); setTimeout(() => cashExplosion(win, { label: 'Cash battle win' }), 500); }
       $('#cbArea').innerHTML = `<div class="bt-res ${won ? 'win' : 'lose'}"><span class="tag">${won ? 'You won' : `@${esc(o.h)} won`}</span>
         <b>${won ? '+$' + win.toFixed(2) : '−$' + stake.toFixed(2)}</b>
-        <p>${me === their ? 'Tied win rates. The crowd broke the tie.' : won ? `Judges picked your photos ${me}% of the time, against their ${their}%.` : `Judges picked their photos ${their}% of the time, against your ${me}%. Better photos win more votes.`}</p></div>
+        <p>${me === their ? 'Tied averages. The crowd broke the tie.' : won ? `Your ${me}% average beat their ${their}%.` : `Their ${their}% average beat your ${me}%. Raise your average to win more.`}</p></div>
         <button class="bt-cta cb-cta" id="cbDone">Keep judging</button>`;
       $('#cbDone').onclick = () => { close(); go('judge'); };
     };
