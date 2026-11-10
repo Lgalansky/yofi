@@ -3022,6 +3022,12 @@ body.tabsliding #shell{overflow:hidden}
 .vh-rk{font-weight:700;font-size:.95rem;color:#CDBEE8}
 .vis-rh span{color:#D9C8FF!important;background:transparent!important;box-shadow:inset 0 0 0 1.5px #4A3275}
 .en-over{margin:10px 2px 0;font-size:.85rem;line-height:1.4;color:var(--muted);text-align:center}
+/* Daily Free Cash */
+.ccard.k-dc{position:relative;background:linear-gradient(160deg,#0C2E22,#0E152A 70%);box-shadow:inset 0 0 0 2px #2EE59D,0 0 24px rgba(46,229,157,.3)}
+.ccard.k-dc .cc-pz{color:#2EE59D}
+.cc-daily{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:4px 10px 4px 6px;border-radius:999px;font-weight:800;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:#05261A;background:linear-gradient(90deg,#FFE27A,#2EE59D)}
+.cc-daily svg{width:22px;height:15px}
+.ccard.k-dc .cc-go{color:#05261A!important;background:linear-gradient(95deg,#FFE27A,#2EE59D)!important;box-shadow:0 10px 22px -10px rgba(46,229,157,.8)!important}
 </style>
 </head>
 <body>
@@ -3702,7 +3708,7 @@ function renderLanding() {
   if (S.user) { $('#lOpen').setAttribute('aria-label', 'Open the app');  }
   $('#hxEnter').onclick = () => pickPhoto();
   const now = Date.now();
-  $('#lComps').innerHTML = CX.filter(c => c.id !== 'snap' && c.k !== 'sp').slice(0, 4).map(ccard).join('');
+  $('#lComps').innerHTML = CX.filter(c => c.id === 'daily').map(c => ccard(c)).join('') + CX.filter(c => c.id !== 'snap' && c.k !== 'sp' && c.k !== 'dc').slice(0, 4).map(c => ccard(c)).join('');
   const wins = [[3, 'pawprincess', 'Best Pet Smile', 250], [7, 'catlover22', 'Cutest Paws', 200], [2, 'max.adventures', 'Wild Eyes', 150], [6, 'dogdad', 'Too Cool', 100], [4, 'luna_loves', 'Best Pet Smile', 75]];
   $('#lWin').innerHTML = wins.map(w => `<figure><img src="${SEED[w[0]].src}" alt=""><figcaption><b>$${w[3]}</b><strong>@${w[1]}</strong><br>${w[2]}</figcaption></figure>`).join('');
   document.querySelectorAll('#lComps [data-cx-go]').forEach(b => b.onclick = () => homeCompete(CX.find(c => c.id === b.dataset.cxGo)));
@@ -4387,6 +4393,7 @@ const CX = [
   { id: 'nature', cats: ['landscape', 'sunrise', 'golden', 'night', 'wildlife'], lab: 'Nature', k: 'gem', t: 'Nature Vibes', img: 0, prize: 1000, fee: 100, n: 3892, per: 30, off: 25 },
   { id: 'citylife', cats: ['city', 'street', 'arch'], lab: 'City & Street', k: 'gem', t: 'City Life', img: 12, prize: 500, fee: 50, n: 2144, per: 60, off: 25 },
   { id: 'petpals', cats: ['pets', 'wildlife'], lab: 'Pets or Wildlife', k: 'gem', t: 'Pet Pals', img: 6, prize: 300, fee: 25, n: 1876, per: 30, off: 9 },
+  { id: 'daily', k: 'dc', daily: true, t: 'Daily Free Cash', lab: 'Any category', img: 3, prize: 100, fee: 0, n: 5200, per: 1440, off: 0 },
   { id: 'champ', k: 'sp', t: 'Yofi Champion', art: 'trophy', prize: 5000, fee: 10, n: 422, per: 240, off: 45 },
   { id: 'spot', k: 'sp', t: 'Weekly Spotlight', art: 'star', prize: 2500, fee: 5, n: 1036, per: 1680, off: 213 }
 ];
@@ -4415,7 +4422,7 @@ const cxLeft = c => { const P = c.per * MIN, now = Date.now() + c.off * MIN; ret
 const fmtLeft = ms => { const m = Math.floor(ms / MIN), d = Math.floor(m / 1440), h = Math.floor((m % 1440) / 60), mm = m % 60; return d ? `${d}d ${h}h` : h ? `${h}h ${mm}m` : mm ? `${mm}m ${String(Math.floor(ms / 1000) % 60).padStart(2, '0')}s` : `${Math.floor(ms / 1000)}s`; };
 const prizeWords = c => c.k === 'gem' ? `${c.prize.toLocaleString()} gems` : `$${c.prize.toLocaleString()}${c.k === 'bc' ? ' BC' : ' cash'}`;
 const cxPrize = c => c.k === 'gem' ? `${c.prize.toLocaleString()}${gemIcon()}` : c.k === 'bc' ? `$${c.prize.toLocaleString()}<small>BC</small>` : `$${c.prize.toLocaleString()}`;
-const cxFee = c => c.k === 'gem' ? `<span class="freefee">Free</span>` : c.k === 'bc' ? `$${c.fee.toFixed(2)} BC` : `$${c.fee} Cash`;
+const cxFee = c => c.k === 'gem' || c.fee === 0 ? `<span class="freefee">Free</span>` : c.k === 'bc' ? `$${c.fee.toFixed(2)} BC` : `$${c.fee} Cash`;
 const cxNeed = c => c.min || CFG.QUALIFY;
 let CXF = 'all', cxTimer = null, CXP = null, CXT = 'enter';
 const freeUsed = () => new Set((S.entries || []).filter(e => (CX.find(x => x.id === e.cid) || {}).k === 'gem').map(e => e.pid));
@@ -4423,10 +4430,10 @@ const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used 
 const readyPhotos = () => S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)) : [];
 function goEligible() { CXF = 'mine'; CXP = null; openComps(null); const b = $('#flowBody'); if (b) b.scrollTop = 0; }
 const ccard = (c, feat) => { const left = cxLeft(c), fee = cxFee(c).replace(/<span class="gfee">/, '').replace(/<\/span>$/, '');
-  return `<div class="ccard k-${c.k}${feat ? ' feat1' : ''}">${feat ? '<span class="cc-feat">⭐ Featured</span>' : ''}<div class="cc-top"><img src="${compArt(c)}" alt="">
+  return `<div class="ccard k-${c.k}${feat ? ' feat1' : ''}">${c.daily ? `<span class="cc-daily">${CASH_ICON}Free entry · Real cash · Once a day</span>` : feat ? '<span class="cc-feat">⭐ Featured</span>' : ''}<div class="cc-top"><img src="${compArt(c)}" alt="">
     <div class="cc-i"><b>${esc(c.t)}</b><span class="cc-cat">${gi(c.cats ? c.cats[0] : 'star')}${esc(c.cats ? c.lab : 'Any category')}</span><span class="cc-pz">${cxPrize(c)}<small>1st prize</small></span><span class="cc-fee">Entry <em>${cxFee(c)}</em></span>
       <span class="fend ${left < 5 * MIN ? 'soon' : ''}" data-cx="${c.id}" data-endpill>${IC.clock}Ends in ${fmtLeft(left)}</span></div></div>
-    <button class="cc-go" data-cx-go="${c.id}">${c.k === 'gem' ? 'Free entry' : 'Enter competition'}</button></div>`; };
+    <button class="cc-go" data-cx-go="${c.id}">${c.k === 'gem' || c.fee === 0 ? 'Free entry' : 'Enter competition'}</button></div>`; };
 function openComps(forPhoto) {
   if (forPhoto !== undefined) CXP = forPhoto ? forPhoto.id : null;
   let fp = CXP && S.photos.find(x => x.id === CXP);
@@ -4467,7 +4474,7 @@ function openComps(forPhoto) {
   openFlow(`<div class="cx"><div class="cxtop${rdyRow ? ' stk' : ''}">${fpBar ? '' : CX_WB && S.user ? `<div class="tot-h sec-h cx-wb"><h2>Welcome back, <span>@${esc(S.user.h)}</span></h2></div>` : '<div class="tot-h sec-h"><h2>Enter free competitions</h2></div>'}${wal}${fpBar}${rdyRow}</div>${tabs}${liveTab ? mine : `
     <div class="mh2"><h2 class="fh">${fpBar ? 'Pick a competition' : CXF === 'mine' ? 'Competitions you can enter' : 'Explore competitions'}</h2></div>
     <div class="chips" role="group" aria-label="Filter competitions">${[['all', 'All'], ['gem', 'Gems'], ['cash', 'Cash']].map(([k, l]) => `<button data-f="${k}" class="${k === 'mine' ? 'mine' : ''}" aria-pressed="${CXF === k || (CXF === 'mine' && k === 'all' && false)}">${l}</button>`).join('')}</div>
-    <div class="clist">${(pick && !fp && show.includes(pick.k) && !liveEntry(pick.id) && (CXF !== 'mine' || canEnter(pick)) ? ccard(pick, true) : '') + show.map(k => cards(k)).join('').replace(pick && !fp ? new RegExp('<div class="ccard k-[a-z]+ feat1">[\\s\\S]*?data-cx-go="' + pick.id + '"[^<]*</button></div>') : /$^/, '') || `<p class="cxempty">You’ve entered every ${CXF === 'gem' ? 'gem ' : CXF === 'cash' ? 'cash ' : ''}competition that’s open right now. New ones start every 30 minutes.</p>`}</div>`}
+    <div class="clist">${(() => { const dc = CX.find(x => x.id === 'daily'); return dc && !liveEntry(dc.id) && (!fp || cxOk(dc, fp)) && (CXF !== 'mine' || canEnter(dc)) && CXF !== 'gem' ? ccard(dc) : ''; })()}${(pick && !fp && show.includes(pick.k) && !liveEntry(pick.id) && (CXF !== 'mine' || canEnter(pick)) ? ccard(pick, true) : '') + show.map(k => cards(k)).join('').replace(pick && !fp ? new RegExp('<div class="ccard k-[a-z]+ feat1">[\\s\\S]*?data-cx-go="' + pick.id + '"[^<]*</button></div>') : /$^/, '') || `<p class="cxempty">You’ve entered every ${CXF === 'gem' ? 'gem ' : CXF === 'cash' ? 'cash ' : ''}competition that’s open right now. New ones start every 30 minutes.</p>`}</div>`}
     <p class="note">Prototype: entry fees and prizes use your simulated wallet. Nothing is charged or paid out for real.</p></div>`, true);
   $('#flow').classList.add('cxmode', 'astab'); $('#flow').style.top = cxTabTop() + 'px';
   document.querySelectorAll('#flowBody [data-cxt]').forEach(b => b.onclick = () => { CXT = b.dataset.cxt; openComps(); $('#flowBody').scrollTop = 0; });
@@ -4493,11 +4500,11 @@ function openComps(forPhoto) {
 /* ---------- Live competition entries ---------- */
 const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
 const curOf = c => (c.k === 'gem' ? 'gems' : c.k === 'bc' ? 'bonus' : 'cash');
-const paidTop = n => Math.max(10, Math.floor(n * 0.1));
+const paidTop = (n, cid) => cid === 'daily' ? 10 : Math.max(10, Math.floor(n * 0.1));
 const fmtMoney = (amt, cur) => cur === 'gems' ? `${Math.round(amt).toLocaleString()} gems` : `$${Number.isInteger(amt) ? amt.toLocaleString() : amt.toFixed(2)}${cur === 'bonus' ? ' BC' : ''}`;
 const fmtPrize = (amt, cur) => cur === 'gems' ? `<span class="gprz">${Math.round(amt).toLocaleString()}${gemIcon()}</span>` : fmtMoney(amt, cur);
 function prizeFor(c, rank, n) {
-  const cur = curOf(c), top = paidTop(n);
+  const cur = curOf(c), top = paidTop(n, c.id);
   if (rank === 1) return { amt: c.prize, cur };
   if (rank === 2) return { amt: c.prize / 2, cur };
   if (rank === 3) return { amt: c.prize / 4, cur };
@@ -4506,11 +4513,11 @@ function prizeFor(c, rank, n) {
   return null;
 }
 function ladder(c, n) {
-  const top = paidTop(n), b = prizeFor(c, 11, n);
+  const top = paidTop(n, c.id), b = prizeFor(c, 11, n);
   return [[1, 1, '1st'], [2, 2, '2nd'], [3, 3, '3rd'], [4, 10, '4th – 10th'], [11, top, `11th – ${top}th`]].map(([a, z, l]) => ({ a, z, l, p: prizeFor(c, a, n), each: z > a }));
 }
 function makeEntry(c, p) {
-  const now = Date.now(), n = c.n + 1, top = paidTop(n), R = mulberry(Math.floor(Math.random() * 1e9));
+  const now = Date.now(), n = c.n + 1, top = paidTop(n, c.id), R = mulberry(Math.floor(Math.random() * 1e9));
   const q = Engine.clamp((p.s.total - 70) / 25);
   let fin;
   if (R() < 0.2 + 0.25 * q) {
@@ -4532,13 +4539,13 @@ const rankMove = e => { const now = Math.min(Date.now(), e.end); return rankAt(e
 const moveHTML = d => d > 0 ? `<i class="mv mup">▲${d}</i>` : d < 0 ? `<i class="mv mdn">▼${-d}</i>` : '<i class="mv">–</i>';
 const BOOST_EVERY = 5;
 const liveEntries = () => (S.entries || []).filter(e => !e.done && Date.now() < e.end);
-const liveEntry = cid => { const c = CX.find(x => x.id === cid); if (c && (c.multi || c.k !== 'gem')) return null; return (S.entries || []).find(e => e.cid === cid && !e.done); };
+const liveEntry = cid => { const c = CX.find(x => x.id === cid); if (c && (c.multi || (c.k !== 'gem' && c.k !== 'dc'))) return null; return (S.entries || []).find(e => e.cid === cid && !e.done); };
 const entrySrc = e => { const p = S.photos.find(x => x.id === e.pid); return p ? p.src : SEED[0].src; };
 const cxPill = c => `<span class="cpill k-${c.k}">${c.cats ? gi(c.cats[0]) : gi('star')}${esc((c.lab || 'Any category').toUpperCase())}</span>`;
 const fmtClock = ms => { const t = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s2 = t % 60; return h ? `${h}:${String(m).padStart(2, '0')}:${String(s2).padStart(2, '0')}` : `${m}:${String(s2).padStart(2, '0')}`; };
 function nowPrizeLine(c, e, r) {
   const pz = prizeFor(c, r, e.n); if (pz) return `In the prize zone · ${fmtMoney(pz.amt, pz.cur)} if it ended now`;
-  return `${(r - paidTop(e.n)).toLocaleString()} places from a prize`;
+  return `${(r - paidTop(e.n, e.cid)).toLocaleString()} places from a prize`;
 }
 function liveCardHTML(c, e) {
   const r = rankAt(e, Date.now()), d = rankMove(e);
@@ -4573,7 +4580,7 @@ function paintLive(force) {
   const tick = Math.floor(now / 3000);
   if (!force && r === LV.last && tick === LV.tick) return;
   LV.last = r; LV.tick = tick;
-  const y = $('#lv').scrollTop, d = rankMove(e), top = paidTop(e.n);
+  const y = $('#lv').scrollTop, d = rankMove(e), top = paidTop(e.n, e.cid);
   const pts = [...Array(14)].map((_, i) => rankAt(e, e.start + (Math.min(now, e.end) - e.start) * i / 13));
   const lo = Math.min(...pts), hi = Math.max(...pts, lo + 1);
   const poly = pts.map((v, i) => `${(4 + i * 332 / 13).toFixed(1)},${(8 + (v - lo) / (hi - lo) * 74).toFixed(1)}`).join(' ');
@@ -4590,7 +4597,7 @@ function paintLive(force) {
     <div class="lv-top"><button class="lv-back" id="lvBack" aria-label="Back to competitions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
       <div class="lv-t">${cxPill(c)}<h2>${esc(c.t)}</h2></div><span class="lv-live">LIVE</span></div>
     <div class="lv-cd"><span>Results in</span><b id="lvCd">${fmtClock(e.end - now)}</b></div>
-    <div class="lv-pz k-${c.k}"><div><small>1st prize</small><b>${fmtPrize(c.prize, curOf(c))}</b></div><div><small>Prizes to</small><b>#${paidTop(e.n).toLocaleString()}</b></div><div class="${prizeFor(c, r, e.n) ? 'win' : ''}"><small>${prizeFor(c, r, e.n) ? 'You’d win now' : 'To a prize'}</small><b>${prizeFor(c, r, e.n) ? fmtPrize(prizeFor(c, r, e.n).amt, prizeFor(c, r, e.n).cur) : (r - paidTop(e.n)).toLocaleString() + ' places'}</b></div></div>
+    <div class="lv-pz k-${c.k}"><div><small>1st prize</small><b>${fmtPrize(c.prize, curOf(c))}</b></div><div><small>Prizes to</small><b>#${paidTop(e.n, e.cid).toLocaleString()}</b></div><div class="${prizeFor(c, r, e.n) ? 'win' : ''}"><small>${prizeFor(c, r, e.n) ? 'You’d win now' : 'To a prize'}</small><b>${prizeFor(c, r, e.n) ? fmtPrize(prizeFor(c, r, e.n).amt, prizeFor(c, r, e.n).cur) : (r - paidTop(e.n, e.cid)).toLocaleString() + ' places'}</b></div></div>
     ${(() => { const ph = S.photos.find(x => x.id === e.pid), canHang = false;
       return `<div class="lv-hero2 k-${c.k}"><div class="lh-ph"><img src="${entrySrc(e)}" alt="Your entry">${canHang ? `<button class="lh-gal" id="lvGal">${TROPHY_S}Add to gallery</button>` : ''}</div>
       <div class="lh-rk"><small>Your rank</small><b>#${r.toLocaleString()}</b><span>of ${e.n.toLocaleString()} entries</span>
@@ -4637,7 +4644,7 @@ function settle(e) {
   save(); snapThumb(e);
 }
 function openResult(e) {
-  const c = CX.find(x => x.id === e.cid), pz = e.prize, top = paidTop(e.n), climbed = e.startR - e.fin;
+  const c = CX.find(x => x.id === e.cid), pz = e.prize, top = paidTop(e.n, e.cid), climbed = e.startR - e.fin;
   const ph0 = S.photos.find(x => x.id === e.pid), inGal = galleryData().all.some(o => o.id === e.pid && (o.gems || o.cash)), ph = inGal ? ph0 : null, hungAt = !!ph, spot = null, swap = null;
   const galBtn = cls => ph ? `<button class="${cls}" id="rsGal">${hungAt ? 'See it in your gallery' : spot ? 'Add photo to gallery' : swap ? 'Add photo to gallery' : 'Go to your gallery'} <span aria-hidden="true">→</span></button>` : `<button class="${cls}" id="rsNext">Enter next competition <span aria-hidden="true">→</span></button>`;
   const galNote = ph ? `${swap ? `<p class="rs-gn">It replaces your ${framed(swap[0], swap[1]).s.total} photo in the ${esc(ROOMS[swap[0]].slots[swap[1]][1])} frame.</p>` : ''}<button class="rs-alt" id="rsNext">Or enter the next competition</button>` : '';
