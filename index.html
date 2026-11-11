@@ -3035,7 +3035,7 @@ body.tabsliding #shell{overflow:hidden}
 .enh0-pr .pr-t{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
 .enh0-pr .pr-t b{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#A796C6}
 .enh0-pr .pr-t span{font-weight:800;font-size:.95rem;color:#fff}
-.enh0-pr .pr-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.enh0-pr .pr-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .enh0-pr .pr-bar i{height:8px;border-radius:4px;background:#33204F}
 .enh0-pr .pr-bar i.on{background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
 .enh0-pr .pr-bar i.nx{background:#33204F;box-shadow:inset 0 0 0 1.5px #FF3FA4;animation:prPulse 1.6s ease-in-out infinite}
@@ -4462,10 +4462,10 @@ let CXF = 'all', cxTimer = null, CXP = null, CXT = 'enter';
 const freeUsed = () => new Set((S.entries || []).filter(e => (CX.find(x => x.id === e.cid) || {}).k === 'gem').map(e => e.pid));
 const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used = c.k === 'gem' ? freeUsed() : new Set(); return S.photos.filter(p => cxOk(c, p) && (c.k !== 'gem' || !photoLock(p)) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total)[0] || null; };
 const readyPhotos = () => S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)) : [];
-function progDone() { const E = S.entries || []; return [S.photos.length > 0 || E.length > 0, S.photos.some(x => x.s.total >= CFG.QUALIFY) || E.length > 0, E.length > 0, E.some(e => e.prize), E.some(e => e.prize && e.prize.cur !== 'gems')]; }
-const PROG_STEPS = ['Upload', `Improve to ${CFG.QUALIFY}+`, 'Enter a competition', 'Win gems', 'Win real cash'];
+function progDone() { const E = S.entries || [], d1 = S.photos.length > 0 || E.length > 0, d2 = d1 && (S.photos.some(x => x.s.total >= CFG.QUALIFY) || E.some(e => e.score >= CFG.QUALIFY)), d3 = d2 && E.some(e => e.score >= CFG.QUALIFY), d4 = d3 && E.some(e => e.prize && e.prize.cur !== 'gems'); return [d1, d2, d3, d4]; }
+const PROG_STEPS = ['Upload', `Improve to ${CFG.QUALIFY}+`, 'Enter a competition', 'Win real cash'];
 function progStrip() { const d = progDone(), nx = d.indexOf(false), nd = d.filter(Boolean).length;
-  return `<div class="enh0-pr mini" aria-label="${nd} of 5 steps done"><div class="pr-t"><b>${nx < 0 ? 'All steps done' : `Next: ${PROG_STEPS[nx]}`}</b><span>${nd} of 5 done</span></div><div class="pr-bar">${d.map((x, i) => `<i class="${x ? 'on' : i === nx ? 'nx' : ''}"></i>`).join('')}</div></div>`; }
+  return `<div class="enh0-pr mini" aria-label="${nd} of 4 steps done"><div class="pr-t"><b>${nx < 0 ? 'All steps done' : `Next: ${PROG_STEPS[nx]}`}</b><span>${nd} of 4 done</span></div><div class="pr-bar">${d.map((x, i) => `<i class="${x ? 'on' : i === nx ? 'nx' : ''}"></i>`).join('')}</div></div>`; }
 function goEligible() { CXF = 'mine'; CXP = null; openComps(null); const b = $('#flowBody'); if (b) b.scrollTop = 0; }
 const ccard = (c, feat) => { const left = cxLeft(c), fee = cxFee(c).replace(/<span class="gfee">/, '').replace(/<\/span>$/, '');
   return `<div class="ccard k-${c.k}${feat ? ' feat1' : ''}">${c.daily ? `<span class="cc-daily">${CASH_ICON}Free entry · Real cash · Once a day</span>` : feat ? '<span class="cc-feat">⭐ Featured</span>' : ''}<div class="cc-top"><img src="${compArt(c)}" alt="">
@@ -5755,9 +5755,9 @@ function renderStudio() {
     st.innerHTML = `
     <div class="enh0"><h2>Enhance your photos</h2><p>Upload a photo, get an AI score, then improve it to 70+ to compete.</p>
       ${(() => { const done = progDone(), nx = done.indexOf(false), nd = done.filter(Boolean).length;
-        const steps = [['Upload', 'Add a photo and get an AI score'], [`Improve to ${CFG.QUALIFY}+`, 'Fix your weakest category with gems'], ['Enter a competition', 'Judges vote on your photo against others'], ['Win gems', 'Place in a gem competition and hang it in your gallery'], ['Win real cash!! 💸', 'Top photos take home real money']];
-        return `<div class="enh0-pr" aria-label="${nd} of 5 steps done"><div class="pr-t"><b>Your progress</b><span>${nd} of 5 done</span></div><div class="pr-bar">${steps.map((_, i) => `<i class="${done[i] ? 'on' : i === nx ? 'nx' : ''}"></i>`).join('')}</div></div>
-      <ol class="enh0-st">${steps.map(([t, d], i) => `<li class="${i === 4 ? 'cash5' : ''}${done[i] ? ' done' : i === nx ? ' next' : ''}"><span class="n">${done[i] ? '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>' : i + 1}</span><b>${t}</b>${done[i] ? '' : `<small>${d}</small>`}${done[i] ? '<em class="st-tag dn">Done</em>' : i === nx ? '<em class="st-tag">Next</em>' : ''}</li>`).join('')}</ol>`; })()}
+        const steps = [['Upload', 'Add a photo and get an AI score'], [`Improve to ${CFG.QUALIFY}+`, 'Fix your weakest category with gems'], ['Enter a competition', 'Win gems or cash to hang it in your gallery'], ['Win real cash!! 💸', 'Top photos take home real money']];
+        return `<div class="enh0-pr" aria-label="${nd} of 4 steps done"><div class="pr-t"><b>Your progress</b><span>${nd} of 4 done</span></div><div class="pr-bar">${steps.map((_, i) => `<i class="${done[i] ? 'on' : i === nx ? 'nx' : ''}"></i>`).join('')}</div></div>
+      <ol class="enh0-st">${steps.map(([t, d], i) => `<li class="${i === 3 ? 'cash5' : ''}${done[i] ? ' done' : i === nx ? ' next' : ''}"><span class="n">${done[i] ? '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>' : i + 1}</span><b>${t}</b>${done[i] ? '' : `<small>${d}</small>`}${done[i] ? '<em class="st-tag dn">Done</em>' : i === nx ? '<em class="st-tag">Next</em>' : ''}</li>`).join('')}</ol>`; })()}
       <button class="btn block" id="stAdd"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Upload a new photo</button></div>`;
     $('#stAdd').onclick = () => { const c = CX.find(x => x.id === 'snap') || CX[0]; if (!S.user) { pickPhoto(true); return; } openEntryGuide(c, null); }; return;
   }
