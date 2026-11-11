@@ -4514,7 +4514,7 @@ function prizeFor(c, rank, n) {
 }
 function ladder(c, n) {
   const top = paidTop(n, c.id), b = prizeFor(c, 11, n);
-  return [[1, 1, '1st'], [2, 2, '2nd'], [3, 3, '3rd'], [4, 10, '4th – 10th'], [11, top, `11th – ${top}th`]].map(([a, z, l]) => ({ a, z, l, p: prizeFor(c, a, n), each: z > a }));
+  return [[1, 1, '1st'], [2, 2, '2nd'], [3, 3, '3rd'], [4, 10, '4th – 10th'], [11, top, `11th – ${top}th`]].map(([a, z, l]) => ({ a, z, l, p: prizeFor(c, a, n), each: z > a })).filter(t => t.p && t.z >= t.a);
 }
 function makeEntry(c, p) {
   const now = Date.now(), n = c.n + 1, top = paidTop(n, c.id), R = mulberry(Math.floor(Math.random() * 1e9));
