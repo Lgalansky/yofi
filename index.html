@@ -4440,7 +4440,7 @@ const CX = [
   { id: 'nature', cats: ['landscape', 'sunrise', 'golden', 'night', 'wildlife'], lab: 'Nature', k: 'gem', t: 'Nature Vibes', img: 0, prize: 1000, fee: 100, n: 3892, per: 30, off: 25 },
   { id: 'citylife', cats: ['city', 'street', 'arch'], lab: 'City & Street', k: 'gem', t: 'City Life', img: 12, prize: 500, fee: 50, n: 2144, per: 60, off: 25 },
   { id: 'petpals', cats: ['pets', 'wildlife'], lab: 'Pets or Wildlife', k: 'gem', t: 'Pet Pals', img: 6, prize: 300, fee: 25, n: 1876, per: 30, off: 9 },
-  { id: 'daily', k: 'dc', daily: true, t: 'Daily Free Cash', lab: 'Any category', img: 3, prize: 100, fee: 0, n: 5200, per: 1440, off: 0 },
+  { id: 'daily', k: 'dc', daily: true, t: 'Daily Cash Cup', lab: 'Any category', img: 3, prize: 100, get fee() { return dcFirst() ? 0 : DC_GEMS; }, n: 5200, per: 1440, off: 0 },
   { id: 'champ', k: 'sp', t: 'Yofi Champion', art: 'trophy', prize: 5000, fee: 10, n: 422, per: 240, off: 45 },
   { id: 'spot', k: 'sp', t: 'Weekly Spotlight', art: 'star', prize: 2500, fee: 5, n: 1036, per: 1680, off: 213 }
 ];
@@ -4469,7 +4469,8 @@ const cxLeft = c => { const P = c.per * MIN, now = Date.now() + c.off * MIN; ret
 const fmtLeft = ms => { const m = Math.floor(ms / MIN), d = Math.floor(m / 1440), h = Math.floor((m % 1440) / 60), mm = m % 60; return d ? `${d}d ${h}h` : h ? `${h}h ${mm}m` : mm ? `${mm}m ${String(Math.floor(ms / 1000) % 60).padStart(2, '0')}s` : `${Math.floor(ms / 1000)}s`; };
 const prizeWords = c => c.k === 'gem' ? `${c.prize.toLocaleString()} gems` : `$${c.prize.toLocaleString()}${c.k === 'bc' ? ' BC' : ' cash'}`;
 const cxPrize = c => c.k === 'gem' ? `${c.prize.toLocaleString()}${gemIcon()}` : c.k === 'bc' ? `$${c.prize.toLocaleString()}<small>BC</small>` : `$${c.prize.toLocaleString()}`;
-const cxFee = c => c.k === 'gem' || c.fee === 0 ? `<span class="freefee">Free</span>` : c.k === 'bc' ? `$${c.fee.toFixed(2)} BC` : `$${c.fee} Cash`;
+const DC_GEMS = 75, dcFirst = () => !(S.entries || []).some(e => e.cid === 'daily');
+const cxFee = c => c.k === 'dc' && c.fee ? `<span class="gfee">${c.fee} gems</span>` : c.k === 'gem' || c.fee === 0 ? `<span class="freefee">Free</span>` : c.k === 'bc' ? `$${c.fee.toFixed(2)} BC` : `$${c.fee} Cash`;
 const cxNeed = c => c.min || CFG.QUALIFY;
 let CXF = 'all', cxTimer = null, CXP = null, CXT = 'enter';
 const freeUsed = () => new Set((S.entries || []).filter(e => (CX.find(x => x.id === e.cid) || {}).k === 'gem').map(e => e.pid));
@@ -4477,10 +4478,10 @@ const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used 
 const readyPhotos = () => S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)) : [];
 function goEligible() { CXF = 'mine'; CXP = null; openComps(null); const b = $('#flowBody'); if (b) b.scrollTop = 0; }
 const ccard = (c, feat) => { const left = cxLeft(c), fee = cxFee(c).replace(/<span class="gfee">/, '').replace(/<\/span>$/, '');
-  return `<div class="ccard k-${c.k}${feat ? ' feat1' : ''}">${c.daily ? `<span class="cc-daily">${CASH_ICON}Free entry · Real cash · Once a day</span>` : feat ? '<span class="cc-feat">⭐ Featured</span>' : ''}<div class="cc-top"><img src="${compArt(c)}" alt="">
+  return `<div class="ccard k-${c.k}${feat ? ' feat1' : ''}">${c.daily ? `<span class="cc-daily">${CASH_ICON}${c.fee ? 'Gems to enter' : 'First entry free'} · Real cash · Once a day</span>` : feat ? '<span class="cc-feat">⭐ Featured</span>' : ''}<div class="cc-top"><img src="${compArt(c)}" alt="">
     <div class="cc-i"><b>${esc(c.t)}</b><span class="cc-cat">${gi(c.cats ? c.cats[0] : 'star')}${esc(c.cats ? c.lab : 'Any category')}</span><span class="cc-pz">${cxPrize(c)}<small>1st prize</small></span><span class="cc-fee">Entry <em>${cxFee(c)}</em></span>
       <span class="fend ${left < 5 * MIN ? 'soon' : ''}" data-cx="${c.id}" data-endpill>${IC.clock}Ends in ${fmtLeft(left)}</span></div></div>
-    <button class="cc-go" data-cx-go="${c.id}">${c.k === 'gem' || c.fee === 0 ? 'Free entry' : 'Enter competition'}</button></div>`; };
+    <button class="cc-go" data-cx-go="${c.id}">${c.k === 'dc' && c.fee ? `Enter · ${c.fee} gems` : c.k === 'gem' || c.fee === 0 ? 'Free entry' : 'Enter competition'}</button></div>`; };
 function openComps(forPhoto) {
   if (forPhoto !== undefined) CXP = forPhoto ? forPhoto.id : null;
   let fp = CXP && S.photos.find(x => x.id === CXP);
@@ -4738,7 +4739,7 @@ setInterval(() => {
 function openEntryGuide(c, bestP) {
   const need = cxNeed(c), q = S.photos.filter(p => cxOk(c, p)).length, el = $('#ceg');
   const from = bestP ? bestP.s.total : 70, have = !!bestP;
-  const fee = c.k === 'gem' ? 'Free' : c.k === 'bc' ? `$${c.fee.toFixed(2)} Bonus Cash` : `$${c.fee} Cash`;
+  const fee = c.k === 'gem' || !c.fee ? 'Free' : c.k === 'dc' ? `${c.fee} gems` : c.k === 'bc' ? `$${c.fee.toFixed(2)} Bonus Cash` : `$${c.fee} Cash`;
   const prize = cxPrize(c).replace(/<[^>]+>/g, '').trim() + (c.k === 'gem' ? ' gems' : '');
   const isNew = !have;
   el.innerHTML = isNew ? `<div class="ceg-in first">
@@ -4864,7 +4865,7 @@ function needGems(c) {
 function cxPay(c, q) {
   if (!S.user) { openSignup(() => cxPay(c, q)); return; }
   if (S.goal && S.goal.cid === c.id) S.goal = null;
-  if (c.k === 'gem') { if (S.gems < c.fee) { needGems(c); return; } S.gems -= c.fee; save(); paintGems(); }
+  if (c.k === 'gem' || c.k === 'dc') { const f = c.fee; if (S.gems < f) { needGems(c); return; } if (f) { S.gems -= f; save(); paintGems(); } }
   else if (c.k === 'bc') { if ((S.bonus || 0) < c.fee) { openStore(`${c.t} costs $${c.fee.toFixed(2)} Bonus Cash to enter.`); return; } S.bonus = +(S.bonus - c.fee).toFixed(2); }
   else { if ((S.cash || 0) < c.fee) { openStore(`${c.t} costs $${c.fee} Cash to enter.`); return; } S.cash = +(S.cash - c.fee).toFixed(2); }
   const e = makeEntry(c, q); S.entries.push(e); S.entered[c.id] = e.id; save(); paintWallet(); paintGems(false);
