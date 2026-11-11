@@ -3076,6 +3076,329 @@ body.tabsliding #shell{overflow:hidden}
 .us-s.nx em{color:#FF7CC4}
 @media (prefers-reduced-motion:reduce){.us-s.nx{animation:none}}
 .cr-comp.cr-free{background:linear-gradient(90deg,#FFE27A,#2EE59D);color:#0B2A1C;font-weight:800}
+/* Enhance tab as a gallery wall */
+.wall{padding:14px 2px 24px;color:#fff}
+.wall-h h2{margin:4px 0 4px;font:800 1.8rem/1.1 "Bricolage Grotesque",sans-serif}
+.wall-h p{margin:0 0 14px;color:#CDBEE8;font-size:.95rem;line-height:1.4}
+.wall-pr{padding:12px 14px;border-radius:16px;background:#211339;box-shadow:inset 0 0 0 1.5px #33204F;margin-bottom:14px}
+.wall-pr .pr-t{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.wall-pr .pr-t b{font-weight:800}.wall-pr .pr-t span{font-size:.85rem;font-weight:800;color:#2EE59D}
+.pr-bar2{height:8px;border-radius:4px;background:#33204F;overflow:hidden}.pr-bar2 i{display:block;height:100%;background:linear-gradient(90deg,#FF3FA4,#9B3CFF);border-radius:4px}
+.wall-rw{margin:10px 0 0;font-size:.85rem;color:#E6DDF5}.wall-rw b{color:#FFC93C}.wall-rw span{color:#A796C6}
+.wall-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 12px}
+.wf{min-width:0}
+.tot-h:has(.wall-back) h2{padding:0 46px}
+.wf{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;color:inherit;font:inherit;cursor:pointer}
+.wf-in{position:relative;width:100%;aspect-ratio:3/4;border-radius:6px;overflow:hidden;background:#170C2B;padding:5px;box-shadow:0 0 0 3px #5B4380,0 0 0 5px #2A1C42,0 10px 18px -10px rgba(0,0,0,.8)}
+.wf.gold .wf-in{box-shadow:0 0 0 3px #E9B23C,0 0 0 5px #7A5212,0 10px 22px -8px rgba(233,178,60,.55)}
+.wf-in img{width:100%;height:100%;object-fit:cover;border-radius:2px;display:block}
+.wf-sc{position:absolute;right:8px;top:8px;min-width:30px;padding:3px 6px;border-radius:999px;background:#fff;color:#1A0F2E;font-weight:800;font-size:.8rem;text-align:center}
+.wf.gold .wf-sc{background:#FFC93C}
+.wf-n{position:absolute;left:8px;top:8px;padding:2px 6px;border-radius:999px;background:rgba(10,4,22,.75);font-size:.7rem;font-weight:800}
+.wf-t{position:absolute;left:5px;right:5px;bottom:5px;padding:4px 2px;font-style:normal;font-size:.64rem;font-weight:800;text-align:center;border-radius:0 0 2px 2px;background:rgba(10,4,22,.78)}
+.wf-t.ok{background:linear-gradient(90deg,#0E7A4E,#16B571);color:#fff}.wf-t.up{color:#FF9BD2}.wf-t.lk{color:#CDBEE8}
+.wf-pl{font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#CDBEE8;padding:2px 8px;border-radius:4px;background:#2A1C42;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wf.empty .wf-in{display:grid;place-items:center;background:repeating-linear-gradient(135deg,#1A0F2E 0 8px,#1E1236 8px 16px);box-shadow:0 0 0 2px #3A2760,0 0 0 4px #1A0F2E}
+.wf.empty .wf-in>span{display:grid;justify-items:center;gap:2px;color:#8C7BAA}
+.wf.empty .wf-ic svg{width:22px;height:22px}.wf.empty b{font-size:1.6rem;line-height:1;color:#FF7CC4}.wf.empty small{font-size:.7rem;font-weight:800}
+.wall-back{position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;display:grid;place-items:center;border-radius:50%;color:#fff;background:#211339;border:0}
+.tot-h{position:relative}
+.wsel{display:grid;gap:10px;margin-top:10px}.wsel-r{display:flex;gap:12px;align-items:center;padding:8px;border-radius:14px;background:var(--line, #eee)}
+.wsel-r .im{position:relative;width:64px;height:80px;border-radius:8px;overflow:hidden;flex:none}.wsel-r .im img{width:100%;height:100%;object-fit:cover}
+.wsel-r .im b{position:absolute;right:4px;top:4px;background:#fff;color:#1A0F2E;border-radius:999px;font-size:.72rem;padding:1px 6px}
+.wsel-r>div{display:flex;flex-direction:column;align-items:flex-start;gap:4px}.wsel-r.on{box-shadow:inset 0 0 0 2px #E9B23C}
+.wsel-k{font-weight:800;font-size:.8rem;color:#A796C6}.wsel-r.on .wsel-k{color:#E9B23C}
+.wall-g{gap:18px 12px!important}
+.wf-pl{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;font-size:.8rem!important;letter-spacing:.02em!important;color:#fff!important;padding:6px 6px!important;border-radius:8px!important;background:linear-gradient(135deg,#4A2C7A,#3A2060)!important;box-shadow:inset 0 0 0 1.5px #6B4BA0}
+.wf-pl svg{width:16px;height:16px;flex:none}
+.wf.gold .wf-pl{background:linear-gradient(135deg,#7A5212,#5A3A08)!important;box-shadow:inset 0 0 0 1.5px #E9B23C;color:#FFE7A8!important}
+.wf.empty .wf-ic svg{width:44px!important;height:44px!important;color:#B9A6DC}
+.wf.empty .wf-in>span{gap:6px!important}
+.wf.empty b{font-size:2rem!important}
+.wf.empty small{font-size:.78rem!important;color:#CDBEE8}
+.wf-t.up b{color:#FFC93C}
+.wall-back{position:static!important;transform:none!important;width:auto!important;height:34px!important;display:inline-flex!important;align-items:center;gap:4px;padding:0 14px 0 8px;margin:0 0 6px;border-radius:999px!important;font-weight:800;font-size:.85rem;color:#E6DDF5!important;background:#2A1747!important;box-shadow:inset 0 0 0 1.5px #4A2C7A}
+.tot-h:has(.wall-back){display:flex;flex-direction:column;align-items:center}
+.tot-h:has(.wall-back) .wall-back{align-self:flex-start}
+.tot-h:has(.wall-back) h2{padding:0!important}
+button.wf-in{border:0;font:inherit;color:inherit;cursor:pointer;display:block}
+.wf.empty button.wf-in{display:grid}
+.wf{cursor:default}
+button.wf-pl{border:0;font-family:inherit;font-weight:800;text-transform:uppercase;cursor:pointer}
+.wf-pl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.wf-plus{flex:none;display:grid;place-items:center;width:20px;height:20px;margin-left:auto;border-radius:50%;background:#FF3FA4;color:#fff;font-size:1rem;line-height:1;box-shadow:0 0 10px -2px rgba(255,63,164,.8)}
+.wf.gold .wf-plus{background:#FFC93C;color:#2A1600}
+.wf-pl{justify-content:flex-start!important;padding:6px 6px 6px 8px!important}
+.wf.empty .wf-plus,.wf-plus{font-size:1rem!important;color:#fff}
+.wf-pl{font-size:.74rem!important;letter-spacing:0!important;gap:4px!important}
+.wf-pl svg{width:14px!important;height:14px!important}
+.wf{position:relative}
+.wf-add{position:absolute;top:-8px;right:-8px;z-index:2;width:32px;height:32px;border-radius:50%;border:2px solid #120A22;background:#FF3FA4;color:#fff;font:800 1.35rem/1 "Bricolage Grotesque",sans-serif;display:grid;place-items:center;padding:0 0 2px;cursor:pointer;box-shadow:0 4px 12px -2px rgba(255,63,164,.8)}
+.wf.gold .wf-add{background:#FFC93C;color:#2A1600;box-shadow:0 4px 12px -2px rgba(255,201,60,.8)}
+.wf-sc{right:auto!important;left:8px!important}
+.wf-n{left:auto!important;right:8px;top:auto!important;bottom:32px}
+.wf-pl{justify-content:center!important;padding:6px!important;font-size:.78rem!important;letter-spacing:.03em!important}
+.wf.empty .wf-ic svg{width:52px!important;height:52px!important}
+/* Battle chooser + King + Showdown */
+.bch h2{margin:4px 0 4px}.bch>p{margin:0 0 12px}
+.bch-l{display:grid;gap:10px;width:100%}
+.bch-o{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:16px;border:0;text-align:left;color:#fff;font:inherit;cursor:pointer;background:#2A1747;box-shadow:inset 0 0 0 1.5px #4A2C7A}
+.bch-o:disabled{opacity:.45}
+.bch-o .bi{font-size:1.6rem}.bch-o .bt{flex:1;display:grid;gap:2px}.bch-o .bt b{font-size:1.02rem}.bch-o .bt small{color:#CDBEE8;font-size:.8rem}
+.bch-o em{font-style:normal;font-weight:800;padding:4px 10px;border-radius:999px;background:#FF3FA4}
+.bch-o.raid em{background:#2E8BFF}.bch-o.duel{box-shadow:inset 0 0 0 1.5px #16B571}.bch-o.duel em{background:#16B571}
+.bch-o.show{box-shadow:inset 0 0 0 1.5px #FF7A3C}.bch-o.show em{background:#FF7A3C}
+.bch-o.king{background:linear-gradient(120deg,#5A3A08,#2A1747);box-shadow:inset 0 0 0 2px #FFC93C,0 8px 22px -10px rgba(255,201,60,.8)}.bch-o.king em{background:#FFC93C;color:#2A1600}
+.bch-o .kb{color:#FFC93C}
+.bch-n{font-size:.85rem;color:#FFB4D8;margin:10px 0 0}
+.kg{color:#fff;text-align:center;padding:4px 0 12px}
+.kg h2{margin:2px 0 8px;font:800 1.7rem/1.1 "Bricolage Grotesque",sans-serif}
+.kg-cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px}
+.kg-cats button{flex:none;padding:6px 12px;border-radius:999px;border:0;font:inherit;font-weight:800;font-size:.8rem;color:#CDBEE8;background:#2A1747}
+.kg-cats button[aria-pressed=true]{background:#FFC93C;color:#2A1600}
+.kg-crown{font-size:2.4rem;line-height:1;filter:drop-shadow(0 4px 10px rgba(255,201,60,.7))}
+.kg-bounty{display:grid;justify-items:center;margin:4px auto 14px;padding:12px 20px;border-radius:18px;background:radial-gradient(circle at 50% 0,#7A5212,#2A1747 70%);box-shadow:inset 0 0 0 2px #FFC93C,0 10px 30px -12px rgba(255,201,60,.9);max-width:280px}
+.kg-bounty small{font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#FFE7A8;font-size:.72rem}
+.kg-bounty b{font:800 2.8rem/1 "Bricolage Grotesque",sans-serif;color:#FFC93C;text-shadow:0 3px 0 #7A5212}
+.kg-bounty span{font-size:.8rem;color:#E6DDF5;margin-top:4px}
+.kg-vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:12px}
+.kg-ph{position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;box-shadow:0 0 0 3px #4A2C7A}
+.kg-ph.king{box-shadow:0 0 0 3px #FFC93C,0 0 22px -4px rgba(255,201,60,.8)}.kg-ph.me{box-shadow:0 0 0 3px #FF3FA4}
+.kg-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.kg-tag{position:absolute;left:6px;right:6px;top:6px;padding:3px 6px;border-radius:999px;background:rgba(10,4,22,.78);font-size:.72rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kg-r{position:absolute;left:0;right:0;bottom:0;padding:6px;background:linear-gradient(transparent,rgba(10,4,22,.9));font-weight:800;font-size:.85rem}
+.kg-x{font:800 1.3rem "Bricolage Grotesque",sans-serif;color:#FFC93C}
+.kg-vs.sm .kg-ph{aspect-ratio:1}
+.kg-how{font-size:.88rem;color:#CDBEE8;line-height:1.4;margin:0 0 14px}
+.kg-go{background:linear-gradient(90deg,#FFC93C,#FF9F1C)!important;color:#2A1600!important}
+.kg.live .lv-live{display:inline-block;margin-bottom:6px}
+.kg-bar{display:flex;height:16px;border-radius:999px;overflow:hidden;background:#2A1747;margin:6px 0}
+.kg-bar i{display:block;height:100%;transition:width .2s}#kgK{background:#FFC93C}#kgM{background:#FF3FA4}
+.kg-cnt{display:flex;justify-content:space-between;font-weight:800;font-size:.9rem}.kg-cnt b{color:#CDBEE8;font-weight:700}
+#kgKn{color:#FFC93C}#kgMn{color:#FF7CC4}
+.kg-pot{margin:12px 0}.kg-pot b{color:#FFC93C}
+.kg-win,.kg-lose{display:grid;gap:4px;padding:14px;border-radius:16px;margin-bottom:12px}
+.kg-win{background:linear-gradient(120deg,#0E7A4E,#16B571);}.kg-win b{font-size:1.2rem}
+.kg-lose{background:#2A1747;box-shadow:inset 0 0 0 1.5px #4A2C7A}.kg-lose b{font-size:1.1rem}.kg-lose span b{color:#FFC93C}
+.sd-l{display:grid;gap:8px;margin-bottom:14px}
+.sd-r{display:grid;grid-template-columns:46px 1fr auto;grid-template-rows:auto auto;column-gap:10px;align-items:center;padding:8px;border-radius:14px;background:#2A1747;text-align:left}
+.sd-r img{grid-row:span 2;width:46px;height:46px;border-radius:8px;object-fit:cover}
+.sd-r.me{box-shadow:inset 0 0 0 2px #FF3FA4}.sd-r.win{box-shadow:inset 0 0 0 2px #FFC93C,0 0 20px -6px rgba(255,201,60,.9);background:#3A2508}
+.sd-n{font-weight:800;font-size:.85rem}.sd-p{grid-row:span 2;font-weight:800;font-size:1.05rem;color:#FFC93C}
+.sd-b{height:8px;border-radius:4px;background:#170C2B;overflow:hidden}.sd-b i{display:block;height:100%;width:0;background:linear-gradient(90deg,#FF3FA4,#FF9F1C);transition:width .6s}
+/* gallery frame: win rate + crown */
+.wf-wr{position:absolute;left:8px;top:36px;padding:2px 6px;border-radius:999px;background:rgba(10,4,22,.78);font-size:.66rem;font-weight:800;color:#2EE59D}
+.sd-pot{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 10px}
+.sd-pot>div{display:grid;justify-items:center;padding:10px 14px;border-radius:14px;background:#2A1747;box-shadow:inset 0 0 0 1.5px #4A2C7A;min-width:120px}
+.sd-pot>div.w{background:radial-gradient(circle at 50% 0,#7A5212,#2A1747 75%);box-shadow:inset 0 0 0 2px #FFC93C}
+.sd-pot small{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#CDBEE8}
+.sd-pot b{font:800 1.6rem/1.1 "Bricolage Grotesque",sans-serif;color:#fff}.sd-pot .w b{color:#FFC93C}
+.sd-pot span{font-size:.72rem;color:#CDBEE8}.sd-pot>i{font-style:normal;font-size:1.4rem;color:#FFC93C}
+.sd-fair{font-size:.82rem;color:#CDBEE8;margin:0 0 12px;line-height:1.4}.sd-fair b{color:#fff}
+.sd-r{position:relative}
+.sd-n{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px}
+.sd-v{font-style:normal;font-weight:600;font-size:.7rem;color:#A796C6}
+.sd-wn{font-style:normal;font-weight:800;font-size:.72rem;color:#2A1600;background:#FFC93C;padding:1px 7px;border-radius:999px}
+.sd-pl{position:absolute;left:-6px;top:-6px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#120A22;box-shadow:0 0 0 2px #4A2C7A;font-size:.72rem;font-weight:800}
+.sd-r.win .sd-pl{background:#FFC93C;color:#2A1600;box-shadow:none}
+#sdRes .kg-win,#sdRes .kg-lose{text-align:left}
+.sd-r>img{grid-column:1;grid-row:1/3}.sd-r .sd-n{grid-column:2;grid-row:1}.sd-r .sd-b{grid-column:2;grid-row:2;margin-top:6px}.sd-r .sd-p{grid-column:3;grid-row:1/3}
+.sd-r.me .sd-b i{background:linear-gradient(90deg,#FF3FA4,#FF7CC4)}.sd-r.win .sd-b i{background:linear-gradient(90deg,#FFC93C,#FF9F1C)}
+.sd-me{display:flex;gap:10px;align-items:center;text-align:left;padding:8px;border-radius:14px;background:#2A1747;margin-bottom:12px;box-shadow:inset 0 0 0 1.5px #FF3FA4}
+.sd-me img{width:52px;height:52px;border-radius:10px;object-fit:cover}.sd-me b{display:block}.sd-me small{color:#CDBEE8;font-size:.78rem}
+.sd-steps{text-align:left;margin:0 0 14px;padding-left:20px;display:grid;gap:6px;font-size:.86rem;color:#CDBEE8}.sd-steps b{color:#fff}
+.sd-status{display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0 12px;font-size:.95rem}
+.sd-status .dot{width:10px;height:10px;border-radius:50%;background:#FF9F1C;animation:prPulse 1.2s infinite}
+.sd-seats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.sd-seat{display:grid;gap:4px;justify-items:center;min-width:0}
+.sd-seat img,.sd-seat i{width:100%;aspect-ratio:1;border-radius:12px;object-fit:cover;box-shadow:0 0 0 2px #4A2C7A;animation:sdIn .4s ease}
+.sd-seat.me img{box-shadow:0 0 0 2px #FF3FA4}
+.sd-seat.wait i{display:block;background:repeating-linear-gradient(135deg,#1A0F2E 0 6px,#22143A 6px 12px);box-shadow:0 0 0 2px #3A2760;animation:none}
+.sd-seat span{font-size:.62rem;font-weight:800;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#CDBEE8}
+.sd-seat.wait span{color:#6E5C8E}
+@keyframes sdIn{from{transform:scale(.6);opacity:0}}
+.sd-vbar{height:12px;border-radius:999px;background:#2A1747;overflow:hidden}.sd-vbar i{display:block;height:100%;background:linear-gradient(90deg,#FF3FA4,#FF9F1C);transition:width 1s linear}
+.sd-vt{font-weight:800;font-size:.85rem;color:#CDBEE8;margin:6px 0 10px}
+.sd-note{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:200;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:16px;border:0;text-align:left;color:#fff;font:inherit;background:linear-gradient(120deg,#3A2508,#2A1747);box-shadow:0 0 0 2px #FFC93C,0 14px 30px -10px rgba(0,0,0,.7);transform:translateY(-140%);transition:transform .35s cubic-bezier(.3,1.3,.5,1);cursor:pointer}
+.sd-note.on{transform:none}.sd-note .sd-ni{font-size:1.5rem}.sd-note>span:nth-child(2){flex:1;display:grid}.sd-note small{color:#E6DDF5;font-size:.8rem}
+.sd-note em{font-style:normal;font-weight:800;padding:5px 12px;border-radius:999px;background:#FFC93C;color:#2A1600}
+.tk-next{display:grid;justify-items:center;margin:4px auto 12px;padding:12px 18px;border-radius:18px;background:#2A1747;box-shadow:inset 0 0 0 1.5px #4A2C7A;max-width:300px}
+.tk-next small{font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#CDBEE8}
+.tk-next b{font:800 2.4rem/1.1 "Bricolage Grotesque",sans-serif;color:#fff;font-variant-numeric:tabular-nums}.tk-next span{font-size:.8rem;color:#CDBEE8}
+.tk-lv{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;margin:0 0 12px}
+.tk-lv>div{display:grid;justify-items:center;gap:3px;padding:6px 2px;border-radius:10px;background:#1E1236}
+.tk-lv i{font-style:normal;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:800;background:#33204F;color:#A796C6}
+.tk-lv b{font-size:.58rem;line-height:1.1;color:#A796C6;text-align:center}.tk-lv small{font-size:.6rem;font-weight:800;color:#FFC93C}
+.tk-lv .ok i{background:#2EE59D;color:#0B2A1C}.tk-lv .ok b{color:#E6DDF5}
+.tk-lv .now{background:#2A1747;box-shadow:inset 0 0 0 2px #FF3FA4}.tk-lv .now i{background:#FF3FA4;color:#fff}.tk-lv .now b{color:#fff}
+.tk-lv .x i{background:#5A1730;color:#FF8FA3}.tk-lv>div:last-child{background:radial-gradient(circle at 50% 0,#5A3A08,#1E1236 75%)}.tk-lv .win{box-shadow:inset 0 0 0 2px #FFC93C}
+.tk-pz{font-size:.85rem;color:#CDBEE8;margin:0 0 12px}.tk-pz b{color:#FFC93C}
+.tk-msg{margin-top:10px;text-align:left}
+.tk-tier{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+.tk-tier button{display:grid;gap:2px;padding:10px 6px;border-radius:14px;border:0;font:inherit;color:#CDBEE8;background:#2A1747;box-shadow:inset 0 0 0 1.5px #4A2C7A;cursor:pointer}
+.tk-tier button b{font:800 1.4rem/1 "Bricolage Grotesque",sans-serif;color:#fff}.tk-tier button small{font-size:.72rem}
+.tk-tier button[aria-pressed=true]{background:radial-gradient(circle at 50% 0,#7A5212,#2A1747 80%);box-shadow:inset 0 0 0 2px #FFC93C}.tk-tier button[aria-pressed=true] b{color:#FFC93C}
+.tk-row{display:grid;grid-template-columns:auto 1fr;gap:8px;margin:0 0 12px}
+.tk-row .tk-next{margin:0;max-width:none;padding:10px 12px}.tk-row .tk-next b{font-size:1.9rem}
+.tk-gtd{display:grid;justify-items:center;align-content:center;gap:1px;padding:10px;border-radius:18px;background:radial-gradient(circle at 50% 0,#7A5212,#2A1747 80%);box-shadow:inset 0 0 0 2px #FFC93C,0 10px 26px -12px rgba(255,201,60,.8)}
+.tk-gtd small{font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#FFE7A8}
+.tk-gtd>b{font:800 1.9rem/1.05 "Bricolage Grotesque",sans-serif;color:#FFC93C;font-variant-numeric:tabular-nums}
+.tk-gtd>span:last-child{font-size:.7rem;color:#E6DDF5}.tk-gtd>span:last-child b{color:#fff}
+.tk-badge{font-size:.66rem;font-weight:800;padding:2px 8px;border-radius:999px;background:#2EE59D;color:#0B2A1C;margin-bottom:3px}
+.tk-g{font-style:normal;font-size:.68rem;font-weight:800;color:#2EE59D}
+.tk-lock{font-size:.82rem;color:#CDBEE8;margin:-6px 0 10px}.tk-lock b{color:#FFC93C}
+.tk-left{margin-left:6px;font-size:.8rem;font-weight:800;color:#FFC93C}
+.tk-ph{margin:16px 0 8px;font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#CDBEE8;text-align:left}
+.tk-path{display:grid;gap:6px;text-align:left}
+.tp-row{display:grid;grid-template-columns:78px 1fr 54px;align-items:center;gap:8px;padding:8px;border-radius:12px;background:#1E1236;box-shadow:inset 0 0 0 1.5px #2A1C42}
+.tp-l b{display:block;font-size:.78rem}.tp-l small{font-size:.66rem;color:#A796C6}
+.tp-m{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;min-width:0}
+.tp-p{display:flex;align-items:center;gap:5px;min-width:0}.tp-p.r{justify-content:flex-end}
+.tp-p img{width:26px;height:26px;border-radius:7px;object-fit:cover;flex:none}
+.tp-p em{font-style:normal;font-size:.7rem;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tp-s{font-weight:800;font-size:.8rem;color:#E6DDF5}.tp-live{font-style:normal;font-size:.62rem;padding:2px 6px;border-radius:6px;background:#FF2D55;color:#fff}
+.tp-q{grid-column:1/-1;text-align:center;color:#6E5C8E;font-weight:800}
+.tp-z{display:grid;justify-items:end;font-weight:800}.tp-z small{font-size:.66rem;color:#FFC93C;font-weight:800}
+.tp-row.won{box-shadow:inset 0 0 0 1.5px #16B571;background:#12261F}.tp-row.won .tp-z{color:#2EE59D}
+.tp-row.lost{box-shadow:inset 0 0 0 1.5px #8A2440;background:#2A1020}.tp-row.lost .tp-z{color:#FF8FA3}
+.tp-row.now{box-shadow:inset 0 0 0 2px #FF3FA4,0 0 18px -6px rgba(255,63,164,.9);background:#2A1747}
+.tp-row.spec{opacity:.75}.tp-row.spec.now{opacity:1;box-shadow:inset 0 0 0 2px #FFC93C}
+.tp-row.next{opacity:.6}
+.tp-row.champ{background:radial-gradient(circle at 30% 0,#5A3A08,#1E1236 70%);box-shadow:inset 0 0 0 1.5px #E9B23C}
+.tk-champ{font-size:.9rem;color:#E6DDF5;margin:0 0 10px}.tk-champ b{color:#FFC93C}
+.tk-up{animation:cpop .5s cubic-bezier(.3,1.4,.5,1)}
+/* simple level track */
+.tt{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;margin:6px 0 14px;padding-top:2px}
+.tt-line{position:absolute;left:8%;right:8%;top:24px;height:6px;border-radius:3px;background:#33204F}
+.tt-line i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#2EE59D,#FF3FA4);transition:width .6s}
+.tt-n{position:relative;display:grid;justify-items:center;gap:3px}
+.tt-c{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;overflow:hidden;font-weight:800;font-size:.95rem;background:#2A1747;color:#8C7BAA;box-shadow:0 0 0 3px #120A22,inset 0 0 0 2px #4A2C7A}
+.tt-c img{width:100%;height:100%;object-fit:cover}
+.tt-n small{white-space:nowrap}.tt-n b{font-size:.72rem;font-weight:800;color:#A796C6;white-space:nowrap}.tt-n small{font-size:.62rem;font-weight:800;color:#FFC93C}
+.tt-n.ok .tt-c{background:#2EE59D;color:#0B2A1C;box-shadow:0 0 0 3px #120A22}.tt-n.ok b{color:#E6DDF5}
+.tt-n.me .tt-c{box-shadow:0 0 0 3px #FF3FA4,0 0 18px rgba(255,63,164,.8);transform:scale(1.12)}.tt-n.me b{color:#fff}
+.tt-n.x .tt-c{background:#5A1730;color:#FF8FA3;box-shadow:0 0 0 3px #120A22}
+.tt-n.win .tt-c{background:radial-gradient(circle at 40% 30%,#FFE27A,#E9A514);color:#2A1600;font-size:1.3rem}
+.tt-n.win.me .tt-c{box-shadow:0 0 0 3px #FFC93C,0 0 22px rgba(255,201,60,.9)}
+.tk-rd{margin:0 0 10px;font-size:.95rem;color:#CDBEE8}.tk-rd b{color:#fff}
+/* persistent tournament widget */
+.tk-w{position:fixed;left:12px;right:12px;bottom:calc(var(--navh, 76px) + env(safe-area-inset-bottom,0px) + 10px);z-index:60;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;border:0;font:inherit;color:#fff;text-align:left;background:linear-gradient(120deg,#3A2508,#2A1747);box-shadow:0 0 0 2px #FFC93C,0 12px 26px -8px rgba(0,0,0,.7);transform:translateY(140%);opacity:0;transition:transform .35s cubic-bezier(.3,1.3,.5,1),opacity .2s;cursor:pointer}
+.tk-w.on{transform:none;opacity:1}
+.tk-w .i{font-size:1.4rem}.tk-w .i.live{font-size:.66rem;font-weight:800;padding:3px 7px;border-radius:6px;background:#FF2D55}
+.tk-w .t{flex:1;display:grid;min-width:0}.tk-w .t b{font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}.tk-w .t small{font-size:.74rem;color:#E6DDF5}
+.tk-w em{font-style:normal;font-weight:800;font-size:.82rem;padding:6px 12px;border-radius:999px;background:#FFC93C;color:#2A1600}
+/* tournament pop-up + quick chip */
+.tp .tp-ic{font-size:3rem;line-height:1;filter:drop-shadow(0 6px 14px rgba(255,201,60,.7))}
+.tp h2{margin:6px 0 6px}.tp p b{color:#FFC93C;font-variant-numeric:tabular-nums}
+.tp-lv{display:flex;align-items:center;justify-content:center;gap:4px;margin:4px 0 14px;flex-wrap:wrap}
+.tp-lv span{display:grid;justify-items:center;padding:6px 8px;border-radius:10px;background:#2A1747;font-size:.72rem;font-weight:800}
+.tp-lv span small{font-size:.62rem;color:#FFC93C}.tp-lv span:last-child{background:#5A3A08;box-shadow:inset 0 0 0 1.5px #FFC93C}.tp-lv i{font-style:normal;color:#6E5C8E}
+.tp-two{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-bottom:6px}
+.tpo{display:grid;justify-items:center;gap:2px;padding:12px 8px;border-radius:16px;border:0;font:inherit;color:#fff;background:#2A1747;box-shadow:inset 0 0 0 2px #FF3FA4;cursor:pointer}
+.tpo b{font:800 1.6rem/1 "Bricolage Grotesque",sans-serif}.tpo span{font-size:.72rem;font-weight:800;color:#2EE59D}
+.tpo em{font-style:normal;margin-top:6px;padding:6px 16px;border-radius:999px;background:#FF3FA4;font-weight:800}
+.tpo.big{background:radial-gradient(circle at 50% 0,#7A5212,#2A1747 80%);box-shadow:inset 0 0 0 2px #FFC93C}.tpo.big b{color:#FFC93C}.tpo.big em{background:#FFC93C;color:#2A1600}
+.tk-chip{position:fixed;right:12px;bottom:calc(var(--navh, 76px) + env(safe-area-inset-bottom,0px) + 12px);z-index:59;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:0;font:inherit;font-weight:800;color:#2A1600;background:linear-gradient(135deg,#FFE27A,#FFB21C);box-shadow:0 8px 20px -6px rgba(255,178,28,.8),0 0 0 2px #120A22;transform:scale(0);transition:transform .3s cubic-bezier(.3,1.4,.5,1);cursor:pointer}
+.tk-chip.on{transform:none}.tk-chip b{font-variant-numeric:tabular-nums}
+/* tournament v5 (from Larry's designs) */
+.tk{text-align:center}
+.tk-h{margin:0 0 4px!important;font:800 1.65rem/1.15 "Bricolage Grotesque",sans-serif!important}
+.tk-sub{margin:0 0 12px;color:#D9C8FF;font-size:.95rem}
+.tk-tier2{display:inline-flex;gap:4px;padding:4px;border-radius:999px;background:#1E1236;margin-bottom:12px}
+.tk-tier2 button{border:0;font:inherit;font-weight:800;font-size:.85rem;padding:6px 14px;border-radius:999px;background:none;color:#A796C6;cursor:pointer}
+.tk-tier2 button[aria-pressed=true]{background:#FFC93C;color:#2A1600}
+.tk-pc{position:relative;padding:22px 18px 10px;margin:14px 0 12px;border-radius:22px;background:radial-gradient(circle at 50% 0,#5A3A12,#2A1747 65%);box-shadow:inset 0 0 0 2.5px #FFC93C,0 0 26px -6px rgba(255,201,60,.55)}
+.tk-gb{position:absolute;left:50%;top:-14px;transform:translateX(-50%);white-space:nowrap;padding:6px 18px;border-radius:999px;background:#2EE59D;color:#0B2A1C;font-weight:800;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase}
+.tk-pr{display:flex;align-items:center;gap:12px;padding:8px 0}
+.tk-pr+.tk-pr{border-top:1.5px solid rgba(255,201,60,.6)}
+.tk-md{width:34px;height:40px;flex:none}
+.tk-pr b{flex:1;text-align:left;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#FFE7A8;font-size:.95rem}
+.tk-pr em{font-style:normal;font:800 2.2rem/1 "Bricolage Grotesque",sans-serif;color:#FFC93C}
+.tk-pr.f em{font-size:1.7rem;color:#FFE08A}
+.tk-pc p{margin:6px 0 0;font-size:.82rem;color:#E6DDF5}
+.tk-st{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tk-st>div{display:grid;gap:2px;padding:10px;border-radius:16px;background:#2A1747;box-shadow:inset 0 0 0 1.5px #4A2C7A}
+.tk-st small{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#D9C8FF}
+.tk-st b{font:800 2rem/1.1 "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums}
+.tk-pj{margin:10px 0 6px;color:#E6DDF5}
+.tk-how{margin:0 0 12px;color:#D9C8FF;font-size:.92rem}
+.tk-me{text-align:left;box-shadow:inset 0 0 0 2px #FF3FA4!important;padding:10px!important}.tk-me img{width:64px!important;height:64px!important}
+.tk-join{font-size:1.15rem!important;min-height:58px}
+.tk-top{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;text-align:left;padding:10px 16px;margin:8px 0 12px;border-radius:18px;background:#2A1747;box-shadow:inset 0 0 0 1.5px #4A2C7A}
+.tk-top>div:first-child{padding-right:14px;border-right:1.5px solid #4A2C7A}
+.tk-top small{display:block;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#C9A8FF}
+.tk-top>div:first-child b{font:800 2.3rem/1 "Bricolage Grotesque",sans-serif;color:#FF4FB0;font-variant-numeric:tabular-nums}
+.tk-top p{margin:2px 0 0;font-size:.92rem;display:flex;justify-content:space-between;gap:8px}.tk-top p b{color:#FFC93C}
+.tk-pill{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:6px 16px;border-radius:999px;background:#2A1747;box-shadow:inset 0 0 0 1.5px #6B4BA0;font-weight:800;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase}
+.tk-vs{margin-bottom:10px}
+.tk-cnt span{font-size:1.4rem}
+.tk-won,.tk-lost,.tk-res{display:grid;gap:2px;margin:12px 0;padding:12px;border-radius:18px;animation:cpop .5s cubic-bezier(.3,1.4,.5,1)}
+.tk-won,.tk-res.w{background:linear-gradient(120deg,#0E7A4E,#16B571);box-shadow:inset 0 0 0 1.5px #5FF0B5}
+.tk-won b{font:800 1.9rem/1.1 "Bricolage Grotesque",sans-serif}
+.tk-lost,.tk-res.l{background:#2A1747;box-shadow:inset 0 0 0 1.5px #8A2440}
+.tk-lost b,.tk-res b{font-size:1.25rem;font-weight:800}.tk-won span,.tk-lost span,.tk-res span{font-size:.9rem;color:#E6FFF3}
+.tk-pyr{display:grid;justify-items:center;gap:4px;margin:12px 0 4px;padding:12px 8px 14px;border-radius:18px;background:#1A0F2E;box-shadow:inset 0 0 0 1.5px #33204F}
+.tk-pyr h3{margin:0 0 6px;font-size:.8rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#C9A8FF}
+.py{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:4px 10px;clip-path:polygon(6% 0,94% 0,100% 100%,0 100%);background:#4A2C7A;color:#E6DDF5;font-weight:800;font-size:.9rem;letter-spacing:.06em;text-transform:uppercase}
+.py.top{clip-path:polygon(22% 0,78% 0,100% 100%,0 100%);background:linear-gradient(180deg,#FFD24A,#E9A514);color:#2A1600;min-height:48px;font-size:.78rem;line-height:1.1}
+.py.ok{background:linear-gradient(180deg,#1BC77E,#0E8A55);color:#fff}
+.py.here{background:linear-gradient(180deg,#FF4FB0,#C2186E);color:#fff;min-height:52px}
+.py.x{background:#5A1730;color:#FFB4C4}
+.py span{display:grid;justify-items:center}.py small{font-size:.62rem;padding:1px 8px;border-radius:999px;background:rgba(255,255,255,.85);color:#C2186E;letter-spacing:.04em}
+.py img{width:34px;height:34px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #fff}
+.py-k{font-style:normal;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#0E8A55;font-size:.8rem}
+.py.x .py-k{color:#8A2440}
+.tk-auto{margin:8px 0 10px;color:#D9C8FF;font-size:.9rem}
+/* pyramid v2 + result countdown */
+.pyw{display:grid;gap:4px;width:100%}
+.py{width:100%!important;min-height:46px!important;clip-path:none;padding:0 22%!important}
+.py.here{min-height:46px!important}
+.py.top{font-size:.8rem}
+.py img{width:30px!important;height:30px!important}
+.py-t{font-style:normal;font-size:1.1rem}
+.py small{margin-top:1px}
+.tk-rin{display:grid;justify-items:center;margin:2px 0 8px;padding:8px;border-radius:16px;background:#2A1747;box-shadow:inset 0 0 0 1.5px #FF3FA4}
+.tk-rin span{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#FFB4D8}
+.tk-rin b{font:800 2.2rem/1 "Bricolage Grotesque",sans-serif;color:#FF4FB0;font-variant-numeric:tabular-nums}
+.tk-rin small{font-size:.85rem;font-weight:700;color:#E6DDF5}
+.tk-rin.hot{animation:prPulse .6s infinite;box-shadow:inset 0 0 0 2px #FFC93C}.tk-rin.hot b{color:#FFC93C}
+.tk-rc{margin:0 0 12px;padding:10px 12px;border-radius:18px;background:#1E1236;box-shadow:inset 0 0 0 1.5px #4A2C7A}
+.tk-rc small{display:block;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#C9A8FF;margin-bottom:6px}
+.tk-rc>div{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+.tk-rc span{display:grid;justify-items:center;gap:3px;min-width:0}.tk-rc span img{width:62px;height:62px;border-radius:12px;object-fit:cover;box-shadow:0 0 0 2px #4A2C7A}.tk-rc span.me img{box-shadow:0 0 0 2px #FF3FA4}
+.tk-rc span b{font-size:.78rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tk-rc em{font-style:normal;font:800 1.8rem/1 "Bricolage Grotesque",sans-serif}.tk-rc em i{font-style:normal;color:#6E5C8E;margin:0 4px}
+.tk-rc p{margin:6px 0 0;font-size:.85rem;color:#E6DDF5}
+.tk-dots{display:flex;gap:3px;margin-top:8px;font-style:normal}
+.tk-dots u{width:10px;height:10px;border-radius:50%;background:#3A2760;text-decoration:none;transition:background .2s,transform .2s}
+.tk-dots u.m{background:#FF4FB0;transform:scale(1.15)}.tk-dots u.o{background:#FFC93C;transform:scale(1.15)}
+.tk-rin b{font-size:2.6rem!important}
+.tk-cnt #kgV{display:none}
+.pyw{gap:0!important;background:none}
+.py{box-shadow:inset 0 -2px 0 rgba(255,255,255,.18)}
+.py:not(.ok):not(.here):not(.x):not(.top){background:linear-gradient(180deg,#7A55C2,#5E3DA3)!important;color:#fff}
+.py.x{background:linear-gradient(180deg,#FF5A7A,#D92D50)!important;color:#fff!important}
+.py.x .py-k{color:#D92D50!important}
+.tk-top2{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:8px 0 12px;padding:10px 14px;border-radius:16px;background:#2A1747;box-shadow:inset 0 0 0 1.5px #4A2C7A}
+.tk-top2 span{font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#C9A8FF;width:100%}
+.tk-top2 p{margin:0;font-size:.95rem}.tk-top2 b{color:#FFC93C;font-size:1.1rem}
+.tk-ko{background:linear-gradient(120deg,#B3203F,#E2405E)!important;box-shadow:inset 0 0 0 1.5px #FF9AAE!important}
+.tk-ko span{color:#FFE4EA!important}
+#coach.on{z-index:210}
+.tk-res small,.tk-won small{display:block;margin-top:6px;font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.85)}
+.tk-wn{display:flex!important;justify-content:center;gap:16px;margin-top:4px}
+.tk-wn i{display:inline-flex;align-items:center;gap:6px;font-style:normal;font:800 2rem/1 "Bricolage Grotesque",sans-serif;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.25)}
+.tk-wn i svg{width:30px;height:30px;flex:none}
+.tk-wn i.c{color:#FFF3A8}
+.tk-won .tk-wn i{font-size:1.6rem}.tk-won .tk-wn i svg{width:24px;height:24px}
+.tk-res .tk-wn i{font-size:2.2rem}.tk-res .tk-wn i svg{width:32px;height:32px}
+.crs-sm{font-style:normal;font-size:.62em;white-space:nowrap;letter-spacing:-.02em}
+.tk-run{display:grid;gap:2px;margin:12px 0;padding:12px;border-radius:18px;background:radial-gradient(circle at 50% 0,#6B3FB0,#2A1747 80%);box-shadow:inset 0 0 0 2px #FFC93C,0 0 22px -8px rgba(255,201,60,.6);animation:cpop .5s cubic-bezier(.3,1.4,.5,1)}
+.tk-run b{font-size:1.25rem;font-weight:800}.tk-run span{font-size:.9rem;color:#E6DDF5}
+.tk-run small{display:block;margin-top:6px;font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#FFE7A8}
+.tk-run .tk-wn i{font-size:2.2rem;color:#fff}.tk-run .tk-wn i svg{width:32px;height:32px}
+.tk-run.sm{box-shadow:inset 0 0 0 1.5px #6B4BA0;background:#2A1747}.tk-run.sm b{font-size:1.1rem}
+.tk-spec .kg-ph{box-shadow:0 0 0 3px #6B4BA0}
 </style>
 </head>
 <body>
@@ -3146,7 +3469,7 @@ body.tabsliding #shell{overflow:hidden}
       <button id="segCompete" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg><span>Compete</span></button>
       <div class="segpair"><button id="segStudio" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L15 9"/><path d="M15 9l2-2"/><path d="M18 2l.8 2.2L21 5l-2.2.8L18 8l-.8-2.2L15 5l2.2-.8zM9 3l.5 1.5L11 5l-1.5.5L9 7l-.5-1.5L7 5l1.5-.5z"/></svg><span>Enhance</span></button>
       <span class="segsw" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg></span><button id="segJudge" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg><span>Judge</span></button></div>
-      <button id="segGallery" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg><span>Gallery</span></button>
+      <button id="segGallery" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg><span>Hall of Fame</span></button>
     </nav>
 
     <div class="flow" id="flow" role="dialog" aria-modal="true" aria-label="Photo scoring">
@@ -3944,7 +4267,7 @@ $('#file').addEventListener('change', async e => {
   const s = capUpload(Engine.score(Engine.analyze(id)));
   await sleep(2000); clearInterval(iv);
   const p = { id: uid(), src, orig: src, s, start: s.total, enh: 0, q: s.total >= CFG.QUALIFY, at: Date.now() };
-  S.photos.unshift(p); S.cur = p.id;
+  S.photos.unshift(p); S.cur = p.id; WALL = false;
   const first = !S.onboarded && S.photos.length === 1;
   const upToday = S.upDay === todayKey(), win = first ? CFG.FIRST_WIN : upToday ? 0 : CFG.NEW_PHOTO;
   S.upDay = todayKey(); S.gems += win; save();
@@ -4931,7 +5254,7 @@ $('#shell .top .wm').style.cursor = 'pointer'; $('#shell .top .wm').onclick = ()
 const setHH = () => { const g = $('#shell > .seg'); if (g && g.offsetHeight) $('#shell').style.setProperty('--hh', (g.offsetTop + g.offsetHeight + 8) + 'px'); };
 window.addEventListener('resize', setHH); new MutationObserver(setHH).observe($('#app'), { attributes: true, attributeFilter: ['class'] }); setTimeout(setHH, 0);
 (() => {
-  const T = { segCompete: 'Competitions', segStudio: 'Enhance photo', segJudge: 'Judge photos', segGallery: 'Gallery' };
+  const T = { segCompete: 'Competitions', segStudio: 'Enhance photo', segJudge: 'Judge photos', segGallery: 'Hall of Fame' };
   const upd = () => { const b = document.querySelector('.seg button[aria-pressed="true"]'); if (document.querySelector('#lv.on .rs2')) { $('#ptitle').textContent = 'Results'; return; } $('#ptitle').textContent = b ? T[b.id] : ($('#flow').classList.contains('homemode') ? 'Home' : ''); };
   new MutationObserver(upd).observe(document.querySelector('.seg'), { attributes: true, subtree: true, attributeFilter: ['aria-pressed'] });
   upd();
@@ -5462,7 +5785,8 @@ function go(where) {
   if (where === 'gallery') { renderGallery(); $('#gallery').scrollTop = 0; }
 }
 document.querySelectorAll('#shell > .seg button').forEach(b => b.addEventListener('click', () => { if ($('#sheet').classList.contains('on') && !$('#sheet').classList.contains('cover')) closeSheet(); if ($('#ceg').classList.contains('on')) { $('#ceg').classList.remove('on', 'under'); $('#ceg').style.top = ''; } }, true));
-$('#segJudge').onclick = () => go('judge'); $('#segStudio').onclick = () => go('studio'); $('#segGallery').onclick = () => openGallery();
+$('#segJudge').onclick = () => go('judge'); $('#segStudio').onclick = () => { WALL = true; go('studio'); renderStudio(); };
+$('#studio').addEventListener('click', e => { if (e.target.closest('#toWall')) { WALL = true; renderStudio(); $('#studio').scrollTop = 0; } }); $('#segGallery').onclick = () => openGallery();
 $('#segCompete').onclick = () => { CX_WB = false; if (!S.user) { openSignup(() => openComps(null)); return; } if (CX.some(c => canEnter(c))) goEligible(); else openComps(null); };
 (() => {
   const panes = $('#panes'); let x0 = null, y0 = null, t0 = 0;
@@ -5678,7 +6002,468 @@ function openCashBattle(stake) {
   paint(); bt.scrollTop = 0; bt.classList.add('on');
 }
 window.__cashBattle = openCashBattle;
+
+/* ---------- New battles: chooser, Showdown, Challenge the King ---------- */
+const judgeRate = p => { if (p.jr != null) return p.jr; let h = 0; for (const ch of String(p.id)) h = (h * 31 + ch.charCodeAt(0)) % 997; return Math.max(20, Math.min(85, Math.round(50 + (p.s.total - 75) * 1.1 + (h % 7) - 3))); };
+const KING_FEE = 0.15, KING_SEED = 5;
+const fighters = () => wallFrames().filter(f => f.p && f.p.s.total >= CFG.QUALIFY && !photoLock(f.p)).map(f => f.p);
+function kingOf(cat) {
+  S.kings = S.kings || {};
+  if (!S.kings[cat]) { let h = 0; for (const ch of cat) h = (h * 31 + ch.charCodeAt(0)) % 997;
+    const r = battleRival(cat), o = OPP[h % OPP.length], def = 18 + h % 40;
+    S.kings[cat] = { h: o.h, src: r.src, rate: 70 + h % 9, def, bounty: +(KING_SEED + def * (1 - KING_FEE)).toFixed(2) }; save(); }
+  return S.kings[cat];
+}
+const money = n => '$' + (+n).toFixed(2);
+const catLabel = k => k === 'any' ? 'Anything' : (typeof wallName === 'function' ? wallName(k) : pcatName(k));
+function openBattleChooser() {
+  const F = fighters(), top = F.slice().sort((a, b) => judgeRate(b) - judgeRate(a))[0];
+  const kc = top ? (top.cat || 'any') : 'pets', K = kingOf(kc), off = !top;
+  const c = $('#coach');
+  c.innerHTML = `<div class="crbox bch" role="dialog" aria-modal="true" aria-labelledby="crT">
+    <h2 id="crT">⚔️ Battle time!</h2><p>Pick your battle. Winners are decided by real judge votes.</p>
+    <div class="bch-l">
+      <button class="bch-o raid" data-b="raid"><span class="bi">💎</span><span class="bt"><b>Gem raid</b><small>Free · steal gems from a rival's vault</small></span><em>Free</em></button>
+      <button class="bch-o duel" data-b="duel" ${off ? 'disabled' : ''}><span class="bi">💵</span><span class="bt"><b>Cash duel</b><small>1 v 1 · win ${money(2 * (1 - KING_FEE))}</small></span><em>$1</em></button>
+      <button class="bch-o show" data-b="tour" ${off ? 'disabled' : ''}><span class="bi">🏆</span><span class="bt"><b>Knockout Tournament</b><small>${S.tour && !S.tour.seen ? (() => { const ph = tPhase(S.tour); return ph.st === 'lobby' ? 'You\'re in · starting soon' : ph.st === 'live' ? `You're in the ${T_NAMES[ph.r]}` : 'Your result is in!'; })() : `$1 every 15 min · $5 every 30 min`}</small></span><em>${S.tour && !S.tour.seen ? 'View' : '$1+'}</em></button>
+      <button class="bch-o king" data-b="king" ${off ? 'disabled' : ''}><span class="bi">👑</span><span class="bt"><b>Challenge the King</b><small>${esc(catLabel(kc))} bounty <b class="kb">${money(K.bounty)}</b></small></span><em>$1</em></button>
+    </div>
+    ${off ? `<p class="bch-n">Get a photo to ${CFG.QUALIFY}+ to unlock cash battles.</p>` : ''}
+    <button class="bt-no" id="crLater">Not now</button></div>`;
+  c.classList.add('on', 'cr');
+  const close = () => c.classList.remove('on', 'cr');
+  $('#crLater').onclick = close; c.onclick = e => { if (e.target === c) close(); };
+  c.querySelectorAll('[data-b]').forEach(b => b.onclick = () => { close(); const k = b.dataset.b;
+    if (k === 'raid') { openBattle.direct = true; openBattle.skipCash = true; openBattle(); openBattle.direct = false; openBattle.skipCash = false; }
+    else if (k === 'duel') openCashBattle(1);
+    else if (k === 'show') openShowdown();
+    else if (k === 'tour') openTourney();
+    else openKing(kc); });
+}
+function payCash(amt, what, then) {
+  if ((S.cash || 0) < amt) { openStore(`${what} costs ${money(amt)} cash.`, () => (S.cash || 0) >= amt && then()); return false; }
+  S.cash = +((S.cash || 0) - amt).toFixed(2); save(); paintWallet(); then(); return true;
+}
+function openKing(cat) {
+  const F = fighters(); if (!F.length) { toast(`Get a photo to ${CFG.QUALIFY}+ to challenge a King.`); return; }
+  const cats = [...new Set(F.map(x => x.cat || 'any'))]; if (!cats.includes(cat)) cat = cats[0];
+  const mine = F.filter(x => (x.cat || 'any') === cat).sort((a, b) => b.s.total - a.s.total)[0], K = kingOf(cat), my = judgeRate(mine);
+  openSheet(`<div class="kg">
+    <div class="kg-cats">${cats.map(k => `<button data-kc="${k}" aria-pressed="${k === cat}">${esc(catLabel(k))}</button>`).join('')}</div>
+    <div class="kg-crown">👑</div><h2>${esc(catLabel(cat))} King</h2>
+    <div class="kg-bounty"><small>Bounty</small><b>${money(K.bounty)}</b><span>${K.def} challengers defeated</span></div>
+    <div class="kg-vs">
+      <div class="kg-ph king"><img src="${K.src}" alt="The King's photo"><span class="kg-tag">👑 @${esc(K.h)}</span></div>
+      <b class="kg-x">VS</b>
+      <div class="kg-ph me"><img src="${mine.src}" alt="Your photo"><span class="kg-tag">You · ${mine.s.total}</span></div>
+    </div>
+    <p class="kg-how">Both photos go head-to-head in front of real judges. Win the votes and you take the whole bounty and the crown. Lose and your entry grows the bounty.</p>
+    <button class="btn block kg-go" id="kgGo">Challenge for $1 · win ${money(K.bounty)}</button>
+    <div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
+  document.querySelectorAll('#sheetBody [data-kc]').forEach(b => b.onclick = () => openKing(b.dataset.kc));
+  $('#kgGo').onclick = () => payCash(1, 'A King challenge', () => kingLive(cat, mine));
+}
+function kingLive(cat, mine) {
+  const K = kingOf(cat), my = judgeRate(mine), pot = K.bounty;
+  K.bounty = +(K.bounty + (1 - KING_FEE)).toFixed(2); save();
+  const pWin = Math.max(.08, Math.min(.6, .3 + (my - K.rate) / 40)), win = Math.random() < pWin, N = 50;
+  const myVotes = win ? 26 + Math.floor(Math.random() * 5) : 18 + Math.floor(Math.random() * 7);
+  openSheet(`<div class="kg live">
+    <span class="lv-live">LIVE</span><h2>Your challenge is live</h2><p class="kg-how">Real judges are voting on your photo against the ${esc(catLabel(cat))} King.</p>
+    <div class="kg-vs sm">
+      <div class="kg-ph king"><img src="${K.src}" alt=""><span class="kg-tag">👑 @${esc(K.h)}</span></div>
+      <b class="kg-x">VS</b>
+      <div class="kg-ph me"><img src="${mine.src}" alt=""><span class="kg-tag">You</span></div>
+    </div>
+    <div class="kg-bar"><i id="kgK" style="width:50%"></i><i id="kgM" style="width:50%"></i></div>
+    <div class="kg-cnt"><span id="kgKn">0</span><b id="kgV">0 of ${N} votes</b><span id="kgMn">0</span></div>
+    <p class="kg-pot">Bounty at stake <b>${money(pot)}</b></p>
+    <div id="kgRes"></div></div>`, { full: true, cover: true, locked: true });
+  let v = 0, m = 0;
+  const seq = [...Array(N)].map((_, i) => i < myVotes); for (let i = N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [seq[i], seq[j]] = [seq[j], seq[i]]; }
+  const iv = setInterval(() => {
+    if (!$('#kgV')) { clearInterval(iv); return; }
+    if (seq[v]) m++; v++;
+    const share = m / v * 100;
+    $('#kgM').style.width = share + '%'; $('#kgK').style.width = (100 - share) + '%';
+    $('#kgMn').textContent = m; $('#kgKn').textContent = v - m; $('#kgV').textContent = `${v} of ${N} votes`;
+    if (v < N) return;
+    clearInterval(iv);
+    const pct = Math.round(m / N * 100);
+    if (win) {
+      S.cash = +((S.cash || 0) + pot).toFixed(2);
+      S.kings[cat] = { h: S.user ? S.user.h : 'you', src: mine.src, rate: Math.max(my, pct), def: 0, bounty: KING_SEED, mine: true }; save(); paintWallet();
+      setTimeout(() => cashExplosion(pot, { label: `${catLabel(cat)} bounty` }), 300);
+      $('#kgRes').innerHTML = `<div class="kg-win"><b>👑 You're the new ${esc(catLabel(cat))} King!</b><span>You won ${pct}% of the votes and took the ${money(pot)} bounty.</span></div><button class="btn block" data-shclose>Collect</button>`;
+    } else {
+      K.def++; save();
+      $('#kgRes').innerHTML = `<div class="kg-lose"><b>The King defends</b><span>You won ${pct}% of the votes. The bounty is now <b>${money(K.bounty)}</b>.</span></div><button class="btn block" id="kgAgain">Challenge again · $1</button><div style="text-align:center"><button class="link" data-shclose>Back to judging</button></div>`;
+      $('#kgAgain').onclick = () => payCash(1, 'A King challenge', () => kingLive(cat, mine));
+    }
+    document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
+  }, 240);
+}
+/* Showdown rooms: asynchronous, fill with real players, then judges vote */
+const SD_N = 5, SD_FEE = 1, SD_VOTE_MS = 20000, SD_JOIN_GAP = [6000, 9000, 7000, 11000];
+const sdPrize = () => +(SD_N * SD_FEE * (1 - KING_FEE)).toFixed(2);
+const sdRooms = () => (S.sdRooms = S.sdRooms || []);
+const sdActive = () => sdRooms().find(r => !r.seen);
+function sdState(r, now = Date.now()) {
+  const joined = r.seats.filter(x => x.at <= now).length;
+  if (joined < SD_N) return { st: 'filling', joined };
+  const full = Math.max(...r.seats.map(x => x.at));
+  if (now < full + SD_VOTE_MS) return { st: 'voting', joined, f: (now - full) / SD_VOTE_MS };
+  return { st: 'done', joined };
+}
+function sdNew() {
+  const F = fighters(), mine = F.slice().sort((a, b) => judgeRate(b) - judgeRate(a))[0], cat = mine.cat || 'any', now = Date.now();
+  const myR = Math.round((judgeRate(mine) + (mine.id.length % 10) / 10) * 10) / 10;
+  const hs = OPP.slice().sort(() => Math.random() - .5), used = new Set([mine.src]);
+  const pre = 1 + Math.floor(Math.random() * 3); // players already waiting in the room
+  let t = now;
+  const opp = [...Array(SD_N - 1)].map((_, i) => { let rv = battleRival(cat); for (let k = 0; k < 8 && used.has(rv.src); k++) rv = battleRival(cat); used.add(rv.src);
+    const at = i < pre ? now - (pre - i) * 60000 : (t += SD_JOIN_GAP[i]);
+    return { h: hs[i].h, src: rv.src, rate: Math.round((myR + rnd(-4, 4)) * 10) / 10, votes: 80 + Math.floor(Math.random() * 160), at }; });
+  const seats = [...opp.filter(x => x.at < now), { h: 'You', src: mine.src, rate: myR, votes: 60 + Math.floor(Math.random() * 120), me: true, at: now }, ...opp.filter(x => x.at >= now)];
+  seats.forEach((x, i) => { while (seats.some((y, k) => k !== i && y.rate === x.rate)) x.rate = Math.round((x.rate + .1) * 10) / 10; });
+  const r = { id: uid(), cat, pid: mine.id, seats, at: now, paid: false, seen: false };
+  sdRooms().push(r); save(); return r;
+}
+function sdFinish(r) {
+  if (r.paid) return; r.paid = true;
+  const order = r.seats.slice().sort((a, b) => b.rate - a.rate); r.place = order.findIndex(x => x.me) + 1; r.winner = order[0].h;
+  if (order[0].me) { S.cash = +((S.cash || 0) + sdPrize()).toFixed(2); paintWallet(); }
+  save();
+}
+function sdBanner(r, title, body) {
+  let b = $('#sdNote'); if (!b) { b = document.createElement('button'); b.id = 'sdNote'; b.className = 'sd-note'; document.body.appendChild(b); }
+  b.innerHTML = `<span class="sd-ni">🔥</span><span><b>${title}</b><small>${body}</small></span><em>View</em>`;
+  b.classList.add('on'); clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove('on'), 7000);
+  b.onclick = () => { b.classList.remove('on'); openSdRoom(r.id); };
+}
+setInterval(() => {
+  if (!S || !S.sdRooms) return;
+  S.sdRooms.forEach(r => {
+    const st = sdState(r).st;
+    if (st !== r.lastSt) {
+      const prev = r.lastSt; r.lastSt = st; save();
+      if (prev && st === 'voting' && !sdOpen(r.id)) sdBanner(r, `Your ${esc(catLabel(r.cat))} Showdown is full`, 'All 5 players are in. Judges are voting now.');
+      if (st === 'done') { sdFinish(r); if (!sdOpen(r.id)) sdBanner(r, `Your Showdown is in`, r.place === 1 ? `You won ${money(sdPrize())}!` : `You placed ${['1st', '2nd', '3rd', '4th', '5th'][r.place - 1]} of 5. Tap to see the votes.`); }
+    }
+    if (sdOpen(r.id)) paintSdRoom(r);
+  });
+}, 1000);
+const sdOpen = id => $('#sheet').classList.contains('on') && !!document.querySelector(`#sheetBody .sd[data-room="${id}"]`);
+function openShowdown() {
+  const a = sdActive(); if (a) { openSdRoom(a.id); return; }
+  const F = fighters(); if (!F.length) { toast(`Get a photo to ${CFG.QUALIFY}+ to battle.`); return; }
+  const mine = F.slice().sort((a, b) => judgeRate(b) - judgeRate(a))[0], cat = mine.cat || 'any', prize = sdPrize(), pot = SD_N * SD_FEE;
+  openSheet(`<div class="kg sd">
+    <h2>🔥 Showdown</h2><p class="kg-how">Join a room of 5 ${esc(catLabel(cat))} photos. When it's full, real judges vote and the highest vote share takes the pot.</p>
+    ${sdPotHTML()}
+    <div class="sd-me"><img src="${mine.src}" alt=""><div><b>Your photo</b><small>${judgeRate(mine)}% win rate · matched with photos close to yours</small></div></div>
+    <ol class="sd-steps"><li><b>Join</b> for ${money(SD_FEE)}. Your photo takes a seat.</li><li><b>Room fills</b> as other players join. You can keep playing.</li><li><b>Judges vote</b> on all 5 photos (about 15 minutes).</li><li><b>We notify you</b> with the result. The winner takes ${money(prize)}.</li></ol>
+    <button class="btn block kg-go" id="sdGo">Join a room · ${money(SD_FEE)}</button>
+    <div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
+  $('#sdGo').onclick = () => payCash(SD_FEE, 'A Showdown', () => { const r = sdNew(); r.lastSt = sdState(r).st; save(); openSdRoom(r.id); });
+}
+function sdPotHTML() { const pot = SD_N * SD_FEE, prize = sdPrize(), cut = +(pot - prize).toFixed(2);
+  return `<div class="sd-pot"><div><small>Prize pot</small><b>${money(pot)}</b><span>${SD_N} players × ${money(SD_FEE)}</span></div><i>→</i><div class="w"><small>Winner takes</small><b>${money(prize)}</b><span>Yofi fee ${Math.round(KING_FEE * 100)}% (${money(cut)})</span></div></div>`; }
+function openSdRoom(id) {
+  const r = sdRooms().find(x => x.id === id); if (!r) return;
+  openSheet(`<div class="kg sd" data-room="${r.id}"><h2>🔥 ${esc(catLabel(r.cat))} Showdown</h2>${sdPotHTML()}<div id="sdBody"></div></div>`, { full: true, cover: true });
+  r.drawn = null; paintSdRoom(r);
+}
+function paintSdRoom(r) {
+  const body = $('#sdBody'); if (!body) return;
+  const now = Date.now(), { st, joined, f } = sdState(r, now), key = st + joined;
+  if (st === 'voting') { const vb = body.querySelector('.sd-vbar i'), vt = body.querySelector('.sd-vt'); if (vb && r.drawn === key) { vb.style.width = Math.min(100, f * 100) + '%'; vt.textContent = `${Math.floor(f * 250)} of 250 votes`; return; } }
+  if (r.drawn === key) return; r.drawn = key;
+  const seat = x => x.at <= now ? `<div class="sd-seat ${x.me ? 'me' : ''}"><img src="${x.src}" alt=""><span>${x.me ? 'You' : '@' + esc(x.h)}</span></div>` : `<div class="sd-seat wait"><i></i><span>Waiting…</span></div>`;
+  if (st === 'filling') {
+    body.innerHTML = `<p class="sd-status"><span class="dot"></span><b>${joined} of ${SD_N} joined</b> · waiting for ${SD_N - joined} more player${SD_N - joined === 1 ? '' : 's'}</p>
+      <div class="sd-seats">${r.seats.slice().sort((a, b) => (a.at <= now) === (b.at <= now) ? a.at - b.at : a.at <= now ? -1 : 1).map(seat).join('')}</div>
+      <p class="kg-how">Players join whenever they're playing. You don't need to wait here: we'll notify you when the room is full and again when the result is in.</p>
+      <button class="btn block" data-shclose>Keep judging</button>`;
+  } else if (st === 'voting') {
+    body.innerHTML = `<p class="sd-status v"><span class="lv-live">LIVE</span><b>Room full · judges are voting</b></p>
+      <div class="sd-seats">${r.seats.map(seat).join('')}</div>
+      <div class="sd-vbar"><i style="width:${Math.min(100, f * 100)}%"></i></div><p class="sd-vt">${Math.floor(f * 250)} of 250 votes</p>
+      <p class="kg-how">Each photo is shown to real judges against the others. Results in about 15 minutes. We'll notify you.</p>
+      <button class="btn block" data-shclose>Keep judging</button>`;
+  } else {
+    sdFinish(r); r.seen = true; save();
+    const order = r.seats.slice().sort((a, b) => b.rate - a.rate), w = order[0], me = r.seats.find(x => x.me), prize = sdPrize(), ord = ['1st', '2nd', '3rd', '4th', '5th'][r.place - 1];
+    body.innerHTML = `${w.me ? `<div class="kg-win"><b>You won the ${money(prize)} pot!</b><span>Your photo had the highest vote share: ${me.rate.toFixed(1)}%. You paid ${money(SD_FEE)}, so you're up ${money(prize - SD_FEE)}.</span></div>`
+        : `<div class="kg-lose"><b>You placed ${ord} of 5</b><span>@${esc(w.h)} had the highest vote share (${w.rate.toFixed(1)}% vs your ${me.rate.toFixed(1)}%) and took the <b>${money(prize)}</b> pot. Your ${money(SD_FEE)} entry went into that pot.</span></div>`}
+      <div class="sd-l">${order.map((x, k) => `<div class="sd-r ${x.me ? 'me' : ''} ${k === 0 ? 'win' : ''}"><span class="sd-pl">${k + 1}</span><img src="${x.src}" alt=""><span class="sd-n">${x.me ? 'You' : '@' + esc(x.h)}${k === 0 ? `<em class="sd-wn">🏆 Takes ${money(prize)}</em>` : ''}</span><span class="sd-b"><i style="width:${x.rate}%"></i></span><b class="sd-p">${x.rate.toFixed(1)}%</b></div>`).join('')}</div>
+      <button class="btn block kg-go" id="sdAgain">New Showdown · ${money(SD_FEE)}</button>
+      <div style="text-align:center"><button class="link" data-shclose>Back to judging</button></div>`;
+    if (w.me && !r.boomed) { r.boomed = true; save(); setTimeout(() => cashExplosion(prize, { label: 'Showdown win' }), 300); }
+    $('#sdAgain').onclick = () => { closeSheet(); openShowdown(); };
+  }
+  body.querySelectorAll('[data-shclose]').forEach(b => b.onclick = () => closeSheet());
+}
+
+/* ---------- Knockout tournament: every 15 minutes, 1 v 1 rounds decided live by judges ---------- */
+let T_FEE = 1; const T_TIERS = { 1: { every: 15, gems: [25, 50, 100], gtd: 15 }, 5: { every: 30, gems: [50, 100, 200], gtd: 75 } };
+const T_VOTES = 20, T_VOTE_MS = 1250, T_RESULT_MS = 6000, T_VF = (T_VOTES * T_VOTE_MS) / (T_VOTES * T_VOTE_MS + T_RESULT_MS);
+// demo pacing: one judge vote every ~1.25 s (never faster than 1 s), 20 votes a round, then 6 s of result
+const tSeq = (mine, n = T_VOTES) => { const a = [...Array(n)].map((_, i) => i < mine); for (let i = n - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const tVotes = (M, f) => { const k = Math.min(T_VOTES, Math.floor(f / T_VF * T_VOTES)), seq = M.seq || []; let m = 0; for (let i = 0; i < k; i++) if (seq[i]) m++; return { k, m, o: k - m }; };
+const T_N = 16, T_ROUND = T_VOTES * T_VOTE_MS + T_RESULT_MS, T_LOBBY = 20000, T_EVERY = 15;
+const T_NAMES = ['Level 1', 'Level 2', 'Level 3', 'Level 4'];
+const T_LAST = T_NAMES.length - 1;
+const T_SPLIT = { win: .80, final: .20 }; // gems for each round won before the final come from T_TIERS
+let T_GEMS = T_TIERS[1].gems;
+const tTier = fee => { T_FEE = fee; T_GEMS = T_TIERS[fee].gems; };
+const tPool = (n = T_N) => +(n * T_FEE * (1 - KING_FEE)).toFixed(2);
+const tPay = (k, n = T_N) => { const pool = tPool(n); return +(k === 'win' ? Math.max(T_TIERS[T_FEE].gtd, pool * T_SPLIT.win) : pool * T_SPLIT[k]).toFixed(2); };
+// players registered so far (demo: grows from 6 to 32 before the start)
+const tCount = () => Math.max(5, Math.min(T_N, Math.round(T_N - ((tNext() - Date.now()) / 30000) * 11)));
+function tLive() { const n = tCount(); document.querySelectorAll('#sheetBody [data-tn]').forEach(e => e.textContent = n); document.querySelectorAll('#sheetBody [data-tw]').forEach(e => e.textContent = money(tPay('win', n))); document.querySelectorAll('#sheetBody [data-tf]').forEach(e => e.textContent = money(tPay('final', n))); document.querySelectorAll('#sheetBody [data-tmins]').forEach(e => e.textContent = tMins()); }
+const tPrizeBox = () => { const n = tCount(), g = T_TIERS[T_FEE].gtd; return `<div class="tk-gtd"><span class="tk-badge">✓ ${money(g)} guaranteed</span><small>Winner gets</small><b data-tw>${money(tPay('win', n))}</b><span><b data-tn>${n}</b> players so far · grows with every player</span></div>`; };
+// Demo timing: the next tournament starts 30 seconds out (in the real product, every 15 minutes)
+const tNext = () => { if (!window.__tNext || window.__tNext - Date.now() < 3000) window.__tNext = Date.now() + 30000; return window.__tNext; };
+const tMins = () => { const l = Math.max(0, Math.ceil((tNext() - Date.now()) / 1000)); return `${Math.floor(l / 60)}:${String(l % 60).padStart(2, '0')}`; };
+function tNew() {
+  const F = fighters(), mine = F.slice().sort((a, b) => judgeRate(b) - judgeRate(a))[0], cat = mine.cat || 'any', my = judgeRate(mine), hs = OPP.slice().sort(() => Math.random() - .5), used = new Set([mine.src]);
+  const rounds = []; let out = -1;
+  for (let r = 0; r < T_NAMES.length; r++) {
+    let rv = battleRival(cat); for (let k = 0; k < 8 && used.has(rv.src); k++) rv = battleRival(cat); used.add(rv.src);
+    const opp = { h: hs[r % hs.length].h, src: rv.src, rate: Math.max(35, Math.min(85, my + Math.round(rnd(-6, 6)) + r)) };
+    const pWin = Math.max(.35, Math.min(.7, .55 + (my - opp.rate) / 40)), win = Math.random() < pWin, V = T_VOTES, mv = win ? 11 + Math.floor(Math.random() * 4) : 6 + Math.floor(Math.random() * 4);
+    rounds.push({ opp, win, mv, ov: V - mv, seq: tSeq(mv) }); if (!win) { out = r; break; }
+  }
+  if (out > -1) { let cur = rounds[out].opp;
+    for (let r = out + 1; r < T_NAMES.length; r++) { let rv = battleRival(cat); for (let k = 0; k < 8 && used.has(rv.src); k++) rv = battleRival(cat); used.add(rv.src);
+      const b = { h: hs[(r + 3) % hs.length].h, src: rv.src }, aw = Math.random() < .5, V = T_VOTES, av = aw ? 11 + Math.floor(Math.random() * 4) : 6 + Math.floor(Math.random() * 4);
+      rounds.push({ spec: true, a: cur, b, aw, av, bv: V - av }); cur = aw ? cur : b; } }
+  const T = { fee: T_FEE, id: uid(), cat, pid: mine.id, src: mine.src, start: tNext(), rounds, out, paid: false, seen: false, n: T_N };
+  S.tour = T; save(); return T;
+}
+function tPhase(T, now = Date.now()) {
+  if (now < T.start) return { st: 'lobby', left: T.start - now };
+  const t = now - T.start, r = Math.floor(t / T_ROUND), last = T.rounds.length - 1;
+  if (r > last) return { st: 'done' };
+  return { st: 'live', r, f: (t - r * T_ROUND) / T_ROUND };
+}
+const tChamp = T => { const L = T.rounds[T.rounds.length - 1]; return L.spec ? (L.aw ? L.a : L.b) : (L.win ? { h: 'You', src: T.src, me: true } : L.opp); };
+function tResult(T) { const won = T.out === -1 ? T_NAMES.length : T.out, gems = T_GEMS.slice(0, Math.min(won, T_GEMS.length)).reduce((a, b) => a + b, 0);
+  if (T.out === -1) return { k: 'win', place: '1st', amt: tPay('win'), gems }; if (T.out === T_LAST) return { k: 'final', place: '2nd', amt: tPay('final'), gems }; return { k: 'out', place: '', amt: 0, gems }; }
+function tFinish(T) { if (T.paid) return; T.paid = true; const R0 = tResult(T); if (R0.amt) { S.cash = +((S.cash || 0) + R0.amt).toFixed(2); paintWallet(); } if (R0.gems) { S.gems += R0.gems; paintGems(); } save(); }
+const tOpen = () => $('#sheet').classList.contains('on') && !!document.querySelector('#sheetBody .tk');
+function tBanner(title, body) {
+  let b = $('#sdNote'); if (!b) { b = document.createElement('button'); b.id = 'sdNote'; b.className = 'sd-note'; document.body.appendChild(b); }
+  b.innerHTML = `<span class="sd-ni">🏆</span><span><b>${title}</b><small>${body}</small></span><em>View</em>`;
+  b.classList.add('on'); clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove('on'), 7000);
+  b.onclick = () => { b.classList.remove('on'); openTourney(); };
+}
+function tPrompt() {
+  const busy = ['#coach', '#ceg', '#sheet', '#flow', '#battle', '#lv'].some(q => { const e = $(q); return e && e.classList.contains('on'); });
+  if (!S.user || busy || (S.tour && !S.tour.seen) || !fighters().length || Date.now() < (window.__tSnooze || 0)) return;
+  if (!window.__tFirst) { window.__tFirst = Date.now() + 8000; return; }
+  if (Date.now() < window.__tFirst) return;
+  window.__tSnooze = Date.now() + 60000; // demo: ask again a minute after you say not now
+  const c = $('#coach');
+  const card = f => `<button class="tpo ${f === 5 ? 'big' : ''}" data-tj="${f}"><b>${money(f)}</b><span>${money(T_TIERS[f].gtd)} guaranteed</span><em>Join</em></button>`;
+  c.innerHTML = `<div class="crbox tp" role="dialog" aria-modal="true" aria-labelledby="crT">
+    <div class="cr-rays" aria-hidden="true"></div>
+    <div class="tp-ic">🏆</div><h2 id="crT">Tournament starting!</h2>
+    <p>Starts in <b data-tpc>${tMins()}</b> · ${tCount()} players in. Win 4 levels of 1 v 1 battles to take the prize.</p>
+    <div class="tp-lv">${['Level 1', 'Level 2', 'Level 3', 'Level 4'].map((n, i) => `<span>${i < 3 ? `${n}<small>+${T_TIERS[1].gems[i]}💎</small>` : `${n}<small>Final · cash</small>`}</span>`).join('<i>›</i>')}</div>
+    <div class="tp-two">${card(1)}${card(5)}</div>
+    <button class="bt-no" id="crLater">Not now</button></div>`;
+  c.classList.add('on', 'cr');
+  const close = () => { c.classList.remove('on', 'cr'); clearInterval(window.__tpc); };
+  clearInterval(window.__tpc); window.__tpc = setInterval(() => { const e = c.querySelector('[data-tpc]'); if (!e) { clearInterval(window.__tpc); return; } e.textContent = tMins(); }, 1000);
+  $('#crLater').onclick = close; c.onclick = e => { if (e.target === c) close(); };
+  c.querySelectorAll('[data-tj]').forEach(b => b.onclick = () => { close(); tTier(+b.dataset.tj); payCash(T_FEE, 'The tournament', () => { const t = tNew(); t.lastKey = 'lobby'; save(); openTourney(); }); });
+}
+setInterval(tPrompt, 1000);
+function tWidget() {
+  let w = $('#tkW'); const T = S && S.tour;
+  const show = T && !T.seen && S.user && !tOpen();
+  let chip = $('#tkChip');
+  const showChip = !show && S.user && !tOpen() && fighters().length && !['#coach', '#sheet', '#flow', '#battle'].some(q => { const e = $(q); return e && e.classList.contains('on'); });
+  if (showChip) { if (!chip) { chip = document.createElement('button'); chip.id = 'tkChip'; chip.className = 'tk-chip'; chip.onclick = () => openTourney(); document.body.appendChild(chip); }
+    chip.innerHTML = `🏆 <b>${tMins()}</b>`; chip.setAttribute('aria-label', `Next tournament in ${tMins()}`); chip.classList.add('on'); }
+  else if (chip) chip.classList.remove('on');
+  if (!show) { if (w) w.classList.remove('on'); return; }
+  if (!w) { w = document.createElement('button'); w.id = 'tkW'; w.className = 'tk-w'; w.onclick = () => openTourney(); document.body.appendChild(w); }
+  const ph = tPhase(T); let html;
+  if (ph.st === 'lobby') { const l = Math.ceil(ph.left / 1000); html = `<span class="i">🏆</span><span class="t"><b>${money(T.fee || 1)} tournament · starts in 0:${String(l).padStart(2, '0')}</b><small>${tCount()} players · winner gets ${money(tPay('win', tCount()))}</small></span><em>View</em>`; }
+  else if (ph.st === 'live' && !T.rounds[ph.r].spec) { const M = T.rounds[ph.r], tv = tVotes(M, ph.f), sh = tv.k, mv = tv.m;
+    html = `<span class="i live">LIVE</span><span class="t"><b>${T_NAMES[ph.r]} · You ${mv}–${sh - mv}</b><small>${ph.f < T_VF ? `${T_VOTES - sh} votes to go · vs @${esc(M.opp.h)}` : M.win ? 'You won! Next level soon' : 'Knocked out'}</small></span><em>Watch</em>`; }
+  else if (ph.st === 'live') html = `<span class="i">🏆</span><span class="t"><b>Out at ${T_NAMES[T.out]}</b><small>${T_NAMES[ph.r]} being played · winner soon</small></span><em>View</em>`;
+  else html = `<span class="i">🏆</span><span class="t"><b>Tournament results are in</b><small>Tap to see how you did</small></span><em>See</em>`;
+  w.innerHTML = html; w.classList.add('on');
+}
+setInterval(tWidget, 500);
+setInterval(() => {
+  const T = S && S.tour; if (!T || T.seen) return; tTier(T.fee || 1);
+  const ph = tPhase(T), key = ph.st + (ph.r ?? '');
+  if (key !== T.lastKey) { const prev = T.lastKey; T.lastKey = key; save();
+    if (!tOpen() && prev) {
+      if (ph.st === 'live' && ph.r === 0) tBanner('Your tournament has started', `Level 1 vs @${esc(T.rounds[0].opp.h)}. Watch live!`);
+      else if (ph.st === 'live' && (T.out === -1 || ph.r <= T.out)) tBanner(`Up to ${T_NAMES[ph.r]}${ph.r === T_LAST ? ' · the Final' : ''}!`, `Next up: @${esc(T.rounds[ph.r].opp.h)}`);
+      else if (ph.st === 'live' && ph.r === T.out + 1) tBanner('Knocked out', `Out at ${T_NAMES[T.out]}. Tap to see who wins.`);
+      else if (ph.st === 'done') { tFinish(T); const R0 = tResult(T); tBanner(R0.k === 'win' ? 'You won the tournament!' : R0.amt ? `You finished ${R0.place}` : 'Knocked out', R0.amt ? `${money(R0.amt)} + ${R0.gems} gems added` : `Out at ${T_NAMES[T.out]}${R0.gems ? ` · +${R0.gems} gems` : ''}. Next tournament in ${tMins()}`); }
+    } }
+  if (tOpen()) paintTourney();
+}, 500);
+function tLevels(T, cur, out) {
+  const n = T && T.n && T.lastKey && T.lastKey !== 'lobby' ? T.n : tCount();
+  const pays = [...T_GEMS.map(g => `+${g} 💎`), `<span data-tf>${money(tPay('final', n))}</span>`];
+  return `<div class="tk-lv">${T_NAMES.map((n, i) => `<div class="${i < cur ? 'ok' : i === cur ? (out === i ? 'x' : 'now') : ''}"><i>${i < cur ? '✓' : out === i ? '✕' : i + 1}</i><b>${n.replace('Round of ', 'Last ')}</b>${pays[i] ? `<small>${pays[i]}</small>` : ''}</div>`).join('')}<div class="${cur > 4 ? 'ok win' : ''}"><i>🏆</i><b>Winner</b><small data-tw>${money(tPay('win', n))}</small></div></div>`;
+}
+function tPath(T, r, f) {
+  const play = i => i < r || (i === r && f >= .75) || r >= T_NAMES.length;
+  const rows = T_NAMES.map((nm, i) => {
+    const M = T.rounds[i], left = T_N >> i, live = i === r && f < .75, done = play(i);
+    let mid;
+    if (!M) mid = '<span class="tp-q">?</span>';
+    else if (M.spec) mid = `<span class="tp-p"><img src="${M.a.src}" alt=""><em>@${esc(M.a.h)}</em></span><span class="tp-s">${done ? `${M.av}–${M.bv}` : live ? '<i class="tp-live">LIVE</i>' : 'vs'}</span><span class="tp-p r"><em>@${esc(M.b.h)}</em><img src="${M.b.src}" alt=""></span>`;
+    else mid = `<span class="tp-p"><img src="${T.src}" alt=""><em>You</em></span><span class="tp-s">${done ? `${M.mv}–${M.ov}` : live ? '<i class="tp-live">LIVE</i>' : 'vs'}</span><span class="tp-p r"><em>@${esc(M.opp.h)}</em><img src="${M.opp.src}" alt=""></span>`;
+    const state = !M ? '' : M.spec ? (done ? 'spec' : live ? 'spec now' : 'spec') : done ? (M.win ? 'won' : 'lost') : live ? 'now' : 'next';
+    const prize = i < 4 ? `+${T_GEMS[i]} 💎` : `2nd ${money(tPay('final', T.n))}`;
+    return `<div class="tp-row ${state}"><div class="tp-l"><b>${nm.replace('Round of ', 'Last ')}</b><small>${left} players</small></div><div class="tp-m">${mid}</div><div class="tp-z">${M && !M.spec && done ? (M.win ? '✓' : '✕') : ''}<small>${prize}</small></div></div>`;
+  }).join('');
+  const ch = r >= T_NAMES.length ? tChamp(T) : null;
+  return `<div class="tk-path">${rows}<div class="tp-row champ ${ch ? 'won' : ''}"><div class="tp-l"><b>🏆 Champion</b><small>1 player</small></div><div class="tp-m">${ch ? `<span class="tp-p"><img src="${ch.src}" alt=""><em>${ch.me ? 'You!' : '@' + esc(ch.h)}</em></span>` : '<span class="tp-q">?</span>'}</div><div class="tp-z"><small>${money(tPay('win', T.n))}</small></div></div></div>`;
+}
+function tTrack(T, reached, out, live) {
+  // reached = index of the level you're on (or 5 when champion); out = level you lost at (-1 none)
+  const L = T_NAMES;
+  const pay = i => i < T_LAST ? `+${T_GEMS[i]}💎` : `Final · 2nd ${money(tPay('final', T.n || T_N))}`;
+  const node = i => { const st = i < reached ? 'ok' : i === reached ? (out === i ? 'x' : 'me') : '';
+    return `<div class="tt-n ${st}"><span class="tt-c">${i === reached && out !== i ? `<img src="${T.src}" alt="You">` : i < reached ? '✓' : out === i ? '✕' : i + 1}</span><b>${L[i]}</b><small>${pay(i)}</small></div>`; };
+  const pct = Math.min(100, (Math.min(reached, T_NAMES.length) / T_NAMES.length) * 100);
+  return `<div class="tt"><div class="tt-line"><i style="width:${pct}%"></i></div>${T_NAMES.map((_, i) => node(i)).join('')}<div class="tt-n win ${reached >= T_NAMES.length ? 'me' : ''}"><span class="tt-c">${reached >= T_NAMES.length ? `<img src="${T.src}" alt="You">` : '🏆'}</span><b>Winner</b><small>${money(tPay('win', T.n || T_N))}</small></div></div>`;
+}
+const MEDAL = n => `<svg class="tk-md" viewBox="0 0 40 46" aria-hidden="true"><path d="M10 26l-4 16 7-4 4 6 4-14z M30 26l4 16-7-4-4 6-4-14z" fill="#8B5CF6"/><circle cx="20" cy="18" r="15" fill="${n === 1 ? '#F5B82E' : '#C9CFD8'}" stroke="${n === 1 ? '#B7791F' : '#8A93A3'}" stroke-width="2.5"/><circle cx="20" cy="18" r="10.5" fill="none" stroke="${n === 1 ? '#FFE28A' : '#EEF1F5'}" stroke-width="1.5"/><text x="20" y="23.5" text-anchor="middle" font-size="15" font-weight="800" fill="${n === 1 ? '#7A4A06' : '#4A5160'}" font-family="sans-serif">${n}</text></svg>`;
+const tWon = (cash, gems) => `<span class="tk-wn">${cash ? `<i class="c">${CASH_ICON}+${money(cash)}</i>` : ''}${gems ? `<i class="g">${gemIcon('')}+${gems}</i>` : ''}</span>`;
+function tPrizeCard(n) {
+  return `<div class="tk-pc"><span class="tk-gb">${money(T_TIERS[T_FEE].gtd).replace('.00', '')} guaranteed</span>
+    <div class="tk-pr">${MEDAL(1)}<b>Winner</b><em data-tw>${money(tPay('win', n))}</em></div>
+    <div class="tk-pr f">${MEDAL(2)}<b>Finalist</b><em data-tf>${money(tPay('final', n))}</em></div>
+    <p>Earlier round wins earn gems</p></div>`;
+}
+function tStats(label, time, n) {
+  return `<div class="tk-st"><div><small>Entry</small><b>${money(T_FEE)}</b></div><div><small>${label}</small><b data-tmins>${time}</b></div></div><p class="tk-pj"><b data-tn>${n}</b> players joined</p>`;
+}
+function tRecap(T) { if (T.out < 0) return ''; const M = T.rounds[T.out];
+  return `<div class="tk-rc"><small>Your last match · ${T.out === T_LAST ? 'Final' : T_NAMES[T.out]}</small><div><span class="me"><img src="${T.src}" alt=""><b>You</b></span><em>${M.mv}<i>–</i>${M.ov}</em><span><img src="${M.opp.src}" alt=""><b>@${esc(M.opp.h)}</b></span></div><p>${M.ov - M.mv <= 4 ? `So close! Just ${M.ov - M.mv} vote${M.ov - M.mv === 1 ? '' : 's'} in it.` : `${M.ov} of ${T_VOTES} judges picked @${esc(M.opp.h)}.`}</p></div>`; }
+function tPyramid(T, at, out) {
+  // at: level you're on (0..3), 4 = champion; out: level lost at (-1 none). Rows top->bottom: Winner, Final, Level 3, Level 2, Level 1
+  const rows = [...T_NAMES.map((n, i) => ({ i, l: i === T_LAST ? 'Final' : n })), { i: 4, l: 'Winner' }].reverse();
+  const N = rows.length, top = 16, edge = y => top + (50 - top) * y; // half-width (%) of the triangle at height y (0 top, 1 bottom)
+  return `<div class="tk-pyr"><h3>Your tournament path</h3><div class="pyw">${rows.map(({ i, l }, k) => {
+    const y0 = k / N, y1 = (k + 1) / N, a0 = 50 - edge(y0), a1 = 50 - edge(y1);
+    const clip = `polygon(${a0}% 0, ${100 - a0}% 0, ${100 - a1}% 100%, ${a1}% 100%)`;
+    const done = i < at && out !== i, here = i === at && out !== i, lost = out === i;
+    return `<div class="py ${i === 4 ? 'top' : ''} ${done ? 'ok' : here ? 'here' : lost ? 'x' : ''}" style="clip-path:${clip}">
+      ${done ? '<i class="py-k">✓</i>' : lost ? '<i class="py-k">✕</i>' : here ? `<img src="${T.src}" alt="">` : i === 4 ? '<i class="py-t">🏆</i>' : ''}
+      <span>${l}${here ? `<small>${i === 4 ? 'Champion!' : 'You are here'}</small>` : ''}</span></div>`; }).join('')}</div></div>`;
+}
+function openTourney() {
+  const T = S.tour && !S.tour.seen ? S.tour : null;
+  if (!T) {
+    const F = fighters(); if (!F.length) { toast(`Get a photo to ${CFG.QUALIFY}+ to play.`); return; }
+    const mine = F.slice().sort((a, b) => judgeRate(b) - judgeRate(a))[0], n = tCount();
+    openSheet(`<div class="kg tk tk0"><h2 class="tk-h">🏆 Knockout Tournament</h2><p class="tk-sub">Real judges · Head-to-head rounds</p>
+      <div class="tk-tier2" role="group" aria-label="Entry">${[1, 5].map(f => `<button data-tier="${f}" aria-pressed="${f === T_FEE}">${money(f)} entry</button>`).join('')}</div>
+      ${tPrizeCard(n)}${tStats('Starts in', tMins(), n)}
+      <p class="tk-how">Win each head-to-head round to advance.</p>
+      <div class="sd-me tk-me"><img src="${mine.src}" alt=""><div><b>Photo you’re entering</b><small>Score ${mine.s.total} · ${esc(catLabel(mine.cat || 'any'))}</small></div></div>
+      <button class="btn block kg-go tk-join" id="tkGo">Join tournament · ${money(T_FEE)}</button>
+      <div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
+    clearInterval(window.__tm); window.__tm = setInterval(() => { if (!document.querySelector('#sheetBody .tk0')) { clearInterval(window.__tm); return; } tLive(); }, 1000);
+    document.querySelectorAll('#sheetBody [data-tier]').forEach(b => b.onclick = () => { tTier(+b.dataset.tier); openTourney(); });
+    $('#tkGo').onclick = () => payCash(T_FEE, 'The tournament', () => { const t = tNew(); t.lastKey = 'lobby'; save(); openTourney(); });
+    return;
+  }
+  openSheet(`<div class="kg tk"><div id="tkBody"></div></div>`, { full: true, cover: true });
+  T.drawn = null; paintTourney();
+}
+function paintTourney() {
+  const T = S.tour, body = $('#tkBody'); if (!T || !body) return; tTier(T.fee || 1);
+  const ph = tPhase(T), bind = () => body.querySelectorAll('[data-shclose]').forEach(b => b.onclick = () => closeSheet());
+  if (ph.st === 'lobby') {
+    const sec = Math.ceil(ph.left / 1000), n = tCount();
+    if (T.drawn !== 'lobby') { T.drawn = 'lobby';
+      body.innerHTML = `<h2 class="tk-h">🏆 Knockout Tournament</h2><p class="tk-sub">You’re in! Real judges · Head-to-head rounds</p>
+        ${tPrizeCard(n)}${tStats('Starts in', '0:' + String(sec).padStart(2, '0'), n)}
+        ${tPyramid(T, 0, -1)}
+        <div class="sd-me tk-me"><img src="${T.src}" alt=""><div><b>Photo you’re entering</b><small>${esc(catLabel(T.cat))}</small></div></div>
+        <p class="tk-auto">Your tournament starts automatically. We’ll tell you when.</p>
+        <button class="btn block" data-shclose>Keep judging</button>`; bind(); }
+    body.querySelector('[data-tmins]').textContent = '0:' + String(sec).padStart(2, '0'); tLive(); return;
+  }
+  if (ph.st === 'done') {
+    if (T.drawn === 'done') return; T.drawn = 'done'; tFinish(T); T.seen = true; save();
+    const R0 = tResult(T), won = R0.k === 'win', ch = tChamp(T);
+    if (R0.amt && !T.boomed) { T.boomed = true; save(); setTimeout(() => cashExplosion(R0.amt, { label: won ? 'Tournament win' : 'Tournament prize' }), 300); }
+    body.innerHTML = `<h2 class="tk-h">🏆 Knockout Tournament</h2>
+      <div class="tk-res ${won || R0.amt ? 'w tk-won' : 'tk-run'}"><b>${won ? '🏆 You won the tournament!' : R0.amt ? '🥈 You finished 2nd!' : `${R0.gems ? 'Great run!' : 'Good effort!'} You reached ${T_NAMES[T.out]}`}</b>
+        ${R0.amt || R0.gems ? `<small>You won</small>${tWon(R0.amt, R0.gems)}` : `<span>Your ${money(T_FEE)} went into the prize pot</span>`}</div>
+      ${won ? '' : tRecap(T)}${won ? '' : `<p class="tk-champ">🏆 Champion: <b>@${esc(ch.h)}</b> won ${money(tPay('win', T.n))}</p>`}
+      ${tPyramid(T, won ? 4 : T.out, won ? -1 : T.out)}
+      <button class="btn block kg-go tk-join" id="tkAgain">Join the next one · starts in ${tMins()}</button>
+      <div style="text-align:center"><button class="link" data-shclose>Back to judging</button></div>`;
+    $('#tkAgain').onclick = () => { tTier(T.fee || 1); S.tour = null; save(); closeSheet(); openTourney(); };
+    bind(); return;
+  }
+  const { r, f } = ph, M = T.rounds[r], V = T_VOTES, VOTE = T_VF, left = Math.max(0, Math.ceil(T_ROUND * ((f < VOTE ? VOTE : 1) - f) / 1000));
+  const top = `<div class="tk-top2"><span>Live prizes</span><p>🥇 Winner <b>${money(tPay('win', T.n))}</b></p><p>🥈 Finalist <b>${money(tPay('final', T.n))}</b></p></div>`;
+  if (M.spec) {
+    const R0 = tResult(T), k = Math.min(T_VOTES, Math.floor(f / T_VF * T_VOTES)), am = Math.round(M.av * k / T_VOTES), bm = k - am, res = f >= T_VF;
+    const lvl = r === T_LAST ? 'The Final' : T_NAMES[r], wn = M.aw ? M.a : M.b;
+    if (T.drawn !== 'out' + r + res) { T.drawn = 'out' + r + res;
+      body.innerHTML = `<h2 class="tk-h">🏆 Knockout Tournament</h2>
+        <div class="tk-run"><b>${R0.gems ? 'Great run!' : 'Good effort!'} You reached ${T_NAMES[T.out]}</b>${R0.gems ? `<small>You won</small>${tWon(0, R0.gems)}` : `<span>Better luck in the next one</span>`}</div>
+        <p class="tk-pill">${res ? '' : '<span class="lv-live">LIVE</span>'}${lvl}${res ? ' · Result' : ' · now playing'}</p>
+        <div class="kg-vs sm tk-vs tk-spec"><div class="kg-ph"><img src="${M.a.src}" alt=""><span class="kg-tag">@${esc(M.a.h)}</span></div><b class="kg-x">VS</b><div class="kg-ph"><img src="${M.b.src}" alt=""><span class="kg-tag">@${esc(M.b.h)}</span></div></div>
+        ${res ? `<div class="tk-run sm"><b>@${esc(wn.h)} wins ${Math.max(M.av, M.bv)}–${Math.min(M.av, M.bv)}</b><span>${r === T_LAST ? '🏆 Champion! Results coming up…' : `On to ${r + 1 === T_LAST ? 'the Final' : T_NAMES[r + 1]}…`}</span></div>`
+          : `<div class="tk-rin"><span>Votes to go</span><b id="tkSv">${T_VOTES - k}</b></div><div class="kg-bar"><i id="kgM" style="width:50%"></i><i id="kgK" style="width:50%"></i></div><div class="kg-cnt tk-cnt"><span id="kgMn">0</span><b></b><span id="kgKn">0</span></div>`}
+        ${tRecap(T)}
+        ${tPyramid(T, T.out, T.out)}
+        <p class="tk-auto">${r === T_LAST ? 'Final results right after this match.' : 'We’ll tell you who wins.'}</p><button class="btn block" data-shclose>Keep judging</button>`; bind(); }
+    if (!res && $('#tkSv')) { $('#tkSv').textContent = T_VOTES - k; const sh = k ? am / k * 100 : 50; $('#kgM').style.width = sh + '%'; $('#kgK').style.width = (100 - sh) + '%'; $('#kgMn').textContent = am; $('#kgKn').textContent = bm; }
+    return;
+  }
+  const tv = tVotes(M, f), shown = tv.k, mv = tv.m, ov = tv.o, res = f >= VOTE;
+  const lvl = `${r === T_LAST ? 'Final' : T_NAMES[r]}`;
+  if (T.drawn !== 'live' + r + res) { T.drawn = 'live' + r + res;
+    body.innerHTML = `<h2 class="tk-h">🏆 Knockout Tournament</h2>${top}
+      <p class="tk-pill">${res ? '' : '<span class="lv-live">LIVE</span>'}${lvl}${res ? ' · Result' : ` · ${T_N >> r} players left`}</p>
+      <div class="kg-vs sm tk-vs"><div class="kg-ph me"><img src="${T.src}" alt=""><span class="kg-tag">You</span></div><b class="kg-x">VS</b><div class="kg-ph"><img src="${M.opp.src}" alt=""><span class="kg-tag">@${esc(M.opp.h)}</span></div></div>
+      ${res ? '' : `<div class="tk-rin"><span>Votes to go</span><b id="tkR">${T_VOTES}</b></div>`}
+      <div class="kg-bar"><i id="kgM" style="width:50%"></i><i id="kgK" style="width:50%"></i></div>
+      <div class="kg-cnt tk-cnt"><span id="kgMn">0</span><b id="kgV">judges voting…</b><span id="kgKn">0</span></div>
+      ${res ? (M.win ? `<div class="tk-won"><b>You won ${M.mv}–${M.ov}</b><span>${r < T_LAST ? `Advanced to ${r + 1 === T_LAST ? 'the Final' : T_NAMES[r + 1]}${tWon(0, T_GEMS[r])}` : 'You are the champion!'}</span></div>`
+        : `<div class="tk-won tk-ko"><b>Knocked out ${M.mv}–${M.ov}</b><span>@${esc(M.opp.h)} goes through${tResult(T).gems ? ` · you keep ${tResult(T).gems} gems` : ''}</span></div>`) : ''}
+      ${tPyramid(T, res && M.win ? r + 1 : r, res && !M.win ? r : -1)}
+      <p class="tk-auto">Your tournament continues automatically.</p>
+      <button class="btn block" data-shclose>Keep judging</button>`; bind(); }
+  if (res && M.win && !(T.cel || []).includes(r)) { T.cel = [...(T.cel || []), r]; save();
+    const champ = r === T_LAST, next = r + 1 === T_LAST ? 'the Final' : T_NAMES[r + 1];
+    setTimeout(() => celebrate({ src: T.src, score: `<i class="crs-sm">${M.mv}–${M.ov}</i>`,
+      title: champ ? '🏆 You won the tournament!' : `${T_NAMES[r]} won!`,
+      text: champ ? `You beat all ${T_NAMES.length} rivals. <b>${money(tPay('win', T.n))}</b> is yours!` : `You beat @${esc(M.opp.h)} ${M.mv}–${M.ov}. <b>+${T_GEMS[r]} gems</b>. You’re through to <b>${next}</b>${r + 1 === T_LAST ? ` and guaranteed at least <b>${money(tPay('final', T.n))}</b>` : ''}.`,
+      cta: champ ? 'Collect my winnings' : `On to ${next}` }), 400);
+    if (!champ) setTimeout(() => { if (typeof gemExplosion === 'function') gemExplosion(T_GEMS[r], { label: `${T_NAMES[r]} won` }); }, 900); }
+  const share = shown ? mv / shown * 100 : 50;
+  $('#kgM').style.width = share + '%'; $('#kgK').style.width = (100 - share) + '%';
+  $('#kgMn').textContent = mv; $('#kgKn').textContent = ov; $('#kgV').textContent = '';
+  if ($('#tkR')) { const togo = V - shown; $('#tkR').textContent = togo;
+    const lead = mv === ov ? 'Neck and neck!' : mv > ov ? `You're ahead by ${mv - ov}` : `You're behind by ${ov - mv}`;
+
+    $('.tk-rin').classList.toggle('hot', togo <= 3);
+}
+}
 function openBattle() {
+  if (!openBattle.direct) { openBattleChooser(); return; }
   if (isCashPlayer() && !openBattle.skipCash && Math.random() < .5) { openCashBattle(1); return; }
   const mine = S.photos.filter(p => p.cat);
   if (!mine.length) {
@@ -5754,9 +6539,48 @@ function photoSwitcher() {
   document.querySelectorAll('#sheetBody [data-sw]').forEach(b => b.onclick = () => { S.cur = b.dataset.sw; save(); closeSheet(); renderStudio(); $('#studio').scrollTop = 0; });
   if ($('#swNew')) $('#swNew').onclick = () => { closeSheet(); pickPhoto(true); };
 }
+let WALL = true;
+const WALL_CATS = PICKCATS.filter(k => k !== 'any').concat('any');
+const WALL_SHORT = { style: 'Fashion', city: 'City', action: 'Sport', any: 'Anything' };
+const wallName = k => WALL_SHORT[k] || pcatName(k);
+const WALL_REWARD = [[5, 100, 'gems'], [WALL_CATS.length, 1, 'cup']];
+function wallFrames() {
+  return WALL_CATS.map(k => { const list = S.photos.filter(x => (x.cat || 'any') === k).sort((a, b) => b.s.total - a.s.total);
+    return { k, list, p: list[0] }; });
+}
+function renderWall(st) {
+  const F = wallFrames(), filled = F.filter(f => f.p).length, ready = F.filter(f => f.p && f.p.s.total >= CFG.QUALIFY).length, tot = F.length;
+  const next = WALL_REWARD.find(([n]) => filled < n);
+  const plTag = f => `<span class="wf-pl">${esc(wallName(f.k))}</span>`;
+  const plus = f => `<button class="wf-add" data-wadd="${f.k}" aria-label="Add a ${esc(wallName(f.k))} photo">+</button>`;
+  const frame = f => {
+    if (!f.p) return `<div class="wf empty"><button class="wf-in" data-wadd="${f.k}" aria-label="Add a ${esc(wallName(f.k))} photo"><span><span class="wf-ic">${gi(f.k)}</span></span></button>${plus(f)}${plTag(f)}</div>`;
+    const x = f.p, l = photoLock(x), ok = x.s.total >= CFG.QUALIFY;
+    const tag = l ? '<i class="wf-t lk">In a competition</i>' : ok ? '<i class="wf-t ok">⚔️ Battle ready</i>' : `<i class="wf-t up">Goal <b>${CFG.QUALIFY}</b> · ${CFG.QUALIFY - x.s.total} to go</i>`;
+    return `<div class="wf ${ok ? 'gold' : ''}"><button class="wf-in" data-wp="${f.k}" aria-label="${esc(wallName(f.k))} photo scoring ${x.s.total}"><img src="${x.src}" alt=""><span class="wf-sc">${x.s.total}</span>${ok ? `<span class="wf-wr">${judgeRate(x)}% wins</span>` : ''}${f.list.length > 1 ? `<span class="wf-n">+${f.list.length - 1} more</span>` : ''}${tag}</button>${plus(f)}${plTag(f)}</div>`;
+  };
+  st.innerHTML = `<div class="wall">
+    <div class="wall-h"><h2>Enhance your photos</h2><p>Your best photo in each category hangs in its frame. Fill every frame and get each photo to ${CFG.QUALIFY}+ to battle for cash.</p></div>
+    <div class="wall-pr"><div class="pr-t"><b>${filled} of ${tot} frames filled</b><span>${ready} battle ready</span></div><div class="pr-bar2"><i style="width:${filled / tot * 100}%"></i></div>
+      ${next ? `<p class="wall-rw">🎁 Fill <b>${next[0]}</b> frames: ${next[2] === 'gems' ? `<b>+${next[1]} gems</b>` : '<b>a free Daily Cash Cup entry</b>'} <span>(${next[0] - filled} to go)</span></p>` : '<p class="wall-rw">🏆 Gallery complete!</p>'}</div>
+    <div class="wall-g">${F.map(frame).join('')}</div>
+    <button class="btn block" id="stAdd" style="margin-top:18px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Upload a new photo</button></div>`;
+  const openPh = x => { const l = photoLock(x); if (l) { openLive(l); return; } WALL = false; S.cur = x.id; save(); renderStudio(); st.scrollTop = 0; };
+  st.querySelectorAll('[data-wadd]').forEach(b => b.onclick = () => { const k = b.dataset.wadd, nm = k === 'any' ? 'Anything' : pcatName(k); S.frameHint = { cats: [k], lab: nm, frame: nm }; save(); pickPhoto(true); });
+  st.querySelectorAll('[data-wp]').forEach(b => b.onclick = () => { const f = F.find(z => z.k === b.dataset.wp); if (f.list.length < 2) { openPh(f.p); return; }
+    openSheet(`<h2>${esc(f.k === 'any' ? 'Anything' : pcatName(f.k))} photos</h2><p class="sub">Sorted from top score down. Your top photo hangs in the frame.</p>
+      <div class="wsel">${f.list.map((x, i) => `<div class="wsel-r ${i === 0 ? 'on' : ''}"><span class="im"><img src="${x.src}" alt=""><b>${x.s.total}</b></span><div><small class="wsel-k">${i === 0 ? '🏆 In the frame' : '#' + (i + 1)}</small><button class="btn sm" data-enh="${x.id}">${photoLock(x) ? 'See it live' : 'Enhance'}</button></div></div>`).join('')}</div>`);
+    document.querySelectorAll('#sheetBody [data-enh]').forEach(h => h.onclick = () => { closeSheet(); openPh(S.photos.find(x => x.id === h.dataset.enh)); }); });
+  $('#stAdd').onclick = () => { const c = CX.find(x => x.id === 'snap') || CX[0]; if (!S.user) { pickPhoto(true); return; } openEntryGuide(c, null); };
+  // frame rewards
+  S.wallGot = S.wallGot || [];
+  WALL_REWARD.forEach(([n, amt, kind]) => { if (filled >= n && !S.wallGot.includes(n)) { S.wallGot.push(n); save();
+    if (kind === 'gems') setTimeout(() => addGems(amt, `${n} gallery frames filled`), 400); else { S.gems += 75; save(); setTimeout(() => toast('Gallery complete! 75 gems added for a free Daily Cash Cup entry'), 400); } } });
+}
 function renderStudio() {
   const st = $('#studio');
   if (S.user) paintAvatar();
+  if (WALL && S.user && S.photos.length) { renderWall(st); return; }
   const canEnh = x => x && !photoLock(x) && !!lowestOpen(x);
   let p = cur();
   if (p && photoLock(p)) p = null;
@@ -5786,7 +6610,7 @@ function renderStudio() {
         const tick = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
         const cells = show.map((x, k) => `<span class="us-s done"><img src="${x.src}" alt=""><i>${tick}</i><em>${first + k}</em></span>`).join('') + `<button class="us-s nx" data-upslot aria-label="Upload photo ${n + 1}"><b>+</b><em>${n + 1}</em></button>` + (n >= 4 ? '' : [...Array(slots - n - 1)].map((_, k) => `<span class="us-s"><em>${n + 2 + k}</em></span>`).join(''));
         const steps = [['Upload', 'Add a photo and get an AI score'], [`Improve to ${CFG.QUALIFY}+`, 'Fix your weakest category with gems'], ['Enter a competition', 'Win gems or cash to hang it in your gallery'], ['Win real cash!! 💸', 'Top photos take home real money']];
-        return `<ol class="enh0-st">${steps.map(([t, d], i) => i === 0 ? `<li class="upl"><span class="n">1</span><b>Upload</b><small>${n ? (n >= 4 ? `<strong>${n} photos</strong> uploaded · keep going, more photos, more chances to win` : `<strong>${n} of 4</strong> photos · more photos, more chances to win`) : d}</small><div class="us-row">${cells}</div></li>` : `<li class="${i === 3 ? 'cash5' : ''}"><span class="n">${i + 1}</span><b>${t}</b><small>${d}</small></li>`).join('')}</ol>`; })()}
+        return `<ol class="enh0-st">${steps.map(([t, d], i) => `<li class="${i === 3 ? 'cash5' : ''}"><span class="n">${i + 1}</span><b>${t}</b><small>${d}</small></li>`).join('')}</ol>`; })()}
       <button class="btn block" id="stAdd"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Upload a new photo</button></div>`;
     $('#stAdd').onclick = () => { const c = CX.find(x => x.id === 'snap') || CX[0]; if (!S.user) { pickPhoto(true); st.querySelectorAll('[data-upslot]').forEach(b => b.onclick = () => $('#stAdd').click()); return; } openEntryGuide(c, null); }; st.querySelectorAll('[data-upslot]').forEach(b => b.onclick = () => $('#stAdd').click()); return;
   }
@@ -5795,7 +6619,7 @@ function renderStudio() {
   const msg = stage === 2 ? `${lk ? '<strong>Entered.</strong> ' : '<strong>Competition ready.</strong> '}${lk ? 'Locked until the results are in.' : !lowestOpen(p) ? 'Every category is maxed out, so it’s ready to compete.' : 'Keep improving it to win more battles and climb competition rankings.'} Started at ${p.start}, ${p.enh} fix${p.enh === 1 ? '' : 'es'} so far.`
     : stage === 1 ? `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions.`
     : `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions. Started at ${p.start}.`;
-  st.innerHTML = `<div class="tot-h sec-h"><h2>Enhance your photo</h2></div>
+  st.innerHTML = `<div class="tot-h sec-h">${S.user ? '<button class="wall-back" id="toWall" aria-label="Back to all photos"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>All photos</button>' : ''}<h2>Enhance your photo</h2></div>
 ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg"><span class="scb ${tot >= CFG.QUALIFY ? 'ok' : ''}" aria-label="Score ${tot} of 100"><b>${tot}</b><small>/100</small></span>${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
     <div class="scorebox">${ringSVG(tot, 'r2')}<div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small class="osc">${tot < CFG.QUALIFY ? 'Score to compete' : 'Overall score'}${photoLock(p) ? '<span class="qready lk">Entered</span>' : tot >= CFG.QUALIFY ? '<button class="qready" data-ready>🏆 Ready</button>' : ''}</small><div><b>${tot}</b>${tot < CFG.QUALIFY ? `<em class="goal70">Goal <span>${CFG.QUALIFY}</span></em>` : '<em>/100</em>'}</div></div>${barsHTML(p.s, null, !lk, p)}</div>
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can enter competitions.</p>' : ''}
