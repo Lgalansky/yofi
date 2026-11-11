@@ -3030,6 +3030,33 @@ body.tabsliding #shell{overflow:hidden}
 .ccard.k-dc .cc-go{color:#05261A!important;background:linear-gradient(95deg,#FFE27A,#2EE59D)!important;box-shadow:0 10px 22px -10px rgba(46,229,157,.8)!important}
 #studio .scr2 em.goal70,#flowBody .scr2 em.goal70{align-self:center;margin-left:10px;display:inline-flex;align-items:baseline;gap:5px;padding:5px 12px;border-radius:999px;background:rgba(255,201,60,.14);border:1.5px solid #FFC93C;color:#FFC93C;font-weight:800;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;box-shadow:0 0 16px -4px rgba(255,201,60,.6)}
 #studio .scr2 em.goal70 span,#flowBody .scr2 em.goal70 span{font:800 1.25rem/1 "Bricolage Grotesque",sans-serif;color:#FFC93C;letter-spacing:0}
+/* Enhance steps: progression */
+.enh0-pr{margin:0 0 14px}
+.enh0-pr .pr-t{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.enh0-pr .pr-t b{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#A796C6}
+.enh0-pr .pr-t span{font-weight:800;font-size:.95rem;color:#fff}
+.enh0-pr .pr-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.enh0-pr .pr-bar i{height:8px;border-radius:4px;background:#33204F}
+.enh0-pr .pr-bar i.on{background:linear-gradient(90deg,#FF3FA4,#9B3CFF)}
+.enh0-pr .pr-bar i.nx{background:#33204F;box-shadow:inset 0 0 0 1.5px #FF3FA4;animation:prPulse 1.6s ease-in-out infinite}
+@keyframes prPulse{50%{box-shadow:inset 0 0 0 1.5px #FF3FA4,0 0 10px rgba(255,63,164,.6)}}
+.enh0-st li{position:relative}
+.enh0-st li.done{background:#1A1030;box-shadow:inset 0 0 0 1.5px #2A1C42}
+.enh0-st li.done b{color:#8C7BAA;text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:rgba(140,123,170,.6)}
+.enh0-st li.done small{color:#2EE59D;font-weight:800}
+.enh0-st li.done .n{background:#2EE59D;color:#0B2A1C}
+.enh0-st li.cash5.done{filter:saturate(.5)}
+.enh0-st li.next{background:#2A1747;box-shadow:inset 0 0 0 2px #FF3FA4,0 10px 26px -14px rgba(255,63,164,.9)}
+.enh0-st li.cash5.next{background:linear-gradient(120deg,#0E7A4E,#16B571 55%,#2EE59D);box-shadow:inset 0 0 0 2px #FFF3A8,0 10px 26px -12px rgba(46,229,157,.9)}
+.enh0-st .st-tag{position:absolute;right:12px;top:10px;font-style:normal;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:#FF3FA4;color:#fff;z-index:1}
+.enh0-st li.cash5 .st-tag{background:#FFC93C;color:#2A1600}
+.enh0-st li:not(.done):not(.next) .n{opacity:.85}
+.enh0-st li.done{padding-top:8px!important;padding-bottom:8px!important;grid-template-columns:30px 1fr}
+.enh0-st li.done .n{width:30px;height:30px;grid-row:auto}
+.enh0-st li.done .n svg{width:16px;height:16px}
+.enh0-st li.done b{font-size:.95rem}
+.enh0-st .st-tag.dn{top:50%;transform:translateY(-50%);background:rgba(46,229,157,.15);color:#2EE59D}
+@media (prefers-reduced-motion:reduce){.enh0-pr .pr-bar i.nx{animation:none}}
 </style>
 </head>
 <body>
@@ -5718,7 +5745,10 @@ function renderStudio() {
     }
     st.innerHTML = `
     <div class="enh0"><h2>Enhance your photos</h2><p>Upload a photo, get an AI score, then improve it to 70+ to compete.</p>
-      <ol class="enh0-st"><li><span class="n">1</span><b>Upload</b><small>Add a photo and get an AI score</small></li><li><span class="n">2</span><b>Improve to 70+</b><small>Fix your weakest category with gems</small></li><li><span class="n">3</span><b>Enter a competition</b><small>Win gems or cash to hang it in your gallery</small></li><li class="cash5"><span class="n">4</span><b>Win real cash!! 💸</b><small>Top photos take home real money</small></li></ol>
+      ${(() => { const E = S.entries || [], done = [S.photos.length > 0 || E.length > 0, S.photos.some(x => x.s.total >= CFG.QUALIFY) || E.length > 0, E.length > 0, E.some(e => e.prize && e.prize.cur !== 'gems')], nx = done.indexOf(false), nd = done.filter(Boolean).length;
+        const steps = [['Upload', 'Add a photo and get an AI score'], [`Improve to ${CFG.QUALIFY}+`, 'Fix your weakest category with gems'], ['Enter a competition', 'Win gems or cash to hang it in your gallery'], ['Win real cash!! 💸', 'Top photos take home real money']];
+        return `<div class="enh0-pr" aria-label="${nd} of 4 steps done"><div class="pr-t"><b>Your progress</b><span>${nd} of 4 done</span></div><div class="pr-bar">${steps.map((_, i) => `<i class="${done[i] ? 'on' : i === nx ? 'nx' : ''}"></i>`).join('')}</div></div>
+      <ol class="enh0-st">${steps.map(([t, d], i) => `<li class="${i === 3 ? 'cash5' : ''}${done[i] ? ' done' : i === nx ? ' next' : ''}"><span class="n">${done[i] ? '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>' : i + 1}</span><b>${t}</b>${done[i] ? '' : `<small>${d}</small>`}${done[i] ? '<em class="st-tag dn">Done</em>' : i === nx ? '<em class="st-tag">Next</em>' : ''}</li>`).join('')}</ol>`; })()}
       <button class="btn block" id="stAdd"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Upload a new photo</button></div>`;
     $('#stAdd').onclick = () => { const c = CX.find(x => x.id === 'snap') || CX[0]; if (!S.user) { pickPhoto(true); return; } openEntryGuide(c, null); }; return;
   }
