@@ -3075,6 +3075,7 @@ body.tabsliding #shell{overflow:hidden}
 .us-s.nx b{font-size:1.6rem;line-height:1;color:#FF7CC4}
 .us-s.nx em{color:#FF7CC4}
 @media (prefers-reduced-motion:reduce){.us-s.nx{animation:none}}
+.cr-comp.cr-free{background:linear-gradient(90deg,#FFE27A,#2EE59D);color:#0B2A1C;font-weight:800}
 </style>
 </head>
 <body>
@@ -4345,6 +4346,23 @@ function showCompReady(p, goal) {
   if (p) { p.readyShown = true; save(); }
   const rb = document.querySelector('#flowBody #rsComp'); if (rb) rb.hidden = false;
   const c = $('#coach'), fits = CX.filter(x => x.k !== 'gem' && cxFits(x, p)), first = goal || fits[0];
+  const dc = CX.find(x => x.id === 'daily'), freeCup = dc && dcFirst() && cxFits(dc, p) && !liveEntry('daily');
+  if (freeCup) {
+    c.innerHTML = `<div class="crbox" role="dialog" aria-modal="true" aria-labelledby="crT">
+    <div class="cr-rays" aria-hidden="true"></div>${[...Array(18)].map((_, i) => `<i class="cr-cf" style="left:${(i * 53) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('')}
+    <div class="cr-photo"><img src="${p.src}" alt="Your photo"><span class="cr-score">${p.s.total}</span></div>
+    <span class="cr-comp cr-free">🎁 New player gift · Free entry</span>
+    <h2 id="crT">Ready to compete!</h2>
+    <p>Your photo scored <b>${p.s.total}</b>. Your first <b>Daily Cash Cup</b> entry is on us. The top 10 win real cash, with <b class="cr-prz">${prizeWords(dc)}</b> for 1st place.</p>
+    <button class="bt-cta" id="crGo">Enter the Cash Cup free</button>
+    <button class="bt-no" id="crLater">Improve first, enter later</button></div>`;
+    c.classList.add('on', 'cr');
+    const close = () => c.classList.remove('on', 'cr');
+    $('#crGo').onclick = () => { close(); const go2 = () => { closeFlow(); CXF = 'all'; CXP = p.id; openComps(); cxEnter(dc); }; if (!S.user) { openSignup(go2); return; } go2(); };
+    $('#crLater').onclick = close;
+    c.onclick = e => { if (e.target === c) close(); };
+    return;
+  }
   c.innerHTML = `<div class="crbox" role="dialog" aria-modal="true" aria-labelledby="crT">
     <div class="cr-rays" aria-hidden="true"></div>${[...Array(18)].map((_, i) => `<i class="cr-cf" style="left:${(i * 53) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('')}
     <svg class="cr-crown" viewBox="0 0 32 24" aria-hidden="true"><path d="M3 7l6.5 6L16 3l6.5 10L29 7l-2.6 13H5.6z" fill="#FFC93C"/><rect x="5.5" y="19.5" width="21" height="3" rx="1.2" fill="#E9A514"/><circle cx="3" cy="6.5" r="2" fill="#FFC93C"/><circle cx="16" cy="2.5" r="2" fill="#FFC93C"/><circle cx="29" cy="6.5" r="2" fill="#FFC93C"/></svg>
@@ -4478,7 +4496,7 @@ const canEnter = c => { if (!S.user || liveEntry(c.id)) return null; const used 
 const readyPhotos = () => S.user ? S.photos.filter(p => p.s.total >= CFG.QUALIFY && !photoLock(p)) : [];
 function goEligible() { CXF = 'mine'; CXP = null; openComps(null); const b = $('#flowBody'); if (b) b.scrollTop = 0; }
 const ccard = (c, feat) => { const left = cxLeft(c), fee = cxFee(c).replace(/<span class="gfee">/, '').replace(/<\/span>$/, '');
-  return `<div class="ccard k-${c.k}${feat ? ' feat1' : ''}">${c.daily ? `<span class="cc-daily">${CASH_ICON}${c.fee ? 'Gems to enter' : 'First entry free'} · Real cash · Once a day</span>` : feat ? '<span class="cc-feat">⭐ Featured</span>' : ''}<div class="cc-top"><img src="${compArt(c)}" alt="">
+  return `<div class="ccard k-${c.k}${feat ? ' feat1' : ''}">${c.daily ? `<span class="cc-daily">${CASH_ICON}${c.fee ? 'Gems to enter · Real cash · Once a day' : 'New players · First entry free · Real cash'}</span>` : feat ? '<span class="cc-feat">⭐ Featured</span>' : ''}<div class="cc-top"><img src="${compArt(c)}" alt="">
     <div class="cc-i"><b>${esc(c.t)}</b><span class="cc-cat">${gi(c.cats ? c.cats[0] : 'star')}${esc(c.cats ? c.lab : 'Any category')}</span><span class="cc-pz">${cxPrize(c)}<small>1st prize</small></span><span class="cc-fee">Entry <em>${cxFee(c)}</em></span>
       <span class="fend ${left < 5 * MIN ? 'soon' : ''}" data-cx="${c.id}" data-endpill>${IC.clock}Ends in ${fmtLeft(left)}</span></div></div>
     <button class="cc-go" data-cx-go="${c.id}">${c.k === 'dc' && c.fee ? `Enter · ${c.fee} gems` : c.k === 'gem' || c.fee === 0 ? 'Free entry' : 'Enter competition'}</button></div>`; };
