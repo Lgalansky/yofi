@@ -7546,7 +7546,8 @@ const tCount = () => Math.max(5, Math.min(T_N, Math.round(T_N - ((tNext() - Date
 function tLive() { const n = tCount(); document.querySelectorAll('#sheetBody [data-tn]').forEach(e => e.textContent = n); document.querySelectorAll('#sheetBody [data-tw]').forEach(e => e.textContent = money(tPay('win', n))); document.querySelectorAll('#sheetBody [data-tf]').forEach(e => e.textContent = money(tPay('final', n))); document.querySelectorAll('#sheetBody [data-tmins]').forEach(e => e.textContent = tMins()); }
 const tPrizeBox = () => { const n = tCount(), g = T_TIERS[T_FEE].gtd; return `<div class="tk-gtd"><span class="tk-badge">✓ ${money(g)} guaranteed</span><small>Winner gets</small><b data-tw>${money(tPay('win', n))}</b><span><b data-tn>${n}</b> players so far · grows with every player</span></div>`; };
 // Demo timing: the next tournament starts 30 seconds out (in the real product, every 15 minutes)
-const tNext = () => { if (!window.__tNext || window.__tNext - Date.now() < 3000) window.__tNext = Date.now() + 15 * 60000; return window.__tNext; };
+const T_SIT = 45000; // tables start as soon as 16 players are in, about every 45 seconds
+const tNext = () => { if (!window.__tNext || window.__tNext - Date.now() < 3000) window.__tNext = Date.now() + T_SIT; return window.__tNext; };
 const tMins = () => { const l = Math.max(0, Math.ceil((tNext() - Date.now()) / 1000)); return `${Math.floor(l / 60)}:${String(l % 60).padStart(2, '0')}`; };
 function tNew() {
   const F = fighters(), mine = F.slice().sort((a, b) => b.s.total - a.s.total)[0], cat = mine.cat || 'any', my = judgeRate(mine), hs = OPP.slice().sort(() => Math.random() - .5), used = new Set([mine.src]);
@@ -7604,7 +7605,7 @@ function tWidget() {
   if (showChip) { if (!chip) { chip = document.createElement('button'); chip.id = 'tkChip'; chip.className = 'tk-chip'; chip.onclick = () => openTourney(); document.body.appendChild(chip); }
     chip.innerHTML = `🏆 <b>${tMins()}</b>`; chip.setAttribute('aria-label', `Next tournament in ${tMins()}`); chip.classList.add('on'); }
   else if (chip) chip.classList.remove('on');
-  if (!show) { if (w) w.classList.remove('on'); return; }
+  if (!show || $('#panes').dataset.at === 'studio') { if (w) w.classList.remove('on'); return; }
   if (!w) { w = document.createElement('button'); w.id = 'tkW'; w.className = 'tk-w'; w.onclick = () => openTourney(); document.body.appendChild(w); }
   const ph = tPhase(T); let html;
   if (ph.st === 'lobby') { const l = Math.ceil(ph.left / 1000); html = `<span class="i">🏆</span><span class="t"><b>${money(T.fee || 1)} tournament · starts in ${Math.floor(l / 60)}:${String(l % 60).padStart(2, '0')}</b><small>${tCount()} players · winner gets ${money(tPay('win', tCount()))}</small></span><em>View</em>`; }
@@ -7714,7 +7715,7 @@ function paintTourney() {
         ${tPrizeCard(n)}${tStats('Starts in', (Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0')), n)}
         ${tPyramid(T, 0, -1)}
         <div class="sd-me tk-me"><img src="${T.src}" alt=""><div><b>Photo you’re entering</b><small>${esc(catLabel(T.cat))}</small></div></div>
-        <p class="tk-auto">Your tournament starts automatically. We’ll tell you when.</p>
+        <p class="tk-auto">Starts as soon as the table is full. Play on and we’ll call you back.</p>
         <button class="btn block" data-shclose>Keep judging</button>`; bind(); }
     body.querySelector('[data-tmins]').textContent = (Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0')); tLive(); return;
   }
