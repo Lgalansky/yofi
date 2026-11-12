@@ -3771,6 +3771,320 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .lvp-r .t{flex:1;display:grid;gap:1px}.lvp-r .t b{color:#fff;font-size:1rem}.lvp-r .t small{color:#E6DDF5;font-size:.82rem}
 .lvp-r em{font-style:normal;font-weight:800;font-size:.78rem;padding:4px 10px;border-radius:999px;background:#2EE59D;color:#0B2A1C}
 .lvp-r em.nx{background:#FFC93C;color:#2A1600}
+/* Category King */
+.pnow{align-items:stretch}
+.pnow .pn2{grid-template-columns:1fr!important;grid-auto-flow:row!important;align-content:start}
+.pnow .pn2 .pn-go{align-self:end}
+.pnow .pn2.feat{transform:scale(1.04);box-shadow:inset 0 0 0 2.5px #FFC93C,0 0 26px -4px rgba(255,201,60,.7)!important;z-index:1}
+.pnow .pn2.feat b{white-space:normal!important;line-height:1.05}
+.pn-tag{margin:2px 0 14px;text-align:center;font-style:italic;font-weight:700;color:#FFC93C}
+#sheet:has(.kg2) .fullbar{display:none!important}
+.kg2{text-align:center;padding:0 0 12px}
+.kg2-top{display:flex;align-items:center;justify-content:space-between;margin:0 -4px 8px}
+.kg2-top b{font:800 1.35rem "Bricolage Grotesque",sans-serif;color:#fff}
+.kg2-ic{background:none;border:0;color:#fff;padding:6px;cursor:pointer}
+.kg2-cat{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:999px;background:#2A1A4A;box-shadow:inset 0 0 0 1.5px #6A4AA8;font-weight:800;letter-spacing:.08em;font-size:.9rem;color:#E6DDF5}
+.kg2-cat svg{width:20px;height:20px}
+.kg2-crown{font-size:3rem;line-height:1;margin:10px 0 2px}
+.kg2-h{font:800 1.9rem/1.1 "Bricolage Grotesque",sans-serif;color:#fff;margin:2px 0 4px}
+.kg2-sub{margin:0 0 14px;color:#B58CFF;font-weight:600}
+.kg2-fin{margin:10px 0 0;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.85rem;color:#A796C6}
+.kg2-score{margin:0 0 14px;font:800 1.25rem "Bricolage Grotesque",sans-serif;color:#B58CFF}
+.kg2-pot{display:flex;align-items:center;justify-content:center;gap:16px;margin:0 8px 12px;padding:10px 16px;border-radius:16px;background:#1A1030;box-shadow:inset 0 0 0 2px #FFC93C}
+.kg2-pot small{font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem;color:#FFE27A;padding-right:16px;border-right:1.5px solid #6A5520}
+.kg2-pot b{font:900 2rem "Archivo Black","Arial Black",sans-serif;color:#FFD21F}
+.kg2-live{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;background:#4A1236;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;color:#fff;margin-bottom:12px}
+.kg2-live i{width:10px;height:10px;border-radius:50%;background:#FF3FA4;animation:kgp 1s ease-in-out infinite}
+@keyframes kgp{50%{opacity:.3}}
+.kg2-vs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kg2-ph{position:relative;aspect-ratio:1/1;border-radius:18px;overflow:hidden;box-shadow:inset 0 0 0 0}
+.kg2-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.kg2-ph.king{outline:3px solid #FFC93C;outline-offset:-3px}.kg2-ph.me{outline:3px solid #FF3FA4;outline-offset:-3px}
+.kg2-ph.won{box-shadow:0 0 24px -2px rgba(255,201,60,.8)}
+.kg2-w{position:absolute;top:10px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:4px 12px;border-radius:999px;background:#1A1030;box-shadow:inset 0 0 0 1.5px #FFC93C;color:#FFE27A;font-weight:800;font-size:.8rem}
+.kg2-x{z-index:3;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#1A1030;box-shadow:0 0 0 3px #FFC93C;color:#FFC93C;font:900 1rem "Archivo Black",sans-serif}
+.kg2-who{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 10px}
+.kg2-who div{display:grid;justify-items:center;gap:0}
+.kg2-who small{font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-size:.9rem}
+.kg2-who .king small{color:#FFC93C}.kg2-who .me small{color:#FF3FA4}
+.kg2-who b{color:#fff;font-size:1.05rem}
+.kg2-who strong{font:900 2.6rem/1.05 "Archivo Black","Arial Black",sans-serif;margin-top:6px}
+.kg2-who .king strong{color:#FFC93C}.kg2-who .me strong{color:#FF3FA4}
+.kg2-who span{color:#CDBEE8;font-size:.95rem}
+.kg2-bar{display:flex;height:16px;border-radius:999px;overflow:hidden;background:#2A1A4A}
+.kg2-bar i{display:grid;place-items:center;transition:width .2s;font-style:normal;font-weight:800;font-size:.8rem;color:#2A1600}
+.kg2-bar i:first-child{background:#FFC93C}.kg2-bar i:last-child{background:#FF3FA4}
+.kg2-bar.res{height:24px}
+.kg2-n{margin:8px 0 14px;font-weight:700;color:#E6DDF5}
+.kg2-wait{display:flex;align-items:center;gap:16px;padding:14px 16px;border-radius:18px;background:#1E1236;box-shadow:inset 0 0 0 1.5px #4A2F78;text-align:left}
+.kg2-wait .dots{display:flex;gap:6px;padding-right:16px;border-right:1.5px solid #4A2F78}
+.kg2-wait .dots i{width:10px;height:10px;border-radius:50%;background:#7A5AB8;animation:kgd 1.2s infinite}
+.kg2-wait .dots i:nth-child(2){animation-delay:.2s}.kg2-wait .dots i:nth-child(3){animation-delay:.4s}
+@keyframes kgd{0%,100%{background:#7A5AB8}30%{background:#FF3FA4}}
+.kg2-wait b{display:block;color:#fff;font-size:1.1rem}.kg2-wait small{color:#E6DDF5}
+.kg2-next{display:grid;gap:2px;margin:0 0 14px;padding:12px;border-radius:18px;background:linear-gradient(180deg,#3A2A10,#1E1236);box-shadow:inset 0 0 0 1.5px #FFC93C}
+.kg2-next small{font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:.8rem;color:#E6DDF5}
+.kg2-next b{font:900 2.4rem/1.1 "Archivo Black","Arial Black",sans-serif;color:#FFD21F}
+.kg2-next span{color:#E6DDF5}
+.kg2-next.win{background:linear-gradient(180deg,#0E3A2A,#1E1236);box-shadow:inset 0 0 0 1.5px #2EE59D}.kg2-next.win b{color:#2EE59D}
+.kg2-go{font-size:1.15rem!important}
+.kg2-back{margin-top:8px}
+.lvp-lk{margin:-4px 0 14px;font-size:.9rem;color:#FFE27A;line-height:1.4}
+.sk-week.sk4 .sk-d{padding:10px 0 10px;gap:6px}
+.sk-week.sk4 .sk-d small{font-size:.85rem!important;color:#fff}
+.sk-week.sk4 .sk-d .sk-i{width:30px;height:30px;font-size:1.5rem}
+.sk-week.sk4 .sk-d b{font-size:.9rem}
+.sk-d.miss{opacity:.7!important}
+.sk-d.miss small{color:#CDBEE8!important}
+.sk-prog{font-size:.95rem!important}
+.crbox.tlk{background:linear-gradient(180deg,#221836,#15101F)!important;box-shadow:inset 0 0 0 2px #5A4A78,0 20px 60px -10px rgba(0,0,0,.8)!important;text-align:center}
+.tlk-ph{position:relative;width:150px;margin:6px auto 10px;border-radius:18px;overflow:hidden;aspect-ratio:4/5}
+.tlk-ph img{width:100%;height:100%;object-fit:cover;filter:grayscale(.7) brightness(.45)}
+.tlk-lock{position:absolute;inset:0;display:grid;place-items:center;font-size:3.4rem}
+.tlk-tag{display:inline-block;padding:4px 12px;border-radius:999px;background:#3A2E52;color:#CDBEE8;font-weight:800;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase}
+.crbox.tlk h2{margin:8px 0 4px;color:#fff!important;background:none!important;-webkit-text-fill-color:#fff!important;font-size:1.8rem!important;text-shadow:none!important}
+.tlk-p{margin:0 0 14px;color:#CDBEE8}.tlk-p b{color:#fff}
+.tlk-bar{margin:0 4px 18px;text-align:left}
+.tlk-lab{display:flex;justify-content:space-between;font-size:.9rem;color:#CDBEE8;margin-bottom:6px}.tlk-lab b{color:#fff}
+.tlk-tr{height:12px;border-radius:999px;background:#2E2444;overflow:hidden}.tlk-tr i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#8B4DFF,#FF3FA4)}
+.tlk-bar small{display:block;margin-top:8px;text-align:center;font-size:.9rem;color:#E6DDF5}.tlk-bar small b{color:#FFC93C}
+.kg2-who.du strong{font-size:2.2rem}
+.du-st{margin:14px 0 12px!important}
+.kg2-pot{justify-content:center}
+.du-fine{margin:8px 0 0;font-size:.85rem;color:#CDBEE8}
+.kg2-next.lose{background:linear-gradient(180deg,#3A1428,#1E1236);box-shadow:inset 0 0 0 1.5px #FF3FA4}.kg2-next.lose b{color:#FF7AC6}
+/* slot feel */
+.tot-x.tier{font-weight:900!important;animation:cpop .4s cubic-bezier(.3,1.6,.5,1)}
+.tot-x.tier.t2{background:#8B4DFF!important;color:#fff!important}
+.tot-x.tier.t5{background:linear-gradient(90deg,#FF7A3C,#FF3FA4)!important;color:#fff!important}
+.tot-x.tier.t20{background:linear-gradient(90deg,#FFE27A,#FFB21C)!important;color:#2A1600!important;font-size:1rem!important;padding:7px 14px!important}
+.tot-x.nm{background:rgba(255,201,60,.9)!important;color:#2A1600!important}
+.tot-x.en{background:#FFC93C!important;color:#2A1600!important}
+.tot-x.lk{background:rgba(255,63,164,.92)!important;color:#fff!important}
+.tot-c.jack{animation:jackp .5s ease-in-out 4;box-shadow:0 0 0 4px #FFD21F,0 0 40px #FFD21F!important}
+@keyframes jackp{50%{transform:scale(1.04)}}
+.md .md-box{position:relative;display:grid;place-items:center;width:150px;height:150px;margin:10px auto 6px;border:0;border-radius:28px;background:radial-gradient(circle,#5A2E9A,#2A1747);font-size:5rem;cursor:pointer;animation:lkwob 1.2s ease-in-out infinite;color:#fff}
+.md .md-box.open{animation:none}
+.md .md-box b{display:block;font:900 2.6rem "Archivo Black",sans-serif;color:#FFD21F;line-height:1}.md .md-box small{display:block;font-size:.9rem;font-weight:800}
+.md-tap{font-weight:800;color:#FFE27A}
+.md-odds{position:relative;margin:8px 0 0;font-size:.75rem;color:#A796C6}
+.winb{position:fixed;left:50%;top:38%;z-index:9999;transform:translate(-50%,-50%) scale(.3);display:grid;justify-items:center;gap:2px;padding:16px 28px;border-radius:24px;pointer-events:none;animation:winin .45s cubic-bezier(.3,1.6,.5,1) forwards;white-space:nowrap;box-shadow:0 20px 50px -10px rgba(0,0,0,.7)}
+.winb b{font:900 1.9rem "Archivo Black","Arial Black",sans-serif;letter-spacing:.02em}
+.winb span{font:900 2.4rem "Archivo Black","Arial Black",sans-serif}
+.winb.t2{background:linear-gradient(135deg,#9B5CFF,#5A2EC8);color:#fff}
+.winb.t5{background:linear-gradient(135deg,#FF7A3C,#FF3FA4);color:#fff}
+.winb.t20{background:linear-gradient(135deg,#FFE27A,#FFB21C);color:#2A1600;padding:22px 34px;box-shadow:0 0 0 4px #fff,0 0 60px #FFD21F}
+.winb.t20 b{font-size:2.4rem}.winb.t20 span{font-size:3rem}
+.winb.out{animation:winout .45s ease-in forwards}
+@keyframes winin{to{transform:translate(-50%,-50%) scale(1)}}
+@keyframes winout{from{transform:translate(-50%,-50%) scale(1);opacity:1}to{transform:translate(-50%,-50%) scale(1.15);opacity:0}}
+.lkp-steps{display:grid!important;grid-template-columns:repeat(10,1fr);gap:4px;margin-top:8px;padding:0!important}
+.lkp-steps i{display:grid;place-items:center;height:12px;border-radius:6px;background:#3A2760;font-style:normal;font-size:.8rem;transition:background .2s}
+.lkp-steps i.on{background:linear-gradient(90deg,#FFE27A,#FFB21C)}
+.lkp-steps i.m{height:24px;border-radius:8px;font-size:.95rem;background:#2A1A46;box-shadow:inset 0 0 0 1.5px #FFC93C}
+.lkp-steps i.m.on{background:linear-gradient(135deg,#FFE27A,#FFB21C)}
+.lkp-steps i.m10{font-size:1.05rem}
+.lkp-steps i.pop{animation:cpop .5s cubic-bezier(.3,1.6,.5,1) 2}
+.lkp-steps{align-items:center}
+.md .md-box.big{width:170px;height:170px;font-size:5.8rem;box-shadow:0 0 0 3px #FFC93C,0 0 40px rgba(255,201,60,.6)}
+/* fun boxes */
+.md-pk{position:relative;margin:4px 0 12px;color:#EADBFF}.md-pk b{color:#FFE27A}
+.md3 .lk-box{min-height:104px;font-size:3rem;cursor:pointer;color:#fff}
+.lk-box.shake{animation:bxshake .12s linear 5}
+@keyframes bxshake{25%{transform:rotate(-8deg) scale(1.06)}75%{transform:rotate(8deg) scale(1.06)}}
+.lk-box.bxpop{animation:bxburst .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bxburst{0%{transform:scale(.6)}100%{transform:scale(1)}}
+.lk-box.mine b{color:#FFE27A}
+#mdArea .lk-res{position:relative;margin:12px 0 10px;font-weight:800;color:#fff}
+.ch-box{position:relative;display:grid;place-items:center;width:170px;height:170px;margin:12px auto 6px;border:0;border-radius:30px;font-size:6rem;cursor:pointer;background:radial-gradient(circle,#4A2E7A,#22143E);box-shadow:0 0 0 3px #6A4AA8;transition:box-shadow .3s,background .3s;animation:lkwob 1.2s ease-in-out infinite}
+.ch-box.hit{animation:bxshake .1s linear 4}
+.ch-box.glow-common{box-shadow:0 0 0 4px #8FA3BF,0 0 30px rgba(143,163,191,.7)}
+.ch-box.glow-rare{box-shadow:0 0 0 4px #4FB7FF,0 0 40px rgba(79,183,255,.8)}
+.ch-box.glow-epic{box-shadow:0 0 0 4px #B26BFF,0 0 50px rgba(178,107,255,.9)}
+.ch-box.glow-legend{box-shadow:0 0 0 5px #FFD21F,0 0 70px #FFD21F;background:radial-gradient(circle,#7A5A12,#2A1747)}
+.ch-box.open{animation:bxburst .5s cubic-bezier(.3,1.6,.5,1);font-size:5rem}
+.ch-taps{position:relative;display:flex;justify-content:center;gap:8px;margin:2px 0 6px}
+.ch-taps i{width:12px;height:12px;border-radius:50%;background:#3A2760}.ch-taps i.on{background:#FFC93C}
+.ch-rar{position:relative;display:inline-block;margin:4px 0 10px;padding:5px 14px;border-radius:999px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;font-size:.85rem;animation:cpop .4s both}
+.ch-rar.r-common{background:#8FA3BF;color:#13202F}.ch-rar.r-rare{background:#4FB7FF;color:#082033}.ch-rar.r-epic{background:#B26BFF;color:#fff}.ch-rar.r-legend{background:linear-gradient(90deg,#FFE27A,#FFB21C);color:#2A1600}
+.ch-items{position:relative;display:flex;justify-content:center;gap:12px;margin:0 0 14px}
+.ch-it{display:grid;gap:2px;min-width:110px;padding:12px 10px;border-radius:18px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1.5px rgba(255,201,60,.6);animation:cpop .45s cubic-bezier(.3,1.6,.5,1) both}
+.ch-it b{font:900 1.9rem "Archivo Black",sans-serif;color:#FFE27A;line-height:1}.ch-it small{font-weight:800;color:#EADBFF}
+.en-mult button small{margin-left:4px;font-size:.72rem;font-weight:800;opacity:.85}
+.en-mult button{white-space:nowrap}
+.lkp2{display:flex;align-items:center;gap:10px;margin-top:12px}
+.lkp2 .lk-l{flex:none;font-weight:800;font-size:.85rem;color:#CDBEE8;min-width:34px}.lkp2 .lk-l em{font-style:normal;color:#FFC93C}
+.lkp2 .lkp-steps{flex:1;margin-top:0!important}
+.lkp2 .lkp-steps i{height:8px}.lkp2 .lkp-steps i.m{height:22px}
+.pnow{grid-template-columns:repeat(2,1fr)!important}
+.pnow .pn2.feat{transform:none!important}
+.pn2.gemb{background:radial-gradient(circle at 0 0,#1E7FA8,#132743 75%);box-shadow:inset 0 0 0 2px #4FD8FF}
+.pn2.gemb .pn-go{background:#4FD8FF;color:#062030}
+.pn-tag{display:none}
+.gb-st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 12px}
+.gb-st button{display:grid;gap:0;padding:10px 0;border:0;border-radius:16px;font:inherit;color:#fff;cursor:pointer;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760}
+.gb-st b{font:800 1.4rem "Bricolage Grotesque",sans-serif}.gb-st small{font-size:.75rem;color:#CDBEE8}
+.gb-st button[aria-pressed=true]{background:linear-gradient(180deg,#7FE3FF,#3BB3E8);box-shadow:none}.gb-st button[aria-pressed=true] b,.gb-st button[aria-pressed=true] small{color:#062030}
+.kg2-pot.gbz{box-shadow:inset 0 0 0 2px #4FD8FF}.kg2-pot.gbz b{color:#7FE3FF}.kg2-pot.gbz small{color:#BDEFFF;border-color:#2A5A70}
+.kg2-next.gemw{background:linear-gradient(180deg,#0E3346,#1E1236);box-shadow:inset 0 0 0 1.5px #4FD8FF}.kg2-next.gemw b{color:#7FE3FF}
+/* medal of honour */
+.stopc{position:relative}
+.stopc .stm{position:absolute;left:-16px;top:-20px;font-style:normal;font-size:1.75rem;line-height:1;transform:rotate(-32deg);filter:drop-shadow(0 3px 6px rgba(0,0,0,.7))}
+.stopc .stm.gone{opacity:.35;filter:grayscale(1) brightness(1.5)}
+
+.awy-ph{position:relative;width:130px;margin:4px auto 8px;aspect-ratio:4/5;border-radius:18px;overflow:hidden;box-shadow:0 0 0 3px #FFC93C}
+.awy-ph img{width:100%;height:100%;object-fit:cover}
+.awy-m{position:absolute;right:6px;bottom:6px;font-size:2.4rem;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))}
+.awy.lost .awy-ph{box-shadow:0 0 0 3px #FF4F6C}
+.awy.lost .awy-ph img{filter:grayscale(.7) brightness(.6)}
+.awy.lost .awy-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 46%,rgba(255,255,255,.85) 47%,transparent 49%),linear-gradient(60deg,transparent 52%,rgba(255,255,255,.7) 53%,transparent 54.5%)}
+.awy h2{font-size:1.6rem!important;line-height:1.1!important}
+.awy-sub{position:relative;margin:4px 0 10px;color:#E6DDF5}
+.awy-log{position:relative;display:grid;gap:6px;margin:0 0 12px;text-align:left}
+.awy-log div{display:flex;justify-content:space-between;gap:8px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.07);font-size:.88rem}
+.awy-log span{color:#E6DDF5}.awy-log b{white-space:nowrap}
+.awy-log .w b{color:#2EE59D}.awy-log .l b{color:#FF7A92}.awy-log .s b{color:#7FE3FF}
+.awy-cr{position:relative;margin:0 0 12px;font-size:.9rem;color:#E6DDF5}.awy-cr b{color:#fff}
+/* raided pop */
+.crbox.raid{text-align:center}
+.rd-sw{position:relative;font-size:2.4rem;line-height:1;margin-top:-4px;filter:drop-shadow(0 0 12px rgba(255,201,60,.7))}
+.crbox.raid h2{margin:4px 0 2px!important;font-size:2.3rem!important;line-height:1!important}
+.rd-sub{position:relative;margin:4px 0 14px;font-weight:800;font-size:1.1rem;color:#fff}
+.rd-row{position:relative;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:6px;margin:0 0 10px}
+.rd-p{position:relative;display:grid;justify-items:center;gap:8px;padding-top:30px}
+.rd-im{width:100%;aspect-ratio:1/1;border-radius:18px;overflow:hidden;box-shadow:0 0 0 3px #FF4FB0}
+.rd-im img{width:100%;height:100%;object-fit:cover;display:block}
+.rd-p.me .rd-im{position:relative}
+
+
+.rd-p.them .rd-im{width:84%}
+.rd-p b{padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.12);font-size:.78rem;font-weight:800;color:#fff;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.rd-p.me b{text-transform:uppercase;letter-spacing:.04em}
+.rd-ghost{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:2.4rem;line-height:1;opacity:.35;filter:grayscale(1) brightness(1.6)}
+.rd-cr{position:absolute;top:-10px;left:50%;transform:translateX(-50%) rotate(-8deg);font-size:3rem;line-height:1;z-index:2;filter:drop-shadow(0 0 14px rgba(255,201,60,.9));animation:rdcr 1.4s ease-in-out infinite}
+@keyframes rdcr{50%{transform:translateX(-50%) rotate(4deg) scale(1.08)}}
+.rd-arrow{align-self:center;margin-bottom:30px;font-size:2rem;color:#FFC93C;filter:drop-shadow(0 0 8px rgba(255,201,60,.8));animation:rdar 1s ease-in-out infinite}
+@keyframes rdar{50%{transform:translateX(5px)}}
+.rd-sc{position:relative;margin:2px 0 14px;font-size:1.05rem;color:#E6DDF5}.rd-sc b{color:#fff}
+.rd-def{position:relative;margin:12px 0 8px;font-weight:800;color:#fff}
+.rd-shield{position:relative;display:grid;justify-items:center;gap:0;width:100%;padding:14px 10px;border:0;border-radius:999px;font:900 1.25rem "Archivo Black","Arial Black",sans-serif;letter-spacing:.02em;text-transform:uppercase;color:#fff;cursor:pointer;background:linear-gradient(180deg,#3FB4FF,#1458E0);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35),0 10px 24px -8px rgba(30,110,255,.9)}
+.rd-shield small{font:700 .78rem "Inter",sans-serif;text-transform:none;letter-spacing:0;opacity:.9}
+.rd-rep{margin-top:6px}
+/* album */
+.alb-card{position:relative;z-index:2;display:flex;align-items:center;gap:10px;width:calc(100% - 24px);margin:10px 12px 4px;padding:12px;border:0;border-radius:20px;font:inherit;text-align:left;cursor:pointer;color:#fff;background:linear-gradient(135deg,#3A1F6E,#1C0F38);box-shadow:inset 0 0 0 2px #FFC93C,0 10px 26px -12px rgba(0,0,0,.6)}
+.alb-ic{font-size:2rem}
+.alb-t{display:grid;gap:1px;flex:1}.alb-t b{font-size:1.05rem}.alb-t small{color:#CDBEE8;font-size:.8rem}
+.alb-today{display:grid;gap:1px;padding:8px 10px;border-radius:14px;background:rgba(255,255,255,.08);text-align:right}
+.alb-today small{font-size:.65rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#FFC93C}
+.alb-today b{font-size:.85rem;white-space:nowrap}.alb-today em{font-style:normal;font-size:.72rem;color:#CDBEE8}
+.alb-today.ready{background:#FFC93C;color:#2A1600;animation:sknow 1.4s ease-in-out infinite}.alb-today.ready small,.alb-today.ready em{color:#2A1600}
+.alb-today.done em{color:#2EE59D}
+.alb{padding-bottom:20px}
+.alb-top{display:flex;align-items:baseline;justify-content:space-between;margin:2px 0 12px}.alb-top h2{margin:0}.alb-top span{font-weight:800;color:#A796C6;font-size:.85rem}
+.atoday{padding:14px;border-radius:22px;background:radial-gradient(circle at 20% 0,#5A2E9A,#1E1236 70%);box-shadow:inset 0 0 0 2px #FFC93C;margin:0 0 18px}
+.atoday-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.atoday-h small{font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#FFC93C}.atoday-h em{font-style:normal;font-weight:800;font-size:.85rem;color:#fff;font-variant-numeric:tabular-nums}
+.atoday-b{display:grid;grid-template-columns:42% 1fr;gap:14px;align-items:center}
+.atoday-t{display:grid;gap:4px}.atoday-t b{font:800 1.35rem "Bricolage Grotesque",sans-serif;color:#fff}.atoday-t span{font-weight:800;color:#CDBEE8;font-size:.85rem}.atoday-t p{margin:4px 0 0;color:#E6DDF5;font-size:.9rem}.atoday-t p b{color:#FFC93C;font:inherit;font-weight:800}
+.aweek{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}
+.awk{display:grid;justify-items:center;gap:3px}
+.awk img,.awk i{width:100%;aspect-ratio:1/1;border-radius:10px;object-fit:cover;display:grid;place-items:center;font-style:normal;font-size:1.1rem;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1.5px #3A2760;filter:grayscale(.6);opacity:.6}
+.awk.got img{filter:none;opacity:1;box-shadow:0 0 0 2px #FFC93C}
+.awk.now i{opacity:1;filter:none;box-shadow:inset 0 0 0 2px #FFC93C}
+.awk small{font-size:.68rem;font-weight:800;color:#A796C6}
+.aset{margin:0 0 18px}
+.aset-h{display:flex;justify-content:space-between;align-items:baseline}.aset-h b{font:800 1.2rem "Bricolage Grotesque",sans-serif;color:#fff}.aset-h span{font-weight:800;color:#FFC93C}
+.aset-bar{height:8px;border-radius:4px;background:#2A1A46;margin:6px 0 4px;overflow:hidden}.aset-bar i{display:block;height:100%;background:linear-gradient(90deg,#FFE27A,#FFB21C)}
+.aset-rw{margin:0 0 10px;font-size:.85rem;color:#CDBEE8}.aset-rw b{color:#FFC93C}
+.aset.full .aset-rw{color:#2EE59D;font-weight:800}
+.agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.afr{display:grid;gap:5px;padding:0;border:0;background:none;font:inherit;color:#fff;cursor:pointer;text-align:center}
+.afr-in{position:relative;display:grid;place-items:center;aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:#140A26}
+.afr-in img{width:100%;height:100%;object-fit:cover}
+.afr-sil{display:grid;place-items:center;width:100%;height:100%;color:#4A3A6A}.afr-sil svg{width:42%;height:42%}
+.afr.r-bronze .afr-in{box-shadow:0 0 0 3px #C9813F}.afr.r-silver .afr-in{box-shadow:0 0 0 3px #DCE3EC}.afr.r-gold .afr-in{box-shadow:0 0 0 3px #FFD24A,0 0 14px -2px rgba(255,210,74,.7)}.afr.r-diamond .afr-in{box-shadow:0 0 0 3px #9FE8FF,0 0 18px -2px rgba(159,232,255,.8)}
+.afr.empty .afr-in{opacity:.75}
+.afr.empty.r-bronze .afr-in{box-shadow:0 0 0 2px rgba(201,129,63,.5)}.afr.empty.r-silver .afr-in{box-shadow:0 0 0 2px rgba(220,227,236,.45)}.afr.empty.r-gold .afr-in{box-shadow:0 0 0 2px rgba(255,210,74,.5)}.afr.empty.r-diamond .afr-in{box-shadow:0 0 0 2px rgba(159,232,255,.5)}
+.afr.can .afr-in{opacity:1;animation:sknow 1.4s ease-in-out infinite}
+.afr-go{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);padding:4px 10px;border-radius:999px;background:#FFC93C;color:#2A1600;font-weight:900;font-size:.72rem;white-space:nowrap}
+.afr-cap{display:grid;gap:0}.afr-cap b{font-size:.78rem;line-height:1.15}.afr-cap small{font-size:.72rem;font-weight:800;color:#CDBEE8}
+.afr.big .afr-cap{display:none}
+.afr.pop .afr-in{animation:bxburst .5s cubic-bezier(.3,1.6,.5,1)}
+.alb-note{font-size:.8rem;color:#A796C6;text-align:center}
+.afp-fr{width:120px;margin:6px auto 10px;aspect-ratio:4/5;border-radius:16px;overflow:hidden;background:#140A26;display:grid;place-items:center}
+.afp-fr img{width:100%;height:100%;object-fit:cover;filter:grayscale(.5) brightness(.7)}
+.afp-fr.r-bronze{box-shadow:0 0 0 3px #C9813F}.afp-fr.r-silver{box-shadow:0 0 0 3px #DCE3EC}.afp-fr.r-gold{box-shadow:0 0 0 3px #FFD24A}.afp-fr.r-diamond{box-shadow:0 0 0 3px #9FE8FF}
+/* today's frame on the Enhance gallery */
+.tday{margin:4px 0 16px;padding:14px;border-radius:22px;background:radial-gradient(circle at 15% 0,#5A2E9A,#1E1236 70%);box-shadow:inset 0 0 0 2px #FFC93C}
+.tday.done{box-shadow:inset 0 0 0 2px #2EE59D}
+.tday.pop{animation:bxburst .5s cubic-bezier(.3,1.6,.5,1)}
+.tday-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.tday-h small{font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#FFC93C;white-space:nowrap}
+.tday-h em{font-style:normal;font-weight:800;font-size:.8rem;color:#fff;font-variant-numeric:tabular-nums;text-align:right}
+.tday.done .tday-h em{color:#2EE59D}
+.tday-b{display:grid;grid-template-columns:34% 1fr;gap:14px;align-items:center}
+.tday-fr{aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:#140A26;display:grid;place-items:center}
+.tday-fr img{width:100%;height:100%;object-fit:cover}.tday-fr img.pv{filter:brightness(.8)}
+.tday-fr .afr-sil{color:#4A3A6A}.tday-fr .afr-sil svg{width:44%;height:44%}
+.tday-fr.r-bronze{box-shadow:0 0 0 3px #C9813F}.tday-fr.r-silver{box-shadow:0 0 0 3px #DCE3EC}.tday-fr.r-gold{box-shadow:0 0 0 3px #FFD24A}.tday-fr.r-diamond{box-shadow:0 0 0 3px #9FE8FF}
+.tday.ready .tday-fr{animation:sknow 1.4s ease-in-out infinite}
+.tday-t{display:grid;gap:3px;text-align:left}
+.tday-t b{font:800 1.3rem/1.1 "Bricolage Grotesque",sans-serif;color:#fff}
+.tday-t span{font-weight:800;color:#CDBEE8;font-size:.82rem}
+.tday-t p{margin:2px 0 6px;color:#E6DDF5;font-size:.86rem;line-height:1.35}.tday-t p b{color:#FFC93C}
+.td-go{border:0;border-radius:999px;padding:10px 12px;font:inherit;font-weight:900;font-size:.9rem;cursor:pointer;color:#2A1600;background:linear-gradient(180deg,#FFE27A,#FFB21C)}
+.td-go.alt{color:#fff;background:linear-gradient(90deg,#FF3FA4,#8B4DFF)}
+.tday .aweek{margin-top:12px}
+/* today's frame in the gallery grid */
+.wf.tdf .wf-in{position:relative;display:grid;place-items:center}
+.wf.tdf.r-bronze .wf-in{box-shadow:0 0 0 3px #C9813F,0 0 0 5px #5A3412!important}
+.wf.tdf.r-silver .wf-in{box-shadow:0 0 0 3px #DCE3EC,0 0 0 5px #6B7587!important}
+.wf.tdf.r-gold .wf-in{box-shadow:0 0 0 3px #FFD24A,0 0 0 5px #8A5A0A!important}
+.wf.tdf.r-diamond .wf-in{box-shadow:0 0 0 3px #9FE8FF,0 0 0 5px #3B57C9!important}
+.wf.tdf .wf-in{background:radial-gradient(circle at 50% 30%,#5A2E9A,#1E1236 75%)!important}
+.wf.tdf .wf-in img{width:100%;height:100%;object-fit:cover}
+.wf.tdf .wf-in img.pv{filter:brightness(.8)}
+.tdf-sil{font-size:2.4rem;opacity:.75}
+.tdf-badge{position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:2;padding:2px 8px;border-radius:999px;background:#FF3FA4;color:#fff;font-size:.62rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.wf.tdf.ready .wf-in{animation:sknow 1.4s ease-in-out infinite}
+.wf.tdf.ready .tdf-t{background:#FFC93C!important;color:#2A1600!important}
+.wf.tdf.done .tdf-t{background:#18A873!important;color:#fff!important}
+.tdf-t{font-variant-numeric:tabular-nums}
+.tdf-pl{background:linear-gradient(135deg,#FF3FA4,#8B4DFF)!important;box-shadow:none!important}
+.wf.tdf.pop .wf-in{animation:bxburst .5s cubic-bezier(.3,1.6,.5,1)}
+/* shop v4 */
+#sheet:has(.shop4) .fullbar{display:none!important}
+.shop4{padding:4px 0 16px}
+.sp-top{display:flex;align-items:center;justify-content:space-between;margin:4px 0 14px}
+.sp-top h2{margin:0;font:800 2.2rem "Bricolage Grotesque",sans-serif;color:#fff}
+.sp-x{background:none;border:0;color:#fff;padding:6px;cursor:pointer}
+.sp-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:5px;border-radius:999px;background:#24163F;margin:0 0 20px}
+.sp-tabs button{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 4px;border:0;border-radius:999px;background:none;font:800 1rem "Bricolage Grotesque",sans-serif;cursor:pointer}
+.sp-tabs .ti{font-size:1.25rem;line-height:1;display:inline-flex}.sp-tabs .ti svg{width:1.3rem;height:1.3rem}
+.sp-tabs .t-energy{color:#FFC93C}.sp-tabs .t-gems{color:#7FE3FF}.sp-tabs .t-cash{color:#7CF2B0}
+.sp-tabs button[aria-selected=true]{background:linear-gradient(90deg,#FF3FA4,#9B4DFF);color:#fff}
+.sp-h{margin:0;font:800 2rem/1.1 "Bricolage Grotesque",sans-serif;color:#fff}
+.sp-s{margin:4px 0 16px;color:#B58CFF;font-size:1rem}.sp-s b{color:#fff}
+.sp-list{display:grid;gap:14px}
+.sp-card{position:relative;padding:14px 12px 12px;border-radius:20px;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3E2A66}
+.sp-card.offer{box-shadow:inset 0 0 0 2px #FFC93C}
+.sp-tag{position:absolute;top:-10px;left:16px;padding:3px 12px;border-radius:999px;background:#FFC93C;color:#2A1600;font-weight:900;font-size:.8rem;z-index:1}
+.sp-row{display:flex;justify-content:space-around;gap:6px;margin:0 0 12px}
+.sp-t{display:grid;justify-items:center;gap:0;min-width:0;flex:1}
+.sp-ic{font-size:2.8rem;line-height:1.1;display:inline-flex}.sp-gem svg{width:2.9rem;height:2.9rem}
+.sp-t b{font:800 1.55rem "Bricolage Grotesque",sans-serif;line-height:1.1}
+.sp-t small{font-size:.85rem;color:#CDBEE8}
+.sp-t.cs b{color:#2EE59D}.sp-t.gm b{color:#7FE3FF}.sp-t.en b{color:#FFC93C}.sp-t.mut b{color:#fff;font-size:1.2rem}.sp-t.mut .sp-ic{font-size:2rem;opacity:.8}
+.sp-go{width:100%;border:0;border-radius:999px;padding:10px 0;font:800 1.2rem "Bricolage Grotesque",sans-serif;color:#fff;cursor:pointer;background:#16E06A;box-shadow:0 4px 0 #0E9A4A}
+.sp-go:active{transform:translateY(2px);box-shadow:0 2px 0 #0E9A4A}
+.sp-earn{display:flex;align-items:center;gap:12px;width:100%;margin:18px 0 6px;padding:14px 16px;border:0;border-radius:18px;font:inherit;color:#fff;text-align:left;cursor:pointer;background:#24163F;box-shadow:inset 0 0 0 1.5px #4A2F78}
+.sp-earn .ei{font-size:1.6rem}.sp-earn b{flex:1;font-size:1.02rem}.sp-earn i{font-style:normal;font-size:1.5rem}
+/* same green buy button everywhere */
+.enh-go,.ro .enh-go{background:#16E06A!important;box-shadow:0 4px 0 #0E9A4A!important}
+.sp-ic{height:3.3rem;align-items:center;justify-content:center}
+.en-new{margin:8px 0 2px;font-size:.92rem;color:#E6DDF5;text-align:center}.en-new b{color:#7FE3FF}
+.gb-medal{margin:-4px 0 14px;padding:10px 12px;border-radius:14px;background:rgba(255,201,60,.1);box-shadow:inset 0 0 0 1.5px rgba(255,201,60,.5);font-size:.9rem;color:#FFE9B0}.gb-medal b{color:#FFC93C}
+.en-mult[hidden],.lkp2[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -3839,7 +4153,7 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
       <section class="pane" id="gallery" aria-label="Gallery"></section>
     </div>
     <nav class="seg" role="group" aria-label="Switch screen">
-      <div class="segpair"><button id="segStudio" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L15 9"/><path d="M15 9l2-2"/><path d="M18 2l.8 2.2L21 5l-2.2.8L18 8l-.8-2.2L15 5l2.2-.8zM9 3l.5 1.5L11 5l-1.5.5L9 7l-.5-1.5L7 5l1.5-.5z"/></svg><span>Enhance</span></button>
+      <div class="segpair"><button id="segStudio" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L15 9"/><path d="M15 9l2-2"/><path d="M18 2l.8 2.2L21 5l-2.2.8L18 8l-.8-2.2L15 5l2.2-.8zM9 3l.5 1.5L11 5l-1.5.5L9 7l-.5-1.5L7 5l1.5-.5z"/></svg><span>Studio</span></button>
       <span class="segsw" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg></span><button id="segJudge" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg><span>Judge</span></button></div>
       <button id="segCompete" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg><span>Compete</span></button>
       <button id="segGallery" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg><span>Hall of Fame</span></button>
@@ -4236,24 +4550,46 @@ function paintTop() {
   if (!t) { b.hidden = true; return; }
   const L = lvlOf(t.s.total); b.hidden = false;
   b.className = 'stopc ' + (L ? 'lv-' + L.k : 'none');
-  b.innerHTML = `<img src="${t.src}" alt=""><b>${t.s.total}</b><span>${L ? L.ic : '🎯'}</span>`;
+  if (!S.medalIntro && S.gbDone) S.medalIntro = 1;
+  const cr = S.crack && S.photos.some(x => x.id === S.crack.pid), med = !cr && fighters().length && S.medalIntro;
+  b.classList.toggle('lostcr', !!cr);
+  b.innerHTML = `<img src="${t.src}" alt=""><b>${t.s.total}</b><span>${L ? L.ic : '🎯'}</span>${cr ? '<i class="stm gone">🏅</i>' : med ? '<i class="stm">🏅</i>' : ''}`;
   b.setAttribute('aria-label', `Your top photo scores ${t.s.total}${L ? ', ' + L.n : ''}. See what each level unlocks`);
+}
+function tierLockPop(f, mine) {
+  const L = SCORE_LEVELS.find(x => x.fee === f), v = mine.s.total, gap = L.at - v, c = $('#coach');
+  const from = Math.max(0, L.at - 25), pct = Math.max(4, Math.min(100, (v - from) / (L.at - from) * 100));
+  c.innerHTML = `<div class="crbox tlk" role="dialog" aria-modal="true" aria-labelledby="crT">
+    <div class="tlk-ph"><img src="${mine.src}" alt=""><span class="tlk-lock">🔒</span></div>
+    <span class="tlk-tag">Locked</span>
+    <h2 id="crT">${L.n} tables</h2>
+    <p class="tlk-p">$${f} tournaments need a photo scoring <b>${L.at}+</b>.</p>
+    <div class="tlk-bar"><div class="tlk-lab"><span>Your best <b>${v}</b></span><span>${L.ic} <b>${L.at}</b></span></div><div class="tlk-tr"><i style="width:${pct}%"></i></div><small>${gap} point${gap === 1 ? '' : 's'} to unlock up to <b>$${T_TIERS[f].gtd}</b> guaranteed</small></div>
+    <button class="bt-cta" id="tlkGo">Enhance to ${L.at}</button>
+    <button class="bt-no" id="tlkNo">Not now</button></div>`;
+  c.classList.add('on', 'cr');
+  const close = () => c.classList.remove('on', 'cr');
+  $('#tlkNo').onclick = close; c.onclick = e => { if (e.target === c) close(); };
+  $('#tlkGo').onclick = () => { close(); closeSheet(); if (photoLock(mine)) { WALL = true; go('studio'); renderStudio(); toast('That photo is in a competition. Pick another to enhance.'); return; } S.cur = mine.id; WALL = false; save(); go('studio'); renderStudio(); };
 }
 function levelsPop() {
   const t = topPhoto(); if (!t) return; const v = t.s.total, L = lvlOf(v), N = v < CFG.QUALIFY ? SCORE_LEVELS[0] : nextLvl(v), c = $('#coach');
+  const lk = photoLock(t), lc = lk && CX.find(x => x.id === lk.cid), canE = x => x && !photoLock(x) && !!lowestOpen(x);
+  const tgt = canE(t) ? t : S.photos.filter(canE).sort((a, b) => b.s.total - a.s.total)[0];
   c.innerHTML = `<div class="crbox lvp" role="dialog" aria-modal="true" aria-labelledby="crT">
     <button class="lvp-x" id="lvpX" aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="lvp-me"><img src="${t.src}" alt=""><div><small>Your top photo</small><b>${v} ${L ? `${L.ic} ${L.n}` : ''}</b></div></div>
     <h2 id="crT">Higher score, bigger prizes</h2>
     <div class="lvp-l">${SCORE_LEVELS.map(x => { const on = v >= x.at, here = L && L.at === x.at; return `<div class="lvp-r ${on ? 'on' : ''} ${here ? 'here' : ''} ${N && N.at === x.at ? 'nx' : ''}">
       <span class="i">${on ? x.ic : '🔒'}</span><span class="t"><b>${x.n} · ${x.at}+</b><small>$${x.fee} tournaments · up to $${T_TIERS[x.fee].gtd}</small></span>${here ? '<em>You</em>' : N && N.at === x.at ? `<em class="nx">${x.at - v} to go</em>` : ''}</div>`; }).join('')}</div>
-    <button class="bt-cta" id="lvpGo">${N ? `Enhance to ${N.at}` : 'Play a $20 tournament'}</button></div>`;
+    ${lk ? `<p class="lvp-lk">🔒 This photo is in <b>${lc ? esc(lc.t) : 'a competition'}</b>. You can enhance it again once the results are in.</p>` : ''}
+    <button class="bt-cta" id="lvpGo">${!N ? 'Play a $20 tournament' : tgt === t ? `Enhance to ${N.at}` : tgt ? 'Enhance another photo' : 'Upload a new photo'}</button></div>`;
   c.classList.add('on', 'cr');
   const close = () => c.classList.remove('on', 'cr');
   $('#lvpX').onclick = close; c.onclick = e => { if (e.target === c) close(); };
-  $('#lvpGo').onclick = () => { close(); if ($('#flow').classList.contains('on')) closeFlow(); if (N) { S.cur = t.id; WALL = false; save(); go('studio'); renderStudio(); } else { tTier(20); openTourney(); } };
+  $('#lvpGo').onclick = () => { close(); if ($('#flow').classList.contains('on')) closeFlow(); if (!N) { tTier(20); openTourney(); } else if (tgt) { S.cur = tgt.id; WALL = false; save(); go('studio'); renderStudio(); } else { WALL = true; go('studio'); renderStudio(); pickPhoto(true); } };
 }
-document.addEventListener('click', e => { if (e.target.closest('#sTop')) levelsPop(); });
+document.addEventListener('click', e => { if (e.target.closest('#sTop')) medalPop(); });
 function paintGems(animate = true) { if (typeof paintTop === 'function') paintTop();
   paintWallet();
   const target = S.gems, start = shownGems, t0 = performance.now(), dur = animate ? 700 : 0;
@@ -4724,6 +5060,12 @@ function showResult(p, o = {}) {
   p.q = stage === 2; save();
   const gc = goalFor(p), need = gc ? cxNeed(gc) : 0;
   const hitGoal = gc && goalReady(gc, p) && (o.prevTotal != null ? !(o.prevTotal >= need && (p.enh - 1) >= (gc.enh || 0)) : !!(o.win || o.fresh));
+  { const T = todayFrame(), A = S.user && albumS();
+    if (A && !A.week[dayKey()] && o.prevTotal != null && tot >= T[1] && o.prevTotal < T[1] && (T[0] === 'any' || p.cat === T[0]) && !usedPids().has(p.id)) {
+      const pop = () => { if ($('#coach').classList.contains('on')) { setTimeout(pop, 1200); return; }
+        celebrate({ src: p.src, score: tot, title: 'Today’s frame unlocked!', text: `Your photo hit <b>${T[1]}</b>. It fits today’s <b>${T[2]} ${esc(catNm(T[0]))}</b> frame. Collect it for <b>+${DAILY_GEMS} 💎</b>.`, cta: `Collect · +${DAILY_GEMS} 💎`, onCta: () => { const k = collectToday(p); gemExplosion(DAILY_GEMS, { label: `Today’s frame${k > 1 ? ' · 🔥 ' + k : ''}` }); if ($('#panes').dataset.at === 'studio' && WALL) renderStudio(); }, later: 'Later' }); };
+      setTimeout(pop, SCORE_ANIM_MS + 3400);
+    } }
   const hit80 = stage === 2 && !photoLock(p) && (crossed || !p.readyShown) && (o.prevTotal != null || 'win' in o);
   const AFTER = SCORE_ANIM_MS + 600;
   if (S.user && hitGoal) setTimeout(() => showCompReady(p, gc), Math.max(AFTER, o.win ? 2600 : 0));
@@ -5039,7 +5381,7 @@ function openSignup(then, opts = {}) {
     const p0 = cur();
     if (firstTime && p0) {
       const cont = () => { gemExplosion(CFG.SIGNUP, { label: `Welcome, @${h}` }); if (then) { closeFlow(); then(); } else setTimeout(() => askAlerts(() => goalRoute(cur())), 1600); };
-      setTimeout(() => celebrate({ src: p0.src, score: p0.s.total, title: `Welcome, @${esc(h)}!`, text: `Your photo scored ${p0.s.total}. Here are <b>${CFG.SIGNUP} more free gems</b>. Your first Daily Cash Cup entry is <b>free</b>, for real cash.`, cta: 'Collect my gems', onCta: cont, onLater: cont }), 380);
+      setTimeout(cont, 380);
       return;
     }
     setTimeout(() => gemExplosion(CFG.SIGNUP, { label: `Welcome, @${h}` }), 380);
@@ -5091,6 +5433,11 @@ function showCompReady(p, goal) {
   const rb = document.querySelector('#flowBody #rsComp'); if (rb) rb.hidden = false;
   const c = $('#coach'), fits = CX.filter(x => x.k !== 'gem' && cxFits(x, p)), first = goal || fits[0];
   const dc = CX.find(x => x.id === 'daily'), freeCup = dc && dcFirst() && cxFits(dc, p) && !liveEntry('daily') && S.gems >= dc.fee;
+  if (!S.gbDone && p && p.s.total >= CFG.QUALIFY) {
+    const cupNext = freeCup ? () => ({ label: 'Now enter the Cash Cup free', go: () => { closeFlow(); CXF = 'all'; CXP = p.id; openComps(); cxEnter(dc); } }) : null;
+    celebrate({ src: p.src, score: p.s.total, title: 'Battle ready!', text: `Your photo hit <b>${p.s.total}</b>. Put it up against a real photo now. Judges vote live and you'll know in <b>30 seconds</b>. Your first battle is <b>free</b>, win <b>${GB_FREE_WIN} gems</b>.`, cta: 'Battle now · Free', onCta: () => { closeFlow(); openGemBattle(0, cupNext); }, later: freeCup ? 'Enter the Cash Cup instead' : 'Later', onLater: freeCup ? () => { closeFlow(); CXF = 'all'; CXP = p.id; openComps(); cxEnter(dc); } : undefined });
+    return;
+  }
   if (freeCup) {
     c.innerHTML = `<div class="crbox" role="dialog" aria-modal="true" aria-labelledby="crT">
     <div class="cr-rays" aria-hidden="true"></div>${[...Array(18)].map((_, i) => `<i class="cr-cf" style="left:${(i * 53) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('')}
@@ -5182,12 +5529,12 @@ function applyOffer(cash, gems, label, after) {
   setTimeout(() => { addGems(gems, label); if ($('#panes').dataset.at === 'studio' && !$('#flow').classList.contains('on')) setTimeout(renderStudio, 1900); }, 2300);
   if (after) setTimeout(after, 4300);
 }
-function firstDepositOffer() {
+function firstDepositOffer(why) {
   if (S.paidCash || S.fdShown) return; S.fdShown = true; save();
   const c = $('#coach');
   c.innerHTML = `<div class="crbox fdo" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
     <span class="cr-comp cr-free">🎁 One-time welcome offer</span><h2 id="crT">Play for bigger cash prizes</h2>
-    <p>You’re in the Daily Cash Cup! Now try a Knockout Tournament, with up to <b>$75 guaranteed</b> for the winner.</p>
+    <p>${why || 'Try a Knockout Tournament'}, with up to <b>$75 guaranteed</b> for the winner.</p>
     <div class="fdo-v"><div><b>$5</b><small>cash to play</small></div><i>+</i><div><b>${gemIcon('')}1,000</b><small>gems <s>300</s></small></div></div>
     <button class="bt-cta" id="crGo">Get it for $5</button><button class="bt-no" id="crLater">Not now</button></div>`;
   c.classList.add('on', 'cr');
@@ -5232,13 +5579,20 @@ function openStore(reason, onBuy, tab) {
   }
   SHOPTAB = tab || SHOPTAB;
   const T = SHOPTAB;
-  const body = T === 'energy' ? `<h3 class="sh-h">⚡ Get more energy</h3><p class="sh-s">Judge with bigger bets to earn gems faster.<br>Refills +5 an hour free. You have <b>${energy()} ⚡</b></p>${enPackHTML()}`
-    : T === 'gems' ? `<h3 class="sh-h">${gemIcon('')} Get more gems</h3><p class="sh-s">Enhance photos to ${CFG.QUALIFY}+<br>Enter the Daily Cash Cup.</p><div class="srows">${GEM_PACKS.map((k, i) => `<div class="srow">${i === 2 ? '<span class="enp-t">Best value</span>' : ''}<span class="si">${gemIcon('')}</span><span class="sv"><b class="g">${k.gems.toLocaleString()}</b><small>gems</small></span><button class="sb" data-gbuy="${i}">Buy $${k.usd}</button></div>`).join('')}</div>`
-    : `<h3 class="sh-h">Add cash to play</h3><p class="sh-s">For tournaments and the King.<br>Free gems + energy with every deposit.</p><div class="srows">${OFFER ? `<div class="srow cash offer"><span class="enp-t">${esc(OFFER.label)}</span><span class="sv"><b class="c">$${OFFER.cash}</b><small>cash to play</small></span><span class="sbn"><small>Free bonus</small><i>+${OFFER.gems.toLocaleString()} gems 💎</i></span><button class="sb c" data-offer>Add $${OFFER.cash}</button></div>` : ''}${PACKS.map((k, i) => `<div class="srow cash">${i === 2 ? '<span class="enp-t">Best value</span>' : ''}<span class="sv"><b class="c">$${k.cash}</b><small>cash to play</small></span><span class="sbn"><small>Free bonus</small><i>+${k.gems.toLocaleString()} gems 💎</i><i>+${CASH_EN[i]} energy ⚡</i></span><button class="sb c" data-buy="${i}">Add $${k.cash}</button></div>`).join('')}</div>`;
-  openSheet(`<div class="shop2"><h2>Shop</h2>
-    <div class="sh-tabs" role="tablist">${[['energy', '⚡ Energy'], ['gems', '💎 Gems'], ['cash', '💵 Cash']].map(([k, l]) => `<button role="tab" data-shtab="${k}" aria-selected="${k === T}">${l}</button>`).join('')}</div>
+  const tile = (ic, v, lab, cls) => `<div class="sp-t ${cls}"><span class="sp-ic">${ic}</span><b>${v}</b><small>${lab}</small></div>`;
+  const GEM = `<span class="sp-gem">${gemIcon('')}</span>`;
+  const card = (tag, tiles, btn, attr, cls = '') => `<div class="sp-card ${cls}">${tag ? `<span class="sp-tag">${tag}</span>` : ''}<div class="sp-row">${tiles}</div><button class="sp-go" ${attr}>${btn}</button></div>`;
+  const head = { energy: ['Get energy', `Judge with bigger bets to earn gems faster. Refills +5 an hour free. You have <b>${energy()} ⚡</b>`], gems: ['Get gems', `Enhance photos, play gem battles and win back your 🏅 medal. You have <b>${S.gems.toLocaleString()} 💎</b>`], cash: ['Add cash', 'Free gems + energy included'] }[T];
+  const body = `<h3 class="sp-h">${head[0]}</h3><p class="sp-s">${head[1]}</p><div class="sp-list">` + (T === 'energy'
+    ? EN_PACKS.map((k, i) => card(k.tag, tile('⚡', k.en.toLocaleString(), 'Energy', 'en') + tile('⚖️', '~' + Math.round(k.en / 2), 'votes at ×2', 'mut'), `Buy $${k.usd}`, `data-enusd="${i}"`)).join('')
+    : T === 'gems'
+    ? GEM_PACKS.map((k, i) => card(k.tag, tile(GEM, k.gems.toLocaleString(), 'Gems', 'gm') + tile('✨', '~' + Math.floor(k.gems / 100), 'enhances', 'mut'), `Buy $${k.usd}`, `data-gbuy="${i}"`)).join('')
+    : (OFFER ? card(esc(OFFER.label), tile('💵', '$' + OFFER.cash, 'Cash', 'cs') + tile(GEM, OFFER.gems.toLocaleString(), 'Free gems', 'gm'), `Add $${OFFER.cash}`, 'data-offer', 'offer') : '')
+      + PACKS.map((k, i) => card(i === 2 ? 'Best value' : '', tile('💵', '$' + k.cash, 'Cash', 'cs') + tile(GEM, k.gems.toLocaleString(), 'Free gems', 'gm') + tile('⚡', CASH_EN[i], 'Free energy', 'en'), `Add $${k.cash}`, `data-buy="${i}"`)).join('')) + '</div>';
+  openSheet(`<div class="shop2 shop4"><div class="sp-top"><h2>Shop</h2><button class="sp-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="sp-tabs" role="tablist">${[['energy', '⚡', 'Energy'], ['gems', GEM, 'Gems'], ['cash', '💵', 'Cash']].map(([k, ic, l]) => `<button role="tab" data-shtab="${k}" class="t-${k}" aria-selected="${k === T}"><span class="ti">${ic}</span>${l}</button>`).join('')}</div>
     ${body}
-    <button class="searn" id="earnBtn"><span>⚖️</span><span><b>Earn free gems</b><small>Judge photos</small></span><i>›</i></button>
+    <button class="sp-earn" id="earnBtn"><span class="ei">⚖️</span><b>Judge photos to earn free gems</b><i>›</i></button>
     <p class="note sdemo">Demo only · No payment is taken</p></div>`, { full: true, cover: true });
   document.querySelectorAll('#sheetBody [data-shtab]').forEach(b => b.onclick = () => openStore(null, onBuy, b.dataset.shtab));
   bindShop(onBuy);
@@ -5342,11 +5696,12 @@ function openComps(forPhoto) {
   const rdyRow = false && rdy.length ? `<div class="rdyrow rdystick"><div class="rdy-s"><div class="rdy-th">${rdy.slice(0, 3).map(p => `<img src="${p.src}" alt="">`).join('')}</div><div class="tx"><b>${rdy.length} photo${rdy.length === 1 ? '' : 's'} ready</b><span>${nCan ? (CXF === 'mine' ? `Filtered to the ${nCan} you can enter` : `${nCan} competition${nCan === 1 ? '' : 's'} you can enter`) : 'No open competitions fit them right now'}</span></div>${nCan ? (CXF === 'mine' ? '<button class="rdy-btn ghost" id="rdyAll">Clear filter</button>' : '<button class="rdy-btn" id="rdyShow">Filter eligible comps</button>') : ''}</div></div>` : '';
   openFlow(`<div class="cx"><div class="cxtop${rdyRow ? ' stk' : ''}">${wal}${fpBar}${rdyRow}</div>${tabs}${liveTab ? mine : `
     ${fp || !live.length ? '' : `<h2 class="fh">Your entries</h2><div class="yent">${live.map(e => { const c = CX.find(x => x.id === e.cid); if (!c) return ''; const r = rankAt(e, Date.now()); return `<button class="ye" data-live="${e.id}"><img src="${entrySrc(e)}" alt=""><span><b>${esc(c.t)}</b><small>Rank #${r.toLocaleString()} · results in ${fmtLeft(Math.max(0, e.end - Date.now()))}</small></span><em>View</em></button>`; }).join('')}</div>`}
-    ${fp || !tUnlocked() ? '' : `<h2 class="fh">Play now</h2><div class="pnow">
+    ${fp || !fighters().length ? '' : `<h2 class="fh">Play now</h2><div class="pnow">
+      <button class="pn2 gemb" id="pnGem"><span class="pn-i">💎</span><b>Gem Battle</b><i>Win up to 200💎</i><small>30 seconds</small><em class="pn-go">${S.gbDone ? '25💎+' : 'Free'}</em></button>
       <button class="pn2 bat" id="pnBat"><span class="pn-i">⚔️</span><b>1v1 Battle</b><i>Win ${money(2 * (1 - KING_FEE))}</i><small>Instant</small><em class="pn-go">$1</em></button>
-      <button class="pn2 king" id="pnKing"><span class="pn-i">👑</span><b>The King</b><i>$40+ bounty</i><small>Any time</small><em class="pn-go">$1</em></button>
+      <button class="pn2 king feat" id="pnKing"><span class="pn-i">👑</span><b>Category King</b><i>$40+ bounty</i><small>Take the crown</small><em class="pn-go">Play · $1</em></button>
       <button class="pn2" id="pnTour"><span class="pn-i">🏆</span><b>Tournament</b><i>Up to $${T_TIERS[20].gtd}</i><small>in <em data-tmins2>${typeof tMins === 'function' ? tMins() : ''}</em></small><em class="pn-go">$1+</em></button>
-    </div>${(S.tickets || 0) ? `<p class="tix">🎟️ You have <b>${S.tickets}</b> Sunday Grand Final ticket${S.tickets === 1 ? '' : 's'}</p>` : ''}`}<div class="mh2"><h2 class="fh">${fpBar ? 'Pick a competition' : 'Competitions'}</h2></div>
+    </div><p class="pn-tag">Beat the King. Take the crown.</p>${(S.tickets || 0) ? `<p class="tix">🎟️ You have <b>${S.tickets}</b> Sunday Grand Final ticket${S.tickets === 1 ? '' : 's'}</p>` : ''}`}<div class="mh2"><h2 class="fh">${fpBar ? 'Pick a competition' : 'Competitions'}</h2></div>
     <div class="clist">${(() => { const dc = CX.find(x => x.id === 'daily'); return dc && !liveEntry(dc.id) && (!fp || cxOk(dc, fp)) && (CXF !== 'mine' || canEnter(dc)) && CXF !== 'gem' ? ccard(dc) : ''; })()}${show.map(k => cards(k)).join('') || `<p class="cxempty">You’ve entered every ${CXF === 'gem' ? 'gem ' : CXF === 'cash' ? 'cash ' : ''}competition that’s open right now. New ones start every 30 minutes.</p>`}</div>`}
     <p class="note">Prototype: entry fees and prizes use your simulated wallet. Nothing is charged or paid out for real.</p></div>`, true);
   $('#flow').classList.add('cxmode', 'astab'); $('#flow').style.top = cxTabTop() + 'px';
@@ -5356,6 +5711,7 @@ function openComps(forPhoto) {
   body.querySelectorAll('[data-w]').forEach(b => b.onclick = () => openStore());
   if ($('#pnTour')) $('#pnTour').onclick = () => openTourney();
   document.querySelectorAll('#flowBody [data-lad]').forEach(b => b.onclick = () => { closeFlow(); S.cur = b.dataset.lad; WALL = false; save(); go('studio'); renderStudio(); });
+  if ($('#pnGem')) $('#pnGem').onclick = () => openGemBattle(25);
   if ($('#pnBat')) $('#pnBat').onclick = () => { if (!fighters().length) { toast(`Get a photo to ${CFG.QUALIFY}+ to battle.`); return; } openCashBattle(1); };
   if ($('#pnKing')) $('#pnKing').onclick = () => { const F = fighters(); if (!F.length) { toast(`Get a photo to ${CFG.QUALIFY}+ to challenge a King.`); return; } openKing(F[0].cat || 'any'); };
   clearInterval(window.__pn); window.__pn = setInterval(() => { const e = document.querySelector('#flowBody [data-tmins2]'); if (!e) { clearInterval(window.__pn); return; } e.textContent = tMins(); }, 1000);
@@ -5525,6 +5881,8 @@ function settle(e) {
   save(); snapThumb(e);
 }
 function openResult(e) {
+  // the welcome deposit offer waits for the first Cup result, not the moment you enter
+  if (e.cid === 'daily' && !S.paidCash && !S.fdShown) setTimeout(() => { const wait = setInterval(() => { if (!$('#coach').classList.contains('on') && !$('#lv').classList.contains('on')) { clearInterval(wait); firstDepositOffer('Your Cash Cup result is in. Ready for the next level? Try a Knockout Tournament'); } }, 800); }, 6000);
   const c = CX.find(x => x.id === e.cid), pz = e.prize, top = paidTop(e.n, e.cid), climbed = e.startR - e.fin;
   const ph0 = S.photos.find(x => x.id === e.pid), inGal = galleryData().all.some(o => o.id === e.pid && (o.gems || o.cash)), ph = inGal ? ph0 : null, hungAt = !!ph, spot = null, swap = null;
   const galBtn = cls => ph ? `<button class="${cls}" id="rsGal">${hungAt ? 'See it in your gallery' : spot ? 'Add photo to gallery' : swap ? 'Add photo to gallery' : 'Go to your gallery'} <span aria-hidden="true">→</span></button>` : `<button class="${cls}" id="rsNext">Enter next competition <span aria-hidden="true">→</span></button>`;
@@ -5712,10 +6070,9 @@ function cxPay(c, q) {
   const e = makeEntry(c, q); S.entries.push(e); S.entered[c.id] = e.id; save(); paintWallet(); paintGems(false);
   const y = $('#flowBody').scrollTop; openComps(); $('#flowBody').scrollTop = y;
   const spot = true;
-  if (c.id === 'daily' && !S.paidCash) setTimeout(() => { const wait = setInterval(() => { if (!$('#coach').classList.contains('on')) { clearInterval(wait); firstDepositOffer(); } }, 500); }, 1500);
   const longComp = e.end - Date.now() > 60 * 60 * 1000;
   if (longComp) {
-    const at = new Date(e.end), when = at.toDateString() === new Date().toDateString() ? `today at ${at.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : `tomorrow at ${at.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
+    const at = new Date(e.end), midnight = at.getHours() === 0 && at.getMinutes() === 0 && at - Date.now() < 86400000, when = midnight ? 'at midnight tonight' : at.toDateString() === new Date().toDateString() ? `today at ${at.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : `tomorrow at ${at.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
     const toJudge = () => { closeFlow(); go('judge'); renderJudge(); }, toUpload = () => { closeFlow(); WALL = true; go('studio'); renderStudio(); pickPhoto(true); };
     celebrate({ src: q.src, score: q.s.total, title: `You’re in!`, text: `Your photo is in the <b>${esc(c.t)}</b>. Results land <b>${when}</b>, so come back to see if you won${c.k === 'gem' ? ' gems' : ' cash'}.<br><br>Find it any time in <b>Compete › My live entries</b>.<br><br>Meanwhile, earn gems to enhance your next photo.`, cta: 'Earn gems by judging', onCta: toJudge, later: 'Upload another photo', onLater: toUpload });
     return;
@@ -5762,7 +6119,7 @@ $('#shell .top .wm').style.cursor = 'pointer'; $('#shell .top .wm').onclick = ()
 const setHH = () => { const g = $('#shell > .seg'); if (g && g.offsetHeight) $('#shell').style.setProperty('--hh', (g.offsetTop + g.offsetHeight + 8) + 'px'); };
 window.addEventListener('resize', setHH); new MutationObserver(setHH).observe($('#app'), { attributes: true, attributeFilter: ['class'] }); setTimeout(setHH, 0);
 (() => {
-  const T = { segCompete: 'Competitions', segStudio: 'Enhance photo', segJudge: 'Judge photos', segGallery: 'Hall of Fame' };
+  const T = { segCompete: 'Competitions', segStudio: 'Studio', segJudge: 'Judge photos', segGallery: 'Hall of Fame' };
   const upd = () => { const b = document.querySelector('.seg button[aria-pressed="true"]'); if (document.querySelector('#lv.on .rs2')) { $('#ptitle').textContent = 'Results'; return; } $('#ptitle').textContent = b ? T[b.id] : ($('#flow').classList.contains('homemode') ? 'Home' : ''); };
   new MutationObserver(upd).observe(document.querySelector('.seg'), { attributes: true, subtree: true, attributeFilter: ['aria-pressed'] });
   upd();
@@ -6232,6 +6589,124 @@ function hofRank(k, v) {
   if (v > Math.min(...L)) return 1 + L.filter(x => x >= v).length;
   return Math.max(BOARD.length + 1, Math.round(POP * Math.exp(-v / (k === 'cash' ? 60 : 3000))));
 }
+/* ---------- Album: collectable frames + today's frame ---------- */
+const ALBUM = [
+  { id: 's1', name: 'Everyday Life', rw: { k: 'gems', n: 500, t: '500 💎' }, f: [['pets', 70], ['portrait', 70], ['food', 70], ['selfie', 70], ['landscape', 80], ['any', 90]] },
+  { id: 's2', name: 'Out & About', rw: { k: 'chest', t: '🧰 Big chest' }, f: [['travel', 70], ['city', 70], ['golden', 80], ['night', 80], ['wildlife', 90], ['any', 95]] }
+];
+const DAILY_F = [['golden', 80, '🌅'], ['pets', 70, '🐾'], ['food', 70, '🍜'], ['city', 80, '🏙️'], ['landscape', 70, '🏞️'], ['night', 80, '🌌'], ['portrait', 70, '🙂']];
+const DAILY_GEMS = 100;
+const albumS = () => (S.album = S.album || { got: {}, week: {}, streak: 0, last: null, sets: {} });
+const rarOf = lv => lv >= 95 ? { k: 'diamond', ic: '💎', n: 'Legendary' } : lv >= 90 ? { k: 'gold', ic: '🥇', n: 'Epic' } : lv >= 80 ? { k: 'silver', ic: '🥈', n: 'Rare' } : { k: 'bronze', ic: '🥉', n: 'Common' };
+const dayKey = (d = new Date()) => d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+const dayIdx = (d = new Date()) => Math.floor((d.getTime() - d.getTimezoneOffset() * 60000) / 86400000);
+const todayFrame = () => DAILY_F[dayIdx() % DAILY_F.length];
+const usedPids = () => { const A = albumS(); return new Set([...Object.values(A.got), ...Object.values(A.week).map(x => x.pid)]); };
+const fits = (cat, lv) => { const used = usedPids(); return S.photos.filter(p => !used.has(p.id) && p.s.total >= lv && (cat === 'any' || p.cat === cat)).sort((a, b) => a.s.total - b.s.total)[0] || null; };
+const nearest = (cat, lv) => { const used = usedPids(); return S.photos.filter(p => !used.has(p.id) && (cat === 'any' || p.cat === cat)).sort((a, b) => b.s.total - a.s.total)[0] || null; };
+const catNm = k => k === 'any' ? 'Any category' : pcatName(k);
+const msToMidnight = () => { const d = new Date(); d.setHours(24, 0, 0, 0); return d - Date.now(); };
+const albumCount = () => { const A = albumS(); return { got: Object.keys(A.got).length, tot: ALBUM.reduce((a, x) => a + x.f.length, 0) }; };
+function albumCardHTML() {
+  if (!S.user) return '';
+  const A = albumS(), T = todayFrame(), done = A.week[dayKey()], c = albumCount(), ready = !done && fits(T[0], T[1]);
+  return `<button class="alb-card" id="albOpen"><span class="alb-ic">📖</span><span class="alb-t"><b>My Album</b><small>${c.got}/${c.tot} frames collected</small></span>
+    <span class="alb-today ${done ? 'done' : ready ? 'ready' : ''}"><small>Today’s frame</small><b>${T[2]} ${esc(catNm(T[0]))} ${rarOf(T[1]).ic}</b><em>${done ? '✓ Collected' : ready ? 'Ready to collect!' : 'Ends in ' + fmtLeft(msToMidnight())}</em></span></button>`;
+}
+function frameHTML(key, cat, lv, pid, big) {
+  const r = rarOf(lv), p = pid && S.photos.find(x => x.id === pid), can = !pid && fits(cat, lv);
+  return `<button class="afr r-${r.k} ${pid ? 'got' : 'empty'} ${can ? 'can' : ''} ${big ? 'big' : ''}" data-fr="${key}" data-cat="${cat}" data-lv="${lv}">
+    <span class="afr-in">${pid ? `<img src="${p ? p.src : ''}" alt="">` : `<span class="afr-sil">${gi(cat)}</span>`}${can ? '<span class="afr-go">Collect!</span>' : ''}</span>
+    <span class="afr-cap"><b>${esc(catNm(cat))}</b><small>${r.ic} ${lv}+</small></span></button>`;
+}
+function openAlbum() {
+  const A = albumS(), T = todayFrame(), tk = dayKey(), done = A.week[tk];
+  const wk = [...Array(7)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() - 6 + i); const k = dayKey(d), w = A.week[k], ph = w && S.photos.find(x => x.id === w.pid), F = DAILY_F[dayIdx(d) % DAILY_F.length];
+    return `<span class="awk ${w ? 'got' : ''} ${i === 6 ? 'now' : ''}">${ph ? `<img src="${ph.src}" alt="">` : `<i>${F[2]}</i>`}<small>${['S', 'M', 'T', 'W', 'T', 'F', 'S'][d.getDay()]}</small></span>`; }).join('');
+  const sets = ALBUM.map(St => { const n = St.f.filter((_, i) => A.got[St.id + i]).length, full = n === St.f.length;
+    return `<section class="aset ${full ? 'full' : ''}"><div class="aset-h"><b>${esc(St.name)}</b><span>${n}/${St.f.length}</span></div>
+      <div class="aset-bar"><i style="width:${n / St.f.length * 100}%"></i></div>
+      <p class="aset-rw">${full ? `✓ Complete · ${St.rw.t} won` : `Complete the set: <b>${St.rw.t}</b>`}</p>
+      <div class="agrid">${St.f.map(([cat, lv], i) => frameHTML(St.id + i, cat, lv, A.got[St.id + i])).join('')}</div></section>`; }).join('');
+  openSheet(`<div class="alb">
+    <div class="alb-top"><h2>My Album</h2><span>Season 1 · ${albumCount().got}/${albumCount().tot}</span></div>
+    <section class="atoday"><div class="atoday-h"><small>Today’s frame</small><em data-albt>${done ? '✓ Collected' : 'New frame in ' + fmtLeft(msToMidnight())}</em></div>
+      <div class="atoday-b">${frameHTML('today', T[0], T[1], done && done.pid, true)}
+        <div class="atoday-t"><b>${T[2]} ${esc(catNm(T[0]))}</b><span>${rarOf(T[1]).n} · ${rarOf(T[1]).ic} ${T[1]}+</span><p>${done ? 'Come back tomorrow for a new frame.' : `Collect it today for <b>+${DAILY_GEMS} 💎</b>${A.streak ? ` and keep your <b>🔥 ${A.streak}-day</b> run going` : ''}.`}</p></div></div>
+      <div class="aweek">${wk}</div></section>
+    ${sets}
+    <p class="alb-note">Each photo can fill one frame. Upload new photos and enhance them to the frame’s level to collect it.</p></div>`, { full: true });
+  clearInterval(window.__albt); window.__albt = setInterval(() => { const e = document.querySelector('#sheetBody [data-albt]'); if (!e) { clearInterval(window.__albt); return; } if (!albumS().week[dayKey()]) e.textContent = 'New frame in ' + fmtLeft(msToMidnight()); }, 1000);
+  document.querySelectorAll('#sheetBody .afr').forEach(b => b.onclick = () => frameTap(b.dataset.fr, b.dataset.cat, +b.dataset.lv));
+}
+function frameTap(key, cat, lv) {
+  const A = albumS(); const isT = key === 'today', taken = isT ? A.week[dayKey()] : A.got[key];
+  if (taken) { toast('Already in your album.'); return; }
+  const p = fits(cat, lv);
+  if (p) {
+    if (isT) { const y = new Date(); y.setDate(y.getDate() - 1); A.streak = A.last === dayKey(y) ? (A.streak || 0) + 1 : 1; A.last = dayKey(); A.week[dayKey()] = { pid: p.id }; S.gems += DAILY_GEMS; }
+    else A.got[key] = p.id;
+    save();
+    const St = !isT && ALBUM.find(x => key.startsWith(x.id)), full = St && St.f.every((_, i) => A.got[St.id + i]) && !A.sets[St.id];
+    if (full) A.sets[St.id] = true, save();
+    openAlbum();
+    const el = document.querySelector(`#sheetBody .afr[data-fr="${key}"]`); if (el) { el.classList.add('pop'); el.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+    if (isT) setTimeout(() => gemExplosion(DAILY_GEMS, { label: `Today’s frame · 🔥 ${A.streak}` }), 500); else toast(`${rarOf(lv).ic} ${catNm(cat)} frame collected!`);
+    if (full) setTimeout(() => { closeSheet(); if (St.rw.k === 'gems') { S.gems += St.rw.n; save(); celebrate({ src: p.src, score: '📖', title: `${St.name} complete!`, text: `You filled every frame in the set. <b>+${St.rw.n} gems</b>.`, cta: 'Collect', onCta: () => gemExplosion(St.rw.n, { label: 'Set complete' }) }); } else celebrate({ src: p.src, score: '📖', title: `${St.name} complete!`, text: 'You filled every frame in the set. Open your <b>big chest</b>!', cta: 'Open it', onCta: () => chestOpen() }); }, 1400);
+    return;
+  }
+  const nr = nearest(cat, lv), c = $('#coach'), r = rarOf(lv);
+  c.innerHTML = `<div class="crbox tlk afp" role="dialog" aria-modal="true" aria-labelledby="crT">
+    <div class="afp-fr r-${r.k}">${nr ? `<img src="${nr.src}" alt="">` : `<span class="afr-sil">${gi(cat)}</span>`}</div>
+    <span class="tlk-tag">${r.n} frame</span><h2 id="crT">${esc(catNm(cat))} ${r.ic} ${lv}+</h2>
+    <p class="tlk-p">${nr ? `Your ${esc(catNm(cat)).toLowerCase()} photo scores <b>${nr.s.total}</b>. Enhance it to <b>${lv}</b> to collect this frame.` : `You need a ${cat === 'any' ? '' : esc(catNm(cat)).toLowerCase() + ' '}photo scoring <b>${lv}+</b>. Upload one, then enhance it.`}</p>
+    <button class="bt-cta" id="afGo">${nr ? `Enhance to ${lv}` : 'Upload a photo'}</button><button class="bt-no" id="afNo">Not now</button></div>`;
+  c.classList.add('on', 'cr');
+  const close = () => c.classList.remove('on', 'cr');
+  $('#afNo').onclick = close; c.onclick = e => { if (e.target === c) close(); };
+  $('#afGo').onclick = () => { close(); closeSheet(); if (nr) { S.cur = nr.id; WALL = false; save(); go('studio'); renderStudio(); } else { WALL = true; go('studio'); renderStudio(); pickPhoto(true); } };
+}
+function collectToday(p) {
+  const A = albumS(), y = new Date(); y.setDate(y.getDate() - 1);
+  A.streak = A.last === dayKey(y) ? (A.streak || 0) + 1 : 1; A.last = dayKey(); A.week[dayKey()] = { pid: p.id }; S.gems += DAILY_GEMS; save();
+  return A.streak;
+}
+function todayFrameHTML() {
+  if (!S.user) return '';
+  const A = albumS(), T = todayFrame(), done = A.week[dayKey()], ph = done && S.photos.find(x => x.id === done.pid), ready = !done && fits(T[0], T[1]), r = rarOf(T[1]);
+  return `<div class="wf tdf r-${r.k} ${done ? 'done' : ready ? 'ready' : ''}"><button class="wf-in" id="tdGo" aria-label="Today's frame: ${esc(catNm(T[0]))} ${T[1]}+">
+      <span class="tdf-badge">Today</span>
+      ${ph ? `<img src="${ph.src}" alt="">` : ready ? `<img src="${ready.src}" alt="" class="pv">` : `<span class="tdf-sil">${T[2]}</span>`}
+      <i class="wf-t tdf-t" data-tdt>${done ? `✓ +${DAILY_GEMS} 💎${A.streak > 1 ? ' · 🔥' + A.streak : ''}` : ready ? `Collect +${DAILY_GEMS} 💎` : `${r.ic} ${T[1]}+ · ${fmtLeft(msToMidnight())}`}</i></button>
+    <span class="wf-pl tdf-pl">${T[2]} ${esc(catNm(T[0]))}</span></div>`;
+}
+function todayCardHTML() {
+  if (!S.user) return '';
+  const A = albumS(), T = todayFrame(), done = A.week[dayKey()], ph = done && S.photos.find(x => x.id === done.pid), ready = !done && fits(T[0], T[1]), nr = !done && !ready && nearest(T[0], T[1]), r = rarOf(T[1]);
+  const wk = [...Array(7)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() - 6 + i); const w = A.week[dayKey(d)], wp = w && S.photos.find(x => x.id === w.pid), F = DAILY_F[dayIdx(d) % DAILY_F.length];
+    return `<span class="awk ${w ? 'got' : ''} ${i === 6 ? 'now' : ''}">${wp ? `<img src="${wp.src}" alt="">` : `<i>${F[2]}</i>`}<small>${['S', 'M', 'T', 'W', 'T', 'F', 'S'][d.getDay()]}</small></span>`; }).join('');
+  const btn = done ? '' : ready ? `<button class="td-go" id="tdGo">Collect · +${DAILY_GEMS} 💎</button>` : nr ? `<button class="td-go alt" id="tdGo">Enhance to ${T[1]}</button>` : `<button class="td-go alt" id="tdGo">Upload a ${esc(catNm(T[0]))} photo</button>`;
+  return `<section class="tday ${done ? 'done' : ready ? 'ready' : ''}">
+    <div class="tday-h"><small>Today’s frame</small><em data-tdt>${done ? '✓ Collected · new frame in ' + fmtLeft(msToMidnight()) : 'Ends in ' + fmtLeft(msToMidnight())}</em></div>
+    <div class="tday-b"><div class="tday-fr r-${r.k}">${ph ? `<img src="${ph.src}" alt="">` : ready ? `<img src="${ready.src}" alt="" class="pv">` : `<span class="afr-sil">${gi(T[0])}</span>`}</div>
+      <div class="tday-t"><b>${T[2]} ${esc(catNm(T[0]))}</b><span>${r.ic} ${r.n} · ${T[1]}+</span><p>${done ? `Nice! ${A.streak > 1 ? `🔥 ${A.streak} days in a row.` : 'Come back tomorrow.'}` : `A new frame every day. Fill it for <b>+${DAILY_GEMS} 💎</b>${A.streak ? ` · 🔥 ${A.streak}-day run` : ''}.`}</p>${btn}</div></div>
+    <div class="aweek">${wk}</div></section>`;
+}
+function bindToday(st) {
+  clearInterval(window.__tdt); window.__tdt = setInterval(() => { const e = document.querySelector('#studio [data-tdt]'), T = todayFrame(); if (!e) { clearInterval(window.__tdt); return; } if (!albumS().week[dayKey()] && !fits(T[0], T[1])) e.textContent = `${rarOf(T[1]).ic} ${T[1]}+ · ${fmtLeft(msToMidnight())}`; }, 1000);
+  const b = st.querySelector('#tdGo'); if (!b) return;
+  b.onclick = () => {
+    const A = albumS(), T = todayFrame(), p = fits(T[0], T[1]);
+    if (A.week[dayKey()]) { toast(`Today’s frame is collected. A new one drops in ${fmtLeft(msToMidnight())}.`); return; }
+    if (p) { const k = collectToday(p); renderStudio(); const card = $('#studio .tdf'); if (card) card.classList.add('pop'); setTimeout(() => gemExplosion(DAILY_GEMS, { label: `Today’s frame${k > 1 ? ' · 🔥 ' + k : ''}` }), 350); return; }
+    const r = rarOf(T[1]), nr0 = nearest(T[0], T[1]);
+    celebrate({ src: nr0 ? nr0.src : (SEED[0] || {}).src, score: T[2], title: `Today: ${catNm(T[0])}`, text: `Fill today’s frame with a ${T[0] === 'any' ? '' : catNm(T[0]).toLowerCase() + ' '}photo scoring <b>${T[1]}+</b> (${r.ic} ${r.n}) for <b>+${DAILY_GEMS} 💎</b>. ${nr0 ? `Your best one scores <b>${nr0.s.total}</b>.` : 'Upload one, then enhance it.'} A new frame drops at midnight.`, cta: nr0 ? `Enhance to ${T[1]}` : 'Upload a photo', onCta: () => go2(), later: 'Not now' });
+    return;
+    function go2() { const nr = nearest(T[0], T[1]);
+    if (nr) { S.cur = nr.id; WALL = false; save(); renderStudio(); $('#studio').scrollTop = 0; }
+    else { S.frameHint = { cats: [T[0]], lab: catNm(T[0]), frame: catNm(T[0]) }; save(); pickPhoto(true); } }
+  };
+}
 function boardHTML() {
   const k = GV.hof === 'cash' ? 'cash' : 'gems', L = BOARD.slice().sort((a, b) => hofVal(k, b) - hofVal(k, a));
   const tot = k === 'cash' ? wonCash() : wonGems(), rank = hofRank(k, tot), unit = k === 'cash' ? 'cash won' : 'gems won';
@@ -6418,11 +6893,11 @@ function renderJudge() {
     <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span><span class="jrep" role="button" tabindex="0" data-rep="${i}" aria-label="Report this photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
     <div class="jfoot jf2">
       ${energy() < 1 ? `<div class="jf-en en-out"><span class="en-ic">⚡</span><span class="eo-t"><b>Out of energy</b><small class="en-nx">+5 ⚡ in ${enNext()}</small><small class="en-full">Full again at ${enFullAt()}</small></span><button id="enBuy">Refill</button></div>` : `<div class="jf-en"><div class="en-top"><span class="en-ic">⚡</span><span class="en-bar"><i style="width:${Math.min(100, energy() / EN_MAX * 100)}%"></i></span><span class="en-n">${energy()}/${EN_MAX}</span><button class="en-plus" id="enPlus" aria-label="Buy energy">+</button></div>
-        <div class="en-mult" role="group" aria-label="Bet">${MULTS.map(m => `<button data-mult="${m}" aria-pressed="${(S.mult || 1) === m}" class="${energy() < m ? 'low' : ''}">×${m}</button>`).join('')}</div>
+        ${(S.votes || 0) < 10 ? `<p class="en-new">Pick the photo you think most judges prefer. Right picks earn <b>+${CFG.VOTE} 💎</b>.</p>` : ''}<div class="en-mult" role="group" aria-label="Bet" ${(S.votes || 0) < 10 ? 'hidden' : ''}>${MULTS.map(m => `<button data-mult="${m}" aria-pressed="${(S.mult || 1) === m}" class="${energy() < m ? 'low' : ''}">×${m}${(S.mult || 1) === m ? `<small>+${CFG.VOTE * m}💎</small>` : ''}</button>`).join('')}</div>
         ${(S.mult || 1) > energy() ? `<div class="en-empty"><span>Need ${S.mult} ⚡ for ×${S.mult}</span><button id="enBuy">Top up</button></div>`
-          : `<p class="en-rw">Agree with the crowd: <b>+${CFG.VOTE * jMult()}</b> 💎</p>`}
+          : ''}
       </div>`}
-      <div class="lkp jf-combo"><span class="lkp-ic">🎁</span><span class="lkp-t"><b>Lucky box</b><small><em class="cmb-n">${combo}</em>/5 right in a row</small></span><span class="dots">${[...Array(5)].map((_, i) => `<i class="${i < combo ? 'on' : ''}"></i>`).join('')}</span></div>
+      <div class="lkp2" ${(S.votes || 0) < 10 ? 'hidden' : ''}><span class="lk-l" aria-label="Right picks in a row"><em class="cmb-n">${combo}</em>/10</span><div class="lkp-steps jf-combo">${[...Array(10)].map((_, i) => `<i class="${i < combo ? 'on' : ''} ${[2, 4, 9].includes(i) ? 'm m' + (i + 1) : ''}">${[2, 4, 9].includes(i) ? '🎁' : ''}</i>`).join('')}</div></div>
     </div>
     <div class="vh" id="jRes" aria-live="polite"></div>
 `;
@@ -6467,36 +6942,50 @@ function maybeEnhanceNudge() {
   const from = nudgeFrom; nudgeFrom = null;
   const p = waitingPhoto(); if (!p) return; const cost = fixCost(p);
   if (from == null || from >= cost || S.gems < cost) return;
-  const wp = waitingPhoto(); if (wp && S.gems >= fixCost(wp)) enhanceReadyPop(wp); else toast(`You have ${S.gems} gems · swipe to Enhance`);
+  const wp = waitingPhoto(); if (wp && S.gems >= fixCost(wp)) enhanceReadyPop(wp); else toast(`You have ${S.gems} gems · open Studio to enhance`);
 }
 async function vote(pick) {
   if (judging) return; judging = true;
   const pair = seedPair(), p = pair[pick], ca = crowdAvg(pair[0]), cb = crowdAvg(pair[1]);
   const pctA = Math.max(8, Math.min(92, Math.round(50 + (ca - cb) * 32 + (((S.jIdx * 37) % 23) - 11)))), pct = [pctA, 100 - pctA];
   const agree = pct[pick] >= 50, mine = pct[pick];
-  document.querySelectorAll('#judge .tot-c').forEach((b, i) => { b.disabled = true; b.classList.add(i === pick ? 'mine' : 'other'); b.classList.toggle('win', pct[i] >= 50); b.querySelector('.tot-r').innerHTML = `<b>${pct[i]}%</b><small>picked this</small>`; });
-  const ds0 = dailyState(), mult = jMult(), live = isLive(), earn = !agree ? (live ? 2 : 0) : (mult ? CFG.VOTE * mult : 1) + (live ? 5 : 0), capNow = false;
-  energy(); S.en = Math.max(0, S.en - mult); if (S.en < EN_MAX && S.en + mult >= EN_MAX) S.enAt = Date.now(); S.lastMult = mult || 1; setTimeout(paintEnergy, 0); const justEmpty = mult > 0 && S.en < 1;
+  document.querySelectorAll('#judge .tot-c').forEach((b, i) => { b.disabled = true; b.classList.add(i === pick ? 'mine' : 'other'); b.classList.toggle('win', pct[i] >= 50); b.querySelector('.tot-r').innerHTML = `<b data-to="${pct[i]}">50%</b><small>picked this</small>`; });
+  { const t0 = performance.now(), els = [...document.querySelectorAll('#judge .tot-r b[data-to]')]; const step = now => { const k = Math.min(1, (now - t0) / 650), e = 1 - Math.pow(1 - k, 3); els.forEach(el => el.textContent = Math.round(50 + (+el.dataset.to - 50) * e) + '%'); if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }
+  const ds0 = dailyState(), mult = jMult(), live = isLive(), base = mult ? CFG.VOTE * mult : 1, capNow = false;
+  let tier = 1, tierLab = ''; if (agree && mult) { const r = Math.random(); if (r < .01) { tier = 20; tierLab = '💎 JACKPOT'; } else if (r < .05) { tier = 5; tierLab = '🔥 Big win ×5'; } else if (r < .15) { tier = 2; tierLab = '✨ Double ×2'; } }
+  const earn = !agree ? (live ? 2 : 0) : base * tier + (live ? 5 : 0), enBack = mult && Math.random() < .06 ? mult : 0;
+  energy(); S.en = Math.max(0, S.en - mult); if (S.en < EN_MAX && S.en + mult >= EN_MAX) S.enAt = Date.now(); S.lastMult = mult || 1; if (enBack) S.en += enBack; setTimeout(paintEnergy, 0); const justEmpty = mult > 0 && S.en < 1;
   if (nudgeFrom == null) nudgeFrom = S.gems;
   S.votes++; S.since++; S.jIdx += 2; S.gems += earn;
-  S.combo = agree ? (S.combo || 0) + 1 : 0; const comboHit = S.combo >= 5; if (comboHit) S.combo = 0;
+  S.combo = agree ? (S.combo || 0) + 1 : 0; const shown = S.combo, comboHit = agree && S.votes > 10 && [3, 5, 10].includes(S.combo) ? S.combo : 0; if (S.combo >= 10) S.combo = 0;
+  const drop = agree && S.votes > 10 && !comboHit && Math.random() < .04;
   const ds = dailyState(); ds.D.n++; ds.D.sn = (ds.D.sn || 0) + 1;
   let streakHit = 0;
-  if (ds.D.sn >= 3 && !ds.D.got.includes(ds.si)) { ds.D.streak = (ds.D.last === ds.t || ds.D.last === ds.y) ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; ds.D.got.push(ds.si); streakHit = ds.D.streak; S.gems += STREAK_GEMS; paintFlame(); }
+  if (S.votes >= 10 && ds.D.sn >= 3 && !ds.D.got.includes(ds.si)) { ds.D.streak = (ds.D.last === ds.t || ds.D.last === ds.y) ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; ds.D.got.push(ds.si); streakHit = ds.D.streak; S.gems += STREAK_GEMS; paintFlame(); }
   save();
-  document.querySelectorAll('#judge .jf-combo i').forEach((d, i) => d.classList.toggle('on', comboHit || i < S.combo)); document.querySelectorAll('#judge .cmb-n').forEach(n => n.textContent = comboHit ? 5 : S.combo); 
-  const mc = document.querySelectorAll('#judge .tot-c')[pick], word = mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : mine >= 35 ? 'Close call' : 'Missed it';
+  document.querySelectorAll('#judge .lkp-steps i').forEach((d, i) => { d.classList.toggle('on', i < shown); d.classList.toggle('pop', comboHit && i === shown - 1); }); document.querySelectorAll('#judge .cmb-n').forEach(n => n.textContent = shown); document.querySelectorAll('#judge .cmb-nx').forEach(n => n.textContent = comboNext(shown)); 
+  await sleep(680);
+  const near = !agree && mine >= 42;
+  const mc = document.querySelectorAll('#judge .tot-c')[pick], word = mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : near ? 'So close!' : mine >= 35 ? 'Close call' : 'Missed it';
   mc.querySelector('.tot-r').insertAdjacentHTML('afterbegin', `<span class="tot-v ${agree ? 'hit' : 'miss'}">${agree ? '✓' : '✕'} ${word}</span>`);
   $('#jRes').textContent = `${word} ${mine}% of judges picked this one.${earn ? ` Plus ${earn} gems.` : ''}`;
   if (live) mc.querySelector('.tot-r').insertAdjacentHTML('beforeend', `<span class="tot-x lv">🔴 Your vote counted · +${agree ? 5 : 2} live bonus</span>`);
-  if (earn && mult > 1) mc.querySelector('.tot-r').insertAdjacentHTML('beforeend', `<span class="tot-x">×${mult} · +${earn} 💎</span>`);
-  if (earn) gemExplosion(earn, { mid: true, from: mc });
-  await sleep(1900);
+  const tr = mc.querySelector('.tot-r');
+  if (tierLab) { winBanner(tierLab, `+${base * tier} 💎`, tier); if (tier === 20) mc.classList.add('jack'); }
+  else if (earn && mult > 1) tr.insertAdjacentHTML('beforeend', `<span class="tot-x">×${mult} · +${earn} 💎</span>`);
+  if (near) tr.insertAdjacentHTML('beforeend', `<span class="tot-x nm">Crowd split ${mine}/${100 - mine}</span>`);
+  if (enBack) tr.insertAdjacentHTML('beforeend', `<span class="tot-x en">⚡ +${enBack} energy back</span>`);
+  if ([2, 4, 9].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">${S.combo === 9 ? '🧰 1 more for the big chest!' : '🎁 1 more for a lucky box!'}</span>`);
+  if (earn) setTimeout(() => gemExplosion(earn, { mid: true, from: mc }), tier > 1 ? 900 : 0);
+  await sleep(tier === 20 ? 2800 : tier > 1 ? 2200 : 1900);
   if (!comboHit && fighters().length && tUnlocked() && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); return; }
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
   if (streakHit) { const rw = STREAK_GEMS; celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} streak!`, text: `You judged 3 photos this ${SESS[ds.si].toLowerCase()}. <b>+${rw} gems</b>. ${ds.si < 3 ? `Come back from ${SESS_AT[ds.si + 1]} for another ${rw}.` : `Come back after midnight for another ${rw}.`}`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
-  if (comboHit) { luckyDrop(); return; }
+  if (S.votes >= 10 && !S.betIntro) { S.betIntro = true; save(); celebrate({ src: p.src, score: '🎁', title: 'Bets and lucky boxes unlocked!', text: 'Bet ×2, ×5 or ×10 energy to earn more gems per right pick. Get <b>3, 5 and 10 right in a row</b> to open lucky boxes.', cta: 'Got it' }); return; }
+  if (comboHit === 5) { luckyDrop(); return; }
+  if (comboHit) { miniDrop(comboHit); return; }
+  if (drop) { miniDrop(); return; }
   if (justEmpty) { setTimeout(outOfEnergy, 300); return; }
   maybeEnhanceNudge();
 }
@@ -6506,6 +6995,76 @@ function packOffer() {
 function capOffer() {
   const p = cur();
   celebrate({ src: p ? p.src : SEED[3].src, score: '20', title: 'Daily bonus done!', text: `You judged ${JUDGE_CAP} photos today. Judging now pays +${JUDGE_LOW} gems until tomorrow. Want gems now? The <b>${PACKS[0].t} pack</b> has ${PACKS[0].gems} gems and $${PACKS[0].cash} cash.`, cta: 'See gem packs', onCta: () => openStore('Your daily judging bonus is used up.'), later: 'Keep judging' });
+}
+function winBanner(t, sub, tier) {
+  const w = document.createElement('div'); w.className = 'winb t' + tier; w.innerHTML = `<b>${t}</b><span>${sub}</span>`;
+  document.body.appendChild(w); setTimeout(() => w.classList.add('out'), tier === 20 ? 2200 : 1400); setTimeout(() => w.remove(), tier === 20 ? 2700 : 1900);
+}
+const comboNext = n => n < 3 ? `box at 3` : n < 5 ? `bigger box at 5` : n < 10 ? `big chest at 10` : 'chest!';
+function miniDrop(kind) {
+  if (kind === 10) { chestOpen(); return; }
+  // pick one of three boxes; then the other two are revealed (near miss)
+  const LM = S.lastMult || 1, c = $('#coach');
+  const P = kind === 3 ? [{ w: .6, k: 'g', n: 15 * LM }, { w: .3, k: 'e', n: 5 }, { w: .1, k: 'g', n: 50 * LM }]
+    : [{ w: .5, k: 'g', n: 25 * LM }, { w: .3, k: 'e', n: 10 }, { w: .15, k: 'g', n: 100 * LM }, { w: .05, k: 'e', n: 25 }];
+  const roll = () => { let r = Math.random(); for (const x of P) { if (r < x.w) return x; r -= x.w; } return P[0]; };
+  const boxes = [roll(), roll(), roll()], top = P.reduce((a, x) => x.k === 'g' && x.n > a ? x.n : a, 0);
+  const lab = x => x.k === 'g' ? `<b>+${x.n}</b><small>💎 gems</small>` : `<b>+${x.n}</b><small>⚡ energy</small>`;
+  c.innerHTML = `<div class="crbox lucky md" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
+    <h2 id="crT">${kind === 3 ? 'Lucky box!' : 'Mystery drop!'}</h2><p class="lk-sub">${kind === 3 ? '3 right picks in a row!' : 'A bonus fell out of your vote'}</p>
+    <p class="md-pk">Pick a box. One could hold <b>${top} gems</b>.</p>
+    <div class="lk-boxes md3">${[0, 1, 2].map(k => `<button class="lk-box" data-b="${k}" aria-label="Box ${k + 1}">🎁</button>`).join('')}</div>
+    <div id="mdArea"></div>
+    <p class="md-odds">Each box: ${P.map(x => `${Math.round(x.w * 100)}% ${x.n} ${x.k === 'g' ? 'gems' : 'energy'}`).join(' · ')}</p></div>`;
+  c.classList.add('on', 'cr'); c.onclick = null;
+  c.querySelectorAll('.lk-box').forEach(b => b.onclick = () => {
+    const k = +b.dataset.b, pz = boxes[k];
+    c.querySelectorAll('.lk-box').forEach(x => x.disabled = true);
+    b.classList.add('shake');
+    setTimeout(() => {
+      b.classList.remove('shake'); b.classList.add('mine', 'bxpop'); b.innerHTML = lab(pz);
+      if (pz.k === 'g') S.gems += pz.n; else { energy(); S.en += pz.n; } save(); if (typeof paintEnergy === 'function') paintEnergy();
+      setTimeout(() => {
+        c.querySelectorAll('.lk-box').forEach((x, j) => { if (j !== k) { x.classList.add('other'); x.innerHTML = lab(boxes[j]); } });
+        const best = boxes.reduce((a, x, j) => (x.k === 'g' && x.n > (boxes[a].k === 'g' ? boxes[a].n : 0) ? j : a), k);
+        const miss = best !== k && boxes[best].k === 'g' && (pz.k !== 'g' || boxes[best].n > pz.n);
+        $('#mdArea').innerHTML = `<p class="lk-res">${miss ? `So close! The ${boxes[best].n} gems were next door.` : pz.n >= top && pz.k === 'g' ? '🔥 You found the big one!' : 'Nice pick!'}</p><button class="bt-cta" id="mdDone">Collect</button>`;
+        $('#mdDone').onclick = () => { c.classList.remove('on', 'cr'); if (pz.k === 'g') gemExplosion(pz.n, { label: kind === 3 ? 'Lucky box' : 'Mystery drop' }); else { paintGems(); toast(`⚡ +${pz.n} energy`); } };
+      }, 700);
+    }, 650);
+  });
+}
+function chestOpen() {
+  // tap three times to crack it; the glow shows how rare it is
+  const LM = S.lastMult || 1, c = $('#coach');
+  const R = [{ w: .5, k: 'common', n: 'Common', g: 250, e: 10 }, { w: .3, k: 'rare', n: 'Rare', g: 400, e: 25 }, { w: .15, k: 'epic', n: 'Epic', g: 600, e: 50 }, { w: .05, k: 'legend', n: 'Legendary', g: 1000, e: 50 }];
+  let r = Math.random(), rar = R[0]; for (const x of R) { if (r < x.w) { rar = x; break; } r -= x.w; }
+  const gems = rar.g * LM, ladder = ['common', 'rare', 'epic', 'legend'].slice(0, R.indexOf(rar) + 1);
+  c.innerHTML = `<div class="crbox lucky md ch" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
+    <h2 id="crT">Big chest!</h2><p class="lk-sub">10 right picks in a row!</p>
+    <button class="ch-box" id="chBox" aria-label="Tap to crack the chest">🧰</button>
+    <p class="md-tap" id="chTap">Tap 3 times to crack it open</p><div class="ch-taps"><i></i><i></i><i></i></div>
+    <div id="chArea"></div>
+    <p class="md-odds">${R.map(x => `${x.n} ${Math.round(x.w * 100)}%`).join(' · ')}</p></div>`;
+  c.classList.add('on', 'cr'); c.onclick = null;
+  let taps = 0; const box = $('#chBox');
+  box.onclick = () => {
+    if (taps >= 3) return; taps++;
+    c.querySelectorAll('.ch-taps i').forEach((d, k) => d.classList.toggle('on', k < taps));
+    box.classList.remove('hit'); void box.offsetWidth; box.classList.add('hit');
+    box.className = 'ch-box hit glow-' + (taps < 3 ? ladder[Math.min(taps - 1, ladder.length - 1)] : rar.k);
+    if (taps < 3) { $('#chTap').textContent = taps === 1 ? 'It’s glowing… keep going' : 'One more!'; return; }
+    box.disabled = true; $('#chTap').textContent = '';
+    setTimeout(() => {
+      box.classList.add('open'); box.innerHTML = '✨';
+      const shield = false;
+      S.gems += gems; energy(); S.en += rar.e; save(); if (typeof paintEnergy === 'function') paintEnergy();
+      $('#chArea').innerHTML = `<span class="ch-rar r-${rar.k}">${rar.n} chest</span>
+        <div class="ch-items"><div class="ch-it" style="animation-delay:.1s"><b>+${gems}</b><small>💎 gems</small></div><div class="ch-it" style="animation-delay:.45s"><b>+${rar.e}</b><small>⚡ energy</small></div>${shield ? '<div class="ch-it" style="animation-delay:.8s"><b>+1</b><small>🛡️ shield</small></div>' : ''}</div>
+        <button class="bt-cta" id="chDone" style="animation:cpop .4s .8s both">Collect</button>`;
+      $('#chDone').onclick = () => { c.classList.remove('on', 'cr'); gemExplosion(gems, { label: `${rar.n} chest` }); toast(`⚡ +${rar.e} energy`); };
+    }, 500);
+  };
 }
 function luckyDrop() {
   const LM = S.lastMult || 1, sure = 30 * LM, c = $('#coach');
@@ -6546,53 +7105,207 @@ function battleRival(cat) {
 const CASH_FEE = 0.1;
 const isCashPlayer = () => !!S.user && ((S.entries || []).some(e => { const c = CX.find(x => x.id === e.cid); return c && c.k !== 'gem'; }) || !!S.paidCash);
 const avgScore = () => S.photos.length ? Math.round(S.photos.reduce((a, p) => a + p.s.total, 0) / S.photos.length) : 0;
-function openCashBattle(stake) {
-  if (!S.photos.length) return;
-  stake = stake || 1;
-  const me = avgScore(), o = OPP[Math.floor(Math.random() * OPP.length)];
-  const their = Math.max(40, Math.min(98, me + Math.round(rnd(-4, 4)) || me + 1));
-  const theirPics = [2, 9, 13].map(k => SEED[(k + their) % SEED.length].src), pot = s2 => +(s2 * 2 * (1 - CASH_FEE)).toFixed(2), myPics = S.photos.slice().sort((a, b) => b.s.total - a.s.total).slice(0, 3);
-  const bt = $('#battle');
-  bt.style.top = cxTabTop() + 'px';
-  bt.classList.add('cashbt');
-  const paint = () => {
-    const win = pot(stake), short = (S.cash || 0) < stake;
-    bt.innerHTML = `<div class="bt-in">
-      <div class="cb-badge"><span>${CASH_ICON}</span>REAL CASH BATTLE</div>
-      <h2 class="bt-h">@${esc(o.h)} wants a cash battle</h2>
-      <p class="cb-rule">Highest <b>average photo score</b> wins. You’re matched with players at your level.</p>
-      <div class="cb-vs">
-        <div class="cb-p me"><div class="cb-fan">${myPics.map(p => `<img src="${p.src}" alt="">`).join('')}</div><small>Your average</small><b>${me}%</b><span>${BT_USER}You</span></div>
-        <span class="bt-vs">vs</span>
-        <div class="cb-p them"><div class="cb-fan">${theirPics.map(src => `<img src="${src}" alt="">`).join('')}</div><small>Their average</small><b id="cbTheir">?</b><span>${BT_USER}@${esc(o.h)}</span></div>
+const GB_STAKES = [25, 50, 100], GB_FREE_WIN = 100;
+const REPAIR_GEMS = 50, SHIELD_GEMS = 100, SHIELD_MAX = 3;
+const medalPhoto = () => fighters()[0] || null;
+function medalBack() { S.crack = null; S.medalBack = Date.now(); save(); paintTop(); }
+function repairPhoto() {
+  if (!S.crack) return;
+  if (S.gems < REPAIR_GEMS) { runOut('gems', `You need ${REPAIR_GEMS - S.gems} more gems`, () => repairPhoto(), REPAIR_GEMS - S.gems); return; }
+  S.gems -= REPAIR_GEMS; medalBack(); paintGems(); toast('🏅 Your Champion Medal is back!');
+}
+function awayCheck() {
+  if (!S || !S.user) return; const now = Date.now(), last = S.lastSeen || now; S.lastSeen = now; save();
+  if (now - last < 60000 || S.crack || !S.medalIntro || now - S.medalIntro < 24 * 3600000) return; // demo: anything over a minute counts as "away"; new medal holders get a day's grace
+  const ph = medalPhoto(); if (!ph) return;
+  const n = 1 + Math.floor(Math.random() * 3), log = []; let stolen = null;
+  for (let i = 0; i < n && !stolen; i++) {
+    const o = OPP[Math.floor(Math.random() * OPP.length)], lose = Math.random() < Math.max(.2, Math.min(.5, .55 - (ph.s.total - 70) / 60));
+    if (!lose) { log.push({ h: o.h, won: true }); continue; }
+    stolen = { h: o.h, src: battleRival(ph.cat || 'any').src }; log.push({ h: o.h, won: false });
+  }
+  const gems = log.filter(x => x.won).length * 10; S.gems += gems;
+  if (stolen) S.crack = { pid: ph.id, by: stolen.h, src: stolen.src, at: now };
+  save(); paintTop();
+  const show = () => { if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) { setTimeout(show, 1500); return; } awayPop(ph, log, gems, stolen); };
+  setTimeout(show, 1800);
+}
+function buyShield(after) {
+  const c = $('#coach');
+  if ((S.shields || 0) >= SHIELD_MAX) { toast(`🛡️ You already have ${SHIELD_MAX} shields.`); return; }
+  if (S.gems < SHIELD_GEMS) { c.classList.remove('on', 'cr'); runOut('gems', `You need ${SHIELD_GEMS - S.gems} more gems`, null, SHIELD_GEMS - S.gems); return; }
+  S.gems -= SHIELD_GEMS; S.shields = (S.shields || 0) + 1; save(); paintGems(); toast(`🛡️ Shield on. It blocks the next raid. You have ${S.shields}.`); if (after) after();
+}
+function awayPop(ph, log, gems, stolen) {
+  const c = $('#coach');
+  if (stolen) {
+    const used = S.crack && S.crack.rv;
+    c.innerHTML = `<div class="crbox raid" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
+      <div class="rd-sw" aria-hidden="true">⚔️</div>
+      <h2 id="crT">You were raided!</h2>
+      <p class="rd-sub">@${esc(stolen.h)} took your Champion Medal.</p>
+      <div class="rd-row">
+        <div class="rd-p me"><span class="rd-ghost" aria-hidden="true">🏅</span><div class="rd-im"><img src="${ph.src}" alt="Your photo"></div><b>Your photo</b></div>
+        <span class="rd-arrow" aria-hidden="true">➜</span>
+        <div class="rd-p them"><span class="rd-cr" aria-hidden="true">🏅</span><div class="rd-im"><img src="${stolen.src}" alt=""></div><b>@${esc(stolen.h)}</b></div>
       </div>
-      <div id="cbArea">
-        <div class="cb-stake" role="group" aria-label="Stake">${[1, 5].map(v => `<button data-st="${v}" aria-pressed="${v === stake}"><b>$${v}</b><small>Win $${pot(v).toFixed(2)}</small></button>`).join('')}</div>
-        <p class="cb-fine">Real money. You stake <b>$${stake}</b> of your cash balance ($${(S.cash || 0).toFixed(2)}). Winner takes $${win.toFixed(2)} (10% fee).</p>
-        ${short ? `<button class="bt-cta cb-cta" id="cbBuy">Get cash to battle</button><p class="cb-fine">You need $${stake} cash. Buy a pack to add cash.</p>` : `<button class="bt-cta cb-cta" id="cbGo">Battle for $${stake}</button>`}
-        <button class="bt-no" id="cbNo">Not now</button>
-      </div></div>`;
-    bt.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { stake = +b.dataset.st; paint(); });
-    const close = () => { bt.classList.remove('on', 'cashbt'); };
-    $('#cbNo').onclick = close;
-    if ($('#cbBuy')) $('#cbBuy').onclick = () => openStore(`You need $${stake} cash for this battle.`, () => paint());
-    if ($('#cbGo')) $('#cbGo').onclick = async () => {
-      S.cash = +((S.cash || 0) - stake).toFixed(2); save(); paintWallet();
-      bt.querySelectorAll('[data-st]').forEach(b => b.disabled = true); $('#cbGo').disabled = true; $('#cbNo').style.visibility = 'hidden';
-      const el = $('#cbTheir'), t0 = performance.now();
-      await new Promise(res => { const step = now => { const k = (now - t0) / 1800; if (k < 1) { el.textContent = Math.round(rnd(me - 6, me + 6)) + '%'; requestAnimationFrame(step); } else res(); }; requestAnimationFrame(step); });
-      el.textContent = their + '%';
-      const won = me > their || (me === their && Math.random() < .5);
-      bt.querySelector(won ? '.cb-p.me' : '.cb-p.them').classList.add('won');
-      if (won) { S.cash = +((S.cash || 0) + win).toFixed(2); save(); setTimeout(() => cashExplosion(win, { label: 'Cash battle win' }), 500); }
-      $('#cbArea').innerHTML = `<div class="bt-res ${won ? 'win' : 'lose'}"><span class="tag">${won ? 'You won' : `@${esc(o.h)} won`}</span>
-        <b>${won ? '+$' + win.toFixed(2) : '−$' + stake.toFixed(2)}</b>
-        <p>${me === their ? 'Tied averages. The crowd broke the tie.' : won ? `Your ${me}% average beat their ${their}%.` : `Their ${their}% average beat your ${me}%. Raise your average to win more.`}</p></div>
-        <button class="bt-cta cb-cta" id="cbDone">Keep judging</button>`;
-      $('#cbDone').onclick = () => { close(); go('judge'); };
-    };
+      <p class="rd-sc">Get it back to keep earning <b>10 💎</b> for every raid you fight off.</p>
+      ${used ? `<button class="bt-cta" id="awRep">🏅 Get it back · ${REPAIR_GEMS} 💎</button>` : `<button class="bt-cta" id="awRev">⚔️ Take revenge · Free</button>`}
+      ${used ? '<button class="bt-no" id="awX">Later</button>' : `<button class="bt-no rd-rep" id="awRep">Or get it back now · ${REPAIR_GEMS} 💎</button>`}</div>`;
+  } else {
+    c.innerHTML = `<div class="crbox awy" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
+    <div class="awy-ph"><img src="${ph.src}" alt=""><span class="awy-m">🏅</span></div>
+    <h2 id="crT">Your Champion Medal held!</h2>
+    <p class="awy-sub">While you were away, ${log.length} rival${log.length === 1 ? '' : 's'} raided your 🏅 Champion Medal photo.</p>
+    <div class="awy-log">${log.map(x => `<div class="${x.won ? 'w' : 's'}"><span>@${esc(x.h)}</span><b>Defended · +10 💎</b></div>`).join('')}</div>
+    <button class="bt-cta" id="awOk">${gems ? `Collect ${gems} 💎` : 'Nice'}</button></div>`;
+  }
+  c.classList.add('on', 'cr'); c.onclick = null;
+  const close = () => c.classList.remove('on', 'cr');
+  if ($('#awOk')) $('#awOk').onclick = () => { close(); if (gems) gemExplosion(gems, { label: 'Medal defended' }); };
+  if ($('#awSh')) $('#awSh').onclick = () => buyShield(() => { const sm = $('#awSh small'); if (sm) sm.textContent = `${SHIELD_GEMS} 💎 · you have ${S.shields}`; });
+  if ($('#awRev')) $('#awRev').onclick = () => { close(); openGemBattle(0, null, { revenge: true, free: true, photo: ph, rival: { h: stolen.h, src: stolen.src } }); };
+  if ($('#awRep')) $('#awRep').onclick = () => { close(); repairPhoto(); };
+  if ($('#awX')) $('#awX').onclick = close;
+}
+function medalPop() {
+  const ph = S.photos.find(x => S.crack && x.id === S.crack.pid) || medalPhoto(); if (!ph) return levelsPop();
+  if (S.crack) { awayPop(ph, [{ h: S.crack.by, won: false }], 0, { h: S.crack.by, src: S.crack.src }); return; }
+  levelsPop();
+}
+setInterval(() => { if (S && S.user && document.visibilityState === 'visible') { S.lastSeen = Date.now(); save(); } }, 15000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') setTimeout(awayCheck, 600); });
+setTimeout(awayCheck, 2500);
+function openGemBattle(stake, after, opt = {}) {
+  const F = fighters(); if (!F.length && !opt.photo) { toast(`Get a photo to ${CFG.QUALIFY}+ to battle.`); return; }
+  const free = opt.free != null ? opt.free : !S.gbDone; stake = free ? 0 : (stake || 25);
+  const mine = opt.photo || F[0], cat = mine.cat || 'any', o = opt.rival || OPP[Math.floor(Math.random() * OPP.length)], rv = opt.rival ? { src: opt.rival.src } : battleRival(cat), N = 30;
+  const win = () => free ? GB_FREE_WIN : stake * 2;
+  const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>Gem Battle</b><button class="kg2-ic" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <span class="kg2-cat">${gi(cat)}${esc((catLabel(cat) || 'Any category').toUpperCase())}</span>`;
+  const vs = (rvv, mv, done, won, counts) => `<div class="kg2-vs du">
+      <div class="kg2-ph king ${done && !won ? 'won' : ''}"><img src="${rv.src}" alt="Rival's photo">${done && !won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div>
+      <b class="kg2-x">VS</b>
+      <div class="kg2-ph me ${done && won ? 'won' : ''}"><img src="${mine.src}" alt="Your photo">${done && won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div></div>
+    <div class="kg2-who du"><div class="king"><small>Rival</small><b>@${esc(o.h)}</b>${counts ? `<strong id="gbRn">${rvv}</strong><span>votes</span>` : ''}</div>
+      <div class="me"><small>You</small><b>Score ${mine.s.total}</b>${counts ? `<strong id="gbMn">${mv}</strong><span>votes</span>` : ''}</div></div>`;
+  const pick = () => {
+    const short = !free && S.gems < stake;
+    openSheet(`<div class="kg2" id="gb">${head}
+      <div class="kg2-crown">💎</div><h2 class="kg2-h">${opt.revenge ? `Revenge on @${esc(o.h)}` : free ? 'Your first battle!' : `@${esc(o.h)} wants to battle`}</h2><p class="kg2-sub">${opt.revenge ? 'Beat their photo to take your 🏅 Champion Medal back.' : 'Photo vs photo. Real judges vote. Result in 30 seconds.'}</p>
+      ${vs(0, 0, false, false, false)}
+      ${free ? '' : `<div class="gb-st" role="group" aria-label="Stake">${GB_STAKES.map(v => `<button data-gs="${v}" aria-pressed="${v === stake}"><b>${v}</b><small>💎 gems</small></button>`).join('')}</div>`}
+      ${opt.revenge ? '<div class="kg2-pot gbz"><small>Win back</small><b>🏅 Champion Medal</b></div>' : `<div class="kg2-pot gbz"><small>Winner takes</small><b>💎 ${win()}</b></div>`}
+      ${short ? `<button class="btn block kg2-go" id="gbBuy">Get more gems</button>` : `<button class="btn block kg2-go" id="gbGo">${opt.revenge ? 'Take revenge · Free' : free ? 'Battle now · Free' : `Battle for ${stake} 💎`}</button>`}
+      <div style="text-align:center"><button class="link kg2-back" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
+    document.querySelectorAll('#gb [data-gs]').forEach(b => b.onclick = () => { stake = +b.dataset.gs; pick(); });
+    if ($('#gbBuy')) $('#gbBuy').onclick = () => runOut('gems', `You need ${stake - S.gems} more gems`, () => pick(), stake - S.gems);
+    if ($('#gbGo')) $('#gbGo').onclick = () => live();
   };
-  paint(); bt.scrollTop = 0; bt.classList.add('on');
+  const live = () => {
+    const prize = win(), my = judgeRate(mine), pWin = opt.revenge ? .6 : free ? .8 : Math.max(.35, Math.min(.65, .45 + (my - 60) / 80)), won = Math.random() < pWin;
+    const myVotes = won ? 16 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 5);
+    const firstMedal = !opt.revenge && !S.medalIntro; if (firstMedal) S.medalIntro = Date.now();
+    if (opt.revenge) { if (won) medalBack(); S.crack && (S.crack.rv = true); save(); } else { S.gems = S.gems - stake + (won ? prize : 0); S.gbDone = (S.gbDone || 0) + 1; save(); paintGems(false); }
+    $('#gb').innerHTML = `${head}<div class="kg2-crown">💎</div><h2 class="kg2-h">Battle is live</h2><p class="kg2-sub">Most votes wins ${prize} gems.</p>
+      <span class="kg2-live"><i></i>Live voting</span>
+      ${vs(0, 0, false, false, true)}
+      <div class="kg2-bar"><i id="gbR" style="width:50%"></i><i id="gbM" style="width:50%"></i></div>
+      <p class="kg2-n" id="gbV">0 of ${N} votes</p>
+      <div class="kg2-wait"><span class="dots"><i></i><i></i><i></i></span><span><b>Judges are voting</b><small>The most votes wins the battle.</small></span></div>`;
+    document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
+    let v = 0, m = 0; const seq = [...Array(N)].map((_, i) => i < myVotes); for (let i = N - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [seq[i], seq[k]] = [seq[k], seq[i]]; }
+    const iv = setInterval(() => {
+      if (!$('#gbV')) { clearInterval(iv); return; }
+      if (seq[v]) m++; v++;
+      const share = m / v * 100;
+      $('#gbM').style.width = share + '%'; $('#gbR').style.width = (100 - share) + '%';
+      $('#gbMn').textContent = m; $('#gbRn').textContent = v - m; $('#gbV').textContent = `${v} of ${N} votes`;
+      if (v < N) return;
+      clearInterval(iv);
+      const pct = Math.round(m / N * 100), rvv = N - m, nx = after && after();
+      $('#gb').innerHTML = `${head}<p class="kg2-fin">Final result</p><div class="kg2-crown">${won ? '🏆' : '💎'}</div>
+        <h2 class="kg2-h">${won ? 'You win the battle!' : `@${esc(o.h)} wins`}</h2><p class="kg2-score">Final vote · ${Math.max(m, rvv)}–${Math.min(m, rvv)}</p>
+        ${vs(rvv, m, true, won, true)}
+        <div class="kg2-bar res"><i style="width:${100 - pct}%">${100 - pct}%</i><i style="width:${pct}%">${pct}%</i></div>
+        ${opt.revenge ? (won ? `<div class="kg2-next win"><small>Revenge!</small><b>🏅 Medal back</b><span>It's back on your photo</span></div>` : `<div class="kg2-next lose"><small>@${esc(o.h)} holds on</small><b>🏅 Medal stays with them</b><span>Get it back for ${REPAIR_GEMS} gems</span></div>`)
+          : won ? `<div class="kg2-next gemw"><small>You won</small><b>💎 ${prize}</b><span>Added to your gems</span></div>${firstMedal ? `<p class="gb-medal">🏅 Your best photo now wears the <b>Champion Medal</b>. Rivals will try to take it, so win it back if they do.</p>` : ''}`
+          : `<div class="kg2-next lose"><small>${free ? 'Free battle' : 'You lost'}</small><b>${free ? 'No cost' : `💎 ${stake}`}</b><span>Enhance your photo to win more votes</span></div>`}
+        ${nx ? `<button class="btn block kg2-go" id="gbNext">${nx.label}</button><div style="text-align:center"><button class="link kg2-back" id="gbAgain">Battle again for gems</button></div>`
+          : `<button class="btn block kg2-go" id="gbAgain">Battle again</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back</button></div>`}`;
+      if (won && !opt.revenge) setTimeout(() => gemExplosion(prize, { label: 'Gem Battle win' }), 300);
+      if (opt.revenge) { const a = $('#gbAgain'); a.textContent = won ? 'Done' : `Get it back · ${REPAIR_GEMS} 💎`; a.onclick = () => { closeSheet(); if (!won) repairPhoto(); }; paintTop(); }
+      if (nx) $('#gbNext').onclick = () => { closeSheet(); nx.go(); };
+      if (!opt.revenge) $('#gbAgain').onclick = () => openGemBattle(stake || 25);
+      document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
+    }, 200);
+  };
+  pick();
+}
+function openCashBattle(stake) {
+  const F = fighters(); if (!F.length) { toast(`Get a photo to ${CFG.QUALIFY}+ to battle.`); return; }
+  stake = stake || 1; if (!tierOpen(stake)) stake = 1;
+  const mine = F[0], cat = mine.cat || 'any', o = OPP[Math.floor(Math.random() * OPP.length)], rv = battleRival(cat), N = 30;
+  const pot = f => +(2 * f * (1 - KING_FEE)).toFixed(2);
+  const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>1v1 Battle</b><button class="kg2-ic" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <span class="kg2-cat">${gi(cat)}${esc((catLabel(cat) || 'Any category').toUpperCase())}</span>`;
+  const vs = (rvv, mv, done, won, counts) => `<div class="kg2-vs du">
+      <div class="kg2-ph king ${done && !won ? 'won' : ''}"><img src="${rv.src}" alt="Rival's photo">${done && !won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div>
+      <b class="kg2-x">VS</b>
+      <div class="kg2-ph me ${done && won ? 'won' : ''}"><img src="${mine.src}" alt="Your photo">${done && won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div></div>
+    <div class="kg2-who du"><div class="king"><small>Rival</small><b>@${esc(o.h)}</b>${counts ? `<strong id="duRn">${rvv}</strong><span>votes</span>` : ''}</div>
+      <div class="me"><small>You</small><b>Score ${mine.s.total}</b>${counts ? `<strong id="duMn">${mv}</strong><span>votes</span>` : ''}</div></div>`;
+  const pick = () => {
+    const short = (S.cash || 0) < stake;
+    openSheet(`<div class="kg2" id="du">${head}
+      <div class="kg2-crown">⚔️</div><h2 class="kg2-h">@${esc(o.h)} wants to battle</h2><p class="kg2-sub">Photo vs photo. Real judges pick the winner.</p>
+      ${vs(0, 0, false, false, false)}
+      <div class="tk-tier3 du-st" role="group" aria-label="Stake">${[1, 5, 10, 20].map(f => { const L = SCORE_LEVELS.find(x => x.fee === f), open = tierOpen(f); return `<button data-st="${f}" aria-pressed="${f === stake}" class="${open ? '' : 'lock'}"><span class="tm">${open ? L.ic : '🔒'}</span><b>$${f}</b><small>${open ? L.n : `${L.at}+ score`}</small></button>`; }).join('')}</div>
+      <div class="kg2-pot"><small>Winner takes</small><b>${money(pot(stake))}</b></div>
+      ${short ? `<button class="btn block kg2-go" id="duBuy">Add cash to battle</button><p class="du-fine">You need ${money(stake)} cash. You have ${money(S.cash || 0)}.</p>` : `<button class="btn block kg2-go" id="duGo">Battle for $${stake}</button>`}
+      <div style="text-align:center"><button class="link kg2-back" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
+    document.querySelectorAll('#du [data-st]').forEach(b => b.onclick = () => { const f = +b.dataset.st; if (!tierOpen(f)) { tierLockPop(f, mine); return; } stake = f; pick(); });
+    if ($('#duBuy')) $('#duBuy').onclick = () => openStore(`You need ${money(stake)} cash for this battle.`, () => pick(), 'cash');
+    if ($('#duGo')) $('#duGo').onclick = () => live();
+  };
+  const live = () => {
+    const prize = pot(stake), my = judgeRate(mine), pWin = Math.max(.3, Math.min(.65, .45 + (my - 60) / 80)), won = Math.random() < pWin;
+    const myVotes = won ? 16 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 5);
+    // settle up front so closing the screen never loses the result
+    S.cash = +((S.cash || 0) - stake + (won ? prize : 0)).toFixed(2); save(); paintWallet();
+    $('#du').innerHTML = `${head}<div class="kg2-crown">⚔️</div><h2 class="kg2-h">Battle is live</h2><p class="kg2-sub">Most votes wins ${money(prize)}.</p>
+      <span class="kg2-live"><i></i>Live voting</span>
+      ${vs(0, 0, false, false, true)}
+      <div class="kg2-bar"><i id="duR" style="width:50%"></i><i id="duM" style="width:50%"></i></div>
+      <p class="kg2-n" id="duV">0 of ${N} votes</p>
+      <div class="kg2-wait"><span class="dots"><i></i><i></i><i></i></span><span><b>Judges are voting</b><small>The most votes wins the battle.</small></span></div>
+      <div style="text-align:center"><button class="link kg2-back" data-shclose>Back to judging</button></div>`;
+    document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
+    let v = 0, m = 0; const seq = [...Array(N)].map((_, i) => i < myVotes); for (let i = N - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [seq[i], seq[k]] = [seq[k], seq[i]]; }
+    const iv = setInterval(() => {
+      if (!$('#duV')) { clearInterval(iv); return; }
+      if (seq[v]) m++; v++;
+      const share = m / v * 100;
+      $('#duM').style.width = share + '%'; $('#duR').style.width = (100 - share) + '%';
+      $('#duMn').textContent = m; $('#duRn').textContent = v - m; $('#duV').textContent = `${v} of ${N} votes`;
+      if (v < N) return;
+      clearInterval(iv);
+      const pct = Math.round(m / N * 100), rvv = N - m;
+      $('#du').innerHTML = `${head}<p class="kg2-fin">Final result</p><div class="kg2-crown">${won ? '🏆' : '⚔️'}</div>
+        <h2 class="kg2-h">${won ? 'You win the battle!' : `@${esc(o.h)} wins`}</h2><p class="kg2-score">Final vote · ${Math.max(m, rvv)}–${Math.min(m, rvv)}</p>
+        ${vs(rvv, m, true, won, true)}
+        <div class="kg2-bar res"><i style="width:${100 - pct}%">${100 - pct}%</i><i style="width:${pct}%">${pct}%</i></div>
+        <p class="kg2-n">${N} of ${N} votes · Final</p>
+        ${won ? `<div class="kg2-next win"><small>You won</small><b>${money(prize)}</b><span>Added to your cash</span></div>`
+          : `<div class="kg2-next lose"><small>You lost</small><b>${money(stake)}</b><span>Enhance your photo to win more votes</span></div>`}
+        <button class="btn block kg2-go" id="duAgain">Battle again · $${stake}</button>
+        <div style="text-align:center"><button class="link kg2-back" data-shclose>Back to judging</button></div>`;
+      if (won) setTimeout(() => cashExplosion(prize, { label: '1v1 Battle win' }), 300);
+      $('#duAgain').onclick = () => openCashBattle(stake);
+      document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
+    }, 220);
+  };
+  pick();
 }
 window.__cashBattle = openCashBattle;
 
@@ -6600,6 +7313,7 @@ window.__cashBattle = openCashBattle;
 const judgeRate = p => { if (p.jr != null) return p.jr; let h = 0; for (const ch of String(p.id)) h = (h * 31 + ch.charCodeAt(0)) % 997; return Math.max(20, Math.min(85, Math.round(50 + (p.s.total - 75) * 1.1 + (h % 7) - 3))); };
 const KING_FEE = 0.15, KING_SEED = 5;
 // tournaments, King and battles can use any 70+ photo, even one entered in a competition
+const isCracked = p => !!(p && S.crack && S.crack.pid === p.id);
 const fighters = () => S.photos.filter(p => p.s.total >= CFG.QUALIFY).sort((a, b) => b.s.total - a.s.total);
 function kingOf(cat) {
   S.kings = S.kings || {};
@@ -6658,42 +7372,54 @@ function openKing(cat) {
   $('#kgGo').onclick = () => payCash(1, 'A King challenge', () => kingLive(cat, mine));
 }
 function kingLive(cat, mine) {
-  const K = kingOf(cat), my = judgeRate(mine), pot = K.bounty;
-  K.bounty = +(K.bounty + (1 - KING_FEE)).toFixed(2); save();
-  const pWin = Math.max(.08, Math.min(.6, .3 + (my - K.rate) / 40)), win = Math.random() < pWin, N = 50;
+  const K = kingOf(cat), my = judgeRate(mine), pot = K.bounty, N = 50, kh = K.h, ksrc = K.src;
+  K.bounty = +(K.bounty + (1 - KING_FEE)).toFixed(2);
+  const pWin = Math.max(.08, Math.min(.6, .3 + (my - K.rate) / 40)), win = Math.random() < pWin;
   const myVotes = win ? 26 + Math.floor(Math.random() * 5) : 18 + Math.floor(Math.random() * 7);
-  openSheet(`<div class="kg live">
-    <span class="lv-live">LIVE</span><h2>Your challenge is live</h2><p class="kg-how">Real judges are voting on your photo against the ${esc(catLabel(cat))} King.</p>
-    <div class="kg-vs sm">
-      <div class="kg-ph king"><img src="${K.src}" alt=""><span class="kg-tag">👑 @${esc(K.h)}</span></div>
-      <b class="kg-x">VS</b>
-      <div class="kg-ph me"><img src="${mine.src}" alt=""><span class="kg-tag">You</span></div>
-    </div>
-    <div class="kg-bar"><i id="kgK" style="width:50%"></i><i id="kgM" style="width:50%"></i></div>
-    <div class="kg-cnt"><span id="kgKn">0</span><b id="kgV">0 of ${N} votes</b><span id="kgMn">0</span></div>
-    <p class="kg-pot">Bounty at stake <b>${money(pot)}</b></p>
-    <div id="kgRes"></div></div>`, { full: true, cover: true, locked: true });
+  // settle up front so closing the screen never loses the result
+  if (win) { S.cash = +((S.cash || 0) + pot).toFixed(2); S.kings[cat] = { h: S.user ? S.user.h : 'you', src: mine.src, rate: Math.max(my, Math.round(myVotes / N * 100)), def: 0, bounty: KING_SEED, mine: true }; }
+  else K.def++;
+  save();
+  const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>Category King</b><button class="kg2-ic" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <span class="kg2-cat">${gi(cat)}${esc((catLabel(cat) || 'Any category').toUpperCase())}</span>`;
+  const vs = (kv, mv, done) => `<div class="kg2-vs ${done ? 'done' : ''}">
+      <div class="kg2-ph king ${done && !win ? 'won' : ''}"><img src="${ksrc}" alt="The King's photo">${done && !win ? '<span class="kg2-w">👑 WINNER</span>' : ''}</div>
+      <b class="kg2-x">VS</b>
+      <div class="kg2-ph me ${done && win ? 'won' : ''}"><img src="${mine.src}" alt="Your photo">${done && win ? '<span class="kg2-w">👑 WINNER</span>' : ''}</div></div>
+    <div class="kg2-who"><div class="king"><small>${done ? '' : '👑 '}The King</small><b>@${esc(kh)}</b><strong id="kgKn">${kv}</strong><span>votes</span></div>
+      <div class="me"><small>Challenger</small><b>You</b><strong id="kgMn">${mv}</strong><span>votes</span></div></div>`;
+  openSheet(`<div class="kg2" id="kg2">${head}
+    <div class="kg2-crown">👑</div><h2 class="kg2-h">Battle for the crown</h2><p class="kg2-sub">Beat the King to take the crown.</p>
+    <div class="kg2-pot"><small>Bounty at stake</small><b>${money(pot)}</b></div>
+    <span class="kg2-live"><i></i>Live voting</span>
+    ${vs(0, 0, false)}
+    <div class="kg2-bar"><i id="kgK" style="width:50%"></i><i id="kgM" style="width:50%"></i></div>
+    <p class="kg2-n" id="kgV">0 of ${N} votes</p>
+    <div class="kg2-wait"><span class="dots"><i></i><i></i><i></i></span><span><b>Judges are voting</b><small>The most votes wins the crown.</small></span></div>
+    <div style="text-align:center"><button class="link kg2-back" data-shclose>Back to judging</button></div></div>`, { full: true, cover: true });
   let v = 0, m = 0;
   const seq = [...Array(N)].map((_, i) => i < myVotes); for (let i = N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [seq[i], seq[j]] = [seq[j], seq[i]]; }
   const iv = setInterval(() => {
-    if (!$('#kgV')) { clearInterval(iv); return; }
+    if (!$('#kgV')) { clearInterval(iv); paintWallet(); return; }
     if (seq[v]) m++; v++;
     const share = m / v * 100;
     $('#kgM').style.width = share + '%'; $('#kgK').style.width = (100 - share) + '%';
     $('#kgMn').textContent = m; $('#kgKn').textContent = v - m; $('#kgV').textContent = `${v} of ${N} votes`;
     if (v < N) return;
     clearInterval(iv);
-    const pct = Math.round(m / N * 100);
-    if (win) {
-      S.cash = +((S.cash || 0) + pot).toFixed(2);
-      S.kings[cat] = { h: S.user ? S.user.h : 'you', src: mine.src, rate: Math.max(my, pct), def: 0, bounty: KING_SEED, mine: true }; save(); paintWallet();
-      setTimeout(() => cashExplosion(pot, { label: `${catLabel(cat)} bounty` }), 300);
-      $('#kgRes').innerHTML = `<div class="kg-win"><b>👑 You're the new ${esc(catLabel(cat))} King!</b><span>You won ${pct}% of the votes and took the ${money(pot)} bounty.</span></div><button class="btn block" data-shclose>Collect</button>`;
-    } else {
-      K.def++; save();
-      $('#kgRes').innerHTML = `<div class="kg-lose"><b>The King defends</b><span>You won ${pct}% of the votes. The bounty is now <b>${money(K.bounty)}</b>.</span></div><button class="btn block" id="kgAgain">Challenge again · $1</button><div style="text-align:center"><button class="link" data-shclose>Back to judging</button></div>`;
-      $('#kgAgain').onclick = () => payCash(1, 'A King challenge', () => kingLive(cat, mine));
-    }
+    const pct = Math.round(m / N * 100), kv = N - m;
+    $('#kg2').innerHTML = `${head}<p class="kg2-fin">Final result</p><div class="kg2-crown">👑</div>
+      <h2 class="kg2-h">${win ? 'You take the crown!' : 'The King keeps the crown'}</h2><p class="kg2-score">Final vote · ${Math.max(m, kv)}–${Math.min(m, kv)}</p>
+      ${vs(kv, m, true)}
+      <div class="kg2-bar res"><i style="width:${100 - pct}%">${100 - pct}%</i><i style="width:${pct}%">${pct}%</i></div>
+      <p class="kg2-n">${N} of ${N} votes · Final</p>
+      ${win ? `<div class="kg2-next win"><small>You won the bounty</small><b>${money(pot)}</b><span>Added to your cash · you're the new ${esc(catLabel(cat))} King</span></div>
+        <button class="btn block kg2-go" data-shclose>Collect</button>`
+        : `<div class="kg2-next"><small>Next challenge bounty</small><b>${money(K.bounty)}</b><span>Up from ${money(pot)}</span></div>
+        <button class="btn block kg2-go" id="kgAgain">Challenge again · $1</button>`}
+      <div style="text-align:center"><button class="link kg2-back" data-shclose>Back to judging</button></div>`;
+    if (win) { paintWallet(); setTimeout(() => cashExplosion(pot, { label: `${catLabel(cat)} bounty` }), 300); }
+    if ($('#kgAgain')) $('#kgAgain').onclick = () => payCash(1, 'A King challenge', () => kingLive(cat, mine));
     document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
   }, 240);
 }
@@ -6971,7 +7697,7 @@ function openTourney() {
       <button class="btn block kg-go tk-join" id="tkGo">Join tournament · ${money(T_FEE)}</button>
       <div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
     clearInterval(window.__tm); window.__tm = setInterval(() => { if (!document.querySelector('#sheetBody .tk0')) { clearInterval(window.__tm); return; } tLive(); }, 1000);
-    document.querySelectorAll('#sheetBody [data-tier]').forEach(b => b.onclick = () => { const f = +b.dataset.tier; if (!tierOpen(f)) { const L = SCORE_LEVELS.find(x => x.fee === f); celebrate({ src: mine.src, score: mine.s.total, title: `${L.ic} ${L.n} tables`, text: `$${f} tournaments need a photo scoring <b>${L.at}+</b>. Your best is <b>${mine.s.total}</b>. Enhance it to unlock up to <b>$${T_TIERS[f].gtd}</b> guaranteed.`, cta: 'Enhance my photo', onCta: () => { closeSheet(); S.cur = mine.id; WALL = false; save(); go('studio'); renderStudio(); }, later: 'Not now' }); return; } tTier(f); openTourney(); });
+    document.querySelectorAll('#sheetBody [data-tier]').forEach(b => b.onclick = () => { const f = +b.dataset.tier; if (!tierOpen(f)) { const L = SCORE_LEVELS.find(x => x.fee === f); tierLockPop(f, mine); return; } tTier(f); openTourney(); });
     $('#tkGo').onclick = () => payCash(T_FEE, 'The tournament', () => { const t = tNew(); t.lastKey = 'lobby'; save(); openTourney(); });
     return;
   }
@@ -7059,7 +7785,7 @@ function paintTourney() {
 function openBattle() {
   if (isCashPlayer() && (S.cash || 0) >= 1 && !openBattle.skipCash && Math.random() < .5) {
     const me = fighters()[0];
-    celebrate({ src: me.src, score: '⚔️', title: 'Battle time!', text: `A rival wants a <b>real cash battle</b> with your ${me.s.total} photo. Stake <b>$1</b>, win <b>$1.80</b>. Real judges decide.`, cta: 'Let’s battle', onCta: () => openCashBattle(1), later: 'Not now' });
+    celebrate({ src: me.src, score: '⚔️', title: 'Battle time!', text: `A rival wants a <b>real cash battle</b> with your ${me.s.total} photo. Stake <b>$1</b>, win <b>${money(2 * (1 - KING_FEE))}</b>. Real judges decide.`, cta: 'Let’s battle', onCta: () => openCashBattle(1), later: 'Not now' });
     return;
   }
   const mine = S.photos.filter(p => p.cat);
@@ -7170,7 +7896,7 @@ function giftPop() {
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-gc]'); if (!b) return; S.giftAck = true; save(); const c = document.querySelectorAll('.gcard'); c.forEach(x => x.remove()); if (b.dataset.gc === 'judge') { if ($('#flow').classList.contains('on')) closeFlow(); go('judge'); renderJudge(); } });
 function claimGift() {
-  if (S.giftEn) return; S.giftEn = true; S.giftAck = true; S.gems += CFG.FIRST_WIN; energy(); S.en += 50; S.enAt = Date.now(); save();
+  if (S.giftEn) return; S.giftEn = true; S.giftAck = true; S.gems += CFG.FIRST_WIN; energy(); S.en = Math.max(S.en, EN_MAX); S.enAt = Date.now(); save();
   gemExplosion(CFG.FIRST_WIN, { label: 'Welcome gift · gems' });
   setTimeout(() => { const t = document.createElement('div'); t.className = 'enfly'; t.innerHTML = '⚡<b>+50</b><small>Welcome gift · energy</small>'; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }, 1900);
   setTimeout(() => { renderStudio(); toast('Now tap + on a category to upload your first photo'); }, 4300);
@@ -7184,7 +7910,7 @@ function welcomePop() {
     <div class="wp2-g"><small>Your free welcome gift</small><div class="wp2-gr">
       <div><span class="ic">${gemIcon('')}</span><span class="v"><b>100</b><i>Gems</i></span><em>Enhance your photos</em></div>
       <div><span class="ic bolt">⚡</span><span class="v"><b>50</b><i>Energy</i></span><em>Judge to earn gems</em></div></div></div>
-    <ol class="wp2-s"><li><span>1</span>Upload &amp; enhance your photo</li><li><span>2</span>Judge photos to earn gems</li><li><span>3</span>Enter tournaments &amp; competitions</li></ol>
+    <ol class="wp2-s"><li><span>1</span>Upload &amp; enhance your photo</li><li><span>2</span>Judge photos to earn gems</li><li><span>3</span>Battle and enter competitions</li></ol>
     <p class="wp2-c"><span>🏆</span>Top photos win real cash prizes.</p>
     <button class="wp2-go" id="wpGo">Claim my gift</button>
     <button class="wp2-no" id="crLater">Look around first</button></div>`;
@@ -7209,7 +7935,7 @@ function renderWall(st) {
     <div class="wall-h">${S.photos.length ? `<h2>Enhance your photos</h2><p>Your best photo in each category hangs in its frame. Fill every frame and get each photo to ${CFG.QUALIFY}+ to battle for cash.</p>` : `<h2>Your gallery</h2>`}</div>
     <div class="wall-pr"><div class="pr-t"><b>${filled} of ${tot} frames filled</b></div><div class="pr-bar2"><i style="width:${filled / tot * 100}%"></i></div>
       ${next ? `<p class="wall-rw">🎁 Fill <b>${next[0]}</b> frames: ${next[2] === 'gems' ? `<b>+${next[1]} gems</b>` : '<b>a free Daily Cash Cup entry</b>'} <span>(${next[0] - filled} to go)</span></p>` : '<p class="wall-rw">🏆 Gallery complete!</p>'}</div>
-    <div class="wall-g">${F.map(frame).join('')}</div>
+    <div class="wall-g">${todayFrameHTML()}${F.map(frame).join('')}</div>
     <button class="btn block" id="stAdd" style="margin-top:18px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Upload a new photo</button></div>`;
   const openPh = x => { const l = photoLock(x); if (l) { openLive(l); return; } WALL = false; S.cur = x.id; save(); renderStudio(); st.scrollTop = 0; };
   st.querySelectorAll('[data-wadd]').forEach(b => b.onclick = () => { const k = b.dataset.wadd, nm = k === 'any' ? 'Anything' : pcatName(k); S.frameHint = { cats: [k], lab: nm, frame: nm }; save(); pickPhoto(true); });
@@ -7218,6 +7944,7 @@ function renderWall(st) {
       <div class="wsel">${f.list.map((x, i) => `<div class="wsel-r ${i === 0 ? 'on' : ''}"><span class="im"><img src="${x.src}" alt=""><b>${x.s.total}</b></span><div><small class="wsel-k">${i === 0 ? '🏆 In the frame' : '#' + (i + 1)}</small><button class="btn sm" data-enh="${x.id}">${photoLock(x) ? 'See it live' : 'Enhance'}</button></div></div>`).join('')}</div>`);
     document.querySelectorAll('#sheetBody [data-enh]').forEach(h => h.onclick = () => { closeSheet(); openPh(S.photos.find(x => x.id === h.dataset.enh)); }); });
   $('#stAdd').onclick = () => { const c = CX.find(x => x.id === 'snap') || CX[0]; if (!S.user) { pickPhoto(true); return; } openEntryGuide(c, null); };
+  bindToday(st);
   // frame rewards
   S.wallGot = S.wallGot || [];
   WALL_REWARD.forEach(([n, amt, kind]) => { if (filled >= n && !S.wallGot.includes(n)) { S.wallGot.push(n); save();
@@ -7250,6 +7977,7 @@ function renderStudio() {
       $('#stAdd').onclick = () => openEntryGuide(CX.find(x => x.id === 'snap') || CX[0], null);
       return;
     }
+    if (S.photos.length && S.user) { WALL = true; renderWall(st); return; }
     st.innerHTML = `
     <div class="enh0">${S.photos.length ? '<h2>Enhance your photos</h2><p>Upload a photo, get an AI score, then improve it to 70+ to compete.</p>' : `<div class="wl"><span class="wl-t">Win real cash for your photos</span><h2>Upload your first photo</h2><div class="wl-gift"><span>🎁 Free welcome gift</span><b>${gemIcon('')}100 <i>+</i> ⚡50</b><small>Gems to enhance it · energy to judge and earn more</small></div></div>`}
       ${(() => { const ph = S.photos, n = ph.length, slots = Math.max(4, n + 1), show = n >= 4 ? ph.slice(-3) : ph, first = n >= 4 ? n - 2 : 1;
