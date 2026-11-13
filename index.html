@@ -4354,6 +4354,23 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .fsb-r.dn{box-shadow:inset 0 0 0 1.5px #FF5C8A}.fsb-r.dn .fsb-m b span:last-child{color:#FF5C8A}.fsb-r.dn .fsb-m small{color:#FF8FB0}
 .fsb-r.new .fsb-m b{color:#5E4A86}
 .fsb-go{width:44px;height:44px;border:0;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#FF3FA4,#8B3CFF);color:#fff;cursor:pointer;box-shadow:0 4px 12px -4px rgba(255,63,164,.7)}.fsb-go .vsic{width:28px;height:21px;margin:0}
+.f2-tag{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 0;padding:10px 14px;border-radius:14px;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3E2A66}
+.f2-tag:empty{display:none}.f2-tg{display:flex;align-items:center;gap:8px;font-size:1rem}.f2-tg svg{width:20px;height:20px;color:#FF3FA4}
+.f2-chg{font-weight:800!important;color:#FF8FD0!important}
+#fcCats{margin-top:10px}#fcCats[hidden]{display:none!important}
+/* crowns */
+.crw-n{font:700 .8rem Inter,sans-serif;color:#C9B4F5;margin-left:8px}
+.crw{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:6px}
+.crw-c{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px 8px;border:0;border-radius:14px;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3E2A66;color:#fff;cursor:pointer;min-width:0}
+.crw-c .ic svg{width:22px;height:22px;color:#CDBEE8}.crw-c b{font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.crw-c .who{font-size:.68rem;font-weight:700;color:#A796C6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.crw-c small{font-size:.68rem;color:#7A64A8;font-weight:800}
+.crw-c.me{background:linear-gradient(180deg,#4A3510,#2A1C08);box-shadow:inset 0 0 0 2px #FFC93C,0 0 12px -4px rgba(255,201,60,.7)}.crw-c.me .ic svg{color:#FFC93C}.crw-c.me .who{color:#FFE27A}.crw-c.me small{color:#FFC93C}
+.wf-crn{display:block;margin-top:4px;text-align:center;font-size:.72rem;font-weight:800;color:#A796C6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wf-crn.me{color:#FFC93C}
+.f2-crh{margin:8px 2px 0;font-size:.88rem;color:#FFE27A}.f2-crh:empty{display:none}
+.fb-crown{margin:12px 0 0;padding:10px 12px;border-radius:14px;text-align:center;font-weight:700;background:rgba(255,201,60,.12);color:#FFE27A;box-shadow:inset 0 0 0 1.5px #FFC93C}.fb-crown.l{background:rgba(255,92,138,.1);color:#FF8FB0;box-shadow:inset 0 0 0 1.5px #FF5C8A}
+.tk-chip.live{background:linear-gradient(135deg,#FF5C8A,#FF2D55);color:#fff}
+.tkc-live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;animation:ldot 1.2s ease-in-out infinite}
+.nxu-live{cursor:pointer;background:linear-gradient(135deg,#3A2508,#2A1747)!important}.nxu-live em{font-style:normal;font-weight:800;font-size:.8rem;padding:4px 12px;border-radius:999px;background:#FFC93C;color:#2A1600}
 </style>
 </head>
 <body>
@@ -4830,7 +4847,7 @@ function paintTop() {
   if (!S.medalIntro && S.gbDone) S.medalIntro = 1;
   const cr = S.crack && S.photos.some(x => x.id === S.crack.pid), med = !cr && fighters().length && S.medalIntro;
   b.classList.toggle('lostcr', !!cr);
-  b.innerHTML = `<img src="${t.src}" alt=""><b>${t.s.total}</b><span>${L ? L.ic : '🎯'}</span>${cr ? '<i class="stm gone">🏅</i>' : med ? '<i class="stm">🏅</i>' : ''}`;
+  b.innerHTML = `<img src="${t.src}" alt=""><b>${t.s.total}</b><span>${L ? L.ic : '🎯'}</span>${(() => { try { return myCrowns().length ? '<i class="stm">👑</i>' : ''; } catch (e) { return ''; } })()}`;
   b.setAttribute('aria-label', `Your top photo scores ${t.s.total}${L ? ', ' + L.n : ''}. See what each level unlocks`);
 }
 function tierLockPop(f, mine) {
@@ -4866,7 +4883,7 @@ function levelsPop() {
   $('#lvpX').onclick = close; c.onclick = e => { if (e.target === c) close(); };
   $('#lvpGo').onclick = () => { close(); if ($('#flow').classList.contains('on')) closeFlow(); if (!N) { tTier(20); openTourney(); } else if (tgt) { S.cur = tgt.id; WALL = false; save(); go('studio'); renderStudio(); } else { WALL = true; go('studio'); renderStudio(); pickPhoto(true); } };
 }
-document.addEventListener('click', e => { if (e.target.closest('#lvTix')) { $('#lv').classList.remove('on'); if (tix()) { CXF = 'all'; openComps(); cxEnter(CX.find(x => x.id === 'daily')); } else openFriends(); return; } if (e.target.closest('#sTop')) medalPop(); if (e.target.closest('#sTix')) tixPop(); });
+document.addEventListener('click', e => { if (e.target.closest('#lvTix')) { $('#lv').classList.remove('on'); if (tix()) { CXF = 'all'; openComps(); cxEnter(CX.find(x => x.id === 'daily')); } else openFriends(); return; } if (e.target.closest('#sTop')) levelsPop(); if (e.target.closest('#sTix')) tixPop(); });
 function paintGems(animate = true) { if (typeof paintTop === 'function') paintTop();
   paintWallet();
   const target = S.gems, start = shownGems, t0 = performance.now(), dur = animate ? 700 : 0;
@@ -5332,7 +5349,6 @@ function showResult(p, o = {}) {
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
   else html += `<button class="btn block fixbtn nocost rs-fix" id="doFix"><span>Improve ${lc.k === 'comp' ? 'focus' : lc.short.toLowerCase()}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>`;
-  if (S.user && !window.__pickRet) html += `<button class="btn block rs-ch" id="rsChal">${VS_IC}Challenge a friend with this photo</button>`;
   html += '<div class="rs-ex">';
   if (S.user) html += `<div style="text-align:center"><button class="link" id="doneBtn">Done</button></div>`;
   else if (o.delta != null) html += `<div style="text-align:center"><button class="link" id="saveNow">Save my photo and continue</button></div>`;
@@ -5721,9 +5737,9 @@ function showCompReady(p, goal) {
   const rb = document.querySelector('#flowBody #rsComp'); if (rb) rb.hidden = false;
   const c = $('#coach'), fits = CX.filter(x => x.k !== 'gem' && cxFits(x, p)), first = goal || fits[0];
   const dc = CX.find(x => x.id === 'daily'), freeCup = false;
-  if (p && p.s.total >= CFG.QUALIFY && S.gbDone) { celebrate({ src: p.src, score: p.s.total, title: 'Battle ready!', text: `Your photo hit <b>${p.s.total}</b>. Take it into a battle: challenge a friend for gems, or play for real cash in Compete.`, cta: `${VS_IC}Challenge a friend`, onCta: () => { closeFlow(); openFriends(); }, later: 'Play for cash', onLater: () => { closeFlow(); openComps(); } }); return; }
+  if (p && p.s.total >= CFG.QUALIFY && S.gbDone) { celebrate({ src: p.src, score: p.s.total, title: 'Battle ready!', text: (S.votes || 0) < 10 ? `Your photo hit <b>${p.s.total}</b>. Judge a few photos to earn gems, then take it into a battle.` : `Your photo hit <b>${p.s.total}</b>. Take it into a battle: challenge a friend for gems, or play for real cash in Compete.`, cta: (S.votes || 0) < 10 ? '💎 Earn gems by judging' : `${VS_IC}Challenge a friend`, onCta: () => { closeFlow(); if ((S.votes || 0) < 10) { go('judge'); renderJudge(); } else openFriends(); }, later: 'Play for cash', onLater: () => { closeFlow(); openComps(); } }); return; }
   if (!S.gbDone && p && p.s.total >= CFG.QUALIFY) {
-    const cupNext = () => ({ label: `${VS_IC}Now challenge a friend`, go: () => { closeFlow(); openFriends(); } });
+    const cupNext = () => ({ label: '💎 Earn more gems by judging', go: () => { closeFlow(); go('judge'); renderJudge(); $('#judge').scrollTop = 0; } });
     celebrate({ src: p.src, score: p.s.total, title: 'Battle ready!', text: `Your photo hit <b>${p.s.total}</b>. Put it up against a real photo now. Judges vote live and you'll know in <b>30 seconds</b>. Your first battle is <b>free</b>, win <b>${GB_FREE_WIN} gems</b>.`, cta: 'Battle now · Free', onCta: () => { closeFlow(); openGemBattle(0, cupNext); }, later: 'Later', onLater: freeCup ? () => { closeFlow(); CXF = 'all'; CXP = p.id; openComps(); cxEnter(dc); } : undefined });
     return;
   }
@@ -7016,6 +7032,13 @@ function bindToday(st) {
 /* ================= Friends: challenges, rivalries, friends league ================= */
 const FRIENDS = [{ h: 'sam', c: ['#FF7A3C', '#FF3FA4'] }, { h: 'mia', c: ['#3BC8F5', '#6A5CFF'] }, { h: 'tom', c: ['#2EE59D', '#1E9E6A'] }];
 const FC_THEMES = [['selfie', 'Best Selfie'], ['style', 'Best Outfit'], ['fitness', 'Best Gym'], ['pets', 'Best Pet'], ['food', 'Best Cooking'], ['travel', 'Best Holiday'], ['night', 'Best Night Out'], ['any', 'Best Anything']];
+// Category Crowns: one crown per challenge category in your friend group. Beat the holder in a friend challenge to take it.
+const CROWN_SEED = { selfie: ['sam', 74], style: ['mia', 76], fitness: ['tom', 73], pets: ['mia', 78], food: ['sam', 71], travel: ['tom', 75], night: ['mia', 72], any: ['sam', 70] };
+function crownsS() { const F = frS(); if (!F.crowns) { F.crowns = {}; Object.entries(CROWN_SEED).forEach(([k, [h, sc]]) => F.crowns[k] = { h, sc }); save(); } return F.crowns; }
+const crownOf = k => crownsS()[k] || null;
+const myCrowns = () => Object.entries(crownsS()).filter(([, c]) => c.h === 'you').map(([k]) => k);
+const crownName = k => k === 'selfie' ? 'Selfie' : themeName(k).replace('Best ', '');
+const crownCount = h => Object.values(crownsS()).filter(c => c.h === h).length;
 const FC_STAKES = [{ cur: 'gems', amt: 25 }, { cur: 'gems', amt: 50 }, { cur: 'gems', amt: 100 }, { cur: 'gems', amt: 250 }]; // friends play for gems; cash play lives in Compete
 const FC_REPLY = 20000; // demo: friends answer in 20 seconds
 const themeName = k => (FC_THEMES.find(t => t[0] === k) || [k, 'Best ' + catNm(k)])[1];
@@ -7063,7 +7086,7 @@ function frS() {
   return S.fr;
 }
 const fitsTheme = (p, th) => th === 'any' || p.cat === th || (th === 'landscape' && ['sunrise', 'golden', 'night'].includes(p.cat));
-const fcPhotos = (f, th) => { const used = new Set(frS().rec[f].used); return S.photos.filter(p => fitsTheme(p, th) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total); };
+const fcPhotos = (f, th) => { return S.photos.filter(p => fitsTheme(p, th)).sort((a, b) => b.s.total - a.s.total); };
 function openFriends() { GV.tab = 'friends'; frS(); go('gallery'); }
 function friendsHTML() {
   if (!S.user) return `<div class="fr"><h2 class="fr-h">Friends</h2><p class="fr-s">Sign up to challenge friends with your photos.</p><button class="btn block" id="frSign">Sign up</button></div>`;
@@ -7087,11 +7110,13 @@ function friendsHTML() {
     ${yours.length ? `<h3 class="fr-sh">Your move</h3>${yours.map(card).join('')}` : ''}
     ${live.length ? `<h3 class="fr-sh">In play</h3>${live.map(card).join('')}` : ''}
     ${done.length ? `<h3 class="fr-sh">Results</h3>${done.map(card).join('')}` : ''}
+    <h3 class="fr-sh">Crowns <small class="crw-n">You hold ${myCrowns().length} of ${CATS8.length}</small></h3>
+    <div class="crw">${CATS8.map(k => { const c = crownOf(k), me = c.h === 'you'; return `<button class="crw-c ${me ? 'me' : ''}" data-crw="${k}"><span class="ic">${gi(k)}</span><b>${esc(crownName(k))}</b><span class="who">${me ? `👑 You${c.def ? ` · 🛡️${c.def}` : ''}` : `👑 @${esc(c.h)}`}</span><small>${c.sc}</small></button>`; }).join('')}</div>
     <h3 class="fr-sh">Scoreboard</h3>
     <div class="fsb">${FRIENDS.map(f => ({ f, r: F.rec[f.h] || { w: 0, l: 0 } })).sort((a, b) => (b.r.w + b.r.l) - (a.r.w + a.r.l)).map(({ f, r }) => { const n = r.w + r.l, st = !n ? 'Not played yet' : r.w > r.l ? 'You lead' : r.w < r.l ? `@${esc(f.h)} leads` : 'All square';
-      return `<div class="fsb-r ${n ? (r.w > r.l ? 'up' : r.w < r.l ? 'dn' : 'eq') : 'new'}"><div class="fsb-p"><span class="fav me">${avatarInner()}</span><small>You</small></div>
+      return `<div class="fsb-r ${n ? (r.w > r.l ? 'up' : r.w < r.l ? 'dn' : 'eq') : 'new'}"><div class="fsb-p"><span class="fav me">${avatarInner()}</span><small>You${crownCount('you') ? ` 👑${crownCount('you')}` : ''}</small></div>
         <div class="fsb-m"><b><span>${r.w}</span><i>–</i><span>${r.l}</span></b><small>${st}</small></div>
-        <div class="fsb-p">${fav(f.h, 40)}<small>@${esc(f.h)}</small></div>
+        <div class="fsb-p">${fav(f.h, 40)}<small>@${esc(f.h)}${crownCount(f.h) ? ` 👑${crownCount(f.h)}` : ''}</small></div>
         <button class="fsb-go" data-ch="${f.h}" aria-label="Challenge @${esc(f.h)}">${VS_IC}</button></div>`; }).join('')}</div>
     <button class="fr-inv" id="frInv"><span>➕</span><span><b>Invite friends on WhatsApp</b><small>Challenge them with your photo · you both get 50 💎 when they join</small></span><i>›</i></button>
   </div>`;
@@ -7106,6 +7131,9 @@ function bindFriends() {
   g.querySelectorAll('[data-watch]').forEach(b => b.onclick = () => fcBattle(frS().ch.find(c => c.id === b.dataset.watch)));
   g.querySelectorAll('[data-rev]').forEach(b => b.onclick = () => fcNew(b.dataset.rev));
   g.querySelectorAll('[data-ch]').forEach(b => b.onclick = () => fcNew(b.dataset.ch));
+  g.querySelectorAll('[data-crw]').forEach(b => b.onclick = () => { const k = b.dataset.crw, c = crownOf(k);
+    if (c.h === 'you') { toast(`👑 You hold the ${crownName(k)} crown. Keep your photo strong to defend it.`); return; }
+    const ph = S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0]; fcNew(c.h, { f: c.h, th: k, st: 1, sel: ph && ph.id }); });
   $('#frInv').onclick = () => { const T = todayFrame(), th = FC_THEMES.some(t => t[0] === T[0]) ? T[0] : 'pets', p = S.photos.filter(x => fitsTheme(x, th)).sort((a, b) => b.s.total - a.s.total)[0] || S.photos.slice().sort((a, b) => b.s.total - a.s.total)[0]; openInvite({ th: p && !fitsTheme(p, th) ? (p.cat || 'any') : th, photo: p }); return; const link = 'https://yofi.app/c/' + (S.user ? S.user.h : 'you'); try { navigator.clipboard.writeText(link).then(() => toast('Invite link copied. Send it to a friend!'), () => toast(link)); } catch (e) { toast(link); } };
 }
 function fcPhotoPick(f, th, onPick, title) {
@@ -7222,29 +7250,36 @@ function inviteJoined(c) {
 }
 const VS_IC = '<svg class="vsic" viewBox="0 0 44 32" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><rect x="20" y="4" width="19" height="24" rx="4" transform="rotate(12 29.5 16)"/><rect x="5" y="4" width="19" height="24" rx="4" transform="rotate(-10 14.5 16)" fill="rgba(0,0,0,.18)"/></g><text x="22" y="21.5" text-anchor="middle" font-family="Bricolage Grotesque, Inter, sans-serif" font-weight="900" font-size="15" fill="#fff" stroke="#2A1250" stroke-width="3.6" paint-order="stroke" letter-spacing="-.5">VS</text></svg>';
 function challengeWith(p) { if (!p) return; const th = FC_THEMES.some(t => t[0] === p.cat) ? p.cat : 'any';
-  if ($('#flow').classList.contains('on')) closeFlow(); go('gallery'); fcNew(null, { f: FRIENDS[0].h, th, st: 1, sel: p.id }); }
+  if ($('#flow').classList.contains('on')) closeFlow(); go('gallery'); fcNew(null, { f: FRIENDS[0].h, st: 1, sel: p.id }); }
 function fcNew(f0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPic(() => fcNew(f0, keep)); return; }
-  const T = todayFrame(); let f = (keep && keep.f) || f0 || 'sam', th = (keep && keep.th) || (() => { const tt = FC_THEMES.some(t => t[0] === T[0]) ? T[0] : 'pets', has = k => S.photos.some(p => fitsTheme(p, k)); if (has(tt)) return tt; const best = S.photos.slice().sort((a, b) => b.s.total - a.s.total).find(p => FC_THEMES.some(t => t[0] === p.cat)); return best ? best.cat : tt; })(), st = keep ? keep.st : 1, sel = keep && keep.sel;
+  const catOf = p => p && FC_THEMES.some(t => t[0] === p.cat) ? p.cat : 'any';
+  let f = (keep && keep.f) || f0 || 'sam', thOv = keep && keep.th, st = keep ? keep.st : 1, sel = keep && keep.sel, th = 'any', catOpen = false;
   let po0 = () => ({ sel });
   const paint = () => {
     const CK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
     const catLab = (k, n) => k === 'selfie' ? 'Selfie: Hot or Not' : n.replace('Best ', '');
-    openSheet(`<div class="fcn fcn2"><div class="f2-top"><div><h2>Challenge a friend</h2><p>Choose a friend, category and photo.</p></div><button class="f2-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    openSheet(`<div class="fcn fcn2"><div class="f2-top"><div><h2>Challenge a friend</h2><p>Pick a friend and your photo.</p></div><button class="f2-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
       <h3 class="fcn-h">Friend</h3><div class="fcn-f">${FRIENDS.map(x => `<button data-ff="${x.h}" aria-pressed="${x.h === f}">${x.h === f ? `<i class="f2-ck">${CK}</i>` : ''}${fav(x.h, 46)}<b>@${esc(x.h)}</b></button>`).join('')}<button class="fcn-inv" id="fcInv"><span class="wa">${WA_ICON}</span><b>Invite</b></button></div>
-      <h3 class="fcn-h">Category</h3><div class="fcn-chips f2-cat">${FC_THEMES.map(([k, n]) => `<button data-ft="${k}" aria-pressed="${k === th}">${k === th ? gi(k) : ''}${esc(catLab(k, n))}${k === th ? `<i class="f2-tk">${CK}</i>` : ''}</button>`).join('')}</div>
       <h3 class="fcn-h">Your photo</h3><div id="fcPick"></div>
+      <div class="f2-tag" id="fcTag"></div><p class="f2-crh" id="fcCrh"></p><div class="fcn-chips f2-cat" id="fcCats" hidden></div>
       <h3 class="fcn-h">Entry per player</h3><div class="f2-st">${FC_STAKES.map((x, i) => `<button data-fs="${i}" aria-pressed="${i === st}">${x.amt} <span class="g">${gemIcon('')}</span></button>`).join('')}</div>
       <div class="f2-win"><span class="tr">🏆</span><span class="sep"></span><span>Winner gets <b>${fcPrize(FC_STAKES[st])}</b> <span class="g">${gemIcon('')}</span></span></div>
       <button class="btn block fcn-go" id="fcSend">Send challenge · ${FC_STAKES[st].amt} <span class="g">${gemIcon('')}</span></button>
-      <p class="f2-cap">Category: ${esc(catLab(th, themeName(th)))}</p></div>`, { full: true, cover: true });
+      <p class="f2-cap" id="fcCap"></p></div>`, { full: true, cover: true });
     document.querySelectorAll('#sheetBody [data-ff]').forEach(b => b.onclick = () => { f = b.dataset.ff; sel = null; paint(); });
     $('#fcInv').onclick = () => { const p = S.photos.find(x => x.id === po0().sel) || S.photos.filter(x => fitsTheme(x, th)).sort((a, b) => b.s.total - a.s.total)[0]; openInvite({ th, stake: FC_STAKES[st], photo: p }); };
-    document.querySelectorAll('#sheetBody [data-ft]').forEach(b => b.onclick = () => { th = b.dataset.ft; sel = null; paint(); });
     document.querySelectorAll('#sheetBody [data-fs]').forEach(b => b.onclick = () => { st = +b.dataset.fs; sel = po0().sel; paint(); });
-    const used = new Set(frS().rec[f].used), fitsP = p => fitsTheme(p, th);
-    if (!sel || used.has(sel) || !S.photos.some(p => p.id === sel && fitsP(p))) sel = (S.photos.filter(p => fitsP(p) && !used.has(p.id)).sort((a, b) => b.s.total - a.s.total)[0] || {}).id;
-    const po = { grid: true, fits: fitsP, used, usedBy: f, sel, cat: th, themeName: themeName(th).replace('Best ', ''), backLabel: 'Back to your challenge', reopen: id => fcNew(null, { f, th, st, sel: id }) };
-    $('#fcPick').innerHTML = pickerHTML(po); const getSel = bindPicker(po); po0 = () => po;
+    if (!sel || !S.photos.some(p => p.id === sel)) sel = (S.photos.slice().sort((a, b) => b.s.total - a.s.total)[0] || {}).id;
+    // the category follows the photo; "Change" lets you pick another for this challenge
+    const setCat = () => { const p = S.photos.find(x => x.id === po.sel); th = thOv || catOf(p); po.cat = th;
+      const tag = $('#fcTag'); if (tag) tag.innerHTML = p ? `<span class="f2-tg">${gi(th)}<b>${esc(catLab(th, themeName(th)))}</b></span><button class="link f2-chg" id="fcChg">${catOpen ? 'Done' : 'Change'}</button>` : '';
+      const cats = $('#fcCats'); if (cats) { cats.hidden = !catOpen || !p; cats.innerHTML = FC_THEMES.map(([k, n]) => `<button data-ft="${k}" aria-pressed="${k === th}">${k === th ? gi(k) : ''}${esc(catLab(k, n))}${k === th ? `<i class="f2-tk">${CK}</i>` : ''}</button>`).join('');
+        cats.querySelectorAll('[data-ft]').forEach(b => b.onclick = () => { thOv = b.dataset.ft; catOpen = false; setCat(); }); }
+      if ($('#fcChg')) $('#fcChg').onclick = () => { catOpen = !catOpen; setCat(); };
+      const cap = $('#fcCap'); if (cap) cap.textContent = p ? `${themeName(th)} challenge` : '';
+      const ch = $('#fcCrh'), cc = crownOf(th); if (ch) ch.innerHTML = !p || !cc ? '' : cc.h === f ? `👑 @${esc(f)} holds the <b>${esc(crownName(th))}</b> crown (${cc.sc}). Beat them to take it.` : cc.h === 'you' ? `👑 You hold the <b>${esc(crownName(th))}</b> crown. Lose and @${esc(f)} could take it.` : `👑 @${esc(cc.h)} holds the <b>${esc(crownName(th))}</b> crown.`; };
+    const po = { grid: true, fits: () => true, used: new Set(), usedBy: f, sel, cat: 'any', themeName: '', backLabel: 'Back to your challenge', reopen: id => fcNew(null, { f, th: thOv, st, sel: id }), onSel: q => { if (q && q.id !== lastSel) { if (lastSel) thOv = null; lastSel = q.id; } setCat(); } }; let lastSel = sel;
+    $('#fcPick').innerHTML = pickerHTML(po); const getSel = bindPicker(po); po0 = () => po; setCat();
     $('#fcSend').onclick = () => {
       const pid = getSel(); if (!pid) { toast('Pick a photo, or upload one for this theme.'); return; }
       const stake = FC_STAKES[st];
@@ -7267,7 +7302,7 @@ function fcNew(f0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPic
         <button class="btn block fcn-go" id="fcpGo">Send challenge · ${stake.amt} ${gem}</button>
         <div style="text-align:center"><button class="link" id="fcpEdit">Edit challenge</button></div></div>`, { full: true, cover: true });
       $('#fcpGo').onclick = send;
-      $('#fcpEdit').onclick = () => fcNew(null, { f, th, st, sel: pid });
+      $('#fcpEdit').onclick = () => fcNew(null, { f, th: thOv, st, sel: pid });
     };
   };
   paint();
@@ -7280,7 +7315,7 @@ function fcAccept(c, keepSel) {
     <h3 class="fcn-h">Answer with</h3><div id="fcPick"></div>
     <button class="btn block fcn-go" id="fcGo">Battle · ${stakeTxt(c.stake)}</button>
     <div style="text-align:center"><button class="link" data-shclose>Later</button></div></div>`, { full: true, cover: true });
-  const used = new Set(frS().rec[c.f].used), fitsP = p => fitsTheme(p, c.theme);
+  const used = new Set(), fitsP = p => fitsTheme(p, c.theme);
   let sel = keepSel && S.photos.some(p => p.id === keepSel) ? keepSel : (ph[0] || {}).id;
   const po = { fits: fitsP, used, usedBy: c.f, sel, cat: c.theme, target: c.theirScore, who: '@' + c.f, themeName: themeName(c.theme).replace('Best ', ''), backLabel: `Back to @${c.f}’s challenge`, reopen: id => fcAccept(c, id),
     onSel: p => { $('#fcaMe').innerHTML = `<img src="${p.src}" alt=""><b>${p.s.total}</b><small>You</small>`; } };
@@ -7310,6 +7345,10 @@ function fcBattle(c) {
   c.st = 'done'; c.won = won; c.mv = mv; c.tv = tv; c.at = Date.now();
   if (won) { if (c.stake.cur === 'cash') S.cash = +((S.cash || 0) + prize).toFixed(2); else S.gems += prize; S.gems += bonus; F.rec[c.f].w++; F.wk.you = (F.wk.you || 0) + 1; }
   else { F.rec[c.f].l++; F.wk[c.f] = (F.wk[c.f] || 0) + 1; }
+  const CR = crownsS(), cc = CR[c.theme]; let crownMsg = '';
+  if (won && cc && cc.h === c.f) { CR[c.theme] = { h: 'you', sc: me.s.total }; crownMsg = `👑 You took @${esc(c.f)}’s <b>${esc(crownName(c.theme))}</b> crown!`; }
+  else if (!won && cc && cc.h === 'you') { CR[c.theme] = { h: c.f, sc: c.theirScore }; crownMsg = `👑 @${esc(c.f)} took your <b>${esc(crownName(c.theme))}</b> crown`; }
+  setTimeout(paintTop, 0);
   const fd = S.tixDay && S.tixDay.d === dayKey() ? S.tixDay : (S.tixDay = { d: dayKey(), n: 0 }); const newPass = false; if (newPass) { fd.n++; tix(); S.tix++; setTimeout(paintTop, 0); }
   save();
   const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>Friend challenge</b><button class="kg2-ic" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -7330,7 +7369,7 @@ function fcBattle(c) {
     $('#fb').innerHTML = `${head}<p class="kg2-fin">Final result</p><div class="kg2-crown vsc">${won ? '🏆' : VS_IC}</div><h2 class="kg2-h">${won ? `You beat @${esc(c.f)}!` : `@${esc(c.f)} wins this one`}</h2><p class="kg2-score">Final vote · ${Math.max(mv, tv)}–${Math.min(mv, tv)}</p>
       ${vs(tv, mv, true)}
       <div class="kg2-bar res"><i style="width:${100 - pct}%">${100 - pct}%</i><i style="width:${pct}%">${pct}%</i></div>
-      <p class="fb-rec">Head to head: <b>You ${r.w}–${r.l} @${esc(c.f)}</b></p>
+      ${crownMsg ? `<p class="fb-crown ${won ? 'w' : 'l'}">${crownMsg}</p>` : ''}<p class="fb-rec">Head to head: <b>You ${r.w}–${r.l} @${esc(c.f)}</b></p>
       ${won ? `<div class="kg2-next ${c.stake.cur === 'cash' ? 'win' : 'gemw'}"><small>You won</small><b>${prizeTxt(c.stake)}${bonus ? ` <em>+${bonus} 💎</em>` : ''}</b><span>${bonus ? 'Includes the bonus for today’s theme' : 'Added to your balance'}</span></div>
         ${newPass ? `<div class="fb-pass"><b>🎟️ Cash Cup ticket earned!</b><span>Use it to enter a photo in today’s Daily Cash Cup. It expires at midnight.</span></div><button class="btn block kg2-go" id="fbCup">Collect & enter the Cash Cup</button><div style="text-align:center"><button class="link kg2-back" id="fbMore">Challenge again</button></div>` : `<button class="btn block kg2-go" id="fbMore">Challenge again</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to Friends</button></div>`}`
         : `<div class="kg2-next lose"><small>You lost</small><b>${stakeTxt(c.stake)}</b><span>Revenge needs a new photo: each photo can only face @${esc(c.f)} once</span></div><button class="btn block kg2-go" id="fbMore">Take revenge</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to Friends</button></div>`}`;
@@ -7535,8 +7574,9 @@ $('#sFlame').onclick = () => streakPop();
 function nextUp() {
   if (!S.user || !fighters().length || !tUnlocked()) return null;
   const left = Math.max(CFG.BATTLE_EVERY - (S.since || 0), 12 - (S.votes || 0), 1), done = CFG.BATTLE_EVERY - Math.min(CFG.BATTLE_EVERY, left);
-  const tour = !S.popT && !(S.tour && !S.tour.seen) && window.__tSlot !== tNext();
-  return { left, done, k: tour ? 'tour' : S.btAlt ? 'gem' : 'cash' };
+  const tl = Math.max(T_POP_VOTES - (S.tSince || 0), 12 - (S.votes || 0), 1), tOk = !(S.tour && !S.tour.seen) && Date.now() - (S.tLast || 0) >= T_POP_GAP;
+  if (tOk && tl < left) return { left: tl, done: Math.max(0, CFG.BATTLE_EVERY - tl), k: 'tour' };
+  return { left, done, k: S.btAlt ? 'gem' : 'cash' };
 }
 function nextUpHTML() {
   const n = nextUp(); if (!n) return '';
@@ -7616,7 +7656,7 @@ async function vote(pick) {
   const earn = !agree ? (live ? 2 : 0) : base * tier + (live ? 5 : 0), enBack = mult && Math.random() < .06 ? mult : 0;
   energy(); S.en = Math.max(0, S.en - mult); if (S.en < EN_MAX && S.en + mult >= EN_MAX) S.enAt = Date.now(); S.lastMult = mult || 1; if (enBack) S.en += enBack; setTimeout(paintEnergy, 0); const justEmpty = mult > 0 && S.en < 1;
   if (nudgeFrom == null) nudgeFrom = S.gems;
-  S.votes++; S.since++; S.jIdx += 2; S.gems += earn;
+  S.votes++; S.since++; S.tSince = (S.tSince || 0) + 1; S.jIdx += 2; S.gems += earn;
   S.combo = agree ? (S.combo || 0) + 1 : 0; const shown = S.combo, comboHit = agree && S.votes > 10 && [3, 5, 10].includes(S.combo) ? S.combo : 0; if (S.combo >= 10) S.combo = 0;
   const drop = agree && S.votes > 10 && !comboHit && Math.random() < .04;
   const ds = dailyState(); ds.D.n++; ds.D.sn = (ds.D.sn || 0) + 1;
@@ -7638,7 +7678,12 @@ async function vote(pick) {
   if ([2, 4, 9].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">${S.combo === 9 ? '🧰 1 more for the big chest!' : '🎁 1 more for a lucky box!'}</span>`);
   if (earn) setTimeout(() => gemExplosion(earn, { mid: true, from: mc }), tier > 1 ? 900 : 0);
   await sleep(tier === 20 ? 2800 : tier > 1 ? 2200 : 1900);
-  if (!comboHit && S.votes >= 12 && fighters().length && tUnlocked() && S.since >= CFG.BATTLE_EVERY) { S.since = 0; S.popT = !S.popT; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; const nxr = () => { const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); }; if (S.popT && tPrompt()) { nxr(); return; } openBattle(); nxr(); return; }
+  if (!comboHit && tDue()) { renderJudge(); $('#judge').scrollTop = 0; judging = false; if (tPrompt()) { if (S.since >= CFG.BATTLE_EVERY - 1) S.since = Math.max(0, CFG.BATTLE_EVERY - 3); save(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; } }
+  if (!comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.user && fighters().length) { S.frIntro = 1; S.since = 0; save(); renderJudge(); judging = false;
+    const me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
+    celebrate({ src: me.src, score: VS_IC, title: 'Dare a friend!', text: `You’ve got the eye and the gems. Now dare a friend to beat your <b>${me.s.total}</b> photo. If they’re new, <b>you both get 50 💎</b> when they join.`, cta: `${VS_IC}Challenge a friend`, onCta: () => challengeWith(me), later: 'Keep judging' });
+    return; }
+  if (!comboHit && S.votes >= 12 && fighters().length && tUnlocked() && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; }
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
   if (streakHit) { const rw = STREAK_GEMS; celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} streak!`, text: `You judged 3 photos this ${SESS[ds.si].toLowerCase()}. <b>+${rw} gems</b>. ${ds.si < 3 ? `Come back from ${SESS_AT[ds.si + 1]} for another ${rw}.` : `Come back after midnight for another ${rw}.`}`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
@@ -7776,19 +7821,23 @@ function repairPhoto() {
 }
 function awayCheck() {
   if (!S || !S.user) return; const now = Date.now(), last = S.lastSeen || now; S.lastSeen = now; save();
-  if (now - last < 60000 || S.crack || !S.medalIntro || now - S.medalIntro < 24 * 3600000) return; // demo: anything over a minute counts as "away"; new medal holders get a day's grace
-  const ph = medalPhoto(); if (!ph) return;
-  const n = 1 + Math.floor(Math.random() * 3), log = []; let stolen = null;
-  for (let i = 0; i < n && !stolen; i++) {
-    const o = FRIENDS[Math.floor(Math.random() * FRIENDS.length)], lose = Math.random() < Math.max(.2, Math.min(.5, .55 - (ph.s.total - 70) / 60));
-    if (!lose) { log.push({ h: o.h, won: true }); continue; }
-    stolen = { h: o.h, src: battleRival(ph.cat || 'any').src }; log.push({ h: o.h, won: false });
-  }
-  const gems = log.filter(x => x.won).length * 10; S.gems += gems;
-  if (stolen) S.crack = { pid: ph.id, by: stolen.h, src: stolen.src, at: now };
-  save(); paintTop();
-  const show = () => { if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) { setTimeout(show, 1500); return; } awayPop(ph, log, gems, stolen); };
+  if (now - last < 60000 || !S.frIntro) return; // demo: anything over a minute counts as "away"
+  const mine = myCrowns(); if (!mine.length) return; const roll = Math.random(); if (roll < .25) return;
+  if (roll < .6) { const k = mine[Math.floor(Math.random() * mine.length)], o = FRIENDS[Math.floor(Math.random() * FRIENDS.length)], c = crownsS()[k];
+    c.def = (c.def || 0) + 1; S.gems += 20; save(); paintGems();
+    const ph = S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0];
+    const show2 = () => { if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) { setTimeout(show2, 1500); return; }
+      celebrate({ src: ph ? ph.src : (S.user && S.user.pic) || '', score: '🛡️', title: 'Crown defended!', text: `@${esc(o.h)} tried to take your <b>${esc(crownName(k))}</b> crown. Your <b>${c.sc}</b> photo held it! <b>+20 💎</b>`, cta: 'Nice!' }); };
+    setTimeout(show2, 1800); return; }
+  const k = mine[Math.floor(Math.random() * mine.length)], CR = crownsS(), old = CR[k], o = FRIENDS[Math.floor(Math.random() * FRIENDS.length)];
+  const sc = Math.min(97, old.sc + 2 + Math.floor(Math.random() * 5)); CR[k] = { h: o.h, sc }; save(); paintTop();
+  const show = () => { if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) { setTimeout(show, 1500); return; } crownLostPop(k, o.h, sc, old.sc); };
   setTimeout(show, 1800);
+}
+function crownLostPop(k, h, sc, mine) {
+  const ph = S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0];
+  celebrate({ src: ph ? ph.src : (S.user && S.user.pic) || '', score: '👑', title: `@${esc(h)} stole your crown!`, text: `Their <b>${sc}</b> beat your <b>${mine}</b> for the <b>${esc(crownName(k))}</b> crown. Rematch @${esc(h)} to win it back.`,
+    cta: `${VS_IC}Win it back`, onCta: () => { openFriends(); fcNew(h, { f: h, th: k, st: 1, sel: ph && ph.id }); }, later: 'Later' });
 }
 function buyShield(after) {
   const c = $('#coach');
@@ -7902,7 +7951,7 @@ function openGemBattle(stake, after, opt = {}) {
   const live = () => {
     const prize = win(), my = judgeRate(mine), pWin = opt.revenge ? .6 : free ? .8 : Math.max(.35, Math.min(.65, .45 + (my - 60) / 80)), won = Math.random() < pWin;
     const myVotes = won ? 16 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 5);
-    const firstMedal = !opt.revenge && !S.medalIntro; if (firstMedal) S.medalIntro = Date.now();
+    const firstMedal = false; if (!opt.revenge && !S.medalIntro) S.medalIntro = Date.now();
     if (opt.revenge) { if (won) medalBack(); S.crack && (S.crack.rv = true); save(); } else { S.gems = S.gems - stake + (won ? prize : 0); S.gbDone = (S.gbDone || 0) + 1; save(); paintGems(false); }
     $('#gb').innerHTML = `${head}<div class="kg2-crown">💎</div><h2 class="kg2-h">Battle is live</h2><p class="kg2-sub">Most votes wins ${prize} gems.</p>
       <span class="kg2-live"><i></i>Live voting</span>
@@ -8241,12 +8290,14 @@ const tPool = (n = T_N) => +(n * T_FEE * (1 - KING_FEE)).toFixed(2);
 const tPay = (k, n = T_N) => { const pool = tPool(n); return +(k === 'win' ? Math.max(T_TIERS[T_FEE].gtd, pool * T_SPLIT.win) : pool * T_SPLIT[k]).toFixed(2); };
 // players registered so far (demo: grows from 6 to 32 before the start)
 const tCount = () => Math.max(5, Math.min(T_N, Math.round(T_N - ((tNext() - Date.now()) / (15 * 60000)) * 11)));
-function tLive() { if (document.querySelector('#sheet.on #sheetBody .tk0') && window.__tk0Slot && tNext() !== window.__tk0Slot) { window.__tk0Slot = 0; openTourney(); toast('That tournament has started. Here’s the next one.'); return; } const n = tCount(); document.querySelectorAll('#sheetBody [data-tn]').forEach(e => e.textContent = n); document.querySelectorAll('#sheetBody [data-tw]').forEach(e => e.textContent = money(tPay('win', n))); document.querySelectorAll('#sheetBody [data-tf]').forEach(e => e.textContent = money(tPay('final', n))); document.querySelectorAll('#sheetBody [data-tmins]').forEach(e => e.textContent = tMins()); }
+function tLive() { if (document.querySelector('#sheet.on #sheetBody .tk0') && window.__tStart && window.__tStart - Date.now() <= 3000) { window.__tStart = 0; closeSheet(); toast('That tournament has started. Keep judging for the next one.'); return; } const n = tCount(); document.querySelectorAll('#sheetBody [data-tn]').forEach(e => e.textContent = n); document.querySelectorAll('#sheetBody [data-tw]').forEach(e => e.textContent = money(tPay('win', n))); document.querySelectorAll('#sheetBody [data-tf]').forEach(e => e.textContent = money(tPay('final', n))); document.querySelectorAll('#sheetBody [data-tmins]').forEach(e => e.textContent = tMins()); }
 const tPrizeBox = () => { const n = tCount(), g = T_TIERS[T_FEE].gtd; return `<div class="tk-gtd"><span class="tk-badge">✓ ${money(g)} guaranteed</span><small>Winner gets</small><b data-tw>${money(tPay('win', n))}</b><span><b data-tn>${n}</b> players so far · grows with every player</span></div>`; };
 // Demo timing: the next tournament starts 30 seconds out (in the real product, every 15 minutes)
 const T_SIT = 45000; // tables start as soon as 16 players are in, about every 45 seconds
 const T_EVERY_MS = 15 * 60000; // a tournament starts every 15 minutes
-const tNext = () => { const q = Math.ceil((Date.now() + 3000) / T_EVERY_MS) * T_EVERY_MS; return q; };
+const T_SITGO = 60000; // a tournament starts 1 minute after you join
+const tNext = () => window.__tStart && window.__tStart - Date.now() > 3000 ? window.__tStart : Math.ceil((Date.now() + T_SITGO) / 1000) * 1000;
+const tArm = () => { if (!(window.__tStart && window.__tStart - Date.now() > 3000)) window.__tStart = Math.floor((Date.now() + T_SITGO) / 1000) * 1000; return window.__tStart; };
 const tMins = () => { const l = Math.max(0, Math.ceil((tNext() - Date.now()) / 1000)); return `${Math.floor(l / 60)}:${String(l % 60).padStart(2, '0')}`; };
 function tNew(pick) {
   const F = fighters(), mine = pick || F.slice().sort((a, b) => b.s.total - a.s.total)[0], cat = mine.cat || 'any', my = judgeRate(mine), hs = OPP.slice().sort(() => Math.random() - .5), used = new Set([mine.src]);
@@ -8284,21 +8335,36 @@ function tBanner(title, body) {
 }
 // tournaments, battles and live matches unlock after a deposit, or once the first Daily Cash Cup result is in
 const tUnlocked = () => !!S.user && fighters().length > 0; // cash games open once you have a 70+ photo
-function tPrompt() { // shown only from judging: after a run of 7 votes (takes turns with the battle pop)
+const T_POP_VOTES = 20, T_POP_GAP = 5 * 60000; // demo: real product could space these further apart
+const tDue = () => S.user && S.votes >= 12 && tUnlocked() && fighters().length && (S.tSince || 0) >= T_POP_VOTES && Date.now() - (S.tLast || 0) >= T_POP_GAP && !(S.tour && !S.tour.seen);
+function tPrompt() { // shown from judging at a natural break: every 20 votes, at most once every 5 minutes
   if (!window.__tSnooze) { try { window.__tSnooze = +localStorage.getItem('yofi.tprompt') || 0; } catch (e) {} }
   const busy = ['#coach', '#ceg', '#sheet', '#flow', '#battle', '#lv'].some(q => { const e = $(q); return e && e.classList.contains('on'); });
   const slot = tNext(), left = slot - Date.now();
   if (!S.user || busy || !tUnlocked() || (S.tour && !S.tour.seen) || !fighters().length || $('#panes').dataset.at !== 'judge' || window.__tSlot === slot) return false;
-  window.__tSlot = slot; // one pop per tournament
+  tArm(); window.__tSlot = tNext(); S.tSince = 0; S.tLast = Date.now(); save(); // this tournament starts in 1 minute
   const me = fighters()[0];
   const pth = tTheme(slot), ptn = thName(pth), pme = fitFor(pth)[0];
   celebrate({ src: (pme || me).src, score: '🏆', title: `${ptn} tournament!`, text: `<span class="tp-prz"><small>Win up to</small><b>$${T_TIERS[5].gtd}</b><em>guaranteed prize</em></span>Starts in <b data-tpc>${tMins()}</b> · ${pth === 'any' ? 'any photo can enter' : `<b>${ptn.toLowerCase()} photos only</b>`}. ${pme ? `Your ${pme.s.total} photo is ready.` : `Add a ${ptn.toLowerCase()} photo to play.`} Entry from <b>$1</b>.`, cta: pme ? 'Let’s play' : `📷 Add a ${ptn.toLowerCase()} photo`, onCta: () => { clearInterval(window.__tpc); openTourney(); }, later: 'Not now', onLater: () => clearInterval(window.__tpc) });
   const c = $('#coach');
-  clearInterval(window.__tpc); window.__tpc = setInterval(() => { const e = c.querySelector('[data-tpc]'); if (!e || !c.classList.contains('on')) { clearInterval(window.__tpc); return; } if (tNext() !== slot) { clearInterval(window.__tpc); c.classList.remove('on', 'cr'); toast('That tournament has started. Another one starts in 15 minutes.'); return; } e.textContent = tMins(); }, 1000);
+  clearInterval(window.__tpc); window.__tpc = setInterval(() => { const e = c.querySelector('[data-tpc]'); if (!e || !c.classList.contains('on')) { clearInterval(window.__tpc); return; } if (window.__tStart - Date.now() <= 3000) { clearInterval(window.__tpc); window.__tStart = 0; c.classList.remove('on', 'cr'); toast('That tournament has started. Keep judging for the next one.'); return; } e.textContent = tMins(); }, 1000);
   return true;
 }
 function tWidget() {
-  { const w0 = $('#tkW'), c0 = $('#tkChip'); if (w0) w0.classList.remove('on'); if (c0) c0.classList.remove('on'); return; } // quiet: only the end-of-tournament banner
+  { const w0 = $('#tkW'); if (w0) w0.classList.remove('on'); // one live tournament, one countdown: a chip on every tab
+    let chip = $('#tkChip'); const T = S && S.tour, entered = !!(T && !T.seen && tPhase(T).st !== 'done'), armed = !entered && window.__tStart && window.__tStart - Date.now() > 3000;
+    const fl = $('#flow'), blocked = !S || !S.user || tOpen() || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || (fl.classList.contains('on') && !fl.classList.contains('astab'));
+    const nx = document.querySelector('#judge .nxu'), onJ = $('#panes').dataset.at === 'judge' && !fl.classList.contains('on');
+    const mm0 = ms => { const l = Math.max(0, Math.ceil(ms / 1000)); return `${Math.floor(l / 60)}:${String(l % 60).padStart(2, '0')}`; };
+    if (nx) { if (armed || entered) { const ph = entered && tPhase(T); nx.className = 'nxu nxu-tour nxu-live'; nx.innerHTML = `<span class="t">${entered ? (ph.st === 'lobby' ? `<b>🏆 You’re in</b> · starts in <b>${mm0(ph.left)}</b>` : `<b>🔴 Live</b> · ${ph.r === T_LAST ? 'Best in Show' : T_NAMES[ph.r]}`) : `<b>🏆 Tournament</b> starts in <b>${tMins()}</b>`}</span><em>${entered ? 'Watch' : 'Join'}</em>`; nx.onclick = () => openTourney(); }
+      else if (nx.classList.contains('nxu-live')) { nx.outerHTML = nextUpHTML(); } }
+    if ((!armed && !entered) || blocked || onJ) { if (chip) chip.classList.remove('on'); return; }
+    if (!chip) { chip = document.createElement('button'); chip.id = 'tkChip'; chip.className = 'tk-chip'; chip.onclick = () => { if (Date.now() - (chip._at || 0) < 900) return; openTourney(); }; document.body.appendChild(chip); }
+    if (!chip.classList.contains('on')) chip._at = Date.now();
+    const mm = ms => { const l = Math.max(0, Math.ceil(ms / 1000)); return `${Math.floor(l / 60)}:${String(l % 60).padStart(2, '0')}`; };
+    let html; if (entered) { const ph = tPhase(T); html = ph.st === 'lobby' ? `🏆 You’re in · <b>${mm(ph.left)}</b>` : `<i class="tkc-live"></i>Live · ${ph.r === T_LAST ? 'Best in Show' : T_NAMES[ph.r]}`; }
+    else html = `🏆 Tournament <b>${tMins()}</b> · Join`;
+    chip.innerHTML = html; chip.classList.toggle('live', entered); chip.classList.add('on'); return; }
   let w = $('#tkW'); const T = S && S.tour;
   const show = T && !T.seen && S.user && !tOpen();
   let chip = $('#tkChip');
@@ -8386,12 +8452,12 @@ function tPyramid(T, at, out) {
 function openTourney() {
   const T = S.tour && !S.tour.seen ? S.tour : null;
   if (!T) {
-    const slot = tNext(), th = tTheme(slot), tn = thName(th), F = fighters(); window.__tk0Slot = slot;
+    tArm(); const slot = tNext(), th = tTheme(slot), tn = thName(th), F = fighters();
     if (!tierOpen(T_FEE)) tTier(1);
     const fitsP = p => fitsTheme(p, th), n = tCount();
     let tsel = window.__tSel && S.photos.some(p => p.id === window.__tSel && fitsP(p)) ? window.__tSel : (fitFor(th)[0] || S.photos.filter(fitsP).sort((a, b) => b.s.total - a.s.total)[0] || {}).id; window.__tSel = null;
     const mine = S.photos.find(p => p.id === tsel) || F[0] || { src: '', s: { total: 0 } };
-    openSheet(`<div class="kg tk tk0"><span class="tg-th">${gi(th)}${esc(tn.toUpperCase())}${th === 'any' ? ' · ANY PHOTO' : ' PHOTOS ONLY'}</span><h2 class="tk-h">🏆 ${esc(tn)} Tournament</h2><p class="tk-sub">Starts ${ampm(slot)} · real judges · head-to-head rounds</p>
+    openSheet(`<div class="kg tk tk0"><span class="tg-th">${gi(th)}${esc(tn.toUpperCase())}${th === 'any' ? ' · ANY PHOTO' : ' PHOTOS ONLY'}</span><h2 class="tk-h">🏆 ${esc(tn)} Tournament</h2><p class="tk-sub">Starting soon · real judges · head-to-head rounds</p>
       <div class="tk-tier3" role="group" aria-label="Entry">${[1, 5, 10, 20].map(f => { const L = SCORE_LEVELS.find(x => x.fee === f), open = tierOpen(f); return `<button data-tier="${f}" aria-pressed="${f === T_FEE}" class="${open ? '' : 'lock'}"><span class="tm">${open ? L.ic : '🔒'}</span><b>$${f}</b><small>${open ? L.n : `${T_TIERS[f].min}+ score`}</small></button>`; }).join('')}</div>
       ${tPrizeCard(n)}${tStats('Starts in', tMins(), n)}
       <p class="tk-how">Every match is like for like: your photo only faces photos from its own category. Win 3 rounds to reach the <b>Best in Show</b> final.</p>
@@ -8419,7 +8485,7 @@ function paintTourney() {
         ${tPrizeCard(n)}${tStats('Starts in', (Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0')), n)}
         ${tPyramid(T, 0, -1)}
         <div class="sd-me tk-me"><img src="${T.src}" alt=""><div><b>Photo you’re entering</b><small>${esc(catLabel(T.cat))}</small></div></div>
-        <p class="tk-auto">Tournaments start every 15 minutes. Keep judging and we’ll call you when it begins.</p>
+        <p class="tk-auto">Starting in a moment. Stay to watch it go live, or keep judging and we’ll show your result when it’s done.</p>
         <button class="btn block" data-shclose>Keep judging</button>`; bind(); }
     tLive(); body.querySelector('[data-tmins]').textContent = (Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0')); return;
   }
@@ -8631,14 +8697,15 @@ function welcomePop() {
 function renderWall(st) {
   const F = wallFrames(), filled = F.filter(f => f.p).length, ready = F.filter(f => f.p && f.p.s.total >= CFG.QUALIFY).length, tot = F.length;
   const next = WALL_REWARD.find(([n]) => ready < n);
+  const crownTag = k => { try { const c = crownOf(k); return c ? `<span class="wf-crn ${c.h === 'you' ? 'me' : ''}">👑 ${c.h === 'you' ? 'You' : '@' + esc(c.h)} · ${c.sc}</span>` : ''; } catch (e) { return ''; } };
   const plTag = f => `<span class="wf-pl">${esc(wallName(f.k))}</span>`;
   const plus = f => `<button class="wf-add" data-wadd="${f.k}" aria-label="Add a ${esc(wallName(f.k))} photo">+</button>`;
   const frame = f => {
-    if (!f.p) return `<div class="wf empty"><button class="wf-in" data-wadd="${f.k}" aria-label="Add a ${esc(wallName(f.k))} photo"><span><span class="wf-ic">${gi(f.k)}</span></span></button>${plus(f)}${plTag(f)}</div>`;
+    if (!f.p) return `<div class="wf empty"><button class="wf-in" data-wadd="${f.k}" aria-label="Add a ${esc(wallName(f.k))} photo"><span><span class="wf-ic">${gi(f.k)}</span></span></button>${plus(f)}${plTag(f)}${crownTag(f.k)}</div>`;
     const x = f.p, l = photoLock(x), ok = x.s.total >= CFG.QUALIFY;
     const tag = l ? '<i class="wf-t lk">🔒 In a competition</i>' : ok ? `<i class="wf-t ok lvt-${lvlOf(x.s.total).k}">${lvlOf(x.s.total).ic} ${lvlOf(x.s.total).n}${nextLvl(x.s.total) ? ` · ${nextLvl(x.s.total).at - x.s.total} to ${nextLvl(x.s.total).n}` : ''}</i>` : `<i class="wf-t up">✨ ${CFG.QUALIFY - x.s.total} to ${CFG.QUALIFY}</i>`;
     const LV = lvlOf(x.s.total);
-    return `<div class="wf ${ok ? 'gold' : ''} ${LV ? 'lv-' + LV.k : ''}"><button class="wf-in" data-wp="${f.k}" aria-label="${esc(wallName(f.k))} photo scoring ${x.s.total}"><img src="${x.src}" alt=""><span class="wf-sc">${x.s.total}</span>${ok ? `<span class="wf-wr">${judgeRate(x)}% wins</span>` : ''}${f.list.length > 1 ? `<span class="wf-n">+${f.list.length - 1} more</span>` : ''}${tag}</button>${ok && !l ? `<button class="wf-add wf-ch" data-wch="${x.id}" aria-label="Challenge a friend with your ${esc(wallName(f.k))} photo">${VS_IC}</button>` : plus(f)}${plTag(f)}</div>`;
+    return `<div class="wf ${ok ? 'gold' : ''} ${LV ? 'lv-' + LV.k : ''} ${crownTag(f.k).includes('wf-crn me') ? 'crown' : ''}"><button class="wf-in" data-wp="${f.k}" aria-label="${esc(wallName(f.k))} photo scoring ${x.s.total}"><img src="${x.src}" alt=""><span class="wf-sc">${x.s.total}</span>${ok ? `<span class="wf-wr">${judgeRate(x)}% wins</span>` : ''}${f.list.length > 1 ? `<span class="wf-n">+${f.list.length - 1} more</span>` : ''}${tag}</button>${ok && !l ? `<button class="wf-add wf-ch" data-wch="${x.id}" aria-label="Challenge a friend with your ${esc(wallName(f.k))} photo">${VS_IC}</button>` : plus(f)}${plTag(f)}${crownTag(f.k)}</div>`;
   };
   const UPI = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>';
   st.innerHTML = `<div class="wall">
