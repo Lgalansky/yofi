@@ -4212,7 +4212,7 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .pk-ph{background:#140A26;box-shadow:inset 0 0 0 1.5px #3E2A66}
 .pk-ph img,.pk-scan img{width:100%;height:100%;object-fit:cover;display:block}
 .pk-ph .sc{position:absolute;right:6px;bottom:6px;padding:2px 9px;border-radius:999px;background:rgba(20,10,40,.85);font:800 .95rem "Bricolage Grotesque",sans-serif}
-.pk-ph .sc.up{background:#16B571}
+.pk-ph .sc.up{background:#16B571;color:#fff!important}
 .pk-ph .ck{display:none;position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;background:#8B4DFF;place-items:center}.pk-ph .ck svg{width:15px;height:15px}
 .pk-ph[aria-pressed=true]{box-shadow:0 0 0 3px #A15CFF}.pk-ph[aria-pressed=true] .ck{display:grid}
 .pk-ph.used{opacity:.4;cursor:not-allowed}.pk-ph.used em{position:absolute;left:6px;right:6px;top:8px;font-style:normal;font-size:.68rem;font-weight:800;text-align:center;padding:3px;border-radius:8px;background:rgba(20,10,40,.85)}
@@ -4345,8 +4345,8 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .kg2-crown.vsc .vsic{width:64px;height:48px}
 /* friends scoreboard */
 .fsb{display:grid;gap:10px}
-.fsb-r{display:grid;grid-template-columns:56px 1fr 56px 48px;align-items:center;gap:6px;padding:12px 12px 12px 10px;border-radius:18px;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3E2A66}
-.fsb-p{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}.fsb-p small{font-size:.72rem;font-weight:700;color:#CDBEE8;max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fsb-r{display:grid;grid-template-columns:60px 1fr 84px 48px;align-items:center;gap:6px;padding:12px 12px 12px 10px;border-radius:18px;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3E2A66}
+.fsb-p{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}.fsb-p small{font-size:.8rem;font-weight:700;color:#CDBEE8;max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fsb-p .fav{width:40px;height:40px;border-radius:50%;overflow:hidden;display:grid;place-items:center;font-weight:800}.fsb-p .fav.me{background:linear-gradient(135deg,#FF3FA4,#8B3CFF)}.fsb-p .fav img{width:100%;height:100%;object-fit:cover}
 .fsb-m{text-align:center}.fsb-m b{display:flex;justify-content:center;align-items:baseline;gap:8px;font:800 2rem/1 "Bricolage Grotesque",sans-serif;color:#fff}.fsb-m b i{font-style:normal;color:#7A64A8;font-size:1.4rem}
 .fsb-m small{display:block;margin-top:4px;font-size:.78rem;font-weight:700;color:#A796C6}
@@ -4364,6 +4364,11 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .crw-c{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px 8px;border:0;border-radius:14px;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3E2A66;color:#fff;cursor:pointer;min-width:0}
 .crw-c .ic svg{width:22px;height:22px;color:#CDBEE8}.crw-c b{font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .crw-c .who{font-size:.68rem;font-weight:700;color:#A796C6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.crw-c small{font-size:.68rem;color:#7A64A8;font-weight:800}
+.crw{padding-top:14px;gap:14px 10px!important}.crw-c{position:relative;overflow:visible}
+.crw-k{position:absolute;left:-12px;top:-18px;font-style:normal;font-size:2.3rem;line-height:1;transform:rotate(-45deg);filter:drop-shadow(0 3px 5px rgba(0,0,0,.5));pointer-events:none}
+.crw-c{padding-top:34px!important}.crw-c .who{position:absolute;top:7px;left:30px;right:auto;max-width:calc(100% - 34px);text-align:left!important;display:block!important;margin:0!important;font-size:.78rem!important;color:#fff!important;font-weight:800!important}.crw-c.me .who{color:#FFE27A!important}
+.crw-c:not(.me) .crw-k{filter:grayscale(.35) drop-shadow(0 3px 5px rgba(0,0,0,.5))}
+.crw-c.me .crw-k{filter:drop-shadow(0 0 8px rgba(255,201,60,.9))}
 .crw-c.me{background:linear-gradient(180deg,#4A3510,#2A1C08);box-shadow:inset 0 0 0 2px #FFC93C,0 0 12px -4px rgba(255,201,60,.7)}.crw-c.me .ic svg{color:#FFC93C}.crw-c.me .who{color:#FFE27A}.crw-c.me small{color:#FFC93C}
 .wf-crn{display:block;margin-top:4px;text-align:center;font-size:.72rem;font-weight:800;color:#A796C6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wf-crn.me{color:#FFC93C}
 .f2-crh{margin:8px 2px 0;font-size:.88rem;color:#FFE27A}.f2-crh:empty{display:none}
@@ -4371,6 +4376,42 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .tk-chip.live{background:linear-gradient(135deg,#FF5C8A,#FF2D55);color:#fff}
 .tkc-live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;animation:ldot 1.2s ease-in-out infinite}
 .nxu-live{cursor:pointer;background:linear-gradient(135deg,#3A2508,#2A1747)!important}.nxu-live em{font-style:normal;font-weight:800;font-size:.8rem;padding:4px 12px;border-radius:999px;background:#FFC93C;color:#2A1600}
+.stopc.crb{position:relative;padding:0!important;width:52px;height:52px;border-radius:50%;justify-content:center;background:radial-gradient(circle at 35% 30%,#4A3510,#22140A)!important;box-shadow:inset 0 0 0 2px #FFC93C,0 0 14px -4px rgba(255,201,60,.7)!important}
+.crb .crb-i{font-size:1.75rem;line-height:1}
+.crb .crb-n{position:absolute;right:-6px;bottom:-4px;min-width:24px;height:24px;padding:0 6px;display:grid;place-items:center;border-radius:999px;background:#FF3FA4;color:#fff;font:800 .9rem "Bricolage Grotesque",sans-serif;box-shadow:0 0 0 2px #120A22}
+.stopc.crb.zero{background:#24163F!important;box-shadow:inset 0 0 0 2px #4A2F78!important}.crb.zero .crb-i{filter:grayscale(1) brightness(1.3);opacity:.6}.crb.zero .crb-n{background:#4A2F78}
+.ug h2{margin:0 0 4px}.ug .sub{margin:0 0 14px}
+.ug-r{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 10px;padding:14px;border:0;border-radius:18px;text-align:left;color:#fff;cursor:pointer;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3E2A66;font:inherit}
+.ug-i{flex:none;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;font-size:1.4rem;background:linear-gradient(135deg,#3A1B5C,#2A1546);box-shadow:inset 0 0 0 1.5px #5A3A8A}
+.ug-t{flex:1;min-width:0}.ug-t > b{display:block;font-size:1.02rem}.ug-t small b{color:#fff}.ug-t small{display:block;margin-top:2px;font-size:.85rem;color:#CDBEE8;line-height:1.35}
+.ug-r em{flex:none;font-style:normal;font-weight:800;padding:6px 12px;border-radius:999px;background:linear-gradient(135deg,#FF3FA4,#8B3CFF);white-space:nowrap}.ug-r em.need{background:#3E2A66;color:#A796C6}
+.ug-buy{display:block;margin:6px auto 0;font-weight:800}.ug-none{color:#CDBEE8}
+/* friends v3 */
+.fc2{padding:14px!important;border-radius:22px!important;box-shadow:inset 0 0 0 2px #FF3FA4,0 0 22px -8px rgba(255,63,164,.6)!important;background:linear-gradient(180deg,#2A1240,#1C0F33)!important}
+.fc2-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}.fc2-h b{flex:1;font:800 1.25rem "Bricolage Grotesque",sans-serif}
+.fc2-h em{font-style:normal;font-weight:800;font-size:.8rem;padding:4px 10px;border-radius:999px;background:#FF3FA4;color:#fff;white-space:nowrap}
+.fc2-b{display:flex;align-items:stretch;gap:14px}
+.fc2-ph{position:relative;flex:none;width:42%;aspect-ratio:1/1;border-radius:16px;overflow:hidden}.fc2-ph img{width:100%;height:100%;object-fit:cover}
+.fc2-ph i{position:absolute;right:6px;bottom:6px;font-style:normal;font:800 1.1rem "Bricolage Grotesque",sans-serif;padding:4px 10px;border-radius:999px;background:#FFC93C;color:#2A1600}
+.fc2-i{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:8px;padding-left:14px;border-left:1.5px solid #3E2A66}
+.fc2-i p{margin:0;display:flex;align-items:center;gap:8px}
+.fc2-t svg{width:28px;height:28px;color:#E6DDF5;flex:none}.fc2-t b{font:800 1.3rem "Bricolage Grotesque",sans-serif}
+.fc2-e small{color:#C9B4F5;font-weight:700}.fc2-e b{font-weight:600}.fc2-i .g{display:inline-flex}.fc2-e .g svg{width:20px;height:20px}
+.fc2-w{padding-top:8px;border-top:1.5px solid #3E2A66}.fc2-w .g svg{width:30px;height:30px}.fc2-w b{font:800 1.2rem "Bricolage Grotesque",sans-serif;white-space:nowrap}.fc2-w .g svg{width:26px!important;height:26px!important}
+.fc2-go{display:flex!important;align-items:center;justify-content:center;gap:10px;margin-top:14px;font:800 1.45rem "Bricolage Grotesque",sans-serif!important;padding:14px 0!important;background:linear-gradient(95deg,#FF3FA4,#B23CFF)!important}
+.crh{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin:22px 0 12px}.crh h3{margin:0;font:800 1.7rem "Bricolage Grotesque",sans-serif}.crh p{margin:2px 0 0;color:#C9B4F5;font-weight:700}
+.crh-n{flex:none;padding:6px 14px;border-radius:999px;font-weight:800;font-size:.95rem;color:#E6DDF5;background:#24163F;box-shadow:inset 0 0 0 1.5px #5A3A8A}
+.crw2{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px!important;padding-top:0!important}
+.crw2-c{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 0 12px;border:0;border-radius:14px;overflow:hidden;background:#24163F;box-shadow:inset 0 0 0 1.5px #4A2F78;color:#fff;cursor:pointer;min-width:0;font:inherit}
+.crw2-band{align-self:stretch;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 4px;background:linear-gradient(180deg,#4A3510,#2E1F0C);font-size:.95rem;white-space:nowrap;overflow:hidden}.crw2-band b{font-size:.82rem;overflow:hidden;text-overflow:ellipsis}
+.crw2-ic svg{width:40px;height:40px;color:#CDBEE8;margin-top:6px}.crw2-n{font:800 1rem "Bricolage Grotesque",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding:0 4px}
+.crw2-c.me{box-shadow:inset 0 0 0 2px #FFC93C,0 0 14px -4px rgba(255,201,60,.7)}.crw2-c.me .crw2-band{background:linear-gradient(180deg,#FFD24A,#E9A514);color:#2A1600}.crw2-c.me .crw2-ic svg{color:#FFC93C}
+.fr-rk{display:flex;align-items:center;gap:14px;width:100%;margin:16px 0 0;padding:14px 18px;border:0;border-radius:18px;color:#fff;font:inherit;font-size:1.05rem;cursor:pointer;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3E2A66}.fr-rk b{flex:1;text-align:left;font-weight:600}.fr-rk i{font-style:normal;font-size:1.5rem;color:#CDBEE8}.fr-rk-i{color:#C9B4F5;display:inline-flex}
+.fr-cta2{margin-top:14px!important;width:100%}
+.frk h2{margin:0 0 4px}.frk .sub{margin:0 0 14px}
+#gemPill.glow{animation:gglow 1.8s ease-in-out infinite}
+@keyframes gglow{0%,100%{box-shadow:inset 0 0 0 1.5px #5BC8FF,0 0 0 rgba(91,200,255,0)}50%{box-shadow:inset 0 0 0 2px #5BC8FF,0 0 18px rgba(91,200,255,.75)}}
+.pn-go.tix{background:linear-gradient(135deg,#2EE59D,#159A6A)!important;color:#fff!important}
 </style>
 </head>
 <body>
@@ -4432,7 +4473,7 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
     </header>
     <div class="wallet" aria-label="Wallet">
       <button class="wb cash" id="wCash" aria-label="Cash balance"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="8" width="28" height="17" rx="3" fill="#21C77A"/><rect x="5" y="11" width="22" height="11" rx="2" fill="none" stroke="#0E8F55" stroke-width="1.5"/><circle cx="16" cy="16.5" r="4.2" fill="#FFD84D"/><path d="M16 14v5M17.4 14.9c-.4-.5-2.8-.7-2.8.6 0 1.4 2.8.7 2.8 2.1 0 1.2-2.4 1.1-2.9.5" stroke="#0E8F55" stroke-width="1.1" fill="none" stroke-linecap="round"/></svg><span><small>Cash</small><b id="cashNum">$0.00</b></span></button>
-      <button class="wb gems" id="gemPill" aria-label="Gems balance. Buy gems"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#gemPath"/></svg><span><small>Gems</small><b id="gemNum">0</b></span><span class="gplus" aria-hidden="true"><svg viewBox="0 0 12 12" width="12" height="12"><path d="M6 1.5v9M1.5 6h9" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span></button>
+      <button class="wb gems" id="gemPill" aria-label="Gems balance. See what your gems can do"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#gemPath"/></svg><span><small>Gems</small><b id="gemNum">0</b></span><span class="gplus" aria-hidden="true"><svg viewBox="0 0 12 12" width="12" height="12"><path d="M6 1.5v9M1.5 6h9" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span></button>
       <button class="wplus" id="walletPlus" aria-label="Add funds">+</button>
     </div>
     <div class="panes" id="panes" data-at="judge">
@@ -4840,15 +4881,12 @@ function paintWallet() { $('#cashNum').textContent = '$' + (S.cash || 0).toFixed
 const topPhoto = () => S.photos.slice().sort((a, b) => b.s.total - a.s.total)[0];
 function paintTop() {
   const tb = $('#sTix'); if (tb) { tb.hidden = true; tb.innerHTML = `🎟️<b>${S.user ? tix() : 0}</b>`; tb.setAttribute('aria-label', `${S.user ? tix() : 0} Cash Cup tickets`); }
-  const b = $('#sTop'); if (!b) return; const t = S.user && topPhoto();
-  if (!t) { b.hidden = true; return; }
-  const L = lvlOf(t.s.total); b.hidden = false;
-  b.className = 'stopc ' + (L ? 'lv-' + L.k : 'none');
-  if (!S.medalIntro && S.gbDone) S.medalIntro = 1;
-  const cr = S.crack && S.photos.some(x => x.id === S.crack.pid), med = !cr && fighters().length && S.medalIntro;
-  b.classList.toggle('lostcr', !!cr);
-  b.innerHTML = `<img src="${t.src}" alt=""><b>${t.s.total}</b><span>${L ? L.ic : '🎯'}</span>${(() => { try { return myCrowns().length ? '<i class="stm">👑</i>' : ''; } catch (e) { return ''; } })()}`;
-  b.setAttribute('aria-label', `Your top photo scores ${t.s.total}${L ? ', ' + L.n : ''}. See what each level unlocks`);
+  const b = $('#sTop'); if (!b) return;
+  if (!S.user) { b.hidden = true; return; }
+  let n = 0; try { n = myCrowns().length; } catch (e) {}
+  b.hidden = false; b.className = 'stopc crb ' + (n ? 'has' : 'zero');
+  b.innerHTML = `<span class="crb-i">👑</span><b class="crb-n">${n}</b>`;
+  b.setAttribute('aria-label', `You hold ${n} crown${n === 1 ? '' : 's'}. See your crowns`);
 }
 function tierLockPop(f, mine) {
   const L = SCORE_LEVELS.find(x => x.fee === f), v = mine.s.total, gap = L.at - v, c = $('#coach');
@@ -4883,7 +4921,7 @@ function levelsPop() {
   $('#lvpX').onclick = close; c.onclick = e => { if (e.target === c) close(); };
   $('#lvpGo').onclick = () => { close(); if ($('#flow').classList.contains('on')) closeFlow(); if (!N) { tTier(20); openTourney(); } else if (tgt) { S.cur = tgt.id; WALL = false; save(); go('studio'); renderStudio(); } else { WALL = true; go('studio'); renderStudio(); pickPhoto(true); } };
 }
-document.addEventListener('click', e => { if (e.target.closest('#lvTix')) { $('#lv').classList.remove('on'); if (tix()) { CXF = 'all'; openComps(); cxEnter(CX.find(x => x.id === 'daily')); } else openFriends(); return; } if (e.target.closest('#sTop')) levelsPop(); if (e.target.closest('#sTix')) tixPop(); });
+document.addEventListener('click', e => { if (e.target.closest('#lvTix')) { $('#lv').classList.remove('on'); if (tix()) { CXF = 'all'; openComps(); cxEnter(CX.find(x => x.id === 'daily')); } else openFriends(); return; } if (e.target.closest('#sTop')) { openFriends(); setTimeout(() => { const c = document.querySelector('#gallery .crw'); if (c) c.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 350); } if (e.target.closest('#sTix')) tixPop(); });
 function paintGems(animate = true) { if (typeof paintTop === 'function') paintTop();
   paintWallet();
   const target = S.gems, start = shownGems, t0 = performance.now(), dur = animate ? 700 : 0;
@@ -5909,9 +5947,46 @@ function bindShop(onBuy) {
   if (document.querySelector('#sheetBody [data-offer]')) document.querySelector('#sheetBody [data-offer]').onclick = () => { const o = OFFER; checkout(`$${o.cash} cash + ${o.gems.toLocaleString()} gems`, o.cash, () => { OFFER = null; applyOffer(o.cash, o.gems, o.label, o.after); }); };
   if ($('#earnBtn')) $('#earnBtn').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) { if (!S.user) { openSignup(); return; } closeFlow(); } go('judge'); };
 }
-$('#gemPill').onclick = () => openStore();
+// tapping your gems shows what they can do for you now; the + still opens the shop
+function gemIdeas() {
+  const I = [], can = p => !photoLock(p) && lowestOpen(p), cn = p => p.cat && p.cat !== 'any' ? pcatName(p.cat) + ' ' : '';
+  if (fighters().length) I.push({ ic: '🎟️', t: 'Free cash entry', d: `Play a <b>$1</b> tournament or cash battle for free. Win <b>real cash</b>.${(S.cashTix || 0) ? ` You have ${S.cashTix}.` : ''}`, cost: TIX_GEMS, src: (fighters()[0] || {}).src, go: buyTicket });
+  const u70 = S.photos.filter(p => p.s.total < CFG.QUALIFY && can(p)).sort((a, b) => b.s.total - a.s.total)[0];
+  const up = u70 || S.photos.filter(p => can(p) && nextLvl(p.s.total)).sort((a, b) => (nextLvl(a.s.total).at - a.s.total) - (nextLvl(b.s.total).at - b.s.total))[0];
+  if (up) { const L = up.s.total < CFG.QUALIFY ? null : nextLvl(up.s.total), gap = (L ? L.at : CFG.QUALIFY) - up.s.total;
+    I.push({ ic: '✨', t: 'Enhance a photo', d: `Your ${esc(cn(up))}photo is <b>${up.s.total}</b>. ${gap} more to ${L ? `<b>${L.n}</b>` : `<b>${CFG.QUALIFY}</b> and it’s ready to play`}.`, cost: fixCost(up), src: up.src, go: () => { closeSheet(); startEnhance(up, lowestOpen(up)); } }); }
+  try { let best = null; Object.entries(crownsS()).forEach(([k, c]) => { if (c.h === 'you') return; const ph = S.photos.filter(p => k === 'any' ? !p.cat || p.cat === 'any' : p.cat === k).sort((a, b) => b.s.total - a.s.total)[0]; if (!ph) return; const gap = c.sc - ph.s.total; if (!best || gap < best.gap) best = { k, c, ph, gap }; });
+    if (best) I.push({ ic: '👑', t: 'Take a crown', d: `@${esc(best.c.h)} holds the <b>${esc(crownName(best.k))}</b> crown with ${best.c.sc}. Your photo: <b>${best.ph.s.total}</b>.`, cost: FC_STAKES[1].amt, src: best.ph.src, go: () => { closeSheet(); openFriends(); fcNew(best.c.h, { f: best.c.h, th: best.k, st: 1, sel: best.ph.id }); } }); } catch (e) {}
+  const f = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
+  if (f) I.push({ ic: '⚔️', t: 'Gem battle', d: `Put your <b>${f.s.total}</b> photo up against a rival. Win <b>50 💎</b> in 30 seconds.`, cost: 25, src: f.src, go: () => { closeSheet(); openGemBattle(25); } });
+  return I;
+}
+function useGems() {
+  const I = gemIdeas();
+  openSheet(`<div class="ug"><h2>Use your gems</h2><p class="sub">You have <b>${S.gems} 💎</b>${(S.cashTix || 0) ? ` and <b>🎟️ ${S.cashTix} free cash entr${S.cashTix === 1 ? 'y' : 'ies'}</b>` : ''}. Here’s what they can do for you right now.</p>
+    ${I.length ? I.map((x, i) => `<button class="ug-r" data-ug="${i}"><span class="ug-i">${x.ic}</span><span class="ug-t"><b>${x.t}</b><small>${x.d}</small></span><em class="${S.gems < x.cost ? 'need' : ''}">${x.cost} 💎</em></button>`).join('') : `<p class="ug-none">Upload a photo in Studio and your gems can start working for you.</p>`}
+    <button class="link ug-buy" id="ugBuy">Get more gems</button></div>`);
+  document.querySelectorAll('#sheetBody [data-ug]').forEach(b => b.onclick = () => { const x = I[+b.dataset.ug]; if (S.gems < x.cost) { closeSheet(); runOut('gems', `You need ${x.cost - S.gems} more gems`, null, x.cost - S.gems); return; } x.go(); });
+  $('#ugBuy').onclick = () => { closeSheet(); openStore(); };
+}
+// once a session, when judging has piled up 100+ gems, suggest the best way to spend them
+function gemNudge(force) {
+  // pops each time judging takes you past a new 100 gems (at most every 15 votes), or on opening the app with 150+
+  if (!S.user || S.gems < 100 || (S.votes || 0) < 12 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return false;
+  const mark = Math.floor(S.gems / 100) * 100;
+  if (!force && (mark <= (S.gnMark || 0) || (S.votes || 0) - (S.gnVote || 0) < 15)) return false;
+  const I = gemIdeas(); if (!I.length) return false; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow(); const x = I.find(i => S.gems >= i.cost) || I[0];
+  celebrate({ src: x.src, score: '💎', title: `You’ve got ${S.gems} gems!`, text: `${x.d}<br>Use <b>${x.cost} 💎</b> on it now.`, cta: `${x.ic} ${x.t} · ${x.cost} 💎`, onCta: x.go, later: 'See what else gems do', onLater: useGems });
+  return true;
+}
+$('#gemPill').onclick = e => { if (e.target.closest('.gplus')) openStore(); else { S.gnMark = Math.max(S.gnMark || 0, Math.floor(S.gems / 100) * 100); save(); paintGemGlow(); useGems(); } };
+// the gem balance glows while you have 100+ gems you haven't looked at spending
+function paintGemGlow() { const el = $('#gemPill'); if (el) el.classList.toggle('glow', !!(S && S.user && S.gems >= 100 && Math.floor(S.gems / 100) * 100 > (S.gnMark || 0))); }
+setInterval(paintGemGlow, 1500);
+// opening the app with 150+ gems: show the pop once per visit
+setTimeout(function gnOpen() { if (!S || !S.user) return; if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || ($('#flow').classList.contains('on') && !$('#flow').classList.contains('astab'))) { if (!gnOpen.n) gnOpen.n = 0; if (++gnOpen.n < 8) setTimeout(gnOpen, 2500); return; } if (S.gems >= 150) gemNudge(true); }, 4000);
 ['#walletPlus', '#wCash'].forEach(s => { const el = $(s); if (el) el.onclick = () => openStore(); });
-$('#gemPill2').onclick = () => openStore();
+$('#gemPill2').onclick = () => useGems();
 
 /* ---------- Competitions hub ---------- */
 const MIN = 60e3;
@@ -6015,6 +6090,7 @@ function openComps(forPhoto) { forPhoto = null;
   const body = $('#flowBody');
   body.querySelectorAll('[data-w]').forEach(b => b.onclick = () => openStore());
   if ($('#pnTour')) $('#pnTour').onclick = () => openTourney();
+  if ((S.cashTix || 0) > 0) document.querySelectorAll('#pnTour .pn-go, #pnBat .pn-go').forEach(e => { e.textContent = `🎟️ Free`; e.classList.add('tix'); });
   document.querySelectorAll('#flowBody [data-lad]').forEach(b => b.onclick = () => { closeFlow(); S.cur = b.dataset.lad; WALL = false; save(); go('studio'); renderStudio(); });
   if ($('#cxToStudio')) $('#cxToStudio').onclick = () => { closeFlow(); WALL = true; go('studio'); renderStudio(); };
   if ($('#pnGem')) $('#pnGem').onclick = () => openGemBattle(25);
@@ -7094,9 +7170,9 @@ function friendsHTML() {
   const yours = F.ch.filter(c => c.st === 'yours'), live = F.ch.filter(c => c.st === 'wait' || c.st === 'ready' || c.st === 'invite'), done = F.ch.filter(c => c.st === 'done').sort((a, b) => b.at - a.at).slice(0, 4);
   const T = todayFrame(), tth = FC_THEMES.some(t => t[0] === T[0]) ? T[0] : 'pets';
   const card = c => {
-    if (c.st === 'yours') return `<div class="fc in"><div class="fc-top">${fav(c.f)}<div><b>@${esc(c.f)} challenged you</b><small>${esc(themeName(c.theme))} · ${stakeTxt(c.stake)} each · win ${prizeTxt(c.stake)}</small></div></div>
-      <div class="fc-row"><span class="fc-th"><img src="${c.theirSrc}" alt=""><i>${c.theirScore}</i></span><span class="fc-q">Beat their <b>${c.theirScore}</b> with a ${esc(catNm(c.theme)).toLowerCase()} photo</span></div>
-      <button class="fc-go" data-acc="${c.id}">Accept challenge</button></div>`;
+    if (c.st === 'yours') return `<div class="fc in fc2"><div class="fc2-h">${fav(c.f)}<b>@${esc(c.f)} wants to battle</b>${c === yours[0] ? `<em>${yours.length} NEW</em>` : ''}</div>
+      <div class="fc2-b"><span class="fc2-ph"><img src="${c.theirSrc}" alt=""><i>${c.theirScore}</i></span><div class="fc2-i"><p class="fc2-t">${gi(c.theme)}<b>${esc(themeName(c.theme))}</b></p><p class="fc2-e"><small>Entry:</small><span class="g">${gemIcon('')}</span><b>${c.stake.amt} gems</b></p><p class="fc2-w"><span class="g">${gemIcon('')}</span><b>Win ${fcPrize(c.stake)} gems</b></p></div></div>
+      <button class="fc-go fc2-go" data-acc="${c.id}"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 17.5L3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2M9.5 17.5L21 6V3h-3L6.5 14.5M11 19l-6-6M8 16l-4 4M5 21l-2-2"/></svg>Accept battle</button></div>`;
     if (c.st === 'invite') return `<div class="fc wait"><div class="fc-top"><span class="wa mid">${WA_ICON}</span><div><b>Invite sent${c.via === 'wa' ? ' on WhatsApp' : ''}</b><small>${esc(themeName(c.theme))} · ${stakeTxt(c.stake)} · waiting for your friend to join</small></div></div></div>`;
     if (c.st === 'wait') { const l = Math.max(0, Math.ceil((c.replyAt - now) / 1000)); return `<div class="fc wait"><div class="fc-top">${fav(c.f)}<div><b>Waiting for @${esc(c.f)}</b><small>${esc(themeName(c.theme))} · ${stakeTxt(c.stake)}</small></div><em class="fc-tm" data-rp="${c.id}">${l}s</em></div></div>`; }
     if (c.st === 'ready') return `<div class="fc ready"><div class="fc-top">${fav(c.f)}<div><b>@${esc(c.f)} answered!</b><small>${esc(themeName(c.theme))} · judges are voting</small></div></div><button class="fc-go" data-watch="${c.id}">Watch the battle</button></div>`;
@@ -7110,8 +7186,8 @@ function friendsHTML() {
     ${yours.length ? `<h3 class="fr-sh">Your move</h3>${yours.map(card).join('')}` : ''}
     ${live.length ? `<h3 class="fr-sh">In play</h3>${live.map(card).join('')}` : ''}
     ${done.length ? `<h3 class="fr-sh">Results</h3>${done.map(card).join('')}` : ''}
-    <h3 class="fr-sh">Crowns <small class="crw-n">You hold ${myCrowns().length} of ${CATS8.length}</small></h3>
-    <div class="crw">${CATS8.map(k => { const c = crownOf(k), me = c.h === 'you'; return `<button class="crw-c ${me ? 'me' : ''}" data-crw="${k}"><span class="ic">${gi(k)}</span><b>${esc(crownName(k))}</b><span class="who">${me ? `👑 You${c.def ? ` · 🛡️${c.def}` : ''}` : `👑 @${esc(c.h)}`}</span><small>${c.sc}</small></button>`; }).join('')}</div>
+    <div class="crh"><div><h3>Crowns</h3><p>Battle for the crown</p></div><span class="crh-n">${myCrowns().length} of ${CATS8.length} yours</span></div>
+    <div class="crw crw2">${CATS8.map(k => { const c = crownOf(k), me = c.h === 'you'; return `<button class="crw2-c ${me ? 'me' : ''}" data-crw="${k}"><span class="crw2-band">👑 <b>${me ? 'You' : '@' + esc(c.h)}</b></span><span class="crw2-ic">${gi(k)}</span><b class="crw2-n">${esc(crownName(k))}</b></button>`; }).join('')}</div>
     <h3 class="fr-sh">Scoreboard</h3>
     <div class="fsb">${FRIENDS.map(f => ({ f, r: F.rec[f.h] || { w: 0, l: 0 } })).sort((a, b) => (b.r.w + b.r.l) - (a.r.w + a.r.l)).map(({ f, r }) => { const n = r.w + r.l, st = !n ? 'Not played yet' : r.w > r.l ? 'You lead' : r.w < r.l ? `@${esc(f.h)} leads` : 'All square';
       return `<div class="fsb-r ${n ? (r.w > r.l ? 'up' : r.w < r.l ? 'dn' : 'eq') : 'new'}"><div class="fsb-p"><span class="fav me">${avatarInner()}</span><small>You${crownCount('you') ? ` 👑${crownCount('you')}` : ''}</small></div>
@@ -7120,6 +7196,16 @@ function friendsHTML() {
         <button class="fsb-go" data-ch="${f.h}" aria-label="Challenge @${esc(f.h)}">${VS_IC}</button></div>`; }).join('')}</div>
     <button class="fr-inv" id="frInv"><span>➕</span><span><b>Invite friends on WhatsApp</b><small>Challenge them with your photo · you both get 50 💎 when they join</small></span><i>›</i></button>
   </div>`;
+}
+function rankingsSheet() {
+  const F = frS();
+  openSheet(`<div class="frk"><h2>Friend rankings</h2><p class="sub">Your score against each friend, and the crowns they hold.</p>
+    <div class="fsb">${FRIENDS.map(f => ({ f, r: F.rec[f.h] || { w: 0, l: 0 } })).sort((a, b) => (b.r.w + b.r.l) - (a.r.w + a.r.l)).map(({ f, r }) => { const n = r.w + r.l, st = !n ? 'Not played yet' : r.w > r.l ? 'You lead' : r.w < r.l ? `@${esc(f.h)} leads` : 'All square';
+      return `<div class="fsb-r ${n ? (r.w > r.l ? 'up' : r.w < r.l ? 'dn' : 'eq') : 'new'}"><div class="fsb-p"><span class="fav me">${avatarInner()}</span><small>You${crownCount('you') ? ` 👑${crownCount('you')}` : ''}</small></div>
+        <div class="fsb-m"><b><span>${r.w}</span><i>–</i><span>${r.l}</span></b><small>${st}</small></div>
+        <div class="fsb-p">${fav(f.h, 40)}<small>@${esc(f.h)}${crownCount(f.h) ? ` 👑${crownCount(f.h)}` : ''}</small></div>
+        <button class="fsb-go" data-rch="${f.h}" aria-label="Challenge @${esc(f.h)}">${VS_IC}</button></div>`; }).join('')}</div></div>`);
+  document.querySelectorAll('#sheetBody [data-rch]').forEach(b => b.onclick = () => fcNew(b.dataset.rch));
 }
 function bindFriends() {
   const g = $('#gallery');
@@ -7131,6 +7217,7 @@ function bindFriends() {
   g.querySelectorAll('[data-watch]').forEach(b => b.onclick = () => fcBattle(frS().ch.find(c => c.id === b.dataset.watch)));
   g.querySelectorAll('[data-rev]').forEach(b => b.onclick = () => fcNew(b.dataset.rev));
   g.querySelectorAll('[data-ch]').forEach(b => b.onclick = () => fcNew(b.dataset.ch));
+  if ($('#frRank')) $('#frRank').onclick = () => rankingsSheet();
   g.querySelectorAll('[data-crw]').forEach(b => b.onclick = () => { const k = b.dataset.crw, c = crownOf(k);
     if (c.h === 'you') { toast(`👑 You hold the ${crownName(k)} crown. Keep your photo strong to defend it.`); return; }
     const ph = S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0]; fcNew(c.h, { f: c.h, th: k, st: 1, sel: ph && ph.id }); });
@@ -7692,6 +7779,7 @@ async function vote(pick) {
   if (comboHit) { miniDrop(comboHit); return; }
   if (drop) { miniDrop(); return; }
   if (justEmpty) { setTimeout(outOfEnergy, 300); return; }
+  if (gemNudge()) return;
   maybeEnhanceNudge();
 }
 function packOffer() {
@@ -8003,23 +8091,23 @@ function openCashBattle(stake, th, photo) {
     <div class="kg2-who du"><div class="king"><small>Rival</small><b>@${esc(o.h)}</b>${counts ? `<strong id="duRn">${rvv}</strong><span>votes</span>` : ''}</div>
       <div class="me"><small>You</small><b>Score ${mine.s.total}</b>${counts ? `<strong id="duMn">${mv}</strong><span>votes</span>` : ''}</div></div>`;
   const pick = () => {
-    const short = (S.cash || 0) < stake;
+    const tkt = stake === 1 && (S.cashTix || 0) > 0, short = !tkt && (S.cash || 0) < stake;
     openSheet(`<div class="kg2" id="du">${head}
       <div class="kg2-crown">⚔️</div><h2 class="kg2-h">@${esc(o.h)} wants to battle</h2><p class="kg2-sub">Photo vs photo. Real judges pick the winner.</p>
       ${vs(0, 0, false, false, false)}
       <div class="tk-tier3 du-st" role="group" aria-label="Stake">${[1, 5, 10, 20].map(f => { const L = SCORE_LEVELS.find(x => x.fee === f), open = tierOpen(f); return `<button data-st="${f}" aria-pressed="${f === stake}" class="${open ? '' : 'lock'}"><span class="tm">${open ? L.ic : '🔒'}</span><b>$${f}</b><small>${open ? L.n : `${L.at}+ score`}</small></button>`; }).join('')}</div>
       <div class="kg2-pot"><small>Winner takes</small><b>${money(pot(stake))}</b></div>
-      ${short ? `<button class="btn block kg2-go" id="duBuy">Add cash to battle</button><p class="du-fine">You need ${money(stake)} cash. You have ${money(S.cash || 0)}.</p>` : `<button class="btn block kg2-go" id="duGo">Battle for $${stake}</button>`}
+      ${short ? `<button class="btn block kg2-go" id="duBuy">Add cash to battle</button><p class="du-fine">You need ${money(stake)} cash. You have ${money(S.cash || 0)}.</p>` : `<button class="btn block kg2-go" id="duGo">${tkt ? '🎟️ Battle free · use your ticket' : `Battle for $${stake}`}</button>`}
       <div style="text-align:center"><button class="link kg2-back" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
     document.querySelectorAll('#du [data-st]').forEach(b => b.onclick = () => { const f = +b.dataset.st; if (!tierOpen(f)) { tierLockPop(f, mine); return; } stake = f; pick(); });
     if ($('#duBuy')) $('#duBuy').onclick = () => openStore(`You need ${money(stake)} cash for this battle.`, () => pick(), 'cash');
-    if ($('#duGo')) $('#duGo').onclick = () => live();
+    if ($('#duGo')) $('#duGo').onclick = () => live(tkt);
   };
-  const live = () => {
+  const live = (useT) => { if (useT) { S.cashTix = Math.max(0, (S.cashTix || 0) - 1); toast('🎟️ Free entry used'); }
     const prize = pot(stake), my = judgeRate(mine), pWin = Math.max(.3, Math.min(.65, .45 + (my - 60) / 80)), won = Math.random() < pWin;
     const myVotes = won ? 16 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 5);
     // settle up front so closing the screen never loses the result
-    S.cash = +((S.cash || 0) - stake + (won ? prize : 0)).toFixed(2); save(); paintWallet();
+    S.cash = +((S.cash || 0) - (useT ? 0 : stake) + (won ? prize : 0)).toFixed(2); save(); paintWallet();
     $('#du').innerHTML = `${head}<div class="kg2-crown">⚔️</div><h2 class="kg2-h">Battle is live</h2><p class="kg2-sub">Most votes wins ${money(prize)}.</p>
       <span class="kg2-live"><i></i>Live voting</span>
       ${vs(0, 0, false, false, true)}
@@ -8095,7 +8183,15 @@ function openBattleChooser() {
     else if (k === 'tour') openTourney();
     else openKing(kc); });
 }
+const TIX_GEMS = 300; // gems for one free $1 cash entry
+function buyTicket() {
+  if (S.gems < TIX_GEMS) { closeSheet(); runOut('gems', `You need ${TIX_GEMS - S.gems} more gems`, null, TIX_GEMS - S.gems); return; }
+  S.gems -= TIX_GEMS; S.cashTix = (S.cashTix || 0) + 1; save(); paintGems(); closeSheet();
+  celebrate({ src: (S.user && S.user.pic) || '', score: '🎟️', title: 'Free entry ready!', text: `Use it on any <b>$1</b> tournament or cash battle. Prizes are <b>real cash</b>.${S.cashTix > 1 ? ` You have <b>${S.cashTix}</b> free entries.` : ''}`,
+    cta: '🏆 Play a tournament', onCta: () => { tArm(); openTourney(); }, later: '⚔️ Cash battle instead', onLater: () => openCashBattle(1) });
+}
 function payCash(amt, what, then) {
+  if (amt === 1 && (S.cashTix || 0) > 0) { S.cashTix--; save(); toast(`🎟️ Free entry used${S.cashTix ? ` · ${S.cashTix} left` : ''}`); then(); return true; }
   if ((S.cash || 0) < amt) { openStore(`${what} costs ${money(amt)} cash.`, () => (S.cash || 0) >= amt && then()); return false; }
   S.cash = +((S.cash || 0) - amt).toFixed(2); save(); paintWallet(); then(); return true;
 }
@@ -8462,7 +8558,7 @@ function openTourney() {
       ${tPrizeCard(n)}${tStats('Starts in', tMins(), n)}
       <p class="tk-how">Every match is like for like: your photo only faces photos from its own category. Win 3 rounds to reach the <b>Best in Show</b> final.</p>
       <h3 class="fcn-h">Photo you’re entering</h3><div id="tkPick"></div>
-      <button class="btn block kg-go tk-join" id="tkGo">Join tournament · ${money(T_FEE)}</button>
+      <button class="btn block kg-go tk-join" id="tkGo">${T_FEE === 1 && (S.cashTix || 0) > 0 ? '🎟️ Join free · use your ticket' : `Join tournament · ${money(T_FEE)}`}</button>
       <div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
     clearInterval(window.__tm); window.__tm = setInterval(() => { if (!document.querySelector('#sheetBody .tk0')) { clearInterval(window.__tm); return; } tLive(); }, 1000);
     document.querySelectorAll('#sheetBody [data-tier]').forEach(b => b.onclick = () => { const f = +b.dataset.tier; if (!tierOpen(f)) { const L = SCORE_LEVELS.find(x => x.fee === f); tierLockPop(f, mine); return; } tTier(f); openTourney(); });
