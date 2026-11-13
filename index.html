@@ -5296,7 +5296,10 @@ function showResult(p, o = {}) {
   const hit80 = stage === 2 && !photoLock(p) && (crossed || !p.readyShown) && (o.prevTotal != null || 'win' in o);
   const AFTER = SCORE_ANIM_MS + 600;
   if (S.user && window.__pickRet && o.prevTotal != null) { const back = window.__pickRet; window.__pickRet = null;
-    setTimeout(() => celebrate({ src: p.src, score: tot, title: back.target && tot > back.target ? 'Ready to battle!' : 'Enhanced!', text: back.target ? `Your photo now scores <b>${tot}</b> vs ${back.who}’s <b>${back.target}</b>.${tot > back.target ? ' You’re in front!' : ' One more enhance could put you ahead.'}` : `Your photo now scores <b>${tot}</b>.`, cta: back.label || 'Back to your battle', onCta: () => { closeFlow(); back.go(p); }, later: tot > (back.target || 0) ? null : 'Enhance again', onLater: () => { window.__pickRet = back; startEnhance(p, lowestOpen(p)); } }), Math.max(AFTER, 1200));
+    if (back.need) { const ok = tot >= back.need, nx = !ok && lowestOpen(p);
+      setTimeout(() => celebrate(ok ? { src: p.src, score: tot, title: 'Ready to battle!', text: `Your photo now scores <b>${tot}</b>. You’re in!`, cta: back.label, onCta: () => { closeFlow(); back.go(p); } }
+        : { src: p.src, score: tot, title: 'Nearly there!', text: `Your photo now scores <b>${tot}</b>. It needs <b>${back.need}+</b> to play, so <b>${back.need - tot}</b> to go. Enhance again and you’ll come straight back.`, cta: nx ? `✨ Enhance again · ${fixCost(p)} 💎` : 'Back to the battle', onCta: () => { if (nx) { window.__pickRet = back; startEnhance(p, nx); } else { closeFlow(); back.go(p); } }, later: nx ? 'Back to the battle' : null, onLater: () => { closeFlow(); back.go(p); } }), Math.max(AFTER, 1200)); }
+    else setTimeout(() => celebrate({ src: p.src, score: tot, title: back.target && tot > back.target ? 'Ready to battle!' : 'Enhanced!', text: back.target ? `Your photo now scores <b>${tot}</b> vs ${back.who}’s <b>${back.target}</b>.${tot > back.target ? ' You’re in front!' : ' One more enhance could put you ahead.'}` : `Your photo now scores <b>${tot}</b>.`, cta: back.label || 'Back to your battle', onCta: () => { closeFlow(); back.go(p); }, later: tot > (back.target || 0) ? null : 'Enhance again', onLater: () => { window.__pickRet = back; startEnhance(p, lowestOpen(p)); } }), Math.max(AFTER, 1200));
   }
   else if (S.user && hitGoal) setTimeout(() => showCompReady(p, gc), Math.max(AFTER, o.win ? 2600 : 0));
   else if (S.user && hit80) setTimeout(() => showCompReady(p), Math.max(AFTER, o.win ? 2600 : 0));
@@ -7766,7 +7769,7 @@ function themeGate(th, what, go, sel) {
     onSel: p => { const b = $('#tgGo'); if (!b) return; const low = canEnh(p); b.innerHTML = low ? `✨ Enhance to ${CFG.QUALIFY}+ · ${fixCost(p)} 💎` : 'Play with this photo'; b.classList.toggle('tg-enh', !!low); const t = $('#pkTip'); if (t) t.style.display = low ? 'none' : ''; const w = $('#tgWhy'); if (w) w.innerHTML = low ? `Your photo scores <b>${p.s.total}</b>. Enhance it to <b>${CFG.QUALIFY}+</b> and you’ll come straight back to play.` : ''; } };
   $('#tgPick').innerHTML = pickerHTML(po); const getSel = bindPicker(po);
   $('#tgGo').onclick = () => { const p = S.photos.find(x => x.id === getSel()); if (!p) { toast(`Add a ${thName(th).toLowerCase()} photo first.`); return; }
-    if (p.s.total < CFG.QUALIFY) { if (canEnh(p)) { window.__pickRet = { label: po.backLabel, go: q => po.reopen(q.id) }; closeSheet(); startEnhance(p, lowestOpen(p)); } else toast(`This photo scores ${p.s.total}. Pick a ${CFG.QUALIFY}+ photo or add a new one.`); return; }
+    if (p.s.total < CFG.QUALIFY) { if (canEnh(p)) { window.__pickRet = { need: CFG.QUALIFY, label: 'Play the battle', go: q => { if (q.s.total >= CFG.QUALIFY) go(q); else po.reopen(q.id); } }; closeSheet(); startEnhance(p, lowestOpen(p)); } else toast(`This photo scores ${p.s.total}. Pick a ${CFG.QUALIFY}+ photo or add a new one.`); return; }
     closeSheet(); go(p); };
 }
 function openGemBattle(stake, after, opt = {}) {
