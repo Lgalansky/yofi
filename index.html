@@ -5193,7 +5193,7 @@ function showResult(p, o = {}) {
   const L0 = o.prevTotal != null ? lvlOf(o.prevTotal) : null, L1 = lvlOf(tot);
   if (!window.__pickRet && o.prevTotal != null && L1 && L1.at > 70 && (!L0 || L1.at > L0.at)) setTimeout(() => celebrate({ src: p.src, score: tot, title: `${L1.ic} ${L1.n} unlocked!`, text: `Your photo reached <b>${L1.at}</b>. <b>$${L1.fee} tournaments</b> are now open, with up to <b>$${T_TIERS[L1.fee].gtd}</b> guaranteed for the winner.`, cta: `Play $${L1.fee} tournament`, onCta: () => { closeFlow(); tTier(L1.fee); openTourney(); }, later: 'Keep enhancing' }), 2800);
   let html = `<div class="tot-h sec-h"><h2>Enhance your photo</h2></div>${giftCardHTML()}<div class="rs-top"><div class="hero-photo rsph"><img src="${p.src}" alt="Your photo">${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}</div>
-    <div class="rs-side"><div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small class="osc">${tot < CFG.QUALIFY ? 'Score to compete' : 'Overall score'}${photoLock(p) ? '<span class="qready lk">Entered</span>' : ''}</small><div><b>${tot}</b>${goalHTML(tot)}</div></div>${barsHTML(p.s, o.prev, true, p)}</div></div>`;
+    <div class="rs-side"><div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small class="osc">${tot < CFG.QUALIFY ? 'Score to battle' : 'Overall score'}${photoLock(p) ? '<span class="qready lk">Entered</span>' : ''}</small><div><b>${tot}</b>${goalHTML(tot)}</div></div>${barsHTML(p.s, o.prev, true, p)}</div></div>`;
   const target = stage === 1 ? CFG.QUALIFY : CFG.GALLERY;
   if (!lc) html += `<div class="opp"><h3>Every category is at its best</h3><p>There’s nothing left to improve on this photo. ${stage === 2 ? 'Enter it in a competition or upload a new one.' : 'Upload a new photo to keep climbing.'}</p></div>`;
   else html += `<button class="btn block fixbtn nocost rs-fix" id="doFix"><span>Improve ${lc.k === 'comp' ? 'focus' : lc.short.toLowerCase()}</span><span class="gpill ${S.gems < fixCost(p) ? 'need' : ''}">${gemIcon()}${fixCost(p)}</span></button>`;
@@ -5207,7 +5207,7 @@ function showResult(p, o = {}) {
   const gc = goalFor(p), need = gc ? cxNeed(gc) : 0;
   const hitGoal = gc && goalReady(gc, p) && (o.prevTotal != null ? !(o.prevTotal >= need && (p.enh - 1) >= (gc.enh || 0)) : !!(o.win || o.fresh));
   { const T = todayFrame(), A = S.user && albumS();
-    if (!window.__pickRet && A && !A.week[dayKey()] && o.prevTotal != null && tot >= T[1] && o.prevTotal < T[1] && (T[0] === 'any' || p.cat === T[0]) && !usedPids().has(p.id)) {
+    if (!window.__pickRet && !(o.prevTotal < CFG.QUALIFY && tot >= CFG.QUALIFY) && A && !A.week[dayKey()] && o.prevTotal != null && tot >= T[1] && o.prevTotal < T[1] && (T[0] === 'any' || p.cat === T[0]) && !usedPids().has(p.id)) {
       const pop = () => { if ($('#coach').classList.contains('on')) { setTimeout(pop, 1200); return; }
         celebrate({ src: p.src, score: tot, title: 'Today’s frame unlocked!', text: `Your photo hit <b>${T[1]}</b>. It fits today’s <b>${T[2]} ${esc(catNm(T[0]))}</b> frame. Collect it for <b>+${DAILY_GEMS} 💎</b>.`, cta: `Collect · +${DAILY_GEMS} 💎`, onCta: () => { const k = collectToday(p); gemExplosion(DAILY_GEMS, { label: `Today’s frame${k > 1 ? ' · 🔥 ' + k : ''}` }); if ($('#panes').dataset.at === 'studio' && WALL) renderStudio(); }, later: 'Later' }); };
       setTimeout(pop, SCORE_ANIM_MS + 3400);
@@ -6315,7 +6315,7 @@ const cxFits = (c, p) => !!p.cat && (!c.cats || c.cats.includes(p.cat));
 function askCategory(p, done, closable = false, hint = null) {
   const sug = hint ? hint.cats : [];
   openFlow(`<div class="hero-photo" style="max-height:30vh;aspect-ratio:auto;height:30vh"><img src="${p.src}" alt="Your photo"></div>
-    <h2 style="font-size:1.6rem;margin:16px 0 4px">Pick your competition category</h2>
+    <h2 style="font-size:1.6rem;margin:16px 0 4px">Pick your photo’s category</h2>
     <p class="muted" style="margin:0 0 14px">${hint ? `${hint.frame ? 'For' : 'Entering'} <b>${esc(hint.t)}</b>? Pick <b>${esc(hint.lab)}</b> if that’s what your photo shows. Otherwise pick the category it fits.` : 'Pick the competition category it fits. Not sure? Choose Any category and it can enter the open competitions.'}</p>
     <div class="pcats" role="group" aria-label="Competition category">${PICKCATS.map(k => `<button data-k="${k}" class="${k === 'any' ? 'anyc' : ''}${sug.includes(k) ? ' sug' : ''}" aria-pressed="${p.cat === k}">${sug.includes(k) ? `<em class="sugtag">${hint && hint.frame ? 'For this frame' : 'For this competition'}</em>` : ''}${gi(k)}<span>${pcatName(k)}</span></button>`).join('')}</div>`, closable);
   $('#flowBody').querySelectorAll('.pcats button').forEach(b => b.onclick = () => { p.cat = b.dataset.k; save(); done(); });
@@ -7026,7 +7026,7 @@ function pickerUpload(o) {
   inp.click();
 }
 function fcNew(f0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPic(() => fcNew(f0)); return; }
-  const T = todayFrame(); let f = (keep && keep.f) || f0 || 'sam', th = (keep && keep.th) || (FC_THEMES.some(t => t[0] === T[0]) ? T[0] : 'pets'), st = keep ? keep.st : 1, sel = keep && keep.sel;
+  const T = todayFrame(); let f = (keep && keep.f) || f0 || 'sam', th = (keep && keep.th) || (() => { const tt = FC_THEMES.some(t => t[0] === T[0]) ? T[0] : 'pets', has = k => S.photos.some(p => fitsTheme(p, k)); if (has(tt)) return tt; const best = S.photos.slice().sort((a, b) => b.s.total - a.s.total).find(p => FC_THEMES.some(t => t[0] === p.cat)); return best ? best.cat : tt; })(), st = keep ? keep.st : 1, sel = keep && keep.sel;
   let po0 = () => ({ sel });
   const paint = () => {
     openSheet(`<div class="fcn"><h2>Challenge a friend</h2>
@@ -7409,7 +7409,7 @@ async function vote(pick) {
   if ([2, 4, 9].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">${S.combo === 9 ? '🧰 1 more for the big chest!' : '🎁 1 more for a lucky box!'}</span>`);
   if (earn) setTimeout(() => gemExplosion(earn, { mid: true, from: mc }), tier > 1 ? 900 : 0);
   await sleep(tier === 20 ? 2800 : tier > 1 ? 2200 : 1900);
-  if (!comboHit && fighters().length && tUnlocked() && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); return; }
+  if (!comboHit && S.votes >= 12 && fighters().length && tUnlocked() && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); return; }
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
   if (streakHit) { const rw = STREAK_GEMS; celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} streak!`, text: `You judged 3 photos this ${SESS[ds.si].toLowerCase()}. <b>+${rw} gems</b>. ${ds.si < 3 ? `Come back from ${SESS_AT[ds.si + 1]} for another ${rw}.` : `Come back after midnight for another ${rw}.`}`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
@@ -8461,7 +8461,7 @@ function renderStudio() {
     : `<strong>${CFG.QUALIFY - tot} points</strong> to enter cash competitions. Started at ${p.start}.`;
   st.innerHTML = `<div class="tot-h sec-h">${S.user ? '<button class="wall-back" id="toWall" aria-label="Back to all photos"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>All photos</button>' : ''}<h2>Enhance your photo</h2></div>${giftCardHTML()}
 ${lk ? '' : `    <div class="hero-photo" id="cmp"><img src="${p.src}" alt="Your photo" id="cmpImg"><span class="scb ${tot >= CFG.QUALIFY ? 'ok' : ''}" aria-label="Score ${tot} of 100"><b>${tot}</b><small>/100</small></span>${`<button class="catchip" data-cat aria-label="Photo category: ${p.cat ? pcatName(p.cat) : 'none'}. Change">${p.cat ? gi(p.cat) + pcatName(p.cat) : '+ Add a category'}</button>`}${p.orig !== p.src ? '<span class="hold">Hold to compare</span>' : ''}</div>
-    <div class="scorebox">${ringSVG(tot, 'r2')}<div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small class="osc">${tot < CFG.QUALIFY ? 'Score to compete' : 'Overall score'}${photoLock(p) ? '<span class="qready lk">Entered</span>' : ''}</small><div><b>${tot}</b>${goalHTML(tot)}</div></div>${barsHTML(p.s, null, !lk, p)}</div>
+    <div class="scorebox">${ringSVG(tot, 'r2')}<div class="scr2 ${tot >= CFG.QUALIFY ? 'ok' : ''}"><small class="osc">${tot < CFG.QUALIFY ? 'Score to battle' : 'Overall score'}${photoLock(p) ? '<span class="qready lk">Entered</span>' : ''}</small><div><b>${tot}</b>${goalHTML(tot)}</div></div>${barsHTML(p.s, null, !lk, p)}</div>
     ${!lk && !p.cat ? '<p class="to80"><strong>Add a category</strong> so this photo can enter competitions.</p>' : ''}
     
     
