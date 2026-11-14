@@ -4821,6 +4821,8 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .yd-tx{flex:1;min-width:0;display:flex;flex-direction:column}.yd-tx b{font:800 1.1rem 'Bricolage Grotesque',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.yd-tx b.g{color:#FFC93C}.yd-tx small{font-size:.85rem;color:#C9B4F5}
 .yd-m{font:900 1.25rem 'Bricolage Grotesque',sans-serif;color:#7CF5C4;white-space:nowrap}
 .yd-r.fr2.hd{background:linear-gradient(90deg,#3A2318,#2A1A2E);box-shadow:inset 3px 0 0 #FFC93C,inset 0 0 0 1.5px #5A4030}.yd-r.fr2.in{box-shadow:inset 3px 0 0 #2EE59D,inset 0 0 0 2px #2EE59D}
+.fr-st{grid-template-columns:repeat(5,1fr)!important}.fr-st button{white-space:nowrap;padding-left:2px!important;padding-right:2px!important;display:flex;align-items:center;justify-content:center;gap:3px}.fr-st button svg,.fr-st button img,.fr-st button .g{width:16px!important;height:16px!important;flex:none}
+.lgs-ent svg{width:14px;height:14px;vertical-align:-2px}
 </style>
 </head>
 <body>
@@ -6702,7 +6704,7 @@ function paintLive(force) {
     ${false ? (() => { const t = tix(), mineN = (S.entries || []).filter(x => x.cid === 'daily' && !x.done && Date.now() < x.end).length;
       return `<div class="lv-tix ${t ? 'has' : ''}"><div class="lt-n"><span>🎟️</span><b>${t}</b><small>ticket${t === 1 ? '' : 's'} left today</small></div>
         <div class="lt-t"><b>${mineN} photo${mineN === 1 ? '' : 's'} in this Cup</b><small>${t ? 'Each ticket enters another photo. Tickets expire at midnight.' : 'Win a friend challenge to earn another ticket.'}</small>
-        <button class="lt-go" id="lvTix">${t ? 'Enter another photo · 1 🎟️' : `${VS_IC}Challenge a friend`}</button></div></div>`; })() : ''}
+        <button class="lt-go" id="lvTix">${t ? 'Enter another photo · 1 🎟️' : `${VS_IC}Battle your friends`}</button></div></div>`; })() : ''}
     ${(() => { const n = S.photos.filter(x => !photoLock(x) && lowestOpen(x)).length;
       return `<div class="lv-next"><h3>Continue enhancing photos</h3>
         <button class="lvn-boost" id="lvMore"><span class="z">✨</span><span class="tx"><b>${n ? 'Keep enhancing' : 'Upload a new photo'}</b><small>${n ? `${n} photo${n === 1 ? '' : 's'} you can still improve` : 'Score it and improve it to 70+'}</small></span><span class="go">${n ? 'Enhance →' : 'Upload →'}</span></button>
@@ -7739,10 +7741,10 @@ function tixPop() {
       <div><span>🧰</span><b>Open a big chest (10 right picks in a row)</b><em>+1</em></div>
       <div><span>🎁</span><b>Welcome gift for new players</b><em>+1</em></div>
     </div>
-    ${n ? `<button class="btn block" id="txGo">Use 1 ticket · Enter the Cash Cup</button>` : `<button class="btn block" id="txFr">Challenge a friend to earn one</button>`}
+    ${n ? `<button class="btn block" id="txGo">Use 1 ticket · Enter the Cash Cup</button>` : `<button class="btn block" id="txFr">Judge 10 in a row to earn one</button>`}
     <div style="text-align:center"><button class="link" data-shclose>Close</button></div></div>`);
   if ($('#txGo')) $('#txGo').onclick = () => { closeSheet(); CXF = 'all'; openComps(); cxEnter(dc); };
-  if ($('#txFr')) $('#txFr').onclick = () => { closeSheet(); openFriends(); };
+  if ($('#txFr')) $('#txFr').onclick = () => { closeSheet(); go('judge'); };
 }
 const fav = (h, sz = 44) => { const f = FRIENDS.find(x => x.h === h) || { c: ['#7A5AB8', '#3A2760'] }; return `<span class="fav" style="--a:${f.c[0]};--b:${f.c[1]};width:${sz}px;height:${sz}px;font-size:${sz * .42}px">${h[0].toUpperCase()}</span>`; };
 function frS() {
@@ -7799,7 +7801,8 @@ function crownTap(e, k) { const a = e.target.closest('[data-addk]');
 // Challenge a friend: pick the crown (category) first, then your friend and photo
 function crownGo(k) { const c = crownOf(k);
   const ph = S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0], f = (c.h && c.h !== 'you' ? c.h : null) || (FRIENDS[0] && FRIENDS[0].h); fcNew(f, { f, th: k, st: 1, sel: ph && ph.id }); }
-function crownPick() { if (!(S.user && (S.user.pic || S.picSkip))) { needPic(() => crownPick()); return; }
+function crownPick() { frGo(); }
+function crownPickOld() { if (!(S.user && (S.user.pic || S.picSkip))) { needPic(() => crownPick()); return; }
   openSheet(`<div class="fcn fcn2"><div class="f2-top"><div><h2>Challenge a friend</h2><p>Pick a category. Beat your friend to take the crown.</p></div><button class="f2-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <div class="crh"><div><h3>Crowns</h3></div><span class="crh-n">You hold ${myCrowns().length}</span></div>${crownGrid()}</div>`, { full: true, cover: true });
   document.querySelectorAll('#sheetBody [data-crw]').forEach(b => b.onclick = e => crownTap(e, b.dataset.crw));
@@ -7949,8 +7952,7 @@ function inviteJoined(c) {
   c.joined = 1; save(); toast(`🎉 @${nf.h} joined Yofi! You both got 50 💎`);
 }
 const VS_IC = '<svg class="vsic" viewBox="0 0 44 32" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><rect x="20" y="4" width="19" height="24" rx="4" transform="rotate(12 29.5 16)"/><rect x="5" y="4" width="19" height="24" rx="4" transform="rotate(-10 14.5 16)" fill="rgba(0,0,0,.18)"/></g><text x="22" y="21.5" text-anchor="middle" font-family="Bricolage Grotesque, Inter, sans-serif" font-weight="900" font-size="15" fill="#fff" stroke="#2A1250" stroke-width="3.6" paint-order="stroke" letter-spacing="-.5">VS</text></svg>';
-function challengeWith(p) { if (!p) return; const th = FC_THEMES.some(t => t[0] === p.cat) ? p.cat : 'any';
-  if ($('#flow').classList.contains('on')) closeFlow(); openFriends(); crownPick(); }
+function challengeWith(p) { if (!p) return; frGo(CATS8.includes(p.cat) ? p.cat : null); }
 // Cash rivalries: your first challenge with a friend is free (gems); after that, rematches are $1 each
 // into a rolling pot that the first player to win 2 in a row takes.
 const rivS = f => { const F = frS(); F.riv = F.riv || {}; return F.riv[f] = F.riv[f] || { pot: 0, streak: 0, last: null }; };
@@ -7967,7 +7969,12 @@ function rivHTML(f, k) { const R0 = frPot(k), lead = R0.last ? (R0.last === 'you
     <p>Every bet on ${esc(crownName(k))} goes into this pot. It keeps growing until someone wins <b>2 in a row</b>.</p>
     <div class="riv-st" role="group" aria-label="Stake each">${RIV_STAKES.map(x => `<button data-rs="${x}" aria-pressed="${x === a}">$${x}</button>`).join('')}</div>
     <div class="riv-n"><div><small>Pot now</small><b>${money(R0.pot)}</b></div><div><small>Streak</small><b>${lead ? `${lead} · ${R0.streak} win` : 'All square'}</b></div><div><small>If you win 2 in a row</small><b>${money(R0.pot + (R0.last === 'you' ? add : 2 * add))}</b></div></div></div>`; }
-function fcNew(f0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPic(() => fcNew(f0, keep)); return; }
+// One way to battle friends: Friends groups. Old entry points land here.
+function frGo(k, opp) { if ($('#flow').classList.contains('on')) closeFlow(); if ($('#sheet').classList.contains('on')) closeSheet();
+  GV.tab = 'friends'; frS(); go('gallery'); const c = crewCur(); if (!c) { crewCreate(); return; }
+  if (k && CATS8.includes(k)) crewCat(c, k, opp); else if (!c.members.length) crewInvite(c, true); }
+function fcNew(f0, keep) { frGo(keep && keep.th, f0 || (keep && keep.f)); }
+function fcNewOld(f0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPic(() => fcNew(f0, keep)); return; }
   const catOf = p => p && FC_THEMES.some(t => t[0] === p.cat) ? p.cat : 'any';
   let f = (keep && keep.f) || f0 || (FRIENDS[0] && FRIENDS[0].h) || null, thOv = keep && keep.th, st = keep ? keep.st : 1, sel = keep && keep.sel, th = 'any', catOpen = false;
   let po0 = () => ({ sel });
@@ -8403,10 +8410,10 @@ function crewCat(c, k, opp) {
     <div class="lgs-hd"><span class="lgs-hc">${CRW}</span><div><small>Friends crown</small><b>${h ? crewWho(h) : 'Up for grabs'}</b><span>${h ? `Held ${heldFor(c.since[k] || Date.now())} · ${c.def[k] || 0} defence${(c.def[k] || 0) === 1 ? '' : 's'}` : 'Win any battle here to take it'}</span></div></div>
     ${others.length > 1 ? `<div class="cw-opp">${others.map(x => `<button data-cwo="${x}" aria-pressed="${x === o}">${lgAv(x, 26)}@${esc(x)}${c.hold[k] === x ? ' 👑' : ''}</button>`).join('')}</div>` : ''}
     <div class="lgv"><div class="lgv-p"><img src="${lgPhoto(o, k)}" alt=""><b>@${esc(o)}${c.hold[k] === o ? ' 👑' : ''}</b></div><span class="lgv-x">VS</span><div class="lgv-p me"><img src="${mine.src}" alt=""><b>You · ${mine.s.total}</b></div></div>
-<div class="riv-st fr-st" role="group" aria-label="Stake">${FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${x === frSt()}">$${x}</button>`).join('')}</div>
-    <button class="btn block lgs-go" id="cwFight">${c.rev[k] === o && c.hold[k] === o ? '🔥 Take revenge' : me ? `${VS_IC}Defend your crown` : c.hold[k] === o ? `${VS_IC}Battle for the crown` : `${VS_IC}Battle @${esc(o)}`} · $${frSt()}</button>
-    <p class="lgs-ent">${me ? 'Win to keep your crown' : 'Win to take the crown'} · ${frSt() === 1 ? '85¢' : money(.85 * frSt())} goes into the friends pot</p></div>`, { full: true, cover: true });
-  document.querySelectorAll('#sheetBody [data-frs]').forEach(b => b.onclick = () => { S.frSt = +b.dataset.frs; save(); crewCat(c, k, o); });
+<div class="riv-st fr-st" role="group" aria-label="Stake">${FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${!frGem() && x === frSt()}">$${x}</button>`).join('')}<button data-frs="gem" aria-pressed="${frGem()}">${FR_GEM} ${gemIcon('')}</button></div>
+    <button class="btn block lgs-go" id="cwFight">${c.rev[k] === o && c.hold[k] === o ? '🔥 Take revenge' : me ? `${VS_IC}Defend your crown` : c.hold[k] === o ? `${VS_IC}Battle for the crown` : `${VS_IC}Battle @${esc(o)}`} · ${frLab()}</button>
+    <p class="lgs-ent">${me ? 'Win to keep your crown' : 'Win to take the crown'} · ${frGem() ? `winner gets ${FR_GEM * 2} ${gemIcon('')} · no cash in the pot` : `${frSt() === 1 ? '85¢' : money(.85 * frSt())} goes into the friends pot`}</p></div>`, { full: true, cover: true });
+  document.querySelectorAll('#sheetBody [data-frs]').forEach(b => b.onclick = () => { S.frSt = b.dataset.frs === 'gem' ? 'gem' : +b.dataset.frs; save(); crewCat(c, k, o); });
   document.querySelectorAll('#sheetBody [data-cwo]').forEach(b => b.onclick = () => crewCat(c, k, b.dataset.cwo));
   $('#cwFight').onclick = () => (c.rev[k] === o && c.hold[k] === o) ? revengePrep(c, k, o) : frPay(() => crewFight(c, k, o));
 }
@@ -8425,7 +8432,7 @@ function revengePrep(c, k, h, pid) {
     ${canE ? `<button class="rv-op" id="rvEnh"><span>✨</span><span><b>Enhance ${esc(weak.name.toLowerCase())}</b><small>Strengthen your photo</small></span><em>${fixCost(p)} ${G}</em></button>` : ''}
     <button class="rv-op" id="rvSwap"><span>🖼️</span><span><b>Choose another photo</b></span><em>›</em></button>
     <div class="rv-sw" id="rvList" hidden>${pool.map(x => `<button data-rvp="${x.id}" aria-pressed="${x.id === p.id}"><img src="${x.src}" alt=""><i>${x.s.total}</i></button>`).join('')}<button class="rv-new" id="rvNew"><b>+</b><small>New</small></button></div>
-    <button class="btn block wr-go" id="rvGo">${VS_IC}Rematch · $${c ? frSt() : 1}</button>
+    <button class="btn block wr-go" id="rvGo">${VS_IC}Rematch · ${c ? frLab() : '$1'}</button>
     <div style="text-align:center"><button class="link wr-back" data-shclose>Back to Battles</button></div></div>`, { full: true, cover: true });
   if ($('#rvEnh')) $('#rvEnh').onclick = () => { window.__pickRet = { label: 'Back to revenge', go: () => { closeFlow(); back(); } }; closeSheet(); startEnhance(p, weak.k); };
   $('#rvSwap').onclick = () => { if (pool.length > 1) $('#rvList').hidden = !$('#rvList').hidden; else addCatPhoto(k); };
@@ -8434,11 +8441,15 @@ function revengePrep(c, k, h, pid) {
   $('#rvGo').onclick = () => c ? frPay(() => crewFight(c, k, h, p.id, true)) : lgPay(() => lgFight(k, h, lgHold(k).h === h, true, p.id));
 }
 const FR_ST = [1, 2, 5, 10]; const frSt = () => FR_ST.includes(S.frSt) ? S.frSt : 1;
-const frPay = then => payCash(frSt(), 'A friends battle', then);
-function crewFight(c, k, h, pid, rev) { const st = frSt();
+const FR_GEM = 50, frGem = () => S.frSt === 'gem', frLab = () => frGem() ? `${FR_GEM} ⭐` : `$${frSt()}`;
+const frPay = then => { if (!frGem()) return payCash(frSt(), 'A friends battle', then);
+  if (S.gems < FR_GEM) { closeSheet(); runOut('gems', `You need ${FR_GEM - S.gems} more`, null, FR_GEM - S.gems); return; }
+  S.gems -= FR_GEM; save(); paintGems(); then(); };
+function crewFight(c, k, h, pid, rev) { const gem = frGem(), st = gem ? 0 : frSt();
   const me = S.photos.find(x => x.id === pid) || lgMine(k), N = 30, their = 72 + (hsh(h + k) % 16), won = Math.random() < Math.max(.2, Math.min(.8, .5 + (me.s.total - their) / 30));
   const mv = won ? 16 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 5), tv = N - mv, src = lgPhoto(h, k), cn = esc(crownName(k)), H = c.hold[k] || null; let msg = '';
-  c.pot[k] = +((c.pot[k] || 0) + LG_CUT * st).toFixed(2);
+  if (st) c.pot[k] = +((c.pot[k] || 0) + LG_CUT * st).toFixed(2);
+  if (won && gem) { S.gems += FR_GEM * 2; setTimeout(() => { paintGems(); gemExplosion(FR_GEM * 2, { label: '⭐ Gem battle won' }); }, 9000); }
   if (won) { const L = lgS(); L.wins = (L.wins || 0) + 1; L.fwins = (L.fwins || 0) + 1; delete c.rev[k]; if (rev) { S.gems += 25; setTimeout(() => { paintGems(); gemExplosion(25, { label: '🔥 Revenge bonus' }); }, 9500); }
     if (H !== 'you') { c.hold[k] = 'you'; c.since[k] = Date.now(); c.def[k] = 0; msg = `👑 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} crown!`; crewLog(c, `👑 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} crown`); }
     else { c.def[k] = (c.def[k] || 0) + 1; msg = `👑 Crown defended · ${c.def[k]} defence${c.def[k] === 1 ? '' : 's'}`; crewLog(c, `🛡️ You defended the ${cn} crown against @${esc(h)}`); } }
@@ -8793,7 +8804,7 @@ async function vote(pick) {
   if (false && !comboHit && tDue()) { renderJudge(); $('#judge').scrollTop = 0; judging = false; if (tPrompt()) { if (S.since >= CFG.BATTLE_EVERY - 1) S.since = Math.max(0, CFG.BATTLE_EVERY - 3); save(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; } }
   if (!comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.user && fighters().length) { S.frIntro = 1; S.since = 0; save(); renderJudge(); judging = false;
     const me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
-    celebrate({ src: me.src, score: VS_IC, title: 'Dare a friend!', text: `You’ve got the eye and the gems. Now dare a friend to beat your <b>${me.s.total}</b> photo. If they’re new, <b>you both get 50 ⭐</b> when they join.`, cta: `${VS_IC}Challenge a friend`, onCta: () => challengeWith(me), later: 'Keep judging' });
+    celebrate({ src: me.src, score: VS_IC, title: 'Dare a friend!', text: `You’ve got the eye. Now start a friends group, invite your mates on WhatsApp and battle them for the <b>crowns</b> and <b>weekly pots</b>.`, cta: `${VS_IC}Battle your friends`, onCta: () => challengeWith(me), later: 'Keep judging' });
     return; }
   if (!comboHit && S.votes >= 12 && fighters().length && tUnlocked() && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; }
   $('#jcard').classList.add('out'); await sleep(220);
