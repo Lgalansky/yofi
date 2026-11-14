@@ -4715,6 +4715,22 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .crb-in{margin-left:4px;padding:1px 7px;border-radius:999px;font-style:normal;font-size:.7rem;font-weight:800;color:#0B2A1C;background:#2EE59D}
 .td-l{display:flex;flex-direction:column;gap:6px}.td-r{display:grid;grid-template-columns:22px 1fr auto auto;align-items:center;gap:8px;padding:10px 12px;border:0;border-radius:14px;color:#fff;font:inherit;text-align:left;cursor:pointer;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760}
 .td-r svg{width:20px;height:20px}.td-r span{font-weight:800}.td-r em{font-style:normal;font-size:.78rem;color:#C9B4F5}.td-r.in{box-shadow:inset 0 0 0 1.5px #2EE59D}.td-r.in em{color:#2EE59D;font-weight:800}
+.crbox.dsk{max-width:420px;padding:22px 18px 16px;border-radius:28px;text-align:center;background:radial-gradient(circle at 50% 0,#4A2470,#22123F 70%);box-shadow:inset 0 0 0 2.5px #FFC93C,0 0 40px -6px rgba(255,201,60,.55)}
+.dsk-h{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;white-space:nowrap;font:900 clamp(1.4rem,7vw,1.9rem)/1 "Bricolage Grotesque",sans-serif;letter-spacing:.01em;background:linear-gradient(180deg,#FFE27A,#FFB21C);-webkit-background-clip:text;background-clip:text;color:transparent}.dsk-h span{-webkit-text-fill-color:initial;font-size:2rem}
+.dsk-e{margin:10px 0 0;font:800 1.35rem "Bricolage Grotesque",sans-serif;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px}.dsk-e b{color:#6AE3FF}.dsk-e svg,.dsk-e img{width:26px;height:26px}
+.dsk-s{margin:2px 0 10px;color:#C9A8FF;font-weight:600}
+.dsk-st{margin:0 0 12px;padding:8px 10px;border-radius:14px;background:rgba(20,8,40,.5)}.dsk-st b{display:block;font:800 1.05rem "Bricolage Grotesque",sans-serif;color:#FFC93C}.dsk-st span{font-size:.82rem;color:#E6DDF5}
+.dsk-g{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.dsk-c{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;border-radius:16px;background:rgba(20,8,40,.55);box-shadow:inset 0 0 0 1.5px #4A2F78}
+.dsk-c small{font-weight:800;font-size:.72rem;color:#fff}.dsk-a svg{width:42px;height:42px}
+.dsk-c em{font-style:normal;font-size:.6rem;font-weight:900;padding:1px 8px;border-radius:999px;background:#FFC93C;color:#2A1600;min-height:14px}.dsk-c em.ok{background:#2EE59D;color:#0B2A1C}.dsk-c em.ms{background:#3A2760;color:#A994CF}.dsk-c em.sp{background:none}
+.dsk-c b{display:flex;align-items:center;gap:2px;font-weight:900;font-size:.85rem;color:#fff}.dsk-c b svg,.dsk-c b img{width:16px;height:16px}
+.dsk-c.now{box-shadow:inset 0 0 0 2.5px #FFC93C}.dsk-c.got{box-shadow:inset 0 0 0 2px #2EE59D}.dsk-c.miss{opacity:.55}
+.dsk-t{display:flex;align-items:center;gap:10px;margin:12px 4px}.dsk-t span{color:#C9B4F5;font-weight:700;font-size:.85rem}.dsk-t>i{flex:1;height:8px;border-radius:999px;background:#3A2760;overflow:hidden}.dsk-t>i>i{display:block;height:100%;background:linear-gradient(90deg,#FFB21C,#FFC93C)}.dsk-t b{font-size:.85rem}
+.dsk-r{padding:12px;border-radius:16px;background:rgba(20,8,40,.55);box-shadow:inset 0 0 0 1.5px #4A2F78}.dsk-rh{display:flex;justify-content:space-between;align-items:center}.dsk-rh b{font:800 1rem "Bricolage Grotesque",sans-serif}.dsk-rh em{display:flex;align-items:center;gap:4px;font-style:normal;font-weight:900;color:#6AE3FF}.dsk-rh em svg,.dsk-rh em img{width:18px;height:18px}
+.dsk-p{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 4px}.dsk-p i{height:10px;border-radius:999px;background:#3A2760;box-shadow:inset 0 0 0 1px #5A3A8A}.dsk-p i.on{background:linear-gradient(90deg,#FF3FA4,#8B3CFF)}
+.dsk-r small{color:#C9B4F5;font-weight:700}.dsk-r.done b{display:block;color:#2EE59D}.dsk-r.done span{font-size:.82rem;color:#C9B4F5}
+.dsk-go{margin-top:12px!important}
 </style>
 </head>
 <body>
@@ -8464,7 +8480,7 @@ async function vote(pick) {
   const drop = false; // no random surprise boxes: the streak boxes are enough
   const ds = dailyState(); ds.D.n++; ds.D.sn = (ds.D.sn || 0) + 1;
   let streakHit = 0;
-  if (S.votes >= 10 && ds.D.sn >= 3 && !ds.D.got.includes(ds.si)) { ds.D.streak = (ds.D.last === ds.t || ds.D.last === ds.y) ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; ds.D.got.push(ds.si); streakHit = ds.D.streak; S.gems += STREAK_GEMS; paintFlame(); }
+  if (S.votes >= 10 && ds.D.sn >= 3 && !ds.D.got.includes(ds.si)) { if (ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; } ds.D.got.push(ds.si); streakHit = ds.D.streak; S.gems += STREAK_GEMS; paintFlame(); }
   save();
   { const sx = document.querySelector('#judge .stk-x'); if (sx) sx.textContent = '×' + streakX(shown); const sf = document.querySelector('#judge .stk-fill'); if (sf) sf.style.width = stkPct(shown) + '%'; document.querySelectorAll('#judge .stk-m').forEach(m => { const on = shown >= +m.dataset.n; m.classList.toggle('pop', on && !m.classList.contains('on')); m.classList.toggle('on', on); }); } document.querySelectorAll('#judge .lkp-steps i').forEach((d, i) => { d.classList.toggle('on', i < Math.min(shown, 6)); d.classList.toggle('pop', comboHit && i === shown - 1); }); document.querySelectorAll('#judge .cmb-n').forEach(n => n.textContent = shown); document.querySelectorAll('#judge .cmb-nx').forEach(n => n.textContent = comboNext(shown)); 
   await sleep(120);
@@ -8492,7 +8508,7 @@ async function vote(pick) {
   if (!comboHit && S.votes >= 12 && fighters().length && tUnlocked() && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; }
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
-  if (streakHit) { const rw = STREAK_GEMS; gemExplosion(rw, { label: '🔥 Judging streak' }); if (comboHit === 5) { luckyDrop(); return; } if (comboHit) { miniDrop(comboHit); return; } return; }
+  if (streakHit) { const rw = STREAK_GEMS; gemExplosion(rw, { label: `🔥 ${ds.D.streak}-day streak` }); if (comboHit === 5) { luckyDrop(); return; } if (comboHit) { miniDrop(comboHit); return; } return; }
   if (false) { const rw = STREAK_GEMS; celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} streak!`, text: `You judged 3 photos this ${SESS[ds.si].toLowerCase()}. <b>+${rw} gems</b>. ${ds.si < 3 ? `Come back from ${SESS_AT[ds.si + 1]} for another ${rw}.` : `Come back after midnight for another ${rw}.`}`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
   if (S.votes >= 10 && !S.betIntro) { S.betIntro = true; save(); celebrate({ src: p.src, score: '🎁', title: 'Streaks unlocked!', text: 'Get picks right in a row to multiply your gems: <b>2 in a row ×3, 4 ×5, 6 ×10</b>, plus a gift box at each. One wrong pick and you’re back to ×1.', cta: 'Got it' }); return; }
   if (comboHit === 5) { luckyDrop(); return; }
@@ -9731,22 +9747,26 @@ ${lk ? `<button class="btn block enh-more" id="stMore">Enter another competition
 
 const STREAK_GEMS = 15;
 function streakPop() {
-  const ds = dailyState(), n = Math.min(3, ds.D.sn || 0), done = ds.doneToday;
-  const had = (ds.D.streak || 0) > 0 && !ds.streak;
-  const days = SESS.map((nm, i) => { const st = ds.D.got.includes(i) ? 'got' : i === ds.si ? 'now' : i < ds.si ? 'miss' : '';
-    return `<div class="sk-d ${st}"><small>${nm}</small><span class="sk-i">${st === 'got' ? '🔥' : SESS_IC[i]}</span><b>${st === 'got' ? '✓' : st === 'miss' ? '–' : '+' + STREAK_GEMS}</b></div>`; }).join('');
-  const title = done ? `${ds.streak} streak!` : ds.streak ? `${ds.streak} streak` : had ? 'Streak ended' : 'Streaks';
-  const sub = done ? `This ${SESS[ds.si].toLowerCase()}'s <b>+${STREAK_GEMS} gems</b> are in. ${ds.si < 3 ? `Next session from ${SESS_AT[ds.si + 1]}.` : 'Next session after midnight.'}`
-    : `Judge 3 photos this ${SESS[ds.si].toLowerCase()} to earn <b>+${STREAK_GEMS} gems</b>. 4 sessions a day.${had ? ' Start a new streak now.' : ''}`;
+  const ds = dailyState(), n = Math.min(3, ds.D.sn || 0), done = ds.doneToday, st = ds.streak || 0, inToday = ds.D.last === ds.t;
+  const had = (ds.D.streak || 0) > 0 && !st, G = gemIcon('');
+  const ART = ['<svg viewBox="0 0 64 64"><path d="M40 10a22 22 0 1 0 14 34A18 18 0 0 1 40 10z" fill="#FFC93C"/><path d="M48 12l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5zM54 28l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z" fill="#FFE27A"/></svg>',
+    '<svg viewBox="0 0 64 64"><path d="M12 44a20 20 0 0 1 40 0z" fill="#FFB21C"/><g stroke="#FFC93C" stroke-width="3" stroke-linecap="round"><path d="M32 12v8M14 26l5 5M50 26l-5 5M8 40h6M50 40h6"/></g><path d="M6 46c6-6 14-6 20-2 6-6 18-6 22 0 4-2 10-2 12 2z" fill="#C86ACB" opacity=".85"/></svg>',
+    '<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="11" fill="#FFC93C"/><g stroke="#FFB21C" stroke-width="3.4" stroke-linecap="round"><path d="M32 8v8M32 48v8M8 32h8M48 32h8M15 15l5 5M44 44l5 5M49 15l-5 5M20 44l-5 5"/></g></svg>',
+    '<svg viewBox="0 0 64 64"><circle cx="32" cy="34" r="14" fill="#FF7A3C"/><path d="M8 36c4-6 12-6 16-2 4-6 14-6 18 0 6-4 14-2 16 2z" fill="#B65CC8"/><g stroke="#FF5E8A" stroke-width="2.4" stroke-linecap="round"><path d="M16 44h32M20 49h24M26 54h12"/></g></svg>'];
+  const cards = SESS.map((nm, i) => { const k = ds.D.got.includes(i) ? 'got' : i === ds.si ? 'now' : i < ds.si ? 'miss' : '';
+    return `<div class="dsk-c ${k}"><small>${nm}</small><span class="dsk-a">${ART[i]}</span>${k === 'now' ? '<em>NOW</em>' : k === 'got' ? '<em class="ok">✓ DONE</em>' : k === 'miss' ? '<em class="ms">MISSED</em>' : '<em class="sp"></em>'}<b>${G}+${STREAK_GEMS}</b></div>`; }).join('');
+  const head = st ? `<b class="dsk-n">🔥 ${st}-day streak</b><span>${inToday ? 'Today’s flame is lit. Keep collecting gems.' : 'Judge 3 photos today to keep it alive.'}</span>`
+    : `<b class="dsk-n">${had ? 'Your streak ended' : 'Start a streak'}</b><span>Judge 3 photos today to light your first 🔥</span>`;
   const c = $('#coach');
-  c.innerHTML = `<div class="crbox skbox" role="dialog" aria-modal="true" aria-labelledby="crT">
-    <div class="cr-rays" aria-hidden="true"></div>
-    <div class="sk-fl" aria-hidden="true">🔥</div>
-    <h2 id="crT">${title}</h2>
-    <p>${sub}</p>
-    <div class="sk-week sk4">${days}</div>
-    ${done ? '' : `<div class="sk-prog"><span>${SESS[ds.si]}</span><div class="sk-bar"><i style="width:${n / 3 * 100}%"></i></div><b>${n}/3 judged</b></div>`}
-    <button class="bt-cta" id="crGo">${done ? 'Keep judging' : n ? `Judge ${3 - n} more` : 'Start judging'}</button>
+  c.innerHTML = `<div class="crbox dsk" role="dialog" aria-modal="true" aria-labelledby="crT">
+    <h2 id="crT" class="dsk-h"><span>🔥</span>DAILY STREAK</h2>
+    <p class="dsk-e">${G} Earn <b>${STREAK_GEMS * 4} gems</b> a day</p><p class="dsk-s">Judge 3 photos each session</p>
+    <div class="dsk-st">${head}</div>
+    <div class="dsk-g">${cards}</div>
+    <div class="dsk-t"><span>Today</span><i><i style="width:${ds.gotToday / 4 * 100}%"></i></i><b>${ds.gotToday}/4 sessions</b></div>
+    ${done ? `<div class="dsk-r done"><b>${SESS[ds.si]} reward collected</b><span>${ds.si < 3 ? `Next session from ${SESS_AT[ds.si + 1]}` : 'Next session after midnight'}</span></div>`
+      : `<div class="dsk-r"><div class="dsk-rh"><b>${SESS[ds.si]} reward</b><em>${G}+${STREAK_GEMS} gems</em></div><div class="dsk-p">${[0, 1, 2].map(i => `<i class="${i < n ? 'on' : ''}"></i>`).join('')}</div><small>${n}/3 judged</small></div>`}
+    <button class="bt-cta dsk-go" id="crGo">⚖️ ${done ? 'Keep judging' : n ? `Judge ${3 - n} more` : 'Judge 3 photos'}</button>
     <button class="bt-no" id="crLater">Later</button></div>`;
   c.classList.add('on', 'cr');
   const close = () => c.classList.remove('on', 'cr');
