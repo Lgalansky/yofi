@@ -4783,6 +4783,14 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .rm-bn b{display:flex;align-items:center;justify-content:center;gap:6px;font:900 2.4rem/1.1 "Bricolage Grotesque",sans-serif;background:linear-gradient(180deg,#FFE27A,#E9A514);-webkit-background-clip:text;background-clip:text;color:transparent}.rm-bn b svg,.rm-bn b img{width:34px;height:34px}.rm-bn span{color:#E6DDF5}
 .rm .rv-op{text-align:left}
 .lup-go{margin-top:14px;font-size:1.1rem}
+.fr-st{margin:10px 0 2px!important;grid-template-columns:repeat(4,1fr)!important}
+.bt-pay{display:inline-block;margin-top:8px;padding:5px 14px;border-radius:999px;font-size:.85rem;font-weight:700;color:#E6DDF5;background:rgba(46,229,157,.12);box-shadow:inset 0 0 0 1.5px #2EE59D}.bt-pay b{color:#2EE59D}
+.stk-steps{grid-template-columns:1fr 1fr 46px 1fr 46px 1fr 1fr 1fr 1fr 64px!important}
+.stk-steps i.m10{background:linear-gradient(160deg,#FFE27A,#E9A514)!important;box-shadow:0 0 14px rgba(255,201,60,.75)!important;border-radius:12px!important;color:#2A1600!important;animation:tkg 2.4s ease-in-out infinite}
+.stk-steps i.m10 .tkb{font-size:1.25rem!important;line-height:1}.stk-steps i.m10 .tkl{font-size:.56rem;font-weight:900;letter-spacing:.02em;color:#3A1E00;white-space:nowrap}
+@keyframes tkg{50%{box-shadow:0 0 22px rgba(255,201,60,1)}}
+.chtx{min-width:16px;text-align:center}
+.bt .bc-h .bc-t{display:none}.bt .bc-h{margin-top:-4px}
 </style>
 </head>
 <body>
@@ -6243,9 +6251,9 @@ function showCoach() {
 const GEM_PACKS = [{ gems: 500, usd: 4.99 }, { gems: 1200, usd: 9.99, tag: 'Popular' }, { gems: 3000, usd: 19.99, tag: 'Best value' }];
 const CASH_EN = [50, 150, 400]; // bonus energy with each cash deposit
 const PACKS = [
-  { t: 'Starter', sub: 'Great way to get started.', cash: 10, bonus: 1, gems: 150, free: 25, cls: '' },
-  { t: 'Plus', sub: 'More photos. More chances.', cash: 25, bonus: 3, gems: 400, free: 40, cls: 'plus' },
-  { t: 'Pro', sub: 'Best value. Bigger wins.', cash: 50, bonus: 7, gems: 1000, free: 60, cls: 'pro' }
+  { t: 'Starter', sub: 'Great way to get started.', cash: 10, bonus: 1, gems: 20, free: 25, cls: '' },
+  { t: 'Plus', sub: 'More photos. More chances.', cash: 25, bonus: 3, gems: 50, free: 40, cls: 'plus' },
+  { t: 'Pro', sub: 'Best value. Bigger wins.', cash: 50, bonus: 7, gems: 100, free: 60, cls: 'pro' }
 ];
 let storeTimer = null;
 function checkout(item, price, done) {
@@ -6331,7 +6339,7 @@ function openStore(reason, onBuy, tab) {
   const tile = (ic, v, lab, cls) => `<div class="sp-t ${cls}"><span class="sp-ic">${ic}</span><b>${v}</b><small>${lab}</small></div>`;
   const GEM = `<span class="sp-gem">${gemIcon('')}</span>`;
   const card = (tag, tiles, btn, attr, cls = '') => `<div class="sp-card ${cls}">${tag ? `<span class="sp-tag">${tag}</span>` : ''}<div class="sp-row">${tiles}</div><button class="sp-go" ${attr}>${btn}</button></div>`;
-  const head = { energy: ['Get energy', `Judge with bigger bets to earn gems faster. Refills +5 an hour free. You have <b>${energy()} ⚡</b>`], gems: ['Get gems', `Enhance photos, play gem battles and win back your 🏅 medal. You have <b>${S.gems.toLocaleString()} ⭐</b>`], cash: ['Add cash', 'Free gems + energy included'] }[T];
+  const head = { energy: ['Get energy', `Judge with bigger bets to earn gems faster. Refills +5 an hour free. You have <b>${energy()} ⚡</b>`], gems: ['Get gems', `Enhance photos, play gem battles and win back your 🏅 medal. You have <b>${S.gems.toLocaleString()} ⭐</b>`], cash: ['Add cash', 'Play crown battles, friends and tournaments. A small points bonus included'] }[T];
   const body = `<h3 class="sp-h">${head[0]}</h3><p class="sp-s">${head[1]}</p><div class="sp-list">` + (T === 'energy'
     ? EN_PACKS.map((k, i) => card(k.tag, tile('⚡', k.en.toLocaleString(), 'Energy', 'en') + tile('⚖️', '~' + Math.round(k.en / 2), 'votes at ×2', 'mut'), `Buy $${k.usd}`, `data-enusd="${i}"`)).join('')
     : T === 'gems'
@@ -7749,7 +7757,7 @@ function friendsHTML() {
 }
 const crownGrid = () => `<div class="tcg">${CATS8.map(k => { const h = frHold(k), me = h === 'you', mp = lgMine(k);
   return `<div class="bcc ${me ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b></div>
-    <small class="bcc-l">Friends pot</small><b class="bcc-pot">${money(frPot(k).pot)}</b><p class="bcc-hold">${CRW}<b>${h ? (me ? 'You hold it' : '@' + esc(h)) : 'Up for grabs'}</b></p><small class="bcc-hint">${h ? (h === 'you' ? 'Defend it in every battle' : frRev(k) === h ? 'They took it from you' : `Beat @${esc(h)} to take it`) : 'Win a battle to take it'}</small>
+    <small class="bcc-l">Pot · pays Sunday</small><b class="bcc-pot">${money(frPot(k).pot)}</b><p class="bcc-hold">${CRW}<b>${h ? (me ? 'You hold it' : '@' + esc(h)) : 'Up for grabs'}</b></p><small class="bcc-hint">${h ? (h === 'you' ? 'Defend it in every battle' : frRev(k) === h ? 'They took it from you' : `Beat @${esc(h)} to take it`) : 'Win a battle to take it'}</small>
     <button class="bcc-ph" data-crw="${k}" aria-label="Battle a friend in ${esc(crownName(k))}">${h && !me ? `<img src="${lgPhoto(h, k)}" alt="" loading="lazy">` : mp ? `<img src="${mp.src}" alt="" loading="lazy">` : `<span class="tcc-empty">${gi(k)}</span>`}</button>
     ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${h && h !== 'you' && frRev(k) === h ? 'rev' : ''}" data-crw="${k}">${h && h !== 'you' && frRev(k) === h ? '🔥 Take revenge' : `${VS_IC}Battle`}</button>` : `<button class="bcc-go up" data-crw="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>`;
 function crownTap(e, k) { const a = e.target.closest('[data-addk]');
@@ -8124,7 +8132,7 @@ const lgPhoto = (h, k) => { const pool = SEED.filter(x => x.cat === BATTLE_POOL[
 const lgMine = k => fighters().filter(p => fitsTheme(p, k))[0] || null;
 function battleShell(inner) {
   const fr = GV.tab === 'friends';
-  return `<div class="bt"><div class="bt-hd"><h1>Battle for the crown</h1><p>Best photo in each category wins</p></div><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Friends${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
+  return `<div class="bt"><div class="bt-hd"><h1>Battle for the crown</h1><p>Best photo in each category wins</p><span class="bt-pay">💰 ${fr ? `Friends pots pay <b>Sunday midnight</b> · ${weekLeft()} left` : `Pots pay at <b>midnight</b> · <span data-wk>${dayLeft()}</span> left`}</span></div><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Friends${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
 }
 function bindBattleShell() { document.querySelectorAll('#gallery [data-bv]').forEach(b => b.onclick = () => { GV.tab = b.dataset.bv; renderGallery(); $('#gallery').scrollTop = 0; }); }
 function todaySheet() { const L = lgS(), rows = CATS8.map(k => ({ k, y: L.you[k] || 0, h: lgHold(k).h === 'you' })).sort((a, b) => b.y - a.y);
@@ -8146,7 +8154,7 @@ function leagueHTML() {
   return `<div class="bc-h"><span class="bc-t"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Daily cash pots · reset in <span data-wk>${dayLeft()}</span></span><button class="link bc-how" id="btRules">How it works</button></div>
     <div class="tcg">${CATS8.map(k => { const K = lgKing(k), me = K.me && K.n > 0, y = L.you[k] || 0, mp = lgMine(k), pr = Math.min(1, y / LG_SHARE);
       return `<div class="bcc ${lgHold(k).h === 'you' ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b></div>
-        <small class="bcc-l">Daily cash pot</small><b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
+        <small class="bcc-l">Pot · pays midnight</small><b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
         <p class="bcc-sc"><span class="t">${CRW}<b>${me ? 'You' : K.n}</b></span><i>•</i><span class="y">You <b>${y}</b></span></p>
         <button class="bcc-ph" data-lgc="${k}" aria-label="${esc(crownName(k))} crown holder’s photo"><img src="${lgHold(k).h === 'you' && mp ? mp.src : lgPhoto(lgHold(k).h, k)}" alt="" loading="lazy"></button>
         ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? 'rev' : ''}" data-lgc="${k}">${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? '🔥 Take revenge' : `${VS_IC}Battle`}</button>` : `<button class="bcc-go up" data-lgc="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>
@@ -8302,7 +8310,7 @@ function crewRules() {
   openSheet(`<div class="lgs fcn fcn2"><div class="f2-top"><div><h2>How friends battles work</h2><p>Private games · invite only</p></div><button class="f2-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <ol class="tc-rules"><li><span>1</span><p>Create a <b>friends group</b> and invite mates on WhatsApp. Everyone in it can battle everyone else.</p></li>
       <li><span>2</span><p>Every battle is <b>1v1</b>. Win and you take that category’s ${CRW} <b>friends crown</b>.</p></li>
-      <li><span>3</span><p>Every battle costs <b>$1</b>. <b>85¢</b> goes into that category’s <b>friends pot</b>.</p></li>
+      <li><span>3</span><p>Pick your stake: <b>$1, $2, $5 or $10</b>. 85% goes into that category’s <b>friends pot</b>.</p></li>
       <li><span>4</span><p>Whoever holds the crown at <b>Sunday midnight</b> takes the pot. Then it starts again.</p></li>
       <li><span>5</span><p>In more than one group? Each group has its own crowns and pots.</p></li></ol>
     <button class="btn block" data-shclose style="margin-top:14px">Got it</button></div>`, { full: true, cover: true });
@@ -8315,7 +8323,7 @@ function crewsHTML() {
   const mem = `<div class="cw-mem"><div class="cw-av"><span class="fav me">${avatarInner()}</span>${c.members.map(h => lgAv(h, 34)).join('')}</div><span>${c.members.length + 1} in group${c.pend && c.pend.length ? ` · ${c.pend.length} invited` : ''} · ends in ${weekLeft()}</span><button class="cw-inv" id="cwInv">${WA_ICON}Invite</button></div>`;
   const cards = `<div class="tcg">${CATS8.map(k => { const h = c.hold[k] || null, me = h === 'you', mp = lgMine(k), rev = h && !me && c.rev[k] === h, has = S.photos.some(p => fitsTheme(p, k));
     return `<div class="bcc ${me ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b></div>
-      <small class="bcc-l">Friends pot</small><b class="bcc-pot">${money(c.pot[k] || 0)}</b>
+      <small class="bcc-l">Pot · pays Sunday</small><b class="bcc-pot">${money(c.pot[k] || 0)}</b>
       <p class="bcc-hold">${CRW}<b>${h ? (me ? 'You hold it' : '@' + esc(h)) : 'Up for grabs'}</b></p><small class="bcc-hint">${h ? (me ? `Held ${heldFor(c.since[k] || Date.now())}` : rev ? 'They took it from you' : `Beat @${esc(h)} to take it`) : 'Win a battle to take it'}</small>
       <button class="bcc-ph" data-cwk="${k}" aria-label="${esc(crownName(k))} friends crown">${h && !me ? `<img src="${lgPhoto(h, k)}" alt="" loading="lazy">` : mp ? `<img src="${mp.src}" alt="" loading="lazy">` : `<span class="tcc-empty">${gi(k)}</span>`}</button>
       ${!has ? `<button class="bcc-go up" data-cwk="${k}" data-addk="${k}">📷 Upload photo</button>` : `<button class="bcc-go ${rev ? 'rev' : ''}" data-cwk="${k}">${rev ? '🔥 Take revenge' : me ? `${VS_IC}Defend` : `${VS_IC}Battle`}</button>`}</div>`; }).join('')}</div>`;
@@ -8341,10 +8349,12 @@ function crewCat(c, k, opp) {
     <div class="lgs-hd"><span class="lgs-hc">${CRW}</span><div><small>Friends crown</small><b>${h ? crewWho(h) : 'Up for grabs'}</b><span>${h ? `Held ${heldFor(c.since[k] || Date.now())} · ${c.def[k] || 0} defence${(c.def[k] || 0) === 1 ? '' : 's'}` : 'Win any battle here to take it'}</span></div></div>
     ${others.length > 1 ? `<div class="cw-opp">${others.map(x => `<button data-cwo="${x}" aria-pressed="${x === o}">${lgAv(x, 26)}@${esc(x)}${c.hold[k] === x ? ' 👑' : ''}</button>`).join('')}</div>` : ''}
     <div class="lgv"><div class="lgv-p"><img src="${lgPhoto(o, k)}" alt=""><b>@${esc(o)}${c.hold[k] === o ? ' 👑' : ''}</b></div><span class="lgv-x">VS</span><div class="lgv-p me"><img src="${mine.src}" alt=""><b>You · ${mine.s.total}</b></div></div>
-    <button class="btn block lgs-go" id="cwFight">${c.rev[k] === o && c.hold[k] === o ? '🔥 Take revenge' : me ? `${VS_IC}Defend your crown` : c.hold[k] === o ? `${VS_IC}Battle for the crown` : `${VS_IC}Battle @${esc(o)}`} · $1</button>
-    <p class="lgs-ent">${me ? 'Win to keep your crown' : 'Win to take the crown'} · 85¢ goes into the friends pot</p></div>`, { full: true, cover: true });
+<div class="riv-st fr-st" role="group" aria-label="Stake">${FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${x === frSt()}">$${x}</button>`).join('')}</div>
+    <button class="btn block lgs-go" id="cwFight">${c.rev[k] === o && c.hold[k] === o ? '🔥 Take revenge' : me ? `${VS_IC}Defend your crown` : c.hold[k] === o ? `${VS_IC}Battle for the crown` : `${VS_IC}Battle @${esc(o)}`} · $${frSt()}</button>
+    <p class="lgs-ent">${me ? 'Win to keep your crown' : 'Win to take the crown'} · ${frSt() === 1 ? '85¢' : money(.85 * frSt())} goes into the friends pot</p></div>`, { full: true, cover: true });
+  document.querySelectorAll('#sheetBody [data-frs]').forEach(b => b.onclick = () => { S.frSt = +b.dataset.frs; save(); crewCat(c, k, o); });
   document.querySelectorAll('#sheetBody [data-cwo]').forEach(b => b.onclick = () => crewCat(c, k, b.dataset.cwo));
-  $('#cwFight').onclick = () => (c.rev[k] === o && c.hold[k] === o) ? revengePrep(c, k, o) : lgPay(() => crewFight(c, k, o));
+  $('#cwFight').onclick = () => (c.rev[k] === o && c.hold[k] === o) ? revengePrep(c, k, o) : frPay(() => crewFight(c, k, o));
 }
 // Revenge isn't a plain rerun: see why you lost, then make your photo stronger or swap it
 function revengePrep(c, k, h, pid) {
@@ -8361,18 +8371,20 @@ function revengePrep(c, k, h, pid) {
     ${canE ? `<button class="rv-op" id="rvEnh"><span>✨</span><span><b>Enhance ${esc(weak.name.toLowerCase())}</b><small>Strengthen your photo</small></span><em>${fixCost(p)} ${G}</em></button>` : ''}
     <button class="rv-op" id="rvSwap"><span>🖼️</span><span><b>Choose another photo</b></span><em>›</em></button>
     <div class="rv-sw" id="rvList" hidden>${pool.map(x => `<button data-rvp="${x.id}" aria-pressed="${x.id === p.id}"><img src="${x.src}" alt=""><i>${x.s.total}</i></button>`).join('')}<button class="rv-new" id="rvNew"><b>+</b><small>New</small></button></div>
-    <button class="btn block wr-go" id="rvGo">${VS_IC}Rematch · $1</button>
+    <button class="btn block wr-go" id="rvGo">${VS_IC}Rematch · $${c ? frSt() : 1}</button>
     <div style="text-align:center"><button class="link wr-back" data-shclose>Back to Battles</button></div></div>`, { full: true, cover: true });
   if ($('#rvEnh')) $('#rvEnh').onclick = () => { window.__pickRet = { label: 'Back to revenge', go: () => { closeFlow(); back(); } }; closeSheet(); startEnhance(p, weak.k); };
   $('#rvSwap').onclick = () => { if (pool.length > 1) $('#rvList').hidden = !$('#rvList').hidden; else addCatPhoto(k); };
   document.querySelectorAll('#sheetBody [data-rvp]').forEach(b => b.onclick = () => revengePrep(c, k, h, b.dataset.rvp));
   if ($('#rvNew')) $('#rvNew').onclick = () => addCatPhoto(k);
-  $('#rvGo').onclick = () => lgPay(() => c ? crewFight(c, k, h, p.id, true) : lgFight(k, h, lgHold(k).h === h, true, p.id));
+  $('#rvGo').onclick = () => c ? frPay(() => crewFight(c, k, h, p.id, true)) : lgPay(() => lgFight(k, h, lgHold(k).h === h, true, p.id));
 }
-function crewFight(c, k, h, pid, rev) {
+const FR_ST = [1, 2, 5, 10]; const frSt = () => FR_ST.includes(S.frSt) ? S.frSt : 1;
+const frPay = then => payCash(frSt(), 'A friends battle', then);
+function crewFight(c, k, h, pid, rev) { const st = frSt();
   const me = S.photos.find(x => x.id === pid) || lgMine(k), N = 30, their = 72 + (hsh(h + k) % 16), won = Math.random() < Math.max(.2, Math.min(.8, .5 + (me.s.total - their) / 30));
   const mv = won ? 16 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 5), tv = N - mv, src = lgPhoto(h, k), cn = esc(crownName(k)), H = c.hold[k] || null; let msg = '';
-  c.pot[k] = +((c.pot[k] || 0) + LG_CUT).toFixed(2);
+  c.pot[k] = +((c.pot[k] || 0) + LG_CUT * st).toFixed(2);
   if (won) { const L = lgS(); L.wins = (L.wins || 0) + 1; delete c.rev[k]; if (rev) { S.gems += 25; setTimeout(() => { paintGems(); gemExplosion(25, { label: '🔥 Revenge bonus' }); }, 9500); }
     if (H !== 'you') { c.hold[k] = 'you'; c.since[k] = Date.now(); c.def[k] = 0; msg = `👑 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} crown!`; crewLog(c, `👑 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} crown`); }
     else { c.def[k] = (c.def[k] || 0) + 1; msg = `👑 Crown defended · ${c.def[k]} defence${c.def[k] === 1 ? '' : 's'}`; crewLog(c, `🛡️ You defended the ${cn} crown against @${esc(h)}`); } }
@@ -8641,7 +8653,7 @@ function renderJudge() {
     <div class="jfoot jf2">
       ${energy() < 1 ? `<div class="jf-en en-out"><span class="en-ic">⚡</span><span class="eo-t"><b>Out of energy</b><small class="en-nx">+5 ⚡ in ${enNext()}</small><small class="en-full">Full again at ${enFullAt()}</small></span><button id="enBuy">Refill</button></div>` : `<div class="jf-en"><div class="en-top"><span class="en-ic">⚡</span><span class="en-bar"><i style="width:${Math.min(100, energy() / EN_MAX * 100)}%"></i></span><span class="en-n">${energy() > EN_MAX ? `${EN_MAX}<small> +${energy() - EN_MAX}</small>` : `${energy()}/${EN_MAX}`}</span><button class="en-plus" id="enPlus" aria-label="Buy energy">+</button></div>
       </div>`}
-      <div class="stk"><div class="stk-row"><span class="stk-lab" aria-label="Your wins are multiplied by your streak"><small>Wins</small><b class="stk-x">×${streakX(combo)}</b></span><div class="lkp-steps jf-combo stk-steps">${[...Array(10)].map((_, i) => `<i class="${i < Math.min(combo, 10) ? 'on' : ''} ${[2, 4, 9].includes(i) ? 'm m' + (i + 1) : ''}" ${i === 9 ? 'data-chtix role="button" aria-label="Big chest at 10 in a row. See your tickets"' : ''}>${i === 2 ? '<u>📦</u>×3' : i === 4 ? '<u>🎁</u>×5' : i === 9 ? `<u>🧰</u>×10${(S.cashTix || 0) ? `<em class="chtx">🎟️${S.cashTix}</em>` : ''}` : ''}</i>`).join('')}</div></div></div>
+      <div class="stk"><div class="stk-row"><span class="stk-lab" aria-label="Your wins are multiplied by your streak"><small>Wins</small><b class="stk-x">×${streakX(combo)}</b></span><div class="lkp-steps jf-combo stk-steps">${[...Array(10)].map((_, i) => `<i class="${i < Math.min(combo, 10) ? 'on' : ''} ${[2, 4, 9].includes(i) ? 'm m' + (i + 1) : ''}" ${i === 9 ? 'data-chtix role="button" aria-label="Big chest at 10 in a row. See your tickets"' : ''}>${i === 2 ? '<u>📦</u>×3' : i === 4 ? '<u>🎁</u>×5' : i === 9 ? `<u class="tkb">🎟️</u><span class="tkl">FREE $1</span>${(S.cashTix || 0) ? `<em class="chtx">${S.cashTix}</em>` : ''}` : ''}</i>`).join('')}</div></div></div>
     </div>
     <div class="vh" id="jRes" aria-live="polite"></div>
 `;
