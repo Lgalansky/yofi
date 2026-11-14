@@ -4739,6 +4739,8 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .crbox.dsk h2.dsk-h{margin:4px 0 0;font-size:clamp(1.3rem,6.4vw,1.75rem)!important}.crbox.dsk{max-height:92vh;overflow-y:auto}
 .ug-cat{margin-top:4px;padding:14px;border-radius:18px;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760;text-align:left}.ug-cat>b{display:block;font:800 1.05rem "Bricolage Grotesque",sans-serif}.ug-cat>small{display:block;margin:2px 0 10px;color:#C9B4F5}
 .ug-cc{display:flex;flex-wrap:wrap;gap:8px}.ug-cc button{display:flex;align-items:center;gap:6px;padding:8px 12px;border:0;border-radius:999px;font:700 .9rem Inter,sans-serif;color:#fff;cursor:pointer;background:#2A1748;box-shadow:inset 0 0 0 1.5px #5A3A8A}.ug-cc svg{width:18px;height:18px}
+.acp{text-align:center;padding:6px 4px 4px}.acp-i{display:inline-grid;place-items:center;width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,#FF3FA4,#8B3CFF);box-shadow:0 10px 26px -8px rgba(255,63,164,.7)}.acp-i svg{width:44px;height:44px;color:#fff}
+.acp h2{margin:14px 0 6px}.acp p{margin:0 0 16px;color:#C9B4F5}.acp p b{color:#fff}.acp-go{font-size:1.1rem}
 </style>
 </head>
 <body>
@@ -6321,6 +6323,15 @@ function gemIdeas() {
   if (f) I.push({ ic: '⚔️', t: 'Gem battle', d: `Put your <b>${f.s.total}</b> photo up against a rival. Win <b>50 ⭐</b> in 30 seconds.`, cost: 25, src: f.src, go: () => { closeSheet(); openGemBattle(25); } });
   return I;
 }
+// one clear screen for adding a photo in a category, before the phone's upload menu opens
+function addCatPhoto(k) {
+  if ($('#sheet').classList.contains('on')) closeSheet(); if ($('#flow').classList.contains('on')) closeFlow();
+  const cn = crownName(k), L = (typeof lgS === 'function') ? lgS() : null;
+  openSheet(`<div class="acp"><span class="acp-i">${gi(k)}</span><h2>Add a ${esc(cn.toLowerCase())} photo</h2>
+    <p>Upload a ${esc(cn.toLowerCase())} photo, get your score, then enhance it to <b>${CFG.QUALIFY}+</b> to battle for the ${esc(cn)} crown${L ? ` and today’s <b>${money(L.jp[k])}</b> pot` : ''}.</p>
+    <button class="btn block acp-go" id="acpGo">📷 Choose a photo</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`);
+  $('#acpGo').onclick = () => { S.frameHint = { cats: [k], lab: catNm(k), frame: catNm(k) }; save(); closeSheet(); pickPhoto(true); };
+}
 function useGems() {
   const I = gemIdeas();
   openSheet(`<div class="ug"><h2>Use your gems</h2><p class="sub">You have <b>${Math.floor(S.gems).toLocaleString()} ⭐</b>. Here’s what they can do for you right now.</p>
@@ -6328,7 +6339,7 @@ function useGems() {
     ${I.length ? I.map((x, i) => `<button class="ug-r" data-ug="${i}"><span class="ug-i">${x.ic}</span><span class="ug-t"><b>${x.t}</b><small>${x.d}</small></span><em class="${S.gems < x.cost ? 'need' : ''}">${x.cost} ⭐</em></button>`).join('') : `<p class="ug-none">Upload a photo in Studio and your gems can start working for you.</p>`}
     ${(() => { const miss = CATS8.filter(k => k !== 'any' && !S.photos.some(p => p.cat === k)); return miss.length ? `<div class="ug-cat"><b>📷 Battle in a new category</b><small>Upload a photo and enhance it to ${CFG.QUALIFY}+ to compete for these pots</small><div class="ug-cc">${miss.map(k => `<button data-ugc="${k}">${gi(k)}${esc(crownName(k))}</button>`).join('')}</div></div>` : ''; })()}
     <button class="link ug-buy" id="ugBuy">Get more gems</button></div>`);
-  document.querySelectorAll('#sheetBody [data-ugc]').forEach(b => b.onclick = () => { const k = b.dataset.ugc; closeSheet(); S.frameHint = { cats: [k], lab: catNm(k), frame: catNm(k) }; save(); if ($('#flow').classList.contains('on')) closeFlow(); go('studio'); renderStudio(); pickPhoto(true); });
+  document.querySelectorAll('#sheetBody [data-ugc]').forEach(b => b.onclick = () => { const k = b.dataset.ugc; closeSheet(); addCatPhoto(k); });
   document.querySelectorAll('#sheetBody [data-ug]').forEach(b => b.onclick = () => { const x = I[+b.dataset.ug]; if (S.gems < x.cost) { closeSheet(); runOut('gems', `You need ${x.cost - S.gems} more gems`, null, x.cost - S.gems); return; } x.go(); });
   $('#ugBuy').onclick = () => { closeSheet(); openStore(); };
   if ($('#ugTix')) $('#ugTix').onclick = () => { closeSheet(); ticketPop(); };
@@ -7695,7 +7706,7 @@ const crownGrid = () => `<div class="tcg">${CATS8.map(k => { const h = frHold(k)
     <button class="bcc-ph" data-crw="${k}" aria-label="Battle a friend in ${esc(crownName(k))}">${h && !me ? `<img src="${lgPhoto(h, k)}" alt="" loading="lazy">` : mp ? `<img src="${mp.src}" alt="" loading="lazy">` : `<span class="tcc-empty">${gi(k)}</span>`}</button>
     ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go" data-crw="${k}">${VS_IC}Battle</button>` : `<button class="bcc-go up" data-crw="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>`;
 function crownTap(e, k) { const a = e.target.closest('[data-addk]');
-  if (a) { closeSheet(); S.frameHint = { cats: [k], lab: catNm(k), frame: catNm(k) }; save(); toast(`Add a ${crownName(k).toLowerCase()} photo and get it to ${CFG.QUALIFY}+ to battle`); WALL = true; go('studio'); renderStudio(); pickPhoto(true); return; }
+  if (a) { closeSheet(); addCatPhoto(k); return; }
   crownGo(k); }
 // Challenge a friend: pick the crown (category) first, then your friend and photo
 function crownGo(k) { const c = crownOf(k);
@@ -8095,7 +8106,7 @@ function leagueHTML() {
 }
 function bindLeague() {
   document.querySelectorAll('#gallery [data-lgc]').forEach(b => b.onclick = e => { const a = e.target.closest('[data-addk]');
-    if (a) { const k = a.dataset.addk; S.frameHint = { cats: [k], lab: catNm(k), frame: catNm(k) }; save(); toast(`Add a ${crownName(k).toLowerCase()} photo and get it to ${CFG.QUALIFY}+ to battle`); WALL = true; go('studio'); renderStudio(); pickPhoto(true); return; }
+    if (a) { const k = a.dataset.addk; addCatPhoto(k); return; }
     lgCat(b.dataset.lgc); });
   if ($('#btGem')) $('#btGem').onclick = () => openGemBattle(25);
   if ($('#btRules')) $('#btRules').onclick = () => { openSheet(`<div class="lgs fcn fcn2"><div class="f2-top"><div><h2>Battle for cash</h2><p>Daily cash pots · reset at midnight</p></div><button class="f2-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>${LG_RULES()}<button class="btn block" data-shclose style="margin-top:14px">Got it</button></div>`, { full: true, cover: true }); };
@@ -8120,7 +8131,7 @@ function lgCat(k) {
   if ($('#lgKing')) $('#lgKing').onclick = () => lgPay(() => lgFight(k, K.h, true));
   const lowP = !mine && S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0];
   const getPhoto = () => { closeSheet(); if (lowP) { S.cur = lowP.id; save(); WALL = false; go('studio'); renderStudio(); toast(`Enhance it to ${CFG.QUALIFY}+, then come back to battle`); return; }
-    S.frameHint = { cats: [k], lab: catNm(k), frame: catNm(k) }; save(); go('studio'); renderStudio(); pickPhoto(true); };
+    addCatPhoto(k); };
   if ($('#lgUp')) $('#lgUp').onclick = getPhoto;
   if ($('#lgQuick')) $('#lgQuick').onclick = () => { if (mine) { lgPay(() => lgFight(k, near.h, !iHold)); return; } if (!lowP) { getPhoto(); return; } const cn = crownName(k).toLowerCase();
     celebrate(lowP ? { src: lowP.src, score: lowP.s.total, title: 'Enhance first', text: `Your ${esc(cn)} photo scores <b>${lowP.s.total}</b>. Get it to <b>${CFG.QUALIFY}+</b> to battle @${esc(near.h)}.`, cta: '✨ Enhance my photo', onCta: getPhoto, later: 'Not now' }
