@@ -5191,10 +5191,10 @@ function paintTop() {
   const tb = $('#sTix'); if (tb) { tb.hidden = true; tb.innerHTML = `🎟️<b>${S.user ? tix() : 0}</b>`; tb.setAttribute('aria-label', `${S.user ? tix() : 0} Cash Cup tickets`); }
   const b = $('#sTop'); if (!b) return;
   if (!S.user) { b.hidden = true; return; }
-  let n = 0; try { n = CATS8.filter(k => { const K = lgKing(k); return K.me && K.n > 0; }).length; } catch (e) {}
+  let n = 0; try { n = CATS8.filter(k => { const K = lgKing(k); return K.me && K.n > 0; }).length + myCrowns().length; } catch (e) {}
   b.hidden = false; b.className = 'stopc crb ' + (n ? 'has' : 'zero');
   b.innerHTML = `<span class="crb-i">👑</span><b class="crb-n">${n}</b>`;
-  b.setAttribute('aria-label', `You lead ${n} categor${n === 1 ? 'y' : 'ies'} today. Go to Battle`);
+  b.setAttribute('aria-label', `You hold ${n} crown${n === 1 ? '' : 's'}. Go to Battle`);
 }
 function tierLockPop(f, mine) {
   const L = SCORE_LEVELS.find(x => x.fee === f), v = mine.s.total, gap = L.at - v, c = $('#coach');
@@ -7943,6 +7943,7 @@ function fcBattle(c) {
   c.st = 'done'; c.won = won; c.mv = mv; c.tv = tv; c.at = Date.now();
   if (won) { if (c.stake.cur === 'cash' && !c.stake.riv) S.cash = +((S.cash || 0) + prize).toFixed(2); else S.gems += prize; S.gems += bonus; F.rec[c.f].w++; F.wk.you = (F.wk.you || 0) + 1; }
   else { F.rec[c.f].l++; F.wk[c.f] = (F.wk[c.f] || 0) + 1; }
+  setTimeout(paintTop, 0);
   let crownMsg = ''; { const F = frS(); F.hold = F.hold || {}; const h0 = F.hold[c.theme] || null, nm = esc(crownName(c.theme));
     if (won && h0 !== 'you') { F.hold[c.theme] = 'you'; crownMsg = h0 ? `👑 You took ${h0 === c.f ? `@${esc(c.f)}’s` : 'the'} ${nm} crown!` : `👑 You won the ${nm} crown!`; }
     else if (!won && (h0 === 'you' || !h0)) { F.hold[c.theme] = c.f; crownMsg = h0 === 'you' ? `👑 @${esc(c.f)} took your ${nm} crown` : `👑 @${esc(c.f)} won the ${nm} crown`; } }
