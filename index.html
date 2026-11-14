@@ -8663,7 +8663,7 @@ function paintFlame() {
 $('#sFlame').onclick = () => streakPop();
 // countdown on the Judge screen to the next pop: tournament or battle (they take turns every 7 votes)
 const METER = 500; // judging points per free $1 entry
-function meterAdd(n) { S.meterPts = (S.meterPts || 0) + n; while (S.meterPts >= METER) { S.meterPts -= METER; S.cashTix = (S.cashTix || 0) + 1; window.__meterHit = 1; } }
+function meterAdd(n) { return; /* free entries now only come from the 10-in-a-row chest */ S.meterPts = (S.meterPts || 0) + n; while (S.meterPts >= METER) { S.meterPts -= METER; S.cashTix = (S.cashTix || 0) + 1; window.__meterHit = 1; } }
 function meterHTML() { if (!S.user || (S.votes || 0) < 10) return ''; const v = S.meterPts || 0, b = S.boosts || 0;
   return `<div class="mtr"><div class="mtr-h"><span>🎟️ <b>Free $1 entry</b> at ${METER} ⭐</span><span class="mtr-n"><b data-mtr>${v}</b> / ${METER}</span></div><div class="mtr-bar"><i data-mtrb style="width:${v / METER * 100}%"></i></div>${b ? `<p class="mtr-b">🚀 ${b} prize boost${b > 1 ? 's' : ''} ready · +50% on your next tournament win</p>` : ''}</div>`; }
 function nextUp() {
@@ -8774,7 +8774,7 @@ async function vote(pick) {
   if (false && [1, 3, 5].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">1 more for ×${streakX(S.combo + 1)}${S.combo === 5 ? ' + 🧰' : S.combo === 3 ? ' + 🎁' : ''}</span>`);
   if (earn) setTimeout(() => gemExplosion(earn, { mid: true, from: mc }), tier > 1 ? 900 : 0);
   await sleep(tier === 20 ? 2800 : tier > 1 ? 1800 : 1100);
-  if (window.__meterHit) { window.__meterHit = 0; renderJudge(); judging = false; if (typeof paintTixTag === 'function') paintTixTag(); ticketPop(); return; }
+  if (false && window.__meterHit) { window.__meterHit = 0; renderJudge(); judging = false; if (typeof paintTixTag === 'function') paintTixTag(); ticketPop(); return; }
   if (false && !comboHit && tDue()) { renderJudge(); $('#judge').scrollTop = 0; judging = false; if (tPrompt()) { if (S.since >= CFG.BATTLE_EVERY - 1) S.since = Math.max(0, CFG.BATTLE_EVERY - 3); save(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; } }
   if (!comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.user && fighters().length) { S.frIntro = 1; S.since = 0; save(); renderJudge(); judging = false;
     const me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
