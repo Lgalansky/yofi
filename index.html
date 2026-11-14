@@ -8387,7 +8387,7 @@ function tixStripHTML() { const n = (S && S.user && S.cashTix) || 0; if (!n) ret
 document.addEventListener('click', e => { if (e.target.closest('#tixStrip')) { const t = $('#tixTag'); if (t) t.click(); else { tArm(); openTourney(); } } });
 function nextUpHTML() {
   const n = nextUp(); if (!n) return '';
-  const lab = n.k === 'tour' ? '🏆 Tournament' : n.k === 'cash' ? '⚔️ Cash battle' : '⭐ Gem battle';
+  const lab = n.k === 'tour' ? '🏆 Tournament' : n.k === 'cash' ? '👑 Crown battle' : '⭐ Practice battle';
   return `<div class="nxu nxu-${n.k}"><span class="t"><b>${lab}</b> ${n.left === 1 ? 'after this vote' : `in <b>${n.left}</b> votes`}</span><span class="d">${Array.from({ length: CFG.BATTLE_EVERY }, (_, i) => `<i class="${i < n.done ? 'on' : ''}"></i>`).join('')}</span></div>`;
 }
 function renderJudge() {
@@ -9438,8 +9438,17 @@ function paintTourney() {
 function openBattle() {
   S.btAlt = true; save(); // Real Money: always cash
   const bth = pickBattleTheme(), bme = fitFor(bth)[0], tn = thName(bth);
-  if (!S.btAlt && !openBattle.skipCash) { const me0 = bme || fighters()[0]; if (me0) { celebrate({ src: me0.src, score: '⭐', title: `${tn} gem battle!`, text: bme ? `A rival wants a <b>${tn.toLowerCase()}</b> battle with your ${bme.s.total} photo. Stake <b>25 ⭐</b>, win <b>50 ⭐</b>. Result in 30 seconds.` : `A rival wants a <b>${tn.toLowerCase()}</b> battle for <b>50 ⭐</b>. You don’t have a ${tn.toLowerCase()} photo yet. Add one and play!`, cta: bme ? 'Battle · 25 ⭐' : `📷 Add a ${tn.toLowerCase()} photo`, onCta: () => openGemBattle(25, null, { theme: bth }), later: 'Not now' }); return; } }
-  if (!openBattle.skipCash) {
+  if (!S.btAlt && !openBattle.skipCash) { const me0 = bme || fighters()[0]; if (me0) { celebrate({ src: me0.src, score: '⭐', title: `${tn} gem battle!`, text: bme ? `<b>Practice · no crowns at stake.</b> A rival wants a <b>${tn.toLowerCase()}</b> battle with your ${bme.s.total} photo. Stake <b>25 ⭐</b>, win <b>50 ⭐</b>. Result in 30 seconds.` : `A rival wants a <b>${tn.toLowerCase()}</b> battle for <b>50 ⭐</b>. You don’t have a ${tn.toLowerCase()} photo yet. Add one and play!`, cta: bme ? 'Battle · 25 ⭐' : `📷 Add a ${tn.toLowerCase()} photo`, onCta: () => openGemBattle(25, null, { theme: bth }), later: 'Not now' }); return; } }
+  if (!openBattle.skipCash && !S.minor) { // cash battles from judging are crown battles
+    const L = lgS(), ks = CATS8.filter(k => lgMine(k));
+    if (ks.length) { const sc = k => { const y = L.you[k] || 0; return (y === LG_SHARE - 1 ? 100 : 0) + (L.hold && L.hold[k] && (L.hold[k].hist || [])[0] === 'you' ? 80 : 0) + y * 5 + Math.random() * 10; };
+      const k = ks.sort((a, b) => sc(b) - sc(a))[0], H = lgHold(k), y = L.you[k] || 0, cn = crownName(k), mine = H.h === 'you';
+      const why = y === LG_SHARE - 1 ? `One more point and you share today’s <b>${money(L.jp[k])}</b> ${esc(cn)} pot.` : y >= LG_SHARE ? `You’re in the ${esc(cn)} pot with <b>${y} points</b>. Keep climbing.` : `Today’s ${esc(cn)} pot is <b>${money(L.jp[k])}</b>.`;
+      celebrate({ src: mine ? lgMine(k).src : lgPhoto(H.h, k), score: '👑', title: mine ? `Defend your ${cn} crown` : `Battle for the ${cn} crown`, text: `${mine ? 'A challenger wants your crown.' : `<b>@${esc(H.h)}</b> holds it right now.`} ${why} Win <b>+1 point</b>${mine ? '' : ' and your photo goes on the card'}.`,
+        cta: `${mine ? 'Defend' : 'Battle'} · $1`, onCta: () => { openBattleTab(); lgCat(k); }, later: 'Not now' });
+      return; }
+  }
+  if (false) {
     const me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0], mc = me.cat ? pcatName(me.cat).toLowerCase() : 'photo';
     celebrate({ src: me.src, score: '⚔️', title: 'Cash battle!', text: `A rival wants a <b>real cash battle</b> with your ${me.s.total} ${esc(mc)} photo. You’ll face another <b>${esc(mc)}</b> photo. Stake <b>$1</b>, win <b>${money(2 * (1 - KING_FEE))}</b>. Real judges decide.`, cta: (S.cashTix || 0) ? '🎟️ Battle free · use your entry' : 'Let’s battle · $1', onCta: () => openCashBattle(1, null, me), later: 'Not now' });
     return;
