@@ -4716,7 +4716,7 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .td-l{display:flex;flex-direction:column;gap:6px}.td-r{display:grid;grid-template-columns:22px 1fr auto auto;align-items:center;gap:8px;padding:10px 12px;border:0;border-radius:14px;color:#fff;font:inherit;text-align:left;cursor:pointer;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760}
 .td-r svg{width:20px;height:20px}.td-r span{font-weight:800}.td-r em{font-style:normal;font-size:.78rem;color:#C9B4F5}.td-r.in{box-shadow:inset 0 0 0 1.5px #2EE59D}.td-r.in em{color:#2EE59D;font-weight:800}
 .crbox.dsk{max-width:420px;padding:22px 18px 16px;border-radius:28px;text-align:center;background:radial-gradient(circle at 50% 0,#4A2470,#22123F 70%);box-shadow:inset 0 0 0 2.5px #FFC93C,0 0 40px -6px rgba(255,201,60,.55)}
-.dsk-h{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;white-space:nowrap;font:900 clamp(1.4rem,7vw,1.9rem)/1 "Bricolage Grotesque",sans-serif;letter-spacing:.01em;background:linear-gradient(180deg,#FFE27A,#FFB21C);-webkit-background-clip:text;background-clip:text;color:transparent}.dsk-h span{-webkit-text-fill-color:initial;font-size:2rem}
+.dsk-h{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;white-space:nowrap;font:900 clamp(1.2rem,6vw,1.65rem)/1 "Bricolage Grotesque",sans-serif;letter-spacing:.01em;background:linear-gradient(180deg,#FFE27A,#FFB21C);-webkit-background-clip:text;background-clip:text;color:transparent}.dsk-h span{-webkit-text-fill-color:initial;font-size:2rem}
 .dsk-e{margin:10px 0 0;font:800 1.35rem "Bricolage Grotesque",sans-serif;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px}.dsk-e b{color:#6AE3FF}.dsk-e svg,.dsk-e img{width:26px;height:26px}
 .dsk-s{margin:2px 0 10px;color:#C9A8FF;font-weight:600}
 .dsk-st{margin:0 0 12px;padding:8px 10px;border-radius:14px;background:rgba(20,8,40,.5)}.dsk-st b{display:block;font:800 1.05rem "Bricolage Grotesque",sans-serif;color:#FFC93C}.dsk-st span{font-size:.82rem;color:#E6DDF5}
@@ -4731,6 +4731,12 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .dsk-p{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 4px}.dsk-p i{height:10px;border-radius:999px;background:#3A2760;box-shadow:inset 0 0 0 1px #5A3A8A}.dsk-p i.on{background:linear-gradient(90deg,#FF3FA4,#8B3CFF)}
 .dsk-r small{color:#C9B4F5;font-weight:700}.dsk-r.done b{display:block;color:#2EE59D}.dsk-r.done span{font-size:.82rem;color:#C9B4F5}
 .dsk-go{margin-top:12px!important}
+.dsk-st{margin-top:12px!important}.dsk-wk{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0 4px}
+.dsk-dy{display:flex;flex-direction:column;align-items:center;gap:2px}.dsk-dy i{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;font-style:normal;font-size:1rem;font-weight:800;color:#A994CF;background:#2A1A46;box-shadow:inset 0 0 0 1.5px #4A2F78}
+.dsk-dy.lit i{background:radial-gradient(circle,#5A3010,#2A1A46);box-shadow:inset 0 0 0 1.5px #FFB21C}.dsk-dy.td i{box-shadow:inset 0 0 0 2px #FFC93C}.dsk-dy small{font-size:.62rem;font-weight:700;color:#C9B4F5}
+.dsk-how{display:block;font-size:.72rem;color:#A994CF}
+.dsk-sh{display:flex;align-items:center;justify-content:center;gap:6px;margin:14px 0 0;font:800 1.05rem "Bricolage Grotesque",sans-serif;color:#fff}.dsk-sh b{color:#6AE3FF}.dsk-sh svg,.dsk-sh img{width:20px;height:20px}
+.crbox.dsk h2.dsk-h{margin:4px 0 0;font-size:clamp(1.3rem,6.4vw,1.75rem)!important}.crbox.dsk{max-height:92vh;overflow-y:auto}
 </style>
 </head>
 <body>
@@ -9757,13 +9763,15 @@ function streakPop() {
     return `<div class="dsk-c ${k}"><small>${nm}</small><span class="dsk-a">${ART[i]}</span>${k === 'now' ? '<em>NOW</em>' : k === 'got' ? '<em class="ok">✓ DONE</em>' : k === 'miss' ? '<em class="ms">MISSED</em>' : '<em class="sp"></em>'}<b>${G}+${STREAK_GEMS}</b></div>`; }).join('');
   const head = st ? `<b class="dsk-n">🔥 ${st}-day streak</b><span>${inToday ? 'Today’s flame is lit. Keep collecting gems.' : 'Judge 3 photos today to keep it alive.'}</span>`
     : `<b class="dsk-n">${had ? 'Your streak ended' : 'Start a streak'}</b><span>Judge 3 photos today to light your first 🔥</span>`;
+  const wk = [...Array(7)].map((_, i) => { const back = 6 - i, lit = inToday ? back < st : back >= 1 && back <= st, today = back === 0, dn = new Date(Date.now() - back * 864e5).toLocaleDateString([], { weekday: 'narrow' });
+    return `<span class="dsk-dy ${lit ? 'lit' : ''} ${today ? 'td' : ''}"><i>${lit ? '🔥' : today ? '?' : ''}</i><small>${today ? 'Today' : dn}</small></span>`; }).join('');
   const c = $('#coach');
   c.innerHTML = `<div class="crbox dsk" role="dialog" aria-modal="true" aria-labelledby="crT">
     <h2 id="crT" class="dsk-h"><span>🔥</span>DAILY STREAK</h2>
-    <p class="dsk-e">${G} Earn <b>${STREAK_GEMS * 4} gems</b> a day</p><p class="dsk-s">Judge 3 photos each session</p>
-    <div class="dsk-st">${head}</div>
+    <div class="dsk-st">${head}<div class="dsk-wk">${wk}</div><small class="dsk-how">Judge 3 photos on any day to add a 🔥. Miss a day and it resets.</small></div>
+    <h3 class="dsk-sh">${G} Bonus gems today · up to <b>${STREAK_GEMS * 4}</b></h3><p class="dsk-s">Judge 3 photos in each session for +${STREAK_GEMS}</p>
     <div class="dsk-g">${cards}</div>
-    <div class="dsk-t"><span>Today</span><i><i style="width:${ds.gotToday / 4 * 100}%"></i></i><b>${ds.gotToday}/4 sessions</b></div>
+    <div class="dsk-t"><span>Bonus</span><i><i style="width:${ds.gotToday / 4 * 100}%"></i></i><b>${ds.gotToday}/4 sessions</b></div>
     ${done ? `<div class="dsk-r done"><b>${SESS[ds.si]} reward collected</b><span>${ds.si < 3 ? `Next session from ${SESS_AT[ds.si + 1]}` : 'Next session after midnight'}</span></div>`
       : `<div class="dsk-r"><div class="dsk-rh"><b>${SESS[ds.si]} reward</b><em>${G}+${STREAK_GEMS} gems</em></div><div class="dsk-p">${[0, 1, 2].map(i => `<i class="${i < n ? 'on' : ''}"></i>`).join('')}</div><small>${n}/3 judged</small></div>`}
     <button class="bt-cta dsk-go" id="crGo">⚖️ ${done ? 'Keep judging' : n ? `Judge ${3 - n} more` : 'Judge 3 photos'}</button>
