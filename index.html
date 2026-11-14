@@ -4477,6 +4477,17 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .myp-x.land{animation:cpop .6s cubic-bezier(.3,1.6,.5,1)}.myp-x.ok{color:#FFC93C}.myp-x.big{color:#2EE59D;text-shadow:0 0 18px rgba(46,229,157,.8)}
 .myp-t{position:relative;font-size:1.1rem!important}.myp-t b{color:#2EE59D;font-size:1.3rem}
 .crbox.myp #crGo:disabled{opacity:.4}
+.tk-why{margin:12px 0;padding:14px;border-radius:16px;text-align:left;background:linear-gradient(160deg,#3A1B5C,#24163F);box-shadow:inset 0 0 0 1.5px #FF3FA4}
+.tk-why b{font:800 1.1rem "Bricolage Grotesque",sans-serif}.tk-why p{margin:4px 0 10px;color:#E6DDF5}.tk-why p b{font:inherit;font-weight:800;color:#FFC93C}
+.tw-b{display:flex;gap:8px;flex-wrap:wrap}.tw-b button{flex:1 1 140px;padding:11px 10px;border:0;border-radius:999px;font:800 .95rem Inter,sans-serif;color:#fff;cursor:pointer;background:linear-gradient(95deg,#FF3FA4,#8B3CFF)}
+.tw-b button#twEnh{background:#24163F;box-shadow:inset 0 0 0 1.5px #FFC93C;color:#FFE27A}
+.to-cash{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0 4px;padding:12px 14px;border:0;border-radius:16px;text-align:left;color:#fff;cursor:pointer;font:inherit;background:radial-gradient(circle at 0 50%,#4A3510,#2A1747 60%);box-shadow:inset 0 0 0 1.5px #FFC93C,0 0 18px -8px rgba(255,201,60,.6)}
+.to-cash .i{font-size:1.5rem}.to-cash b{display:block;font:800 1.05rem "Bricolage Grotesque",sans-serif;color:#FFC93C}.to-cash small{display:block;font-size:.8rem;color:#E6DDF5}.to-cash>i{margin-left:auto;font-style:normal;font-size:1.5rem;font-weight:800;color:#FFC93C}
+.riv{margin-top:14px;padding:14px;border-radius:18px;background:radial-gradient(circle at 0 0,#4A3510,#2A1747 65%);box-shadow:inset 0 0 0 1.5px #FFC93C}
+.riv-h b{font:800 1.15rem "Bricolage Grotesque",sans-serif;color:#FFC93C}.riv p{margin:6px 0 10px;color:#E6DDF5;font-size:.92rem}.riv p b{color:#fff}
+.riv-n{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.riv-n div{padding:8px;border-radius:12px;background:rgba(20,8,40,.5);text-align:center}
+.riv-n small{display:block;font-size:.7rem;color:#C9B4F5}.riv-n b{font:800 1.05rem "Bricolage Grotesque",sans-serif;color:#fff}.riv-n div:first-child b{color:#2EE59D}
+.fb-crown.riv{background:rgba(46,229,157,.1)!important;color:#7CF5C4!important;box-shadow:inset 0 0 0 1.5px #2EE59D!important}
 </style>
 </head>
 <body>
@@ -4887,7 +4898,7 @@ if (S.bonus) { S.cash = +((S.cash || 0) + S.bonus).toFixed(2); S.bonus = 0; }
 if (Array.isArray(S.entries)) { S.entries = S.entries.filter(e => !(e.cid === 'daily' && !e.done)); if (S.entered) delete S.entered.daily; }
 { const M = { portrait: 'selfie', landscape: 'travel', sunrise: 'travel', golden: 'travel', city: 'travel', street: 'travel', arch: 'travel', surf: 'travel', hiking: 'travel', wildlife: 'any', action: 'fitness', cars: 'any', garden: 'any', bw: 'any' }; if (Array.isArray(S.photos)) S.photos.forEach(p => { if (p.cat && M[p.cat]) p.cat = M[p.cat]; }); }
 // prototype: every refresh starts Friends fresh (gems still riding on unanswered challenges are given back)
-if (S.fr) { (S.fr.ch || []).forEach(c => { if (c.dir === 'out' && (c.st === 'wait' || c.st === 'invite') && c.stake && c.stake.cur === 'gems') S.gems = (S.gems || 0) + c.stake.amt; }); delete S.fr; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+if (S.fr) { (S.fr.ch || []).forEach(c => { if (c.dir === 'out' && (c.st === 'wait' || c.st === 'invite') && c.stake) { if (c.stake.cur === 'gems') S.gems = (S.gems || 0) + c.stake.amt; else S.cash = +((S.cash || 0) + c.stake.amt).toFixed(2); } }); delete S.fr; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 let warnedStorage = false;
 let RESETTING = false;
 function save() {
@@ -7270,6 +7281,7 @@ function friendsHTML() {
     ${done.length ? `<h3 class="fr-sh">Results</h3>${done.map(card).join('')}` : ''}
     <div class="crh"><div><h3>Crowns</h3><p>Battle for the crown</p></div><span class="crh-n">${myCrowns().length} of ${CATS8.length} yours</span></div>
     <div class="crw crw2">${CATS8.map(k => { const c = crownOf(k), me = c.h === 'you'; return `<button class="crw2-c ${me ? 'me' : ''}" data-crw="${k}"><span class="crw2-band">👑 <b>${me ? 'You' : '@' + esc(c.h)}</b></span><span class="crw2-ic">${gi(k)}</span><b class="crw2-n">${esc(crownName(k))}</b></button>`; }).join('')}</div>
+    <button class="to-cash" data-tocash><span class="i">💵</span><span><b>Ready for real cash?</b><small>Play strangers in Compete · $1 tournaments up to $1,000</small></span><i>›</i></button>
     <h3 class="fr-sh">Scoreboard</h3>
     <div class="fsb">${FRIENDS.map(f => ({ f, r: F.rec[f.h] || { w: 0, l: 0 } })).sort((a, b) => (b.r.w + b.r.l) - (a.r.w + a.r.l)).map(({ f, r }) => { const n = r.w + r.l, st = !n ? 'Not played yet' : r.w > r.l ? 'You lead' : r.w < r.l ? `@${esc(f.h)} leads` : 'All square';
       return `<div class="fsb-r ${n ? (r.w > r.l ? 'up' : r.w < r.l ? 'dn' : 'eq') : 'new'}"><div class="fsb-p"><span class="fav me">${avatarInner()}</span><small>You${crownCount('you') ? ` 👑${crownCount('you')}` : ''}</small></div>
@@ -7289,6 +7301,7 @@ function rankingsSheet() {
         <button class="fsb-go" data-rch="${f.h}" aria-label="Challenge @${esc(f.h)}">${VS_IC}</button></div>`; }).join('')}</div></div>`);
   document.querySelectorAll('#sheetBody [data-rch]').forEach(b => b.onclick = () => fcNew(b.dataset.rch));
 }
+document.addEventListener('click', e => { if (e.target.closest('[data-tocash]')) { closeSheet(); CXF = 'all'; openComps(); } });
 function bindFriends() {
   const g = $('#gallery');
   if ($('#frSign')) { $('#frSign').onclick = () => openSignup(() => openFriends()); return; }
@@ -7420,20 +7433,33 @@ function inviteJoined(c) {
 const VS_IC = '<svg class="vsic" viewBox="0 0 44 32" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><rect x="20" y="4" width="19" height="24" rx="4" transform="rotate(12 29.5 16)"/><rect x="5" y="4" width="19" height="24" rx="4" transform="rotate(-10 14.5 16)" fill="rgba(0,0,0,.18)"/></g><text x="22" y="21.5" text-anchor="middle" font-family="Bricolage Grotesque, Inter, sans-serif" font-weight="900" font-size="15" fill="#fff" stroke="#2A1250" stroke-width="3.6" paint-order="stroke" letter-spacing="-.5">VS</text></svg>';
 function challengeWith(p) { if (!p) return; const th = FC_THEMES.some(t => t[0] === p.cat) ? p.cat : 'any';
   if ($('#flow').classList.contains('on')) closeFlow(); go('gallery'); fcNew(null, { f: FRIENDS[0].h, st: 1, sel: p.id }); }
+// Cash rivalries: your first challenge with a friend is free (gems); after that, rematches are $1 each
+// into a rolling pot that the first player to win 2 in a row takes.
+const rivS = f => { const F = frS(); F.riv = F.riv || {}; return F.riv[f] = F.riv[f] || { pot: 0, streak: 0, last: null }; };
+const cashRiv = f => { if (S.minor) return false; const r = frS().rec[f]; return !!r && (r.w + r.l) > 0; };
+function adultPop(go) {
+  celebrate({ src: (S.user && S.user.pic) || '', score: '💵', title: 'Cash rematches are 18+', text: 'Your first game with a friend is free. Rematches are played for <b>real cash</b>, so we need to check you’re <b>18 or older</b>.',
+    cta: 'I’m 18 or older', onCta: () => { S.adult = 1; save(); go(); }, later: 'I’m under 18', onLater: () => { S.minor = 1; save(); toast('No problem. You’ll keep playing friends for gems.'); } });
+}
+function rivHTML(f) { const R0 = rivS(f), lead = R0.last ? (R0.last === 'you' ? 'You' : '@' + esc(f)) : '';
+  return `<div class="riv"><div class="riv-h">💵 <b>Cash rematch with @${esc(f)}</b></div>
+    <p>Your first game was free. Now it’s <b>$1 each</b> into a pot that keeps growing until someone wins <b>2 in a row</b>.</p>
+    <div class="riv-n"><div><small>Pot now</small><b>${money(R0.pot)}</b></div><div><small>Streak</small><b>${lead ? `${lead} · ${R0.streak} win` : 'All square'}</b></div><div><small>If you win 2 in a row</small><b>${money(R0.pot + (R0.last === 'you' ? 1.7 : 3.4))}</b></div></div></div>`; }
 function fcNew(f0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPic(() => fcNew(f0, keep)); return; }
   const catOf = p => p && FC_THEMES.some(t => t[0] === p.cat) ? p.cat : 'any';
   let f = (keep && keep.f) || f0 || 'sam', thOv = keep && keep.th, st = keep ? keep.st : 1, sel = keep && keep.sel, th = 'any', catOpen = false;
   let po0 = () => ({ sel });
   const paint = () => {
     const CK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+    const cr = cashRiv(f);
     const catLab = (k, n) => k === 'selfie' ? 'Selfie: Hot or Not' : n.replace('Best ', '');
     openSheet(`<div class="fcn fcn2"><div class="f2-top"><div><h2>Challenge a friend</h2><p>Pick a friend and your photo.</p></div><button class="f2-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
       <h3 class="fcn-h">Friend</h3><div class="fcn-f">${FRIENDS.map(x => `<button data-ff="${x.h}" aria-pressed="${x.h === f}">${x.h === f ? `<i class="f2-ck">${CK}</i>` : ''}${fav(x.h, 46)}<b>@${esc(x.h)}</b></button>`).join('')}<button class="fcn-inv" id="fcInv"><span class="wa">${WA_ICON}</span><b>Invite</b></button></div>
       <h3 class="fcn-h">Your photo</h3><div id="fcPick"></div>
       <div class="f2-tag" id="fcTag"></div><p class="f2-crh" id="fcCrh"></p><div class="fcn-chips f2-cat" id="fcCats" hidden></div>
-      <h3 class="fcn-h">Entry per player</h3><div class="f2-st">${FC_STAKES.map((x, i) => `<button data-fs="${i}" aria-pressed="${i === st}">${x.amt} <span class="g">${gemIcon('')}</span></button>`).join('')}</div>
-      <div class="f2-win"><span class="tr">🏆</span><span class="sep"></span><span>Winner gets <b>${fcPrize(FC_STAKES[st])}</b> <span class="g">${gemIcon('')}</span></span></div>
-      <button class="btn block fcn-go" id="fcSend">Send challenge · ${FC_STAKES[st].amt} <span class="g">${gemIcon('')}</span></button>
+      ${cr ? rivHTML(f) : `<h3 class="fcn-h">Entry per player</h3><div class="f2-st">${FC_STAKES.map((x, i) => `<button data-fs="${i}" aria-pressed="${i === st}">${x.amt} <span class="g">${gemIcon('')}</span></button>`).join('')}</div>
+      <div class="f2-win"><span class="tr">🏆</span><span class="sep"></span><span>Winner gets <b>${fcPrize(FC_STAKES[st])}</b> <span class="g">${gemIcon('')}</span></span></div>`}
+      <button class="btn block fcn-go" id="fcSend">${cr ? 'Send cash rematch · $1' : `Send challenge · ${FC_STAKES[st].amt} <span class="g">${gemIcon('')}</span>`}</button>
       <p class="f2-cap" id="fcCap"></p></div>`, { full: true, cover: true });
     document.querySelectorAll('#sheetBody [data-ff]').forEach(b => b.onclick = () => { f = b.dataset.ff; sel = null; paint(); });
     $('#fcInv').onclick = () => { const p = S.photos.find(x => x.id === po0().sel) || S.photos.filter(x => fitsTheme(x, th)).sort((a, b) => b.s.total - a.s.total)[0]; openInvite({ th, stake: FC_STAKES[st], photo: p }); };
@@ -7451,14 +7477,15 @@ function fcNew(f0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPic
     $('#fcPick').innerHTML = pickerHTML(po); const getSel = bindPicker(po); po0 = () => po; setCat();
     $('#fcSend').onclick = () => {
       const pid = getSel(); if (!pid) { toast('Pick a photo, or upload one for this theme.'); return; }
-      const stake = FC_STAKES[st];
+      if (cashRiv(f) && !S.adult) { closeSheet(); adultPop(() => fcNew(null, { f, th: thOv, st, sel: pid })); return; }
+      const stake = cashRiv(f) ? { cur: 'cash', amt: 1, riv: true } : FC_STAKES[st];
       if (stake.cur === 'cash' ? (S.cash || 0) < stake.amt : S.gems < stake.amt) { closeSheet(); if (stake.cur === 'cash') openStore(`You need $${stake.amt} cash for this challenge.`); else runOut('gems', `You need ${stake.amt - S.gems} more gems`, null, stake.amt - S.gems); return; }
       const send = () => {
       if (stake.cur === 'cash') { S.cash = +((S.cash || 0) - stake.amt).toFixed(2); paintWallet(); } else { S.gems -= stake.amt; paintGems(); }
       const F = frS(); F.rec[f].used.push(pid);
       F.ch.unshift({ id: uid(), f, dir: 'out', theme: th, stake, st: 'wait', myPid: pid, replyAt: Date.now() + FC_REPLY, at: Date.now() }); save();
       closeSheet(); openFriends(); const mp = S.photos.find(x => x.id === pid);
-      celebrate({ src: mp ? mp.src : '', score: VS_IC, title: 'Challenge sent!', text: `<b>@${esc(f)}</b> has your <b>${esc(themeName(th))}</b> challenge.<br>Entry <b>${stake.amt} 💎</b> each · winner gets <b>${fcPrize(stake)} 💎</b>.<br>We’ll tell you when they answer.`, cta: 'Got it', onCta: () => openFriends(), later: 'Challenge another friend', onLater: () => fcNew() });
+      celebrate({ src: mp ? mp.src : '', score: VS_IC, title: 'Challenge sent!', text: `<b>@${esc(f)}</b> has your <b>${esc(themeName(th))}</b> challenge.<br>${stake.riv ? `Cash rematch: <b>$1</b> each into the pot. Win <b>2 in a row</b> to take it all.` : `Entry <b>${stake.amt} 💎</b> each · winner gets <b>${fcPrize(stake)} 💎</b>.`}<br>We’ll tell you when they answer.`, cta: 'Got it', onCta: () => openFriends(), later: 'Challenge another friend', onLater: () => fcNew() });
       };
       // preview: show exactly what your friend will get before it goes
       const mp0 = S.photos.find(x => x.id === pid), fr0 = FRIENDS.find(x => x.h === f), tn = themeName(th), gem = `<span class="g">${gemIcon('')}</span>`;
@@ -7467,8 +7494,8 @@ function fcNew(f0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPic
         <h2 class="i2-h">Ready to send?</h2><p class="i2-sub">This is the challenge <b>@${esc(f)}</b> will get.</p>
         <div class="fcp-to">${fav(f, 40)}<span><small>To</small><b>@${esc(f)}</b></span></div>
         <div class="i2-card"><div class="i2-ph"><img src="${mp0.src}" alt=""><span class="i2-th">${gi(th)}${esc(tn)}</span><span class="i2-sc"><b>${mp0.s.total}</b><i>🌿 🌿</i></span></div>
-          <div class="i2-body"><h3>Can you beat my photo?</h3><div class="i2-nums"><div><small>Entry</small><b>${stake.amt} ${gem} each</b></div><div><small>Winner gets</small><b>${fcPrize(stake)} ${gem}</b></div></div></div></div>
-        <button class="btn block fcn-go" id="fcpGo">Send challenge · ${stake.amt} ${gem}</button>
+          <div class="i2-body"><h3>Can you beat my photo?</h3><div class="i2-nums"><div><small>Entry</small><b>${stake.riv ? '$1' : stake.amt + ' ' + gem} each</b></div><div><small>${stake.riv ? 'Pot after' : 'Winner gets'}</small><b>${stake.riv ? money(rivS(f).pot + fcPrize(stake)) : fcPrize(stake) + ' ' + gem}</b></div></div></div></div>
+        <button class="btn block fcn-go" id="fcpGo">${stake.riv ? 'Send cash rematch · $1' : `Send challenge · ${stake.amt} ${gem}`}</button>
         <div style="text-align:center"><button class="link" id="fcpEdit">Edit challenge</button></div></div>`, { full: true, cover: true });
       $('#fcpGo').onclick = send;
       $('#fcpEdit').onclick = () => fcNew(null, { f, th: thOv, st, sel: pid });
@@ -7512,11 +7539,15 @@ function fcBattle(c) {
   // settle now so closing the screen never loses the result
   const F = frS(), prize = fcPrize(c.stake), T = todayFrame(), bonus = won && c.theme === (FC_THEMES.some(t => t[0] === T[0]) ? T[0] : 'pets') ? 25 : 0;
   c.st = 'done'; c.won = won; c.mv = mv; c.tv = tv; c.at = Date.now();
-  if (won) { if (c.stake.cur === 'cash') S.cash = +((S.cash || 0) + prize).toFixed(2); else S.gems += prize; S.gems += bonus; F.rec[c.f].w++; F.wk.you = (F.wk.you || 0) + 1; }
+  if (won) { if (c.stake.cur === 'cash' && !c.stake.riv) S.cash = +((S.cash || 0) + prize).toFixed(2); else S.gems += prize; S.gems += bonus; F.rec[c.f].w++; F.wk.you = (F.wk.you || 0) + 1; }
   else { F.rec[c.f].l++; F.wk[c.f] = (F.wk[c.f] || 0) + 1; }
   const CR = crownsS(), cc = CR[c.theme]; let crownMsg = '';
   if (won && cc && cc.h === c.f) { CR[c.theme] = { h: 'you', sc: me.s.total }; crownMsg = `👑 You took @${esc(c.f)}’s <b>${esc(crownName(c.theme))}</b> crown!`; }
   else if (!won && cc && cc.h === 'you') { CR[c.theme] = { h: c.f, sc: c.theirScore }; crownMsg = `👑 @${esc(c.f)} took your <b>${esc(crownName(c.theme))}</b> crown`; }
+  let rivMsg = '', rivWon = 0;
+  if (c.stake.riv) { const R0 = rivS(c.f), w = won ? 'you' : c.f; R0.pot = +(R0.pot + prize).toFixed(2); R0.streak = R0.last === w ? R0.streak + 1 : 1; R0.last = w;
+    if (R0.streak >= 2) { const pot = R0.pot; if (won) { rivWon = pot; S.cash = +((S.cash || 0) + pot).toFixed(2); } rivMsg = won ? `💰 2 in a row! You take the <b>${money(pot)}</b> pot` : `💰 @${esc(c.f)} won 2 in a row and takes the <b>${money(pot)}</b> pot`; R0.pot = 0; R0.streak = 0; R0.last = null; }
+    else rivMsg = `💰 Pot is now <b>${money(R0.pot)}</b> · ${won ? 'win the next one to take it' : `@${esc(c.f)} needs one more to take it`}`; }
   setTimeout(paintTop, 0);
   const fd = S.tixDay && S.tixDay.d === dayKey() ? S.tixDay : (S.tixDay = { d: dayKey(), n: 0 }); const newPass = false; if (newPass) { fd.n++; tix(); S.tix++; setTimeout(paintTop, 0); }
   save();
@@ -7524,7 +7555,7 @@ function fcBattle(c) {
     <span class="kg2-cat">${gi(c.theme)}${esc(themeName(c.theme).toUpperCase())}</span>`;
   const vs = (a, b, done) => `<div class="kg2-vs du"><div class="kg2-ph king ${done && !won ? 'won' : ''}"><img src="${c.theirSrc}" alt="">${done && !won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div><b class="kg2-x">VS</b><div class="kg2-ph me ${done && won ? 'won' : ''}"><img src="${me.src}" alt="">${done && won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div></div>
     <div class="kg2-who du"><div class="king"><small>@${esc(c.f)}</small><b>Score ${c.theirScore}</b><strong id="fbT">${a}</strong><span>votes</span></div><div class="me"><small>You</small><b>Score ${me.s.total}</b><strong id="fbM">${b}</strong><span>votes</span></div></div>`;
-  openSheet(`<div class="kg2" id="fb">${head}<div class="kg2-crown vsc">${VS_IC}</div><h2 class="kg2-h">You vs @${esc(c.f)}</h2><p class="kg2-sub">Real judges vote. Winner takes ${prizeTxt(c.stake)}.</p>
+  openSheet(`<div class="kg2" id="fb">${head}<div class="kg2-crown vsc">${VS_IC}</div><h2 class="kg2-h">You vs @${esc(c.f)}</h2><p class="kg2-sub">${c.stake.riv ? 'Cash rematch · the pot grows until someone wins 2 in a row.' : `Real judges vote. Winner takes ${prizeTxt(c.stake)}.`}</p>
     <span class="kg2-live"><i></i>Live voting</span>${vs(0, 0, false)}
     <div class="kg2-bar"><i id="fbTb" style="width:50%"></i><i id="fbMb" style="width:50%"></i></div><p class="kg2-n" id="fbV">0 of ${N} votes</p></div>`, { full: true, cover: true });
   document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if (GV.tab === 'friends' && $('#panes').dataset.at === 'gallery') renderGallery(); });
@@ -7538,11 +7569,12 @@ function fcBattle(c) {
     $('#fb').innerHTML = `${head}<p class="kg2-fin">Final result</p><div class="kg2-crown vsc">${won ? '🏆' : VS_IC}</div><h2 class="kg2-h">${won ? `You beat @${esc(c.f)}!` : `@${esc(c.f)} wins this one`}</h2><p class="kg2-score">Final vote · ${Math.max(mv, tv)}–${Math.min(mv, tv)}</p>
       ${vs(tv, mv, true)}
       <div class="kg2-bar res"><i style="width:${100 - pct}%">${100 - pct}%</i><i style="width:${pct}%">${pct}%</i></div>
-      ${crownMsg ? `<p class="fb-crown ${won ? 'w' : 'l'}">${crownMsg}</p>` : ''}<p class="fb-rec">Head to head: <b>You ${r.w}–${r.l} @${esc(c.f)}</b></p>
-      ${won ? `<div class="kg2-next ${c.stake.cur === 'cash' ? 'win' : 'gemw'}"><small>You won</small><b>${prizeTxt(c.stake)}${bonus ? ` <em>+${bonus} 💎</em>` : ''}</b><span>${bonus ? 'Includes the bonus for today’s theme' : 'Added to your balance'}</span></div>
+      ${rivMsg ? `<p class="fb-crown riv ${won ? 'w' : 'l'}">${rivMsg}</p>` : ''}${crownMsg ? `<p class="fb-crown ${won ? 'w' : 'l'}">${crownMsg}</p>` : ''}<p class="fb-rec">Head to head: <b>You ${r.w}–${r.l} @${esc(c.f)}</b></p>
+      ${won ? `<div class="kg2-next ${c.stake.cur === 'cash' ? 'win' : 'gemw'}"><small>You won</small><b>${c.stake.riv ? (rivWon ? money(rivWon) : 'this round') : prizeTxt(c.stake)}${bonus ? ` <em>+${bonus} 💎</em>` : ''}</b><span>${bonus ? 'Includes the bonus for today’s theme' : 'Added to your balance'}</span></div>
         ${newPass ? `<div class="fb-pass"><b>🎟️ Cash Cup ticket earned!</b><span>Use it to enter a photo in today’s Daily Cash Cup. It expires at midnight.</span></div><button class="btn block kg2-go" id="fbCup">Collect & enter the Cash Cup</button><div style="text-align:center"><button class="link kg2-back" id="fbMore">Challenge again</button></div>` : `<button class="btn block kg2-go" id="fbMore">Challenge again</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to Friends</button></div>`}`
-        : `<div class="kg2-next lose"><small>You lost</small><b>${stakeTxt(c.stake)}</b><span>Revenge needs a new photo: each photo can only face @${esc(c.f)} once</span></div><button class="btn block kg2-go" id="fbMore">Take revenge</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to Friends</button></div>`}`;
-    if (won) setTimeout(() => { if (c.stake.cur === 'cash') { cashExplosion(prize, { label: 'Friend challenge' }); paintWallet(); } else gemExplosion(prize + bonus, { label: 'Friend challenge' }); }, 300); else { paintGems(false); paintWallet(); }
+        : `<div class="kg2-next lose"><small>You lost</small><b>${stakeTxt(c.stake)}</b><span>Rematch @${esc(c.f)} with any photo</span></div><button class="btn block kg2-go" id="fbMore">Take revenge</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to Friends</button></div>`}`;
+    if (won) setTimeout(() => { if (c.stake.riv) { if (rivWon) cashExplosion(rivWon, { label: 'Rivalry pot' }); paintWallet(); } else if (c.stake.cur === 'cash') { cashExplosion(prize, { label: 'Friend challenge' }); paintWallet(); } else gemExplosion(prize + bonus, { label: 'Friend challenge' }); }, 300); else { paintGems(false); paintWallet(); }
+    $('#fb').insertAdjacentHTML('beforeend', `<button class="to-cash" data-tocash><span class="i">💵</span><span><b>${won ? 'You’ve got the eye. Win real cash' : 'Shake it off. Try a cash game'}</b><small>Play strangers in Compete · $1 tournaments up to $1,000</small></span><i>›</i></button>`);
     $('#fbMore').onclick = () => fcNew(c.f);
     if ($('#fbCup')) $('#fbCup').onclick = () => { closeSheet(); CXF = 'all'; openComps(); cxEnter(CX.find(x => x.id === 'daily')); };
     document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if (GV.tab === 'friends' && $('#panes').dataset.at === 'gallery') renderGallery(); });
@@ -7682,7 +7714,7 @@ function energy() { const now = Date.now(); if (S.en == null) { S.en = EN_MAX; S
   return S.en; }
 const enNext = () => { const l = Math.max(0, EN_MS - (Date.now() - (S.enAt || Date.now()))); return `${Math.floor(l / 60000)}:${String(Math.floor(l / 1000) % 60).padStart(2, '0')}`; };
 const enFullAt = () => { const e = energy(); if (e >= EN_MAX) return ''; const steps = Math.ceil((EN_MAX - e) / EN_STEP), t = new Date((S.enAt || Date.now()) + steps * EN_MS); return t.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); };
-const STK = [2, 4, 6]; // right in a row for ×2, ×5, ×10 (a box at each)
+const STK = [4, 6]; // boxes at 4 and 6 in a row (2 in a row just raises the multiplier) // right in a row for ×2, ×5, ×10 (a box at each)
 const streakX = c => c >= 6 ? 10 : c >= 4 ? 5 : c >= 2 ? 2 : 1;
 const jMult = () => energy() < 1 ? 0 : streakX(S.combo || 0);
 const stkPct = c => c <= 3 ? c / 3 * 33.33 : c <= 5 ? 33.33 + (c - 3) / 2 * 33.33 : Math.min(100, 66.67 + (c - 5) / 5 * 33.33); // boxes evenly spaced
@@ -7743,7 +7775,7 @@ function paintFlame() {
 }
 $('#sFlame').onclick = () => streakPop();
 // countdown on the Judge screen to the next pop: tournament or battle (they take turns every 7 votes)
-const METER = 300, METER_DAY = 2; // judging gems per free $1 entry; daily cap
+const METER = 100, METER_DAY = 2; // judging gems per free $1 entry; daily cap
 function meterAdd(n) { const day = new Date().toDateString(); if (S.mtrDay !== day) { S.mtrDay = day; S.mtrN = 0; }
   if ((S.mtrN || 0) >= METER_DAY) return; S.meterPts = (S.meterPts || 0) + n;
   while (S.meterPts >= METER && (S.mtrN || 0) < METER_DAY) { S.meterPts -= METER; S.mtrN = (S.mtrN || 0) + 1; S.cashTix = (S.cashTix || 0) + 1; window.__meterHit = 1; }
@@ -7775,7 +7807,7 @@ function renderJudge() {
       ${energy() < 1 ? `<div class="jf-en en-out"><span class="en-ic">⚡</span><span class="eo-t"><b>Out of energy</b><small class="en-nx">+5 ⚡ in ${enNext()}</small><small class="en-full">Full again at ${enFullAt()}</small></span><button id="enBuy">Refill</button></div>` : `<div class="jf-en"><div class="en-top"><span class="en-ic">⚡</span><span class="en-bar"><i style="width:${Math.min(100, energy() / EN_MAX * 100)}%"></i></span><span class="en-n">${energy() > EN_MAX ? `${EN_MAX}<small> +${energy() - EN_MAX}</small>` : `${energy()}/${EN_MAX}`}</span><button class="en-plus" id="enPlus" aria-label="Buy energy">+</button></div>
         ${(S.votes || 0) < 10 ? `<p class="en-new">Pick the photo you think most judges prefer. Right picks earn <b>+${CFG.VOTE} 💎</b>.</p>` : ''}
       </div>`}
-      <div class="stk" ${(S.votes || 0) < 10 ? 'hidden' : ''}><div class="stk-row"><span class="stk-lab" aria-label="Your wins are multiplied by your streak"><small>Wins</small><b class="stk-x">×${streakX(combo)}</b></span><div class="lkp-steps jf-combo stk-steps">${[...Array(6)].map((_, i) => `<i class="${i < Math.min(combo, 6) ? 'on' : ''} ${[1, 3, 5].includes(i) ? 'm m' + (i + 1) : ''}">${i === 1 ? '<u>🎁</u>×2' : i === 3 ? '<u>🎁</u>×5' : i === 5 ? '<u>🧰</u>×10' : ''}</i>`).join('')}</div></div></div>
+      <div class="stk"><div class="stk-row"><span class="stk-lab" aria-label="Your wins are multiplied by your streak"><small>Wins</small><b class="stk-x">×${streakX(combo)}</b></span><div class="lkp-steps jf-combo stk-steps">${[...Array(6)].map((_, i) => `<i class="${i < Math.min(combo, 6) ? 'on' : ''} ${[1, 3, 5].includes(i) ? 'm m' + (i + 1) : ''}">${i === 1 ? '×2' : i === 3 ? '<u>🎁</u>×5' : i === 5 ? '<u>🧰</u>×10' : ''}</i>`).join('')}</div></div></div>
     </div>
     <div class="vh" id="jRes" aria-live="polite"></div>
 `;
@@ -7834,7 +7866,7 @@ async function vote(pick) {
   energy(); const cost = hasEn ? 1 : 0; S.en = Math.max(0, S.en - cost); if (S.en < EN_MAX && S.en + cost >= EN_MAX) S.enAt = Date.now(); S.lastMult = mult || 1; setTimeout(paintEnergy, 0); const justEmpty = cost > 0 && S.en < 1;
   if (nudgeFrom == null) nudgeFrom = S.gems;
   S.votes++; S.since++; S.tSince = (S.tSince || 0) + 1; S.jIdx += 2; S.gems += earn; meterAdd(earn);
-  S.combo = agree ? (S.combo || 0) + 1 : 0; const shown = S.combo, comboHit = agree && S.votes > 10 && STK.includes(S.combo) ? ({ 2: 3, 4: 5, 6: 10 })[S.combo] : 0;
+  S.combo = agree ? (S.combo || 0) + 1 : 0; const shown = S.combo, comboHit = agree && STK.includes(S.combo) ? ({ 2: 3, 4: 5, 6: 10 })[S.combo] : 0;
   const drop = agree && S.votes > 10 && !comboHit && Math.random() < .04;
   const ds = dailyState(); ds.D.n++; ds.D.sn = (ds.D.sn || 0) + 1;
   let streakHit = 0;
@@ -7853,7 +7885,7 @@ async function vote(pick) {
   if (!agree && prevCombo >= 2) tr.insertAdjacentHTML('beforeend', `<span class="tot-x stk-lost">✕ ${prevCombo}-pick streak lost · back to ×1</span>`);
   if (near) tr.insertAdjacentHTML('beforeend', `<span class="tot-x nm">Crowd split ${mine}/${100 - mine}</span>`);
   if (enBack) tr.insertAdjacentHTML('beforeend', `<span class="tot-x en">⚡ +${enBack} energy back</span>`);
-  if ([1, 3, 5].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">1 more for ×${streakX(S.combo + 1)} + ${S.combo === 5 ? '🧰' : '🎁'}</span>`);
+  if ([1, 3, 5].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">1 more for ×${streakX(S.combo + 1)}${S.combo === 5 ? ' + 🧰' : S.combo === 3 ? ' + 🎁' : ''}</span>`);
   if (earn) setTimeout(() => gemExplosion(earn, { mid: true, from: mc }), tier > 1 ? 900 : 0);
   await sleep(tier === 20 ? 2800 : tier > 1 ? 2200 : 1900);
   if (window.__meterHit) { window.__meterHit = 0; renderJudge(); judging = false; if (typeof paintTixTag === 'function') paintTixTag(); ticketPop(); return; }
@@ -8661,6 +8693,13 @@ function tPrizeCard(n) {
 function tStats(label, time, n) {
   return `<div class="tk-st"><div><small>Entry</small><b>${money(T_FEE)}</b></div><div><small>${label}</small><b data-tmins>${time}</b></div></div><p class="tk-pj"><b data-tn>${n}</b> players joined</p>`;
 }
+// after a tournament loss: why you lost, and two ways back in (new photo or enhance)
+function whyLostHTML(T) {
+  if (T.out < 0) return ''; const M = T.rounds[T.out], p = S.photos.find(x => x.id === T.pid); if (!p || M.spec) return '';
+  const k = lowestOpen(p) || C.reduce((a, c) => (p.s[c.k] < p.s[a.k] ? c : a)).k, c = C.find(x => x.k === k), mine = p.s[k], theirs = Math.min(97, Math.max(mine + 9, p.s.total + 4));
+  return `<div class="tk-why"><b>Why you lost</b><p>@${esc(M.opp.h)}’s photo won on <b>${esc(c.name.toLowerCase())}</b>: ${theirs} vs your ${mine}.</p>
+    <div class="tw-b"><button id="twNew">📷 Try a new photo</button>${lowestOpen(p) ? `<button id="twEnh" data-k="${k}">✨ Enhance ${esc(c.short.toLowerCase())} · ${fixCost(p)} 💎</button>` : ''}</div></div>`;
+}
 function tRecap(T) { if (T.out < 0) return ''; const M = T.rounds[T.out];
   return `<div class="tk-rc"><small>Your last match · ${T.out === T_LAST ? 'Best in Show' : T_NAMES[T.out]}</small><div><span class="me"><img src="${T.src}" alt=""><b>You</b></span><em>${M.mv}<i>–</i>${M.ov}</em><span><img src="${M.opp.src}" alt=""><b>@${esc(M.opp.h)}</b></span></div><p>${M.ov - M.mv <= 4 ? `So close! Just ${M.ov - M.mv} vote${M.ov - M.mv === 1 ? '' : 's'} in it.` : `${M.ov} of ${T_VOTES} judges picked @${esc(M.opp.h)}.`}</p></div>`; }
 function tPyramid(T, at, out) {
@@ -8675,7 +8714,7 @@ function tPyramid(T, at, out) {
       ${done ? '<i class="py-k">✓</i>' : lost ? '<i class="py-k">✕</i>' : here ? `<img src="${T.src}" alt="">` : i === 4 ? '<i class="py-t">🏆</i>' : ''}
       <span>${l}${here ? `<small>${i === 4 ? 'Champion!' : 'You are here'}</small>` : ''}</span></div>`; }).join('')}</div></div>`;
 }
-function openTourney() {
+function openTourney() { { const nb = document.getElementById('sdNote'); if (nb) nb.classList.remove('on'); }
   const T = S.tour && !S.tour.seen ? S.tour : null;
   if (!T) {
     tArm(); const slot = tNext(), th = tTheme(slot), tn = thName(th), F = fighters();
@@ -8722,10 +8761,12 @@ function paintTourney() {
     body.innerHTML = `<h2 class="tk-h">🏆 Knockout Tournament</h2>
       <div class="tk-res ${won || R0.amt ? 'w tk-won' : 'tk-run'}"><b>${won ? '🏆 You won the tournament!' : R0.amt ? '🥈 You finished 2nd!' : `${R0.gems ? 'Great run!' : 'Good effort!'} You reached ${T_NAMES[T.out]}`}</b>
         ${R0.amt || R0.gems ? `<small>You won</small>${tWon(R0.amt, R0.gems)}` : `<span>Your ${money(T_FEE)} went into the prize pot</span>`}</div>
-      ${won ? '' : tRecap(T)}${won ? '' : `<p class="tk-champ">🏆 Champion: <b>@${esc(ch.h)}</b> won ${money(tPay('win', T.n))}</p>`}
+      ${won ? '' : tRecap(T)}${won ? '' : whyLostHTML(T)}${won ? '' : `<p class="tk-champ">🏆 Champion: <b>@${esc(ch.h)}</b> won ${money(tPay('win', T.n))}</p>`}
       ${tPyramid(T, won ? 4 : T.out, won ? -1 : T.out)}
       <button class="btn block kg-go tk-join" id="tkAgain">${(S.cash || 0) >= (T.fee || 1) ? `Rematch · next starts in ${tMins()}` : `Top up $5 & rematch · starts in ${tMins()}`}</button>
       <div style="text-align:center"><button class="link" data-shclose>Back to judging</button></div>`;
+    if ($('#twNew')) $('#twNew').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); go('studio'); pickPhoto(true); };
+    if ($('#twEnh')) $('#twEnh').onclick = () => { const p = S.photos.find(x => x.id === T.pid); if (!p) return; window.__pickRet = { label: 'Back to tournaments', go: () => { tArm(); openTourney(); } }; closeSheet(); startEnhance(p, $('#twEnh').dataset.k); };
     $('#tkAgain').onclick = () => { tTier(T.fee || 1); S.tour = null; save(); if ((S.cash || 0) < T_FEE) { quickPack(5, 500, 'Rematch top-up', () => openTourney()); return; } closeSheet(); openTourney(); };
     bind(); return;
   }
