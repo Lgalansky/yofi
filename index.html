@@ -4806,6 +4806,11 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .stopc.crb.hp{gap:6px;padding:6px 12px!important;min-height:40px}.hp-t{font:800 .78rem Inter,sans-serif;color:#E6DDF5;white-space:nowrap}
 .stopc.crb.hp.zero0{background:transparent!important;box-shadow:inset 0 0 0 1px #3A2760!important;padding:6px 10px!important;min-height:32px;opacity:.7}.stopc.crb.hp.zero0 .hp-d i{width:8px;height:8px}.hp-i svg{width:20px;height:20px;color:#fff;display:block}.hp-d{display:flex;gap:4px}.hp-d i{width:11px;height:11px;border-radius:50%;background:#2A1A46;box-shadow:inset 0 0 0 1.5px #6A4FA0}.hp-d i.on{background:#FFC93C;box-shadow:0 0 6px rgba(255,201,60,.7)}
 .stopc.crb.hp.in{background:#0E3A2A!important;box-shadow:inset 0 0 0 1.5px #2EE59D!important}.hp-ok{font:900 1.05rem 'Bricolage Grotesque',sans-serif;color:#2EE59D;white-space:nowrap}.stopc.crb.hp small{font-size:.7rem;font-weight:800;color:#7CF5C4}
+.bcc-ld{margin-left:auto;display:flex;align-items:center;gap:4px;padding-left:8px;border-left:1.5px solid #4A2F78;flex:none}.bcc-ld .crw-ic{width:22px;height:17px}.bcc-ld b{font:900 1rem 'Bricolage Grotesque',sans-serif!important;color:#fff}
+.bcc-sh{margin:2px 0 4px;font-size:.8rem;font-weight:800;color:#fff;text-align:center}.bcc-sh b{color:#2EE59D}
+.bcc-dt{display:flex;align-items:center;justify-content:center;gap:5px;margin:0 0 8px}.bcc-dt i{width:15px;height:15px;border-radius:50%;box-shadow:inset 0 0 0 2px #B89AF0}.bcc-dt i.on{background:#FFC93C;box-shadow:0 0 8px rgba(255,201,60,.7)}.bcc-dt b{margin-left:6px;font-weight:800;font-size:.9rem}
+.bcc-dt.in i.on{background:#2EE59D;box-shadow:0 0 8px rgba(46,229,157,.7)}.bcc-dt.in b{color:#2EE59D}
+.bcc-t{gap:6px!important}.bcc-t>b{font-size:clamp(.9rem,4vw,1.1rem)!important;min-width:0}.bcc-t>svg{width:20px!important;height:20px!important}.bcc-ld{padding-left:6px}.bcc-ld .crw-ic{width:18px;height:14px}.bcc-ld b{font-size:.92rem!important}
 </style>
 </head>
 <body>
@@ -8192,9 +8197,9 @@ function leagueHTML() {
   const L = lgS();
   return `<div class="bc-h"><span class="bc-t"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Daily cash pots · reset in <span data-wk>${dayLeft()}</span></span><button class="link bc-how" id="btRules">How it works</button></div>
     <div class="tcg">${CATS8.map(k => { const K = lgKing(k), me = K.me && K.n > 0, y = L.you[k] || 0, mp = lgMine(k), pr = Math.min(1, y / LG_SHARE);
-      return `<div class="bcc ${lgHold(k).h === 'you' ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b></div>
+      return `<div class="bcc ${lgHold(k).h === 'you' ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b><span class="bcc-ld" title="Top score today">${CRW}<b>${me ? 'You' : K.n}</b></span></div>
         <small class="bcc-l">Pot · pays midnight</small><b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
-        <p class="bcc-sc"><span class="t">${CRW}<b>${me ? 'You' : K.n}</b></span><i>•</i><span class="y">You <b>${y}</b></span></p>
+        <p class="bcc-sh">${y >= LG_SHARE ? `✓ You’re in · <b>${money(lgShare(k))}</b> so far` : `${LG_SHARE} points to share the pot`}</p><div class="bcc-dt ${y >= LG_SHARE ? 'in' : ''}">${[1, 2, 3, 4, 5].map(i => `<i class="${i <= y ? 'on' : ''}"></i>`).join('')}<b>${Math.min(y, LG_SHARE)}/${LG_SHARE}</b></div>
         <button class="bcc-ph" data-lgc="${k}" aria-label="${esc(crownName(k))} crown holder’s photo"><img src="${lgHold(k).h === 'you' && mp ? mp.src : lgPhoto(lgHold(k).h, k)}" alt="" loading="lazy"></button>
         ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? 'rev' : ''}" data-lgc="${k}">${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? '🔥 Take revenge' : `${VS_IC}Battle`}</button>` : `<button class="bcc-go up" data-lgc="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>
     <button class="bt-gem" id="btGem"><span>💎</span><span><b>Gem Battle</b><small>Practice for gems · no points at stake</small></span><i>›</i></button>`;
