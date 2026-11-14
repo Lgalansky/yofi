@@ -7253,7 +7253,7 @@ function walletSheet() {
     ${brk ? `<p class="w2-brk">You’re on a break until ${new Date(S.breakUntil).toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' })}. Deposits and cash games are paused.</p>` : ''}
     <h3 class="fcn-h">Deposit</h3><div class="f2-st w2-dep">${[10, 25, 50].map(x => `<button data-dep="${x}" ${brk || used + x > lim ? 'disabled' : ''}>$${x}</button>`).join('')}</div>
     <button class="w2-wd" data-wd>Withdraw ${money(S.cash || 0)}</button>
-    <p class="w2-note">${S.kyc ? '✓ Age and ID verified' : 'First deposit: quick age and ID check (19+)'}</p>
+    <p class="w2-note">Real-money play is 19+</p>
     <h3 class="fcn-h">Safer play</h3>
     <div class="w2-rg"><div class="row"><span>Daily deposit limit</span><b>${money(used)} of ${money(lim)}</b></div><div class="meter"><i style="width:${Math.min(100, used / lim * 100)}%"></i></div>
       <div class="w2-lim">${[25, 50, 100].map(x => `<button data-lim="${x}" aria-pressed="${x === lim}">$${x}/day</button>`).join('')}</div>
@@ -7269,7 +7269,9 @@ function walletSheet() {
   document.querySelectorAll('#sheetBody [data-lim]').forEach(b => b.onclick = () => { S.depLim = +b.dataset.lim; save(); walletSheet(); });
   if ($('#w2Brk')) $('#w2Brk').onclick = () => { S.breakUntil = Date.now() + 24 * 3600000; save(); walletSheet(); toast('Break started. See you tomorrow.'); };
 }
-function kycSheet(then) {
+function kycSheet(then) { S.kyc = true; save(); if (then) then(); return; // ID check switched off for now
+}
+function kycSheetOld(then) {
   openSheet(`<div class="kyc"><h2>Quick check before your first deposit</h2><p class="sub">Real-money play is for adults in Ontario. We check this once.</p>
     <label class="pgc-l" for="kDob">Date of birth</label><input id="kDob" class="pgc-in" type="date" value="1990-05-14">
     <label class="pgc-l" for="kProv">Where are you playing from?</label><select id="kProv" class="pgc-in"><option>Ontario</option><option>Another province</option></select>
