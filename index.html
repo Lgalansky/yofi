@@ -4811,6 +4811,7 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .bcc-dt{display:flex;align-items:center;justify-content:center;gap:5px;margin:0 0 8px}.bcc-dt i{width:15px;height:15px;border-radius:50%;box-shadow:inset 0 0 0 2px #B89AF0}.bcc-dt i.on{background:#FFC93C;box-shadow:0 0 8px rgba(255,201,60,.7)}.bcc-dt b{margin-left:6px;font-weight:800;font-size:.9rem}
 .bcc-dt.in i.on{background:#2EE59D;box-shadow:0 0 8px rgba(46,229,157,.7)}.bcc-dt.in b{color:#2EE59D}
 .bcc-t{gap:6px!important}.bcc-t>b{font-size:clamp(.9rem,4vw,1.1rem)!important;min-width:0}.bcc-t>svg{width:20px!important;height:20px!important}.bcc-ld{padding-left:6px}.bcc-ld .crw-ic{width:18px;height:14px}.bcc-ld b{font-size:.92rem!important}
+.bcc-dt b{margin:0!important;font:900 1.3rem 'Bricolage Grotesque',sans-serif!important;color:#FFC93C}.bcc-dt small{margin-left:4px;font-size:.78rem;color:#C9B4F5}.bcc-dt.in b{color:#2EE59D!important}
 </style>
 </head>
 <body>
@@ -8199,7 +8200,7 @@ function leagueHTML() {
     <div class="tcg">${CATS8.map(k => { const K = lgKing(k), me = K.me && K.n > 0, y = L.you[k] || 0, mp = lgMine(k), pr = Math.min(1, y / LG_SHARE);
       return `<div class="bcc ${lgHold(k).h === 'you' ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b><span class="bcc-ld" title="Top score today">${CRW}<b>${me ? 'You' : K.n}</b></span></div>
         <small class="bcc-l">Pot · pays midnight</small><b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
-        <p class="bcc-sh">${y >= LG_SHARE ? `✓ You’re in · <b>${money(lgShare(k))}</b> so far` : `${LG_SHARE} points to share the pot`}</p><div class="bcc-dt ${y >= LG_SHARE ? 'in' : ''}">${[1, 2, 3, 4, 5].map(i => `<i class="${i <= y ? 'on' : ''}"></i>`).join('')}<b>${Math.min(y, LG_SHARE)}/${LG_SHARE}</b></div>
+        <p class="bcc-sh">${y >= LG_SHARE ? `✓ You’re in · <b>${money(lgShare(k))}</b> so far` : `${LG_SHARE} points to share the pot`}</p><div class="bcc-dt ${y >= LG_SHARE ? 'in' : ''}"><b>${Math.min(y, LG_SHARE)}/${LG_SHARE}</b><small>points</small></div>
         <button class="bcc-ph" data-lgc="${k}" aria-label="${esc(crownName(k))} crown holder’s photo"><img src="${lgHold(k).h === 'you' && mp ? mp.src : lgPhoto(lgHold(k).h, k)}" alt="" loading="lazy"></button>
         ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? 'rev' : ''}" data-lgc="${k}">${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? '🔥 Take revenge' : `${VS_IC}Battle`}</button>` : `<button class="bcc-go up" data-lgc="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>
     <button class="bt-gem" id="btGem"><span>💎</span><span><b>Gem Battle</b><small>Practice for gems · no points at stake</small></span><i>›</i></button>`;
