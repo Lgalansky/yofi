@@ -4524,6 +4524,11 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .w2-dep{grid-template-columns:repeat(3,1fr)!important}
 .w2-wd{width:100%;margin-top:10px;padding:11px 0;border:0;border-radius:999px;font-weight:800;color:#fff;cursor:pointer;background:#24163F;box-shadow:inset 0 0 0 1.5px #4A2F78}
 #frDot{display:none!important}
+.mtr{margin-top:10px;padding:10px 12px;border-radius:14px;background:#1C1233;box-shadow:inset 0 0 0 1.5px #2EE59D}
+.mtr-h{display:flex;justify-content:space-between;gap:8px;font-size:.85rem;color:#C9B4F5}.mtr-h b{color:#fff}.mtr-n b{color:#2EE59D;font-variant-numeric:tabular-nums}
+.mtr-bar{margin-top:6px;height:10px;border-radius:999px;background:#3A2760;overflow:hidden}.mtr-bar i{display:block;height:100%;background:linear-gradient(90deg,#7CF5C4,#2EE59D);transition:width .5s}
+.mtr-b{margin:8px 0 0;font-size:.82rem;font-weight:700;color:#FFE27A}
+.myp-bst{display:block;margin-bottom:4px;color:#FFE27A}.myp-bst b{color:#FFE27A!important}
 </style>
 </head>
 <body>
@@ -6074,7 +6079,7 @@ function bindShop(onBuy) {
 // tapping your gems shows what they can do for you now; the + still opens the shop
 function gemIdeas() {
   const I = [], can = p => !photoLock(p) && lowestOpen(p), cn = p => p.cat && p.cat !== 'any' ? pcatName(p.cat) + ' ' : '';
-  if (fighters().length) I.push({ ic: '🎟️', t: 'Free cash entry', d: `Play a <b>$1</b> tournament or cash battle for free. Win <b>real cash</b>.${(S.cashTix || 0) ? ` You have ${S.cashTix}.` : ''}`, cost: TIX_GEMS, src: (fighters()[0] || {}).src, go: buyTicket });
+  if (0) I.push({ ic: '🎟️', t: 'Free cash entry', d: `Play a <b>$1</b> tournament or cash battle for free. Win <b>real cash</b>.${(S.cashTix || 0) ? ` You have ${S.cashTix}.` : ''}`, cost: TIX_GEMS, src: (fighters()[0] || {}).src, go: buyTicket });
   const u70 = S.photos.filter(p => p.s.total < CFG.QUALIFY && can(p)).sort((a, b) => b.s.total - a.s.total)[0];
   const up = u70 || S.photos.filter(p => can(p) && nextLvl(p.s.total)).sort((a, b) => (nextLvl(a.s.total).at - a.s.total) - (nextLvl(b.s.total).at - b.s.total))[0];
   if (up) { const L = up.s.total < CFG.QUALIFY ? null : nextLvl(up.s.total), gap = (L ? L.at : CFG.QUALIFY) - up.s.total;
@@ -6098,10 +6103,10 @@ function gemNudge(force) {
   // pops each time judging takes you past a new 100 gems (at most every 15 votes), or on opening the app with 150+
   if (!S.user || S.gems < 100 || (S.votes || 0) < 12 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return false;
   const mark = Math.floor(S.gems / 100) * 100;
-  const unlock = !S.tixUnlock && S.gems >= TIX_GEMS && fighters().length;
+  const unlock = false;
   if (!force && !unlock && (mark <= (S.gnMark || 0) || (S.votes || 0) - (S.gnVote || 0) < 15)) return false;
   // first time you can afford a ticket: a dedicated unlock pop
-  if (!S.tixUnlock && S.gems >= TIX_GEMS && fighters().length) { S.tixUnlock = 1; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow();
+  if (false) { S.tixUnlock = 1; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow();
     celebrate({ src: (fighters()[0] || {}).src || '', score: '🎟️', title: 'Free cash entry unlocked!', text: `Swap <b>${TIX_GEMS} ⭐</b> for a free <b>$1</b> tournament or cash battle. <b>Win real money</b> without spending a cent.`, cta: '🎟️ Get my free entry', onCta: buyTicket, later: 'Save my gems', onLater: () => toast(`Tap your gems anytime to get a free entry`) });
     return true; }
   const I = gemIdeas(); if (!I.length) return false; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow(); const x = I.find(i => S.gems >= i.cost) || I[0];
@@ -7898,6 +7903,10 @@ function paintFlame() {
 }
 $('#sFlame').onclick = () => streakPop();
 // countdown on the Judge screen to the next pop: tournament or battle (they take turns every 7 votes)
+const METER = 500; // judging points per free $1 entry
+function meterAdd(n) { S.meterPts = (S.meterPts || 0) + n; while (S.meterPts >= METER) { S.meterPts -= METER; S.cashTix = (S.cashTix || 0) + 1; window.__meterHit = 1; } }
+function meterHTML() { if (!S.user || (S.votes || 0) < 10) return ''; const v = S.meterPts || 0, b = S.boosts || 0;
+  return `<div class="mtr"><div class="mtr-h"><span>🎟️ <b>Free $1 entry</b> at ${METER} ⭐</span><span class="mtr-n"><b data-mtr>${v}</b> / ${METER}</span></div><div class="mtr-bar"><i data-mtrb style="width:${v / METER * 100}%"></i></div>${b ? `<p class="mtr-b">🚀 ${b} prize boost${b > 1 ? 's' : ''} ready · +50% on your next tournament win</p>` : ''}</div>`; }
 function nextUp() {
   if (!S.user || !fighters().length || !tUnlocked()) return null;
   const left = Math.max(CFG.BATTLE_EVERY - (S.since || 0), 12 - (S.votes || 0), 1), done = CFG.BATTLE_EVERY - Math.min(CFG.BATTLE_EVERY, left);
@@ -7927,6 +7936,7 @@ function renderJudge() {
       </div>`}
       <div class="stk" ${(S.votes || 0) < 10 ? 'hidden' : ''}><div class="stk-row"><span class="stk-lab" aria-label="Your wins are multiplied by your streak"><small>Wins</small><b class="stk-x">×${streakX(combo)}</b></span><div class="lkp-steps jf-combo stk-steps">${[...Array(6)].map((_, i) => `<i class="${i < Math.min(combo, 6) ? 'on' : ''} ${[1, 3, 5].includes(i) ? 'm m' + (i + 1) : ''}">${i === 1 ? '<u>🎁</u>×2' : i === 3 ? '<u>🎁</u>×5' : i === 5 ? '<u>🧰</u>×10' : ''}</i>`).join('')}</div></div></div>
     </div>
+    ${meterHTML()}
     <div class="vh" id="jRes" aria-live="polite"></div>
 `;
   document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = e => { if (e.target.closest('.jrep')) return; if (Date.now() - SWIPED < 400) return; vote(+b.dataset.i); });
@@ -7983,14 +7993,14 @@ async function vote(pick) {
   const earn = !agree ? 0 : base + (live ? 5 : 0), enBack = 0;
   energy(); const cost = hasEn ? 1 : 0; S.en = Math.max(0, S.en - cost); if (S.en < EN_MAX && S.en + cost >= EN_MAX) S.enAt = Date.now(); S.lastMult = mult || 1; setTimeout(paintEnergy, 0); const justEmpty = cost > 0 && S.en < 1;
   if (nudgeFrom == null) nudgeFrom = S.gems;
-  S.votes++; S.since++; S.tSince = (S.tSince || 0) + 1; S.jIdx += 2; S.gems += earn;
+  S.votes++; S.since++; S.tSince = (S.tSince || 0) + 1; S.jIdx += 2; S.gems += earn; meterAdd(earn);
   S.combo = agree ? (S.combo || 0) + 1 : 0; const shown = S.combo, comboHit = agree && S.votes > 10 && STK.includes(S.combo) ? ({ 2: 3, 4: 5, 6: 10 })[S.combo] : 0;
   const drop = agree && S.votes > 10 && !comboHit && Math.random() < .04;
   const ds = dailyState(); ds.D.n++; ds.D.sn = (ds.D.sn || 0) + 1;
   let streakHit = 0;
   if (S.votes >= 10 && ds.D.sn >= 3 && !ds.D.got.includes(ds.si)) { ds.D.streak = (ds.D.last === ds.t || ds.D.last === ds.y) ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; ds.D.got.push(ds.si); streakHit = ds.D.streak; S.gems += STREAK_GEMS; paintFlame(); }
   save();
-  { const sx = document.querySelector('#judge .stk-x'); if (sx) sx.textContent = '×' + streakX(shown); const sf = document.querySelector('#judge .stk-fill'); if (sf) sf.style.width = stkPct(shown) + '%'; document.querySelectorAll('#judge .stk-m').forEach(m => { const on = shown >= +m.dataset.n; m.classList.toggle('pop', on && !m.classList.contains('on')); m.classList.toggle('on', on); }); } document.querySelectorAll('#judge .lkp-steps i').forEach((d, i) => { d.classList.toggle('on', i < Math.min(shown, 6)); d.classList.toggle('pop', comboHit && i === shown - 1); }); document.querySelectorAll('#judge .cmb-n').forEach(n => n.textContent = shown); document.querySelectorAll('#judge .cmb-nx').forEach(n => n.textContent = comboNext(shown)); 
+  { const mv = S.meterPts || 0, mn = document.querySelector('#judge [data-mtr]'), mb = document.querySelector('#judge [data-mtrb]'); if (mn) mn.textContent = mv; if (mb) mb.style.width = (mv / METER * 100) + '%'; } { const sx = document.querySelector('#judge .stk-x'); if (sx) sx.textContent = '×' + streakX(shown); const sf = document.querySelector('#judge .stk-fill'); if (sf) sf.style.width = stkPct(shown) + '%'; document.querySelectorAll('#judge .stk-m').forEach(m => { const on = shown >= +m.dataset.n; m.classList.toggle('pop', on && !m.classList.contains('on')); m.classList.toggle('on', on); }); } document.querySelectorAll('#judge .lkp-steps i').forEach((d, i) => { d.classList.toggle('on', i < Math.min(shown, 6)); d.classList.toggle('pop', comboHit && i === shown - 1); }); document.querySelectorAll('#judge .cmb-n').forEach(n => n.textContent = shown); document.querySelectorAll('#judge .cmb-nx').forEach(n => n.textContent = comboNext(shown)); 
   await sleep(680);
   const near = !agree && mine >= 42;
   const mc = document.querySelectorAll('#judge .tot-c')[pick], word = mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : near ? 'So close!' : mine >= 35 ? 'Close call' : 'Missed it';
@@ -8006,6 +8016,7 @@ async function vote(pick) {
   if ([1, 3, 5].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">1 more for ×${streakX(S.combo + 1)} + ${S.combo === 5 ? '🧰' : '🎁'}</span>`);
   if (earn) setTimeout(() => gemExplosion(earn, { mid: true, from: mc }), tier > 1 ? 900 : 0);
   await sleep(tier === 20 ? 2800 : tier > 1 ? 2200 : 1900);
+  if (window.__meterHit) { window.__meterHit = 0; renderJudge(); judging = false; if (typeof paintTixTag === 'function') paintTixTag(); ticketPop(); return; }
   if (!comboHit && tDue()) { renderJudge(); $('#judge').scrollTop = 0; judging = false; if (tPrompt()) { if (S.since >= CFG.BATTLE_EVERY - 1) S.since = Math.max(0, CFG.BATTLE_EVERY - 3); save(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; } }
   if (!comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.user && fighters().length) { S.frIntro = 1; S.since = 0; save(); renderJudge(); judging = false;
     const me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
@@ -8057,7 +8068,7 @@ function miniDrop(kind) {
     b.classList.add('shake');
     setTimeout(() => {
       b.classList.remove('shake'); b.classList.add('mine', 'bxpop'); b.innerHTML = lab(pz);
-      if (pz.k === 'g') S.gems += pz.n; else { S.cashTix = (S.cashTix || 0) + pz.n; if (typeof paintTixTag === 'function') paintTixTag(); } save(); if (typeof paintEnergy === 'function') paintEnergy();
+      if (pz.k === 'g') { S.gems += pz.n; meterAdd(pz.n); } else { S.cashTix = (S.cashTix || 0) + pz.n; if (typeof paintTixTag === 'function') paintTixTag(); } save(); if (typeof paintEnergy === 'function') paintEnergy();
       setTimeout(() => {
         c.querySelectorAll('.lk-box').forEach((x, j) => { if (j !== k) { x.classList.add('other'); x.innerHTML = lab(boxes[j]); } });
         const best = boxes.reduce((a, x, j) => (x.k === 'g' && x.n > (boxes[a].k === 'g' ? boxes[a].n : 0) ? j : a), k);
@@ -8071,7 +8082,7 @@ function miniDrop(kind) {
 function chestOpen() {
   // tap three times to crack it; the glow shows how rare it is
   const LM = S.lastMult || 1, c = $('#coach');
-  const R = [{ w: .5, k: 'common', n: 'Common', g: 250 }, { w: .3, k: 'rare', n: 'Rare', g: 400, t: 1 }, { w: .15, k: 'epic', n: 'Epic', g: 600, t: 1 }, { w: .05, k: 'legend', n: 'Legendary', g: 1000, c: 5 }];
+  const R = [{ w: .5, k: 'common', n: 'Common', g: 250 }, { w: .3, k: 'rare', n: 'Rare', g: 400, t: 1 }, { w: .15, k: 'epic', n: 'Epic', g: 600, b: 1 }, { w: .05, k: 'legend', n: 'Legendary', g: 1000, c: 5 }];
   let r = Math.random(), rar = R[0]; for (const x of R) { if (r < x.w) { rar = x; break; } r -= x.w; }
   const gems = rar.g * LM, ladder = ['common', 'rare', 'epic', 'legend'].slice(0, R.indexOf(rar) + 1);
   c.innerHTML = `<div class="crbox lucky md ch" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
@@ -8079,7 +8090,7 @@ function chestOpen() {
     <button class="ch-box" id="chBox" aria-label="Tap to crack the chest">🧰</button>
     <p class="md-tap" id="chTap">Tap 3 times to crack it open</p><div class="ch-taps"><i></i><i></i><i></i></div>
     <div id="chArea"></div>
-    <p class="md-odds">${R.map(x => `${x.n} ${Math.round(x.w * 100)}%`).join(' · ')} · Rare and Epic add a free entry · Legendary adds $5 cash</p></div>`;
+    <p class="md-odds">${R.map(x => `${x.n} ${Math.round(x.w * 100)}%`).join(' · ')} · Rare adds a free entry · Epic adds a +50% prize boost · Legendary adds $5 cash</p></div>`;
   c.classList.add('on', 'cr'); c.onclick = null;
   let taps = 0; const box = $('#chBox');
   box.onclick = () => {
@@ -8092,11 +8103,11 @@ function chestOpen() {
     setTimeout(() => {
       box.classList.add('open'); box.innerHTML = '✨';
       const shield = false;
-      S.gems += gems; if (rar.t) S.cashTix = (S.cashTix || 0) + rar.t; if (rar.c) { S.cash = +((S.cash || 0) + rar.c).toFixed(2); paintWallet(); } save(); paintTop(); if (typeof paintTixTag === 'function') paintTixTag(); if (typeof paintEnergy === 'function') paintEnergy();
+      S.gems += gems; meterAdd(gems); if (rar.b) S.boosts = (S.boosts || 0) + rar.b; if (rar.t) S.cashTix = (S.cashTix || 0) + rar.t; if (rar.c) { S.cash = +((S.cash || 0) + rar.c).toFixed(2); paintWallet(); } save(); paintTop(); if (typeof paintTixTag === 'function') paintTixTag(); if (typeof paintEnergy === 'function') paintEnergy();
       $('#chArea').innerHTML = `<span class="ch-rar r-${rar.k}">${rar.n} chest</span>
-        <div class="ch-items"><div class="ch-it" style="animation-delay:.1s"><b>+${gems}</b><small>⭐ points</small></div>${rar.t ? `<div class="ch-it" style="animation-delay:.45s"><b>🎟️</b><small>free $1 entry</small></div>` : ''}${rar.c ? `<div class="ch-it" style="animation-delay:.45s"><b>$${rar.c}</b><small>💵 real cash</small></div>` : ''}</div>
+        <div class="ch-items"><div class="ch-it" style="animation-delay:.1s"><b>+${gems}</b><small>⭐ points</small></div>${rar.t ? `<div class="ch-it" style="animation-delay:.45s"><b>🎟️</b><small>free $1 entry</small></div>` : ''}${rar.b ? `<div class="ch-it" style="animation-delay:.45s"><b>🚀 +50%</b><small>prize boost</small></div>` : ''}${rar.c ? `<div class="ch-it" style="animation-delay:.45s"><b>$${rar.c}</b><small>💵 real cash</small></div>` : ''}</div>
         <button class="bt-cta" id="chDone" style="animation:cpop .4s .8s both">Collect</button>`;
-      $('#chDone').onclick = () => { c.classList.remove('on', 'cr'); gemExplosion(gems, { label: `${rar.n} chest` }); if (rar.c) toast(`💵 $${rar.c} cash added`); else if (rar.t) toast('🎟️ Free $1 cash entry added'); };
+      $('#chDone').onclick = () => { c.classList.remove('on', 'cr'); gemExplosion(gems, { label: `${rar.n} chest` }); if (rar.b) toast('🚀 Prize boost ready: +50% on your next tournament win'); if (rar.c) toast(`💵 $${rar.c} cash added`); else if (rar.t) toast('🎟️ Free $1 cash entry added'); };
     }, 500);
   };
 }
@@ -8684,7 +8695,8 @@ function tPhase(T, now = Date.now()) {
   return { st: 'live', r, f: (t - r * T_ROUND) / T_ROUND };
 }
 const tChamp = T => { const L = T.rounds[T.rounds.length - 1]; return L.spec ? (L.aw ? L.a : L.b) : (L.win ? { h: 'You', src: T.src, me: true } : L.opp); };
-function tResult(T) { const won = T.out === -1 ? T_NAMES.length : T.out, gems = T_GEMS.slice(0, Math.min(won, T_GEMS.length)).reduce((a, b) => a + b, 0);
+function tResult(T) { const r = tResult0(T); if (T.boost && r.amt) { r.amt = +(r.amt * (1 + T.boost)).toFixed(2); r.boosted = true; } return r; }
+function tResult0(T) { const won = T.out === -1 ? T_NAMES.length : T.out, gems = T_GEMS.slice(0, Math.min(won, T_GEMS.length)).reduce((a, b) => a + b, 0);
   if (T.out === -1) return { k: 'win', place: '1st', amt: tPay('win'), gems }; if (T.out === T_LAST) return { k: 'final', place: '2nd', amt: tPay('final'), gems }; if (bigSpin(T) && T.out === T_LAST - 1) return { k: 'semi', place: 'semi-finalist', amt: tShare(T, 'semi'), gems }; if (bigSpin(T) && T.out === T_LAST - 2) return { k: 'quarter', place: 'last 8', amt: tShare(T, 'quarter'), gems }; return { k: 'out', place: '', amt: 0, gems }; }
 function tFinish(T) { if (T.paid) return; T.paid = true; const R0 = tResult(T); if (R0.amt) { S.cash = +((S.cash || 0) + R0.amt).toFixed(2); paintWallet(); } if (R0.gems) { S.gems += R0.gems; paintGems(); } save(); }
 const tOpen = () => $('#sheet').classList.contains('on') && !!document.querySelector('#sheetBody .tk');
@@ -8799,7 +8811,7 @@ function mysteryPop(T, done) {
   const tick = () => { el.textContent = '×' + vals[i++ % vals.length]; d *= 1.13; if (d < 420) setTimeout(tick, d); else land(); };
   const land = () => { el.textContent = '×' + T.mult; el.classList.add('land', big ? 'big' : 'ok');
     $('#crT').textContent = big ? `×${T.mult} JACKPOT TOURNAMENT!` : `×${T.mult} prize!`;
-    $('#mypT').innerHTML = big ? `<b>${money(T.fee * T.mult)}</b> prize pool, shared down to the last 8. Winner takes <b>${money(T.fee * T.mult * .7)}</b>` : `Win it and you take <b>${money(T.fee * T.mult)}</b>`; const g = $('#crGo'); g.disabled = false;
+    $('#mypT').innerHTML = (T.boost ? `<span class="myp-bst">🚀 +50% boost: win up to <b>${money(T.fee * T.mult * (big ? .7 : 1) * 1.5)}</b></span>` : '') + (big ? `<b>${money(T.fee * T.mult)}</b> prize pool, shared down to the last 8. Winner takes <b>${money(T.fee * T.mult * .7)}</b>` : `Win it and you take <b>${money(T.fee * T.mult)}</b>`); const g = $('#crGo'); g.disabled = false;
     g.onclick = () => { c.classList.remove('on', 'cr'); done && done(); }; };
   setTimeout(tick, 200);
 }
@@ -8807,7 +8819,7 @@ function tPrizeCard(n) {
   const m = tMult();
   return `<div class="tk-pc myst"><span class="tk-gb">🎰 Mystery prize</span>
     <div class="tk-pr">${MEDAL(1)}<b>Winner</b>${m ? `<em data-tw>${money(tPay('win', n))}</em>` : `<em class="rng">${money(T_FEE * 10).replace('.00', '')}–${money(T_FEE * 1000).replace('.00', '')}</em>`}</div>
-    ${m ? `<p class="myx">Your spin: <b>×${m}</b></p>` : `<p class="myx">A spin sets the winner’s prize when you join: usually <b>×10</b>, up to <b>×1,000</b> your entry</p>`}
+    ${m ? `<p class="myx">Your spin: <b>×${m}</b>${S.tour.boost ? ' · 🚀 <b>+50% boost</b> on your winnings' : ''}</p>` : `<p class="myx">A spin sets the winner’s prize when you join: usually <b>×10</b>, up to <b>×1,000</b> your entry</p>`}
     <div class="tk-pr f">${MEDAL(2)}<b>Finalist</b><em data-tf>${money(tPay('final', n))}</em></div>
     ${m && bigSpin(S.tour) ? `<div class="tk-pr f"><span class="tk-sx">3–4</span><b>Semi-finalists</b><em>${money(tShare(S.tour, 'semi'))} each</em></div><div class="tk-pr f"><span class="tk-sx">5–8</span><b>Last 8</b><em>${money(tShare(S.tour, 'quarter'))} each</em></div><p>Big spin: the prize is shared down to the last 8</p>` : `<p>${m ? 'Earlier round wins earn gems' : 'Spins of ×100+ pay the last 8 too'}</p>`}</div>`;
 }
@@ -8848,7 +8860,7 @@ function openTourney() {
     const po = { fits: fitsP, sel: tsel, cat: th, target: CFG.QUALIFY - 1, who: 'the', themeName: tn, backLabel: 'Back to the tournament', reopen: id => { window.__tSel = id; openTourney(); } };
     $('#tkPick').innerHTML = pickerHTML(po); const getSel = bindPicker(po);
     $('#tkGo').onclick = () => { const p = S.photos.find(x => x.id === getSel()); if (!p) { toast(`Add a ${tn.toLowerCase()} photo to enter.`); return; } if (p.s.total < CFG.QUALIFY) { toast(`This photo scores ${p.s.total}. Enhance it to ${CFG.QUALIFY}+ to enter.`); return; } if (Date.now() > slot) { toast(`That one has started. Next ${tn} tournament: ${ampm(slot + T_THEMES.length * 15 * 60000)}.`); return; }
-      payCash(T_FEE, 'The tournament', () => { const t = tNew(p); t.theme = th; t.lastKey = 'lobby'; t.mult = mystRoll(); save(); closeSheet(); mysteryPop(t, () => openTourney()); }); };
+      payCash(T_FEE, 'The tournament', () => { const t = tNew(p); t.theme = th; t.lastKey = 'lobby'; t.mult = mystRoll(); if (S.boosts) { S.boosts--; t.boost = .5; } save(); closeSheet(); mysteryPop(t, () => openTourney()); }); };
     return;
   }
   openSheet(`<div class="kg tk"><div id="tkBody"></div></div>`, { full: true, cover: true });
