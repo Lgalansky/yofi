@@ -4751,6 +4751,11 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .cw-feed{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}.cw-feed p{margin:0;padding:8px 12px;border-radius:12px;background:#1E1236;font-size:.88rem}.cw-feed small{float:right;margin-left:8px;color:#8E7BB5}
 .cw-opp{display:flex;gap:6px;overflow-x:auto;margin:0 0 10px;scrollbar-width:none}.cw-opp button{flex:none;display:flex;align-items:center;gap:6px;padding:5px 12px 5px 5px;border:0;border-radius:999px;font:700 .85rem Inter,sans-serif;color:#fff;cursor:pointer;background:#24163F;box-shadow:inset 0 0 0 1.5px #4A2F78}.cw-opp button[aria-pressed=true]{box-shadow:inset 0 0 0 2px #FFC93C}
 .cwn-s{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}.cwn-s button{padding:6px 12px;border:0;border-radius:999px;font:700 .85rem Inter,sans-serif;color:#E6DDF5;cursor:pointer;background:#24163F;box-shadow:inset 0 0 0 1.5px #4A2F78}
+.rv-why{padding:12px 14px;border-radius:16px;background:#24163F;box-shadow:inset 0 0 0 1.5px #FF3FA4}.rv-why small{font-size:.72rem;font-weight:800;text-transform:uppercase;color:#FF9FCF}.rv-why p{margin:2px 0 8px}.rv-why p b{color:#FFC93C}
+.rv-bar{display:grid;grid-template-columns:70px 1fr 30px;align-items:center;gap:8px;margin-top:4px;font-size:.85rem}.rv-bar span{color:#C9B4F5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rv-bar>i{height:8px;border-radius:999px;background:#3A2760;overflow:hidden}.rv-bar>i>i{display:block;height:100%;background:#FFC93C}.rv-bar.me>i>i{background:#FF3FA4}.rv-bar b{text-align:right}
+.rv-op{display:flex;align-items:center;gap:12px;width:100%;margin-bottom:8px;padding:12px 14px;border:0;border-radius:16px;text-align:left;color:#fff;font:inherit;cursor:pointer;background:#1E1236;box-shadow:inset 0 0 0 1.5px #4A2F78}.rv-op>span:first-child{font-size:1.4rem}.rv-op b{display:block}.rv-op small{color:#C9B4F5;font-size:.82rem}.rv-op em{margin-left:auto;display:flex;align-items:center;gap:4px;font-style:normal;font-weight:800;white-space:nowrap}.rv-op em svg,.rv-op em img{width:18px;height:18px}
+#rvEnh{box-shadow:inset 0 0 0 2px #FFC93C}.rv-sw{display:flex;gap:8px;overflow-x:auto;margin:-2px 0 10px}.rv-sw button{position:relative;flex:none;width:72px;height:90px;padding:0;border:0;border-radius:12px;overflow:hidden;cursor:pointer;background:#24163F}.rv-sw img{width:100%;height:100%;object-fit:cover}.rv-sw i{position:absolute;left:4px;bottom:4px;padding:0 6px;border-radius:999px;font-style:normal;font-weight:800;font-size:.75rem;background:rgba(20,8,40,.8)}.rv-sw button[aria-pressed=true]{box-shadow:0 0 0 3px #FF3FA4}.rv-new{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;box-shadow:inset 0 0 0 2px #8B3CFF}.rv-new b{font-size:1.6rem}
+.rv-sw[hidden]{display:none!important}.rv-go{background:linear-gradient(95deg,#FF7A3C,#FF3FA4)!important}
 </style>
 </head>
 <body>
@@ -8145,7 +8150,7 @@ function lgCat(k) {
   const getPhoto = () => { closeSheet(); if (lowP) { S.cur = lowP.id; save(); WALL = false; go('studio'); renderStudio(); toast(`Enhance it to ${CFG.QUALIFY}+, then come back to battle`); return; }
     addCatPhoto(k); };
   if ($('#lgUp')) $('#lgUp').onclick = getPhoto;
-  if ($('#lgQuick')) $('#lgQuick').onclick = () => { if (mine) { lgPay(() => lgFight(k, near.h, !iHold)); return; } if (!lowP) { getPhoto(); return; } const cn = crownName(k).toLowerCase();
+  if ($('#lgQuick')) $('#lgQuick').onclick = () => { if (mine) { if (!iHold && (H.hist || [])[0] === 'you') { revengePrep(null, k, H.h); return; } lgPay(() => lgFight(k, near.h, !iHold)); return; } if (!lowP) { getPhoto(); return; } const cn = crownName(k).toLowerCase();
     celebrate(lowP ? { src: lowP.src, score: lowP.s.total, title: 'Enhance first', text: `Your ${esc(cn)} photo scores <b>${lowP.s.total}</b>. Get it to <b>${CFG.QUALIFY}+</b> to battle @${esc(near.h)}.`, cta: '✨ Enhance my photo', onCta: getPhoto, later: 'Not now' }
       : { src: lgPhoto(near.h, k), score: VS_IC, title: `Add a ${cn} photo`, text: `You need a ${esc(cn)} photo scoring <b>${CFG.QUALIFY}+</b> to battle @${esc(near.h)}. Upload one, get your score, then come back.`, cta: '📷 Upload a photo', onCta: getPhoto, later: 'Not now' }); };
   if ($('#lgStudio')) $('#lgStudio').onclick = () => { closeSheet(); WALL = true; go('studio'); renderStudio(); };
@@ -8162,12 +8167,12 @@ function vsCountdown(o, then) {
   const n = d.querySelector('.fcd-n'), show = (t, ms, next) => setTimeout(() => { n.innerHTML = `<span class="${t === 'GO!' ? 'go' : ''}">${t}</span>`; next && next(); }, ms);
   show('2', 750, () => show('1', 750, () => show('GO!', 750, () => setTimeout(() => { d.remove(); then(); }, 550))));
 }
-function lgFight(k, h, isKing, revenge) {
-  const L = lgS(), P = L.pl.find(p => p.h === h), me = lgMine(k), cur = lgCurOf(), N = 30; if (!P || !me) return;
+function lgFight(k, h, isKing, revenge, pid) {
+  const L = lgS(), P = L.pl.find(p => p.h === h), me = S.photos.find(x => x.id === pid) || lgMine(k), cur = lgCurOf(), N = 30; if (!P || !me) return;
   const their = P.sc[k], pWin = Math.max(.2, Math.min(.8, .5 + (me.s.total - their) / 30)), won = Math.random() < pWin;
   const mv = won ? 16 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 5), tv = N - mv, src = lgPhoto(h, k), wasK = lgKing(k);
   // settle now
-  const g = won ? 1 : 0; let lost = 0; const H = lgHold(k), wasHolder = H.h === 'you'; let crownMsg = '';
+  const g = won ? (revenge ? 2 : 1) : 0; let lost = 0; const H = lgHold(k), wasHolder = H.h === 'you'; let crownMsg = '';
   if (won) { L.wins = (L.wins || 0) + 1; if (H.h === h) { takeCrown(k, 'you'); crownMsg = `👑 You took the ${esc(crownName(k))} crown! Your photo is on the card`; } else if (wasHolder) { H.def++; crownMsg = `👑 Crown defended · ${H.def} defence${H.def === 1 ? '' : 's'}`; } }
   else { if (wasHolder) { takeCrown(k, h); crownMsg = `👑 @${esc(h)} took your ${esc(crownName(k))} crown`; } else if (H.h === h) H.def++; }
   if (won) { L.you[k] = (L.you[k] || 0) + g; P.cr[k] = Math.max(0, P.cr[k] - 1); }
@@ -8180,7 +8185,7 @@ function lgFight(k, h, isKing, revenge) {
     const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>${isKing ? 'Crown battle' : wasHolder ? 'Crown defence' : revenge ? 'Revenge' : 'Battle'}</b><span></span></div><span class="kg2-cat">${gi(k)}${esc(crownName(k).toUpperCase())}</span>`;
     const vs = (a, b, done) => `<div class="kg2-vs du"><div class="kg2-ph king ${done && !won ? 'won' : ''}"><img src="${src}" alt="">${done && !won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div><b class="kg2-x">VS</b><div class="kg2-ph me ${done && won ? 'won' : ''}"><img src="${me.src}" alt="">${done && won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div></div>
       <div class="kg2-who du"><div class="king"><small>${isKing ? '👑 ' : ''}@${esc(h)}</small><b>${isKing ? 'Crown holder' : 'Challenger'}</b><strong id="lbT">${a}</strong><span>votes</span></div><div class="me"><small>You</small><b>Score ${me.s.total}</b><strong id="lbM">${b}</strong><span>votes</span></div></div>`;
-    openSheet(`<div class="kg2" id="lb">${head}<h2 class="kg2-h">You vs @${esc(h)}</h2><p class="kg2-sub">${isKing ? 'Win to take the crown' : wasHolder ? 'Win to keep your crown' : 'Win +1 point'} · lose −1 point</p><span class="kg2-live"><i></i>Live voting</span>${vs(0, 0, false)}
+    openSheet(`<div class="kg2" id="lb">${head}<h2 class="kg2-h">You vs @${esc(h)}</h2><p class="kg2-sub">${revenge ? '🔥 Revenge · win +2 points' : isKing ? 'Win to take the crown' : wasHolder ? 'Win to keep your crown' : 'Win +1 point'} · lose −1 point</p><span class="kg2-live"><i></i>Live voting</span>${vs(0, 0, false)}
       <div class="kg2-bar"><i id="lbTb" style="width:50%"></i><i id="lbMb" style="width:50%"></i></div><p class="kg2-n" id="lbV">0 of ${N} votes</p></div>`, { full: true, cover: true });
     let v = 0, m = 0; const seq = [...Array(N)].map((_, i) => i < mv); for (let i = N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [seq[i], seq[j]] = [seq[j], seq[i]]; }
     const iv = setInterval(() => {
@@ -8197,7 +8202,7 @@ function lgFight(k, h, isKing, revenge) {
         <div style="text-align:center"><button class="link kg2-back" data-shclose>Back to Battle</button></div>`;
       paintWallet();
       if ($('#lbMore')) $('#lbMore').onclick = () => lgCat(k);
-      if ($('#lbRev')) $('#lbRev').onclick = () => lgPay(() => lgFight(k, h, lgHold(k).h === h, true));
+      if ($('#lbRev')) $('#lbRev').onclick = () => revengePrep(null, k, h, me.id);
       document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery(); });
     }, 200);
   };
@@ -8211,7 +8216,7 @@ setInterval(() => {
   if (hk.length) { const k = hk[Math.floor(Math.random() * hk.length)], P = L.pl[Math.floor(Math.random() * L.pl.length)], me = lgMine(k), a = 16 + Math.floor(Math.random() * 3);
     takeCrown(k, P.h); if (L.you[k]) L.you[k]--; save(); paintTop(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery();
     celebrate({ src: lgPhoto(P.h, k), score: '👑', title: `@${P.h} took your ${crownName(k)} crown`, text: `Their photo beat your <b>${me.s.total}</b> ${esc(crownName(k).toLowerCase())} photo <b>${a}–${30 - a}</b>. Their photo is on the card now. Win it back?`,
-      cta: 'Revenge · $1', onCta: () => lgPay(() => lgFight(k, P.h, true, true)), later: 'Later' }); return; }
+      cta: 'Revenge · $1', onCta: () => revengePrep(null, k, P.h), later: 'Later' }); return; }
   const ks = CATS8.filter(k => (L.you[k] || 0) > 0 && lgMine(k)); if (!ks.length) { save(); return; }
   const k = ks[Math.floor(Math.random() * ks.length)], P = L.pl[Math.floor(Math.random() * L.pl.length)], me = lgMine(k), a = 16 + Math.floor(Math.random() * 3);
   L.you[k]--; P.cr[k]++; save(); paintTop(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery();
@@ -8304,13 +8309,34 @@ function crewCat(c, k, opp) {
     <button class="btn block lgs-go" id="cwFight">${c.rev[k] === o && c.hold[k] === o ? '🔥 Take revenge' : me ? `${VS_IC}Defend your crown` : c.hold[k] === o ? `${VS_IC}Battle for the crown` : `${VS_IC}Battle @${esc(o)}`} · $1</button>
     <p class="lgs-ent">${me ? 'Win to keep your crown' : 'Win to take the crown'} · 85¢ goes into the crew pot</p></div>`, { full: true, cover: true });
   document.querySelectorAll('#sheetBody [data-cwo]').forEach(b => b.onclick = () => crewCat(c, k, b.dataset.cwo));
-  $('#cwFight').onclick = () => lgPay(() => crewFight(c, k, o));
+  $('#cwFight').onclick = () => (c.rev[k] === o && c.hold[k] === o) ? revengePrep(c, k, o) : lgPay(() => crewFight(c, k, o));
 }
-function crewFight(c, k, h) {
-  const me = lgMine(k), N = 30, their = 72 + (hsh(h + k) % 16), won = Math.random() < Math.max(.2, Math.min(.8, .5 + (me.s.total - their) / 30));
+// Revenge isn't a plain rerun: see why you lost, then make your photo stronger or swap it
+function revengePrep(c, k, h, pid) {
+  const pool = S.photos.filter(p => fitsTheme(p, k) && p.s.total >= CFG.QUALIFY).sort((a, b) => b.s.total - a.s.total);
+  const p = S.photos.find(x => x.id === pid) || pool[0]; if (!p) { addCatPhoto(k); return; }
+  const weak = C.reduce((a, x) => (p.s[x.k] < p.s[a.k] ? x : a)), mine = p.s[weak.k], theirs = Math.min(97, mine + 8 + (hsh(h + weak.k) % 7)), canE = !photoLock(p) && lowestOpen(p);
+  const back = () => revengePrep(c, k, h, p.id), G = gemIcon('');
+  openSheet(`<div class="lgs fcn fcn2"><div class="f2-top"><div><h2>🔥 Revenge on @${esc(h)}</h2><p>${c ? esc(c.name) : 'Everyone'} · ${esc(crownName(k))} crown · win a revenge bonus</p></div><button class="f2-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="rv-why"><small>Why you lost</small><p>@${esc(h)}’s photo beat yours on <b>${esc(weak.name.toLowerCase())}</b></p>
+      <div class="rv-bar"><span>@${esc(h)}</span><i><i style="width:${theirs}%"></i></i><b>${theirs}</b></div><div class="rv-bar me"><span>You</span><i><i style="width:${mine}%"></i></i><b>${mine}</b></div></div>
+    <h3 class="fcn-h">Get stronger first</h3>
+    ${canE ? `<button class="rv-op" id="rvEnh"><span>✨</span><span><b>Enhance ${esc(weak.name.toLowerCase())}</b><small>Raise your ${p.s.total} photo, then come straight back</small></span><em>${fixCost(p)} ${G}</em></button>` : ''}
+    <button class="rv-op" id="rvSwap"><span>📷</span><span><b>Use a different photo</b><small>${pool.length > 1 ? `Pick one of your ${pool.length} ${esc(crownName(k).toLowerCase())} photos` : 'Upload a new one for this rematch'}</small></span><em>›</em></button>
+    <div class="rv-sw" id="rvList" hidden>${pool.map(x => `<button data-rvp="${x.id}" aria-pressed="${x.id === p.id}"><img src="${x.src}" alt=""><i>${x.s.total}</i></button>`).join('')}<button class="rv-new" id="rvNew"><b>+</b><small>New</small></button></div>
+    <div class="lgv"><div class="lgv-p"><img src="${lgPhoto(h, k)}" alt=""><b>@${esc(h)}</b></div><span class="lgv-x">VS</span><div class="lgv-p me"><img src="${p.src}" alt=""><b>You · ${p.s.total}</b></div></div>
+    <button class="btn block lgs-go rv-go" id="rvGo">🔥 Rematch now · $1</button><p class="lgs-ent">Win it for a <b>revenge bonus</b>${c ? ' of +25 ' + gemIcon('') : ': +2 points instead of +1'}. Same photos, same odds: make yours stronger to tip it your way.</p></div>`, { full: true, cover: true });
+  if ($('#rvEnh')) $('#rvEnh').onclick = () => { window.__pickRet = { label: 'Back to revenge', go: () => { closeFlow(); back(); } }; closeSheet(); startEnhance(p, weak.k); };
+  $('#rvSwap').onclick = () => { if (pool.length > 1) $('#rvList').hidden = !$('#rvList').hidden; else addCatPhoto(k); };
+  document.querySelectorAll('#sheetBody [data-rvp]').forEach(b => b.onclick = () => revengePrep(c, k, h, b.dataset.rvp));
+  if ($('#rvNew')) $('#rvNew').onclick = () => addCatPhoto(k);
+  $('#rvGo').onclick = () => lgPay(() => c ? crewFight(c, k, h, p.id, true) : lgFight(k, h, lgHold(k).h === h, true, p.id));
+}
+function crewFight(c, k, h, pid, rev) {
+  const me = S.photos.find(x => x.id === pid) || lgMine(k), N = 30, their = 72 + (hsh(h + k) % 16), won = Math.random() < Math.max(.2, Math.min(.8, .5 + (me.s.total - their) / 30));
   const mv = won ? 16 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 5), tv = N - mv, src = lgPhoto(h, k), cn = esc(crownName(k)), H = c.hold[k] || null; let msg = '';
   c.pot[k] = +((c.pot[k] || 0) + LG_CUT).toFixed(2);
-  if (won) { const L = lgS(); L.wins = (L.wins || 0) + 1; delete c.rev[k];
+  if (won) { const L = lgS(); L.wins = (L.wins || 0) + 1; delete c.rev[k]; if (rev) { S.gems += 25; setTimeout(() => { paintGems(); gemExplosion(25, { label: '🔥 Revenge bonus' }); }, 9500); }
     if (H !== 'you') { c.hold[k] = 'you'; c.since[k] = Date.now(); c.def[k] = 0; msg = `👑 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} crown!`; crewLog(c, `👑 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} crown`); }
     else { c.def[k] = (c.def[k] || 0) + 1; msg = `👑 Crown defended · ${c.def[k]} defence${c.def[k] === 1 ? '' : 's'}`; crewLog(c, `🛡️ You defended the ${cn} crown against @${esc(h)}`); } }
   else { c.rev[k] = h; if (H === 'you' || !H) { c.hold[k] = h; c.since[k] = Date.now(); c.def[k] = 0; msg = H ? `👑 @${esc(h)} took your ${cn} crown` : `👑 @${esc(h)} won the ${cn} crown`; crewLog(c, `👑 @${esc(h)} ${H ? 'took your' : 'won the'} ${cn} crown`); }
@@ -8320,7 +8346,7 @@ function crewFight(c, k, h) {
     const vs = (a, b, done) => `<div class="kg2-vs du"><div class="kg2-ph king ${done && !won ? 'won' : ''}"><img src="${src}" alt="">${done && !won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div><b class="kg2-x">VS</b><div class="kg2-ph me ${done && won ? 'won' : ''}"><img src="${me.src}" alt="">${done && won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div></div>
       <div class="kg2-who du"><div class="king"><small>@${esc(h)}</small><b>${esc(c.name)}</b><strong id="cbT">${a}</strong><span>votes</span></div><div class="me"><small>You</small><b>Score ${me.s.total}</b><strong id="cbM">${b}</strong><span>votes</span></div></div>`;
     const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>Crew battle</b><span></span></div><span class="kg2-cat">${gi(k)}${cn.toUpperCase()}</span>`;
-    openSheet(`<div class="kg2" id="cb">${head}<h2 class="kg2-h">You vs @${esc(h)}</h2><p class="kg2-sub">${esc(c.name)} · ${cn} crown</p><span class="kg2-live"><i></i>Live voting</span>${vs(0, 0, false)}<div class="kg2-bar"><i id="cbTb" style="width:50%"></i><i id="cbMb" style="width:50%"></i></div><p class="kg2-n" id="cbV">0 of ${N} votes</p></div>`, { full: true, cover: true });
+    openSheet(`<div class="kg2" id="cb">${head}<h2 class="kg2-h">You vs @${esc(h)}</h2><p class="kg2-sub">${esc(c.name)} · ${cn} crown${rev ? ' · 🔥 revenge bonus +25' : ''}</p><span class="kg2-live"><i></i>Live voting</span>${vs(0, 0, false)}<div class="kg2-bar"><i id="cbTb" style="width:50%"></i><i id="cbMb" style="width:50%"></i></div><p class="kg2-n" id="cbV">0 of ${N} votes</p></div>`, { full: true, cover: true });
     let v = 0, m = 0; const seq = [...Array(N)].map((_, i) => i < mv); for (let i = N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [seq[i], seq[j]] = [seq[j], seq[i]]; }
     const iv = setInterval(() => {
       if (!$('#cbV')) { clearInterval(iv); return; }
@@ -8332,7 +8358,7 @@ function crewFight(c, k, h) {
         <div class="kg2-next ${won ? 'win' : 'lose'}"><small>${cn} crew pot</small><b>${money(c.pot[k])}</b><span>${c.hold[k] === 'you' ? 'Yours if you hold the crown at Sunday midnight' : `@${esc(c.hold[k])} takes it if they still hold the crown on Sunday`}</span></div>
         <button class="btn block kg2-go" id="cbAgain">${won ? 'Battle again' : `🔥 Take revenge on @${esc(h)}`}</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to ${esc(c.name)}</button></div>`;
       paintWallet();
-      $('#cbAgain').onclick = () => won ? crewCat(c, k) : lgPay(() => crewFight(c, k, h));
+      $('#cbAgain').onclick = () => won ? crewCat(c, k) : revengePrep(c, k, h, me.id);
       document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'friends') renderGallery(); });
     }, 200);
   };
