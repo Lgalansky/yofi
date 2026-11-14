@@ -5597,7 +5597,7 @@ function cropTall(img) {
   return new Promise(done => {
     const W = img.naturalWidth, H = img.naturalHeight, ch = Math.round(W * 4 / 3);
     const el = document.createElement('div'); el.className = 'crp'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'crpT');
-    el.innerHTML = `<div class="crp-in"><h2 id="crpT">Crop your photo</h2><p>This photo is very tall. Drag the frame up or down to choose the part to keep.</p>
+    el.innerHTML = `<div class="crp-in"><h2 id="crpT">Crop your photo</h2><p>Photos need to fit the Yofi frame. Drag the frame up or down to choose the part to keep.</p>
       <div class="crp-st crp-v"><img src="${img.src}" alt="Your photo"><i class="crp-dim t"></i><i class="crp-dim b"></i><b class="crp-box" tabindex="0" aria-label="Crop frame. Use up and down arrow keys to move it"><span class="g"></span><span class="h">⇅</span></b></div>
       <button class="btn block" id="crpGo">Use this crop</button><button class="ceg-later" id="crpNo">Cancel</button></div>`;
     document.body.appendChild(el);
@@ -5628,6 +5628,11 @@ function pickPhoto(fromStudio) {
   if (S.photos.length >= CFG.MAX_PHOTOS) { makeRoom(fromStudio); return; }
   intakeFromStudio = !!fromStudio; $('#file').value = ''; $('#file').click();
 }
+// every photo is cropped to the app's photo shape before scoring
+async function fitCrop(img) { const r = img.naturalWidth / img.naturalHeight;
+  if (r > CFG.MAX_RATIO) return await cropPortrait(img);
+  if (r < 0.74) return await cropTall(img);
+  return img; }
 $('#file').addEventListener('change', async e => {
   const f = e.target.files && e.target.files[0]; if (!f) return;
   if ($('#ceg').classList.contains('on')) { $('#ceg').classList.remove('on', 'under'); $('#ceg').style.top = ''; clearInterval(window.__ceg); }
@@ -5635,8 +5640,7 @@ $('#file').addEventListener('change', async e => {
   const url = URL.createObjectURL(f);
   let img;
   try { img = await loadImg(url); } catch (err) { toast('This photo couldn’t be opened. Try a JPG or PNG.'); return; }
-  if (img.naturalWidth / img.naturalHeight > CFG.MAX_RATIO) { const cut = await cropPortrait(img); if (!cut) { URL.revokeObjectURL(url); return; } img = cut; }
-  else if (img.naturalWidth / img.naturalHeight < 0.62) { const cut = await cropTall(img); if (!cut) { URL.revokeObjectURL(url); return; } img = cut; }
+  img = await fitCrop(img); if (!img) { URL.revokeObjectURL(url); return; }
   $('#landing').style.display = 'none'; $('#app').classList.add('on'); paintGems(false);
   const id = toID(img, 960); URL.revokeObjectURL(url);
   const src = toURL(id);
@@ -7765,6 +7769,7 @@ $('#pkFile').addEventListener('change', async () => {
     const f = inp.files && inp.files[0]; if (!f) return;
     if (S.photos.length >= CFG.MAX_PHOTOS) { toast('Your studio is full. Remove a photo in Studio first.'); return; }
     const url = URL.createObjectURL(f); let img; try { img = await loadImg(url); } catch (e) { toast('This photo couldn’t be opened. Try a JPG or PNG.'); return; }
+    img = await fitCrop(img); if (!img) { URL.revokeObjectURL(url); inp.value = ''; return; }
     const id = toID(img, 960); URL.revokeObjectURL(url); const src = toURL(id);
     const row = $('#sheetBody .pk-row') || $('#sheetBody .pk-grid'); if (row) row.insertAdjacentHTML('afterbegin', `<div class="pk-scan"><img src="${src}" alt=""><span><i></i>Scoring…</span></div>`);
     await sleep(60); const sc = capUpload(Engine.score(Engine.analyze(id))); await sleep(1600);
