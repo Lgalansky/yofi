@@ -4823,6 +4823,11 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .yd-r.fr2.hd{background:linear-gradient(90deg,#3A2318,#2A1A2E);box-shadow:inset 3px 0 0 #FFC93C,inset 0 0 0 1.5px #5A4030}.yd-r.fr2.in{box-shadow:inset 3px 0 0 #2EE59D,inset 0 0 0 2px #2EE59D}
 .fr-st{grid-template-columns:repeat(5,1fr)!important}.fr-st button{white-space:nowrap;padding-left:2px!important;padding-right:2px!important;display:flex;align-items:center;justify-content:center;gap:3px}.fr-st button svg,.fr-st button img,.fr-st button .g{width:16px!important;height:16px!important;flex:none}
 .lgs-ent svg{width:14px;height:14px;vertical-align:-2px}
+.bf .f2-top h2{display:flex;align-items:center;gap:10px}.bf-ic svg{width:34px;height:34px;display:block}
+.bf-cat{padding:10px 16px;border-radius:16px;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3A2760;margin-top:12px}.bf-cat .f2-tg>span{display:flex;flex-direction:column;line-height:1.15}.bf-cat .f2-tg small{font-size:.75rem;color:#C9B4F5}.bf-cat .f2-tg b{font-size:1.1rem}.bf-cat .f2-tg svg{width:24px;height:24px;color:#FF5FA8}
+.bf-win{display:flex;align-items:center;gap:16px;margin:16px 0 0;padding:14px 18px;border-radius:18px;background:#1C1233;box-shadow:inset 0 0 0 2px #FFC93C}.bf-win .tr{font-size:2.6rem;line-height:1;flex:none}.bf-win .tr svg{width:44px;height:44px;color:#FFC93C}.bf-win .sep{width:1.5px;align-self:stretch;background:#8A6A1A}
+.bf-win>div{flex:1;text-align:center;display:flex;flex-direction:column;align-items:center}.bf-win small{font:800 1rem Inter,sans-serif;color:#fff}.bf-win b{font:900 2.4rem 'Bricolage Grotesque',sans-serif;color:#FFC93C;line-height:1.1;display:flex;align-items:center;gap:6px}.bf-win b svg{width:30px;height:30px}.bf-win span{font-size:.85rem;color:#C9B4F5}
+.bf-go{display:flex!important;align-items:center;justify-content:center;gap:10px;text-decoration:none;margin-top:16px}.bf-cap{text-align:center;margin:10px 4px 0;font-size:.85rem;color:#C9B4F5}.bf-cap svg{width:14px;height:14px;vertical-align:-2px}
 </style>
 </head>
 <body>
@@ -7971,8 +7976,8 @@ function rivHTML(f, k) { const R0 = frPot(k), lead = R0.last ? (R0.last === 'you
     <div class="riv-n"><div><small>Pot now</small><b>${money(R0.pot)}</b></div><div><small>Streak</small><b>${lead ? `${lead} · ${R0.streak} win` : 'All square'}</b></div><div><small>If you win 2 in a row</small><b>${money(R0.pot + (R0.last === 'you' ? add : 2 * add))}</b></div></div></div>`; }
 // One way to battle friends: Friends groups. Old entry points land here.
 function frGo(k, opp) { if ($('#flow').classList.contains('on')) closeFlow(); if ($('#sheet').classList.contains('on')) closeSheet();
-  GV.tab = 'friends'; frS(); go('gallery'); const c = crewCur(); if (!c) { crewCreate(); return; }
-  if (k && CATS8.includes(k)) crewCat(c, k, opp); else if (!c.members.length) crewInvite(c, true); }
+  GV.tab = 'friends'; frS(); go('gallery'); const c = crewCur(); if (!c || !c.members.length) { frDare(k); return; }
+  if (k && CATS8.includes(k)) crewCat(c, k, opp); }
 function fcNew(f0, keep) { frGo(keep && keep.th, f0 || (keep && keep.f)); }
 function fcNewOld(f0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPic(() => fcNew(f0, keep)); return; }
   const catOf = p => p && FC_THEMES.some(t => t[0] === p.cat) ? p.cat : 'any';
@@ -8358,6 +8363,45 @@ function crewCreate() {
   document.querySelectorAll('#sheetBody [data-cws]').forEach(b => b.onclick = () => { $('#cwName').value = b.dataset.cws; });
   $('#cwGo').onclick = () => { const n = ($('#cwName').value || '').trim() || 'My friends'; const c = newCrew(n); closeSheet(); openBattleTab(); GV.tab = 'friends'; renderGallery(); crewInvite(c); };
 }
+// "Battle a friend": the invite step when you have no mates in a friends group yet
+function frDare(k0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPic(() => frDare(k0, keep)); return; }
+  const CK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  const best = a => a.slice().sort((x, y) => y.s.total - x.s.total)[0];
+  let thOv = keep ? keep.th : (CATS8.includes(k0) ? k0 : null), sel = keep && keep.sel, catOpen = false, th = 'any';
+  if (!sel || !S.photos.some(p => p.id === sel)) sel = ((thOv && best(S.photos.filter(p => fitsTheme(p, thOv)))) || best(S.photos) || {}).id;
+  const catOf = p => p && CATS8.includes(p.cat) ? p.cat : 'any', G = gemIcon('');
+  const paint = () => { const gem = frGem(), st = frSt();
+    openSheet(`<div class="fcn fcn2 bf"><div class="f2-top"><div><h2><span class="bf-ic">${VS_IC}</span>Battle a friend</h2><p>Your photo. Their photo. One winner.</p></div><button class="f2-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <h3 class="fcn-h">Your photo</h3><div id="fcPick"></div>
+      <div class="f2-tag bf-cat" id="fcTag"></div><div class="fcn-chips f2-cat" id="fcCats" hidden></div>
+      <h3 class="fcn-h">Entry per player</h3>
+      <div class="riv-st fr-st bf-st" role="group" aria-label="Entry">${FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${!gem && x === st}">$${x}</button>`).join('')}<button data-frs="gem" aria-pressed="${gem}">${FR_GEM} ${G}</button></div>
+      <div class="bf-win"><span class="tr">${gem ? '🏆' : CRW}</span><span class="sep"></span><div id="bfWin"></div></div>
+      <a class="btn block fcn-go bf-go" id="bfGo" href="#" target="_blank" rel="noopener"><span class="fcs-wa">${WA_ICON}</span>Invite on WhatsApp</a>
+      <p class="bf-cap">They join your friends group free${gem ? ` and you both get <b>50 ${G}</b>` : ''}. The battle starts when they accept.</p></div>`, { full: true, cover: true });
+    document.querySelectorAll('#sheetBody [data-frs]').forEach(b => b.onclick = () => { S.frSt = b.dataset.frs === 'gem' ? 'gem' : +b.dataset.frs; save(); sel = po.sel; paint(); });
+    const po = { grid: true, fits: () => true, used: new Set(), usedBy: null, sel, cat: 'any', themeName: '', backLabel: 'Back to Battle a friend', reopen: id => frDare(null, { th: thOv, sel: id }), onSel: q => { if (q && q.id !== lastSel) { if (lastSel) thOv = null; lastSel = q.id; } setCat(); } }; let lastSel = sel;
+    const setCat = () => { const p = S.photos.find(x => x.id === po.sel); th = thOv || catOf(p); po.cat = th; const cn = crownName(th);
+      const tag = $('#fcTag'); if (tag) tag.innerHTML = p ? `<span class="f2-tg">${gi(th)}<span><small>Category</small><b>${esc(cn)}</b></span></span><button class="link f2-chg" id="fcChg">${catOpen ? 'Done' : 'Change ›'}</button>` : '';
+      const cats = $('#fcCats'); if (cats) { cats.hidden = !catOpen || !p; cats.innerHTML = CATS8.map(k => `<button data-ft="${k}" aria-pressed="${k === th}">${k === th ? gi(k) : ''}${esc(crownName(k))}${k === th ? `<i class="f2-tk">${CK}</i>` : ''}</button>`).join('');
+        cats.querySelectorAll('[data-ft]').forEach(b => b.onclick = () => { thOv = b.dataset.ft; catOpen = false; sel = po.sel; paint(); }); }
+      if ($('#fcChg')) $('#fcChg').onclick = () => { catOpen = !catOpen; setCat(); };
+      $('#bfWin').innerHTML = frGem() ? `<small>Winner takes all</small><b>${FR_GEM * 2} ${G}</b><span>${FR_GEM} each</span>`
+        : `<small>Winner takes the ${esc(cn)} crown</small><b>${money(.85 * frSt() * 2)}</b><span>$${frSt()} each into the friends pot · pays Sunday</span>`;
+      const link = `https://yofi.app/crew/${(crewCur() || { id: 'new000' }).id.slice(0, 6)}`, msg = `👑 Can you beat my ${cn} photo?${p ? ` My score: ${p.s.total}.` : ''} Battle me on Yofi for ${frLab()}: ${link}`;
+      $('#bfGo').href = 'https://wa.me/?text=' + encodeURIComponent(msg); };
+    $('#fcPick').innerHTML = pickerHTML(po); const getSel = bindPicker(po); setCat();
+    $('#bfGo').onclick = e => { const pid = getSel(); if (!pid) { e.preventDefault(); toast('Pick a photo, or upload one.'); return; }
+      const c = crewCur() || newCrew(S.user && S.user.h ? `${S.user.h}’s friends` : 'My friends');
+      c.dare = { k: th, pid, at: Date.now() }; e.currentTarget.href = e.currentTarget.href.replace('crew%2Fnew000', 'crew%2F' + c.id.slice(0, 6)); if (!c.pend || !c.pend.length) c.pend = CREW_POOL.filter(h => !c.members.includes(h)).slice(0, 2); c.joinAt = Date.now() + 8000; save();
+      setTimeout(() => { closeSheet(); GV.tab = 'friends'; go('gallery'); toast('✓ Invite sent. The battle starts when they accept.'); }, 300); };
+  };
+  paint(); }
+function dareAccepted(c, h) { const D = c.dare; if (!D) return; const k = D.k, gem = frGem();
+  if (gem) { S.gems += 50; save(); paintGems(); }
+  const me = S.photos.find(p => p.id === D.pid) || lgMine(k);
+  celebrate({ src: lgPhoto(h, k), score: VS_IC, title: `@${esc(h)} accepted!`, text: `Your <b>${esc(crownName(k))}</b> battle is on · ${frLab()} each.${gem ? ` You both got <b>${frLab()}</b> for joining.` : ''}`,
+    cta: `${VS_IC}Battle now`, onCta: () => { if (!me) { addCatPhoto(k); return; } frPay(() => crewFight(c, k, h, me.id)); }, later: 'Later' }); }
 function crewInvite(c, first) {
   const link = `https://yofi.app/crew/${c.id.slice(0, 6)}`, msg = `Join my Yofi friends group “${c.name}” 👑 Battle me for the crowns and the weekly pots: ${link}`;
   openSheet(`<div class="cwn"><h2>${first ? 'Invite your mates first' : `Invite to ${esc(c.name)}`}</h2><p class="sub">${first ? `Nobody has joined <b>${esc(c.name)}</b> yet. Send the invite and battle them when they join.` : 'Anyone who joins with this link is in your group and can battle anyone else in it.'}</p>
@@ -8400,7 +8444,7 @@ function bindCrews() {
 }
 function crewCat(c, k, opp) {
   const h = c.hold[k] || null, me = h === 'you', mine = lgMine(k), cn = crownName(k), others = c.members;
-  if (!others.length) { crewInvite(c, true); return; }
+  if (!others.length) { frDare(k); return; }
   if (!mine) { const low = S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0];
     if (low) { celebrate({ src: low.src, score: low.s.total, title: 'Enhance first', text: `Your ${esc(cn.toLowerCase())} photo scores <b>${low.s.total}</b>. Get it to <b>${CFG.QUALIFY}+</b> to battle.`, cta: '✨ Enhance my photo', onCta: () => { S.cur = low.id; save(); WALL = false; go('studio'); renderStudio(); }, later: 'Not now' }); return; }
     addCatPhoto(k); return; }
@@ -8482,7 +8526,7 @@ function crewFight(c, k, h, pid, rev) { const gem = frGem(), st = gem ? 0 : frSt
 setInterval(() => {
   if (!S || !S.user || !S.crews || !S.crews.length) return; let ch = false;
   S.crews.forEach(c => {
-    if (c.pend && c.pend.length && Date.now() >= (c.joinAt || 0)) { const h = c.pend.shift(); c.members.push(h); c.joinAt = Date.now() + 12000; crewLog(c, `👋 @${esc(h)} joined the group`); toast(`👋 @${h} joined ${c.name}`); ch = true; }
+    if (c.pend && c.pend.length && Date.now() >= (c.joinAt || 0)) { const h = c.pend.shift(); c.members.push(h); c.joinAt = Date.now() + 12000; crewLog(c, `👋 @${esc(h)} joined the group`); toast(`👋 @${h} joined ${c.name}`); ch = true; if (c.dare && !c.dare.done) { c.dare.done = 1; setTimeout(() => dareAccepted(c, h), 700); } }
     if (c.members.length >= 2 && Date.now() >= (c.actAt || 0)) { c.actAt = Date.now() + 25000 + Math.random() * 20000;
       if (c.actAt && Math.random() < .5) return;
       const k = CATS8[Math.floor(Math.random() * CATS8.length)], H = c.hold[k] || null, pool = c.members.filter(x => x !== H), a = pool[Math.floor(Math.random() * pool.length)];
