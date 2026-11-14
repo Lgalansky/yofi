@@ -4792,6 +4792,15 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .chtx{min-width:16px;text-align:center}
 .bt .bc-h .bc-t{display:none}.bt .bc-h{margin-top:-4px}
 .td-sp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 10px}.td-sp div{padding:10px 4px;border-radius:14px;text-align:center;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760}.td-sp b{display:block;font:900 1.4rem 'Bricolage Grotesque',sans-serif;color:#FFC93C}.td-sp small{font-size:.72rem;color:#C9B4F5}
+.yd h2{margin:0 0 10px}.yd-sum{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px}.yd-sum div{padding:12px 6px;border-radius:16px;text-align:center;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760}
+.yd-sum b{display:block;font:900 1.3rem 'Bricolage Grotesque',sans-serif;color:#fff;white-space:nowrap}.yd-sum small{font-size:.72rem;color:#C9B4F5}.yd-sum .hot{box-shadow:inset 0 0 0 2px #2EE59D}.yd-sum .hot b{color:#2EE59D}
+.yd-how{margin:12px 2px;font-size:.85rem;color:#C9B4F5}.yd-how b{color:#fff}.yd-k i{display:inline-block;width:12px;height:12px;border-radius:50%;background:#FFC93C;vertical-align:-1px}
+.yd-l{display:flex;flex-direction:column;gap:6px}.yd-r{display:grid;grid-template-columns:1fr auto 74px;align-items:center;gap:10px;padding:10px 12px;border:0;border-radius:14px;color:#fff;font:inherit;text-align:left;cursor:pointer;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760}
+.yd-n{display:flex;align-items:center;gap:8px;min-width:0}.yd-n svg{width:20px;height:20px;flex:none}.yd-n b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.yd-n em{font-style:normal}
+.yd-d{display:flex;gap:5px}.yd-d i{width:14px;height:14px;border-radius:50%;background:#2A1A46;box-shadow:inset 0 0 0 1.5px #5A3A8A}.yd-d i.on{background:#FFC93C;box-shadow:0 0 8px rgba(255,201,60,.6)}
+.yd-s{text-align:right;font-size:.8rem;color:#C9B4F5;white-space:nowrap}.yd-s b{color:#2EE59D;font-size:.9rem}
+.yd-r.in{box-shadow:inset 0 0 0 2px #2EE59D}.yd-r.in .yd-d i.on{background:#2EE59D;box-shadow:0 0 8px rgba(46,229,157,.6)}.yd-r.na{opacity:.6}
+.yd-fr{margin:12px 2px 0;padding:10px 12px;border-radius:14px;background:#1E1236;font-size:.85rem;color:#E6DDF5}
 </style>
 </head>
 <body>
@@ -8136,10 +8145,16 @@ function battleShell(inner) {
   return `<div class="bt"><div class="bt-hd"><h1>Battle for the crown</h1><p>Best photo in each category wins</p><span class="bt-pay">💰 ${fr ? `Friends pots pay <b>Sunday midnight</b> · ${weekLeft()} left` : `Pots pay at <b>midnight</b> · <span data-wk>${dayLeft()}</span> left`}</span></div><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Friends${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
 }
 function bindBattleShell() { document.querySelectorAll('#gallery [data-bv]').forEach(b => b.onclick = () => { GV.tab = b.dataset.bv; renderGallery(); $('#gallery').scrollTop = 0; }); }
-function todaySheet() { const L = lgS(), rows = CATS8.map(k => ({ k, y: L.you[k] || 0, h: lgHold(k).h === 'you' })).sort((a, b) => b.y - a.y);
-  openSheet(`<div class="ug"><h2>👑 ${L.wins || 0} crown${(L.wins || 0) === 1 ? '' : 's'} won today</h2><div class="td-sp"><div><b>${L.ewins || 0}</b><small>Everyone wins</small></div><div><b>${L.elost || 0}</b><small>Everyone losses</small></div><div><b>${L.fwins || 0}</b><small>Friends wins</small></div></div>
-    <p class="sub">Each <b>Everyone</b> win is <b>+1 point</b> in that category and each loss is <b>−1</b>. Reach <b>${LG_SHARE} points</b> to share its daily pot. <b>Friends</b> wins count toward your friends crowns and weekly pots, not these points.</p>
-    <div class="td-l">${rows.map(r => `<button class="td-r ${r.y >= LG_SHARE ? 'in' : ''}" data-tdk="${r.k}">${gi(r.k)}<b>${esc(crownName(r.k))}${r.h ? ' 👑' : ''}</b><span>${r.y} pt${r.y === 1 ? '' : 's'}</span><em>${r.y >= LG_SHARE ? `✓ In · ${money(lgShare(r.k))}` : `${LG_SHARE - r.y} more to share`}</em></button>`).join('')}</div></div>`);
+function todaySheet() { const L = lgS(), rows = CATS8.map(k => ({ k, y: L.you[k] || 0, h: lgHold(k).h === 'you', ok: !!lgMine(k) })).sort((a, b) => b.y - a.y || b.ok - a.ok);
+  const inP = rows.filter(r => r.y >= LG_SHARE), tot = inP.reduce((a, r) => a + lgShare(r.k), 0), held = rows.filter(r => r.h).length;
+  let fh = 0; try { (S.crews || []).forEach(c => CATS8.forEach(k => { if (c.hold[k] === 'you') fh++; })); } catch (e) {}
+  const dots = y => [1, 2, 3, 4, 5].map(i => `<i class="${i <= y ? 'on' : ''}"></i>`).join('');
+  openSheet(`<div class="ug yd"><h2>Your day</h2>
+    <div class="yd-sum"><div class="${inP.length ? 'hot' : ''}"><b>${inP.length ? money(tot) : '$0'}</b><small>${inP.length ? `in ${inP.length} pot${inP.length === 1 ? '' : 's'} so far` : 'not in a pot yet'}</small></div><div><b>👑 ${held + fh}</b><small>crowns you hold</small></div><div><b>⏱ ${dayLeft()}</b><small>until pots pay</small></div></div>
+    <p class="yd-how"><span class="yd-k"><i class="on"></i></span> = a point. Win a battle to fill a dot, lose one and it empties. <b>Fill all 5</b> to share that pot at midnight.</p>
+    <div class="yd-l">${rows.map(r => `<button class="yd-r ${r.y >= LG_SHARE ? 'in' : ''} ${r.ok ? '' : 'na'}" data-tdk="${r.k}"><span class="yd-n">${gi(r.k)}<b>${esc(crownName(r.k))}</b>${r.h ? '<em>👑</em>' : ''}</span>
+      <span class="yd-d">${dots(r.y)}</span><span class="yd-s">${r.y >= LG_SHARE ? `<b>✓ ${money(lgShare(r.k))}</b>` : r.ok ? `${LG_SHARE - r.y} to go` : 'Add photo'}</span></button>`).join('')}</div>
+    ${fh || L.fwins ? `<p class="yd-fr">👥 Friends: you hold <b>${fh}</b> friends crown${fh === 1 ? '' : 's'}${L.fwins ? ` · ${L.fwins} win${L.fwins === 1 ? '' : 's'} today` : ''}. Those pay on Sunday.</p>` : ''}</div>`);
   document.querySelectorAll('#sheetBody [data-tdk]').forEach(b => b.onclick = () => { closeSheet(); openBattleTab(); lgCat(b.dataset.tdk); }); }
 function openBattleTab() { GV.tab = 'battle'; lgS(); frS(); go('gallery'); }
 const lgInset = (mp, ks, k) => mp ? `${ks && mp.s.total > ks ? '<em class="tcc-beat">You can beat this</em>' : ''}<i class="tcc-me ${ks && mp.s.total > ks ? 'up' : ''}"><img src="${mp.src}" alt=""><b>You · ${mp.s.total}</b></i>`
