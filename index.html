@@ -4801,6 +4801,11 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .yd-s{text-align:right;font-size:.8rem;color:#C9B4F5;white-space:nowrap}.yd-s b{color:#2EE59D;font-size:.9rem}
 .yd-r.in{box-shadow:inset 0 0 0 2px #2EE59D}.yd-r.in .yd-d i.on{background:#2EE59D;box-shadow:0 0 8px rgba(46,229,157,.6)}.yd-r.na{opacity:.6}
 .yd-fr{margin:12px 2px 0;padding:10px 12px;border-radius:14px;background:#1E1236;font-size:.85rem;color:#E6DDF5}
+.yd-sw{margin:0 0 12px!important}.yd-grp{margin:0 0 8px;font-weight:800;color:#C9A8FF}
+.yd-r.fr{grid-template-columns:1fr auto 70px}.yd-h{font-size:.85rem;font-weight:700;color:#FFC93C;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis}.yd-s b.w{color:#fff}
+.stopc.crb.hp{gap:6px;padding:6px 12px!important;min-height:40px}.hp-t{font:800 .78rem Inter,sans-serif;color:#E6DDF5;white-space:nowrap}
+.stopc.crb.hp.zero0{background:transparent!important;box-shadow:inset 0 0 0 1px #3A2760!important;padding:6px 10px!important;min-height:32px;opacity:.7}.stopc.crb.hp.zero0 .hp-d i{width:8px;height:8px}.hp-i svg{width:20px;height:20px;color:#fff;display:block}.hp-d{display:flex;gap:4px}.hp-d i{width:11px;height:11px;border-radius:50%;background:#2A1A46;box-shadow:inset 0 0 0 1.5px #6A4FA0}.hp-d i.on{background:#FFC93C;box-shadow:0 0 6px rgba(255,201,60,.7)}
+.stopc.crb.hp.in{background:#0E3A2A!important;box-shadow:inset 0 0 0 1.5px #2EE59D!important}.hp-ok{font:900 1.05rem 'Bricolage Grotesque',sans-serif;color:#2EE59D;white-space:nowrap}.stopc.crb.hp small{font-size:.7rem;font-weight:800;color:#7CF5C4}
 </style>
 </head>
 <body>
@@ -5286,10 +5291,13 @@ function paintTop() {
   const tb = $('#sTix'); if (tb) { tb.hidden = true; tb.innerHTML = `🎟️<b>${S.user ? tix() : 0}</b>`; tb.setAttribute('aria-label', `${S.user ? tix() : 0} Cash Cup tickets`); }
   const b = $('#sTop'); if (!b) return;
   if (!S.user) { b.hidden = true; return; }
-  let n = 0, inP = 0; try { const L = lgS(); n = L.wins || 0; inP = CATS8.filter(k => (L.you[k] || 0) >= LG_SHARE).length; } catch (e) {}
-  b.hidden = false; b.className = 'stopc crb ' + (n ? 'has' : 'zero');
-  b.innerHTML = `<span class="crb-i">👑</span><b class="crb-n">${n}</b>${inP ? `<i class="crb-in">${inP} in</i>` : ''}`;
-  b.setAttribute('aria-label', `${n} crown${n === 1 ? '' : 's'} won today${inP ? `, in ${inP} pot${inP === 1 ? '' : 's'}` : ''}. See today`);
+  let html = '<span class="hp-d"><i></i><i></i><i></i><i></i><i></i></span>', lab = 'Your progress today', inn = false, zero = true;
+  try { const L = lgS(), rows = CATS8.map(k => ({ k, y: L.you[k] || 0 })), inP = rows.filter(r => r.y >= LG_SHARE);
+    if (inP.length) { const t = inP.reduce((a, r) => a + lgShare(r.k), 0); inn = true; zero = false; html = `<span class="hp-ok">✓ ${money(t)}</span>${inP.length > 1 ? `<small>${inP.length} pots</small>` : ''}`; lab = `In ${inP.length} pot${inP.length === 1 ? '' : 's'}, ${money(t)} so far`; }
+    else { const best = rows.filter(r => r.y > 0).sort((x, y) => y.y - x.y)[0];
+      if (best) { zero = false; html = `<span class="hp-i">${gi(best.k)}</span><span class="hp-d">${[1, 2, 3, 4, 5].map(i => `<i class="${i <= best.y ? 'on' : ''}"></i>`).join('')}</span>`; lab = `${crownName(best.k)}: ${best.y} of ${LG_SHARE} points`; } } } catch (e) {}
+  b.hidden = false; b.className = 'stopc crb hp ' + (inn ? 'in' : zero ? 'zero0' : '');
+  b.innerHTML = html; b.setAttribute('aria-label', lab + '. See your day');
 }
 function tierLockPop(f, mine) {
   const L = SCORE_LEVELS.find(x => x.fee === f), v = mine.s.total, gap = L.at - v, c = $('#coach');
@@ -8144,18 +8152,32 @@ function battleShell(inner) {
   const fr = GV.tab === 'friends';
   return `<div class="bt"><div class="bt-hd"><h1>Battle for the crown</h1><p>Best photo in each category wins</p><span class="bt-pay">💰 ${fr ? `Friends pots pay <b>Sunday midnight</b> · ${weekLeft()} left` : `Pots pay at <b>midnight</b> · <span data-wk>${dayLeft()}</span> left`}</span></div><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Friends${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
 }
-function bindBattleShell() { document.querySelectorAll('#gallery [data-bv]').forEach(b => b.onclick = () => { GV.tab = b.dataset.bv; renderGallery(); $('#gallery').scrollTop = 0; }); }
-function todaySheet() { const L = lgS(), rows = CATS8.map(k => ({ k, y: L.you[k] || 0, h: lgHold(k).h === 'you', ok: !!lgMine(k) })).sort((a, b) => b.y - a.y || b.ok - a.ok);
-  const inP = rows.filter(r => r.y >= LG_SHARE), tot = inP.reduce((a, r) => a + lgShare(r.k), 0), held = rows.filter(r => r.h).length;
-  let fh = 0; try { (S.crews || []).forEach(c => CATS8.forEach(k => { if (c.hold[k] === 'you') fh++; })); } catch (e) {}
+function bindBattleShell() { document.querySelectorAll('#gallery [data-bv]').forEach(b => b.onclick = () => { GV.tab = b.dataset.bv; renderGallery(); paintTop(); $('#gallery').scrollTop = 0; }); }
+function todaySheet(tab) { tab = tab || 'everyone';
+  const sw = `<div class="bt-sw yd-sw" role="tablist"><button role="tab" data-ydt="everyone" aria-selected="${tab === 'everyone'}">Everyone</button><button role="tab" data-ydt="friends" aria-selected="${tab === 'friends'}">Friends</button></div>`;
   const dots = y => [1, 2, 3, 4, 5].map(i => `<i class="${i <= y ? 'on' : ''}"></i>`).join('');
-  openSheet(`<div class="ug yd"><h2>Your day</h2>
-    <div class="yd-sum"><div class="${inP.length ? 'hot' : ''}"><b>${inP.length ? money(tot) : '$0'}</b><small>${inP.length ? `in ${inP.length} pot${inP.length === 1 ? '' : 's'} so far` : 'not in a pot yet'}</small></div><div><b>👑 ${held + fh}</b><small>crowns you hold</small></div><div><b>⏱ ${dayLeft()}</b><small>until pots pay</small></div></div>
+  let body = '';
+  if (tab === 'everyone') { const L = lgS(), rows = CATS8.map(k => ({ k, y: L.you[k] || 0, h: lgHold(k).h === 'you', ok: !!lgMine(k) })).sort((a, b) => b.y - a.y || b.ok - a.ok);
+    const inP = rows.filter(r => r.y >= LG_SHARE), tot = inP.reduce((a, r) => a + lgShare(r.k), 0), held = rows.filter(r => r.h).length;
+    body = `<div class="yd-sum"><div class="${inP.length ? 'hot' : ''}"><b>${inP.length ? money(tot) : '$0'}</b><small>${inP.length ? `in ${inP.length} pot${inP.length === 1 ? '' : 's'} so far` : 'not in a pot yet'}</small></div><div><b>👑 ${held}</b><small>crowns you hold</small></div><div><b>⏱ ${dayLeft()}</b><small>until pots pay</small></div></div>
     <p class="yd-how"><span class="yd-k"><i class="on"></i></span> = a point. Win a battle to fill a dot, lose one and it empties. <b>Fill all 5</b> to share that pot at midnight.</p>
     <div class="yd-l">${rows.map(r => `<button class="yd-r ${r.y >= LG_SHARE ? 'in' : ''} ${r.ok ? '' : 'na'}" data-tdk="${r.k}"><span class="yd-n">${gi(r.k)}<b>${esc(crownName(r.k))}</b>${r.h ? '<em>👑</em>' : ''}</span>
-      <span class="yd-d">${dots(r.y)}</span><span class="yd-s">${r.y >= LG_SHARE ? `<b>✓ ${money(lgShare(r.k))}</b>` : r.ok ? `${LG_SHARE - r.y} to go` : 'Add photo'}</span></button>`).join('')}</div>
-    ${fh || L.fwins ? `<p class="yd-fr">👥 Friends: you hold <b>${fh}</b> friends crown${fh === 1 ? '' : 's'}${L.fwins ? ` · ${L.fwins} win${L.fwins === 1 ? '' : 's'} today` : ''}. Those pay on Sunday.</p>` : ''}</div>`);
-  document.querySelectorAll('#sheetBody [data-tdk]').forEach(b => b.onclick = () => { closeSheet(); openBattleTab(); lgCat(b.dataset.tdk); }); }
+      <span class="yd-d">${dots(r.y)}</span><span class="yd-s">${r.y >= LG_SHARE ? `<b>✓ ${money(lgShare(r.k))}</b>` : r.ok ? `${LG_SHARE - r.y} to go` : 'Add photo'}</span></button>`).join('')}</div>`; }
+  else { const C = (typeof crewsS === 'function') ? crewsS() : [], c = (typeof crewCur === 'function') ? crewCur() : null;
+    if (!c) body = `<div class="cw-empty"><span>👥</span><h2>No friends group yet</h2><p>Start one, invite your mates, and battle for weekly pots.</p><button class="btn block" id="ydNew">Start a friends group</button></div>`;
+    else { const rows = CATS8.map(k => ({ k, h: c.hold[k] || null, pot: c.pot[k] || 0 })).sort((a, b) => (b.h === 'you') - (a.h === 'you') || b.pot - a.pot);
+      const mine = rows.filter(r => r.h === 'you'), tot = mine.reduce((a, r) => a + r.pot, 0);
+      body = `${C.length > 1 ? `<div class="cw-chips">${C.map(x => `<button data-ydc="${x.id}" aria-pressed="${x.id === c.id}">${esc(x.name)}</button>`).join('')}</div>` : `<p class="yd-grp">👥 ${esc(c.name)}</p>`}
+      <div class="yd-sum"><div class="${mine.length ? 'hot' : ''}"><b>${money(tot)}</b><small>${mine.length ? 'yours if you hold on' : 'hold a crown to win'}</small></div><div><b>👑 ${mine.length}</b><small>friends crowns you hold</small></div><div><b>⏱ ${weekLeft()}</b><small>until Sunday</small></div></div>
+      <p class="yd-how">Whoever holds a category’s crown at <b>Sunday midnight</b> takes its pot.</p>
+      <div class="yd-l">${rows.map(r => `<button class="yd-r fr ${r.h === 'you' ? 'in' : ''}" data-ydf="${r.k}"><span class="yd-n">${gi(r.k)}<b>${esc(crownName(r.k))}</b></span>
+        <span class="yd-h">${r.h === 'you' ? '👑 You' : r.h ? `👑 @${esc(r.h)}` : 'Up for grabs'}</span><span class="yd-s"><b class="${r.h === 'you' ? '' : 'w'}">${money(r.pot)}</b></span></button>`).join('')}</div>`; } }
+  openSheet(`<div class="ug yd"><h2>Your day</h2>${sw}${body}</div>`);
+  document.querySelectorAll('#sheetBody [data-ydt]').forEach(b => b.onclick = () => todaySheet(b.dataset.ydt));
+  document.querySelectorAll('#sheetBody [data-ydc]').forEach(b => b.onclick = () => { S.crewCur = b.dataset.ydc; save(); todaySheet('friends'); });
+  document.querySelectorAll('#sheetBody [data-tdk]').forEach(b => b.onclick = () => { closeSheet(); openBattleTab(); lgCat(b.dataset.tdk); });
+  document.querySelectorAll('#sheetBody [data-ydf]').forEach(b => b.onclick = () => { closeSheet(); GV.tab = 'friends'; go('gallery'); crewCat(crewCur(), b.dataset.ydf); });
+  if ($('#ydNew')) $('#ydNew').onclick = () => { closeSheet(); crewCreate(); }; }
 function openBattleTab() { GV.tab = 'battle'; lgS(); frS(); go('gallery'); }
 const lgInset = (mp, ks, k) => mp ? `${ks && mp.s.total > ks ? '<em class="tcc-beat">You can beat this</em>' : ''}<i class="tcc-me ${ks && mp.s.total > ks ? 'up' : ''}"><img src="${mp.src}" alt=""><b>You · ${mp.s.total}</b></i>`
   : `<i class="tcc-me add" data-addk="${k}"><span>+</span><b>Add a photo</b></i>`;
