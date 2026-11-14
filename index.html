@@ -8336,9 +8336,9 @@ function crewCreate() {
   document.querySelectorAll('#sheetBody [data-cws]').forEach(b => b.onclick = () => { $('#cwName').value = b.dataset.cws; });
   $('#cwGo').onclick = () => { const n = ($('#cwName').value || '').trim() || 'My friends'; const c = newCrew(n); closeSheet(); openBattleTab(); GV.tab = 'friends'; renderGallery(); crewInvite(c); };
 }
-function crewInvite(c) {
+function crewInvite(c, first) {
   const link = `https://yofi.app/crew/${c.id.slice(0, 6)}`, msg = `Join my Yofi friends group “${c.name}” 👑 Battle me for the crowns and the weekly pots: ${link}`;
-  openSheet(`<div class="cwn"><h2>Invite to ${esc(c.name)}</h2><p class="sub">Anyone who joins with this link is in your group and can battle anyone else in it.</p>
+  openSheet(`<div class="cwn"><h2>${first ? 'Invite your mates first' : `Invite to ${esc(c.name)}`}</h2><p class="sub">${first ? `Nobody has joined <b>${esc(c.name)}</b> yet. Send the invite and battle them when they join.` : 'Anyone who joins with this link is in your group and can battle anyone else in it.'}</p>
     <div class="i2-msg"><span class="wa">${WA_ICON}</span><div class="i2-bub">${esc(msg)}</div></div>
     <a class="inv-wa i2-send" id="cwWa" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${WA_ICON}<b>Send on WhatsApp</b></a>
     <button class="inv-copy i2-copy" id="cwCopy"><b>Copy invite link</b></button></div>`);
@@ -8378,7 +8378,7 @@ function bindCrews() {
 }
 function crewCat(c, k, opp) {
   const h = c.hold[k] || null, me = h === 'you', mine = lgMine(k), cn = crownName(k), others = c.members;
-  if (!others.length) { celebrate({ src: (mine || {}).src || '', score: '👥', title: 'Invite your mates first', text: `Nobody has joined <b>${esc(c.name)}</b> yet. Send the invite and battle them when they join.`, cta: `${WA_ICON} Invite`, onCta: () => crewInvite(c), later: 'Later' }); return; }
+  if (!others.length) { crewInvite(c, true); return; }
   if (!mine) { const low = S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0];
     if (low) { celebrate({ src: low.src, score: low.s.total, title: 'Enhance first', text: `Your ${esc(cn.toLowerCase())} photo scores <b>${low.s.total}</b>. Get it to <b>${CFG.QUALIFY}+</b> to battle.`, cta: '✨ Enhance my photo', onCta: () => { S.cur = low.id; save(); WALL = false; go('studio'); renderStudio(); }, later: 'Not now' }); return; }
     addCatPhoto(k); return; }
