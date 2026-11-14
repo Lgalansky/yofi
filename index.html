@@ -4817,6 +4817,10 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .bcc-pl .t{display:flex;align-items:center;gap:5px}.bcc-pl .t .crw-ic{width:22px;height:17px}.bcc-pl .t b{color:#fff}.bcc-pl .y{color:#FF5EB0}.bcc-pl .y b{color:#fff;margin-left:2px}.bcc-pl.in .y b{color:#2EE59D}
 .bt-hd p{color:#fff!important;font-weight:700}.bt-pt{display:block;margin-top:2px;font-size:.85rem;color:#B89AF0}
 .bcc-pl{white-space:nowrap}.bcc-pl.in .y{color:#2EE59D}
+.yd-r.fr2{display:flex;gap:14px;padding:10px 16px}.yd-ic{width:40px;flex:none;display:flex;justify-content:center;font-size:1.9rem;line-height:1}.yd-ic svg{width:30px;height:30px;color:#fff}
+.yd-tx{flex:1;min-width:0;display:flex;flex-direction:column}.yd-tx b{font:800 1.1rem 'Bricolage Grotesque',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.yd-tx b.g{color:#FFC93C}.yd-tx small{font-size:.85rem;color:#C9B4F5}
+.yd-m{font:900 1.25rem 'Bricolage Grotesque',sans-serif;color:#7CF5C4;white-space:nowrap}
+.yd-r.fr2.hd{background:linear-gradient(90deg,#3A2318,#2A1A2E);box-shadow:inset 3px 0 0 #FFC93C,inset 0 0 0 1.5px #5A4030}.yd-r.fr2.in{box-shadow:inset 3px 0 0 #2EE59D,inset 0 0 0 2px #2EE59D}
 </style>
 </head>
 <body>
@@ -8179,10 +8183,10 @@ function todaySheet(tab) { tab = tab || 'everyone';
     else { const rows = CATS8.map(k => ({ k, h: c.hold[k] || null, pot: c.pot[k] || 0 })).sort((a, b) => (b.h === 'you') - (a.h === 'you') || b.pot - a.pot);
       const mine = rows.filter(r => r.h === 'you'), tot = mine.reduce((a, r) => a + r.pot, 0);
       body = `${C.length > 1 ? `<div class="cw-chips">${C.map(x => `<button data-ydc="${x.id}" aria-pressed="${x.id === c.id}">${esc(x.name)}</button>`).join('')}</div>` : `<p class="yd-grp">👥 ${esc(c.name)}</p>`}
-      <div class="yd-sum"><div class="${mine.length ? 'hot' : ''}"><b>${money(tot)}</b><small>${mine.length ? 'yours if you hold on' : 'hold a crown to win'}</small></div><div><b>👑 ${mine.length}</b><small>friends crowns you hold</small></div><div><b>⏱ ${weekLeft()}</b><small>until Sunday</small></div></div>
-      <p class="yd-how">Whoever holds a category’s crown at <b>Sunday midnight</b> takes its pot.</p>
-      <div class="yd-l">${rows.map(r => `<button class="yd-r fr ${r.h === 'you' ? 'in' : ''}" data-ydf="${r.k}"><span class="yd-n">${gi(r.k)}<b>${esc(crownName(r.k))}</b></span>
-        <span class="yd-h">${r.h === 'you' ? '👑 You' : r.h ? `👑 @${esc(r.h)}` : 'Up for grabs'}</span><span class="yd-s"><b class="${r.h === 'you' ? '' : 'w'}">${money(r.pot)}</b></span></button>`).join('')}</div>`; } }
+      <div class="yd-sum"><div class="${mine.length ? 'hot' : ''}"><b>${money(tot)}</b><small>Currently winning</small></div><div><b>👑 ${mine.length}</b><small>Crowns you hold</small></div><div><b>⏱ ${weekLeft()}</b><small>Until payout</small></div></div>
+      <p class="yd-how">Hold the crown at <b>Sunday midnight</b> to win its pot.</p>
+      <div class="yd-l">${rows.map(r => `<button class="yd-r fr2 ${r.h ? 'hd' : ''} ${r.h === 'you' ? 'in' : ''}" data-ydf="${r.k}"><span class="yd-ic">${r.h ? '👑' : gi(r.k)}</span>
+        <span class="yd-tx">${r.h ? `<b class="g">${r.h === 'you' ? 'You' : '@' + esc(r.h)}</b><small>${esc(crownName(r.k))}</small>` : `<b>${esc(crownName(r.k))}</b><small>Up for grabs</small>`}</span><span class="yd-m">${money(r.pot)}</span></button>`).join('')}</div>`; } }
   openSheet(`<div class="ug yd"><h2>Your day</h2>${sw}${body}</div>`);
   document.querySelectorAll('#sheetBody [data-ydt]').forEach(b => b.onclick = () => todaySheet(b.dataset.ydt));
   document.querySelectorAll('#sheetBody [data-ydc]').forEach(b => b.onclick = () => { S.crewCur = b.dataset.ydc; save(); todaySheet('friends'); });
