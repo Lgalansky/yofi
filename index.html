@@ -4758,6 +4758,8 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .rv-sw[hidden]{display:none!important}.rv-go{background:linear-gradient(95deg,#FF7A3C,#FF3FA4)!important}
 .bt-hd{text-align:center;margin:2px 0 12px}.bt-hd h1{margin:0;font:800 1.75rem "Bricolage Grotesque",sans-serif;color:#fff}.bt-hd p{margin:2px 0 0;font-weight:700;color:#C9A8FF}
 .bt .bt-sw{margin-bottom:12px}.bt .bc-h{margin-bottom:12px}
+.stk-steps{grid-template-columns:1fr 46px 1fr 1fr 46px 1fr 1fr 1fr 1fr 46px!important;gap:4px!important}
+.stk-steps i.m10{position:relative;cursor:pointer}.chtx{position:absolute;top:-9px;right:-8px;padding:0 5px;border-radius:999px;font-style:normal;font-size:.62rem;font-weight:900;color:#0B2A1C;background:#2EE59D;line-height:1.5}
 </style>
 </head>
 <body>
@@ -7669,7 +7671,7 @@ function tixPop() {
     <div class="tx-l">
       <div><span>${VS_IC}</span><b>Win a friend challenge</b><em>+1</em></div>
       <div><span>🖼️</span><b>Collect today’s frame in Studio</b><em>+1</em></div>
-      <div><span>🧰</span><b>Open a big chest (6 right picks in a row)</b><em>+1</em></div>
+      <div><span>🧰</span><b>Open a big chest (10 right picks in a row)</b><em>+1</em></div>
       <div><span>🎁</span><b>Welcome gift for new players</b><em>+1</em></div>
     </div>
     ${n ? `<button class="btn block" id="txGo">Use 1 ticket · Enter the Cash Cup</button>` : `<button class="btn block" id="txFr">Challenge a friend to earn one</button>`}
@@ -8518,10 +8520,10 @@ function energy() { S.en = EN_MAX; S.enAt = Date.now(); return EN_MAX; // Real M
   return S.en; }
 const enNext = () => { const l = Math.max(0, EN_MS - (Date.now() - (S.enAt || Date.now()))); return `${Math.floor(l / 60000)}:${String(Math.floor(l / 1000) % 60).padStart(2, '0')}`; };
 const enFullAt = () => { const e = energy(); if (e >= EN_MAX) return ''; const steps = Math.ceil((EN_MAX - e) / EN_STEP), t = new Date((S.enAt || Date.now()) + steps * EN_MS); return t.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); };
-const STK = [2, 4, 6]; // boxes at 4 and 6 in a row (2 in a row just raises the multiplier) // right in a row for ×2, ×5, ×10 (a box at each)
-const streakX = c => c >= 6 ? 10 : c >= 4 ? 5 : c >= 2 ? 3 : 1;
+const STK = [2, 5, 10]; // boxes at 4 and 6 in a row (2 in a row just raises the multiplier) // right in a row for ×2, ×5, ×10 (a box at each)
+const streakX = c => c >= 10 ? 10 : c >= 5 ? 5 : c >= 2 ? 3 : 1;
 const jMult = () => energy() < 1 ? 0 : streakX(S.combo || 0);
-const stkPct = c => c <= 3 ? c / 3 * 33.33 : c <= 5 ? 33.33 + (c - 3) / 2 * 33.33 : Math.min(100, 66.67 + (c - 5) / 5 * 33.33); // boxes evenly spaced
+const stkPct = c => Math.min(100, c / 10 * 100); // boxes evenly spaced
 const isLive = () => tUnlocked() && fighters().length > 0 && (S.votes || 0) % 3 === 2; // every 3rd pair is a live tournament match
 function paintEnergy() { const e = energy(), b = document.querySelector('#judge .en-bar i'), t = document.querySelector('#judge .en-n'), nx = document.querySelector('#judge .en-nx');
   if (b) b.style.width = (e / EN_MAX * 100) + '%'; if (t) t.innerHTML = e > EN_MAX ? `${EN_MAX}<small> +${e - EN_MAX}</small>` : `${e}/${EN_MAX}`; if (nx) nx.textContent = `+5 ⚡ in ${enNext()}`; }
@@ -8609,7 +8611,7 @@ function renderJudge() {
     <div class="jfoot jf2">
       ${energy() < 1 ? `<div class="jf-en en-out"><span class="en-ic">⚡</span><span class="eo-t"><b>Out of energy</b><small class="en-nx">+5 ⚡ in ${enNext()}</small><small class="en-full">Full again at ${enFullAt()}</small></span><button id="enBuy">Refill</button></div>` : `<div class="jf-en"><div class="en-top"><span class="en-ic">⚡</span><span class="en-bar"><i style="width:${Math.min(100, energy() / EN_MAX * 100)}%"></i></span><span class="en-n">${energy() > EN_MAX ? `${EN_MAX}<small> +${energy() - EN_MAX}</small>` : `${energy()}/${EN_MAX}`}</span><button class="en-plus" id="enPlus" aria-label="Buy energy">+</button></div>
       </div>`}
-      <div class="stk"><div class="stk-row"><span class="stk-lab" aria-label="Your wins are multiplied by your streak"><small>Wins</small><b class="stk-x">×${streakX(combo)}</b></span><div class="lkp-steps jf-combo stk-steps">${[...Array(6)].map((_, i) => `<i class="${i < Math.min(combo, 6) ? 'on' : ''} ${[1, 3, 5].includes(i) ? 'm m' + (i + 1) : ''}">${i === 1 ? '<u>📦</u>×3' : i === 3 ? '<u>🎁</u>×5' : i === 5 ? '<u>🧰</u>×10' : ''}</i>`).join('')}</div></div></div>
+      <div class="stk"><div class="stk-row"><span class="stk-lab" aria-label="Your wins are multiplied by your streak"><small>Wins</small><b class="stk-x">×${streakX(combo)}</b></span><div class="lkp-steps jf-combo stk-steps">${[...Array(10)].map((_, i) => `<i class="${i < Math.min(combo, 10) ? 'on' : ''} ${[1, 4, 9].includes(i) ? 'm m' + (i + 1) : ''}" ${i === 9 ? 'data-chtix role="button" aria-label="Big chest at 10 in a row. See your tickets"' : ''}>${i === 1 ? '<u>📦</u>×3' : i === 4 ? '<u>🎁</u>×5' : i === 9 ? `<u>🧰</u>×10${(S.cashTix || 0) ? `<em class="chtx">🎟️${S.cashTix}</em>` : ''}` : ''}</i>`).join('')}</div></div></div>
     </div>
     <div class="vh" id="jRes" aria-live="polite"></div>
 `;
@@ -8668,13 +8670,13 @@ async function vote(pick) {
   energy(); const cost = hasEn ? 1 : 0; S.en = Math.max(0, S.en - cost); if (S.en < EN_MAX && S.en + cost >= EN_MAX) S.enAt = Date.now(); S.lastMult = mult || 1; setTimeout(paintEnergy, 0); const justEmpty = cost > 0 && S.en < 1;
   if (nudgeFrom == null) nudgeFrom = S.gems;
   S.votes++; S.since++; S.tSince = (S.tSince || 0) + 1; S.jIdx += 2; S.gems += earn; meterAdd(earn);
-  S.combo = agree ? (S.combo || 0) + 1 : 0; const shown = S.combo, comboHit = agree && STK.includes(S.combo) ? ({ 2: 3, 4: 5, 6: 10 })[S.combo] : 0;
+  S.combo = agree ? (S.combo || 0) + 1 : 0; const shown = S.combo, comboHit = agree && STK.includes(S.combo) ? ({ 2: 3, 5: 5, 10: 10 })[S.combo] : 0;
   const drop = false; // no random surprise boxes: the streak boxes are enough
   const ds = dailyState(); ds.D.n++; ds.D.sn = (ds.D.sn || 0) + 1;
   let streakHit = 0;
   if (S.votes >= 10 && ds.D.sn >= 3 && !ds.D.got.includes(ds.si)) { if (ds.D.last !== ds.t) { ds.D.streak = ds.D.last === ds.y ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; } ds.D.got.push(ds.si); streakHit = ds.D.streak; S.gems += STREAK_GEMS; paintFlame(); }
   save();
-  { const sx = document.querySelector('#judge .stk-x'); if (sx) sx.textContent = '×' + streakX(shown); const sf = document.querySelector('#judge .stk-fill'); if (sf) sf.style.width = stkPct(shown) + '%'; document.querySelectorAll('#judge .stk-m').forEach(m => { const on = shown >= +m.dataset.n; m.classList.toggle('pop', on && !m.classList.contains('on')); m.classList.toggle('on', on); }); } document.querySelectorAll('#judge .lkp-steps i').forEach((d, i) => { d.classList.toggle('on', i < Math.min(shown, 6)); d.classList.toggle('pop', comboHit && i === shown - 1); }); document.querySelectorAll('#judge .cmb-n').forEach(n => n.textContent = shown); document.querySelectorAll('#judge .cmb-nx').forEach(n => n.textContent = comboNext(shown)); 
+  { const sx = document.querySelector('#judge .stk-x'); if (sx) sx.textContent = '×' + streakX(shown); const sf = document.querySelector('#judge .stk-fill'); if (sf) sf.style.width = stkPct(shown) + '%'; document.querySelectorAll('#judge .stk-m').forEach(m => { const on = shown >= +m.dataset.n; m.classList.toggle('pop', on && !m.classList.contains('on')); m.classList.toggle('on', on); }); } document.querySelectorAll('#judge .lkp-steps i').forEach((d, i) => { d.classList.toggle('on', i < Math.min(shown, 10)); d.classList.toggle('pop', comboHit && i === shown - 1); }); document.querySelectorAll('#judge .cmb-n').forEach(n => n.textContent = shown); document.querySelectorAll('#judge .cmb-nx').forEach(n => n.textContent = comboNext(shown)); 
   await sleep(120);
   const near = !agree && mine >= 42;
   const mc = document.querySelectorAll('#judge .tot-c')[pick], word = mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : near ? 'So close!' : mine >= 35 ? 'Close call' : 'Missed it';
@@ -8702,7 +8704,7 @@ async function vote(pick) {
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
   if (streakHit) { const rw = STREAK_GEMS; gemExplosion(rw, { label: `🔥 ${ds.D.streak}-day streak` }); if (comboHit === 5) { luckyDrop(); return; } if (comboHit) { miniDrop(comboHit); return; } return; }
   if (false) { const rw = STREAK_GEMS; celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} streak!`, text: `You judged 3 photos this ${SESS[ds.si].toLowerCase()}. <b>+${rw} gems</b>. ${ds.si < 3 ? `Come back from ${SESS_AT[ds.si + 1]} for another ${rw}.` : `Come back after midnight for another ${rw}.`}`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
-  if (S.votes >= 10 && !S.betIntro) { S.betIntro = true; save(); celebrate({ src: p.src, score: '🎁', title: 'Streaks unlocked!', text: 'Get picks right in a row to multiply your gems: <b>2 in a row ×3, 4 ×5, 6 ×10</b>, plus a gift box at each. One wrong pick and you’re back to ×1.', cta: 'Got it' }); return; }
+  if (S.votes >= 10 && !S.betIntro) { S.betIntro = true; save(); celebrate({ src: p.src, score: '🎁', title: 'Streaks unlocked!', text: 'Get picks right in a row to multiply your gems: <b>2 in a row ×3, 5 ×5, 10 ×10</b>, plus a gift box at each. One wrong pick and you’re back to ×1.', cta: 'Got it' }); return; }
   if (comboHit === 5) { luckyDrop(); return; }
   if (comboHit) { miniDrop(comboHit); return; }
   if (drop) { miniDrop(); return; }
@@ -8755,6 +8757,9 @@ function miniDrop(kind) {
     }, 650);
   });
 }
+document.addEventListener('click', e => { if (e.target.closest('#judge [data-chtix]')) useTickets(); });
+const CHEST_TIX_DAY = 2;
+function chestTix(rar) { const dk = dayKey(); if (S.ctDay !== dk) { S.ctDay = dk; S.ctN = 0; } const want = rar.k === 'rare' ? 2 : 1, n = Math.max(0, Math.min(want, CHEST_TIX_DAY - (S.ctN || 0))); S.ctN = (S.ctN || 0) + n; return n; }
 function chestOpen() {
   // tap three times to crack it; the glow shows how rare it is
   const LM = S.lastMult || 1, c = $('#coach');
@@ -8762,11 +8767,11 @@ function chestOpen() {
   let r = Math.random(), rar = R[0]; for (const x of R) { if (r < x.w) { rar = x; break; } r -= x.w; }
   const gems = rar.g * LM, ladder = ['common', 'rare', 'epic', 'legend'].slice(0, R.indexOf(rar) + 1);
   c.innerHTML = `<div class="crbox lucky md ch" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
-    <h2 id="crT">Big chest!</h2><p class="lk-sub">6 right picks in a row!</p>
+    <h2 id="crT">Big chest!</h2><p class="lk-sub">10 right picks in a row!</p>
     <button class="ch-box" id="chBox" aria-label="Tap to crack the chest">🧰</button>
     <p class="md-tap" id="chTap">Tap 3 times to crack it open</p><div class="ch-taps"><i></i><i></i><i></i></div>
     <div id="chArea"></div>
-    <p class="md-odds">${R.map(x => `${x.n} ${Math.round(x.w * 100)}%`).join(' · ')} · Rare adds a free entry · Epic adds a +50% prize boost · Legendary adds $5 cash</p></div>`;
+    <p class="md-odds">${R.map(x => `${x.n} ${Math.round(x.w * 100)}%`).join(' · ')} · Every chest: a free $1 entry (2 a day) · Rare: 2 entries · Epic: +50% prize boost · Legendary: $5 cash</p></div>`;
   c.classList.add('on', 'cr'); c.onclick = null;
   let taps = 0; const box = $('#chBox');
   box.onclick = () => {
@@ -8779,11 +8784,11 @@ function chestOpen() {
     setTimeout(() => {
       box.classList.add('open'); box.innerHTML = '✨';
       const shield = false;
-      S.gems += gems; meterAdd(gems); if (rar.b) S.boosts = (S.boosts || 0) + rar.b; if (rar.t) S.cashTix = (S.cashTix || 0) + rar.t; if (rar.c) { S.cash = +((S.cash || 0) + rar.c).toFixed(2); paintWallet(); } save(); paintTop(); if (typeof paintTixTag === 'function') paintTixTag(); if (typeof paintEnergy === 'function') paintEnergy();
+      S.gems += gems; meterAdd(gems); if (rar.b) S.boosts = (S.boosts || 0) + rar.b; const tk = chestTix(rar); window.__chTk = tk; if (tk) S.cashTix = (S.cashTix || 0) + tk; if (rar.c) { S.cash = +((S.cash || 0) + rar.c).toFixed(2); paintWallet(); } save(); paintTop(); if (typeof paintTixTag === 'function') paintTixTag(); if (typeof paintEnergy === 'function') paintEnergy();
       $('#chArea').innerHTML = `<span class="ch-rar r-${rar.k}">${rar.n} chest</span>
-        <div class="ch-items"><div class="ch-it" style="animation-delay:.1s"><b>+${gems}</b><small>⭐ points</small></div>${rar.t ? `<div class="ch-it" style="animation-delay:.45s"><b>🎟️</b><small>free $1 entry</small></div>` : ''}${rar.b ? `<div class="ch-it" style="animation-delay:.45s"><b>🚀 +50%</b><small>prize boost</small></div>` : ''}${rar.c ? `<div class="ch-it" style="animation-delay:.45s"><b>$${rar.c}</b><small>💵 real cash</small></div>` : ''}</div>
+        <div class="ch-items"><div class="ch-it" style="animation-delay:.1s"><b>+${gems}</b><small>⭐ points</small></div>${window.__chTk ? `<div class="ch-it" style="animation-delay:.45s"><b>🎟️${window.__chTk > 1 ? '×' + window.__chTk : ''}</b><small>free $1 entr${window.__chTk > 1 ? 'ies' : 'y'}</small></div>` : ''}${rar.b ? `<div class="ch-it" style="animation-delay:.45s"><b>🚀 +50%</b><small>prize boost</small></div>` : ''}${rar.c ? `<div class="ch-it" style="animation-delay:.45s"><b>$${rar.c}</b><small>💵 real cash</small></div>` : ''}</div>
         <button class="bt-cta" id="chDone" style="animation:cpop .4s .8s both">Collect</button>`;
-      $('#chDone').onclick = () => { c.classList.remove('on', 'cr'); gemExplosion(gems, { label: `${rar.n} chest` }); if (rar.b) toast('🚀 Prize boost ready: +50% on your next tournament win'); if (rar.c) toast(`💵 $${rar.c} cash added`); else if (rar.t) toast('🎟️ Free $1 cash entry added'); };
+      $('#chDone').onclick = () => { c.classList.remove('on', 'cr'); gemExplosion(gems, { label: `${rar.n} chest` }); if (rar.b) toast('🚀 Prize boost ready: +50% on your next tournament win'); if (rar.c) toast(`💵 $${rar.c} cash added`); else if (rar.t) toast('🎟️ Free $1 cash entry added');  if (window.__chTk) { window.__chTk = 0; setTimeout(ticketPop, 1400); } };
     }, 500);
   };
 }
