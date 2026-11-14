@@ -4412,6 +4412,71 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 #gemPill.glow{animation:gglow 1.8s ease-in-out infinite}
 @keyframes gglow{0%,100%{box-shadow:inset 0 0 0 1.5px #5BC8FF,0 0 0 rgba(91,200,255,0)}50%{box-shadow:inset 0 0 0 2px #5BC8FF,0 0 18px rgba(91,200,255,.75)}}
 .pn-go.tix{background:linear-gradient(135deg,#2EE59D,#159A6A)!important;color:#fff!important}
+.tix-tag{position:absolute;left:10px;top:-11px;z-index:3;padding:2px 9px;border:0;border-radius:999px;font:800 .72rem Inter,sans-serif;color:#0B2A1C;background:linear-gradient(135deg,#7CF5C4,#2EE59D);box-shadow:0 2px 8px rgba(46,229,157,.5),0 0 0 2px #120A22;cursor:pointer;white-space:nowrap}
+.tix-tag.bounce{animation:tbounce .9s ease 3}
+@keyframes tbounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-6px) scale(1.08)}}
+.tix-tip{position:absolute;left:4px;top:34px;z-index:4;width:220px;padding:10px 12px;border-radius:12px;font-size:.85rem;font-weight:600;line-height:1.35;color:#0B2A1C;background:#7CF5C4;box-shadow:0 8px 20px rgba(0,0,0,.4);animation:tipin .3s ease}
+.tix-tip::before{content:"";position:absolute;left:30px;top:-7px;border:7px solid transparent;border-top:0;border-bottom-color:#7CF5C4}
+@keyframes tipin{from{opacity:0;transform:translateY(-4px)}}
+.tixs{display:flex;align-items:center;gap:10px;width:100%;max-width:420px;margin:0 auto 8px;padding:8px 10px 8px 12px;border:0;border-radius:16px;font:inherit;color:#0B2A1C;cursor:pointer;background:linear-gradient(135deg,#7CF5C4,#2EE59D);box-shadow:0 6px 18px -6px rgba(46,229,157,.8)}
+.tixs-i{font-size:1.5rem}.tixs-t{flex:1;text-align:left;min-width:0}.tixs-t b{display:block;font-size:.95rem}.tixs-t small{display:block;font-size:.75rem;font-weight:600;opacity:.8}
+.tixs em{font-style:normal;font-weight:800;font-size:.85rem;padding:6px 12px;border-radius:999px;background:#0B2A1C;color:#7CF5C4;white-space:nowrap}
+/* judging streak */
+.stk{margin-top:10px}.stk[hidden]{display:none!important}
+.stk-h{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.stk-x{flex:none;min-width:54px;padding:6px 10px;border-radius:12px;text-align:center;font:800 1.35rem "Bricolage Grotesque",sans-serif;color:#2A1600;background:linear-gradient(180deg,#FFE27A,#FFB21C);box-shadow:0 0 14px -2px rgba(255,178,28,.7)}
+.stk-t b{display:block;font-size:.95rem}.stk-t small{display:block;font-size:.8rem;color:#C9B4F5}
+.stk-steps i.m{font-size:.72rem!important;font-weight:800;color:#FFE27A}.stk-steps i.m.on{color:#2A1600}
+.tot-x.stk-lost{background:rgba(255,92,138,.9)!important;color:#fff!important}
+.en-n small{font-size:.75em;color:#2EE59D}
+.stk-lab{display:flex;flex-direction:column;align-items:center;line-height:1;margin-right:8px;padding-right:10px;border-right:1.5px solid #3E2A66}
+.stk-lab small{font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#C9B4F5}
+.stk-lab .stk-x{min-width:0!important;padding:0!important;background:none!important;box-shadow:none!important;color:#FFC93C!important;font:800 1.35rem "Bricolage Grotesque",sans-serif!important;margin-top:2px}
+.en-top .en-plus{margin-left:auto}
+.stk{margin-top:8px!important}
+.stk-row{display:flex;align-items:center;gap:12px}
+.stk-row .stk-lab{flex:none;margin:0;padding-right:12px}
+.stk-track{position:relative;flex:1;height:10px;margin:0 22px 0 4px;border-radius:999px;background:#3A2760}
+.stk-fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,#FFE27A,#FFB21C);transition:width .5s cubic-bezier(.3,1.3,.5,1)}
+.stk-m{position:absolute;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:1px}
+.stk-m i{display:grid;place-items:center;width:34px;height:34px;border-radius:12px;font-style:normal;font-size:1.15rem;background:#2A1A46;box-shadow:inset 0 0 0 1.5px #FFC93C}
+.stk-m b{position:absolute;top:36px;font-size:.7rem;font-weight:800;color:#FFE27A;white-space:nowrap}
+.stk-m.on i{background:linear-gradient(135deg,#FFE27A,#FFB21C);box-shadow:0 0 12px rgba(255,201,60,.7)}
+.stk-m.pop i{animation:cpop .5s cubic-bezier(.3,1.6,.5,1) 2}
+.stk{padding-bottom:14px}
+.stk-row .stk-steps{flex:1;margin-top:0!important}.stk{padding-bottom:0!important}
+.stk-steps{grid-template-columns:repeat(6,1fr)!important;gap:6px!important}
+.stk-steps i{height:10px}
+.stk-steps i.m{height:36px!important;display:flex!important;flex-direction:column;justify-content:center;align-items:center;line-height:1;gap:1px;font-size:.68rem!important}
+.stk-steps i.m u{text-decoration:none;font-size:1rem}
+/* golden ticket pop */
+.crbox.tp{position:relative;padding:28px 22px 24px;overflow:hidden}
+.tp-x{position:absolute;top:14px;right:14px;z-index:3;background:none;border:0;color:#fff;cursor:pointer;padding:4px}
+.tp-h{position:relative;z-index:2;margin:6px 0 4px!important;display:flex;flex-direction:column;align-items:center;line-height:.95;font-family:"Archivo Black","Bricolage Grotesque",sans-serif!important;text-transform:uppercase;letter-spacing:-.01em}
+.tp-h .g{font-size:2.25rem;white-space:nowrap;background:linear-gradient(180deg,#FFF1A8,#FFC93C 55%,#E9A514);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #6A3C00)}
+.tp-h .w{font-size:1.7rem;color:#fff;margin:4px 0;filter:drop-shadow(0 2px 0 #2A1250)}
+.tp-tk{position:relative;z-index:2;margin:18px auto 14px;width:86%;padding-top:30px}
+.tp-crown{position:absolute;left:50%;top:0;width:66px;transform:translateX(-50%);filter:drop-shadow(0 0 10px rgba(255,201,60,.8))}
+.tp-ticket{display:flex;transform:rotate(-8deg);filter:drop-shadow(0 10px 18px rgba(0,0,0,.45)) drop-shadow(0 0 22px rgba(255,201,60,.55));--n:radial-gradient(circle at 0 50%,transparent 11px,#000 12px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 11px,#000 12px) right/51% 100% no-repeat;-webkit-mask:var(--n);mask:var(--n)}
+.tp-main{flex:1;display:flex;align-items:center;justify-content:center;gap:2px;padding:22px 8px;border-radius:12px 0 0 12px;background:linear-gradient(135deg,#FFE58A,#FFC93C 45%,#E9A514);box-shadow:inset 0 0 0 3px rgba(138,90,10,.35)}
+.tp-tro svg{width:64px;height:64px;display:block}
+.tp-lau{width:24px;height:50px}.tp-lau.r{transform:scaleX(-1)}
+.tp-stub{flex:none;width:32%;padding-right:10px;display:grid;place-items:center;border-left:3px dashed rgba(138,90,10,.55);border-radius:0 12px 12px 0;background:linear-gradient(135deg,#FFE58A,#F5B82E);box-shadow:inset 0 0 0 3px rgba(138,90,10,.35)}
+.tp-stub span{transform:rotate(-8deg);font:900 .9rem/1.05 "Archivo Black",sans-serif;color:#7A4A00;text-align:center}
+.tp-n{position:absolute;right:-6px;top:22px;padding:4px 10px;border-radius:999px;background:#FF3FA4;color:#fff;font-weight:800;box-shadow:0 0 0 2px #120A22}
+.tp-t{position:relative;z-index:2;margin:8px 0 18px!important;font-size:1.2rem!important;line-height:1.35;color:#fff!important}.tp-t b{font-size:1.25rem;color:#fff}
+.tp-go{position:relative;z-index:2;font-size:1.25rem!important}
+/* mystery prize */
+.tk-pc.myst .tk-gb{background:linear-gradient(135deg,#FF3FA4,#8B3CFF);color:#fff}
+.tk-pc .rng{font-size:1.6rem!important}
+.tk-pc .myx{margin:6px 0 4px!important;font-size:.85rem;color:#E6DDF5}.tk-pc .myx b{color:#FFC93C}
+.crbox.myp h2{margin:4px 0 10px}
+.myp-k{margin:0;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#C9B4F5;position:relative}
+.myp-reel{position:relative;margin:6px auto 12px;width:200px;height:120px;border-radius:24px;display:grid;place-items:center;background:linear-gradient(180deg,#1C0F33,#2A1546 50%,#1C0F33);box-shadow:inset 0 0 0 3px #FFC93C,0 0 30px -6px rgba(255,201,60,.7)}
+.myp-x{font:800 3.6rem "Bricolage Grotesque",sans-serif;color:#fff;font-variant-numeric:tabular-nums}
+.myp-x.land{animation:cpop .6s cubic-bezier(.3,1.6,.5,1)}.myp-x.ok{color:#FFC93C}.myp-x.big{color:#2EE59D;text-shadow:0 0 18px rgba(46,229,157,.8)}
+.myp-t{position:relative;font-size:1.1rem!important}.myp-t b{color:#2EE59D;font-size:1.3rem}
+.crbox.myp #crGo:disabled{opacity:.4}
 </style>
 </head>
 <body>
@@ -4877,7 +4942,19 @@ async function prepSeeds() {
 let toastT;
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
 let shownGems = 0;
-function paintWallet() { $('#cashNum').textContent = '$' + (S.cash || 0).toFixed(2); paintTop(); }
+function paintWallet() { $('#cashNum').textContent = '$' + (S.cash || 0).toFixed(2); paintTop(); paintTixTag(); }
+// free cash entries show as a small tag on the Cash pill, only while you hold one
+function paintTixTag() {
+  const w = $('#wCash'); if (!w) return; let t = $('#tixTag'); const n = (S && S.user && S.cashTix) || 0;
+  if (!n) { if (t) t.remove(); return; }
+  if (!t) { t = document.createElement('button'); t.id = 'tixTag'; t.className = 'tix-tag'; w.parentNode.style.position = 'relative'; w.after(t);
+    t.onclick = e => { e.stopPropagation(); ticketPop(); }; }
+  const txt = `🎟️ ${n} free entr${n === 1 ? 'y' : 'ies'}`; if (t.textContent !== txt) t.textContent = txt;
+  if (window.__tixPoint && !$('#coach').classList.contains('on') && !$('#sheet').classList.contains('on')) { window.__tixPoint = false;
+    t.classList.remove('bounce'); void t.offsetWidth; t.classList.add('bounce');
+    const tip = document.createElement('div'); tip.className = 'tix-tip'; tip.innerHTML = 'Your free entry is here.<br>Tap it anytime to play for cash.'; w.parentNode.appendChild(tip); setTimeout(() => tip.remove(), 4500); }
+}
+setInterval(paintTixTag, 1000);
 const topPhoto = () => S.photos.slice().sort((a, b) => b.s.total - a.s.total)[0];
 function paintTop() {
   const tb = $('#sTix'); if (tb) { tb.hidden = true; tb.innerHTML = `🎟️<b>${S.user ? tix() : 0}</b>`; tb.setAttribute('aria-label', `${S.user ? tix() : 0} Cash Cup tickets`); }
@@ -5950,7 +6027,7 @@ function bindShop(onBuy) {
 // tapping your gems shows what they can do for you now; the + still opens the shop
 function gemIdeas() {
   const I = [], can = p => !photoLock(p) && lowestOpen(p), cn = p => p.cat && p.cat !== 'any' ? pcatName(p.cat) + ' ' : '';
-  if (fighters().length) I.push({ ic: '🎟️', t: 'Free cash entry', d: `Play a <b>$1</b> tournament or cash battle for free. Win <b>real cash</b>.${(S.cashTix || 0) ? ` You have ${S.cashTix}.` : ''}`, cost: TIX_GEMS, src: (fighters()[0] || {}).src, go: buyTicket });
+  if (0) I.push({ ic: '🎟️', t: 'Free cash entry', d: `Play a <b>$1</b> tournament or cash battle for free. Win <b>real cash</b>.${(S.cashTix || 0) ? ` You have ${S.cashTix}.` : ''}`, cost: TIX_GEMS, src: (fighters()[0] || {}).src, go: buyTicket });
   const u70 = S.photos.filter(p => p.s.total < CFG.QUALIFY && can(p)).sort((a, b) => b.s.total - a.s.total)[0];
   const up = u70 || S.photos.filter(p => can(p) && nextLvl(p.s.total)).sort((a, b) => (nextLvl(a.s.total).at - a.s.total) - (nextLvl(b.s.total).at - b.s.total))[0];
   if (up) { const L = up.s.total < CFG.QUALIFY ? null : nextLvl(up.s.total), gap = (L ? L.at : CFG.QUALIFY) - up.s.total;
@@ -5974,7 +6051,12 @@ function gemNudge(force) {
   // pops each time judging takes you past a new 100 gems (at most every 15 votes), or on opening the app with 150+
   if (!S.user || S.gems < 100 || (S.votes || 0) < 12 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return false;
   const mark = Math.floor(S.gems / 100) * 100;
-  if (!force && (mark <= (S.gnMark || 0) || (S.votes || 0) - (S.gnVote || 0) < 15)) return false;
+  const unlock = false;
+  if (!force && !unlock && (mark <= (S.gnMark || 0) || (S.votes || 0) - (S.gnVote || 0) < 15)) return false;
+  // first time you can afford a ticket: a dedicated unlock pop
+  if (false) { S.tixUnlock = 1; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow();
+    celebrate({ src: (fighters()[0] || {}).src || '', score: '🎟️', title: 'Free cash entry unlocked!', text: `Swap <b>${TIX_GEMS} 💎</b> for a free <b>$1</b> tournament or cash battle. <b>Win real money</b> without spending a cent.`, cta: '🎟️ Get my free entry', onCta: buyTicket, later: 'Save my gems', onLater: () => toast(`Tap your gems anytime to get a free entry`) });
+    return true; }
   const I = gemIdeas(); if (!I.length) return false; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow(); const x = I.find(i => S.gems >= i.cost) || I[0];
   celebrate({ src: x.src, score: '💎', title: `You’ve got ${S.gems} gems!`, text: `${x.d}<br>Use <b>${x.cost} 💎</b> on it now.`, cta: `${x.ic} ${x.t} · ${x.cost} 💎`, onCta: x.go, later: 'See what else gems do', onLater: useGems });
   return true;
@@ -5984,7 +6066,7 @@ $('#gemPill').onclick = e => { if (e.target.closest('.gplus')) openStore(); else
 function paintGemGlow() { const el = $('#gemPill'); if (el) el.classList.toggle('glow', !!(S && S.user && S.gems >= 100 && Math.floor(S.gems / 100) * 100 > (S.gnMark || 0))); }
 setInterval(paintGemGlow, 1500);
 // opening the app with 150+ gems: show the pop once per visit
-setTimeout(function gnOpen() { if (!S || !S.user) return; if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || ($('#flow').classList.contains('on') && !$('#flow').classList.contains('astab'))) { if (!gnOpen.n) gnOpen.n = 0; if (++gnOpen.n < 8) setTimeout(gnOpen, 2500); return; } if (S.gems >= 150) gemNudge(true); }, 4000);
+setTimeout(function gnOpen() { if (!S || !S.user) return; if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || ($('#flow').classList.contains('on') && !$('#flow').classList.contains('astab'))) { if (!gnOpen.n) gnOpen.n = 0; if (++gnOpen.n < 8) setTimeout(gnOpen, 2500); return; } if (S.gems >= 150 && !window.__spent) gemNudge(true); }, 4000);
 ['#walletPlus', '#wCash'].forEach(s => { const el = $(s); if (el) el.onclick = () => openStore(); });
 $('#gemPill2').onclick = () => useGems();
 
@@ -6080,7 +6162,7 @@ function openComps(forPhoto) { forPhoto = null;
       <button class="pn2 gemb" id="pnGem"><span class="pn-i">💎</span><b>Gem Battle</b><i>Win up to 200 <span class="pg">${gemIcon('')}</span></i><small>30 seconds</small><em class="pn-go">${S.gbDone ? `From 25 <span class="pg">${gemIcon('')}</span>` : 'Free'}</em></button>
       <button class="pn2 bat" id="pnBat"><span class="pn-i">⚔️</span><b>1v1 Battle</b><i>Win ${money(2 * (1 - KING_FEE))}</i><small>Instant</small><em class="pn-go">Enter · $1</em></button>
       <button class="pn2 king" id="pnKing"><span class="pn-i">👑</span><b>Category King</b><i>$40+ bounty</i><small>Take the crown</small><em class="pn-go">Enter · $1</em></button>
-      <button class="pn2" id="pnTour"><span class="pn-i">🏆</span><b>${typeof tTheme === 'function' ? esc(thName(tTheme(tNext()))) + ' ' : ''}Tournament</b><i>Up to $${T_TIERS[20].gtd}</i><small>Starts in <em data-tmins2>${typeof tMins === 'function' ? tMins() : ''}</em></small><em class="pn-go">From $1</em></button>
+      <button class="pn2" id="pnTour"><span class="pn-i">🏆</span><b>${typeof tTheme === 'function' ? esc(thName(tTheme(tNext()))) + ' ' : ''}Tournament</b><i>🎰 Up to $1,000</i><small>Starts in <em data-tmins2>${typeof tMins === 'function' ? tMins() : ''}</em></small><em class="pn-go">From $1</em></button>
     </div><p class="pn-tag">Beat the King. Take the crown.</p>${(S.tickets || 0) ? `<p class="tix">🎟️ You have <b>${S.tickets}</b> Sunday Grand Final ticket${S.tickets === 1 ? '' : 's'}</p>` : ''}`}<div class="mh2" hidden><h2 class="fh">Competitions</h2></div>
     <div class="clist">${(() => { const dc = CX.find(x => x.id === 'daily'); return dc && !liveEntry(dc.id) && (!fp || cxOk(dc, fp)) && (CXF !== 'mine' || canEnter(dc)) && CXF !== 'gem' ? ccard(dc) : ''; })()}${show.map(k => cards(k)).join('') || `<p class="cxempty">You’ve entered every ${CXF === 'gem' ? 'gem ' : CXF === 'cash' ? 'cash ' : ''}competition that’s open right now. New ones start every 30 minutes.</p>`}</div>`}
     <p class="note">Prototype: entry fees and prizes use your simulated wallet. Nothing is charged or paid out for real.</p></div>`, true);
@@ -7142,7 +7224,7 @@ function tixPop() {
     <div class="tx-l">
       <div><span>${VS_IC}</span><b>Win a friend challenge</b><em>+1</em></div>
       <div><span>🖼️</span><b>Collect today’s frame in Studio</b><em>+1</em></div>
-      <div><span>🧰</span><b>Open a big chest (10 right picks in a row)</b><em>+1</em></div>
+      <div><span>🧰</span><b>Open a big chest (6 right picks in a row)</b><em>+1</em></div>
       <div><span>🎁</span><b>Welcome gift for new players</b><em>+1</em></div>
     </div>
     ${n ? `<button class="btn block" id="txGo">Use 1 ticket · Enter the Cash Cup</button>` : `<button class="btn block" id="txFr">Challenge a friend to earn one</button>`}
@@ -7600,10 +7682,13 @@ function energy() { const now = Date.now(); if (S.en == null) { S.en = EN_MAX; S
   return S.en; }
 const enNext = () => { const l = Math.max(0, EN_MS - (Date.now() - (S.enAt || Date.now()))); return `${Math.floor(l / 60000)}:${String(Math.floor(l / 1000) % 60).padStart(2, '0')}`; };
 const enFullAt = () => { const e = energy(); if (e >= EN_MAX) return ''; const steps = Math.ceil((EN_MAX - e) / EN_STEP), t = new Date((S.enAt || Date.now()) + steps * EN_MS); return t.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); };
-const jMult = () => { const m = S.mult || 1, e = energy(); if (e < 1) return 0; return e >= m ? m : MULTS.filter(x => x <= e).pop() || 1; };
+const STK = [2, 4, 6]; // right in a row for ×2, ×5, ×10 (a box at each)
+const streakX = c => c >= 6 ? 10 : c >= 4 ? 5 : c >= 2 ? 2 : 1;
+const jMult = () => energy() < 1 ? 0 : streakX(S.combo || 0);
+const stkPct = c => c <= 3 ? c / 3 * 33.33 : c <= 5 ? 33.33 + (c - 3) / 2 * 33.33 : Math.min(100, 66.67 + (c - 5) / 5 * 33.33); // boxes evenly spaced
 const isLive = () => tUnlocked() && fighters().length > 0 && (S.votes || 0) % 3 === 2; // every 3rd pair is a live tournament match
 function paintEnergy() { const e = energy(), b = document.querySelector('#judge .en-bar i'), t = document.querySelector('#judge .en-n'), nx = document.querySelector('#judge .en-nx');
-  if (b) b.style.width = (e / EN_MAX * 100) + '%'; if (t) t.textContent = `${e}/${EN_MAX}`; if (nx) nx.textContent = `+5 ⚡ in ${enNext()}`; }
+  if (b) b.style.width = (e / EN_MAX * 100) + '%'; if (t) t.innerHTML = e > EN_MAX ? `${EN_MAX}<small> +${e - EN_MAX}</small>` : `${e}/${EN_MAX}`; if (nx) nx.textContent = `+5 ⚡ in ${enNext()}`; }
 setInterval(() => { if (S && $('#panes') && $('#panes').dataset.at === 'judge') paintEnergy(); }, 1000);
 const EN_PACKS = [{ en: 50, usd: 1.99, gems: 150 }, { en: 150, usd: 4.99, gems: 400, tag: 'Popular' }, { en: 500, usd: 14.99, gems: 1200, tag: 'Best value' }];
 function addEnergy(n) { energy(); S.en += n; S.enAt = Date.now(); save(); if ($('#panes').dataset.at === 'judge') renderJudge(); toast(`⚡ +${n} energy! Keep judging.`); }
@@ -7658,6 +7743,11 @@ function paintFlame() {
 }
 $('#sFlame').onclick = () => streakPop();
 // countdown on the Judge screen to the next pop: tournament or battle (they take turns every 7 votes)
+const METER = 300, METER_DAY = 2; // judging gems per free $1 entry; daily cap
+function meterAdd(n) { const day = new Date().toDateString(); if (S.mtrDay !== day) { S.mtrDay = day; S.mtrN = 0; }
+  if ((S.mtrN || 0) >= METER_DAY) return; S.meterPts = (S.meterPts || 0) + n;
+  while (S.meterPts >= METER && (S.mtrN || 0) < METER_DAY) { S.meterPts -= METER; S.mtrN = (S.mtrN || 0) + 1; S.cashTix = (S.cashTix || 0) + 1; window.__meterHit = 1; }
+  if ((S.mtrN || 0) >= METER_DAY) S.meterPts = 0; }
 function nextUp() {
   if (!S.user || !fighters().length || !tUnlocked()) return null;
   const left = Math.max(CFG.BATTLE_EVERY - (S.since || 0), 12 - (S.votes || 0), 1), done = CFG.BATTLE_EVERY - Math.min(CFG.BATTLE_EVERY, left);
@@ -7665,6 +7755,9 @@ function nextUp() {
   if (tOk && tl < left) return { left: tl, done: Math.max(0, CFG.BATTLE_EVERY - tl), k: 'tour' };
   return { left, done, k: S.btAlt ? 'gem' : 'cash' };
 }
+function tixStripHTML() { const n = (S && S.user && S.cashTix) || 0; if (!n) return '';
+  return `<button class="tixs" id="tixStrip"><span class="tixs-i">🎟️</span><span class="tixs-t"><b>${n} free cash entr${n === 1 ? 'y' : 'ies'}</b><small>Play a $1 game free · win real cash</small></span><em>Play now</em></button>`; }
+document.addEventListener('click', e => { if (e.target.closest('#tixStrip')) { const t = $('#tixTag'); if (t) t.click(); else { tArm(); openTourney(); } } });
 function nextUpHTML() {
   const n = nextUp(); if (!n) return '';
   const lab = n.k === 'tour' ? '🏆 Tournament' : n.k === 'cash' ? '⚔️ Cash battle' : '💎 Gem battle';
@@ -7676,20 +7769,17 @@ function renderJudge() {
   const left = CFG.BATTLE_EVERY - S.since, ds = dailyState(), combo = S.combo || 0;
   const [pa, pb] = seedPair();
   const inTour = S.tour && !S.tour.seen;
-  $('#judge').innerHTML = `${false && inTour ? `<button class="tjs" id="tjStrip"><span class="tjs-h tk-w-in"></span></button>` : waitCardHTML()}<div class="tot-h">${nextUpHTML()}<h2>Which is better?</h2><p><b>${esc(CHAL[pa.cat] || 'Photo challenge')}</b> · ${isLive() ? '<span class="jl-tag"><i></i>Live match +5</span>' : 'tap your pick'}</p></div>
+  $('#judge').innerHTML = `${false && inTour ? `<button class="tjs" id="tjStrip"><span class="tjs-h tk-w-in"></span></button>` : waitCardHTML()}<div class="tot-h">${tixStripHTML()}${nextUpHTML()}<h2>Which is better?</h2><p><b>${esc(CHAL[pa.cat] || 'Photo challenge')}</b> · ${isLive() ? '<span class="jl-tag"><i></i>Live match +5</span>' : 'tap your pick'}</p></div>
     <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span><span class="jrep" role="button" tabindex="0" data-rep="${i}" aria-label="Report this photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
     <div class="jfoot jf2">
-      ${energy() < 1 ? `<div class="jf-en en-out"><span class="en-ic">⚡</span><span class="eo-t"><b>Out of energy</b><small class="en-nx">+5 ⚡ in ${enNext()}</small><small class="en-full">Full again at ${enFullAt()}</small></span><button id="enBuy">Refill</button></div>` : `<div class="jf-en"><div class="en-top"><span class="en-ic">⚡</span><span class="en-bar"><i style="width:${Math.min(100, energy() / EN_MAX * 100)}%"></i></span><span class="en-n">${energy()}/${EN_MAX}</span><button class="en-plus" id="enPlus" aria-label="Buy energy">+</button></div>
-        ${(S.votes || 0) < 10 ? `<p class="en-new">Pick the photo you think most judges prefer. Right picks earn <b>+${CFG.VOTE} 💎</b>.</p>` : ''}<div class="en-mult" role="group" aria-label="Bet" ${(S.votes || 0) < 10 ? 'hidden' : ''}>${MULTS.map(m => `<button data-mult="${m}" aria-pressed="${(S.mult || 1) === m}" class="${energy() < m ? 'low' : ''}">×${m} <span class="mg">${gemIcon('')}</span></button>`).join('')}</div>
-        ${(S.mult || 1) > energy() ? `<div class="en-empty"><span>Need ${S.mult} ⚡ for ×${S.mult}</span><button id="enBuy">Top up</button></div>`
-          : ''}
+      ${energy() < 1 ? `<div class="jf-en en-out"><span class="en-ic">⚡</span><span class="eo-t"><b>Out of energy</b><small class="en-nx">+5 ⚡ in ${enNext()}</small><small class="en-full">Full again at ${enFullAt()}</small></span><button id="enBuy">Refill</button></div>` : `<div class="jf-en"><div class="en-top"><span class="en-ic">⚡</span><span class="en-bar"><i style="width:${Math.min(100, energy() / EN_MAX * 100)}%"></i></span><span class="en-n">${energy() > EN_MAX ? `${EN_MAX}<small> +${energy() - EN_MAX}</small>` : `${energy()}/${EN_MAX}`}</span><button class="en-plus" id="enPlus" aria-label="Buy energy">+</button></div>
+        ${(S.votes || 0) < 10 ? `<p class="en-new">Pick the photo you think most judges prefer. Right picks earn <b>+${CFG.VOTE} 💎</b>.</p>` : ''}
       </div>`}
-      <div class="lkp2" ${(S.votes || 0) < 10 ? 'hidden' : ''}><span class="lk-l" aria-label="Right picks in a row"><em class="cmb-n">${combo}</em>/10</span><div class="lkp-steps jf-combo">${[...Array(10)].map((_, i) => `<i class="${i < combo ? 'on' : ''} ${[2, 4, 9].includes(i) ? 'm m' + (i + 1) : ''}">${[2, 4, 9].includes(i) ? '🎁' : ''}</i>`).join('')}</div></div>
+      <div class="stk" ${(S.votes || 0) < 10 ? 'hidden' : ''}><div class="stk-row"><span class="stk-lab" aria-label="Your wins are multiplied by your streak"><small>Wins</small><b class="stk-x">×${streakX(combo)}</b></span><div class="lkp-steps jf-combo stk-steps">${[...Array(6)].map((_, i) => `<i class="${i < Math.min(combo, 6) ? 'on' : ''} ${[1, 3, 5].includes(i) ? 'm m' + (i + 1) : ''}">${i === 1 ? '<u>🎁</u>×2' : i === 3 ? '<u>🎁</u>×5' : i === 5 ? '<u>🧰</u>×10' : ''}</i>`).join('')}</div></div></div>
     </div>
     <div class="vh" id="jRes" aria-live="polite"></div>
 `;
   document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = e => { if (e.target.closest('.jrep')) return; if (Date.now() - SWIPED < 400) return; vote(+b.dataset.i); });
-  document.querySelectorAll('#judge [data-mult]').forEach(b => b.onclick = () => { S.mult = +b.dataset.mult; save(); renderJudge(); });
   if ($('#enBuy')) $('#enBuy').onclick = () => outOfEnergy();
   if ($('#tjStrip')) { $('#tjStrip').onclick = () => openTourney(); tWidget(); }
   if ($('#wCard')) $('#wCard').onclick = () => { const p = waitingPhoto(); if (!p) return; if (S.gems < fixCost(p)) { toast(`Keep judging to earn ${fixCost(p) - S.gems} more gems`); return; } S.cur = p.id; WALL = false; save(); go('studio'); renderStudio(); };
@@ -7734,37 +7824,39 @@ function maybeEnhanceNudge() {
 async function vote(pick) {
   if (judging) return; judging = true;
   const pair = seedPair(), p = pair[pick], ca = crowdAvg(pair[0]), cb = crowdAvg(pair[1]);
-  const pctA = Math.max(8, Math.min(92, Math.round(50 + (ca - cb) * 32 + (((S.jIdx * 37) % 23) - 11)))), pct = [pctA, 100 - pctA];
+  const pctA = Math.max(12, Math.min(88, Math.round(50 + (ca - cb) * 12 + (Math.random() * 30 - 15)))), pct = [pctA, 100 - pctA];
   const agree = pct[pick] >= 50, mine = pct[pick];
   document.querySelectorAll('#judge .tot-c').forEach((b, i) => { b.disabled = true; b.classList.add(i === pick ? 'mine' : 'other'); b.classList.toggle('win', pct[i] >= 50); b.querySelector('.tot-r').innerHTML = `<b data-to="${pct[i]}">50%</b><small>picked this</small>`; });
   { const t0 = performance.now(), els = [...document.querySelectorAll('#judge .tot-r b[data-to]')]; const step = now => { const k = Math.min(1, (now - t0) / 650), e = 1 - Math.pow(1 - k, 3); els.forEach(el => el.textContent = Math.round(50 + (+el.dataset.to - 50) * e) + '%'); if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }
-  const ds0 = dailyState(), mult = jMult(), live = isLive(), base = mult ? CFG.VOTE * mult : 1, capNow = false;
-  let tier = 1, tierLab = ''; if (agree && mult) { const r = Math.random(); if (r < .01) { tier = 20; tierLab = '💎 JACKPOT'; } else if (r < .05) { tier = 5; tierLab = '🔥 Big win ×5'; } else if (r < .15) { tier = 2; tierLab = '✨ Double ×2'; } }
-  const earn = !agree ? (live ? 2 : 0) : base * tier + (live ? 5 : 0), enBack = mult && Math.random() < .06 ? mult : 0;
-  energy(); S.en = Math.max(0, S.en - mult); if (S.en < EN_MAX && S.en + mult >= EN_MAX) S.enAt = Date.now(); S.lastMult = mult || 1; if (enBack) S.en += enBack; setTimeout(paintEnergy, 0); const justEmpty = mult > 0 && S.en < 1;
+  const ds0 = dailyState(), hasEn = energy() >= 1, prevCombo = S.combo || 0, mult = hasEn ? streakX(agree ? prevCombo + 1 : 0) : 0, live = isLive(), base = mult ? CFG.VOTE * mult : 1, capNow = false;
+  const tier = 1, tierLab = '';
+  const earn = !agree ? 0 : base + (live ? 5 : 0), enBack = 0;
+  energy(); const cost = hasEn ? 1 : 0; S.en = Math.max(0, S.en - cost); if (S.en < EN_MAX && S.en + cost >= EN_MAX) S.enAt = Date.now(); S.lastMult = mult || 1; setTimeout(paintEnergy, 0); const justEmpty = cost > 0 && S.en < 1;
   if (nudgeFrom == null) nudgeFrom = S.gems;
-  S.votes++; S.since++; S.tSince = (S.tSince || 0) + 1; S.jIdx += 2; S.gems += earn;
-  S.combo = agree ? (S.combo || 0) + 1 : 0; const shown = S.combo, comboHit = agree && S.votes > 10 && [3, 5, 10].includes(S.combo) ? S.combo : 0; if (S.combo >= 10) S.combo = 0;
+  S.votes++; S.since++; S.tSince = (S.tSince || 0) + 1; S.jIdx += 2; S.gems += earn; meterAdd(earn);
+  S.combo = agree ? (S.combo || 0) + 1 : 0; const shown = S.combo, comboHit = agree && S.votes > 10 && STK.includes(S.combo) ? ({ 2: 3, 4: 5, 6: 10 })[S.combo] : 0;
   const drop = agree && S.votes > 10 && !comboHit && Math.random() < .04;
   const ds = dailyState(); ds.D.n++; ds.D.sn = (ds.D.sn || 0) + 1;
   let streakHit = 0;
   if (S.votes >= 10 && ds.D.sn >= 3 && !ds.D.got.includes(ds.si)) { ds.D.streak = (ds.D.last === ds.t || ds.D.last === ds.y) ? (ds.D.streak || 0) + 1 : 1; ds.D.last = ds.t; ds.D.got.push(ds.si); streakHit = ds.D.streak; S.gems += STREAK_GEMS; paintFlame(); }
   save();
-  document.querySelectorAll('#judge .lkp-steps i').forEach((d, i) => { d.classList.toggle('on', i < shown); d.classList.toggle('pop', comboHit && i === shown - 1); }); document.querySelectorAll('#judge .cmb-n').forEach(n => n.textContent = shown); document.querySelectorAll('#judge .cmb-nx').forEach(n => n.textContent = comboNext(shown)); 
+  { const sx = document.querySelector('#judge .stk-x'); if (sx) sx.textContent = '×' + streakX(shown); const sf = document.querySelector('#judge .stk-fill'); if (sf) sf.style.width = stkPct(shown) + '%'; document.querySelectorAll('#judge .stk-m').forEach(m => { const on = shown >= +m.dataset.n; m.classList.toggle('pop', on && !m.classList.contains('on')); m.classList.toggle('on', on); }); } document.querySelectorAll('#judge .lkp-steps i').forEach((d, i) => { d.classList.toggle('on', i < Math.min(shown, 6)); d.classList.toggle('pop', comboHit && i === shown - 1); }); document.querySelectorAll('#judge .cmb-n').forEach(n => n.textContent = shown); document.querySelectorAll('#judge .cmb-nx').forEach(n => n.textContent = comboNext(shown)); 
   await sleep(680);
   const near = !agree && mine >= 42;
   const mc = document.querySelectorAll('#judge .tot-c')[pick], word = mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : near ? 'So close!' : mine >= 35 ? 'Close call' : 'Missed it';
   mc.querySelector('.tot-r').insertAdjacentHTML('afterbegin', `<span class="tot-v ${agree ? 'hit' : 'miss'}">${agree ? '✓' : '✕'} ${word}</span>`);
   $('#jRes').textContent = `${word} ${mine}% of judges picked this one.${earn ? ` Plus ${earn} gems.` : ''}`;
-  if (live) mc.querySelector('.tot-r').insertAdjacentHTML('beforeend', `<span class="tot-x lv">🔴 Your vote counted · +${agree ? 5 : 2} live bonus</span>`);
+  if (live && agree) mc.querySelector('.tot-r').insertAdjacentHTML('beforeend', `<span class="tot-x lv">🔴 Live match · +5 bonus</span>`);
   const tr = mc.querySelector('.tot-r');
   if (tierLab) { winBanner(tierLab, `+${base * tier} 💎`, tier); if (tier === 20) mc.classList.add('jack'); }
-  else if (earn && mult > 1) tr.insertAdjacentHTML('beforeend', `<span class="tot-x">×${mult} · +${earn} 💎</span>`);
+  else if (earn && mult > 1) tr.insertAdjacentHTML('beforeend', `<span class="tot-x">×${mult} streak · +${earn} 💎</span>`);
+  if (!agree && prevCombo >= 2) tr.insertAdjacentHTML('beforeend', `<span class="tot-x stk-lost">✕ ${prevCombo}-pick streak lost · back to ×1</span>`);
   if (near) tr.insertAdjacentHTML('beforeend', `<span class="tot-x nm">Crowd split ${mine}/${100 - mine}</span>`);
   if (enBack) tr.insertAdjacentHTML('beforeend', `<span class="tot-x en">⚡ +${enBack} energy back</span>`);
-  if ([2, 4, 9].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">${S.combo === 9 ? '🧰 1 more for the big chest!' : '🎁 1 more for a lucky box!'}</span>`);
+  if ([1, 3, 5].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">1 more for ×${streakX(S.combo + 1)} + ${S.combo === 5 ? '🧰' : '🎁'}</span>`);
   if (earn) setTimeout(() => gemExplosion(earn, { mid: true, from: mc }), tier > 1 ? 900 : 0);
   await sleep(tier === 20 ? 2800 : tier > 1 ? 2200 : 1900);
+  if (window.__meterHit) { window.__meterHit = 0; renderJudge(); judging = false; if (typeof paintTixTag === 'function') paintTixTag(); ticketPop(); return; }
   if (!comboHit && tDue()) { renderJudge(); $('#judge').scrollTop = 0; judging = false; if (tPrompt()) { if (S.since >= CFG.BATTLE_EVERY - 1) S.since = Math.max(0, CFG.BATTLE_EVERY - 3); save(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; } }
   if (!comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.user && fighters().length) { S.frIntro = 1; S.since = 0; save(); renderJudge(); judging = false;
     const me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
@@ -7774,7 +7866,7 @@ async function vote(pick) {
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
   if (streakHit) { const rw = STREAK_GEMS; celebrate({ src: p.src, score: '🔥' + streakHit, title: streakHit === 1 ? 'Streak started!' : `${streakHit} streak!`, text: `You judged 3 photos this ${SESS[ds.si].toLowerCase()}. <b>+${rw} gems</b>. ${ds.si < 3 ? `Come back from ${SESS_AT[ds.si + 1]} for another ${rw}.` : `Come back after midnight for another ${rw}.`}`, cta: 'Keep judging', onCta: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); }, onLater: () => { gemExplosion(rw, { label: 'Streak' }); if (comboHit) setTimeout(luckyDrop, 1400); } }); return; }
-  if (S.votes >= 10 && !S.betIntro) { S.betIntro = true; save(); celebrate({ src: p.src, score: '🎁', title: 'Bets and lucky boxes unlocked!', text: 'Bet ×2, ×5 or ×10 energy to earn more gems per right pick. Get <b>3, 5 and 10 right in a row</b> to open lucky boxes.', cta: 'Got it' }); return; }
+  if (S.votes >= 10 && !S.betIntro) { S.betIntro = true; save(); celebrate({ src: p.src, score: '🎁', title: 'Streaks unlocked!', text: 'Get picks right in a row to multiply your gems: <b>2 in a row ×2, 4 ×5, 6 ×10</b>, plus a gift box at each. One wrong pick and you’re back to ×1.', cta: 'Got it' }); return; }
   if (comboHit === 5) { luckyDrop(); return; }
   if (comboHit) { miniDrop(comboHit); return; }
   if (drop) { miniDrop(); return; }
@@ -7793,7 +7885,7 @@ function winBanner(t, sub, tier) {
   const w = document.createElement('div'); w.className = 'winb t' + tier; w.innerHTML = `<b>${t}</b><span>${sub}</span>`;
   document.body.appendChild(w); setTimeout(() => w.classList.add('out'), tier === 20 ? 2200 : 1400); setTimeout(() => w.remove(), tier === 20 ? 2700 : 1900);
 }
-const comboNext = n => n < 3 ? `box at 3` : n < 5 ? `bigger box at 5` : n < 10 ? `big chest at 10` : 'chest!';
+const comboNext = n => n < 2 ? `box at 2` : n < 4 ? `bigger box at 4` : n < 6 ? `big chest at 6` : 'chest!';
 function miniDrop(kind) {
   if (kind === 10) { chestOpen(); return; }
   // pick one of three boxes; then the other two are revealed (near miss)
@@ -7804,7 +7896,7 @@ function miniDrop(kind) {
   const boxes = [roll(), roll(), roll()], top = P.reduce((a, x) => x.k === 'g' && x.n > a ? x.n : a, 0);
   const lab = x => x.k === 'g' ? `<b>+${x.n}</b><small>💎 gems</small>` : `<b>+${x.n}</b><small>⚡ energy</small>`;
   c.innerHTML = `<div class="crbox lucky md" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
-    <h2 id="crT">${kind === 3 ? 'Lucky box!' : 'Mystery drop!'}</h2><p class="lk-sub">${kind === 3 ? '3 right picks in a row!' : 'A bonus fell out of your vote'}</p>
+    <h2 id="crT">${kind === 3 ? 'Lucky box!' : 'Mystery drop!'}</h2><p class="lk-sub">${kind === 3 ? '2 right picks in a row!' : 'A bonus fell out of your vote'}</p>
     <p class="md-pk">Pick a box. One could hold <b>${top} gems</b>.</p>
     <div class="lk-boxes md3">${[0, 1, 2].map(k => `<button class="lk-box" data-b="${k}" aria-label="Box ${k + 1}">🎁</button>`).join('')}</div>
     <div id="mdArea"></div>
@@ -7816,7 +7908,7 @@ function miniDrop(kind) {
     b.classList.add('shake');
     setTimeout(() => {
       b.classList.remove('shake'); b.classList.add('mine', 'bxpop'); b.innerHTML = lab(pz);
-      if (pz.k === 'g') S.gems += pz.n; else { energy(); S.en += pz.n; } save(); if (typeof paintEnergy === 'function') paintEnergy();
+      if (pz.k === 'g') { S.gems += pz.n; meterAdd(pz.n); } else { energy(); S.en += pz.n; } save(); if (typeof paintEnergy === 'function') paintEnergy();
       setTimeout(() => {
         c.querySelectorAll('.lk-box').forEach((x, j) => { if (j !== k) { x.classList.add('other'); x.innerHTML = lab(boxes[j]); } });
         const best = boxes.reduce((a, x, j) => (x.k === 'g' && x.n > (boxes[a].k === 'g' ? boxes[a].n : 0) ? j : a), k);
@@ -7834,7 +7926,7 @@ function chestOpen() {
   let r = Math.random(), rar = R[0]; for (const x of R) { if (r < x.w) { rar = x; break; } r -= x.w; }
   const gems = rar.g * LM, ladder = ['common', 'rare', 'epic', 'legend'].slice(0, R.indexOf(rar) + 1);
   c.innerHTML = `<div class="crbox lucky md ch" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
-    <h2 id="crT">Big chest!</h2><p class="lk-sub">10 right picks in a row!</p>
+    <h2 id="crT">Big chest!</h2><p class="lk-sub">6 right picks in a row!</p>
     <button class="ch-box" id="chBox" aria-label="Tap to crack the chest">🧰</button>
     <p class="md-tap" id="chTap">Tap 3 times to crack it open</p><div class="ch-taps"><i></i><i></i><i></i></div>
     <div id="chArea"></div>
@@ -7851,7 +7943,7 @@ function chestOpen() {
     setTimeout(() => {
       box.classList.add('open'); box.innerHTML = '✨';
       const shield = false;
-      S.gems += gems; energy(); S.en += rar.e; save(); paintTop(); if (typeof paintEnergy === 'function') paintEnergy();
+      S.gems += gems; meterAdd(gems); energy(); S.en += rar.e; save(); paintTop(); if (typeof paintEnergy === 'function') paintEnergy();
       $('#chArea').innerHTML = `<span class="ch-rar r-${rar.k}">${rar.n} chest</span>
         <div class="ch-items"><div class="ch-it" style="animation-delay:.1s"><b>+${gems}</b><small>💎 gems</small></div><div class="ch-it" style="animation-delay:.45s"><b>+${rar.e}</b><small>⚡ energy</small></div></div>
         <button class="bt-cta" id="chDone" style="animation:cpop .4s .8s both">Collect</button>`;
@@ -7866,7 +7958,7 @@ function luckyDrop() {
   c.innerHTML = `<div class="crbox lucky" role="dialog" aria-modal="true" aria-labelledby="crT">
     <div class="cr-rays" aria-hidden="true"></div>${[...Array(14)].map((_, i) => `<i class="cr-cf" style="left:${(i * 53) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('')}
     <div class="lk-gift" aria-hidden="true">🎁</div>
-    <h2 id="crT">Lucky drop!</h2><p class="lk-sub">5 right picks in a row!</p>
+    <h2 id="crT">Lucky drop!</h2><p class="lk-sub">4 right picks in a row!</p>
     <p>Take <b>${sure} gems</b> now, or risk them on a mystery box. One of the three boxes is empty. The others hold ${PRIZES[0]}, ${PRIZES[1]} or <b>${PRIZES[2]}</b> gems.${LM > 1 ? ` <b>×${LM} bet!</b>` : ''}</p>
     <div id="lkArea"><button class="bt-cta" id="lkTake">Take ${sure} gems</button><button class="lk-risk" id="lkRisk">Risk it: open a box</button></div></div>`;
   c.classList.add('on', 'cr');
@@ -8184,11 +8276,28 @@ function openBattleChooser() {
     else openKing(kc); });
 }
 const TIX_GEMS = 300; // gems for one free $1 cash entry
+// the golden ticket pop: free entry to a cash tournament
+function ticketPop() {
+  const c = $('#coach'), n = S.cashTix || 0;
+  const TROPHY = '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 8h24v14a12 12 0 0 1-24 0z" fill="#8A5A0A"/><path d="M20 12h-7a8 8 0 0 0 9 10M44 12h7a8 8 0 0 1-9 10" fill="none" stroke="#8A5A0A" stroke-width="3.4"/><path d="M29 33h6v8h-6z" fill="#8A5A0A"/><path d="M22 50a10 6 0 0 1 20 0z" fill="#8A5A0A"/><rect x="20" y="49" width="24" height="5" rx="2" fill="#8A5A0A"/></svg>';
+  const LAUREL = d => `<svg class="tp-lau ${d}" viewBox="0 0 24 48" aria-hidden="true"><path d="M18 46C6 38 3 22 10 4" fill="none" stroke="#8A5A0A" stroke-width="2"/>${[8, 16, 24, 32, 40].map(y => `<ellipse cx="${y < 20 ? 8 : 10 - (y - 20) / 6}" cy="${y}" rx="5" ry="2.4" fill="#8A5A0A" transform="rotate(-35 ${y < 20 ? 8 : 10} ${y})"/>`).join('')}</svg>`;
+  c.innerHTML = `<div class="crbox tp" role="dialog" aria-modal="true" aria-labelledby="crT">
+    <div class="cr-rays" aria-hidden="true"></div>${[...Array(14)].map((_, i) => `<i class="cr-cf" style="left:${(i * 61) % 100}%;background:${['#FFC93C', '#B46CFF', '#FFC93C', '#9B5CFF'][i % 4]};animation-delay:${(i * .17).toFixed(2)}s"></i>`).join('')}
+    <button class="tp-x" id="crLater" aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h2 id="crT" class="tp-h"><span class="g">FREE ENTRY</span><span class="w">TO A CASH</span><span class="g">TOURNEY!</span></h2>
+    <div class="tp-tk"><svg class="tp-crown" viewBox="0 0 32 24" aria-hidden="true"><path d="M3 7l6.5 6L16 3l6.5 10L29 7l-2.6 13H5.6z" fill="#FFC93C"/><rect x="5.5" y="19.5" width="21" height="3" rx="1.2" fill="#E9A514"/><circle cx="3" cy="6.5" r="2" fill="#FFC93C"/><circle cx="16" cy="2.5" r="2" fill="#FFC93C"/><circle cx="29" cy="6.5" r="2" fill="#FFC93C"/></svg>
+      <div class="tp-ticket"><div class="tp-main">${LAUREL('l')}<span class="tp-tro">${TROPHY}</span>${LAUREL('r')}</div><div class="tp-stub"><span>FREE<br>ENTRY</span></div></div>${n > 1 ? `<span class="tp-n">×${n}</span>` : ''}</div>
+    <p class="tp-t">Your ticket is ready.<br><b>Play free. Win real cash.</b></p>
+    <button class="bt-cta tp-go" id="crGo">🏆 Enter cash tourney</button></div>`;
+  c.classList.add('on', 'cr');
+  const close = () => c.classList.remove('on', 'cr');
+  $('#crGo').onclick = () => { close(); tArm(); openTourney(); };
+  $('#crLater').onclick = close; c.onclick = e => { if (e.target === c) close(); };
+}
 function buyTicket() {
   if (S.gems < TIX_GEMS) { closeSheet(); runOut('gems', `You need ${TIX_GEMS - S.gems} more gems`, null, TIX_GEMS - S.gems); return; }
-  S.gems -= TIX_GEMS; S.cashTix = (S.cashTix || 0) + 1; save(); paintGems(); closeSheet();
-  celebrate({ src: (S.user && S.user.pic) || '', score: '🎟️', title: 'Free entry ready!', text: `Use it on any <b>$1</b> tournament or cash battle. Prizes are <b>real cash</b>.${S.cashTix > 1 ? ` You have <b>${S.cashTix}</b> free entries.` : ''}`,
-    cta: '🏆 Play a tournament', onCta: () => { tArm(); openTourney(); }, later: '⚔️ Cash battle instead', onLater: () => openCashBattle(1) });
+  window.__spent = true; S.gems -= TIX_GEMS; S.cashTix = (S.cashTix || 0) + 1; save(); paintGems(); paintTixTag(); closeSheet();
+  ticketPop();
 }
 function payCash(amt, what, then) {
   if (amt === 1 && (S.cashTix || 0) > 0) { S.cashTix--; save(); toast(`🎟️ Free entry used${S.cashTix ? ` · ${S.cashTix} left` : ''}`); then(); return true; }
@@ -8383,7 +8492,10 @@ const T_SPLIT = { win: .80, final: .20 }; // gems for each round won before the 
 let T_GEMS = T_TIERS[1].gems;
 const tTier = fee => { T_FEE = fee; T_GEMS = T_TIERS[fee].gems; };
 const tPool = (n = T_N) => +(n * T_FEE * (1 - KING_FEE)).toFixed(2);
-const tPay = (k, n = T_N) => { const pool = tPool(n); return +(k === 'win' ? Math.max(T_TIERS[T_FEE].gtd, pool * T_SPLIT.win) : pool * T_SPLIT[k]).toFixed(2); };
+const MYST = [[10, .7495], [15, .2], [25, .04], [100, .01], [1000, .0005]]; // winner prize = entry x this
+const mystRoll = () => { let r = Math.random(); for (const [m, w] of MYST) { if (r < w) return m; r -= w; } return 10; };
+const tMult = () => S.tour && !S.tour.seen && S.tour.mult;
+const tPay = (k, n = T_N) => { if (k === 'win' && tMult()) return +(S.tour.fee * S.tour.mult).toFixed(2); const pool = tPool(n); return +(k === 'win' ? Math.max(T_TIERS[T_FEE].gtd, pool * T_SPLIT.win) : pool * T_SPLIT[k]).toFixed(2); };
 // players registered so far (demo: grows from 6 to 32 before the start)
 const tCount = () => Math.max(5, Math.min(T_N, Math.round(T_N - ((tNext() - Date.now()) / (15 * 60000)) * 11)));
 function tLive() { if (document.querySelector('#sheet.on #sheetBody .tk0') && window.__tStart && window.__tStart - Date.now() <= 3000) { window.__tStart = 0; closeSheet(); toast('That tournament has started. Keep judging for the next one.'); return; } const n = tCount(); document.querySelectorAll('#sheetBody [data-tn]').forEach(e => e.textContent = n); document.querySelectorAll('#sheetBody [data-tw]').forEach(e => e.textContent = money(tPay('win', n))); document.querySelectorAll('#sheetBody [data-tf]').forEach(e => e.textContent = money(tPay('final', n))); document.querySelectorAll('#sheetBody [data-tmins]').forEach(e => e.textContent = tMins()); }
@@ -8441,7 +8553,7 @@ function tPrompt() { // shown from judging at a natural break: every 20 votes, a
   tArm(); window.__tSlot = tNext(); S.tSince = 0; S.tLast = Date.now(); save(); // this tournament starts in 1 minute
   const me = fighters()[0];
   const pth = tTheme(slot), ptn = thName(pth), pme = fitFor(pth)[0];
-  celebrate({ src: (pme || me).src, score: '🏆', title: `${ptn} tournament!`, text: `<span class="tp-prz"><small>Win up to</small><b>$${T_TIERS[5].gtd}</b><em>guaranteed prize</em></span>Starts in <b data-tpc>${tMins()}</b> · ${pth === 'any' ? 'any photo can enter' : `<b>${ptn.toLowerCase()} photos only</b>`}. ${pme ? `Your ${pme.s.total} photo is ready.` : `Add a ${ptn.toLowerCase()} photo to play.`} Entry from <b>$1</b>.`, cta: pme ? 'Let’s play' : `📷 Add a ${ptn.toLowerCase()} photo`, onCta: () => { clearInterval(window.__tpc); openTourney(); }, later: 'Not now', onLater: () => clearInterval(window.__tpc) });
+  celebrate({ src: (pme || me).src, score: '🏆', title: `${ptn} tournament!`, text: `<span class="tp-prz"><small>Mystery prize</small><b>up to $1,000</b><em>a spin sets the prize</em></span>Starts in <b data-tpc>${tMins()}</b> · ${pth === 'any' ? 'any photo can enter' : `<b>${ptn.toLowerCase()} photos only</b>`}. ${pme ? `Your ${pme.s.total} photo is ready.` : `Add a ${ptn.toLowerCase()} photo to play.`} Entry from <b>$1</b>.`, cta: pme ? ((S.cashTix || 0) ? '🎟️ Play free · use your entry' : 'Let’s play') : `📷 Add a ${ptn.toLowerCase()} photo`, onCta: () => { clearInterval(window.__tpc); openTourney(); }, later: 'Not now', onLater: () => clearInterval(window.__tpc) });
   const c = $('#coach');
   clearInterval(window.__tpc); window.__tpc = setInterval(() => { const e = c.querySelector('[data-tpc]'); if (!e || !c.classList.contains('on')) { clearInterval(window.__tpc); return; } if (window.__tStart - Date.now() <= 3000) { clearInterval(window.__tpc); window.__tStart = 0; c.classList.remove('on', 'cr'); toast('That tournament has started. Keep judging for the next one.'); return; } e.textContent = tMins(); }, 1000);
   return true;
@@ -8522,9 +8634,27 @@ function tTrack(T, reached, out, live) {
 }
 const MEDAL = n => `<svg class="tk-md" viewBox="0 0 40 46" aria-hidden="true"><path d="M10 26l-4 16 7-4 4 6 4-14z M30 26l4 16-7-4-4 6-4-14z" fill="#8B5CF6"/><circle cx="20" cy="18" r="15" fill="${n === 1 ? '#F5B82E' : '#C9CFD8'}" stroke="${n === 1 ? '#B7791F' : '#8A93A3'}" stroke-width="2.5"/><circle cx="20" cy="18" r="10.5" fill="none" stroke="${n === 1 ? '#FFE28A' : '#EEF1F5'}" stroke-width="1.5"/><text x="20" y="23.5" text-anchor="middle" font-size="15" font-weight="800" fill="${n === 1 ? '#7A4A06' : '#4A5160'}" font-family="sans-serif">${n}</text></svg>`;
 const tWon = (cash, gems) => `<span class="tk-wn">${cash ? `<i class="c">${CASH_ICON}+${money(cash)}</i>` : ''}${gems ? `<i class="g">${gemIcon('')}+${gems}</i>` : ''}</span>`;
+function mysteryPop(T, done) {
+  const c = $('#coach'), vals = [10, 15, 25, 100, 1000, 10, 15, 25, 10, 100, 15, 10], big = T.mult >= 100;
+  c.innerHTML = `<div class="crbox myp" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
+    <p class="myp-k">Mystery prize</p><h2 id="crT">Spinning your prize…</h2>
+    <div class="myp-reel" aria-live="polite"><span class="myp-x" id="mypX">×10</span></div>
+    <p class="myp-t" id="mypT">${money(T.fee)} entry × ?</p>
+    <button class="bt-cta" id="crGo" disabled>Go to the tournament</button></div>`;
+  c.classList.add('on', 'cr');
+  let i = 0, d = 60; const el = $('#mypX');
+  const tick = () => { el.textContent = '×' + vals[i++ % vals.length]; d *= 1.13; if (d < 420) setTimeout(tick, d); else land(); };
+  const land = () => { el.textContent = '×' + T.mult; el.classList.add('land', big ? 'big' : 'ok');
+    $('#crT').textContent = big ? `×${T.mult} JACKPOT TOURNAMENT!` : `×${T.mult} prize!`;
+    $('#mypT').innerHTML = `Win it and you take <b>${money(T.fee * T.mult)}</b>`; const g = $('#crGo'); g.disabled = false;
+    g.onclick = () => { c.classList.remove('on', 'cr'); done && done(); }; };
+  setTimeout(tick, 200);
+}
 function tPrizeCard(n) {
-  return `<div class="tk-pc"><span class="tk-gb">${money(T_TIERS[T_FEE].gtd).replace('.00', '')} guaranteed</span>
-    <div class="tk-pr">${MEDAL(1)}<b>Winner</b><em data-tw>${money(tPay('win', n))}</em></div>
+  const m = tMult();
+  return `<div class="tk-pc myst"><span class="tk-gb">🎰 Mystery prize</span>
+    <div class="tk-pr">${MEDAL(1)}<b>Winner</b>${m ? `<em data-tw>${money(tPay('win', n))}</em>` : `<em class="rng">${money(T_FEE * 10).replace('.00', '')}–${money(T_FEE * 1000).replace('.00', '')}</em>`}</div>
+    ${m ? `<p class="myx">Your spin: <b>×${m}</b></p>` : `<p class="myx">A spin sets the winner’s prize when you join: usually <b>×10</b>, up to <b>×1,000</b> your entry</p>`}
     <div class="tk-pr f">${MEDAL(2)}<b>Finalist</b><em data-tf>${money(tPay('final', n))}</em></div>
     <p>Earlier round wins earn gems</p></div>`;
 }
@@ -8565,7 +8695,7 @@ function openTourney() {
     const po = { fits: fitsP, sel: tsel, cat: th, target: CFG.QUALIFY - 1, who: 'the', themeName: tn, backLabel: 'Back to the tournament', reopen: id => { window.__tSel = id; openTourney(); } };
     $('#tkPick').innerHTML = pickerHTML(po); const getSel = bindPicker(po);
     $('#tkGo').onclick = () => { const p = S.photos.find(x => x.id === getSel()); if (!p) { toast(`Add a ${tn.toLowerCase()} photo to enter.`); return; } if (p.s.total < CFG.QUALIFY) { toast(`This photo scores ${p.s.total}. Enhance it to ${CFG.QUALIFY}+ to enter.`); return; } if (Date.now() > slot) { toast(`That one has started. Next ${tn} tournament: ${ampm(slot + T_THEMES.length * 15 * 60000)}.`); return; }
-      payCash(T_FEE, 'The tournament', () => { const t = tNew(p); t.theme = th; t.lastKey = 'lobby'; save(); openTourney(); }); };
+      payCash(T_FEE, 'The tournament', () => { const t = tNew(p); t.theme = th; t.lastKey = 'lobby'; t.mult = mystRoll(); save(); closeSheet(); mysteryPop(t, () => openTourney()); }); };
     return;
   }
   openSheet(`<div class="kg tk"><div id="tkBody"></div></div>`, { full: true, cover: true });
@@ -8655,7 +8785,7 @@ function openBattle() {
   if (!S.btAlt && !openBattle.skipCash) { const me0 = bme || fighters()[0]; if (me0) { celebrate({ src: me0.src, score: '💎', title: `${tn} gem battle!`, text: bme ? `A rival wants a <b>${tn.toLowerCase()}</b> battle with your ${bme.s.total} photo. Stake <b>25 💎</b>, win <b>50 💎</b>. Result in 30 seconds.` : `A rival wants a <b>${tn.toLowerCase()}</b> battle for <b>50 💎</b>. You don’t have a ${tn.toLowerCase()} photo yet. Add one and play!`, cta: bme ? 'Battle · 25 💎' : `📷 Add a ${tn.toLowerCase()} photo`, onCta: () => openGemBattle(25, null, { theme: bth }), later: 'Not now' }); return; } }
   if (!openBattle.skipCash) {
     const me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0], mc = me.cat ? pcatName(me.cat).toLowerCase() : 'photo';
-    celebrate({ src: me.src, score: '⚔️', title: 'Cash battle!', text: `A rival wants a <b>real cash battle</b> with your ${me.s.total} ${esc(mc)} photo. You’ll face another <b>${esc(mc)}</b> photo. Stake <b>$1</b>, win <b>${money(2 * (1 - KING_FEE))}</b>. Real judges decide.`, cta: 'Let’s battle · $1', onCta: () => openCashBattle(1, null, me), later: 'Not now' });
+    celebrate({ src: me.src, score: '⚔️', title: 'Cash battle!', text: `A rival wants a <b>real cash battle</b> with your ${me.s.total} ${esc(mc)} photo. You’ll face another <b>${esc(mc)}</b> photo. Stake <b>$1</b>, win <b>${money(2 * (1 - KING_FEE))}</b>. Real judges decide.`, cta: (S.cashTix || 0) ? '🎟️ Battle free · use your entry' : 'Let’s battle · $1', onCta: () => openCashBattle(1, null, me), later: 'Not now' });
     return;
   }
   const mine = S.photos.filter(p => p.cat);
