@@ -4766,6 +4766,21 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .stopc.crb.hp{gap:6px;padding:6px 12px!important;min-height:40px}.hp-t{font:800 .78rem Inter,sans-serif;color:#E6DDF5;white-space:nowrap}
 .stopc.crb.hp.zero0{background:transparent!important;box-shadow:inset 0 0 0 1px #3A2760!important;padding:6px 10px!important;min-height:32px;opacity:.7}.stopc.crb.hp.zero0 .hp-d i{width:8px;height:8px}.hp-i svg{width:20px;height:20px;color:#fff;display:block}.hp-d{display:flex;gap:4px}.hp-d i{width:11px;height:11px;border-radius:50%;background:#2A1A46;box-shadow:inset 0 0 0 1.5px #6A4FA0}.hp-d i.on{background:#FFC93C;box-shadow:0 0 6px rgba(255,201,60,.7)}
 .stopc.crb.hp.in{background:#0E3A2A!important;box-shadow:inset 0 0 0 1.5px #2EE59D!important}.hp-ok{font:900 1.05rem 'Bricolage Grotesque',sans-serif;color:#2EE59D;white-space:nowrap}.stopc.crb.hp small{font-size:.7rem;font-weight:800;color:#7CF5C4}
+.bcc-ld{margin-left:auto;display:flex;align-items:center;gap:4px;padding-left:8px;border-left:1.5px solid #4A2F78;flex:none}.bcc-ld .crw-ic{width:22px;height:17px}.bcc-ld b{font:900 1rem 'Bricolage Grotesque',sans-serif!important;color:#fff}
+.bcc-sh{margin:2px 0 4px;font-size:.8rem;font-weight:800;color:#fff;text-align:center}.bcc-sh b{color:#2EE59D}
+.bcc-dt{display:flex;align-items:center;justify-content:center;gap:5px;margin:0 0 8px}.bcc-dt i{width:15px;height:15px;border-radius:50%;box-shadow:inset 0 0 0 2px #B89AF0}.bcc-dt i.on{background:#FFC93C;box-shadow:0 0 8px rgba(255,201,60,.7)}.bcc-dt b{margin-left:6px;font-weight:800;font-size:.9rem}
+.bcc-dt.in i.on{background:#2EE59D;box-shadow:0 0 8px rgba(46,229,157,.7)}.bcc-dt.in b{color:#2EE59D}
+.bcc-t{gap:6px!important}.bcc-t>b{font-size:clamp(.9rem,4vw,1.1rem)!important;min-width:0}.bcc-t>svg{width:20px!important;height:20px!important}.bcc-ld{padding-left:6px}.bcc-ld .crw-ic{width:18px;height:14px}.bcc-ld b{font-size:.92rem!important}
+.bcc-dt b{margin:0!important;font:900 1.3rem 'Bricolage Grotesque',sans-serif!important;color:#FFC93C}.bcc-dt small{margin-left:4px;font-size:.78rem;color:#C9B4F5}.bcc-dt.in b{color:#2EE59D!important}
+.bcc-t.c{justify-content:center;border-bottom:0!important;padding-bottom:0!important}.bcc-t.c>b{flex:none}
+.bcc-pl{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 8px;font-weight:800;font-size:1.05rem}.bcc-pl i{width:1.5px;height:20px;background:#6A4FA0}
+.bcc-pl .t{display:flex;align-items:center;gap:5px}.bcc-pl .t .crw-ic{width:22px;height:17px}.bcc-pl .t b{color:#fff}.bcc-pl .y{color:#FF5EB0}.bcc-pl .y b{color:#fff;margin-left:2px}.bcc-pl.in .y b{color:#2EE59D}
+.bt-hd p{color:#fff!important;font-weight:700}.bt-pt{display:block;margin-top:2px;font-size:.85rem;color:#B89AF0}
+.bcc-pl{white-space:nowrap}.bcc-pl.in .y{color:#2EE59D}
+.yd-r.fr2{display:flex;gap:14px;padding:10px 16px}.yd-ic{width:40px;flex:none;display:flex;justify-content:center;font-size:1.9rem;line-height:1}.yd-ic svg{width:30px;height:30px;color:#fff}
+.yd-tx{flex:1;min-width:0;display:flex;flex-direction:column}.yd-tx b{font:800 1.1rem 'Bricolage Grotesque',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.yd-tx b.g{color:#FFC93C}.yd-tx small{font-size:.85rem;color:#C9B4F5}
+.yd-m{font:900 1.25rem 'Bricolage Grotesque',sans-serif;color:#7CF5C4;white-space:nowrap}
+.yd-r.fr2.hd{background:linear-gradient(90deg,#3A2318,#2A1A2E);box-shadow:inset 3px 0 0 #FFC93C,inset 0 0 0 1.5px #5A4030}.yd-r.fr2.in{box-shadow:inset 3px 0 0 #2EE59D,inset 0 0 0 2px #2EE59D}
 </style>
 </head>
 <body>
@@ -8001,7 +8016,7 @@ const lgPhoto = (h, k) => { const pool = SEED.filter(x => x.cat === BATTLE_POOL[
 const lgMine = k => fighters().filter(p => fitsTheme(p, k))[0] || null;
 function battleShell(inner) {
   const fr = GV.tab === 'friends';
-  return `<div class="bt"><div class="bt-hd"><h1>Battle for the crown</h1><p>Best photo in each category wins</p><span class="bt-pay">💰 ${fr ? `Friends pots pay <b>Sunday midnight</b> · ${weekLeft()} left` : `Pots pay at <b>midnight</b> · <span data-wk>${dayLeft()}</span> left`}</span></div><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Friends${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
+  return `<div class="bt"><div class="bt-hd"><h1>Battle for the crown</h1><p>${fr ? 'Hold the crown on Sunday to take the pot' : 'Earn 5 points to share the pot'}</p><small class="bt-pt">${fr ? `Friends pots pay Sunday midnight · ${weekLeft()} left` : `Pots pay at midnight · <span data-wk>${dayLeft()}</span> left`}</small></div><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Friends${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
 }
 function bindBattleShell() { document.querySelectorAll('#gallery [data-bv]').forEach(b => b.onclick = () => { GV.tab = b.dataset.bv; renderGallery(); paintTop(); $('#gallery').scrollTop = 0; }); }
 function todaySheet(tab) { tab = tab || 'everyone';
@@ -8019,10 +8034,10 @@ function todaySheet(tab) { tab = tab || 'everyone';
     else { const rows = CATS8.map(k => ({ k, h: c.hold[k] || null, pot: c.pot[k] || 0 })).sort((a, b) => (b.h === 'you') - (a.h === 'you') || b.pot - a.pot);
       const mine = rows.filter(r => r.h === 'you'), tot = mine.reduce((a, r) => a + r.pot, 0);
       body = `${C.length > 1 ? `<div class="cw-chips">${C.map(x => `<button data-ydc="${x.id}" aria-pressed="${x.id === c.id}">${esc(x.name)}</button>`).join('')}</div>` : `<p class="yd-grp">👥 ${esc(c.name)}</p>`}
-      <div class="yd-sum"><div class="${mine.length ? 'hot' : ''}"><b>${money(tot)}</b><small>${mine.length ? 'yours if you hold on' : 'hold a crown to win'}</small></div><div><b>👑 ${mine.length}</b><small>friends crowns you hold</small></div><div><b>⏱ ${weekLeft()}</b><small>until Sunday</small></div></div>
-      <p class="yd-how">Whoever holds a category’s crown at <b>Sunday midnight</b> takes its pot.</p>
-      <div class="yd-l">${rows.map(r => `<button class="yd-r fr ${r.h === 'you' ? 'in' : ''}" data-ydf="${r.k}"><span class="yd-n">${gi(r.k)}<b>${esc(crownName(r.k))}</b></span>
-        <span class="yd-h">${r.h === 'you' ? '👑 You' : r.h ? `👑 @${esc(r.h)}` : 'Up for grabs'}</span><span class="yd-s"><b class="${r.h === 'you' ? '' : 'w'}">${money(r.pot)}</b></span></button>`).join('')}</div>`; } }
+      <div class="yd-sum"><div class="${mine.length ? 'hot' : ''}"><b>${money(tot)}</b><small>Currently winning</small></div><div><b>👑 ${mine.length}</b><small>Crowns you hold</small></div><div><b>⏱ ${weekLeft()}</b><small>Until payout</small></div></div>
+      <p class="yd-how">Hold the crown at <b>Sunday midnight</b> to win its pot.</p>
+      <div class="yd-l">${rows.map(r => `<button class="yd-r fr2 ${r.h ? 'hd' : ''} ${r.h === 'you' ? 'in' : ''}" data-ydf="${r.k}"><span class="yd-ic">${r.h ? '👑' : gi(r.k)}</span>
+        <span class="yd-tx">${r.h ? `<b class="g">${r.h === 'you' ? 'You' : '@' + esc(r.h)}</b><small>${esc(crownName(r.k))}</small>` : `<b>${esc(crownName(r.k))}</b><small>Up for grabs</small>`}</span><span class="yd-m">${money(r.pot)}</span></button>`).join('')}</div>`; } }
   openSheet(`<div class="ug yd"><h2>Your day</h2>${sw}${body}</div>`);
   document.querySelectorAll('#sheetBody [data-ydt]').forEach(b => b.onclick = () => todaySheet(b.dataset.ydt));
   document.querySelectorAll('#sheetBody [data-ydc]').forEach(b => b.onclick = () => { S.crewCur = b.dataset.ydc; save(); todaySheet('friends'); });
@@ -8043,9 +8058,9 @@ function leagueHTML() {
   const L = lgS();
   return `<div class="bc-h"><span class="bc-t"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Daily cash pots · reset in <span data-wk>${dayLeft()}</span></span><button class="link bc-how" id="btRules">How it works</button></div>
     <div class="tcg">${CATS8.map(k => { const K = lgKing(k), me = K.me && K.n > 0, y = L.you[k] || 0, mp = lgMine(k), pr = Math.min(1, y / LG_SHARE);
-      return `<div class="bcc ${lgHold(k).h === 'you' ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b></div>
-        <small class="bcc-l">Pot · pays midnight</small><b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
-        <p class="bcc-sc"><span class="t">${CRW}<b>${me ? 'You' : K.n}</b></span><i>•</i><span class="y">You <b>${y}</b></span></p>
+      return `<div class="bcc ${lgHold(k).h === 'you' ? 'me' : ''}"><div class="bcc-t c">${gi(k)}<b>${esc(crownName(k))}</b></div>
+        <b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
+        <p class="bcc-pl ${y >= LG_SHARE ? 'in' : ''}"><span class="t">${CRW}<b>${me ? 'You' : K.n}</b></span><i></i><span class="y">You <b>${Math.min(Math.max(0, y), LG_SHARE)}/${LG_SHARE}</b></span></p>
         <button class="bcc-ph" data-lgc="${k}" aria-label="${esc(crownName(k))} crown holder’s photo"><img src="${lgHold(k).h === 'you' && mp ? mp.src : lgPhoto(lgHold(k).h, k)}" alt="" loading="lazy"></button>
         ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? 'rev' : ''}" data-lgc="${k}">${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? '🔥 Take revenge' : `${VS_IC}Battle`}</button>` : `<button class="bcc-go up" data-lgc="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>
     <button class="bt-gem" id="btGem"><span>💎</span><span><b>Gem Battle</b><small>Practice for gems · no points at stake</small></span><i>›</i></button>`;
@@ -8132,7 +8147,7 @@ function lgFight(k, h, isKing, revenge, pid) {
           <div class="wr-steps">${steps}</div><strong>${Math.min(y, LG_SHARE)} of ${LG_SHARE} points</strong><span>${y >= LG_SHARE ? 'Keep winning to grow your share' : `${LG_SHARE - y} more point${LG_SHARE - y === 1 ? '' : 's'} to qualify`}${!won && lost ? ' · −1 for this loss' : ''}</span><em>Pays at midnight</em></div>
         ${won ? `<button class="btn block wr-go" id="lbMore">${VS_IC}Battle again</button>` : `<button class="btn block wr-go rev" id="lbRev">🔥 Take revenge</button>`}
         <div style="text-align:center"><button class="link wr-back" data-shclose>Back to Battles</button></div></div>`;
-      paintWallet();
+      paintWallet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery();
       if ($('#lbMore')) $('#lbMore').onclick = () => lgCat(k);
       if ($('#lbRev')) $('#lbRev').onclick = () => revengePrep(null, k, h, me.id);
       document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery(); });
@@ -8186,9 +8201,9 @@ function crewCreate() {
   document.querySelectorAll('#sheetBody [data-cws]').forEach(b => b.onclick = () => { $('#cwName').value = b.dataset.cws; });
   $('#cwGo').onclick = () => { const n = ($('#cwName').value || '').trim() || 'My friends'; const c = newCrew(n); closeSheet(); openBattleTab(); GV.tab = 'friends'; renderGallery(); crewInvite(c); };
 }
-function crewInvite(c) {
+function crewInvite(c, first) {
   const link = `https://yofi.app/crew/${c.id.slice(0, 6)}`, msg = `Join my Yofi friends group “${c.name}” 👑 Battle me for the crowns and the weekly pots: ${link}`;
-  openSheet(`<div class="cwn"><h2>Invite to ${esc(c.name)}</h2><p class="sub">Anyone who joins with this link is in your group and can battle anyone else in it.</p>
+  openSheet(`<div class="cwn"><h2>${first ? 'Invite your mates first' : `Invite to ${esc(c.name)}`}</h2><p class="sub">${first ? `Nobody has joined <b>${esc(c.name)}</b> yet. Send the invite and battle them when they join.` : 'Anyone who joins with this link is in your group and can battle anyone else in it.'}</p>
     <div class="i2-msg"><span class="wa">${WA_ICON}</span><div class="i2-bub">${esc(msg)}</div></div>
     <a class="inv-wa i2-send" id="cwWa" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${WA_ICON}<b>Send on WhatsApp</b></a>
     <button class="inv-copy i2-copy" id="cwCopy"><b>Copy invite link</b></button></div>`);
@@ -8228,7 +8243,7 @@ function bindCrews() {
 }
 function crewCat(c, k, opp) {
   const h = c.hold[k] || null, me = h === 'you', mine = lgMine(k), cn = crownName(k), others = c.members;
-  if (!others.length) { celebrate({ src: (mine || {}).src || '', score: '👥', title: 'Invite your mates first', text: `Nobody has joined <b>${esc(c.name)}</b> yet. Send the invite and battle them when they join.`, cta: `${WA_ICON} Invite`, onCta: () => crewInvite(c), later: 'Later' }); return; }
+  if (!others.length) { crewInvite(c, true); return; }
   if (!mine) { const low = S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0];
     if (low) { celebrate({ src: low.src, score: low.s.total, title: 'Enhance first', text: `Your ${esc(cn.toLowerCase())} photo scores <b>${low.s.total}</b>. Get it to <b>${CFG.QUALIFY}+</b> to battle.`, cta: '✨ Enhance my photo', onCta: () => { S.cur = low.id; save(); WALL = false; go('studio'); renderStudio(); }, later: 'Not now' }); return; }
     addCatPhoto(k); return; }
@@ -8295,7 +8310,7 @@ function crewFight(c, k, h, pid, rev) { const st = frSt();
         ${msg ? `<p class="fb-crown ${won ? 'w' : 'l'}">${msg}</p>` : ''}
         <div class="kg2-next ${won ? 'win' : 'lose'}"><small>${cn} friends pot</small><b>${money(c.pot[k])}</b><span>${c.hold[k] === 'you' ? 'Yours if you hold the crown at Sunday midnight' : `@${esc(c.hold[k])} takes it if they still hold the crown on Sunday`}</span></div>
         <button class="btn block kg2-go" id="cbAgain">${won ? 'Battle again' : `🔥 Take revenge on @${esc(h)}`}</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to ${esc(c.name)}</button></div>`;
-      paintWallet();
+      paintWallet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'friends') renderGallery();
       $('#cbAgain').onclick = () => won ? crewCat(c, k) : revengePrep(c, k, h, me.id);
       document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'friends') renderGallery(); });
     }, 200);
@@ -8512,7 +8527,7 @@ function paintFlame() {
 $('#sFlame').onclick = () => streakPop();
 // countdown on the Judge screen to the next pop: tournament or battle (they take turns every 7 votes)
 const METER = 100, METER_DAY = 2; // judging gems per free $1 entry; daily cap
-function meterAdd(n) { const day = new Date().toDateString(); if (S.mtrDay !== day) { S.mtrDay = day; S.mtrN = 0; }
+function meterAdd(n) { return; /* free entries now only come from the 10-in-a-row chest */ const day = new Date().toDateString(); if (S.mtrDay !== day) { S.mtrDay = day; S.mtrN = 0; }
   if ((S.mtrN || 0) >= METER_DAY) return; S.meterPts = (S.meterPts || 0) + n;
   while (S.meterPts >= METER && (S.mtrN || 0) < METER_DAY) { S.meterPts -= METER; S.mtrN = (S.mtrN || 0) + 1; S.cashTix = (S.cashTix || 0) + 1; window.__meterHit = 1; }
   if ((S.mtrN || 0) >= METER_DAY) S.meterPts = 0; }
@@ -8624,7 +8639,7 @@ async function vote(pick) {
   if (false && [1, 3, 5].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">1 more for ×${streakX(S.combo + 1)}${S.combo === 5 ? ' + 🧰' : S.combo === 3 ? ' + 🎁' : ''}</span>`);
   if (earn) setTimeout(() => gemExplosion(earn, { mid: true, from: mc }), tier > 1 ? 900 : 0);
   await sleep(tier === 20 ? 2800 : tier > 1 ? 1800 : 1100);
-  if (window.__meterHit) { window.__meterHit = 0; renderJudge(); judging = false; if (typeof paintTixTag === 'function') paintTixTag(); ticketPop(); return; }
+  if (false && window.__meterHit) { window.__meterHit = 0; renderJudge(); judging = false; if (typeof paintTixTag === 'function') paintTixTag(); ticketPop(); return; }
   if (false && !comboHit && tDue()) { renderJudge(); $('#judge').scrollTop = 0; judging = false; if (tPrompt()) { if (S.since >= CFG.BATTLE_EVERY - 1) S.since = Math.max(0, CFG.BATTLE_EVERY - 3); save(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; } }
   if (!comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.user && fighters().length) { S.frIntro = 1; S.since = 0; save(); renderJudge(); judging = false;
     const me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
