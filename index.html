@@ -4737,6 +4737,8 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .dsk-how{display:block;font-size:.72rem;color:#A994CF}
 .dsk-sh{display:flex;align-items:center;justify-content:center;gap:6px;margin:14px 0 0;font:800 1.05rem "Bricolage Grotesque",sans-serif;color:#fff}.dsk-sh b{color:#6AE3FF}.dsk-sh svg,.dsk-sh img{width:20px;height:20px}
 .crbox.dsk h2.dsk-h{margin:4px 0 0;font-size:clamp(1.3rem,6.4vw,1.75rem)!important}.crbox.dsk{max-height:92vh;overflow-y:auto}
+.ug-cat{margin-top:4px;padding:14px;border-radius:18px;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760;text-align:left}.ug-cat>b{display:block;font:800 1.05rem "Bricolage Grotesque",sans-serif}.ug-cat>small{display:block;margin:2px 0 10px;color:#C9B4F5}
+.ug-cc{display:flex;flex-wrap:wrap;gap:8px}.ug-cc button{display:flex;align-items:center;gap:6px;padding:8px 12px;border:0;border-radius:999px;font:700 .9rem Inter,sans-serif;color:#fff;cursor:pointer;background:#2A1748;box-shadow:inset 0 0 0 1.5px #5A3A8A}.ug-cc svg{width:18px;height:18px}
 </style>
 </head>
 <body>
@@ -6321,10 +6323,12 @@ function gemIdeas() {
 }
 function useGems() {
   const I = gemIdeas();
-  openSheet(`<div class="ug"><h2>Use your gems</h2><p class="sub">You have <b>${S.gems} ⭐</b>. Here’s what they can do for you right now.</p>
+  openSheet(`<div class="ug"><h2>Use your gems</h2><p class="sub">You have <b>${Math.floor(S.gems).toLocaleString()} ⭐</b>. Here’s what they can do for you right now.</p>
     ${false ? `<button class="ug-r ug-tix" id="ugTix"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free cash entr${S.cashTix === 1 ? 'y' : 'ies'}${S.cashTix > 1 ? ` · ${S.cashTix}` : ''}</b><small>Play a $1 battle or tournament free. Win real cash.</small></span><em class="claim">Claim</em></button>` : ''}
     ${I.length ? I.map((x, i) => `<button class="ug-r" data-ug="${i}"><span class="ug-i">${x.ic}</span><span class="ug-t"><b>${x.t}</b><small>${x.d}</small></span><em class="${S.gems < x.cost ? 'need' : ''}">${x.cost} ⭐</em></button>`).join('') : `<p class="ug-none">Upload a photo in Studio and your gems can start working for you.</p>`}
+    ${(() => { const miss = CATS8.filter(k => k !== 'any' && !S.photos.some(p => p.cat === k)); return miss.length ? `<div class="ug-cat"><b>📷 Battle in a new category</b><small>Upload a photo and enhance it to ${CFG.QUALIFY}+ to compete for these pots</small><div class="ug-cc">${miss.map(k => `<button data-ugc="${k}">${gi(k)}${esc(crownName(k))}</button>`).join('')}</div></div>` : ''; })()}
     <button class="link ug-buy" id="ugBuy">Get more gems</button></div>`);
+  document.querySelectorAll('#sheetBody [data-ugc]').forEach(b => b.onclick = () => { const k = b.dataset.ugc; closeSheet(); S.frameHint = { cats: [k], lab: catNm(k), frame: catNm(k) }; save(); if ($('#flow').classList.contains('on')) closeFlow(); go('studio'); renderStudio(); pickPhoto(true); });
   document.querySelectorAll('#sheetBody [data-ug]').forEach(b => b.onclick = () => { const x = I[+b.dataset.ug]; if (S.gems < x.cost) { closeSheet(); runOut('gems', `You need ${x.cost - S.gems} more gems`, null, x.cost - S.gems); return; } x.go(); });
   $('#ugBuy').onclick = () => { closeSheet(); openStore(); };
   if ($('#ugTix')) $('#ugTix').onclick = () => { closeSheet(); ticketPop(); };
@@ -6341,7 +6345,7 @@ function gemNudge(force) {
     celebrate({ src: (fighters()[0] || {}).src || '', score: '🎟️', title: 'Free cash entry unlocked!', text: `Swap <b>${TIX_GEMS} 💎</b> for a free <b>$1</b> tournament or cash battle. <b>Win real money</b> without spending a cent.`, cta: '🎟️ Get my free entry', onCta: buyTicket, later: 'Save my gems', onLater: () => toast(`Tap your gems anytime to get a free entry`) });
     return true; }
   const I = gemIdeas(); if (!I.length) return false; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow(); const x = I.find(i => S.gems >= i.cost) || I[0];
-  celebrate({ src: x.src, score: '💎', title: `You’ve got ${S.gems} gems!`, text: `${x.d}<br>Use <b>${x.cost} 💎</b> on it now.`, cta: '💎 Use my gems', onCta: useGems, later: 'Later' });
+  celebrate({ src: x.src, score: '💎', title: `You’ve got ${Math.floor(S.gems).toLocaleString()} gems!`, text: `${x.d}<br>Use <b>${x.cost} 💎</b> on it now.`, cta: '💎 Use my gems', onCta: useGems, later: 'Later' });
   return true;
 }
 $('#gemPill').onclick = e => { if (e.target.closest('.gplus')) openStore(); else { S.gnMark = Math.max(S.gnMark || 0, Math.floor(S.gems / 100) * 100); save(); paintGemGlow(); useGems(); } };
