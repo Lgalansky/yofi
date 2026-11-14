@@ -4756,6 +4756,8 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .rv-op{display:flex;align-items:center;gap:12px;width:100%;margin-bottom:8px;padding:12px 14px;border:0;border-radius:16px;text-align:left;color:#fff;font:inherit;cursor:pointer;background:#1E1236;box-shadow:inset 0 0 0 1.5px #4A2F78}.rv-op>span:first-child{font-size:1.4rem}.rv-op b{display:block}.rv-op small{color:#C9B4F5;font-size:.82rem}.rv-op em{margin-left:auto;display:flex;align-items:center;gap:4px;font-style:normal;font-weight:800;white-space:nowrap}.rv-op em svg,.rv-op em img{width:18px;height:18px}
 #rvEnh{box-shadow:inset 0 0 0 2px #FFC93C}.rv-sw{display:flex;gap:8px;overflow-x:auto;margin:-2px 0 10px}.rv-sw button{position:relative;flex:none;width:72px;height:90px;padding:0;border:0;border-radius:12px;overflow:hidden;cursor:pointer;background:#24163F}.rv-sw img{width:100%;height:100%;object-fit:cover}.rv-sw i{position:absolute;left:4px;bottom:4px;padding:0 6px;border-radius:999px;font-style:normal;font-weight:800;font-size:.75rem;background:rgba(20,8,40,.8)}.rv-sw button[aria-pressed=true]{box-shadow:0 0 0 3px #FF3FA4}.rv-new{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;box-shadow:inset 0 0 0 2px #8B3CFF}.rv-new b{font-size:1.6rem}
 .rv-sw[hidden]{display:none!important}.rv-go{background:linear-gradient(95deg,#FF7A3C,#FF3FA4)!important}
+.bt-hd{text-align:center;margin:2px 0 12px}.bt-hd h1{margin:0;font:800 1.75rem "Bricolage Grotesque",sans-serif;color:#fff}.bt-hd p{margin:2px 0 0;font-weight:700;color:#C9A8FF}
+.bt .bt-sw{margin-bottom:12px}.bt .bc-h{margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -5171,6 +5173,7 @@ if (S.fr) { (S.fr.ch || []).forEach(c => { if (c.dir === 'out' && (c.st === 'wai
 let warnedStorage = false;
 let RESETTING = false;
 function save() {
+  if (S && typeof S.gems === 'number') S.gems = Math.floor(S.gems);
   if (RESETTING) return;
   try { localStorage.setItem(KEY, JSON.stringify(S)); }
   catch (e) {
@@ -8093,7 +8096,7 @@ const lgPhoto = (h, k) => { const pool = SEED.filter(x => x.cat === BATTLE_POOL[
 const lgMine = k => fighters().filter(p => fitsTheme(p, k))[0] || null;
 function battleShell(inner) {
   const fr = GV.tab === 'friends';
-  return `<div class="bt"><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Crews${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
+  return `<div class="bt"><div class="bt-hd"><h1>Battle for the crown</h1><p>Best photo in each category wins</p></div><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Crews${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
 }
 function bindBattleShell() { document.querySelectorAll('#gallery [data-bv]').forEach(b => b.onclick = () => { GV.tab = b.dataset.bv; renderGallery(); $('#gallery').scrollTop = 0; }); }
 function todaySheet() { const L = lgS(), rows = CATS8.map(k => ({ k, y: L.you[k] || 0, h: lgHold(k).h === 'you' })).sort((a, b) => b.y - a.y);
@@ -8112,7 +8115,7 @@ const LG_RULES = () => `<ol class="tc-rules"><li><span>1</span><p>Every battle c
   <li><span>5</span><p>Everyone with <b>5+ points</b> shares the other <b>50%</b>, by points.</p></li></ol>`;
 function leagueHTML() {
   const L = lgS();
-  return `<div class="bc-h"><h1>Battle for cash</h1><span class="bc-t"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Daily reset in <span data-wk>${dayLeft()}</span></span><button class="link bc-how" id="btRules">How it works</button></div>
+  return `<div class="bc-h"><span class="bc-t"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Daily cash pots · reset in <span data-wk>${dayLeft()}</span></span><button class="link bc-how" id="btRules">How it works</button></div>
     <div class="tcg">${CATS8.map(k => { const K = lgKing(k), me = K.me && K.n > 0, y = L.you[k] || 0, mp = lgMine(k), pr = Math.min(1, y / LG_SHARE);
       return `<div class="bcc ${lgHold(k).h === 'you' ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b></div>
         <small class="bcc-l">Daily cash pot</small><b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
@@ -8274,7 +8277,7 @@ function crewRules() {
 }
 function crewsHTML() {
   const C = crewsS(), c = crewCur();
-  const head = `<div class="bc-h"><h1>Your crews</h1><span class="bc-t">🔒 Private · pots pay Sunday midnight</span><button class="link bc-how" id="cwRules">How it works</button></div>`;
+  const head = `<div class="bc-h"><span class="bc-t">🔒 Private · pots pay Sunday midnight</span><button class="link bc-how" id="cwRules">How it works</button></div>`;
   if (!c) return head + `<div class="cw-empty"><span>👥</span><h2>Start a crew</h2><p>Invite your mates, battle each other 1v1 for the crowns, and take the weekly pots.</p><button class="btn block" id="cwNew">Create a crew</button></div>`;
   const chips = `<div class="cw-chips">${C.map(x => `<button data-cwid="${x.id}" aria-pressed="${x.id === c.id}">${esc(x.name)}</button>`).join('')}<button class="cw-add" id="cwNew">+ New crew</button></div>`;
   const mem = `<div class="cw-mem"><div class="cw-av"><span class="fav me">${avatarInner()}</span>${c.members.map(h => lgAv(h, 34)).join('')}</div><span>${c.members.length + 1} in crew${c.pend && c.pend.length ? ` · ${c.pend.length} invited` : ''} · ends in ${weekLeft()}</span><button class="cw-inv" id="cwInv">${WA_ICON}Invite</button></div>`;
