@@ -4812,6 +4812,11 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .bcc-dt.in i.on{background:#2EE59D;box-shadow:0 0 8px rgba(46,229,157,.7)}.bcc-dt.in b{color:#2EE59D}
 .bcc-t{gap:6px!important}.bcc-t>b{font-size:clamp(.9rem,4vw,1.1rem)!important;min-width:0}.bcc-t>svg{width:20px!important;height:20px!important}.bcc-ld{padding-left:6px}.bcc-ld .crw-ic{width:18px;height:14px}.bcc-ld b{font-size:.92rem!important}
 .bcc-dt b{margin:0!important;font:900 1.3rem 'Bricolage Grotesque',sans-serif!important;color:#FFC93C}.bcc-dt small{margin-left:4px;font-size:.78rem;color:#C9B4F5}.bcc-dt.in b{color:#2EE59D!important}
+.bcc-t.c{justify-content:center;border-bottom:0!important;padding-bottom:0!important}.bcc-t.c>b{flex:none}
+.bcc-pl{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 8px;font-weight:800;font-size:1.05rem}.bcc-pl i{width:1.5px;height:20px;background:#6A4FA0}
+.bcc-pl .t{display:flex;align-items:center;gap:5px}.bcc-pl .t .crw-ic{width:22px;height:17px}.bcc-pl .t b{color:#fff}.bcc-pl .y{color:#FF5EB0}.bcc-pl .y b{color:#fff;margin-left:2px}.bcc-pl.in .y b{color:#2EE59D}
+.bt-hd p{color:#fff!important;font-weight:700}.bt-pt{display:block;margin-top:2px;font-size:.85rem;color:#B89AF0}
+.bcc-pl{white-space:nowrap}.bcc-pl.in .y{color:#2EE59D}
 </style>
 </head>
 <body>
@@ -8156,7 +8161,7 @@ const lgPhoto = (h, k) => { const pool = SEED.filter(x => x.cat === BATTLE_POOL[
 const lgMine = k => fighters().filter(p => fitsTheme(p, k))[0] || null;
 function battleShell(inner) {
   const fr = GV.tab === 'friends';
-  return `<div class="bt"><div class="bt-hd"><h1>Battle for the crown</h1><p>Best photo in each category wins</p><span class="bt-pay">💰 ${fr ? `Friends pots pay <b>Sunday midnight</b> · ${weekLeft()} left` : `Pots pay at <b>midnight</b> · <span data-wk>${dayLeft()}</span> left`}</span></div><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Friends${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
+  return `<div class="bt"><div class="bt-hd"><h1>Battle for the crown</h1><p>${fr ? 'Hold the crown on Sunday to take the pot' : 'Earn 5 points to share the pot'}</p><small class="bt-pt">${fr ? `Friends pots pay Sunday midnight · ${weekLeft()} left` : `Pots pay at midnight · <span data-wk>${dayLeft()}</span> left`}</small></div><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Friends${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
 }
 function bindBattleShell() { document.querySelectorAll('#gallery [data-bv]').forEach(b => b.onclick = () => { GV.tab = b.dataset.bv; renderGallery(); paintTop(); $('#gallery').scrollTop = 0; }); }
 function todaySheet(tab) { tab = tab || 'everyone';
@@ -8198,9 +8203,9 @@ function leagueHTML() {
   const L = lgS();
   return `<div class="bc-h"><span class="bc-t"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Daily cash pots · reset in <span data-wk>${dayLeft()}</span></span><button class="link bc-how" id="btRules">How it works</button></div>
     <div class="tcg">${CATS8.map(k => { const K = lgKing(k), me = K.me && K.n > 0, y = L.you[k] || 0, mp = lgMine(k), pr = Math.min(1, y / LG_SHARE);
-      return `<div class="bcc ${lgHold(k).h === 'you' ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b><span class="bcc-ld" title="Top score today">${CRW}<b>${me ? 'You' : K.n}</b></span></div>
-        <small class="bcc-l">Pot · pays midnight</small><b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
-        <p class="bcc-sh">${y >= LG_SHARE ? `✓ You’re in · <b>${money(lgShare(k))}</b> so far` : `${LG_SHARE} points to share the pot`}</p><div class="bcc-dt ${y >= LG_SHARE ? 'in' : ''}"><b>${Math.min(y, LG_SHARE)}/${LG_SHARE}</b><small>points</small></div>
+      return `<div class="bcc ${lgHold(k).h === 'you' ? 'me' : ''}"><div class="bcc-t c">${gi(k)}<b>${esc(crownName(k))}</b></div>
+        <b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
+        <p class="bcc-pl ${y >= LG_SHARE ? 'in' : ''}"><span class="t">${CRW}<b>${me ? 'You' : K.n}</b></span><i></i><span class="y">You <b>${Math.min(Math.max(0, y), LG_SHARE)}/${LG_SHARE}</b></span></p>
         <button class="bcc-ph" data-lgc="${k}" aria-label="${esc(crownName(k))} crown holder’s photo"><img src="${lgHold(k).h === 'you' && mp ? mp.src : lgPhoto(lgHold(k).h, k)}" alt="" loading="lazy"></button>
         ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? 'rev' : ''}" data-lgc="${k}">${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? '🔥 Take revenge' : `${VS_IC}Battle`}</button>` : `<button class="bcc-go up" data-lgc="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>
     <button class="bt-gem" id="btGem"><span>💎</span><span><b>Gem Battle</b><small>Practice for gems · no points at stake</small></span><i>›</i></button>`;
