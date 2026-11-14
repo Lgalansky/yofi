@@ -4744,6 +4744,13 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .tcg{align-items:stretch}.bcc{height:100%}.bcc-go{margin-top:auto!important;height:48px;padding:0!important;font-size:clamp(.88rem,3.9vw,1.05rem)!important}
 .bcc-hint{display:block;min-height:1.2em;margin:-4px 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .bcc-ph{flex:none}.bcc-go.rev{background:linear-gradient(95deg,#FF7A3C,#FF3FA4)!important}
+.cw-empty{text-align:center;padding:26px 16px;border-radius:22px;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760}.cw-empty>span{font-size:3rem}.cw-empty h2{margin:8px 0 4px}.cw-empty p{margin:0 0 16px;color:#C9B4F5}
+.cw-chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.cw-chips button{flex:none;padding:8px 14px;border:0;border-radius:999px;font:800 .9rem Inter,sans-serif;color:#E6DDF5;cursor:pointer;background:#24163F;box-shadow:inset 0 0 0 1.5px #4A2F78}.cw-chips button[aria-pressed=true]{background:linear-gradient(95deg,#FF3FA4,#8B3CFF);color:#fff;box-shadow:none}.cw-chips .cw-add{background:none;color:#C9A8FF;box-shadow:inset 0 0 0 1.5px dashed #6A4FA0}
+.cw-mem{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:10px 12px;border-radius:16px;background:#1E1236}.cw-av{display:flex}.cw-av>*{margin-left:-8px;box-shadow:0 0 0 2px #1E1236;border-radius:50%}.cw-av>*:first-child{margin-left:0}.cw-av .fav.me{width:34px;height:34px;overflow:hidden}.cw-av .fav.me img{width:100%;height:100%;object-fit:cover}
+.cw-mem>span{flex:1;font-size:.8rem;color:#C9B4F5}.cw-inv{display:flex;align-items:center;gap:6px;padding:7px 12px;border:0;border-radius:999px;font:800 .85rem Inter,sans-serif;color:#fff;cursor:pointer;background:#25D366}.cw-inv svg{width:18px;height:18px}
+.cw-feed{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}.cw-feed p{margin:0;padding:8px 12px;border-radius:12px;background:#1E1236;font-size:.88rem}.cw-feed small{float:right;margin-left:8px;color:#8E7BB5}
+.cw-opp{display:flex;gap:6px;overflow-x:auto;margin:0 0 10px;scrollbar-width:none}.cw-opp button{flex:none;display:flex;align-items:center;gap:6px;padding:5px 12px 5px 5px;border:0;border-radius:999px;font:700 .85rem Inter,sans-serif;color:#fff;cursor:pointer;background:#24163F;box-shadow:inset 0 0 0 1.5px #4A2F78}.cw-opp button[aria-pressed=true]{box-shadow:inset 0 0 0 2px #FFC93C}
+.cwn-s{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}.cwn-s button{padding:6px 12px;border:0;border-radius:999px;font:700 .85rem Inter,sans-serif;color:#E6DDF5;cursor:pointer;background:#24163F;box-shadow:inset 0 0 0 1.5px #4A2F78}
 </style>
 </head>
 <body>
@@ -7271,7 +7278,7 @@ window.__sessStart = Date.now();
 
 function renderGallery() {
   const g = $('#gallery');
-  if (GV.tab === 'friends' || GV.tab === 'battle') { $('#ptitle').textContent = 'Battle'; g.innerHTML = battleShell(GV.tab === 'friends' ? friendsHTML() : leagueHTML()); bindBattleShell(); if (GV.tab === 'friends') bindFriends(); else bindLeague(); return; }
+  if (GV.tab === 'friends' || GV.tab === 'battle') { $('#ptitle').textContent = 'Battle'; g.innerHTML = battleShell(GV.tab === 'friends' ? crewsHTML() : leagueHTML()); bindBattleShell(); if (GV.tab === 'friends') bindCrews(); else bindLeague(); return; }
   $('#ptitle').textContent = 'Hall of Fame';
   const tabs = `<div class="gtabs" role="group" aria-label="Gallery view"><button data-t="mine" aria-pressed="${GV.tab === 'mine'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 16l-5-5-9 9"/></svg>My Gallery</button><button data-t="board" aria-pressed="${GV.tab === 'board'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg>Halls of Fame</button></div>`;
   const wbh = WB_SHOW && S.user ? `<h1 class="gwb">Welcome back, <span>@${esc(S.user.h)}</span></h1>` : '';
@@ -8081,7 +8088,7 @@ const lgPhoto = (h, k) => { const pool = SEED.filter(x => x.cat === BATTLE_POOL[
 const lgMine = k => fighters().filter(p => fitsTheme(p, k))[0] || null;
 function battleShell(inner) {
   const fr = GV.tab === 'friends';
-  return `<div class="bt"><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Friends${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
+  return `<div class="bt"><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Crews${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
 }
 function bindBattleShell() { document.querySelectorAll('#gallery [data-bv]').forEach(b => b.onclick = () => { GV.tab = b.dataset.bv; renderGallery(); $('#gallery').scrollTop = 0; }); }
 function todaySheet() { const L = lgS(), rows = CATS8.map(k => ({ k, y: L.you[k] || 0, h: lgHold(k).h === 'you' })).sort((a, b) => b.y - a.y);
@@ -8217,10 +8224,138 @@ setInterval(() => { // other players' entries keep the jackpots growing
   const e = document.querySelector(`#gallery [data-jp="${k}"]`); if (e) { e.textContent = Math.round(S.lg.jp[k]).toLocaleString(); e.parentElement.classList.remove('bump'); void e.offsetWidth; e.parentElement.classList.add('bump'); }
   const w = document.querySelector('#gallery [data-wk]'); if (w) w.textContent = dayLeft();
 }, 5000);
+
+/* ===== Crews: private groups you invite mates into. Every battle is 1v1 between two members.
+   Each category has a crew crown and a crew pot: every $1 battle adds 85c, and whoever holds
+   the crown at Sunday midnight takes that pot. ===== */
+const CREW_POOL = ['mike', 'james', 'sophie', 'dan', 'priya', 'olly', 'chloe', 'sam', 'ella', 'tom'];
+const CREW_SUGG = ['Friday lads', 'The pet squad', 'Gym rats', 'Family'];
+function crewsS() { S.crews = S.crews || []; const wk = weekKey(); S.crews.forEach(c => { if (c.wk !== wk) crewPayout(c, wk); }); return S.crews; }
+function crewPayout(c, wk) { let won = 0; CATS8.forEach(k => { if (c.hold[k] === 'you' && c.pot[k] > 0) won += c.pot[k]; });
+  if (won) { S.cash = +((S.cash || 0) + won).toFixed(2); crewLog(c, `👑 You held crowns at Sunday midnight and took <b>${money(won)}</b>`); setTimeout(() => { toast(`👑 ${c.name}: you took ${money(won)} from the weekly pots`); paintWallet(); }, 1500); }
+  c.wk = wk; c.pot = {}; save(); }
+const crewCur = () => { const C = crewsS(); return C.find(c => c.id === S.crewCur) || C[0] || null; };
+const crewLog = (c, m) => { c.feed = c.feed || []; c.feed.unshift({ t: Date.now(), m }); c.feed = c.feed.slice(0, 12); };
+const crewWho = h => h === 'you' ? 'You' : '@' + esc(h);
+function newCrew(name) { crewsS();
+  const pend = CREW_POOL.filter(h => !S.crews.some(c => c.members.includes(h))).slice(0, 3);
+  const c = { id: uid(), name, members: [], pend: pend.length ? pend : CREW_POOL.slice(0, 3), joinAt: Date.now() + 8000, hold: {}, since: {}, def: {}, pot: {}, rev: {}, wk: weekKey(), feed: [] };
+  crewLog(c, 'Crew created. Invite your mates on WhatsApp.'); S.crews.push(c); S.crewCur = c.id; save(); return c; }
+function crewCreate() {
+  openSheet(`<div class="cwn"><h2>New crew</h2><p class="sub">A private group for you and your mates. Battle each other for the crew’s crowns and weekly pots.</p>
+    <label class="field">Crew name<input id="cwName" maxlength="24" placeholder="e.g. Friday lads"></label>
+    <div class="cwn-s">${CREW_SUGG.map(n => `<button data-cws="${esc(n)}">${esc(n)}</button>`).join('')}</div>
+    <button class="btn block" id="cwGo">Create crew</button></div>`);
+  document.querySelectorAll('#sheetBody [data-cws]').forEach(b => b.onclick = () => { $('#cwName').value = b.dataset.cws; });
+  $('#cwGo').onclick = () => { const n = ($('#cwName').value || '').trim() || 'My crew'; const c = newCrew(n); closeSheet(); openBattleTab(); GV.tab = 'friends'; renderGallery(); crewInvite(c); };
+}
+function crewInvite(c) {
+  const link = `https://yofi.app/crew/${c.id.slice(0, 6)}`, msg = `Join my Yofi crew “${c.name}” 👑 Battle me for the crowns and the weekly pots: ${link}`;
+  openSheet(`<div class="cwn"><h2>Invite to ${esc(c.name)}</h2><p class="sub">Anyone who joins with this link is in the crew and can battle anyone else in it.</p>
+    <div class="i2-msg"><span class="wa">${WA_ICON}</span><div class="i2-bub">${esc(msg)}</div></div>
+    <a class="inv-wa i2-send" id="cwWa" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${WA_ICON}<b>Send on WhatsApp</b></a>
+    <button class="inv-copy i2-copy" id="cwCopy"><b>Copy invite link</b></button></div>`);
+  const sent = () => { if (!c.pend || !c.pend.length) { c.pend = CREW_POOL.filter(h => !c.members.includes(h)).slice(0, 2); c.joinAt = Date.now() + 8000; } save(); setTimeout(() => { closeSheet(); toast('✓ Invite sent. We’ll tell you when mates join.'); }, 400); };
+  $('#cwWa').onclick = sent; $('#cwCopy').onclick = () => { try { const pr = navigator.clipboard && navigator.clipboard.writeText(link); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {} sent(); };
+}
+function crewRules() {
+  openSheet(`<div class="lgs fcn fcn2"><div class="f2-top"><div><h2>How crews work</h2><p>Private games · invite only</p></div><button class="f2-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <ol class="tc-rules"><li><span>1</span><p>Create a <b>crew</b> and invite mates on WhatsApp. Everyone in it can battle everyone else.</p></li>
+      <li><span>2</span><p>Every battle is <b>1v1</b>. Win and you take that category’s ${CRW} <b>crew crown</b>.</p></li>
+      <li><span>3</span><p>Every battle costs <b>$1</b>. <b>85¢</b> goes into that category’s <b>crew pot</b>.</p></li>
+      <li><span>4</span><p>Whoever holds the crown at <b>Sunday midnight</b> takes the pot. Then it starts again.</p></li>
+      <li><span>5</span><p>In more than one crew? Each crew has its own crowns and pots.</p></li></ol>
+    <button class="btn block" data-shclose style="margin-top:14px">Got it</button></div>`, { full: true, cover: true });
+}
+function crewsHTML() {
+  const C = crewsS(), c = crewCur();
+  const head = `<div class="bc-h"><h1>Your crews</h1><span class="bc-t">🔒 Private · pots pay Sunday midnight</span><button class="link bc-how" id="cwRules">How it works</button></div>`;
+  if (!c) return head + `<div class="cw-empty"><span>👥</span><h2>Start a crew</h2><p>Invite your mates, battle each other 1v1 for the crowns, and take the weekly pots.</p><button class="btn block" id="cwNew">Create a crew</button></div>`;
+  const chips = `<div class="cw-chips">${C.map(x => `<button data-cwid="${x.id}" aria-pressed="${x.id === c.id}">${esc(x.name)}</button>`).join('')}<button class="cw-add" id="cwNew">+ New crew</button></div>`;
+  const mem = `<div class="cw-mem"><div class="cw-av"><span class="fav me">${avatarInner()}</span>${c.members.map(h => lgAv(h, 34)).join('')}</div><span>${c.members.length + 1} in crew${c.pend && c.pend.length ? ` · ${c.pend.length} invited` : ''} · ends in ${weekLeft()}</span><button class="cw-inv" id="cwInv">${WA_ICON}Invite</button></div>`;
+  const cards = `<div class="tcg">${CATS8.map(k => { const h = c.hold[k] || null, me = h === 'you', mp = lgMine(k), rev = h && !me && c.rev[k] === h, has = S.photos.some(p => fitsTheme(p, k));
+    return `<div class="bcc ${me ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b></div>
+      <small class="bcc-l">Crew pot</small><b class="bcc-pot">${money(c.pot[k] || 0)}</b>
+      <p class="bcc-hold">${CRW}<b>${h ? (me ? 'You hold it' : '@' + esc(h)) : 'Up for grabs'}</b></p><small class="bcc-hint">${h ? (me ? `Held ${heldFor(c.since[k] || Date.now())}` : rev ? 'They took it from you' : `Beat @${esc(h)} to take it`) : 'Win a battle to take it'}</small>
+      <button class="bcc-ph" data-cwk="${k}" aria-label="${esc(crownName(k))} crew crown">${h && !me ? `<img src="${lgPhoto(h, k)}" alt="" loading="lazy">` : mp ? `<img src="${mp.src}" alt="" loading="lazy">` : `<span class="tcc-empty">${gi(k)}</span>`}</button>
+      ${!has ? `<button class="bcc-go up" data-cwk="${k}" data-addk="${k}">📷 Upload photo</button>` : `<button class="bcc-go ${rev ? 'rev' : ''}" data-cwk="${k}">${rev ? '🔥 Take revenge' : me ? `${VS_IC}Defend` : `${VS_IC}Battle`}</button>`}</div>`; }).join('')}</div>`;
+  const feed = (c.feed || []).length ? `<h3 class="fr-sh">Crew activity</h3><div class="cw-feed">${c.feed.slice(0, 6).map(e => `<p><small>${Date.now() - e.t < 6e4 ? 'just now' : heldFor(e.t) + ' ago'}</small>${e.m}</p>`).join('')}</div>` : '';
+  return head + chips + mem + cards + feed;
+}
+function bindCrews() {
+  if ($('#cwRules')) $('#cwRules').onclick = crewRules;
+  document.querySelectorAll('#gallery #cwNew').forEach(b => b.onclick = crewCreate);
+  if ($('#cwInv')) $('#cwInv').onclick = () => crewInvite(crewCur());
+  document.querySelectorAll('#gallery [data-cwid]').forEach(b => b.onclick = () => { S.crewCur = b.dataset.cwid; save(); renderGallery(); });
+  document.querySelectorAll('#gallery [data-cwk]').forEach(b => b.onclick = () => { const k = b.dataset.cwk; if (b.dataset.addk) { addCatPhoto(k); return; } crewCat(crewCur(), k); });
+}
+function crewCat(c, k, opp) {
+  const h = c.hold[k] || null, me = h === 'you', mine = lgMine(k), cn = crownName(k), others = c.members;
+  if (!others.length) { celebrate({ src: (mine || {}).src || '', score: '👥', title: 'Invite your mates first', text: `Nobody has joined <b>${esc(c.name)}</b> yet. Send the invite and battle them when they join.`, cta: `${WA_ICON} Invite`, onCta: () => crewInvite(c), later: 'Later' }); return; }
+  if (!mine) { const low = S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0];
+    if (low) { celebrate({ src: low.src, score: low.s.total, title: 'Enhance first', text: `Your ${esc(cn.toLowerCase())} photo scores <b>${low.s.total}</b>. Get it to <b>${CFG.QUALIFY}+</b> to battle.`, cta: '✨ Enhance my photo', onCta: () => { S.cur = low.id; save(); WALL = false; go('studio'); renderStudio(); }, later: 'Not now' }); return; }
+    addCatPhoto(k); return; }
+  let o = opp && others.includes(opp) ? opp : (h && !me ? h : others[0]);
+  openSheet(`<div class="lgs fcn fcn2"><div class="f2-top"><div><h2>${gi(k)} ${esc(cn)}</h2><p>${esc(c.name)} · pays Sunday midnight</p></div><button class="f2-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="lgs-jp"><small>${esc(cn)} crew pot</small><b>${money(c.pot[k] || 0)}</b><span>Hold the crown at Sunday midnight to take it</span></div>
+    <div class="lgs-hd"><span class="lgs-hc">${CRW}</span><div><small>Crew crown</small><b>${h ? crewWho(h) : 'Up for grabs'}</b><span>${h ? `Held ${heldFor(c.since[k] || Date.now())} · ${c.def[k] || 0} defence${(c.def[k] || 0) === 1 ? '' : 's'}` : 'Win any battle here to take it'}</span></div></div>
+    ${others.length > 1 ? `<div class="cw-opp">${others.map(x => `<button data-cwo="${x}" aria-pressed="${x === o}">${lgAv(x, 26)}@${esc(x)}${c.hold[k] === x ? ' 👑' : ''}</button>`).join('')}</div>` : ''}
+    <div class="lgv"><div class="lgv-p"><img src="${lgPhoto(o, k)}" alt=""><b>@${esc(o)}${c.hold[k] === o ? ' 👑' : ''}</b></div><span class="lgv-x">VS</span><div class="lgv-p me"><img src="${mine.src}" alt=""><b>You · ${mine.s.total}</b></div></div>
+    <button class="btn block lgs-go" id="cwFight">${c.rev[k] === o && c.hold[k] === o ? '🔥 Take revenge' : me ? `${VS_IC}Defend your crown` : c.hold[k] === o ? `${VS_IC}Battle for the crown` : `${VS_IC}Battle @${esc(o)}`} · $1</button>
+    <p class="lgs-ent">${me ? 'Win to keep your crown' : 'Win to take the crown'} · 85¢ goes into the crew pot</p></div>`, { full: true, cover: true });
+  document.querySelectorAll('#sheetBody [data-cwo]').forEach(b => b.onclick = () => crewCat(c, k, b.dataset.cwo));
+  $('#cwFight').onclick = () => lgPay(() => crewFight(c, k, o));
+}
+function crewFight(c, k, h) {
+  const me = lgMine(k), N = 30, their = 72 + (hsh(h + k) % 16), won = Math.random() < Math.max(.2, Math.min(.8, .5 + (me.s.total - their) / 30));
+  const mv = won ? 16 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 5), tv = N - mv, src = lgPhoto(h, k), cn = esc(crownName(k)), H = c.hold[k] || null; let msg = '';
+  c.pot[k] = +((c.pot[k] || 0) + LG_CUT).toFixed(2);
+  if (won) { const L = lgS(); L.wins = (L.wins || 0) + 1; delete c.rev[k];
+    if (H !== 'you') { c.hold[k] = 'you'; c.since[k] = Date.now(); c.def[k] = 0; msg = `👑 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} crown!`; crewLog(c, `👑 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} crown`); }
+    else { c.def[k] = (c.def[k] || 0) + 1; msg = `👑 Crown defended · ${c.def[k]} defence${c.def[k] === 1 ? '' : 's'}`; crewLog(c, `🛡️ You defended the ${cn} crown against @${esc(h)}`); } }
+  else { c.rev[k] = h; if (H === 'you' || !H) { c.hold[k] = h; c.since[k] = Date.now(); c.def[k] = 0; msg = H ? `👑 @${esc(h)} took your ${cn} crown` : `👑 @${esc(h)} won the ${cn} crown`; crewLog(c, `👑 @${esc(h)} ${H ? 'took your' : 'won the'} ${cn} crown`); }
+    else { c.def[k] = (c.def[k] || 0) + 1; crewLog(c, `🛡️ @${esc(h)} held the ${cn} crown against you`); } }
+  save(); setTimeout(paintTop, 0);
+  const show = () => {
+    const vs = (a, b, done) => `<div class="kg2-vs du"><div class="kg2-ph king ${done && !won ? 'won' : ''}"><img src="${src}" alt="">${done && !won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div><b class="kg2-x">VS</b><div class="kg2-ph me ${done && won ? 'won' : ''}"><img src="${me.src}" alt="">${done && won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div></div>
+      <div class="kg2-who du"><div class="king"><small>@${esc(h)}</small><b>${esc(c.name)}</b><strong id="cbT">${a}</strong><span>votes</span></div><div class="me"><small>You</small><b>Score ${me.s.total}</b><strong id="cbM">${b}</strong><span>votes</span></div></div>`;
+    const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>Crew battle</b><span></span></div><span class="kg2-cat">${gi(k)}${cn.toUpperCase()}</span>`;
+    openSheet(`<div class="kg2" id="cb">${head}<h2 class="kg2-h">You vs @${esc(h)}</h2><p class="kg2-sub">${esc(c.name)} · ${cn} crown</p><span class="kg2-live"><i></i>Live voting</span>${vs(0, 0, false)}<div class="kg2-bar"><i id="cbTb" style="width:50%"></i><i id="cbMb" style="width:50%"></i></div><p class="kg2-n" id="cbV">0 of ${N} votes</p></div>`, { full: true, cover: true });
+    let v = 0, m = 0; const seq = [...Array(N)].map((_, i) => i < mv); for (let i = N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [seq[i], seq[j]] = [seq[j], seq[i]]; }
+    const iv = setInterval(() => {
+      if (!$('#cbV')) { clearInterval(iv); return; }
+      if (seq[v]) m++; v++; const sh = m / v * 100; $('#cbMb').style.width = sh + '%'; $('#cbTb').style.width = (100 - sh) + '%'; $('#cbM').textContent = m; $('#cbT').textContent = v - m; $('#cbV').textContent = `${v} of ${N} votes`;
+      if (v < N) return; clearInterval(iv); const pct = Math.round(mv / N * 100);
+      $('#cb').innerHTML = `${head}<p class="kg2-fin">Final result</p><h2 class="kg2-h">${won ? `You beat @${esc(h)}!` : `@${esc(h)} wins this one`}</h2><p class="kg2-score">Final vote · ${Math.max(mv, tv)}–${Math.min(mv, tv)}</p>${vs(tv, mv, true)}
+        <div class="kg2-bar res"><i style="width:${100 - pct}%">${100 - pct}%</i><i style="width:${pct}%">${pct}%</i></div>
+        ${msg ? `<p class="fb-crown ${won ? 'w' : 'l'}">${msg}</p>` : ''}
+        <div class="kg2-next ${won ? 'win' : 'lose'}"><small>${cn} crew pot</small><b>${money(c.pot[k])}</b><span>${c.hold[k] === 'you' ? 'Yours if you hold the crown at Sunday midnight' : `@${esc(c.hold[k])} takes it if they still hold the crown on Sunday`}</span></div>
+        <button class="btn block kg2-go" id="cbAgain">${won ? 'Battle again' : `🔥 Take revenge on @${esc(h)}`}</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to ${esc(c.name)}</button></div>`;
+      paintWallet();
+      $('#cbAgain').onclick = () => won ? crewCat(c, k) : lgPay(() => crewFight(c, k, h));
+      document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'friends') renderGallery(); });
+    }, 200);
+  };
+  closeSheet(); vsCountdown({ title: '👥 Crew battle', sub: `${cn} · you vs @${esc(h)}`, a: src, al: '@' + esc(h), b: me.src }, show);
+}
+// demo life: mates join from the invite, and battle each other while you watch
+setInterval(() => {
+  if (!S || !S.user || !S.crews || !S.crews.length) return; let ch = false;
+  S.crews.forEach(c => {
+    if (c.pend && c.pend.length && Date.now() >= (c.joinAt || 0)) { const h = c.pend.shift(); c.members.push(h); c.joinAt = Date.now() + 12000; crewLog(c, `👋 @${esc(h)} joined the crew`); toast(`👋 @${h} joined ${c.name}`); ch = true; }
+    if (c.members.length >= 2 && Date.now() >= (c.actAt || 0)) { c.actAt = Date.now() + 25000 + Math.random() * 20000;
+      if (c.actAt && Math.random() < .5) return;
+      const k = CATS8[Math.floor(Math.random() * CATS8.length)], H = c.hold[k] || null, pool = c.members.filter(x => x !== H), a = pool[Math.floor(Math.random() * pool.length)];
+      const b = H || c.members.filter(x => x !== a)[0]; if (!a || !b || a === b) return; const cn = esc(crownName(k));
+      c.pot[k] = +((c.pot[k] || 0) + LG_CUT).toFixed(2);
+      if (Math.random() < .5) { c.hold[k] = a; c.since[k] = Date.now(); c.def[k] = 0; if (b === 'you') { c.rev[k] = a; crewLog(c, `👑 @${esc(a)} took your ${cn} crown`); toast(`👑 @${a} took your ${crownName(k)} crown in ${c.name}`); } else crewLog(c, `👑 @${esc(a)} took ${H ? `@${esc(b)}’s` : 'the'} ${cn} crown`); }
+      else { c.def[k] = (c.def[k] || 0) + 1; crewLog(c, `🛡️ ${b === 'you' ? 'Your photo' : '@' + esc(b)} held the ${cn} crown against @${esc(a)}`); }
+      ch = true; } });
+  if (ch) { save(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'friends' && !$('#sheet').classList.contains('on') && !document.querySelector('.fcd')) { const y = $('#gallery').scrollTop; renderGallery(); $('#gallery').scrollTop = y; } }
+}, 2000);
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
-  if (GV.tab === 'friends' && $('#panes').dataset.at === 'gallery' && !$('#sheet').classList.contains('on') && !document.querySelector('.fcd')) { const y = $('#gallery').scrollTop; renderGallery(); $('#gallery').scrollTop = y; }
 }
 setInterval(() => {
   if (!S || !S.fr || !S.user) return; let ch = false;
