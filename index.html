@@ -8297,7 +8297,7 @@ function lgFight(k, h, isKing, revenge, pid) {
           <div class="wr-steps">${steps}</div><strong>${Math.min(y, LG_SHARE)} of ${LG_SHARE} points</strong><span>${y >= LG_SHARE ? 'Keep winning to grow your share' : `${LG_SHARE - y} more point${LG_SHARE - y === 1 ? '' : 's'} to qualify`}${!won && lost ? ' · −1 for this loss' : ''}</span><em>Pays at midnight</em></div>
         ${won ? `<button class="btn block wr-go" id="lbMore">${VS_IC}Battle again</button>` : `<button class="btn block wr-go rev" id="lbRev">🔥 Take revenge</button>`}
         <div style="text-align:center"><button class="link wr-back" data-shclose>Back to Battles</button></div></div>`;
-      paintWallet();
+      paintWallet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery();
       if ($('#lbMore')) $('#lbMore').onclick = () => lgCat(k);
       if ($('#lbRev')) $('#lbRev').onclick = () => revengePrep(null, k, h, me.id);
       document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery(); });
@@ -8460,7 +8460,7 @@ function crewFight(c, k, h, pid, rev) { const st = frSt();
         ${msg ? `<p class="fb-crown ${won ? 'w' : 'l'}">${msg}</p>` : ''}
         <div class="kg2-next ${won ? 'win' : 'lose'}"><small>${cn} friends pot</small><b>${money(c.pot[k])}</b><span>${c.hold[k] === 'you' ? 'Yours if you hold the crown at Sunday midnight' : `@${esc(c.hold[k])} takes it if they still hold the crown on Sunday`}</span></div>
         <button class="btn block kg2-go" id="cbAgain">${won ? 'Battle again' : `🔥 Take revenge on @${esc(h)}`}</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to ${esc(c.name)}</button></div>`;
-      paintWallet();
+      paintWallet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'friends') renderGallery();
       $('#cbAgain').onclick = () => won ? crewCat(c, k) : revengePrep(c, k, h, me.id);
       document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'friends') renderGallery(); });
     }, 200);
