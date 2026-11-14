@@ -4741,6 +4741,9 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .ug-cc{display:flex;flex-wrap:wrap;gap:8px}.ug-cc button{display:flex;align-items:center;gap:6px;padding:8px 12px;border:0;border-radius:999px;font:700 .9rem Inter,sans-serif;color:#fff;cursor:pointer;background:#2A1748;box-shadow:inset 0 0 0 1.5px #5A3A8A}.ug-cc svg{width:18px;height:18px}
 .acp{text-align:center;padding:6px 4px 4px}.acp-i{display:inline-grid;place-items:center;width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,#FF3FA4,#8B3CFF);box-shadow:0 10px 26px -8px rgba(255,63,164,.7)}.acp-i svg{width:44px;height:44px;color:#fff}
 .acp h2{margin:14px 0 6px}.acp p{margin:0 0 16px;color:#C9B4F5}.acp p b{color:#fff}.acp-go{font-size:1.1rem}
+.tcg{align-items:stretch}.bcc{height:100%}.bcc-go{margin-top:auto!important;height:48px;padding:0!important;font-size:clamp(.88rem,3.9vw,1.05rem)!important}
+.bcc-hint{display:block;min-height:1.2em;margin:-4px 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.bcc-ph{flex:none}.bcc-go.rev{background:linear-gradient(95deg,#FF7A3C,#FF3FA4)!important}
 </style>
 </head>
 <body>
@@ -7614,6 +7617,7 @@ const FC_THEMES = [['selfie', 'Best Selfie'], ['style', 'Best Outfit'], ['fitnes
 // Category Crowns: one crown per challenge category in your friend group. Beat the holder in a friend challenge to take it.
 const CROWN_SEED = { selfie: ['sam', 74], style: ['mia', 76], fitness: ['tom', 73], pets: ['mia', 78], food: ['sam', 71], travel: ['tom', 75], night: ['mia', 72], any: ['sam', 70] };
 function frCC(k) { const F = frS(); F.cc = F.cc || {}; return F.cc[k] = F.cc[k] || {}; }
+const frRev = k => { const F = frS(); return (F.rev || {})[k] || null; };
 const frHold = k => { const F = frS(); return (F.hold || {})[k] || null; };
 function frKing(k) { const h = frHold(k); return h ? { h, n: 0 } : null; }
 function crownsS() { return Object.fromEntries(CATS8.map(k => { const K = frKing(k); return [k, { h: K ? K.h : null, sc: K ? K.n : 0 }]; })); }
@@ -7702,9 +7706,9 @@ function friendsHTML() {
 }
 const crownGrid = () => `<div class="tcg">${CATS8.map(k => { const h = frHold(k), me = h === 'you', mp = lgMine(k);
   return `<div class="bcc ${me ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b></div>
-    <small class="bcc-l">Friends pot</small><b class="bcc-pot">${money(frPot(k).pot)}</b><p class="bcc-hold">${CRW}<b>${h ? (me ? 'You hold it' : '@' + esc(h)) : 'Up for grabs'}</b></p>${h ? '' : '<small class="bcc-hint">Win a battle to take it</small>'}
+    <small class="bcc-l">Friends pot</small><b class="bcc-pot">${money(frPot(k).pot)}</b><p class="bcc-hold">${CRW}<b>${h ? (me ? 'You hold it' : '@' + esc(h)) : 'Up for grabs'}</b></p><small class="bcc-hint">${h ? (h === 'you' ? 'Defend it in every battle' : frRev(k) === h ? 'They took it from you' : `Beat @${esc(h)} to take it`) : 'Win a battle to take it'}</small>
     <button class="bcc-ph" data-crw="${k}" aria-label="Battle a friend in ${esc(crownName(k))}">${h && !me ? `<img src="${lgPhoto(h, k)}" alt="" loading="lazy">` : mp ? `<img src="${mp.src}" alt="" loading="lazy">` : `<span class="tcc-empty">${gi(k)}</span>`}</button>
-    ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go" data-crw="${k}">${VS_IC}Battle</button>` : `<button class="bcc-go up" data-crw="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>`;
+    ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${h && h !== 'you' && frRev(k) === h ? 'rev' : ''}" data-crw="${k}">${h && h !== 'you' && frRev(k) === h ? '🔥 Take revenge' : `${VS_IC}Battle`}</button>` : `<button class="bcc-go up" data-crw="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>`;
 function crownTap(e, k) { const a = e.target.closest('[data-addk]');
   if (a) { closeSheet(); addCatPhoto(k); return; }
   crownGo(k); }
@@ -7995,6 +7999,7 @@ function fcBattle(c) {
   else { F.rec[c.f].l++; F.wk[c.f] = (F.wk[c.f] || 0) + 1; }
   setTimeout(paintTop, 0);
   let crownMsg = ''; { const F = frS(); F.hold = F.hold || {}; const h0 = F.hold[c.theme] || null, nm = esc(crownName(c.theme));
+    { const F2 = frS(); F2.rev = F2.rev || {}; if (won) delete F2.rev[c.theme]; else F2.rev[c.theme] = c.f; }
     if (won && h0 !== 'you') { F.hold[c.theme] = 'you'; crownMsg = h0 ? `👑 You took ${h0 === c.f ? `@${esc(c.f)}’s` : 'the'} ${nm} crown!` : `👑 You won the ${nm} crown!`; }
     else if (!won && (h0 === 'you' || !h0)) { F.hold[c.theme] = c.f; crownMsg = h0 === 'you' ? `👑 @${esc(c.f)} took your ${nm} crown` : `👑 @${esc(c.f)} won the ${nm} crown`; } }
   let rivMsg = '', rivWon = 0;
@@ -8101,7 +8106,7 @@ function leagueHTML() {
         <small class="bcc-l">Daily cash pot</small><b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
         <p class="bcc-sc"><span class="t">${CRW}<b>${me ? 'You' : K.n}</b></span><i>•</i><span class="y">You <b>${y}</b></span></p>
         <button class="bcc-ph" data-lgc="${k}" aria-label="${esc(crownName(k))} crown holder’s photo"><img src="${lgHold(k).h === 'you' && mp ? mp.src : lgPhoto(lgHold(k).h, k)}" alt="" loading="lazy"></button>
-        ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go" data-lgc="${k}">${VS_IC}Battle</button>` : `<button class="bcc-go up" data-lgc="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>
+        ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? 'rev' : ''}" data-lgc="${k}">${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? '🔥 Take revenge' : `${VS_IC}Battle`}</button>` : `<button class="bcc-go up" data-lgc="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>
     <button class="bt-gem" id="btGem"><span>💎</span><span><b>Gem Battle</b><small>Practice for gems · no points at stake</small></span><i>›</i></button>`;
 }
 function bindLeague() {
@@ -8122,7 +8127,7 @@ function lgCat(k) {
     <div class="lgs-hd"><span class="lgs-hc">${CRW}</span><div><small>Crown holder</small><b>${iHold ? 'You' : '@' + esc(H.h)}</b><span>Held ${heldFor(H.since)} · ${H.def} defence${H.def === 1 ? '' : 's'}</span>${(H.hist || []).length ? `<em>Before: ${H.hist.slice(0, 3).map(x => x === 'you' ? 'You' : '@' + esc(x)).join(' ← ')}</em>` : ''}</div></div>
     <p class="lgs-ld">🏆 Points leader <b>${kingMe ? 'You' : '@' + esc(K.h)}</b> · ${K.n} · you have <b>${y}</b>${y >= LG_SHARE ? ` · in for ${money(lgShare(k))}` : ` · ${LG_SHARE - y} more to share`}</p>
     ${mine ? (S.minor ? `<div class="lgs-none"><b>Daily cash battles are 18+</b><span>Play your friends for gems in the Friends tab.</span></div>` : `<div class="lgv"><div class="lgv-p"><img src="${lgPhoto(near.h, k)}" alt=""><b>@${esc(near.h)}</b></div><span class="lgv-x">VS</span><div class="lgv-p me"><img src="${mine.src}" alt=""><b>You · ${mine.s.total}</b></div></div>
-      <button class="btn block lgs-go" id="lgQuick">${VS_IC}${iHold ? 'Defend your crown' : 'Battle for the crown'} · $1</button><p class="lgs-ent">${iHold ? 'Win to keep it' : 'Win to take the crown'} · <b>+1 point</b> · 85¢ goes into today’s pot</p>`)
+      <button class="btn block lgs-go" id="lgQuick">${iHold ? `${VS_IC}Defend your crown` : (H.hist || [])[0] === 'you' ? '🔥 Take revenge' : `${VS_IC}Battle for the crown`} · $1</button><p class="lgs-ent">${iHold ? 'Win to keep it' : 'Win to take the crown'} · <b>+1 point</b> · 85¢ goes into today’s pot</p>`)
       : (() => { const low = S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0], cn = esc(crownName(k).toLowerCase());
         return `<div class="lgv"><div class="lgv-p"><img src="${lgPhoto(near.h, k)}" alt=""><b>@${esc(near.h)}</b></div><span class="lgv-x">VS</span><div class="lgv-p me"><button class="lgv-up ${low ? 'low' : ''}" id="lgUp" aria-label="${low ? 'Enhance your photo' : `Upload a ${cn} photo`}">${low ? `<img src="${low.src}" alt=""><em>${low.s.total} · needs ${CFG.QUALIFY}+</em>` : `<span>+</span><small>Upload a ${cn} photo</small>`}</button><b>You</b></div></div>
         <button class="btn block lgs-go" id="lgQuick">${low ? `${VS_IC}Battle` : '📷 Upload photo'}</button><p class="lgs-ent">${low ? `Enhance your photo to <b>${CFG.QUALIFY}+</b> to battle` : `Add a ${cn} photo to battle`}</p>`; })()}
