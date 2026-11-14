@@ -7936,7 +7936,6 @@ function renderJudge() {
       </div>`}
       <div class="stk" ${(S.votes || 0) < 10 ? 'hidden' : ''}><div class="stk-row"><span class="stk-lab" aria-label="Your wins are multiplied by your streak"><small>Wins</small><b class="stk-x">×${streakX(combo)}</b></span><div class="lkp-steps jf-combo stk-steps">${[...Array(6)].map((_, i) => `<i class="${i < Math.min(combo, 6) ? 'on' : ''} ${[1, 3, 5].includes(i) ? 'm m' + (i + 1) : ''}">${i === 1 ? '<u>🎁</u>×2' : i === 3 ? '<u>🎁</u>×5' : i === 5 ? '<u>🧰</u>×10' : ''}</i>`).join('')}</div></div></div>
     </div>
-    ${meterHTML()}
     <div class="vh" id="jRes" aria-live="polite"></div>
 `;
   document.querySelectorAll('#judge .tot-c').forEach(b => b.onclick = e => { if (e.target.closest('.jrep')) return; if (Date.now() - SWIPED < 400) return; vote(+b.dataset.i); });
