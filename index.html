@@ -4760,6 +4760,20 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .bt .bt-sw{margin-bottom:12px}.bt .bc-h{margin-bottom:12px}
 .stk-steps{grid-template-columns:1fr 1fr 46px 1fr 46px 1fr 1fr 1fr 1fr 46px!important;gap:4px!important}
 .stk-steps i.m10{position:relative;cursor:pointer}.chtx{position:absolute;top:-9px;right:-8px;padding:0 5px;border-radius:999px;font-style:normal;font-size:.62rem;font-weight:900;color:#0B2A1C;background:#2EE59D;line-height:1.5}
+.wr{position:relative;text-align:center;padding:4px 2px 10px;overflow:hidden}.wr-x{position:absolute;left:0;top:0;border:0;background:none;color:#fff;font-size:1.6rem;cursor:pointer;z-index:2}
+.wr-cf i{position:absolute;top:-10px;width:10px;height:5px;border-radius:2px;background:#FFC93C;animation:wrcf 2.6s linear infinite}@keyframes wrcf{to{transform:translateY(240px) rotate(540deg);opacity:0}}
+.wr-h{margin:14px 0 0;font:900 clamp(2.4rem,12vw,3.4rem)/1 "Bricolage Grotesque",sans-serif;color:#fff;letter-spacing:-.01em;text-shadow:0 4px 0 rgba(0,0,0,.25)}.wr.l .wr-h{color:#FFB3D6}
+.wr-s{margin:6px 0 30px;font-weight:700;font-size:1.05rem;color:#E6DDF5}
+.wr-ph{position:relative;display:inline-block;width:62%;max-width:240px;aspect-ratio:1/1;border-radius:24px;padding:5px;background:linear-gradient(160deg,#FFE27A,#E9A514);box-shadow:0 0 60px 10px rgba(255,201,60,.35)}.wr.l .wr-ph{background:linear-gradient(160deg,#C9B4F5,#6A4FA0);box-shadow:0 0 40px 4px rgba(139,60,255,.3)}
+.wr-ph img{width:100%;height:100%;object-fit:cover;border-radius:19px;display:block}
+.wr-cr{position:absolute;left:50%;top:-34px;transform:translateX(-50%)}.wr-cr .crw-ic{width:84px;height:62px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.4))}
+.wr-ph em{position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);padding:4px 18px;border-radius:999px;font:900 1rem "Bricolage Grotesque",sans-serif;font-style:normal;color:#FFC93C;background:#2A1A10;box-shadow:inset 0 0 0 2px #E9A514;white-space:nowrap}
+.wr-vs{display:grid;grid-template-columns:52px 1fr auto auto;align-items:center;gap:10px;margin:30px 4px 14px;text-align:left}.wr-vs img{width:52px;height:52px;border-radius:12px;object-fit:cover;box-shadow:0 0 0 2px #E9A514}.wr-vs span{font-weight:800;font-size:.95rem}.wr-vs b{font:900 1.6rem "Bricolage Grotesque",sans-serif;color:#FF3FA4}.wr-vs small{color:#C9B4F5}
+.wr-pot{padding:14px 14px 12px;border-radius:22px;box-shadow:inset 0 0 0 2px #E9A514;background:rgba(20,8,40,.5)}.wr-pot>small{display:block;letter-spacing:.18em;font-weight:800;font-size:.78rem;text-transform:uppercase}
+.wr-pot>b{display:block;font:900 2.6rem/1.1 "Bricolage Grotesque",sans-serif;background:linear-gradient(180deg,#FFE27A,#E9A514);-webkit-background-clip:text;background-clip:text;color:transparent}.wr-pot>p{margin:2px 0 10px;font-weight:600}.wr-pot>p b{color:#2EE59D}
+.wr-steps{display:flex;align-items:center;justify-content:center}.wr-steps>i{flex:1;max-width:34px;height:2px;background:#6A4FA0}.wr-st{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;font-weight:800;color:#C9B4F5;box-shadow:inset 0 0 0 2px #6A4FA0;line-height:1;font-size:.95rem}.wr-st b{font-size:.8rem}.wr-st.on{background:linear-gradient(180deg,#FFE27A,#E9A514);color:#2A1600;box-shadow:none}
+.wr-pot>strong{display:block;margin-top:10px;font:900 1.4rem "Bricolage Grotesque",sans-serif}.wr-pot>span{display:block;color:#C9B4F5}.wr-pot>em{display:block;margin-top:4px;font-style:normal;font-size:.8rem;color:#A994CF}
+.wr-go{margin-top:16px;display:flex!important;align-items:center;justify-content:center;gap:10px;font-size:1.2rem!important}.wr-go .vsic{width:32px;height:24px}.wr-go.rev{background:linear-gradient(95deg,#FF7A3C,#FF3FA4)!important}.wr-back{margin-top:8px}
 </style>
 </head>
 <body>
@@ -8200,13 +8214,17 @@ function lgFight(k, h, isKing, revenge, pid) {
       if (seq[v]) m++; v++; const sh = m / v * 100; $('#lbMb').style.width = sh + '%'; $('#lbTb').style.width = (100 - sh) + '%'; $('#lbM').textContent = m; $('#lbT').textContent = v - m; $('#lbV').textContent = `${v} of ${N} votes`;
       if (v < N) return; clearInterval(iv);
       const pct = Math.round(mv / N * 100), y = L.you[k] || 0, rk = lgRank(k).findIndex(r => r.me) + 1;
-      $('#lb').innerHTML = `${head}<p class="kg2-fin">Final result</p><h2 class="kg2-h">${won ? `You beat @${esc(h)}!` : `@${esc(h)} wins this one`}</h2><p class="kg2-score">Final vote · ${Math.max(mv, tv)}–${Math.min(mv, tv)}</p>${vs(tv, mv, true)}
-        <div class="kg2-bar res"><i style="width:${100 - pct}%">${100 - pct}%</i><i style="width:${pct}%">${pct}%</i></div>
-        <div class="lb-cr ${won ? 'w' : 'l'}"><b>${won ? `+${g}` : lost ? '−1' : '±0'}</b><span>${won ? `${esc(crownName(k))} point${g > 1 ? 's' : ''}` : lost ? `${esc(crownName(k))} point lost` : 'No points to lose yet'} · you have <b>${y}</b> today${y >= LG_SHARE ? ` · in for ${money(lgShare(k))}` : ` · ${LG_SHARE - y} more to share`}</span></div>
-        ${kingMsg ? `<p class="fb-crown ${nk.me ? 'w' : 'l'}">${kingMsg}</p>` : ''}
-        ${won ? `<div class="kg2-next win"><small>${y >= LG_SHARE ? 'Your share of today’s pot so far' : 'Get a share of today’s pot'}</small><b>${y >= LG_SHARE ? money(lgShare(k)) : `${LG_SHARE - y} more point${LG_SHARE - y === 1 ? '' : 's'}`}</b><span>Today’s ${esc(crownName(k))} pot · ${money(L.jp[k])} · pays at midnight</span></div><button class="btn block kg2-go" id="lbMore">Battle again</button>`
-          : `<div class="kg2-next lose"><small>Your $1 is in the pot</small><b>${money(L.jp[k])}</b><span>Today’s ${esc(crownName(k))} pot · win points back to get a share</span></div><button class="btn block kg2-go" id="lbRev">Revenge @${esc(h)}</button>`}
-        <div style="text-align:center"><button class="link kg2-back" data-shclose>Back to Battle</button></div>`;
+      const cn = esc(crownName(k)), took = won && lgHold(k).h === 'you' && !wasHolder, kept = won && wasHolder, lostCrown = !won && wasHolder;
+      const sub = took ? `You took the ${cn} crown.` : kept ? `You defended the ${cn} crown.` : won ? `+${g} ${cn} point${g > 1 ? 's' : ''}.` : lostCrown ? `@${esc(h)} took your ${cn} crown.` : `@${esc(h)} kept the ${cn} crown.`;
+      const steps = [1, 2, 3, 4, 5].map(i => `<span class="wr-st ${i <= y ? 'on' : ''}">${i <= y ? '✓' : i === 5 ? '🏆<b>5</b>' : i}</span>`).join('<i></i>');
+      $('#lb').innerHTML = `<div class="wr ${won ? 'w' : 'l'}"><button class="wr-x" data-shclose aria-label="Close">✕</button>${won ? '<div class="wr-cf" aria-hidden="true">' + [...Array(10)].map((_, i) => `<i style="left:${(i * 37) % 95}%;animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('') + '</div>' : ''}
+        <h1 class="wr-h">${won ? 'YOU WON!' : 'SO CLOSE!'}</h1><p class="wr-s">${sub}</p>
+        <div class="wr-ph"><span class="wr-cr">${CRW}</span><img src="${won ? me.src : src}" alt=""><em>${won ? 'YOU' : '@' + esc(h)}</em></div>
+        <div class="wr-vs"><img src="${won ? src : me.src}" alt=""><span>${won ? `You beat @${esc(h)}` : `@${esc(h)} beat you`}</span><b>${Math.max(mv, tv)}–${Math.min(mv, tv)}</b><small>votes</small></div>
+        <div class="wr-pot"><small>Today’s ${cn} pot</small><b>$${L.jp[k].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</b><p>${y >= LG_SHARE ? `✓ You’re in · <b>${money(lgShare(k))}</b> so far` : `Get ${LG_SHARE} points today to share the pot`}</p>
+          <div class="wr-steps">${steps}</div><strong>${Math.min(y, LG_SHARE)} of ${LG_SHARE} points</strong><span>${y >= LG_SHARE ? 'Keep winning to grow your share' : `${LG_SHARE - y} more point${LG_SHARE - y === 1 ? '' : 's'} to qualify`}${!won && lost ? ' · −1 for this loss' : ''}</span><em>Pays at midnight</em></div>
+        ${won ? `<button class="btn block wr-go" id="lbMore">${VS_IC}Battle again</button>` : `<button class="btn block wr-go rev" id="lbRev">🔥 Take revenge</button>`}
+        <div style="text-align:center"><button class="link wr-back" data-shclose>Back to Battles</button></div></div>`;
       paintWallet();
       if ($('#lbMore')) $('#lbMore').onclick = () => lgCat(k);
       if ($('#lbRev')) $('#lbRev').onclick = () => revengePrep(null, k, h, me.id);
