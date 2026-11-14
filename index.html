@@ -4480,6 +4480,50 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .rm-pill{margin-left:6px;padding:3px 8px;border-radius:999px;font-size:.62rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#2EE59D;box-shadow:inset 0 0 0 1.5px #2EE59D;white-space:nowrap}
 .tk-sx{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;font-weight:800;font-size:.75rem;background:#3E2A66;color:#E6DDF5;flex:none}
 .jf-en .en-top{display:none!important}.jf-en.en-out{display:none!important}
+/* Real Money: private games + wallet */
+#sTop,#pnGem,.wf-ch,#tixStrip~.nxu-gem{display:none!important}
+#segCompete{order:-1}
+.pgp{display:flex;flex-direction:column;gap:12px;padding-bottom:20px}
+.pg-hero{padding:18px;border-radius:22px;background:linear-gradient(160deg,#3A1B5C,#1C1233);box-shadow:inset 0 0 0 1.5px #5A3A8A;display:flex;flex-direction:column;gap:8px}
+.pg-hero h2{margin:0;font:800 1.9rem "Bricolage Grotesque",sans-serif}.pg-hero p{margin:0;color:#E6DDF5}.pg-hero small{color:#A796C6}
+.pg-new{padding:14px 0;border:0;border-radius:999px;font:800 1.2rem "Bricolage Grotesque",sans-serif;color:#fff;cursor:pointer;background:linear-gradient(95deg,#FF3FA4,#8B3CFF)}
+.pg-g{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:18px;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3E2A66}
+.pg-t b{display:block;font:800 1.15rem "Bricolage Grotesque",sans-serif}.pg-t small{color:#C9B4F5}
+.pg-m{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pg-av{display:flex}.pg-av i{width:30px;height:30px;margin-left:-6px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:.8rem;background:linear-gradient(135deg,#FF7A3C,#FF3FA4);box-shadow:0 0 0 2px #1C1233;overflow:hidden}.pg-av i:first-child{margin-left:0}.pg-av i.me img{width:100%;height:100%;object-fit:cover}
+.pg-n{color:#E6DDF5;font-size:.9rem}.pg-pot{margin-left:auto;font-size:.9rem;color:#C9B4F5}.pg-pot b{color:#2EE59D;font:800 1.1rem "Bricolage Grotesque",sans-serif}
+.pg-b{padding:11px 0;border:0;border-radius:999px;font:800 1rem Inter,sans-serif;color:#fff;cursor:pointer;background:linear-gradient(95deg,#FF3FA4,#8B3CFF)}
+.pg-b.go{background:#2EE59D;color:#0B2A1C}.pg-b.ghost{background:#24163F;box-shadow:inset 0 0 0 1.5px #4A2F78}
+.pg-res{margin:0;font-weight:700}.pg-res b{color:#2EE59D}
+.pg-ref{display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;background:#24163F}
+.pg-ref .i{font-size:1.6rem}.pg-ref b{display:block}.pg-ref small{display:block;color:#C9B4F5}.pg-ref button{margin-left:auto;flex:none;padding:8px 14px;border:0;border-radius:999px;font-weight:800;color:#2A1600;background:#FFC93C;cursor:pointer}
+.pgc-l{display:block;margin:12px 0 6px;font-weight:700;color:#E6DDF5}
+.pgc-in{width:100%;padding:12px 14px;border:0;border-radius:14px;font:inherit;font-size:1rem;color:#fff;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3E2A66}
+.pgr-l{list-style:none;margin:14px 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.pgr-l li{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:14px;background:#1C1233;animation:pgin .4s both}
+.pgr-l li.me{box-shadow:inset 0 0 0 2px #FF3FA4}
+.pgr-l .n{width:24px;font:800 1.1rem "Bricolage Grotesque",sans-serif;color:#FFC93C}.pgr-l img{width:42px;height:42px;border-radius:10px;object-fit:cover}
+.pgr-l b{flex:1}.pgr-l small{color:#A796C6}.pgr-l em{font-style:normal;font-weight:800;color:#2EE59D;min-width:64px;text-align:right}
+@keyframes pgin{from{opacity:0;transform:translateY(8px)}}
+.pgr-out{text-align:center;font-size:1.15rem;font-weight:700}.pgr-out b{color:#2EE59D}
+.w2-bal{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.w2-bal div{padding:14px;border-radius:16px;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3E2A66}.w2-bal small{display:block;color:#A796C6;font-weight:700}.w2-bal b{font:800 1.6rem "Bricolage Grotesque",sans-serif;color:#2EE59D}
+.w2-dep button:last-child{background:#24163F!important}
+.f2-st button:disabled{opacity:.35;cursor:not-allowed}
+.w2-note{margin:8px 0 0;font-size:.85rem;color:#C9B4F5}
+.w2-brk{padding:10px 12px;border-radius:12px;background:rgba(255,201,60,.12);color:#FFE27A;font-weight:600}
+.w2-rg{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:16px;box-shadow:inset 0 0 0 1.5px #3E2A66}
+.w2-rg .row{display:flex;justify-content:space-between;color:#C9B4F5}.w2-rg .row b{color:#fff}
+.w2-rg .meter{height:6px;border-radius:999px;background:#3E2A66;overflow:hidden}.w2-rg .meter i{display:block;height:100%;background:#2EE59D}
+.w2-lim{display:flex;gap:8px}.w2-lim button{flex:1;padding:8px 0;border:0;border-radius:999px;color:#fff;font-weight:700;cursor:pointer;background:#1C1233;box-shadow:inset 0 0 0 1.5px #3E2A66}.w2-lim button[aria-pressed=true]{background:#2EE59D;color:#0B2A1C}
+.w2-break{padding:10px 0;border:0;border-radius:999px;font-weight:800;color:#FFE27A;cursor:pointer;background:none;box-shadow:inset 0 0 0 1.5px #FFC93C}
+.w2-h{display:flex;flex-direction:column;gap:6px}.w2-h div{display:flex;justify-content:space-between;padding:8px 12px;border-radius:12px;background:#1C1233}.w2-h .p{color:#2EE59D}.w2-h .n{color:#FF8FB0}.w2-none{color:#A796C6}
+.w2-fine{margin:14px 0 0;text-align:center;font-size:.75rem;color:#8E7BB5}
+.kyc-id{width:100%;padding:14px;border:0;border-radius:14px;font:inherit;font-weight:700;color:#fff;cursor:pointer;background:#24163F;box-shadow:inset 0 0 0 1.5px dashed #5A3A8A}.kyc-id.ok{color:#2EE59D;box-shadow:inset 0 0 0 1.5px #2EE59D}
+.kyc-err{min-height:1.2em;color:#FF8FB0;font-weight:700}
+.w2-dep{grid-template-columns:repeat(3,1fr)!important}
+.w2-wd{width:100%;margin-top:10px;padding:11px 0;border:0;border-radius:999px;font-weight:800;color:#fff;cursor:pointer;background:#24163F;box-shadow:inset 0 0 0 1.5px #4A2F78}
+#frDot{display:none!important}
 </style>
 </head>
 <body>
@@ -4552,8 +4596,8 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
     <nav class="seg" role="group" aria-label="Switch screen">
       <div class="segpair"><button id="segStudio" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L15 9"/><path d="M15 9l2-2"/><path d="M18 2l.8 2.2L21 5l-2.2.8L18 8l-.8-2.2L15 5l2.2-.8zM9 3l.5 1.5L11 5l-1.5.5L9 7l-.5-1.5L7 5l1.5-.5z"/></svg><span>Studio</span></button>
       <span class="segsw" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg></span><button id="segJudge" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0z"/></svg><span>Judge</span></button></div>
-      <button id="segGallery" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/></svg><span>Friends</span><i class="fr-dot" id="frDot" hidden></i></button>
-      <button id="segCompete" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg><span>Compete</span></button>
+      <button id="segGallery" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/></svg><span>Private</span><i class="fr-dot" id="frDot" hidden></i></button>
+      <button id="segCompete" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg><span>Play</span></button>
     </nav>
 
     <div class="flow" id="flow" role="dialog" aria-modal="true" aria-label="Photo scoring">
@@ -6035,7 +6079,7 @@ function gemIdeas() {
   const up = u70 || S.photos.filter(p => can(p) && nextLvl(p.s.total)).sort((a, b) => (nextLvl(a.s.total).at - a.s.total) - (nextLvl(b.s.total).at - b.s.total))[0];
   if (up) { const L = up.s.total < CFG.QUALIFY ? null : nextLvl(up.s.total), gap = (L ? L.at : CFG.QUALIFY) - up.s.total;
     I.push({ ic: '✨', t: 'Enhance a photo', d: `Your ${esc(cn(up))}photo is <b>${up.s.total}</b>. ${gap} more to ${L ? `<b>${L.n}</b>` : `<b>${CFG.QUALIFY}</b> and it’s ready to play`}.`, cost: fixCost(up), src: up.src, go: () => { closeSheet(); startEnhance(up, lowestOpen(up)); } }); }
-  try { let best = null; Object.entries(crownsS()).forEach(([k, c]) => { if (c.h === 'you') return; const ph = S.photos.filter(p => k === 'any' ? !p.cat || p.cat === 'any' : p.cat === k).sort((a, b) => b.s.total - a.s.total)[0]; if (!ph) return; const gap = c.sc - ph.s.total; if (!best || gap < best.gap) best = { k, c, ph, gap }; });
+  if (0) try { let best = null; Object.entries(crownsS()).forEach(([k, c]) => { if (c.h === 'you') return; const ph = S.photos.filter(p => k === 'any' ? !p.cat || p.cat === 'any' : p.cat === k).sort((a, b) => b.s.total - a.s.total)[0]; if (!ph) return; const gap = c.sc - ph.s.total; if (!best || gap < best.gap) best = { k, c, ph, gap }; });
     if (best) I.push({ ic: '👑', t: 'Take a crown', d: `@${esc(best.c.h)} holds the <b>${esc(crownName(best.k))}</b> crown with ${best.c.sc}. Your photo: <b>${best.ph.s.total}</b>.`, cost: FC_STAKES[1].amt, src: best.ph.src, go: () => { closeSheet(); openFriends(); fcNew(best.c.h, { f: best.c.h, th: best.k, st: 1, sel: best.ph.id }); } }); } catch (e) {}
   const f = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
   if (f) I.push({ ic: '⚔️', t: 'Gem battle', d: `Put your <b>${f.s.total}</b> photo up against a rival. Win <b>50 ⭐</b> in 30 seconds.`, cost: 25, src: f.src, go: () => { closeSheet(); openGemBattle(25); } });
@@ -6070,7 +6114,7 @@ function paintGemGlow() { const el = $('#gemPill'); if (el) el.classList.toggle(
 setInterval(paintGemGlow, 1500);
 // opening the app with 150+ gems: show the pop once per visit
 setTimeout(function gnOpen() { if (!S || !S.user) return; if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || ($('#flow').classList.contains('on') && !$('#flow').classList.contains('astab'))) { if (!gnOpen.n) gnOpen.n = 0; if (++gnOpen.n < 8) setTimeout(gnOpen, 2500); return; } if (S.gems >= 150 && !window.__spent) gemNudge(true); }, 4000);
-['#walletPlus', '#wCash'].forEach(s => { const el = $(s); if (el) el.onclick = () => openStore(); });
+['#walletPlus', '#wCash'].forEach(s => { const el = $(s); if (el) el.onclick = () => walletSheet(); });
 $('#gemPill2').onclick = () => useGems();
 
 /* ---------- Competitions hub ---------- */
@@ -6848,9 +6892,116 @@ function bindRoomView() {
 }
 var WB_SHOW = false, CX_WB = false;
 function openGallery() { if ($('#sheet').classList.contains('on')) closeSheet(); GV.tab = 'board'; if (!(GV.room >= 0 && GV.room < GROOMS.length)) GV.room = 0; go('gallery'); }
+/* ===== Real Money: private games with your mates, and refer a friend ===== */
+const PG_NAMES = ['mia', 'sam', 'tom', 'jess', 'kai', 'noor', 'leo', 'ava'];
+const PG_FEE = 0.10, PG_SPLIT = [0.70, 0.20]; // 10% fee; 1st 70%, 2nd 20% of the pot
+function pgS() { if (!S.pg) { S.pg = [{ id: uid(), name: 'Friday Pet Night', host: 'mia', stake: 5, size: 6, cat: 'pets', joined: 4, me: false, at: Date.now(), st: 'open' }]; save(); } return S.pg; }
+function openPrivate() { GV.tab = 'friends'; if ($('#flow').classList.contains('on')) closeFlow(); closeSheet(); go('gallery'); }
+function privateHTML() {
+  if (!S.user) return `<div class="pgp"><h2>Private games</h2><p class="sub">Sign up to play your mates for real cash.</p></div>`;
+  const G = pgS(), row = g => { const full = g.joined >= g.size, cat = themeName(g.cat);
+    return `<div class="pg-g ${g.st}"><div class="pg-t"><b>${esc(g.name)}</b><small>${g.host === 'you' ? 'Your game' : `Hosted by @${esc(g.host)}`} · ${esc(cat)} · ${money(g.stake)} each</small></div>
+      <div class="pg-m"><span class="pg-av">${[...Array(Math.min(g.joined, 6))].map((_, i) => i === 0 && g.me ? `<i class="me">${avatarInner()}</i>` : `<i>${esc(PG_NAMES[(i + g.size) % PG_NAMES.length][0].toUpperCase())}</i>`).join('')}</span>
+        <span class="pg-n">${g.joined} of ${g.size} in</span><span class="pg-pot">Pot <b>${money(g.stake * g.joined)}</b></span></div>
+      ${g.st === 'done' ? `<p class="pg-res">${g.res.place === 1 ? `🏆 You won <b>${money(g.res.won)}</b>` : g.res.won ? `🥈 You came 2nd · <b>${money(g.res.won)}</b>` : `You came ${ordN(g.res.place)} · @${esc(g.res.winner)} won`}</p><button class="pg-b ghost" data-pgres="${g.id}">See results</button>`
+        : !g.me ? `<button class="pg-b" data-pgjoin="${g.id}">Join · ${money(g.stake)}</button>`
+        : full ? `<button class="pg-b go" data-pgplay="${g.id}">Everyone’s in · Play now</button>`
+        : `<button class="pg-b ghost" data-pginv="${g.id}">Waiting for ${g.size - g.joined} more · Invite</button>`}</div>`; };
+  return `<div class="pgp"><div class="pg-hero"><h2>Private games</h2><p>Play your mates for real cash. Pick the stake, share the link, winner takes the pot.</p>
+      <button class="pg-new" id="pgNew">+ Create a game</button><small>Everyone must be 19+ and verified. 10% fee per game.</small></div>
+    <h3 class="fr-sh">Your games</h3>${G.map(row).join('')}
+    <div class="pg-ref"><span class="i">🤝</span><span><b>Refer a friend</b><small>When they make a first deposit, you both get a free $5 entry.</small></span><button id="pgRef">Copy link</button></div></div>`;
+}
+const ordN = n => n + (['th', 'st', 'nd', 'rd'][(n % 100 - 20) % 10] || ['th', 'st', 'nd', 'rd'][n % 100] || 'th');
+function bindPrivate() {
+  if ($('#pgNew')) $('#pgNew').onclick = pgCreate;
+  if ($('#pgRef')) $('#pgRef').onclick = () => { const l = `https://yofi.app/r/${S.user ? S.user.h : 'me'}`; try { const pr = navigator.clipboard && navigator.clipboard.writeText(l); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {} toast('🔗 Referral link copied'); };
+  const G = pgS(), find = id => G.find(g => g.id === id);
+  document.querySelectorAll('#gallery [data-pgjoin]').forEach(b => b.onclick = () => { const g = find(b.dataset.pgjoin); payCash(g.stake, 'This game', () => { g.me = true; g.joined++; save(); renderGallery(); toast(`✓ You’re in ${g.name}`); }); });
+  document.querySelectorAll('#gallery [data-pginv]').forEach(b => b.onclick = () => { const l = 'https://yofi.app/g/' + b.dataset.pginv; try { const pr = navigator.clipboard && navigator.clipboard.writeText(l); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {} toast('🔗 Game link copied. Send it to your group.'); });
+  document.querySelectorAll('#gallery [data-pgplay]').forEach(b => b.onclick = () => pgPlay(find(b.dataset.pgplay)));
+  document.querySelectorAll('#gallery [data-pgres]').forEach(b => b.onclick = () => pgResults(find(b.dataset.pgres)));
+}
+function pgCreate() {
+  let stake = 5, size = 6, cat = 'any';
+  const paint = () => { openSheet(`<div class="pgc"><h2>Create a private game</h2><p class="sub">Your mates join with a link. Winner takes 70% of the pot, 2nd gets 20%.</p>
+    <label class="pgc-l" for="pgName">Game name</label><input id="pgName" class="pgc-in" maxlength="30" value="${esc($('#pgName') ? $('#pgName').value : 'Friday Photo Night')}">
+    <h3 class="fcn-h">Stake each</h3><div class="f2-st">${[1, 5, 10, 20].map(x => `<button data-s="${x}" aria-pressed="${x === stake}">$${x}</button>`).join('')}</div>
+    <h3 class="fcn-h">Players</h3><div class="f2-st">${[4, 6, 8].map(x => `<button data-n="${x}" aria-pressed="${x === size}">${x}</button>`).join('')}</div>
+    <h3 class="fcn-h">Category</h3><div class="fcn-chips f2-cat">${FC_THEMES.map(([k, n]) => `<button data-c="${k}" aria-pressed="${k === cat}">${esc(n.replace('Best ', ''))}</button>`).join('')}</div>
+    <div class="f2-win"><span class="tr">🏆</span><span class="sep"></span><span>Full pot <b>${money(stake * size)}</b> · winner gets <b>${money(stake * size * PG_SPLIT[0])}</b></span></div>
+    <button class="btn block fcn-go" id="pgGo">Create & pay ${money(stake)}</button></div>`, { full: true, cover: true });
+    document.querySelectorAll('#sheetBody [data-s]').forEach(b => b.onclick = () => { stake = +b.dataset.s; paint(); });
+    document.querySelectorAll('#sheetBody [data-n]').forEach(b => b.onclick = () => { size = +b.dataset.n; paint(); });
+    document.querySelectorAll('#sheetBody [data-c]').forEach(b => b.onclick = () => { cat = b.dataset.c; paint(); });
+    $('#pgGo').onclick = () => { const name = ($('#pgName').value || 'Photo Night').trim(); closeSheet();
+      payCash(stake, 'Your game', () => { pgS().unshift({ id: uid(), name, host: 'you', stake, size, cat, joined: 1, me: true, at: Date.now(), st: 'open', nextJoin: Date.now() + 3000 }); save(); openPrivate(); toast('🔗 Game created. Link copied: send it to your group.'); }); }; };
+  paint();
+}
+// demo: friends accept your invite a few seconds apart
+setInterval(() => { if (!S || !S.pg) return; let ch = false; S.pg.forEach(g => { if (g.st === 'open' && g.me && g.joined < g.size && Date.now() >= (g.nextJoin || 0)) { g.joined++; g.nextJoin = Date.now() + 2500; ch = true; } });
+  if (ch) { save(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'friends' && !$('#sheet').classList.contains('on')) renderGallery(); } }, 1000);
+function pgPlay(g) {
+  const mine = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0] || S.photos[0]; if (!mine) { toast('Add a photo first'); return; }
+  const players = [{ h: 'you', src: mine.src, r: judgeRate(mine) + Math.random() * 18 }];
+  for (let i = 1; i < g.size; i++) players.push({ h: PG_NAMES[(i + g.size) % PG_NAMES.length], src: battleRival(g.cat === 'any' ? 'pets' : g.cat).src, r: 45 + Math.random() * 40 });
+  const N = 60, tot = players.reduce((a, p) => a + p.r, 0); players.forEach(p => p.v = Math.round(p.r / tot * N * g.size)); players.sort((a, b) => b.r - a.r); for (let i = 1; i < players.length; i++) if (players[i].v >= players[i - 1].v) players[i].v = players[i - 1].v - 1 - Math.floor(Math.random() * 3);
+  const pot = g.stake * g.size, place = players.findIndex(p => p.h === 'you') + 1, won = place <= 2 ? +(pot * PG_SPLIT[place - 1]).toFixed(2) : 0;
+  g.st = 'done'; g.res = { place, won, winner: players[0].h, players: players.map(p => ({ h: p.h, v: p.v, src: p.src })) };
+  if (won) { S.cash = +((S.cash || 0) + won).toFixed(2); (S.wHist = S.wHist || []).unshift({ t: `${g.name} · ${ordN(place)}`, a: won, at: Date.now() }); paintWallet(); }
+  save(); pgResults(g, true);
+}
+function pgResults(g, live) {
+  const P = g.res.players, pot = g.stake * g.size;
+  openSheet(`<div class="pgr"><h2>${esc(g.name)}</h2><p class="sub">${esc(themeName(g.cat))} · ${g.size} players · pot ${money(pot)}</p>
+    <ol class="pgr-l">${P.map((p, i) => `<li class="${p.h === 'you' ? 'me' : ''}" style="animation-delay:${live ? (P.length - i) * .35 : 0}s"><span class="n">${i + 1}</span><img src="${p.src}" alt=""><b>${p.h === 'you' ? 'You' : '@' + esc(p.h)}</b><small>${p.v} votes</small><em>${i < 2 ? money(pot * PG_SPLIT[i]) : ''}</em></li>`).join('')}</ol>
+    <p class="pgr-out">${g.res.place === 1 ? `🏆 You won <b>${money(g.res.won)}</b>!` : g.res.won ? `🥈 2nd place · <b>${money(g.res.won)}</b>` : `You came ${ordN(g.res.place)}. @${esc(g.res.winner)} takes the pot.`}</p>
+    <button class="btn block" id="pgAgain">Rematch with the same group</button><div style="text-align:center"><button class="link" data-shclose>Close</button></div></div>`, { full: true, cover: true });
+  $('#pgAgain').onclick = () => { closeSheet(); payCash(g.stake, 'The rematch', () => { pgS().unshift({ id: uid(), name: g.name, host: 'you', stake: g.stake, size: g.size, cat: g.cat, joined: 1, me: true, at: Date.now(), st: 'open', nextJoin: Date.now() + 2000 }); save(); openPrivate(); }); };
+}
+
+/* ===== Real Money: wallet (deposit, withdraw, safer play) ===== */
+function walletSheet() {
+  const lim = S.depLim || 50, day = new Date().toDateString(), used = S.depDay === day ? (S.depUsed || 0) : 0, brk = S.breakUntil && S.breakUntil > Date.now(), mins = Math.max(1, Math.round((Date.now() - (window.__sessStart || Date.now())) / 60000));
+  openSheet(`<div class="wal2"><h2>Wallet</h2>
+    <div class="w2-bal"><div><small>Cash</small><b>${money(S.cash || 0)}</b></div><div><small>Free entries</small><b>🎟️ ${S.cashTix || 0}</b></div></div>
+    ${brk ? `<p class="w2-brk">You’re on a break until ${new Date(S.breakUntil).toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' })}. Deposits and cash games are paused.</p>` : ''}
+    <h3 class="fcn-h">Deposit</h3><div class="f2-st w2-dep">${[10, 25, 50].map(x => `<button data-dep="${x}" ${brk || used + x > lim ? 'disabled' : ''}>$${x}</button>`).join('')}</div>
+    <button class="w2-wd" data-wd>Withdraw ${money(S.cash || 0)}</button>
+    <p class="w2-note">${S.kyc ? '✓ Age and ID verified' : 'First deposit: quick age and ID check (19+)'}</p>
+    <h3 class="fcn-h">Safer play</h3>
+    <div class="w2-rg"><div class="row"><span>Daily deposit limit</span><b>${money(used)} of ${money(lim)}</b></div><div class="meter"><i style="width:${Math.min(100, used / lim * 100)}%"></i></div>
+      <div class="w2-lim">${[25, 50, 100].map(x => `<button data-lim="${x}" aria-pressed="${x === lim}">$${x}/day</button>`).join('')}</div>
+      <div class="row"><span>Playing this session</span><b>${mins} min</b></div>
+      <button class="w2-break" id="w2Brk" ${brk ? 'disabled' : ''}>${brk ? 'On a break' : 'Take a 24-hour break'}</button></div>
+    <h3 class="fcn-h">History</h3><div class="w2-h">${(S.wHist || []).slice(0, 8).map(h => `<div><span>${esc(h.t)}</span><b class="${h.a >= 0 ? 'p' : 'n'}">${h.a >= 0 ? '+' : '−'}${money(Math.abs(h.a))}</b></div>`).join('') || '<p class="w2-none">No deposits or withdrawals yet.</p>'}</div>
+    <p class="w2-fine">Licensed real-money play · 19+ · Need help? ConnexOntario 1-866-531-2600</p></div>`, { full: true, cover: true });
+  const hist = (t, a) => (S.wHist = S.wHist || []).unshift({ t, a, at: Date.now() });
+  document.querySelectorAll('#sheetBody [data-dep]').forEach(b => b.onclick = () => { const x = +b.dataset.dep;
+    const doDep = () => checkout(`Deposit ${money(x)}`, x, () => { S.cash = +((S.cash || 0) + x).toFixed(2); S.depDay = day; S.depUsed = used + x; hist('Deposit', x); S.paidCash = true; save(); paintWallet(); walletSheet(); });
+    if (S.kyc) doDep(); else kycSheet(doDep); });
+  $('#sheetBody [data-wd]').onclick = () => { const c = S.cash || 0; if (c < 10) { toast('You can withdraw once you have $10 or more'); return; } S.cash = 0; hist('Withdrawal · 1–2 business days', -c); save(); paintWallet(); walletSheet(); toast(`✓ ${money(c)} withdrawal requested`); };
+  document.querySelectorAll('#sheetBody [data-lim]').forEach(b => b.onclick = () => { S.depLim = +b.dataset.lim; save(); walletSheet(); });
+  if ($('#w2Brk')) $('#w2Brk').onclick = () => { S.breakUntil = Date.now() + 24 * 3600000; save(); walletSheet(); toast('Break started. See you tomorrow.'); };
+}
+function kycSheet(then) {
+  openSheet(`<div class="kyc"><h2>Quick check before your first deposit</h2><p class="sub">Real-money play is for adults in Ontario. We check this once.</p>
+    <label class="pgc-l" for="kDob">Date of birth</label><input id="kDob" class="pgc-in" type="date" value="1990-05-14">
+    <label class="pgc-l" for="kProv">Where are you playing from?</label><select id="kProv" class="pgc-in"><option>Ontario</option><option>Another province</option></select>
+    <label class="pgc-l">Photo ID</label><button class="kyc-id" id="kId">📄 Add your driver’s licence or passport</button>
+    <p class="kyc-err" id="kErr"></p><button class="btn block" id="kGo">Verify and continue</button></div>`, { full: true, cover: true });
+  $('#kId').onclick = () => { $('#kId').textContent = '✓ ID added'; $('#kId').classList.add('ok'); };
+  $('#kGo').onclick = () => { const dob = new Date($('#kDob').value), age = (Date.now() - dob) / 31557600000, err = $('#kErr');
+    if (!(age >= 19)) { err.textContent = 'You need to be 19 or older to play for real money.'; return; }
+    if ($('#kProv').value !== 'Ontario') { err.textContent = 'Real-money play is only available in Ontario for now.'; return; }
+    if (!$('#kId').classList.contains('ok')) { err.textContent = 'Add a photo ID to finish the check.'; return; }
+    S.kyc = true; save(); closeSheet(); toast('✓ Verified'); then && then(); };
+}
+window.__sessStart = Date.now();
+
 function renderGallery() {
   const g = $('#gallery');
-  if (GV.tab === 'friends') { $('#ptitle').textContent = 'Friends'; g.innerHTML = friendsHTML(); bindFriends(); return; }
+  if (GV.tab === 'friends') { $('#ptitle').textContent = 'Private games'; g.innerHTML = privateHTML(); bindPrivate(); return; }
   $('#ptitle').textContent = 'Hall of Fame';
   const tabs = `<div class="gtabs" role="group" aria-label="Gallery view"><button data-t="mine" aria-pressed="${GV.tab === 'mine'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 16l-5-5-9 9"/></svg>My Gallery</button><button data-t="board" aria-pressed="${GV.tab === 'board'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4M12 14v4M8 21h8"/></svg>Halls of Fame</button></div>`;
   const wbh = WB_SHOW && S.user ? `<h1 class="gwb">Welcome back, <span>@${esc(S.user.h)}</span></h1>` : '';
@@ -7421,9 +7572,9 @@ function inviteJoined(c) {
   else toast(`🎉 @${nf.h} joined Yofi and answered your challenge! +50 ⭐`);
 }
 const VS_IC = '<svg class="vsic" viewBox="0 0 44 32" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><rect x="20" y="4" width="19" height="24" rx="4" transform="rotate(12 29.5 16)"/><rect x="5" y="4" width="19" height="24" rx="4" transform="rotate(-10 14.5 16)" fill="rgba(0,0,0,.18)"/></g><text x="22" y="21.5" text-anchor="middle" font-family="Bricolage Grotesque, Inter, sans-serif" font-weight="900" font-size="15" fill="#fff" stroke="#2A1250" stroke-width="3.6" paint-order="stroke" letter-spacing="-.5">VS</text></svg>';
-function challengeWith(p) { if (!p) return; const th = FC_THEMES.some(t => t[0] === p.cat) ? p.cat : 'any';
+function challengeWith(p) { openPrivate(); return; if (!p) return; const th = FC_THEMES.some(t => t[0] === p.cat) ? p.cat : 'any';
   if ($('#flow').classList.contains('on')) closeFlow(); go('gallery'); fcNew(null, { f: FRIENDS[0].h, st: 1, sel: p.id }); }
-function fcNew(f0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPic(() => fcNew(f0, keep)); return; }
+function fcNew(f0, keep) { openPrivate(); return; if (!(S.user && (S.user.pic || S.picSkip))) { needPic(() => fcNew(f0, keep)); return; }
   const catOf = p => p && FC_THEMES.some(t => t[0] === p.cat) ? p.cat : 'any';
   let f = (keep && keep.f) || f0 || 'sam', thOv = keep && keep.th, st = keep ? keep.st : 1, sel = keep && keep.sel, th = 'any', catOpen = false;
   let po0 = () => ({ sel });
@@ -7752,7 +7903,7 @@ function nextUp() {
   const left = Math.max(CFG.BATTLE_EVERY - (S.since || 0), 12 - (S.votes || 0), 1), done = CFG.BATTLE_EVERY - Math.min(CFG.BATTLE_EVERY, left);
   const tl = Math.max(T_POP_VOTES - (S.tSince || 0), 12 - (S.votes || 0), 1), tOk = !(S.tour && !S.tour.seen) && Date.now() - (S.tLast || 0) >= T_POP_GAP;
   if (tOk && tl < left) return { left: tl, done: Math.max(0, CFG.BATTLE_EVERY - tl), k: 'tour' };
-  return { left, done, k: S.btAlt ? 'gem' : 'cash' };
+  return { left, done, k: 'cash' }; // Real Money: battle pops are cash battles
 }
 function tixStripHTML() { const n = (S && S.user && S.cashTix) || 0; if (!n) return '';
   return `<button class="tixs" id="tixStrip"><span class="tixs-i">🎟️</span><span class="tixs-t"><b>${n} free cash entr${n === 1 ? 'y' : 'ies'}</b><small>Play a $1 game free · win real cash</small></span><em>Play now</em></button>`; }
@@ -7997,7 +8148,7 @@ function repairPhoto() {
   if (S.gems < REPAIR_GEMS) { runOut('gems', `You need ${REPAIR_GEMS - S.gems} more gems`, () => repairPhoto(), REPAIR_GEMS - S.gems); return; }
   S.gems -= REPAIR_GEMS; medalBack(); paintGems(); toast('🏅 Your Champion Medal is back!');
 }
-function awayCheck() {
+function awayCheck() { return; // Real Money: no crown raids
   if (!S || !S.user) return; const now = Date.now(), last = S.lastSeen || now; S.lastSeen = now; save();
   if (now - last < 60000 || !S.frIntro) return; // demo: anything over a minute counts as "away"
   const mine = myCrowns(); if (!mine.length) return; const roll = Math.random(); if (roll < .25) return;
@@ -8298,6 +8449,7 @@ function buyTicket() {
   ticketPop();
 }
 function payCash(amt, what, then) {
+  if (S.breakUntil && S.breakUntil > Date.now()) { toast('You’re on a break. Cash games are paused.'); return false; }
   if (amt === 1 && (S.cashTix || 0) > 0) { S.cashTix--; save(); toast(`🎟️ Free entry used${S.cashTix ? ` · ${S.cashTix} left` : ''}`); then(); return true; }
   if ((S.cash || 0) < amt) { openStore(`${what} costs ${money(amt)} cash.`, () => (S.cash || 0) >= amt && then()); return false; }
   S.cash = +((S.cash || 0) - amt).toFixed(2); save(); paintWallet(); then(); return true;
@@ -8781,7 +8933,7 @@ function paintTourney() {
 }
 }
 function openBattle() {
-  S.btAlt = !S.btAlt; save();
+  S.btAlt = true; save(); // Real Money: always cash
   const bth = pickBattleTheme(), bme = fitFor(bth)[0], tn = thName(bth);
   if (!S.btAlt && !openBattle.skipCash) { const me0 = bme || fighters()[0]; if (me0) { celebrate({ src: me0.src, score: '⭐', title: `${tn} gem battle!`, text: bme ? `A rival wants a <b>${tn.toLowerCase()}</b> battle with your ${bme.s.total} photo. Stake <b>25 ⭐</b>, win <b>50 ⭐</b>. Result in 30 seconds.` : `A rival wants a <b>${tn.toLowerCase()}</b> battle for <b>50 ⭐</b>. You don’t have a ${tn.toLowerCase()} photo yet. Add one and play!`, cta: bme ? 'Battle · 25 ⭐' : `📷 Add a ${tn.toLowerCase()} photo`, onCta: () => openGemBattle(25, null, { theme: bth }), later: 'Not now' }); return; } }
   if (!openBattle.skipCash) {
@@ -8924,7 +9076,7 @@ function welcomePop() {
 function renderWall(st) {
   const F = wallFrames(), filled = F.filter(f => f.p).length, ready = F.filter(f => f.p && f.p.s.total >= CFG.QUALIFY).length, tot = F.length;
   const next = WALL_REWARD.find(([n]) => ready < n);
-  const crownTag = k => { try { const c = crownOf(k); return c ? `<span class="wf-crn ${c.h === 'you' ? 'me' : ''}">👑 ${c.h === 'you' ? 'You' : '@' + esc(c.h)} · ${c.sc}</span>` : ''; } catch (e) { return ''; } };
+  const crownTag = k => ''; const crownTagOld = k => { try { const c = crownOf(k); return c ? `<span class="wf-crn ${c.h === 'you' ? 'me' : ''}">👑 ${c.h === 'you' ? 'You' : '@' + esc(c.h)} · ${c.sc}</span>` : ''; } catch (e) { return ''; } };
   const plTag = f => `<span class="wf-pl">${esc(wallName(f.k))}</span>`;
   const plus = f => `<button class="wf-add" data-wadd="${f.k}" aria-label="Add a ${esc(wallName(f.k))} photo">+</button>`;
   const frame = f => {
