@@ -4710,6 +4710,11 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .rs-top{align-items:start!important}
 .rs-top .hero-photo.rsph,#cmp{aspect-ratio:3/4!important;height:auto!important;max-height:46vh!important;overflow:hidden!important}
 .rs-top .hero-photo.rsph>*:not(.catchip):not(.hold-tip):not(span):not(button),#cmp>img,#cmp>canvas{position:absolute;inset:0;width:100%!important;height:100%!important;object-fit:cover!important}
+.lgs-hd{display:flex;gap:10px;align-items:flex-start;margin:0 0 8px;padding:10px 12px;border-radius:14px;background:linear-gradient(180deg,#3A2410,#22140C);box-shadow:inset 0 0 0 1.5px #E9A514}
+.lgs-hc .crw-ic{width:34px;height:26px}.lgs-hd small{display:block;font-size:.7rem;font-weight:800;text-transform:uppercase;color:#FFC93C}.lgs-hd b{display:block;font:800 1.1rem "Bricolage Grotesque",sans-serif}.lgs-hd span{display:block;font-size:.82rem;color:#E6DDF5}.lgs-hd em{display:block;margin-top:2px;font-style:normal;font-size:.75rem;color:#C9A86A}
+.crb-in{margin-left:4px;padding:1px 7px;border-radius:999px;font-style:normal;font-size:.7rem;font-weight:800;color:#0B2A1C;background:#2EE59D}
+.td-l{display:flex;flex-direction:column;gap:6px}.td-r{display:grid;grid-template-columns:22px 1fr auto auto;align-items:center;gap:8px;padding:10px 12px;border:0;border-radius:14px;color:#fff;font:inherit;text-align:left;cursor:pointer;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760}
+.td-r svg{width:20px;height:20px}.td-r span{font-weight:800}.td-r em{font-style:normal;font-size:.78rem;color:#C9B4F5}.td-r.in{box-shadow:inset 0 0 0 1.5px #2EE59D}.td-r.in em{color:#2EE59D;font-weight:800}
 </style>
 </head>
 <body>
@@ -5194,10 +5199,10 @@ function paintTop() {
   const tb = $('#sTix'); if (tb) { tb.hidden = true; tb.innerHTML = `🎟️<b>${S.user ? tix() : 0}</b>`; tb.setAttribute('aria-label', `${S.user ? tix() : 0} Cash Cup tickets`); }
   const b = $('#sTop'); if (!b) return;
   if (!S.user) { b.hidden = true; return; }
-  let n = 0; try { n = CATS8.filter(k => { const K = lgKing(k); return K.me && K.n > 0; }).length + myCrowns().length; } catch (e) {}
+  let n = 0, inP = 0; try { const L = lgS(); n = L.wins || 0; inP = CATS8.filter(k => (L.you[k] || 0) >= LG_SHARE).length; } catch (e) {}
   b.hidden = false; b.className = 'stopc crb ' + (n ? 'has' : 'zero');
-  b.innerHTML = `<span class="crb-i">👑</span><b class="crb-n">${n}</b>`;
-  b.setAttribute('aria-label', `You hold ${n} crown${n === 1 ? '' : 's'}. Go to Battle`);
+  b.innerHTML = `<span class="crb-i">👑</span><b class="crb-n">${n}</b>${inP ? `<i class="crb-in">${inP} in</i>` : ''}`;
+  b.setAttribute('aria-label', `${n} crown${n === 1 ? '' : 's'} won today${inP ? `, in ${inP} pot${inP === 1 ? '' : 's'}` : ''}. See today`);
 }
 function tierLockPop(f, mine) {
   const L = SCORE_LEVELS.find(x => x.fee === f), v = mine.s.total, gap = L.at - v, c = $('#coach');
@@ -5232,7 +5237,7 @@ function levelsPop() {
   $('#lvpX').onclick = close; c.onclick = e => { if (e.target === c) close(); };
   $('#lvpGo').onclick = () => { close(); if ($('#flow').classList.contains('on')) closeFlow(); if (!N) { tTier(20); openTourney(); } else if (tgt) { S.cur = tgt.id; WALL = false; save(); go('studio'); renderStudio(); } else { WALL = true; go('studio'); renderStudio(); pickPhoto(true); } };
 }
-document.addEventListener('click', e => { if (e.target.closest('#lvTix')) { $('#lv').classList.remove('on'); if (tix()) { CXF = 'all'; openComps(); cxEnter(CX.find(x => x.id === 'daily')); } else { openFriends(); crownPick(); } return; } if (e.target.closest('#sTop')) { openBattleTab(); } if (e.target.closest('#sTix')) tixPop(); });
+document.addEventListener('click', e => { if (e.target.closest('#lvTix')) { $('#lv').classList.remove('on'); if (tix()) { CXF = 'all'; openComps(); cxEnter(CX.find(x => x.id === 'daily')); } else { openFriends(); crownPick(); } return; } if (e.target.closest('#sTop')) { todaySheet(); } if (e.target.closest('#sTix')) tixPop(); });
 function paintGems(animate = true) { if (typeof paintTop === 'function') paintTop();
   paintWallet();
   const target = S.gems, start = shownGems, t0 = performance.now(), dur = animate ? 700 : 0;
@@ -8016,6 +8021,12 @@ function lgS() {
   }
   return S.lg;
 }
+function lgHold(k) { const L = lgS(); L.hold = L.hold || {};
+  if (!L.hold[k]) { const r2 = mulberry(hsh(dayKey() + k)), pick = () => L.pl[Math.floor(r2() * L.pl.length)].h, h = pick();
+    L.hold[k] = { h, since: Date.now() - Math.floor(r2() * 40 + 3) * 60000, def: Math.floor(r2() * 5), hist: [pick(), pick()].filter(x => x !== h).slice(0, 2) }; save(); }
+  return L.hold[k]; }
+const heldFor = t => { const m = Math.max(1, Math.round((Date.now() - t) / 60000)); return m < 60 ? `${m} min` : `${Math.floor(m / 60)}h ${m % 60}m`; };
+function takeCrown(k, h) { const H = lgHold(k); if (H.h === h) return; H.hist = [H.h, ...(H.hist || [])].slice(0, 4); H.h = h; H.since = Date.now(); H.def = 0; }
 const lgShare = k => { const L = lgS(), y = L.you[k] || 0, top = lgKing(k); return y < LG_SHARE ? 0 : +(L.jp[k] * (1 - LG_KING) * y / (L.q[k] + y) + (top.me ? L.jp[k] * LG_KING : 0)).toFixed(2); };
 const lgProg = k => { const y = lgS().you[k] || 0; return y >= LG_SHARE ? `<p class="tcc-pr in">✓ You’re in · ${money(lgShare(k))} so far</p>` : `<p class="tcc-pr">${LG_SHARE - y} more point${LG_SHARE - y === 1 ? '' : 's'} to get a share</p>`; };
 const lgTotal = () => Object.values(lgS().you).reduce((a, b) => a + b, 0);
@@ -8031,23 +8042,28 @@ function battleShell(inner) {
   return `<div class="bt"><div class="bt-sw" role="tablist"><button role="tab" data-bv="battle" aria-selected="${!fr}">Everyone</button><button role="tab" data-bv="friends" aria-selected="${fr}">Friends${S.fr && S.fr.ch.some(c => c.st === 'yours' || c.st === 'ready') ? '<i class="bt-dot"></i>' : ''}</button></div>${inner}</div>`;
 }
 function bindBattleShell() { document.querySelectorAll('#gallery [data-bv]').forEach(b => b.onclick = () => { GV.tab = b.dataset.bv; renderGallery(); $('#gallery').scrollTop = 0; }); }
+function todaySheet() { const L = lgS(), rows = CATS8.map(k => ({ k, y: L.you[k] || 0, h: lgHold(k).h === 'you' })).sort((a, b) => b.y - a.y);
+  openSheet(`<div class="ug"><h2>👑 ${L.wins || 0} crown${(L.wins || 0) === 1 ? '' : 's'} won today</h2><p class="sub">Battles you’ve won since midnight. Reach <b>${LG_SHARE} points</b> in a category to share its pot.</p>
+    <div class="td-l">${rows.map(r => `<button class="td-r ${r.y >= LG_SHARE ? 'in' : ''}" data-tdk="${r.k}">${gi(r.k)}<b>${esc(crownName(r.k))}${r.h ? ' 👑' : ''}</b><span>${r.y} pt${r.y === 1 ? '' : 's'}</span><em>${r.y >= LG_SHARE ? `✓ In · ${money(lgShare(r.k))}` : `${LG_SHARE - r.y} more to share`}</em></button>`).join('')}</div></div>`);
+  document.querySelectorAll('#sheetBody [data-tdk]').forEach(b => b.onclick = () => { closeSheet(); openBattleTab(); lgCat(b.dataset.tdk); }); }
 function openBattleTab() { GV.tab = 'battle'; lgS(); frS(); go('gallery'); }
 const lgInset = (mp, ks, k) => mp ? `${ks && mp.s.total > ks ? '<em class="tcc-beat">You can beat this</em>' : ''}<i class="tcc-me ${ks && mp.s.total > ks ? 'up' : ''}"><img src="${mp.src}" alt=""><b>You · ${mp.s.total}</b></i>`
   : `<i class="tcc-me add" data-addk="${k}"><span>+</span><b>Add a photo</b></i>`;
 const dispName = h => { const t = String(h).split(/[._]/)[0]; return t.charAt(0).toUpperCase() + t.slice(1); };
 const CRW = '<svg class="crw-ic" viewBox="0 0 64 48" aria-hidden="true"><defs><linearGradient id="crg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE27A"/><stop offset="1" stop-color="#E9A514"/></linearGradient></defs><path d="M6 40 L3 12 L19 24 L32 4 L45 24 L61 12 L58 40 Z" fill="url(#crg)" stroke="#8A5A00" stroke-width="2" stroke-linejoin="round"/><rect x="6" y="40" width="52" height="6" rx="2" fill="url(#crg)" stroke="#8A5A00" stroke-width="2"/><circle cx="3" cy="12" r="3" fill="#FFE27A"/><circle cx="32" cy="4" r="3" fill="#FFE27A"/><circle cx="61" cy="12" r="3" fill="#FFE27A"/></svg>';
 const LG_RULES = () => `<ol class="tc-rules"><li><span>1</span><p>Every battle costs <b>$1</b>. <b>85¢</b> goes into that category’s daily cash pot.</p></li>
-  <li><span>2</span><p>Win a battle <b>+1 point</b>. Beat the ${CRW} leader <b>+3 points</b>. Lose <b>−1 point</b>.</p></li>
-  <li><span>3</span><p>At midnight the ${CRW} <b>highest score</b> in each category wins <b>50%</b> of the pot.</p></li>
-  <li><span>4</span><p>Everyone with <b>5+ points</b> shares the other <b>50%</b>, by points.</p></li></ol>`;
+  <li><span>2</span><p>Every battle is against the ${CRW} <b>crown holder</b>. Win and you take the crown: <b>your photo goes on the card</b>.</p></li>
+  <li><span>3</span><p>Win <b>+1 point</b>, lose <b>−1 point</b>.</p></li>
+  <li><span>4</span><p>At midnight the 🏆 <b>highest points</b> in each category wins <b>50%</b> of the pot.</p></li>
+  <li><span>5</span><p>Everyone with <b>5+ points</b> shares the other <b>50%</b>, by points.</p></li></ol>`;
 function leagueHTML() {
   const L = lgS();
   return `<div class="bc-h"><h1>Battle for cash</h1><span class="bc-t"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Daily reset in <span data-wk>${dayLeft()}</span></span><button class="link bc-how" id="btRules">How it works</button></div>
     <div class="tcg">${CATS8.map(k => { const K = lgKing(k), me = K.me && K.n > 0, y = L.you[k] || 0, mp = lgMine(k), pr = Math.min(1, y / LG_SHARE);
-      return `<div class="bcc ${me ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b></div>
+      return `<div class="bcc ${lgHold(k).h === 'you' ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b></div>
         <small class="bcc-l">Daily cash pot</small><b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
         <p class="bcc-sc"><span class="t">${CRW}<b>${me ? 'You' : K.n}</b></span><i>•</i><span class="y">You <b>${y}</b></span></p>
-        <button class="bcc-ph" data-lgc="${k}" aria-label="${esc(crownName(k))} leader’s photo"><img src="${me && mp ? mp.src : lgPhoto(K.h, k)}" alt="" loading="lazy"></button>
+        <button class="bcc-ph" data-lgc="${k}" aria-label="${esc(crownName(k))} crown holder’s photo"><img src="${lgHold(k).h === 'you' && mp ? mp.src : lgPhoto(lgHold(k).h, k)}" alt="" loading="lazy"></button>
         ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go" data-lgc="${k}">${VS_IC}Battle</button>` : `<button class="bcc-go up" data-lgc="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>
     <button class="bt-gem" id="btGem"><span>💎</span><span><b>Gem Battle</b><small>Practice for gems · no points at stake</small></span><i>›</i></button>`;
 }
@@ -8061,14 +8077,15 @@ function bindLeague() {
 const lgCurOf = () => 'cash';
 function lgCat(k) {
   const L = lgS(), R0 = lgRank(k), K = R0[0], mine = lgMine(k), myIdx = R0.findIndex(r => r.me), cur = lgCurOf(), y = L.you[k] || 0;
-  const near = R0.filter(r => !r.me && r !== K).sort((a, b) => Math.abs(a.n - y) - Math.abs(b.n - y))[0];
+  const H = lgHold(k), iHold = H.h === 'you', near = iHold ? R0.filter(r => !r.me && r !== K).sort((a, b) => Math.abs(a.n - y) - Math.abs(b.n - y))[0] : { h: H.h };
   const row = (r, i) => `<div class="lgr ${r.me ? 'me' : ''}"><span class="lgr-i">${i + 1}</span>${r.me ? `<span class="fav me">${avatarInner()}</span>` : lgAv(r.h, 30)}<b>${r.me ? 'You' : '@' + esc(r.h)}</b><em>${r.n} 👑</em></div>`;
   const kingMe = K.me && K.n > 0;
   openSheet(`<div class="lgs fcn fcn2"><div class="f2-top"><div><h2>${gi(k)} ${esc(crownName(k))}</h2><p>Everyone · resets in ${dayLeft()}</p></div><button class="f2-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-    <div class="lgs-jp"><small>Today’s ${esc(crownName(k))} pot</small><b>$${L.jp[k].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</b><span>👑 Highest score wins 50% · 5+ points share 50%</span></div>
-    <p class="lgs-ld">👑 Leader <b>${kingMe ? 'You' : '@' + esc(K.h)}</b> · ${K.n} points · you have <b>${y}</b>${y >= LG_SHARE ? ` · in for ${money(lgShare(k))}` : ` · ${LG_SHARE - y} more to share`}</p>
+    <div class="lgs-jp"><small>Today’s ${esc(crownName(k))} pot</small><b>$${L.jp[k].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</b><span>🏆 Most points wins 50% · 5+ points share 50%</span></div>
+    <div class="lgs-hd"><span class="lgs-hc">${CRW}</span><div><small>Crown holder</small><b>${iHold ? 'You' : '@' + esc(H.h)}</b><span>Held ${heldFor(H.since)} · ${H.def} defence${H.def === 1 ? '' : 's'}</span>${(H.hist || []).length ? `<em>Before: ${H.hist.slice(0, 3).map(x => x === 'you' ? 'You' : '@' + esc(x)).join(' ← ')}</em>` : ''}</div></div>
+    <p class="lgs-ld">🏆 Points leader <b>${kingMe ? 'You' : '@' + esc(K.h)}</b> · ${K.n} · you have <b>${y}</b>${y >= LG_SHARE ? ` · in for ${money(lgShare(k))}` : ` · ${LG_SHARE - y} more to share`}</p>
     ${mine ? (S.minor ? `<div class="lgs-none"><b>Daily cash battles are 18+</b><span>Play your friends for gems in the Friends tab.</span></div>` : `<div class="lgv"><div class="lgv-p"><img src="${lgPhoto(near.h, k)}" alt=""><b>@${esc(near.h)}</b></div><span class="lgv-x">VS</span><div class="lgv-p me"><img src="${mine.src}" alt=""><b>You · ${mine.s.total}</b></div></div>
-      <button class="btn block lgs-go" id="lgQuick">${VS_IC}Battle · $1</button><p class="lgs-ent">Win <b>+1 point</b> · 85¢ goes into today’s pot</p>`)
+      <button class="btn block lgs-go" id="lgQuick">${VS_IC}${iHold ? 'Defend your crown' : 'Battle for the crown'} · $1</button><p class="lgs-ent">${iHold ? 'Win to keep it' : 'Win to take the crown'} · <b>+1 point</b> · 85¢ goes into today’s pot</p>`)
       : (() => { const low = S.photos.filter(p => fitsTheme(p, k)).sort((a, b) => b.s.total - a.s.total)[0], cn = esc(crownName(k).toLowerCase());
         return `<div class="lgv"><div class="lgv-p"><img src="${lgPhoto(near.h, k)}" alt=""><b>@${esc(near.h)}</b></div><span class="lgv-x">VS</span><div class="lgv-p me"><button class="lgv-up ${low ? 'low' : ''}" id="lgUp" aria-label="${low ? 'Enhance your photo' : `Upload a ${cn} photo`}">${low ? `<img src="${low.src}" alt=""><em>${low.s.total} · needs ${CFG.QUALIFY}+</em>` : `<span>+</span><small>Upload a ${cn} photo</small>`}</button><b>You</b></div></div>
         <button class="btn block lgs-go" id="lgQuick">${low ? `${VS_IC}Battle` : '📷 Upload photo'}</button><p class="lgs-ent">${low ? `Enhance your photo to <b>${CFG.QUALIFY}+</b> to battle` : `Add a ${cn} photo to battle`}</p>`; })()}
@@ -8079,7 +8096,7 @@ function lgCat(k) {
   const getPhoto = () => { closeSheet(); if (lowP) { S.cur = lowP.id; save(); WALL = false; go('studio'); renderStudio(); toast(`Enhance it to ${CFG.QUALIFY}+, then come back to battle`); return; }
     S.frameHint = { cats: [k], lab: catNm(k), frame: catNm(k) }; save(); go('studio'); renderStudio(); pickPhoto(true); };
   if ($('#lgUp')) $('#lgUp').onclick = getPhoto;
-  if ($('#lgQuick')) $('#lgQuick').onclick = () => { if (mine) { lgPay(() => lgFight(k, near.h, false)); return; } if (!lowP) { getPhoto(); return; } const cn = crownName(k).toLowerCase();
+  if ($('#lgQuick')) $('#lgQuick').onclick = () => { if (mine) { lgPay(() => lgFight(k, near.h, !iHold)); return; } if (!lowP) { getPhoto(); return; } const cn = crownName(k).toLowerCase();
     celebrate(lowP ? { src: lowP.src, score: lowP.s.total, title: 'Enhance first', text: `Your ${esc(cn)} photo scores <b>${lowP.s.total}</b>. Get it to <b>${CFG.QUALIFY}+</b> to battle @${esc(near.h)}.`, cta: '✨ Enhance my photo', onCta: getPhoto, later: 'Not now' }
       : { src: lgPhoto(near.h, k), score: VS_IC, title: `Add a ${cn} photo`, text: `You need a ${esc(cn)} photo scoring <b>${CFG.QUALIFY}+</b> to battle @${esc(near.h)}. Upload one, get your score, then come back.`, cta: '📷 Upload a photo', onCta: getPhoto, later: 'Not now' }); };
   if ($('#lgStudio')) $('#lgStudio').onclick = () => { closeSheet(); WALL = true; go('studio'); renderStudio(); };
@@ -8098,21 +8115,23 @@ function vsCountdown(o, then) {
 }
 function lgFight(k, h, isKing, revenge) {
   const L = lgS(), P = L.pl.find(p => p.h === h), me = lgMine(k), cur = lgCurOf(), N = 30; if (!P || !me) return;
-  const their = P.sc[k] + (isKing ? 3 : 0), pWin = Math.max(.2, Math.min(.8, .5 + (me.s.total - their) / 30)), won = Math.random() < pWin;
+  const their = P.sc[k], pWin = Math.max(.2, Math.min(.8, .5 + (me.s.total - their) / 30)), won = Math.random() < pWin;
   const mv = won ? 16 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 5), tv = N - mv, src = lgPhoto(h, k), wasK = lgKing(k);
   // settle now
-  const g = won ? (isKing ? 3 : revenge ? 2 : 1) : 0; let lost = 0;
+  const g = won ? 1 : 0; let lost = 0; const H = lgHold(k), wasHolder = H.h === 'you'; let crownMsg = '';
+  if (won) { L.wins = (L.wins || 0) + 1; if (H.h === h) { takeCrown(k, 'you'); crownMsg = `👑 You took the ${esc(crownName(k))} crown! Your photo is on the card`; } else if (wasHolder) { H.def++; crownMsg = `👑 Crown defended · ${H.def} defence${H.def === 1 ? '' : 's'}`; } }
+  else { if (wasHolder) { takeCrown(k, h); crownMsg = `👑 @${esc(h)} took your ${esc(crownName(k))} crown`; } else if (H.h === h) H.def++; }
   if (won) { L.you[k] = (L.you[k] || 0) + g; P.cr[k] = Math.max(0, P.cr[k] - 1); }
   else { P.cr[k]++; if (L.you[k]) { L.you[k]--; lost = 1; } }
   if (cur === 'cash') L.jp[k] = +(L.jp[k] + LG_CUT).toFixed(2);
-  const nk = lgKing(k), kingMsg = nk.h !== wasK.h ? (nk.me ? `👑 You’re top in ${esc(crownName(k))}!` : `👑 @${esc(nk.h)} is now top`) : '';
-  if (won && !L.raidAt) L.raidAt = Date.now() + 45000;
+  const nk = lgKing(k), kingMsg = crownMsg || (nk.h !== wasK.h ? (nk.me ? `🏆 You’re top scorer in ${esc(crownName(k))}!` : `🏆 @${esc(nk.h)} is now top scorer`) : '');
+  if (won && !L.raidAt) L.raidAt = Date.now() + 45000; if (won) setTimeout(paintTop, 0);
   save(); setTimeout(paintTop, 0);
   const go2 = () => {
-    const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>${isKing ? 'Leader battle' : revenge ? 'Revenge' : 'Battle'}</b><span></span></div><span class="kg2-cat">${gi(k)}${esc(crownName(k).toUpperCase())}</span>`;
+    const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>${isKing ? 'Crown battle' : wasHolder ? 'Crown defence' : revenge ? 'Revenge' : 'Battle'}</b><span></span></div><span class="kg2-cat">${gi(k)}${esc(crownName(k).toUpperCase())}</span>`;
     const vs = (a, b, done) => `<div class="kg2-vs du"><div class="kg2-ph king ${done && !won ? 'won' : ''}"><img src="${src}" alt="">${done && !won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div><b class="kg2-x">VS</b><div class="kg2-ph me ${done && won ? 'won' : ''}"><img src="${me.src}" alt="">${done && won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div></div>
-      <div class="kg2-who du"><div class="king"><small>${isKing ? '👑 ' : ''}@${esc(h)}</small><b>${isKing ? 'Leader' : 'Player'}</b><strong id="lbT">${a}</strong><span>votes</span></div><div class="me"><small>You</small><b>Score ${me.s.total}</b><strong id="lbM">${b}</strong><span>votes</span></div></div>`;
-    openSheet(`<div class="kg2" id="lb">${head}<h2 class="kg2-h">You vs @${esc(h)}</h2><p class="kg2-sub">Win ${isKing ? '+3 points' : revenge ? '+2 points' : '+1 point'} · lose −1 point</p><span class="kg2-live"><i></i>Live voting</span>${vs(0, 0, false)}
+      <div class="kg2-who du"><div class="king"><small>${isKing ? '👑 ' : ''}@${esc(h)}</small><b>${isKing ? 'Crown holder' : 'Challenger'}</b><strong id="lbT">${a}</strong><span>votes</span></div><div class="me"><small>You</small><b>Score ${me.s.total}</b><strong id="lbM">${b}</strong><span>votes</span></div></div>`;
+    openSheet(`<div class="kg2" id="lb">${head}<h2 class="kg2-h">You vs @${esc(h)}</h2><p class="kg2-sub">${isKing ? 'Win to take the crown' : wasHolder ? 'Win to keep your crown' : 'Win +1 point'} · lose −1 point</p><span class="kg2-live"><i></i>Live voting</span>${vs(0, 0, false)}
       <div class="kg2-bar"><i id="lbTb" style="width:50%"></i><i id="lbMb" style="width:50%"></i></div><p class="kg2-n" id="lbV">0 of ${N} votes</p></div>`, { full: true, cover: true });
     let v = 0, m = 0; const seq = [...Array(N)].map((_, i) => i < mv); for (let i = N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [seq[i], seq[j]] = [seq[j], seq[i]]; }
     const iv = setInterval(() => {
@@ -8129,17 +8148,22 @@ function lgFight(k, h, isKing, revenge) {
         <div style="text-align:center"><button class="link kg2-back" data-shclose>Back to Battle</button></div>`;
       paintWallet();
       if ($('#lbMore')) $('#lbMore').onclick = () => lgCat(k);
-      if ($('#lbRev')) $('#lbRev').onclick = () => lgPay(() => lgFight(k, h, isKing, true));
+      if ($('#lbRev')) $('#lbRev').onclick = () => lgPay(() => lgFight(k, h, lgHold(k).h === h, true));
       document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery(); });
     }, 200);
   };
-  closeSheet(); vsCountdown({ title: isKing ? `👑 Leader battle` : revenge ? 'Revenge!' : 'Battle!', sub: `${esc(crownName(k))} · you vs @${esc(h)}`, a: src, al: '@' + esc(h), b: me.src }, go2);
+  closeSheet(); vsCountdown({ title: isKing ? `👑 Crown battle` : wasHolder ? '👑 Defend your crown' : revenge ? 'Revenge!' : 'Battle!', sub: `${esc(crownName(k))} · you vs @${esc(h)}`, a: src, al: '@' + esc(h), b: me.src }, go2);
 }
 // while you're away (demo: 45 seconds after a win) league players attack your crowns: revenge
 setInterval(() => {
   if (!S || !S.user || !S.lg || !S.lg.raidAt || Date.now() < S.lg.raidAt) return;
   if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || document.querySelector('.fcd')) return;
-  const L = S.lg, ks = CATS8.filter(k => (L.you[k] || 0) > 0 && lgMine(k)); L.raidAt = 0; if (!ks.length) { save(); return; }
+  const L = S.lg, hk = CATS8.filter(k => L.hold && L.hold[k] && L.hold[k].h === 'you' && lgMine(k)); L.raidAt = 0;
+  if (hk.length) { const k = hk[Math.floor(Math.random() * hk.length)], P = L.pl[Math.floor(Math.random() * L.pl.length)], me = lgMine(k), a = 16 + Math.floor(Math.random() * 3);
+    takeCrown(k, P.h); if (L.you[k]) L.you[k]--; save(); paintTop(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery();
+    celebrate({ src: lgPhoto(P.h, k), score: '👑', title: `@${P.h} took your ${crownName(k)} crown`, text: `Their photo beat your <b>${me.s.total}</b> ${esc(crownName(k).toLowerCase())} photo <b>${a}–${30 - a}</b>. Their photo is on the card now. Win it back?`,
+      cta: 'Revenge · $1', onCta: () => lgPay(() => lgFight(k, P.h, true, true)), later: 'Later' }); return; }
+  const ks = CATS8.filter(k => (L.you[k] || 0) > 0 && lgMine(k)); if (!ks.length) { save(); return; }
   const k = ks[Math.floor(Math.random() * ks.length)], P = L.pl[Math.floor(Math.random() * L.pl.length)], me = lgMine(k), a = 16 + Math.floor(Math.random() * 3);
   L.you[k]--; P.cr[k]++; save(); paintTop(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery();
   celebrate({ src: lgPhoto(P.h, k), score: '⚔️', title: `@${P.h} took a ${crownName(k)} point`, text: `Their photo beat your <b>${me.s.total}</b> ${esc(crownName(k).toLowerCase())} photo <b>${a}–${30 - a}</b> while you were away. You have <b>${L.you[k]}</b> ${esc(crownName(k))} point${L.you[k] === 1 ? '' : 's'} left.`,
