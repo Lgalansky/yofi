@@ -212,3 +212,94 @@ R7("g.querySelector('#obGo2').onclick = () => { if (window.__obAfter) { const f 
 R7("const l = e.target.closest('label[for=\"file\"]'); if (l && S.obDone && !S.likes)","const l = e.target.closest('label[for=\"file\"]'); if (l && !l.closest('#ageGate') && S.obDone && !S.likes)")
 s=s.replace('</style>','#ageGate label.ob-pick{display:flex!important;align-items:center;justify-content:center;cursor:pointer;text-align:center}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('pick ok')
+
+# ---------- Crowd Picks (coins, fixed payout, in the voting loop) + Crowd Sprints (cash, pooled, every 15 min) ----------
+s=open(d+'yofi-simple.html').read()
+def R8(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+CR = r"""
+// ---------- Crowd Picks & Crowd Sprints (pairs with settled crowd results, so no extra voting needed) ----------
+const CP_STAKE = 50, CP_PAY = { 3: 2, 4: 3, 5: 6 }, SPR_MS = 15 * 60e3, SPR_N = 10, SPR_FEE = .15;
+function cpRng(seed) { let x = seed % 2147483647 || 7; return () => (x = x * 16807 % 2147483647) / 2147483647; }
+function cpPairs(n, seed, close) { const r = cpRng(seed), P = SEED.filter(x => x.src), out = [];
+  for (let i = 0; i < n; i++) { const a = P[Math.floor(r() * P.length)]; let b = P[Math.floor(r() * P.length)]; if (b === a) b = P[(P.indexOf(a) + 3) % P.length];
+    const share = close ? 52 + Math.floor(r() * 15) : 56 + Math.floor(r() * 22), aWins = r() < .5; out.push({ a, b, pa: aWins ? share : 100 - share }); } return out; }
+const sprId = (t = Date.now()) => Math.floor(t / SPR_MS);
+function sprPlayers(id, t = Date.now()) { const r = cpRng(id * 31 + 5), base = 14 + Math.floor(r() * 40), frac = Math.min(1, (t - id * SPR_MS) / SPR_MS); return base + Math.floor(frac * (60 + r() * 220)); }
+const sprPool = n => Math.floor(n * (1 - SPR_FEE));
+const sprLeft = id => Math.max(0, (id + 1) * SPR_MS - Date.now());
+const mmss = ms => { const t = Math.ceil(ms / 1000); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; };
+function cpRun(mode) { const sprint = mode === 'sprint', id = sprId(), pairs = sprint ? cpPairs(SPR_N, id * 97 + 13, true) : cpPairs(5, Date.now() % 100000, false);
+  let i = 0, right = 0; const t0 = Date.now(), c = $('#coach');
+  const draw = () => { const p = pairs[i];
+    c.innerHTML = `<div class="cpr" role="dialog" aria-modal="true"><div class="cpr-h"><b>${sprint ? '🎯 Crowd Sprint' : '🎯 Crowd Picks'}</b><span>${sprint ? `Pair ${i + 1} of ${SPR_N} · ${right} right` : `${right} in a row${CP_PAY[right] ? ` · ×${CP_PAY[right]}` : ''}`}</span></div>
+      <p class="cpr-q">Which one did the crowd pick?</p>
+      <div class="cpr-p">${[['a', p.a, p.pa], ['b', p.b, 100 - p.pa]].map(([k, x, sh]) => `<button data-cp="${k}"><img src="${x.src}" alt=""><span class="cpr-pc" data-sh="${sh}"></span></button>`).join('<span class="cpr-vs">VS</span>')}</div>
+      <div class="cpr-steps">${[...Array(sprint ? SPR_N : 5)].map((_, j) => `<i class="${j < i ? 'd' : ''} ${j === i ? 'n' : ''}"></i>`).join('')}</div>
+      <div class="cpr-act" id="cprAct">${!sprint ? `<small>Stake ${CP_STAKE} 🟡 · 3 right ×2 · 4 right ×3 · 5 right ×6</small>` : `<small>Same pairs for every player this round · most right wins</small>`}</div></div>`;
+    c.classList.add('on', 'cr'); c.onclick = null;
+    c.querySelectorAll('[data-cp]').forEach(btn => btn.onclick = () => { if (c.querySelector('.cpr-p.done')) return; const pick = btn.dataset.cp, win = (pick === 'a') === (p.pa >= 50);
+      c.querySelector('.cpr-p').classList.add('done'); c.querySelectorAll('.cpr-pc').forEach(e => e.textContent = e.dataset.sh + '%');
+      c.querySelectorAll('[data-cp]').forEach(b2 => b2.classList.add(((b2.dataset.cp === 'a') === (p.pa >= 50)) ? 'crowd' : 'lose')); btn.classList.add(win ? 'ok' : 'bad');
+      if (win) right++; i++;
+      setTimeout(() => { if (sprint) { if (i < SPR_N) draw(); else sprDone(id, right, Date.now() - t0); return; }
+        if (!win) { cpEnd(right, 0); return; }
+        if (i >= 5) { cpEnd(right, CP_PAY[5]); return; }
+        if (right >= 3) { const hd = c.querySelector('.cpr-h span'); if (hd) hd.textContent = `${right} in a row · ×${CP_PAY[right]}`; $('#cprAct').innerHTML = `<button class="bt-cta" id="cpCash">Cash out ${CP_STAKE * CP_PAY[right]} 🟡</button><button class="bt-no" id="cpNext">Keep going · ×${CP_PAY[right + 1]} next</button>`;
+          $('#cpCash').onclick = () => cpEnd(right, CP_PAY[right]); $('#cpNext').onclick = draw; } else draw(); }, 1100); }); };
+  draw(); }
+function cpStart() { if (S.gems < CP_STAKE) { toast(`You need ${CP_STAKE} coins`); return; } S.gems -= CP_STAKE; save(); paintGems(); cpRun('coins'); }
+function cpEnd(right, mult) { const c = $('#coach'), won = CP_STAKE * (mult || 0); if (won) { S.gems += won; save(); }
+  const ups = right >= 4 && S.cpUp !== todayKey() && !S.geoBlock; if (ups) { S.cpUp = todayKey(); save(); }
+  const id = sprId(), n = sprPlayers(id);
+  c.innerHTML = `<div class="cpr cpr-end"><h2>${won ? (right >= 5 ? '5 in a row!' : 'Cashed out!') : 'So close!'}</h2><p>${won ? `You read the crowd: <b>+${won} 🟡</b>` : `${right} right before a miss. Your ${CP_STAKE} 🟡 stake is gone.`}</p>
+    ${ups ? `<div class="ups" id="cpUps">💵 <span><b>You’ve got a good eye</b><small>Next Crowd Sprint in ${mmss(sprLeft(id))} · $1 entry · $${sprPool(n)} and growing</small></span><span class="go">Try it</span></div>` : ''}
+    <button class="bt-cta" id="cpAgain">🎯 Play again · ${CP_STAKE} 🟡</button><button class="bt-no" id="cpBack">Keep voting</button></div>`;
+  if (won) setTimeout(() => { paintGems(); gemExplosion(won, { label: 'Crowd Picks' }); }, 300);
+  $('#cpAgain').onclick = () => { c.classList.remove('on', 'cr'); cpStart(); }; $('#cpBack').onclick = () => c.classList.remove('on', 'cr');
+  if ($('#cpUps')) $('#cpUps').onclick = () => { c.classList.remove('on', 'cr'); openComps(); }; }
+function crowdPop() { celebrate({ src: (SEED[6] || {}).src, score: '🎯', title: 'Crowd Picks!', text: `Pick the photo most people chose, 5 in a row. Stake <b>${CP_STAKE} coins</b>, win up to <b>${CP_STAKE * 6} 🟡</b>. Cash out after 3.`, cta: `🎯 Play · ${CP_STAKE} 🟡`, onCta: cpStart, later: 'Keep voting' }); }
+function sprEnter() { const id = sprId(), E = S.cs = S.cs || {};
+  if (S.geoBlock) { toast('Cash contests aren’t available in your state'); return; }
+  if (E[id]) { toast('You’ve played this round · results when it closes'); return; }
+  if (sprLeft(id) < 70e3) { toast('This round is closing · join the next one'); return; }
+  if ((S.cash || 0) < 1) { openStore('A Crowd Sprint costs $1 cash.'); return; }
+  S.cash = +((S.cash || 0) - 1).toFixed(2); E[id] = { at: Date.now() }; save(); paintWallet(); if ($('#sheet').classList.contains('on')) closeSheet(); cpRun('sprint'); }
+function sprDone(id, right, ms) { const e = (S.cs || {})[id] || {}; e.score = right; e.ms = ms; S.cs[id] = e; save(); const c = $('#coach');
+  c.innerHTML = `<div class="cpr cpr-end"><h2>${right}/${SPR_N} right</h2><p>Results when the round closes in <b>${mmss(sprLeft(id))}</b>. Top 20% share the prize pool.</p><button class="bt-cta" id="cpBack">Keep voting</button></div>`;
+  $('#cpBack').onclick = () => c.classList.remove('on', 'cr'); }
+function sprSettle() { if (!S || !S.cs) return; Object.entries(S.cs).forEach(([k, e]) => { const id = +k; if (e.paid || e.score == null || Date.now() < (id + 1) * SPR_MS) return;
+  const n = sprPlayers(id, (id + 1) * SPR_MS), r = cpRng(id * 7 + 3); let above = 0, tie = 0; for (let i = 0; i < n - 1; i++) { let sc = 0; for (let j = 0; j < SPR_N; j++) if (r() < .6) sc++; if (sc > e.score) above++; else if (sc === e.score) tie++; }
+  const rank = 1 + above + Math.floor(tie * Math.min(1, e.ms / 60000)), W = Math.max(1, Math.ceil(n * .2)), pool = sprPool(n);
+  let prize = 0; if (rank <= W) { const sum = W * (W + 1) / 2; prize = Math.max(.5, +(pool * (W - rank + 1) / sum).toFixed(2)); }
+  e.paid = 1; e.rank = rank; e.prize = prize; e.n = n; if (prize) S.cash = +((S.cash || 0) + prize).toFixed(2); save(); paintWallet();
+  if (!$('#coach').classList.contains('on')) celebrate({ src: (SEED[1] || {}).src, score: '🎯', title: prize ? `You won $${prize.toFixed(2)}!` : 'Crowd Sprint results', text: `You finished <b>#${rank}</b> of ${n} with ${e.score}/${SPR_N}. ${prize ? 'Added to your cash.' : `The top ${W} won this time.`}`, cta: '🎯 Play the next Sprint · $1', onCta: () => openComps(), later: 'Keep voting' }); }); }
+setInterval(sprSettle, 4000);
+const sprRowHTML = () => { const id = sprId(), n = sprPlayers(id), e = (S.cs || {})[id];
+  return `<button class="tsr2 sprow" id="sprRow"><span class="tsr2-t"><em class="sp-tag">CROWD SPRINT</em><b data-spl>${mmss(sprLeft(id))}</b></span><span class="tsr2-p">$${sprPool(n)}<small class="sp-up">↑</small></span><span class="tsr2-n">${n}</span><span class="tsr2-e">${S.geoBlock ? '🚫' : e ? (e.score != null ? `✓ ${e.score}/10` : '…') : '$1'}</span></button>`; };
+document.addEventListener('click', e => { if (e.target.closest('#sprRow')) { e.preventDefault(); sprEnter(); } });
+setInterval(() => { const b = document.querySelector('#sprRow [data-spl]'); if (b) b.textContent = mmss(sprLeft(sprId())); }, 1000);
+"""
+R8("function fcNotify() {", CR+"function fcNotify() {")
+R8("S.votes++;","S.votes++; S.cpN = (S.cpN || 0) + 1;")
+R8("if (!comboHit && S.votes >= 12 && fighters().length && tUnlocked() && S.since >= CFG.BATTLE_EVERY) {",
+   "if (!comboHit && S.votes >= 15 && (S.cpN || 0) >= 20) { S.cpN = 0; save(); renderJudge(); judging = false; crowdPop(); return; }\n  if (!comboHit && S.votes >= 12 && fighters().length && tUnlocked() && S.since >= CFG.BATTLE_EVERY) {")
+R8('<div class="tsl2">${frRows}${rows}</div>','<div class="tsl2">${sprRowHTML()}${frRows}${rows}</div>')
+s=s.replace("${swapRowHTML()}","${swapRowHTML()}<button class=\"ug-r\" id=\"ugCp\"><span class=\"ug-i\">🎯</span><span class=\"ug-t\"><b>Crowd Picks</b><small>Pick the crowd’s favourite 5 in a row · win up to ×6</small></span><em>${CP_STAKE} 🟡</em></button>",1)
+s=s.replace("document.addEventListener('click', e => { if (e.target.closest('#sprRow'))","document.addEventListener('click', e => { if (e.target.closest('#ugCp')) { e.preventDefault(); if ($('#sheet').classList.contains('on')) closeSheet(); cpStart(); } });\ndocument.addEventListener('click', e => { if (e.target.closest('#sprRow'))",1)
+s=s.replace('</style>',""".cpr{width:100%;max-width:420px;margin:auto;padding:18px 14px;border-radius:24px;text-align:center}.cpr-h{display:flex;justify-content:space-between;align-items:center;font-size:.9rem;margin:0 0 6px}.cpr-h b{font-size:1.05rem}
+.cpr-q{margin:0 0 10px;font-weight:800;font-size:1.15rem}.cpr-p{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px}.cpr-p button{position:relative;border:0;padding:0;border-radius:16px;overflow:hidden;aspect-ratio:3/4;cursor:pointer;transition:transform .2s,opacity .2s}
+.cpr-p img{width:100%;height:100%;object-fit:cover;display:block}.cpr-vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:.85rem}
+.cpr-pc{position:absolute;left:8px;right:8px;bottom:8px;padding:6px;border-radius:12px;font:900 1.4rem/1 inherit;color:#fff;background:rgba(0,0,0,.55)}.cpr-pc:empty{display:none}
+.cpr-p button.crowd{box-shadow:inset 0 0 0 4px #2EE59D}.cpr-p button.lose{opacity:.55}.cpr-p button.bad{box-shadow:inset 0 0 0 4px #F0384F}.cpr-p button.ok{transform:scale(1.03)}
+.cpr-steps{display:flex;justify-content:center;gap:5px;margin:12px 0 8px}.cpr-steps i{width:10px;height:10px;border-radius:50%;background:rgba(127,127,127,.3)}.cpr-steps i.d{background:#2F6B3F}.cpr-steps i.n{box-shadow:0 0 0 2px #D9A441}
+.cpr-act{display:grid;gap:8px;min-height:24px}.cpr-act small{font-size:.8rem;opacity:.8}.cpr-end h2{margin:4px 0 6px;font-size:2rem}.cpr-end p{margin:0 0 14px}.cpr-end{display:grid;gap:8px}.cpr .ups{margin:0 0 6px}
+html:not(.yg) .cpr{background:#FBF7F0;color:#2B2320;box-shadow:0 0 0 2px #D9A441}html:not(.yg) .cpr-vs{background:#2D4E86;color:#fff}html:not(.yg) .cpr-end h2{font-family:Fraunces,Georgia,serif;color:#2D4E86}
+html.yg .cpr{background:#1E1236;color:#fff;box-shadow:0 0 0 2px #FFC93C}html.yg .cpr-vs{background:linear-gradient(135deg,#FF3FA4,#8B3CFF);color:#fff}html.yg .cpr-end h2{color:#FFC93C}html.yg .cpr-steps i.d{background:#2EE59D}
+.ups{padding:12px;border-radius:16px;text-align:left;display:flex;gap:10px;align-items:center;cursor:pointer}.ups b{display:block}.ups small{font-size:.8rem;opacity:.85}.ups .go{margin-left:auto;white-space:nowrap;padding:8px 12px;border-radius:999px;font-weight:900}
+html:not(.yg) .ups{background:#EAF3EC;box-shadow:inset 0 0 0 1.5px #2F6B3F;color:#2B2320}html:not(.yg) .ups .go{background:#2F6B3F;color:#fff}html.yg .ups{background:#0E3A2A;box-shadow:inset 0 0 0 1.5px #2EE59D;color:#fff}html.yg .ups .go{background:#2EE59D;color:#06261A}
+.tsr2.sprow .tsr2-t{flex-direction:column;align-items:flex-start!important;gap:0!important}.tsr2.sprow .sp-tag{position:static!important;font-style:normal;display:block;font-size:.58rem;font-weight:900;letter-spacing:.06em;padding:1px 6px;border-radius:6px;margin-bottom:2px}.sp-up{font-weight:900;margin-left:2px;color:#2EE59D}
+html:not(.yg) .tsr2.sprow{background:#EAF3EC!important;box-shadow:inset 0 0 0 2px #2F6B3F!important}html:not(.yg) .tsr2.sprow .sp-tag{background:#2F6B3F;color:#fff}html:not(.yg) .tsr2.sprow .tsr2-e{background:#2F6B3F!important;color:#fff!important}html:not(.yg) .sp-up{color:#2F6B3F}
+html.yg .tsr2.sprow{background:#0E3A2A!important;box-shadow:inset 0 0 0 2px #2EE59D!important}html.yg .tsr2.sprow .sp-tag{background:#2EE59D;color:#06261A}html.yg .tsr2.sprow .tsr2-e{background:#2EE59D!important;color:#06261A!important}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('crowd ok')
