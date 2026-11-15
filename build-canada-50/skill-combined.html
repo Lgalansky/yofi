@@ -2010,7 +2010,7 @@ function openStore(reason, onBuy, tab) {
   const card = (tag, tiles, btn, attr, cls = '') => `<div class="sp-card ${cls}">${tag ? `<span class="sp-tag">${tag}</span>` : ''}<div class="sp-row">${tiles}</div><button class="sp-go" ${attr}>${btn}</button></div>`;
   const head = { energy: ['Get energy', `Vote with bigger bets to earn coins faster. Refills +5 an hour free. You have <b>${energy()} ⚡</b>`], gems: ['Get coins', `Touch up photos, play coin challenges and win back your 🏅 medal. You have <b>${S.gems.toLocaleString()} 🟡</b>`], cash: ['Add cash', 'Play blue ribbon challenges, friends and tournaments. A small coin bonus included'] }[T];
   const body = `<h3 class="sp-h">${head[0]}</h3><p class="sp-s">${head[1]}</p><div class="sp-list">` + (T === 'energy'
-    ? EN_PACKS.map((k, i) => card(k.tag, tile('⚡', k.en.toLocaleString(), 'Energy', 'en') + tile('⚖️', '~' + Math.round(k.en / 2), 'votes at ×2', 'mut'), `Buy $${k.usd}`, `data-enusd="${i}"`)).join('')
+    ? EN_PACKS.map((k, i) => card(k.tag, tile('⚡', k.en.toLocaleString(), 'Energy', 'en') + tile('⚖️', '~' + Math.round(k.en / 2), 'votes at ×2', 'mut'), `Pay $${k.usd} cash`, `data-enusd="${i}"`)).join('')
     : T === 'gems'
     ? GEM_PACKS.map((k, i) => card(k.tag, tile(GEM, k.gems.toLocaleString(), 'Coins', 'gm') + tile('✨', '~' + Math.floor(k.gems / 100), 'enhances', 'mut'), `Buy $${k.usd}`, `data-gbuy="${i}"`)).join('')
     : (OFFER ? card(esc(OFFER.label), tile('💵', '$' + OFFER.cash, 'Cash', 'cs') + tile(GEM, OFFER.gems.toLocaleString(), 'Free coins', 'gm'), `Add $${OFFER.cash}`, 'data-offer', 'offer') : '')
@@ -4321,17 +4321,20 @@ const isLive = () => tUnlocked() && fighters().length > 0 && (S.votes || 0) % 3 
 function paintEnergy() { const e = energy(), b = document.querySelector('#judge .en-bar i'), t = document.querySelector('#judge .en-n'), nx = document.querySelector('#judge .en-nx');
   if (b) b.style.width = (e / EN_MAX * 100) + '%'; if (t) t.innerHTML = e > EN_MAX ? `${EN_MAX}<small> +${e - EN_MAX}</small>` : `${e}/${EN_MAX}`; if (nx) nx.textContent = `+5 ⚡ in ${enNext()}`; }
 setInterval(() => { if (S && $('#panes') && $('#panes').dataset.at === 'judge') paintEnergy(); }, 1000);
-const EN_PACKS = [{ en: 50, usd: 1.99, gems: 150 }, { en: 150, usd: 4.99, gems: 400, tag: 'Popular' }, { en: 500, usd: 14.99, gems: 1200, tag: 'Best value' }];
+const EN_PACKS = [{ en: 50, usd: 1, gems: 150 }, { en: 150, usd: 2, gems: 400, tag: 'Popular' }, { en: 500, usd: 5, gems: 1200, tag: 'Best value' }];
 function addEnergy(n) { energy(); S.en += n; S.enAt = Date.now(); save(); if ($('#panes').dataset.at === 'judge') renderJudge(); toast(`⚡ +${n} energy! Keep judging.`); }
-const enPackHTML = () => `<div class="srows">${EN_PACKS.map((k, i) => `<div class="srow">${k.tag ? `<span class="enp-t">${k.tag}</span>` : ''}<span class="si">⚡</span><span class="sv"><b>${k.en}</b><small>energy</small></span><button class="sb" data-enusd="${i}">Buy $${k.usd}</button></div>`).join('')}</div>`;
+const enPackHTML = () => `<div class="srows">${EN_PACKS.map((k, i) => `<div class="srow">${k.tag ? `<span class="enp-t">${k.tag}</span>` : ''}<span class="si">⚡</span><span class="sv"><b>${k.en}</b><small>energy</small></span><button class="sb" data-enusd="${i}">Pay $${k.usd} cash</button></div>`).join('')}</div>`;
+function enCash(k, then) { const c = S.cash || 0;
+  if (c < k.usd) { openStore(`${k.en} energy costs ${money(k.usd)} from your cash. You have ${money(c)}. Add cash first.`); setTimeout(() => { const t = [...document.querySelectorAll('#sheetBody button')].find(b => /^\s*\S*\s*Cash\s*$/.test(b.textContent)); if (t) t.click(); }, 50); return; }
+  S.cash = +(c - k.usd).toFixed(2); save(); paintWallet(); toast(`⚡ +${k.en} energy · ${money(k.usd)} from your cash`); then(); }
 function bindEnPacks(root, close) {
-  root.querySelectorAll('[data-enusd]').forEach(b => b.onclick = () => { const k = EN_PACKS[+b.dataset.enusd]; close(); checkout(`${k.en} energy`, k.usd, () => { S.paidCash = true; addEnergy(k.en); }); });
+  root.querySelectorAll('[data-enusd]').forEach(b => b.onclick = () => { const k = EN_PACKS[+b.dataset.enusd]; close(); enCash(k, () => addEnergy(k.en)); });
   root.querySelectorAll('[data-engem]').forEach(b => b.onclick = () => { const k = EN_PACKS[+b.dataset.engem]; if (S.gems < k.gems) { close(); openStore(`That pack costs ${k.gems} coins. You have ${S.gems}.`); return; } close(); S.gems -= k.gems; paintGems(); addEnergy(k.en); });
 }
 function runOut(kind, title, onBuy, need) {
   const c = $('#coach'), e = energy();
   const cfg = kind === 'energy' ? { ic: '⚡', title: title || (e < 1 ? 'Out of energy!' : 'Get more energy'), big: `⚡${EN_PACKS[1].en}`, sub: 'energy · enough for 15 picks at ×10', usd: EN_PACKS[1].usd,
-      buy: () => checkout(`${EN_PACKS[1].en} energy`, EN_PACKS[1].usd, () => { S.paidCash = true; addEnergy(EN_PACKS[1].en); if (onBuy) setTimeout(onBuy, 1500); }),
+      buy: () => enCash(EN_PACKS[1], () => { addEnergy(EN_PACKS[1].en); if (onBuy) setTimeout(onBuy, 1500); }),
       free: e < 1 ? `Keep judging for free · +5 ⚡ in <b data-enx>${enNext()}</b>` : 'Not now', freeFn: () => {} }
     : kind === 'gems' ? { ic: gemIcon(''), title: title || 'Need more coins?', big: `${gemIcon('')}${GEM_PACKS[0].gems.toLocaleString()}`, sub: `coins · enough for ${Math.floor(GEM_PACKS[0].gems / 50)} improvements`, usd: GEM_PACKS[0].usd,
       buy: () => checkout(`${GEM_PACKS[0].gems.toLocaleString()} coins`, GEM_PACKS[0].usd, () => { S.paidCash = true; addGems(GEM_PACKS[0].gems, `${GEM_PACKS[0].gems} coin pack`); if (onBuy) setTimeout(onBuy, 2000); }),
@@ -4341,7 +4344,7 @@ function runOut(kind, title, onBuy, need) {
       buy: () => checkout(`$${cash} cash + ${coins.toLocaleString()} coins`, cash, () => applyOffer(cash, coins, w ? 'Welcome offer' : '$5 pack', onBuy)), free: 'Not now', freeFn: () => {} }; })();
   c.innerHTML = `<div class="crbox enx ro" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
     <div class="enx-ic">${cfg.ic}</div><h2 id="crT">${cfg.title}</h2>
-    <div class="enh"><span class="enp-t">${cfg.tag || 'Most popular'}</span><b>${cfg.big}</b><small>${cfg.sub}</small><button class="enh-go" id="roBuy">Buy · $${(+cfg.usd).toFixed(2)}</button></div>
+    <div class="enh"><span class="enp-t">${cfg.tag || 'Most popular'}</span><b>${cfg.big}</b><small>${cfg.sub}</small><button class="enh-go" id="roBuy">${kind === 'energy' ? `Pay $${cfg.usd} from cash` : `Buy · $${(+cfg.usd).toFixed(2)}`}</button></div>
     <button class="ro-free ${cfg.freeCls || ''}" id="roFree">${cfg.free}</button>
     <button class="ro-all" id="roAll">See all packs</button></div>`;
   c.classList.add('on', 'cr');

@@ -356,3 +356,26 @@ s=s.replace('</style>',""".up-ok{position:fixed;left:12px;right:12px;top:calc(en
 html:not(.yg) .up-ok{background:#2F6B3F;color:#fff}html.yg .up-ok{background:#118A4A;color:#fff}
 </style>""",1)
 open(d+'yofi-preview.html','w').write(s); print('upload ok')
+
+
+# ---------- energy is paid from the Cash balance ----------
+s=open(d+'yofi-preview.html').read()
+def R6(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+R6("const EN_PACKS = [{ en: 50, usd: 1.99, gems: 150 }, { en: 150, usd: 4.99, gems: 400, tag: 'Popular' }, { en: 500, usd: 14.99, gems: 1200, tag: 'Best value' }];",
+   "const EN_PACKS = [{ en: 50, usd: 1, gems: 150 }, { en: 150, usd: 2, gems: 400, tag: 'Popular' }, { en: 500, usd: 5, gems: 1200, tag: 'Best value' }];")
+R6("close(); checkout(`${k.en} energy`, k.usd, () => { S.paidCash = true; addEnergy(k.en); }); });","close(); enCash(k, () => addEnergy(k.en)); });")
+R6("buy: () => checkout(`${EN_PACKS[1].en} energy`, EN_PACKS[1].usd, () => { S.paidCash = true; addEnergy(EN_PACKS[1].en); if (onBuy) setTimeout(onBuy, 1500); }),",
+   "buy: () => enCash(EN_PACKS[1], () => { addEnergy(EN_PACKS[1].en); if (onBuy) setTimeout(onBuy, 1500); }),")
+R6("function bindEnPacks(root, close) {", r"""function enCash(k, then) { const c = S.cash || 0;
+  if (c < k.usd) { openStore(`${k.en} energy costs ${money(k.usd)} from your cash. You have ${money(c)}. Add cash first.`); setTimeout(() => { const t = [...document.querySelectorAll('#sheetBody button')].find(b => /^\s*\S*\s*Cash\s*$/.test(b.textContent)); if (t) t.click(); }, 50); return; }
+  S.cash = +(c - k.usd).toFixed(2); save(); paintWallet(); toast(`⚡ +${k.en} energy · ${money(k.usd)} from your cash`); then(); }
+function bindEnPacks(root, close) {""")
+s=s.replace("`Buy $${k.usd}`, `data-enusd=\"${i}\"`","`Pay $${k.usd} cash`, `data-enusd=\"${i}\"`")
+s=s.replace('<button class="sb" data-enusd="${i}">Buy $${k.usd}</button>','<button class="sb" data-enusd="${i}">Pay $${k.usd} cash</button>')
+open(d+'yofi-preview.html','w').write(s); print('energy cash ok')
+s=open(d+'yofi-preview.html').read()
+a='<button class="enh-go" id="roBuy">Buy · $${(+cfg.usd).toFixed(2)}</button>'
+assert s.count(a)==1
+s=s.replace(a,'<button class="enh-go" id="roBuy">${kind === \'energy\' ? `Pay $${cfg.usd} from cash` : `Buy · $${(+cfg.usd).toFixed(2)}`}</button>')
+open(d+'yofi-preview.html','w').write(s)
