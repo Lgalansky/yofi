@@ -704,3 +704,88 @@ RA("const qsChipHTML = () => S.geoBlock ? '' :","const qsChipHTML = () => (S.geo
 RA("Later · earn coins by judging","Not now · keep voting")
 RA("<p class=\"pi-k\">Next step · real cash</p><h2 class=\"pi-h\">Win today’s cash pot</h2>","<p class=\"pi-k\">New · real cash challenges</p><h2 class=\"pi-h\">Win today’s cash pot</h2>")
 open(d+'yofi-simple.html','w').write(s); print('flow1 ok')
+
+# ---------- Daily cash challenge card (pot intro + voting-loop pop) and new pot challenge result, from the user's designs ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+# 1) potIntro becomes the new card
+i=s.index('function potIntro(p) {'); j=s.index('\nfunction openGemBattle(', i)
+s=s[:i]+r"""function potIntro(p) { potCard((p && CATS8.find(x => fitsTheme(p, x))) || CATS8[0]); }
+function potCard(k) { const L = lgS(), H = lgHold(k), iHold = H.h === 'you', y = L.you[k] || 0, R = lgRank(k), K = R[0], mine = lgMine(k);
+  const opp = iHold ? (R.find(r => !r.me) || {}).h : H.h; if (!mine || !opp) { lgCat(k); return; }
+  const os = (R.find(r => r.h === opp) || {}).n || 0, lead = K && !K.me && K.h === opp && os > 0, rev = !iHold && (H.hist || [])[0] === 'you', cnt = y > 0 || os > 0, onVote = $('#panes').dataset.at === 'judge';
+  setTimeout(() => { openSheet(`<div class="pc"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
+    <p class="pc-k">Daily cash challenge</p><h2 class="pc-h">Your photo. Real cash.</h2>
+    <p class="pc-pl">Today’s prize pool</p><b class="pc-pot">$${Math.round(L.jp[k]).toLocaleString()}</b>
+    <span class="pc-time"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Ends at midnight · <span data-wk>${dayLeft()}</span> left</span>
+    <p class="pc-cat">${gi(k)}<b>${esc(crownName(k))}</b></p>
+    <div class="pc-vs"><figure><img src="${mine.src}" alt=""><figcaption>You</figcaption>${cnt ? `<strong>${y}<i>⭐</i></strong>` : ''}</figure><span class="pc-x2">VS</span>
+      <figure><img src="${lgPhoto(opp, k)}" alt=""><figcaption>${iHold ? '' : CRW}@${esc(opp)}</figcaption>${lead ? '<em class="pc-lead">Current leader</em>' : ''}${cnt ? `<strong>${os}<i>⭐</i></strong>` : ''}</figure></div>
+    <p class="pc-wl"><span>Win <b>+1</b> ⭐</span><i></i><span>Lose <b>−1</b> ⭐</span></p>
+    <div class="pc-two"><h3>Two ways to win at midnight</h3><div><span><b>⭐ 5+ stars</b><small>Share 50% of the pool</small></span><i></i><span><b>🏆 Most stars</b><small>Win 50% of the pool</small></span></div></div>
+    <button class="btn block pc-go" id="pcGo">${VS_IC}${iHold ? 'Defend your blue ribbon' : rev ? 'Rematch' : 'Challenge now'} · $1</button>
+    <div style="text-align:center"><button class="link pc-later" id="pcLater">${onVote ? (isYoungW() ? 'Keep judging' : 'Keep voting') : 'Not now'}</button></div></div>`);
+    $('#pcGo').onclick = () => { closeSheet(); if (rev) { revengePrep(null, k, opp); return; } lgPay(() => lgFight(k, opp, !iHold)); };
+    $('#pcLater').onclick = () => closeSheet();
+    document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); }, 380); }"""+s[j:]
+# 2) the voting loop's cash pop uses the same card
+a=s.index("celebrate({ src: mine ? lgMine(k).src : lgPhoto(H.h, k), score: '🏅'"); b=s.index("later: 'Not now' });", a)+len("later: 'Not now' });")
+s=s[:a]+"potCard(k);"+s[b:]
+# 3) new result screen
+a=s.index("$('#lb').innerHTML = `<div class=\"wr ${won ? 'w' : 'l'}\">"); b=s.index("paintWallet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery();", a)
+s=s[:a]+r"""const onVote = $('#panes').dataset.at === 'judge', rib = `<span class="pz-rib">${CRW}</span>`;
+      $('#lb').innerHTML = `<div class="pz ${won ? 'w' : 'l'}"><button class="pz-xx" data-shclose aria-label="Close">${QS_X}</button>${won ? '<div class="wr-cf" aria-hidden="true">' + [...Array(10)].map((_, i) => `<i style="left:${(i * 37) % 95}%;animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('') + '</div>' : ''}
+        <p class="pz-k"><i></i>${esc(crownName(k).toUpperCase())}<i></i></p>
+        <h1 class="pz-h">This round goes to…</h1><p class="pz-w">${won ? 'You!' : '@' + esc(h)}${CRW}</p>
+        <div class="pz-vs"><figure class="${won ? 'win' : ''}"><div class="pz-im"><img src="${me.src}" alt="">${won ? rib : ''}</div><figcaption>You</figcaption>${won ? '<em class="pz-wb">Winner</em>' : '<em class="pz-wb no"></em>'}<strong>${mv}<small>votes</small></strong></figure>
+          <span class="pz-x"><i></i>VS<i></i></span>
+          <figure class="${won ? '' : 'win'}"><div class="pz-im"><img src="${src}" alt="">${won ? '' : rib}</div><figcaption>@${esc(h)}</figcaption>${won ? '<em class="pz-wb no"></em>' : '<em class="pz-wb">Winner</em>'}<strong>${tv}<small>votes</small></strong></figure></div>
+        <p class="pz-sub">${sub}</p>
+        <div class="pz-pool"><small>Today’s prize pool</small><b>$${L.jp[k].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</b><hr>
+          <div class="pz-ys"><span>Your stars</span><b>${Math.min(y, LG_SHARE)} / ${LG_SHARE}</b></div>
+          <div class="pz-stars">${[1, 2, 3, 4, 5].map(i => `<i class="${i <= y ? 'on' : ''}">⭐</i>`).join('')}</div>
+          <p>${y >= LG_SHARE ? `You’re in · <b>${money(lgShare(k))}</b> so far. Keep winning to grow it.` : `Finish with ${LG_SHARE}+ stars to share half the pool.`}${!won && lost ? ' <span class="pz-lost">−1 star for this loss</span>' : ''}</p><em>Pays at midnight</em></div>
+        ${won ? `<button class="btn block pz-go" id="lbMore">${VS_IC}Challenge again · $1</button>` : `<button class="btn block pz-go" id="lbRev">${VS_IC}Rematch · $1</button>`}
+        <div style="text-align:center"><button class="link pz-back" data-shclose>${onVote ? (isYoungW() ? 'Keep judging' : 'Keep voting') : 'Back to challenges'}</button></div></div>`;
+      """+s[b:]
+RA("if ($('#lbMore')) $('#lbMore').onclick = () => lgCat(k);","if ($('#lbMore')) $('#lbMore').onclick = () => { closeSheet(); potCard(k); };")
+s=s.replace('</style>',""".pc{position:relative;text-align:center;padding:4px 2px 2px}.pc-x,.pz-xx{position:absolute;right:0;top:0;border:0;background:none;color:inherit;padding:4px;cursor:pointer;z-index:3}
+.pc-k{margin:6px 0 2px;font-size:.78rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase}.pc-h{margin:0 0 8px;padding-bottom:8px;font-size:1.75rem;line-height:1.1;border-bottom:2px solid #D9A441}
+.pc-pl{margin:4px 0 0;font-weight:800;font-size:1rem}.pc-pot{display:block;font-size:3.2rem;line-height:1.05;margin:0 0 6px}
+.pc-time{display:inline-flex;align-items:center;gap:8px;padding:5px 16px;border-radius:999px;font-size:.88rem;font-weight:700;font-variant-numeric:tabular-nums}
+.pc-cat{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px 0 8px;font-size:1.05rem}.pc-cat svg{width:22px;height:22px}
+.pc-vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:6px}.pc-vs figure{margin:0}.pc-vs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:16px;display:block}
+.pc-vs figcaption{margin-top:6px;font-weight:800;font-size:.95rem}.pc-vs figcaption .crw-ic{width:14px;height:17px;vertical-align:-3px;margin-right:3px}
+.pc-x2{align-self:center;margin-top:-30px;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:900}
+.pc-lead{display:inline-block;margin-top:3px;padding:2px 10px;border-radius:999px;font-style:normal;font-size:.78rem;font-weight:800}
+.pc-vs strong{display:block;font-size:2.3rem;line-height:1.1;margin-top:2px}.pc-vs strong i{font-style:normal;font-size:.8em;margin-left:2px}
+.pc-wl{display:flex;justify-content:center;align-items:center;gap:16px;margin:10px 0;font-size:1rem}.pc-wl i{width:1px;height:24px;opacity:.35;background:currentColor}
+.pc-two{border-radius:16px;padding:10px 12px;margin:0 0 12px}.pc-two h3{margin:0 0 6px;font-size:1.1rem}.pc-two div{display:grid;grid-template-columns:1fr 1px 1fr;gap:10px;align-items:center}.pc-two div i{align-self:stretch;opacity:.3;background:currentColor}
+.pc-two b{display:block;font-size:1.05rem}.pc-two small{font-size:.8rem}.pc-later{margin-top:8px}
+.pz{position:relative;text-align:center;padding:6px 4px 4px}.pz-k{display:flex;align-items:center;justify-content:center;gap:12px;margin:4px 0;font-size:.82rem;font-weight:900;letter-spacing:.2em}.pz-k i{width:32px;height:2px;background:#D9A441}
+.pz-h{margin:2px 0 0;font-size:1.9rem;line-height:1.1}.pz-w{display:flex;align-items:center;justify-content:center;gap:6px;margin:2px 0 10px;font-size:1.6rem;font-weight:800}.pz-w .crw-ic{width:26px;height:32px}
+.pz-vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:6px}.pz-vs figure{margin:0}.pz-im{position:relative}.pz-im img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:16px;display:block}
+.pz-rib{position:absolute;right:-8px;top:-12px;z-index:2}.pz-rib .crw-ic,.pz-rib svg{width:38px!important;height:46px!important;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}.pz-vs figcaption{margin-top:6px;font-weight:800;font-size:1rem}
+.pz-wb{display:inline-block;min-height:18px;margin-top:2px;padding:1px 12px;border-radius:999px;font-style:normal;font-size:.72rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.pz-wb.no{background:none!important}
+.pz-vs strong{display:block;font-size:2.6rem;line-height:1.05}.pz-vs strong small{font-size:.9rem;font-weight:700;margin-left:6px}
+.pz-x{display:flex;flex-direction:column;align-items:center;gap:6px;align-self:center;margin-top:-40px;font-weight:900;font-size:1.3rem}.pz-x i{width:22px;height:2px;background:#D9A441}
+.pz-sub{margin:6px 0 10px;font-size:.88rem;font-weight:700}
+.pz-pool{border-radius:18px;padding:12px 14px;margin:0 0 12px}.pz-pool>small{display:block;font-size:.78rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.pz-pool>b{display:block;font-size:2.4rem;line-height:1.1}
+.pz-pool hr{border:0;height:1px;margin:8px 0;opacity:.3;background:currentColor}.pz-ys{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:1.05rem}.pz-ys b{font-size:1.4rem}
+.pz-stars{display:flex;justify-content:center;gap:10px;margin:4px 0 6px;font-size:1.9rem}.pz-stars i{font-style:normal;filter:grayscale(1);opacity:.3}.pz-stars i.on{filter:none;opacity:1;animation:qsPlus .5s ease-out}
+.pz-pool p{margin:0;font-size:.9rem}.pz-pool em{display:block;margin-top:2px;font-size:.8rem;font-style:normal;opacity:.7}.pz-lost{display:block;font-weight:800;margin-top:2px}.pz-back{margin-top:8px}
+html:not(.yg) .pc-k{color:#2F6B3F}html:not(.yg) .pc-h,html:not(.yg) .pz-h,html:not(.yg) .pz-w,html:not(.yg) .pc-two h3,html:not(.yg) .pz-k{color:#2B1D14}html:not(.yg) .pc-pot,html:not(.yg) .pz-pool>b,html:not(.yg) .pc-two b{color:#2F6B3F}
+html:not(.yg) .pc-time{background:#FFF8E7;box-shadow:inset 0 0 0 1.5px #E5C77A;color:#2B2320}html:not(.yg) .pc-time svg{color:#C98A12}html:not(.yg) .pc-cat{color:#2B2320}
+html:not(.yg) .pc-vs img,html:not(.yg) .pz-im img{box-shadow:0 0 0 3px #2D4E86}html:not(.yg) .pz-vs figure.win .pz-im img{box-shadow:0 0 0 3px #D9A441}html:not(.yg) .pc-x2{background:#2D4E86;color:#fff}
+html:not(.yg) .pc-lead{background:#DCE6F7;color:#2D4E86}html:not(.yg) .pc-vs strong,html:not(.yg) .pz-vs strong{color:#1F3F8F}html:not(.yg) .pz-vs strong small{color:#2B2320}html:not(.yg) .pc-wl{color:#2B2320}
+html:not(.yg) .pc-two{background:#FFF8E7;box-shadow:inset 0 0 0 1.5px #E5C77A;color:#2B2320}html:not(.yg) .pz-wb{background:#2D4E86;color:#fff}html:not(.yg) .pz-x{color:#2B1D14}
+html:not(.yg) .pz-pool{background:#fff;box-shadow:inset 0 0 0 1.5px #E6D9C4;color:#2B2320}html:not(.yg) .pz-sub{color:#5B4E45}html:not(.yg) .pz-lost{color:#9E2F2A}
+html.yg .pc-k{color:#2EE59D}html.yg .pc-h,html.yg .pz-h,html.yg .pz-w,html.yg .pc-two h3,html.yg .pz-k{color:#fff}html.yg .pc-pot,html.yg .pz-pool>b,html.yg .pc-two b{color:#2EE59D}
+html.yg .pc-time{background:#241544;box-shadow:inset 0 0 0 1.5px #FFC93C;color:#fff}html.yg .pc-time svg{color:#FFC93C}html.yg .pc-cat{color:#fff}
+html.yg .pc-vs img,html.yg .pz-im img{box-shadow:0 0 0 3px #C13CFF}html.yg .pz-vs figure.win .pz-im img{box-shadow:0 0 0 3px #FFC93C}html.yg .pc-x2{background:#FFC93C;color:#1B0F33}
+html.yg .pc-lead{background:#3A2766;color:#E9E2FF}html.yg .pc-vs strong,html.yg .pz-vs strong{color:#FFC93C}html.yg .pz-vs strong small{color:#E9E2FF}html.yg .pc-wl{color:#E9E2FF}
+html.yg .pc-two{background:#241544;box-shadow:inset 0 0 0 1.5px #FFC93C;color:#E9E2FF}html.yg .pz-wb{background:#FFC93C;color:#1B0F33}html.yg .pz-x{color:#fff}
+html.yg .pz-pool{background:#1B0F33;box-shadow:inset 0 0 0 1.5px #3A2766;color:#E9E2FF}html.yg .pz-sub{color:#C9B8FF}html.yg .pz-lost{color:#FF7A9A}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('pot card ok')
