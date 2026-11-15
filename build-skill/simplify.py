@@ -507,3 +507,29 @@ RA("${S.qsTried ? 'from $2' : 'Try free'}","${S.qsTried ? 'from $2' : `${QS_COIN
 s=s.replace("</style>",""".qs-res h2 svg,.qs-lb em svg,.qs-chip em svg,#crGo svg,svg[class=""]{width:1em;height:1em;vertical-align:-.15em}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('coins practice ok')
+
+# ---------- Quick Sprint in voting is 1 v 1: same 10 pairs, best score wins, 20% rake ($2 wins $3.20, $5 wins $8; first one 100 coins wins 160) ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA("const qsPay = st => QS_SPLIT.map(f => +(st * 10 * (1 - QS_RAKE) * f).toFixed(2));","const qsPay = st => [+(st * 2 * (1 - QS_RAKE)).toFixed(2)];")
+RA("QS_COIN_PAY = [500, 200, 100]","QS_COIN_PAY = [160]")
+RA(".sort(() => r() - .5).slice(0, 9);",".sort(() => r() - .5).slice(0, 1);")
+RA("text: `Pick the photo the crowd chose in <b>10 pairs</b>, against 9 players. Your first one is for coins: <b>${QS_COIN}</b> in, top 3 win up to <b>${QS_COIN_PAY[0]}</b>. Then play for cash: <b>$2</b> or <b>$5</b> tables, win up to <b>$25</b>.`",
+   "text: `1 v 1 against a real player. Pick the photo the crowd chose in <b>10 pairs</b>, best score wins. Your first one is for coins: <b>${QS_COIN}</b> in, win <b>${QS_COIN_PAY[0]}</b>. Then play for cash: <b>$2</b> wins <b>$3.20</b>, <b>$5</b> wins <b>$8</b>.`")
+RA("text: `10 pairs against 9 real players. Top 3 win cash: up to <b>$10</b> on the $2 table, <b>$25</b> on the $5 table.`",
+   "text: `1 v 1 against a real player · 10 pairs · about 30 seconds. <b>$2</b> wins <b>$3.20</b>, <b>$5</b> wins <b>$8</b>.`")
+RA("<b>🎯 Quick Sprint</b><span>10 players · instant</span>","<b>🎯 Quick Sprint</b><span>1 v 1 · instant</span>")
+RA("<p class=\"cpr-q\">Pick your table</p>","<p class=\"cpr-q\">Pick your stake</p>")
+RA("<span>1st <i>${qsM(p[0])}</i> · 2nd ${qsM(p[1])} · 3rd ${qsM(p[2])}</span>","<span>Beat 1 player, win <i>${qsM(p[0])}</i></span>")
+RA("<small>Same 10 pairs for all 10 players · most right wins · ties go to the fastest. Top 3 paid.</small>","<small>You and 1 real player get the same 10 pairs · most right wins · ties go to the fastest.</small>")
+RA("<small>Same 10 pairs as your 9 opponents · most right wins · ties go to the fastest</small>","<small>Same 10 pairs as your opponent · most right wins · ties go to the fastest</small>")
+RA("(prize ? `You won ${prize} ${gemIcon('')}` : `${ord(rank)} of 10`) : prize ? `You won ${qsM(prize)}!` : `${ord(rank)} of 10`}",
+   "(prize ? `You won ${prize} ${gemIcon('')}` : 'So close!') : prize ? `You won ${qsM(prize)}!` : 'So close!'}")
+RA("'Top 3 win · on the $2 table 1st wins $10'","'On the $2 table the winner gets $3.20'")
+RA("${prize ? `${ord(rank)} place` : 'top 3 win cash'}","${prize ? 'you win' : `@${esc(all.find(x => !x.me).h)} won`}")
+RA("<b>Quick Sprint</b> · win up to $25 · instant</span>","<b>Quick Sprint</b> · 1 v 1 · win up to $8</span>")
+s=s.replace("Quick Sprint · from $2 · win up to $25, result instantly","Quick Sprint · 1 v 1 from $2 · win up to $8",1)
+s=s.replace('</style>',""".qs-lb{max-height:none}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('h2h ok')
