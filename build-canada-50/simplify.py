@@ -172,3 +172,13 @@ s=s.replace("if ($('#tshTix')) $('#tshTix').onclick = () => useTickets();","if (
 s=s.replace("toast(`You need a Freeroll ticket · ${TIX_EVERY - (S.tixV || 0)} more votes`); return;","toast(`Swap ${TIX_COINS.toLocaleString()} coins for a Freeroll ticket first`); useGems(); return;",1)
 s=s.replace('</style>','.tsr2.frrow.pulse{animation:frp 1s ease-in-out 3}@keyframes frp{50%{transform:scale(1.03)}}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('swap ok')
+
+# ---------- + on coins inline; energy + opens the wallet (shop); ×10 box icon in the same family ----------
+s=open(d+'yofi-simple.html').read()
+s=s.replace('</style>','html #shell > .wallet #gemPill .gplus{transform:none!important;align-self:center!important;margin-left:8px!important}\n</style>',1)
+a="if ($('#enPlus')) $('#enPlus').onclick = () => outOfEnergy();"; assert s.count(a)==1
+s=s.replace(a,"if ($('#enPlus')) $('#enPlus').onclick = () => openStore();")
+a="i === 9 ? '<u>🧰</u>×10' : ''"; assert s.count(a)==1, s.count(a)
+s=s.replace(a,"i === 9 ? '<u class=\"bx10\">🎁</u>×10' : ''")
+s=s.replace('</style>','html .stk-steps i.m u.bx10{font-size:1.25rem!important}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('fix ok')

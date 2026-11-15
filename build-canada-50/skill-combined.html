@@ -481,6 +481,8 @@ html.yg .tsr2.frrow{background:#2A1A10!important;box-shadow:inset 0 0 0 2px #FFC
 html .wallet.cxw{display:none!important}
 #judge .vstrip{display:none!important}
 .tsr2.frrow.pulse{animation:frp 1s ease-in-out 3}@keyframes frp{50%{transform:scale(1.03)}}
+html #shell > .wallet #gemPill .gplus{transform:none!important;align-self:center!important;margin-left:8px!important}
+html .stk-steps i.m u.bx10{font-size:1.25rem!important}
 </style>
 </head>
 <body>
@@ -4508,7 +4510,7 @@ function renderJudge() {
     <div class="jfoot jf2">
       ${energy() < 1 ? `<div class="jf-en en-out"><span class="en-ic">⚡</span><span class="eo-t"><b>Out of energy</b><small class="en-nx">+5 ⚡ in ${enNext()}</small><small class="en-full">Full again at ${enFullAt()}</small></span><button id="enBuy">Refill</button></div>` : `<div class="jf-en ${energy() > 10 ? 'en-hide' : 'en-low'}"><div class="en-top"><span class="en-ic">⚡</span><span class="en-bar"><i style="width:${Math.min(100, energy() / EN_MAX * 100)}%"></i></span><span class="en-n">${energy() > EN_MAX ? `${EN_MAX}<small> +${energy() - EN_MAX}</small>` : `${energy()}/${EN_MAX}`}</span><button class="en-plus" id="enPlus" aria-label="Buy energy">+</button></div>
       </div>`}
-      <div class="stk"><div class="stk-row"><span class="stk-lab" aria-label="Your wins are multiplied by your streak"><small>Wins</small><b class="stk-x">×${streakX(combo)}</b></span><div class="lkp-steps jf-combo stk-steps">${[...Array(10)].map((_, i) => `<i class="${i < Math.min(combo, 10) ? 'on' : ''} ${[2, 5, 9].includes(i) ? 'm m' + (i === 2 ? 3 : 5) : ''}" >${i === 2 ? '<u>📦</u>×3' : i === 5 ? '<u>🎁</u>×6' : i === 9 ? '<u>🧰</u>×10' : ''}</i>`).join('')}</div></div></div>
+      <div class="stk"><div class="stk-row"><span class="stk-lab" aria-label="Your wins are multiplied by your streak"><small>Wins</small><b class="stk-x">×${streakX(combo)}</b></span><div class="lkp-steps jf-combo stk-steps">${[...Array(10)].map((_, i) => `<i class="${i < Math.min(combo, 10) ? 'on' : ''} ${[2, 5, 9].includes(i) ? 'm m' + (i === 2 ? 3 : 5) : ''}" >${i === 2 ? '<u>📦</u>×3' : i === 5 ? '<u>🎁</u>×6' : i === 9 ? '<u class="bx10">🎁</u>×10' : ''}</i>`).join('')}</div></div></div>
     </div>
     <div class="vh" id="jRes" aria-live="polite"></div>
 `;
@@ -4516,7 +4518,7 @@ function renderJudge() {
   if ($('#enBuy')) $('#enBuy').onclick = () => outOfEnergy();
   if ($('#tjStrip')) { $('#tjStrip').onclick = () => openTourney(); tWidget(); }
   if ($('#wCard')) $('#wCard').onclick = () => { const p = waitingPhoto(); if (!p) return; if (S.gems < fixCost(p)) { toast(`Keep judging to earn ${fixCost(p) - S.gems} more coins`); return; } S.cur = p.id; WALL = false; save(); go('studio'); renderStudio(); };
-  if ($('#enPlus')) $('#enPlus').onclick = () => outOfEnergy();
+  if ($('#enPlus')) $('#enPlus').onclick = () => openStore();
   document.querySelectorAll('#judge .jrep').forEach(r => r.onclick = e => { e.stopPropagation(); openReport([pa, pb][+r.dataset.rep]); });
 }
 const REPORT_WHY = [['nude', 'Nudity or sexual content'], ['minor', 'Puts a child at risk'], ['violence', 'Violence or gore'], ['hate', 'Hate or harassment'], ['stolen', 'Not their photo (stolen or copied)'], ['spam', 'Spam, ads or scam'], ['other', 'Something else']];
