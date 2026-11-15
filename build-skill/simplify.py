@@ -384,3 +384,39 @@ a='<div class="tot-h">${nextUpHTML()}'; assert s.count(a)==1
 s=s.replace(a,'${qsChipHTML()}<div class="tot-h">${nextUpHTML()}')
 s=s.replace('#judge .qs-chip{margin:6px 0 2px;','#judge .qs-chip{margin:0 0 6px;',1)
 open(d+'yofi-simple.html','w').write(s)
+
+# ---------- Quick Sprint: play any time, instant result against 9 players who played the same pairs; fixed prizes per group of 10 ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA("NN = champ ? CH_N : NN","NN = champ ? CH_N : SPR_N")
+RA("sprint ? '🎯 Crowd Sprint'","sprint ? '🎯 Quick Sprint'")
+RA("id = champ ? chId() : sprId()","id = champ ? chId() : sprint ? (window.__qsSet || sprId()) : sprId()")
+# replace sprEnter and sprDone
+a=s.index("function sprEnter() {"); b=s.index("\nfunction sprDone(", a); s=s[:a]+r"""function sprEnter() {
+  if (S.geoBlock) { toast('Cash contests aren’t available in your state'); return; }
+  if ((S.cash || 0) < 1) { openStore('A Quick Sprint costs $1 cash.'); return; }
+  S.cash = +((S.cash || 0) - 1).toFixed(2); save(); paintWallet(); if ($('#sheet').classList.contains('on')) closeSheet();
+  window.__qsSet = Math.floor(Math.random() * 900000) + 1000; cpRun('sprint'); }"""+s[b:]
+a=s.index("function sprDone(id, right, ms) {"); b=s.index("\nfunction ", a+10); s=s[:a]+r"""const QS_PAY = [5, 2.5, 1], QS_NAMES = ['nana_bakes', 'max.adventures', 'coco.pup', 'linda.blooms', 'dogdad', 'luna_loves', 'pawprincess', 'catlover22', 'ella.travels', 'sam_snaps', 'jade.k', 'tom_frames'];
+function sprDone(id, right, ms) { const r = cpRng(id * 7 + 1), pool = QS_NAMES.slice().sort(() => r() - .5).slice(0, 9);
+  const opp = pool.map(h => { let sc = 0; for (let j = 0; j < SPR_N; j++) if (r() < .6) sc++; return { h, sc, ms: 14000 + Math.floor(r() * 26000) }; });
+  const all = opp.concat([{ h: 'You', sc: right, ms, me: 1 }]).sort((x, y) => y.sc - x.sc || x.ms - y.ms), rank = all.findIndex(x => x.me) + 1, prize = QS_PAY[rank - 1] || 0;
+  if (prize) { S.cash = +((S.cash || 0) + prize).toFixed(2); save(); setTimeout(paintWallet, 200); }
+  const c = $('#coach'), ord = n => n + (n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th');
+  c.innerHTML = `<div class="cpr cpr-end qs-res"><h2>${prize ? `You won $${prize.toFixed(2)}!` : `${ord(rank)} of 10`}</h2><p>${right}/${SPR_N} right · ${(ms / 1000).toFixed(1)}s · ${prize ? `${ord(rank)} place` : 'top 3 win cash'}</p>
+    <div class="qs-lb">${all.map((x, i) => `<div class="${x.me ? 'me' : ''}"><span>${i + 1}</span><b>${x.me ? 'You' : '@' + esc(x.h)}</b><small>${x.sc}/10 · ${(x.ms / 1000).toFixed(1)}s</small><em>${QS_PAY[i] ? '$' + QS_PAY[i].toFixed(2) : ''}</em></div>`).join('')}</div>
+    <button class="bt-cta" id="qsAgain">🎯 Play again · $1</button><button class="bt-no" id="cpBack">Keep voting</button></div>`;
+  if (prize) setTimeout(() => cashExplosion && cashExplosion(prize, { label: 'Quick Sprint' }), 400);
+  $('#qsAgain').onclick = () => { c.classList.remove('on', 'cr'); sprEnter(); }; $('#cpBack').onclick = () => c.classList.remove('on', 'cr'); }"""+s[b:]
+# Vote page line: no clock
+a=s.index("const qsChipHTML = () => {"); b=s.index("</button>`; };", a)+len("</button>`; };")
+s=s[:a]+"const qsChipHTML = () => S.geoBlock ? '' : `<button class=\"qs-chip\" id=\"qsChip\">🎯 <span><b>Quick Sprint</b> · 10 pairs · win up to $5 · instant</span><em>$1</em></button>`;"+s[b:]
+RA("Quick Sprint · ${mmss(sprLeft(id))} left · $1 entry · $${sprPool(n)} and growing","Quick Sprint · $1 · win up to $5, result instantly")
+s=s.replace("<small>Same pairs for every player this round · most right wins</small>","<small>Same 10 pairs as your 9 opponents · most right wins · ties go to the fastest</small>",1)
+s=s.replace('</style>',""".qs-lb{display:grid;gap:3px;margin:4px 0 10px;max-height:46vh;overflow:auto;text-align:left}.qs-lb div{display:grid;grid-template-columns:22px 1fr auto 52px;gap:8px;align-items:center;padding:6px 10px;border-radius:10px;font-size:.85rem}
+.qs-lb span{font-weight:900;opacity:.6}.qs-lb small{opacity:.75}.qs-lb em{font-style:normal;font-weight:900;text-align:right}.qs-lb div.me{font-weight:900}
+html:not(.yg) .qs-lb div{background:#fff}html:not(.yg) .qs-lb div.me{background:#FFF3D1;box-shadow:inset 0 0 0 2px #D9A441}html:not(.yg) .qs-lb em{color:#2F6B3F}
+html.yg .qs-lb div{background:#160B2E}html.yg .qs-lb div.me{background:#2A1A46;box-shadow:inset 0 0 0 2px #FFC93C}html.yg .qs-lb em{color:#2EE59D}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('instant ok')
