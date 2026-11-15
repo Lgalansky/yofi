@@ -6443,7 +6443,7 @@ function useGems() {
 // once a session, when judging has piled up 100+ gems, suggest the best way to spend them
 function gemNudge(force) {
   // pops each time judging takes you past a new 100 gems (at most every 15 votes), or on opening the app with 150+
-  if (!S.user || S.gems < 100 || (S.votes || 0) < 12 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return false;
+  if (!S.user || S.gems < 100 || (S.votes || 0) < 12 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || document.querySelector('.fcd')) return false;
   const mark = Math.floor(S.gems / 100) * 100;
   const unlock = false;
   if (!force && !unlock && (mark <= (S.gnMark || 0) || (S.votes || 0) - (S.gnVote || 0) < 40)) return false;
@@ -6460,7 +6460,7 @@ $('#gemPill').onclick = e => { if (e.target.closest('.gplus')) openStore(); else
 function paintGemGlow() { const el = $('#gemPill'); if (el) el.classList.toggle('glow', !!(S && S.user && S.gems >= 100 && Math.floor(S.gems / 100) * 100 > (S.gnMark || 0))); }
 setInterval(paintGemGlow, 1500);
 // opening the app with 150+ gems: show the pop once per visit
-setTimeout(function gnOpen() { if (!S || !S.user) return; if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || ($('#flow').classList.contains('on') && !$('#flow').classList.contains('astab'))) { if (!gnOpen.n) gnOpen.n = 0; if (++gnOpen.n < 8) setTimeout(gnOpen, 2500); return; } if (S.gems >= 150 && !window.__spent) gemNudge(true); }, 4000);
+setTimeout(function gnOpen() { if (!S || !S.user) return; if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || document.querySelector('.fcd') || ($('#flow').classList.contains('on') && !$('#flow').classList.contains('astab'))) { if (!gnOpen.n) gnOpen.n = 0; if (++gnOpen.n < 8) setTimeout(gnOpen, 2500); return; } if (S.gems >= 150 && !window.__spent) gemNudge(true); }, 4000);
 ['#walletPlus', '#wCash'].forEach(s => { const el = $(s); if (el) el.onclick = () => walletSheet(); });
 $('#gemPill2').onclick = () => useGems();
 
