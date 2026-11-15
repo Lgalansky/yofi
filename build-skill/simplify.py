@@ -420,3 +420,39 @@ html:not(.yg) .qs-lb div{background:#fff}html:not(.yg) .qs-lb div.me{background:
 html.yg .qs-lb div{background:#160B2E}html.yg .qs-lb div.me{background:#2A1A46;box-shadow:inset 0 0 0 2px #FFC93C}html.yg .qs-lb em{color:#2EE59D}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('instant ok')
+
+# ---------- Quick Sprint stakes: $2 / $5 tables, 20% rake, top 3 paid 62.5/25/12.5% of what's left ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+a=s.index("function sprEnter() {"); b=s.index("\nconst QS_PAY", a); s=s[:a]+r"""const QS_STAKES = [2, 5], QS_RAKE = .2, QS_SPLIT = [.625, .25, .125];
+const qsPay = st => QS_SPLIT.map(f => +(st * 10 * (1 - QS_RAKE) * f).toFixed(2));
+const qsM = v => '$' + (v % 1 ? v.toFixed(2) : v);
+function sprEnter(stake) {
+  if (S.geoBlock) { toast('Cash contests aren’t available in your state'); return; }
+  const c = $('#coach');
+  if (!stake) { if ($('#sheet').classList.contains('on')) closeSheet();
+    c.innerHTML = `<div class="cpr qs-pick" role="dialog" aria-modal="true"><div class="cpr-h"><b>🎯 Quick Sprint</b><span>10 players · instant</span></div>
+      <p class="cpr-q">Pick your table</p>
+      <div class="qs-st">${QS_STAKES.map(st => { const p = qsPay(st); return `<button data-qst="${st}"><b>${qsM(st)}</b><span>1st <i>${qsM(p[0])}</i> · 2nd ${qsM(p[1])} · 3rd ${qsM(p[2])}</span></button>`; }).join('')}</div>
+      <div class="cpr-act"><small>Same 10 pairs for all 10 players · most right wins · ties go to the fastest. Top 3 paid.</small><button class="bt-no" id="qsX">Not now</button></div></div>`;
+    c.classList.add('on', 'cr'); c.onclick = null;
+    c.querySelectorAll('[data-qst]').forEach(bt => bt.onclick = () => sprEnter(+bt.dataset.qst)); $('#qsX').onclick = () => c.classList.remove('on', 'cr'); return; }
+  if ((S.cash || 0) < stake) { c.classList.remove('on', 'cr'); openStore(`This Quick Sprint table costs ${qsM(stake)} cash.`); return; }
+  S.cash = +((S.cash || 0) - stake).toFixed(2); save(); paintWallet(); if ($('#sheet').classList.contains('on')) closeSheet();
+  window.__qsStake = stake; window.__qsSet = Math.floor(Math.random() * 900000) + 1000; cpRun('sprint'); }"""+s[b:]
+RA("const QS_PAY = [5, 2.5, 1], ","const ")
+RA("prize = QS_PAY[rank - 1] || 0;","QS_PAY = qsPay(window.__qsStake || 5), prize = QS_PAY[rank - 1] || 0;")
+RA("<em>${QS_PAY[i] ? '$' + QS_PAY[i].toFixed(2) : ''}</em>","<em>${QS_PAY[i] ? qsM(QS_PAY[i]) : ''}</em>")
+RA("<h2>${prize ? `You won $${prize.toFixed(2)}!`","<h2>${prize ? `You won ${qsM(prize)}!`")
+RA("<button class=\"bt-cta\" id=\"qsAgain\">🎯 Play again · $1</button>","<button class=\"bt-cta\" id=\"qsAgain\">🎯 Play again · ${qsM(window.__qsStake || 5)}</button>")
+RA("$('#qsAgain').onclick = () => { c.classList.remove('on', 'cr'); sprEnter(); };","$('#qsAgain').onclick = () => { c.classList.remove('on', 'cr'); sprEnter(window.__qsStake || 5); };")
+RA("<b>Quick Sprint</b> · 10 pairs · win up to $5 · instant</span><em>$1</em>","<b>Quick Sprint</b> · win up to $25 · instant</span><em>from $2</em>")
+RA("Quick Sprint · $1 · win up to $5, result instantly","Quick Sprint · from $2 · win up to $25, result instantly")
+s=s.replace('</style>',""".qs-st{display:grid;gap:8px;margin:6px 0 10px}.qs-st button{display:flex;align-items:center;gap:12px;padding:12px 14px;border:0;border-radius:14px;font:inherit;text-align:left;cursor:pointer}
+.qs-st b{font-size:1.35rem;min-width:52px}.qs-st span{font-size:.85rem}.qs-st i{font-style:normal;font-weight:900}.qs-pick .cpr-act small{display:block;margin-bottom:6px}
+html:not(.yg) .qs-st button{background:#fff;box-shadow:inset 0 0 0 1.5px #2F6B3F;color:#2B2320}html:not(.yg) .qs-st b,html:not(.yg) .qs-st i{color:#2F6B3F}
+html.yg .qs-st button{background:#0E3A2A;box-shadow:inset 0 0 0 1.5px #2EE59D;color:#fff}html.yg .qs-st b,html.yg .qs-st i{color:#2EE59D}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('stakes ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace("'🎯 Play the next Sprint · $1'","'🎯 Play a Quick Sprint · from $2'",1); open(d+'yofi-simple.html','w').write(s)
