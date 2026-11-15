@@ -418,7 +418,7 @@ html.yg .gm-c,html:not(.yg) .gm-g{display:none}
 </style>
 </head>
 <body>
-<script>try{var _b=(JSON.parse(localStorage.getItem("yofi.proto.v1")||"{}")||{}).ageBr;if(_b&&_b!=="25 to 34"&&_b!=="35 to 44"){document.documentElement.classList.remove("yg");document.documentElement.setAttribute("data-theme","light")}}catch(e){}</script>
+<script>try{var _b=(JSON.parse(localStorage.getItem("yofi.proto.v1")||"{}")||{}).ageBr;if(_b&&_b!=="18 to 24"){document.documentElement.classList.remove("yg");document.documentElement.setAttribute("data-theme","light")}}catch(e){}</script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <linearGradient id="gemGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7FE3FF"/><stop offset=".55" stop-color="#2A8CFF"/><stop offset="1" stop-color="#7B3CFF"/></linearGradient>
@@ -4047,11 +4047,11 @@ setInterval(() => {
   if (ch) { save(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'friends' && !$('#sheet').classList.contains('on') && !document.querySelector('.fcd')) { const y = $('#gallery').scrollTop; renderGallery(); $('#gallery').scrollTop = y; } }
 }, 2000);
 
-const OB_AGES = ['25 to 34', '35 to 44', '45 to 54', '55 to 64', '65 and over'];
+const OB_AGES = ['18 to 24', '25 to 34', '35 to 44', '45 to 54', '55 to 64', '65 and over'];
 const OB_INT = [['Gardening', 3, 'fitness'], ['Grandkids', 3, 'selfie'], ['Baking', 2, 'food'], ['Travel', 3, 'travel'], ['Dogs', 2, 'pets'], ['Flowers', 2, 'fitness'], ['Cottage life', 2, 'travel'], ['Birds', 1, 'night'],
   ['Fall colours', 2, 'night'], ['Family', 2, 'selfie'], ['Quilting & crafts', 1, 'style'], ['Cats', 1, 'pets'], ['Home decor', 2, 'style'], ['Sunsets', 1, 'night'], ['Dinner parties', 1, 'food'], ['Winter scenes', 1, 'night'],
   ['Golf', 1, 'night'], ['Beach', 1, 'travel'], ['Weddings', 1, 'selfie'], ['Fishing', 1, 'night'], ['Vintage finds', 1, 'style']];
-const OB_PRE = { '25 to 34': ['Travel', 'Dogs', 'Dinner parties', 'Home decor'], '35 to 44': ['Family', 'Travel', 'Baking', 'Dogs'], '45 to 54': ['Gardening', 'Family', 'Travel', 'Cottage life', 'Baking'], '55 to 64': ['Gardening', 'Grandkids', 'Travel', 'Flowers', 'Baking'], '65 and over': ['Grandkids', 'Gardening', 'Birds', 'Quilting & crafts'] };
+const OB_PRE = { '18 to 24': ['Travel', 'Dogs', 'Dinner parties', 'Beach'], '25 to 34': ['Travel', 'Dogs', 'Dinner parties', 'Home decor'], '35 to 44': ['Family', 'Travel', 'Baking', 'Dogs'], '45 to 54': ['Gardening', 'Family', 'Travel', 'Cottage life', 'Baking'], '55 to 64': ['Gardening', 'Grandkids', 'Travel', 'Flowers', 'Baking'], '65 and over': ['Grandkids', 'Gardening', 'Birds', 'Quilting & crafts'] };
 function obRank() { const r = {}; (S.likes || []).forEach(n => { const x = OB_INT.find(i => i[0] === n); if (x) r[x[2]] = (r[x[2]] || 0) + 1; }); return r; }
 function obSort() { if (!S.likes) return; const r = obRank(), o = ['selfie', 'style', 'fitness', 'pets', 'food', 'travel', 'night', 'any'];
   CATS8.sort((a, b) => (a === 'any') - (b === 'any') || (r[b] || 0) - (r[a] || 0) || o.indexOf(a) - o.indexOf(b)); }
@@ -4094,7 +4094,7 @@ const YOUNG_W = [[/Today’s photo challenges/g, 'Battle for the crown'], [/\bHe
   [/\bBlue ribbons\b/g, 'Crowns'], [/\bblue ribbons\b/g, 'crowns'], [/\bBlue ribbon\b/g, 'Crown'], [/\bblue ribbon\b/g, 'crown'], [/\bStars\b/g, 'Points'], [/\bstars\b/g, 'points'], [/\bstar\b/g, 'point'], [/\bCoins\b/g, 'Gems'], [/\bcoins\b/g, 'gems'], [/🪙/g, '💎'], [/🏅/g, '👑'], [/🟡/g, '💎'],
   [/\bClubs\b/g, 'Friends'], [/\bClub pot\b/g, 'Friends pot'], [/\bclub pot\b/g, 'friends pot'], [/\bClub\b/g, 'Friends group'], [/\bclub\b/g, 'friends group'], [/\bTouch-ups\b/g, 'Studio'], [/\bTouch up\b/g, 'Enhance'], [/\btouch up\b/g, 'enhance'],
   [/\bShows\b/g, 'Tournaments'], [/^Vote$/, 'Judge'], [/^Compete$/, 'Battle'], [/\bCHALLENGE\b/g, 'BATTLE'], [/\bChallenges\b/g, 'Battles'], [/\bchallenges\b/g, 'battles'], [/\bChallenge\b/g, 'Battle'], [/\bchallenge\b/g, 'battle'], [/^Enter · /, 'Battle · ']];
-const isYoung = () => S && (!S.ageBr || S.ageBr === '25 to 34' || S.ageBr === '35 to 44');
+const isYoung = () => S && (!S.ageBr || S.ageBr === '18 to 24');
 function setLook() { const y = isYoung(), r = document.documentElement; r.classList.toggle('yg', y); if (y) r.removeAttribute('data-theme'); else r.setAttribute('data-theme', 'light'); }
 function youngPass() { if (!isYoung() || !document.body) return;
   const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, { acceptNode: n => { const p = n.parentElement; return !p || p.closest('script,style,textarea,input,.wm') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; } });

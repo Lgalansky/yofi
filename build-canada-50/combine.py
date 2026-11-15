@@ -1,5 +1,5 @@
 # Combined Yofi Skill: one app, two looks.
-#   ages 25 to 44 (and anyone who hasn't picked yet) -> original dark Yofi look and words  (html.yg)
+#   ages 18 to 24 (and anyone who hasn't picked yet) -> original dark Yofi look and words  (html.yg)
 #   ages 45+                                          -> Fall Fair look and gentler words    (html:not(.yg))
 # Logic/HTML come from the Fall Fair build (yofi-ca50.html); the dark look comes from the Skill base styles.
 import re
@@ -66,17 +66,19 @@ s=s[:first]+'<style>'+Y+'\n'+F+EXTRA+'</style>\n'+s[first:]
 
 # theme class before first paint: saved bracket decides; no bracket yet -> original look
 s=s.replace('<html lang="en" data-theme="light">','<html lang="en" class="yg">',1)
-s=s.replace('<body>','<body>\n<script>try{var _b=(JSON.parse(localStorage.getItem("yofi.proto.v1")||"{}")||{}).ageBr;if(_b&&_b!=="25 to 34"&&_b!=="35 to 44"){document.documentElement.classList.remove("yg");document.documentElement.setAttribute("data-theme","light")}}catch(e){}</script>',1)
+s=s.replace('<body>','<body>\n<script>try{var _b=(JSON.parse(localStorage.getItem("yofi.proto.v1")||"{}")||{}).ageBr;if(_b&&_b!=="18 to 24"){document.documentElement.classList.remove("yg");document.documentElement.setAttribute("data-theme","light")}}catch(e){}</script>',1)
 
 def R(a,b,n=1):
     global s; assert s.count(a)==n,(a[:80],s.count(a)); s=s.replace(a,b)
 # younger words for 25 to 44, and keep the theme class in step with the bracket
 R("const isYoung = () => S && S.ageBr === '25 to 34';",
-  "const isYoung = () => S && (!S.ageBr || S.ageBr === '25 to 34' || S.ageBr === '35 to 44');\nfunction setLook() { const y = isYoung(), r = document.documentElement; r.classList.toggle('yg', y); if (y) r.removeAttribute('data-theme'); else r.setAttribute('data-theme', 'light'); }")
+  "const isYoung = () => S && (!S.ageBr || S.ageBr === '18 to 24');\nfunction setLook() { const y = isYoung(), r = document.documentElement; r.classList.toggle('yg', y); if (y) r.removeAttribute('data-theme'); else r.setAttribute('data-theme', 'light'); }")
 R("S.ageBr = b.dataset.oa; S.likes0 = null; save(); obAge(g);","S.ageBr = b.dataset.oa; S.likes0 = null; save(); setLook(); obAge(g);")
 R("S.likes = [...picked]; S.obDone = 1; save();","S.likes = [...picked]; S.obDone = 1; save(); setLook(); youngPass();")
 s=s.replace("setTimeout(youngPass, 0);","setTimeout(() => { setLook(); youngPass(); }, 0);",1)
 
+R("const OB_AGES = ['25 to 34',","const OB_AGES = ['18 to 24', '25 to 34',")
+R("const OB_PRE = { '25 to 34':","const OB_PRE = { '18 to 24': ['Travel', 'Dogs', 'Dinner parties', 'Beach'], '25 to 34':")
 # neutral, 18+
 R('<p>Yofi has cash prizes, so you must be the age of majority in your province (<b>19+</b>, or 18+ in AB, MB and QC) to play.</p>','<p>Yofi has cash prizes, so you must be <b>18 or over</b> to play.</p>')
 R('I confirm I’m of legal age in my province','I confirm I’m <b>18 or over</b>')
