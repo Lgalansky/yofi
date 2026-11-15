@@ -182,3 +182,7 @@ a="i === 9 ? '<u>🧰</u>×10' : ''"; assert s.count(a)==1, s.count(a)
 s=s.replace(a,"i === 9 ? '<u class=\"bx10\">🎁</u>×10' : ''")
 s=s.replace('</style>','html .stk-steps i.m u.bx10{font-size:1.25rem!important}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('fix ok')
+s=open(d+'yofi-simple.html').read()
+a="i === 2 ? '<u>📦</u>×3'"; assert s.count(a)==1
+s=s.replace(a,"i === 2 ? '<u>🎁</u>×3'")
+open(d+'yofi-simple.html','w').write(s)
