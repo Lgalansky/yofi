@@ -168,3 +168,41 @@ a="if ($('#twNew')) $('#twNew').onclick = () => { closeSheet(); if ($('#flow').c
 assert s.count(a)==1
 s=s.replace(a,"if ($('#twNew')) $('#twNew').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); pickPhoto(true); };")
 open(d+'yofi-preview.html','w').write(s); print('tourney ok')
+
+# ---------- after a lost tournament: Touch-ups opens on a "New photo" screen; once the new photo is ready, offer the next tournament ----------
+s=open(d+'yofi-preview.html').read()
+def R3(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+R3('<div class="tw-b"><button id="twNew">📷 Try a new photo</button></div>','<div class="tw-b"><button id="twNew" data-k="${k}">📷 Try a new photo</button></div>')
+R3("if ($('#twNew')) $('#twNew').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); pickPhoto(true); };",
+   "if ($('#twNew')) $('#twNew').onclick = () => { const k = $('#twNew').dataset.k; S.retryT = { fee: T.fee || 1, at: Date.now() }; save(); closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); newPhotoStart(k); };")
+NP = r"""
+// "Try a new photo" after a lost tournament: a calm start screen in Touch-ups
+function newPhotoStart(k) {
+  const c = C.find(x => x.k === k), nm = c ? c.name.toLowerCase() : '';
+  const TIP = { light: 'Look for a photo taken in soft daylight, near a window or outdoors.', comp: 'Pick one where the subject fills the frame and isn’t cut off.', colour: 'Bright, natural colours do best. Avoid dull or very dark shots.', subject: 'Faces and moments with feeling win votes. Pick one that tells a story.', tech: 'Choose a sharp photo that isn’t blurry or grainy.' };
+  const ks = CATS8.slice();
+  openSheet(`<div class="np"><span class="np-ic">📷</span><h2>Try a new photo</h2>
+    ${nm ? `<p class="np-why">You lost on <b>${esc(nm)}</b>. ${TIP[k] || ''}</p>` : '<p class="np-why">A fresh photo gives you a fresh chance.</p>'}
+    <p class="np-l">Pick a category</p><div class="np-g">${ks.map(x => `<button data-npk="${x}">${gi(x)}<span>${esc(crownName(x))}</span></button>`).join('')}</div>
+    <button class="btn block np-go" id="npGo">Choose a photo</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
+  document.querySelectorAll('#sheetBody [data-npk]').forEach(b => b.onclick = () => { window.__preCat = b.dataset.npk; closeSheet(); pickPhoto(true); });
+  $('#npGo').onclick = () => { window.__preCat = null; closeSheet(); pickPhoto(true); }; }
+// once a photo added after the loss reaches the goal, Touch-ups offers the next tournament
+function retryBar() { const st = $('#studio'); if (!st) return; const old = st.querySelector('.np-back'); if (old) old.remove();
+  const R0 = S.retryT, p = cur && cur(); if (!R0 || !p || !(p.at > R0.at) || p.s.total < CFG.QUALIFY) return;
+  const b = document.createElement('button'); b.className = 'btn block np-back'; b.innerHTML = `🏆 Enter the next tournament with this photo`;
+  b.onclick = () => retryEnter(p);
+  st.insertBefore(b, st.firstChild); }
+setInterval(retryBar, 1000);
+function retryEnter(p) { const R0 = S.retryT; S.retryT = null; save(); const b = document.querySelector('.np-back'); if (b) b.remove(); tTier((R0 && R0.fee) || 1); S.tour = null; save(); window.__tSel = p.id; if ($('#flow').classList.contains('on')) closeFlow(); openTourney(); }
+"""
+R3("function whyLostHTML(T) {", NP+"function whyLostHTML(T) {")
+R3("function showCompReady(p, goal) {\n  if (p) { p.readyShown = true; save(); }", "function showCompReady(p, goal) {\n  if (p) { p.readyShown = true; save(); }\n  if (S.retryT && p && p.at > S.retryT.at && p.s.total >= CFG.QUALIFY) { celebrate({ src: p.src, score: p.s.total, title: 'Ready for the next tournament!', text: `Your new photo hit <b>${p.s.total}</b>. Take it back into a tournament and try again.`, cta: '🏆 Enter the next tournament', onCta: () => retryEnter(p), later: 'Later' }); return; }")
+s=s.replace('</style>',"""#sheetBody .np{text-align:center;padding:6px 2px}.np-ic{font-size:2.6rem}.np h2{margin:6px 0 6px}.np-why{margin:0 0 16px}.np-l{margin:0 0 8px;font-weight:800;text-align:left}
+.np-g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 16px}.np-g button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:14px;border:0;font:700 .82rem/1.2 inherit;cursor:pointer}.np-g svg{width:26px;height:26px}
+html:not(.yg) .np-g button{background:#fff;color:#2B2320;box-shadow:inset 0 0 0 1.5px #CDBB98}html:not(.yg) .np-g svg{color:#9E2F2A}html:not(.yg) .np-why b{color:#2D4E86}
+html.yg .np-g button{background:#241640;color:#fff;box-shadow:inset 0 0 0 1.5px #4A2F78}html.yg .np-g svg{color:#FF4FB0}html.yg .np-why{color:#D8C8F5}html.yg .np-why b{color:#FFC93C}
+.np-back{margin:4px 0 10px!important}
+</style>""",1)
+open(d+'yofi-preview.html','w').write(s); print('newphoto ok')
