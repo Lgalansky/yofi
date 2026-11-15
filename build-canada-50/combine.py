@@ -265,3 +265,66 @@ assert s.count(a)==1; s=s.replace(a,"<b>${gemIcon('')}100</b><small>Coins to enh
 a=" + tile('⚡', CASH_EN[i], 'Free energy', 'en')"
 assert s.count(a)==1; s=s.replace(a,"")
 open(d+'yofi-preview.html','w').write(s); print('energy text ok')
+
+# ---------- batch: loot boxes at 3/6/10, chest surprise, 50 votes per ticket, interests before the picker, wording, clubs, packs, layout ----------
+s=open(d+'yofi-preview.html').read()
+def R5(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a)); s=s.replace(a,b)
+# loot boxes at 3, 6 and 10 in a row
+R5("const STK = [3, 5, 10];","const STK = [3, 6, 10];")
+R5("const streakX = c => c >= 10 ? 10 : c >= 5 ? 5 : c >= 3 ? 3 : 1;","const streakX = c => c >= 10 ? 10 : c >= 6 ? 6 : c >= 3 ? 3 : 1;")
+R5("({ 3: 3, 5: 5, 10: 10 })[S.combo]","({ 3: 3, 6: 5, 10: 10 })[S.combo]")
+R5("${[2, 4, 9].includes(i) ? 'm m' + (i + 1) : ''}","${[2, 5, 9].includes(i) ? 'm m' + (i + 1) : ''}")
+R5("i === 4 ? '<u>🎁</u>×5' :","i === 5 ? '<u>🎁</u>×6' :")
+# chest: no ticket; surprise = double coins on the next 10 votes
+R5("const want = (rar.k === 'epic' || rar.k === 'legend') ? 1 : 0,","const want = 0,")
+R5("const tk = chestTix(rar);","const tk = chestTix(rar); S.boostN = 10;")
+R5("${tk ? `<div class=\"ch-it\" style=\"animation-delay:.7s\">","<div class=\"ch-it\" style=\"animation-delay:.45s\"><b>2×</b><small>coins on your next 10 votes</small></div>${tk ? `<div class=\"ch-it\" style=\"animation-delay:.7s\">")
+R5("S.gems += earn; meterAdd(earn);","if (S.boostN > 0) { S.boostN--; earn *= 2; } S.gems += earn; meterAdd(earn);")
+# 50 votes per free entry
+R5("const TIX_EVERY = 25;","const TIX_EVERY = 50;")
+# interests come before the photo picker (first photo only)
+R5("  if (!S.likes) await new Promise(res => { window.__obAfter = res;","  if (false) await new Promise(res => { window.__obAfter = res;")
+s=s.replace("document.getElementById('file').click()","yWL()")
+R5("$('#file').value = ''; $('#file').click();","$('#file').value = ''; yWL();",3)
+R5("Nice photo! What else do you love to photograph?","Before you pick a photo: what do you love to photograph?")
+YW = r"""
+// first photo: ask interests, then open the phone's photo picker
+window.yWL = function () { const f = document.getElementById('file'); if (S.likes || !S.obDone) { f.click(); return; }
+  window.__obAfter = () => f.click(); let g1 = document.getElementById('ageGate'); if (!g1) { g1 = document.createElement('div'); g1.id = 'ageGate'; document.body.appendChild(g1); } g1.className = 'on'; obLikes(g1); };
+document.addEventListener('click', e => { const l = e.target.closest('label[for="file"]'); if (l && S.obDone && !S.likes) { e.preventDefault(); yWL(); } }, true);
+// the + on the coins pill opens the shop
+document.addEventListener('click', e => { if (e.target.closest('#gemPill .gplus') || e.target.closest('#walletPlus')) { e.preventDefault(); e.stopPropagation(); openStore(); } }, true);
+// 25+: prizes, not pots
+const OLD_W = [[/\bprize pots\b/g, 'prizes'], [/\bprize pot\b/g, 'prize'], [/\bPots\b/g, 'Prizes'], [/\bpots\b/g, 'prizes'], [/\bPot\b/g, 'Prize'], [/\bpot\b/g, 'prize'], [/\bPOT\b/g, 'PRIZE']];
+function oldPass() { if (isYoungW() || !document.body) return;
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, { acceptNode: n => { const p = n.parentElement; return !p || p.closest('script,style,textarea,input') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; } });
+  let n; while ((n = w.nextNode())) { const t = n.nodeValue; if (!t || !/pot/i.test(t)) continue; let u = t; for (const [a, b] of OLD_W) u = u.replace(a, b); if (u !== t) n.nodeValue = u; } }
+let oldQ = 0; new MutationObserver(() => { if (isYoungW() || oldQ) return; oldQ = requestAnimationFrame(() => { oldQ = 0; oldPass(); }); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+setTimeout(oldPass, 0);
+"""
+R5("function fcNotify() {", YW+"function fcNotify() {")
+# new players start with no old clubs
+R5("g.querySelector('#obGo1').onclick = () => { S.age18 = 1;","g.querySelector('#obGo1').onclick = () => { S.crews = []; S.crewCur = null; S.age18 = 1;")
+# club names and members follow the look
+R5("const CREW_POOL = ['mike', 'james', 'sophie', 'dan', 'priya', 'olly', 'chloe', 'sam', 'ella', 'tom'];","const CREW_POOL = ['mike', 'james', 'sophie', 'dan', 'priya', 'olly', 'chloe', 'sam', 'ella', 'tom'], CREW_POOL_Y = CREW_POOL.slice(), CREW_POOL_O = ['margaret', 'susan', 'dave', 'carol', 'linda.b', 'pete', 'jean', 'barb', 'gord', 'helen'];")
+R5("const CREW_SUGG = ['Friday lads', 'The pet squad', 'Gym rats', 'Family'];","const CREW_SUGG = ['Friday lads', 'The pet squad', 'Gym rats', 'Family'], CREW_SUGG_Y = ['Friday lads', 'The pet squad', 'Gym rats', 'Uni crew'], CREW_SUGG_O = ['Garden club', 'Book club', 'Family', 'Walking group'];")
+R5("newCrew(S.user && S.user.h ? `${S.user.h}’s friends` : 'My friends')","newCrew(S.user && S.user.h ? `${S.user.h}’s ${window.__young ? 'friends' : 'club'}` : (window.__young ? 'My friends' : 'My club'))")
+R5("function setLook() { const y = isYoung(), r = document.documentElement; window.__young = y;","function setLook() { const y = isYoung(), r = document.documentElement; window.__young = y; try { CREW_SUGG.splice(0, CREW_SUGG.length, ...(y ? CREW_SUGG_Y : CREW_SUGG_O)); CREW_POOL.splice(0, CREW_POOL.length, ...(y ? CREW_POOL_Y : CREW_POOL_O)); } catch (e) {}")
+# buying cash gives only a small coin bonus
+R5("quickPack(5, 1000, 'Welcome offer')","quickPack(5, 25, 'Welcome offer')")
+R5("quickPack(5, 500, '$5 pack',","quickPack(5, 10, '$5 pack',")
+R5("quickPack(5, 500, 'Rematch top-up',","quickPack(5, 10, 'Rematch top-up',")
+s=s.replace("coins = w ? 1000 : 500;","coins = w ? 25 : 10;")
+# score area: Expression -> Wow factor
+R5("name: 'Expression', short: 'Expression', verb: 'Improve Expression'","name: 'Wow factor', short: 'Wow factor', verb: 'Improve Wow factor'")
+R5("{ k: 'expr', name: 'Expression',","{ k: 'expr', name: 'Wow factor',")
+# 25+: Tournaments, not Shows (keep "Best in Show")
+s=re.sub(r'\bShows\b','Tournaments',s)
+s=s.replace('</style>',"""html .stk-steps{grid-template-columns:1fr 1fr 46px 1fr 1fr 46px 1fr 1fr 1fr 46px!important}
+html .stk-steps i.m10{animation:none!important}html .stk-steps i.m10 u{font-size:1.3rem!important}
+html.yg .stk-steps i.m10:not(.on){background:#241640!important;box-shadow:inset 0 0 0 1.5px #FFC93C!important;color:#fff!important}html.yg .stk-steps i.m10.on{background:#FFC93C!important;color:#2A1600!important;box-shadow:none!important}
+html:not(.yg) .stk-steps i.m10:not(.on){background:#fff!important;box-shadow:inset 0 0 0 2px #C99A3B!important;color:#2B2320!important}html:not(.yg) .stk-steps i.m10.on{background:#D9A441!important;color:#2B2320!important;box-shadow:none!important}
+html .nxu{max-width:100%!important;overflow:hidden}html .nxu .d{min-width:0;overflow:hidden;gap:3px!important;flex-shrink:1}html .nxu .d i{flex:0 0 auto;width:7px!important;height:7px!important}
+</style>""",1)
+open(d+'yofi-preview.html','w').write(s); print('batch ok')
