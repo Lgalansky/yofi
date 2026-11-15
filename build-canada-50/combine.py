@@ -59,6 +59,8 @@ EXTRA = """
 html.yg .ca-hero{display:none!important}
 html:not(.yg) .hx-in.hxp-low{display:none!important}
 #ageGate{z-index:100000}
+html.yg .sp-go,html.yg .enh-go,html.yg .shop4 .sp-go,html.yg .ro .enh-go,html.yg #sheet .sp-go,html.yg #coach .enh-go{background:#118A4A!important;box-shadow:0 4px 0 #0A5E32!important}
+.fav:not(.me){box-shadow:inset 0 0 0 60px rgba(0,0,0,.22);text-shadow:0 1px 2px rgba(0,0,0,.4)}html.yg .lk-box.mine b{color:#FFFFFF!important}html.yg .lk-box.mine small{color:#FFFFFF!important}html.yg .lk-box.mine{background:linear-gradient(135deg,#D41F7E,#6B2FD6)!important}
 html:not(.yg) #avatar.av,html:not(.yg) .av{color:#FFFFFF!important}
 html:not(.yg) .catchip{background:rgba(255,255,255,.94)!important;color:#2B2320!important;box-shadow:0 2px 10px rgba(0,0,0,.2)!important}html:not(.yg) .catchip svg{color:#2D4E86!important}
 #ageGate .ob-bub button{background:#EADCC6!important;color:#2B2320!important}#ageGate .ob-bub button[aria-pressed="true"]{background:#2D4E86!important;color:#fff!important}
@@ -128,7 +130,7 @@ gy='<g id="gemPathY"><path d="M7 3h10l5 6.2L12 21 2 9.2z" fill="url(#gemGrad)"/>
 i=s.index('<g id="gemPath">'); j=s.index('</g>', i)+4; s=s[:j]+gy+s[j:]
 s=s.replace('<use href="#gemPath"/>','<use class="gm-c" href="#gemPath"/><use class="gm-g" href="#gemPathY"/>')
 s=s.replace('</style>','html.yg .gm-c,html:not(.yg) .gm-g{display:none}\n</style>',1)
-s=s.replace("[/🏅/g, '👑'],","[/🏅/g, '👑'], [/🟡/g, '💎'],",1)
+s=s.replace("[/🏅/g, '👑'],",r"[/🏅/g, '👑'], [/🟡/g, '💎'], [/\bChampion bounties\b/g, 'King bounties'], [/\bChampions?\b/g, 'King'], [/real members vote/g, 'real judges vote'], [/\breal members\b/g, 'real judges'], [/\bMembers vote\b/g, 'Judges vote'], [/\bmembers are voting\b/g, 'judges are voting'], [/\bVote to earn\b/g, 'Judge to earn'], [/\bVote on (\d+) photos\b/g, 'Judge $1 photos'], [/\bVote on photos\b/g, 'Judge photos'], [/\bCompete for cash\b/g, 'Battle for cash'], [/\bcoins\b/g, 'gems'], [/\bcoin\b/g, 'gem'], [/\bCoins\b/g, 'Gems'],",1)
 # Skill save and name
 R("const KEY = 'yofi.ca50.v1'","const KEY = 'yofi.proto.v1'")
 s=re.sub(r'<title>[^<]*</title>','<title>Yofi - Skill (Preview)</title>',s,1)
