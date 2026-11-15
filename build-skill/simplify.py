@@ -486,3 +486,24 @@ RA("else if (e.target.closest('#qsChip')) { e.preventDefault(); sprEnter(); }","
 s=s.replace('</style>',""".qs-prac{margin:-4px 0 4px!important;font-size:.78rem;font-weight:800;opacity:.8}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('practice ok')
+
+# ---------- First Quick Sprint is played for coins (100 in, 500/200/100 out), then cash ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA("function sprPractice() { if ($('#sheet').classList.contains('on')) closeSheet();",
+   "const QS_COIN = 100, QS_COIN_PAY = [500, 200, 100];\nfunction sprPractice() { if ($('#sheet').classList.contains('on')) closeSheet(); if ((S.gems || 0) < QS_COIN) { toast(`You need ${QS_COIN} coins`); return; } S.gems -= QS_COIN; save(); paintGems();")
+RA("title: 'Try Quick Sprint free', text: `Pick the photo the crowd chose in <b>10 pairs</b>. Have a free practice, then play real players for cash: <b>$2</b> or <b>$5</b> tables, win up to <b>$25</b>.`, cta: '🎯 Practise free'",
+   "title: 'Try Quick Sprint', text: `Pick the photo the crowd chose in <b>10 pairs</b>, against 9 players. Your first one is for coins: <b>${QS_COIN}</b> in, top 3 win up to <b>${QS_COIN_PAY[0]}</b>. Then play for cash: <b>$2</b> or <b>$5</b> tables, win up to <b>$25</b>.`, cta: `🎯 Play · ${QS_COIN} ${gemIcon('')}`")
+RA("'🎯 Free practice'","'🎯 Quick Sprint · coins'")
+# results: coin prizes for the first game
+RA("if (pr) { S.qsTried = 1; save(); }","if (pr) { S.qsTried = 1; QS_PAY = QS_COIN_PAY; prize = QS_PAY[rank - 1] || 0; if (prize) { S.gems = (S.gems || 0) + prize; setTimeout(paintGems, 200); } save(); }")
+RA("QS_PAY = qsPay(window.__qsStake || 5), prize = QS_PAY[rank - 1] || 0;","_qz = 0; let QS_PAY = qsPay(window.__qsStake || 5), prize = QS_PAY[rank - 1] || 0;")
+RA("<h2>${pr ? (prize ? `You’d have won ${qsM(prize)}!` : `You’d be ${ord(rank)} of 10`) :",
+   "<h2>${pr ? (prize ? `You won ${prize} ${gemIcon('')}` : `${ord(rank)} of 10`) :")
+RA("<p class=\"qs-prac\">Free practice · prizes shown for the $2 table</p>","<p class=\"qs-prac\">${prize ? `On the $2 table that’s ${qsM(qsPay(2)[rank - 1])} cash` : 'Top 3 win · on the $2 table 1st wins $10'}</p>")
+RA("<em>${QS_PAY[i] ? qsM(QS_PAY[i]) : ''}</em>","<em>${QS_PAY[i] ? (pr ? QS_PAY[i] + ' ' + gemIcon('') : qsM(QS_PAY[i])) : ''}</em>")
+RA("${S.qsTried ? 'from $2' : 'Try free'}","${S.qsTried ? 'from $2' : `${QS_COIN} ${gemIcon('')}`}")
+s=s.replace("</style>",""".qs-res h2 svg,.qs-lb em svg,.qs-chip em svg,#crGo svg,svg[class=""]{width:1em;height:1em;vertical-align:-.15em}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('coins practice ok')
