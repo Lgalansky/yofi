@@ -303,3 +303,84 @@ html:not(.yg) .tsr2.sprow{background:#EAF3EC!important;box-shadow:inset 0 0 0 2p
 html.yg .tsr2.sprow{background:#0E3A2A!important;box-shadow:inset 0 0 0 2px #2EE59D!important}html.yg .tsr2.sprow .sp-tag{background:#2EE59D;color:#06261A}html.yg .tsr2.sprow .tsr2-e{background:#2EE59D!important;color:#06261A!important}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('crowd ok')
+
+# ---------- quick Sprints on the Vote page; hourly Crowd Championship (prebuy) in Tournaments ----------
+s=open(d+'yofi-simple.html').read()
+def R9(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+# cpRun handles the hourly championship too
+a=s.index("function cpRun(mode) {"); b=s.index("\nfunction cpStart()", a); run=s[a:b]
+run=run.replace("const sprint = mode === 'sprint', id = sprId(), pairs = sprint ? cpPairs(SPR_N, id * 97 + 13, true)","const champ = mode === 'champ', sprint = mode === 'sprint' || champ, NN = champ ? CH_N : SPR_N, id = champ ? chId() : sprId(), pairs = sprint ? cpPairs(NN, id * (champ ? 131 : 97) + 13, true)")
+run=run.replace("SPR_N","NN").replace("${sprint ? '🎯 Crowd Sprint' : '🎯 Crowd Picks'}","${champ ? '🏆 Crowd Championship' : sprint ? '🎯 Crowd Sprint' : '🎯 Crowd Picks'}")
+run=run.replace("sprDone(id, right, Date.now() - t0)","(champ ? chDone : sprDone)(id, right, Date.now() - t0)")
+s=s[:a]+run+s[b:]
+CH = r"""
+// hourly Crowd Championship: buy your seat ahead, play when the hour starts, results at the end of the hour
+const CH_MS = 3600e3, CH_ENTRY = 2, CH_N = 15;
+const chId = (t = Date.now()) => Math.floor(t / CH_MS);
+function chPlayers(id, t = Date.now()) { const r = cpRng(id * 53 + 11), base = 180 + Math.floor(r() * 300), frac = Math.max(0, Math.min(1, 1 - ((id * CH_MS) - t) / CH_MS)); return base + Math.floor(frac * (400 + r() * 900)); }
+const chPool = n => Math.floor(n * CH_ENTRY * (1 - SPR_FEE));
+const hm = ms => { const m = Math.max(0, Math.ceil(ms / 60e3)); return m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m}m`; };
+function chBuy() { const E = S.ch = S.ch || {}, cur = chId(), nxt = cur + 1;
+  if (S.geoBlock) { toast('Cash contests aren’t available in your state'); return; }
+  if (E[cur] && E[cur].score == null) { chPlay(); return; }
+  if (E[nxt]) { toast('🔔 You’re booked · we’ll tell you when it starts'); return; }
+  if ((S.cash || 0) < CH_ENTRY) { openStore(`The Crowd Championship costs $${CH_ENTRY} cash.`); return; }
+  S.cash = +((S.cash || 0) - CH_ENTRY).toFixed(2); E[nxt] = { at: Date.now() }; save(); paintWallet();
+  toast(`🏆 Booked for the ${new Date(nxt * CH_MS).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} Crowd Championship · we’ll remind you`); if ($('#panes').dataset.at === 'comps' || document.getElementById('chRow')) openComps(); }
+function chPlay() { const e = (S.ch || {})[chId()]; if (!e || e.score != null) return; if ($('#sheet').classList.contains('on')) closeSheet(); document.querySelectorAll('.coach.on').forEach(c => c.classList.remove('on', 'cr')); cpRun('champ'); }
+function chDone(id, right, ms) { const e = S.ch[id]; e.score = right; e.ms = ms; save(); const c = $('#coach');
+  c.innerHTML = `<div class="cpr cpr-end"><h2>${right}/${CH_N} right</h2><p>Results when the hour ends in <b>${hm((id + 1) * CH_MS - Date.now())}</b>. Top 20% share the prize pool.</p><button class="bt-cta" id="cpBack">Keep voting</button></div>`;
+  $('#cpBack').onclick = () => c.classList.remove('on', 'cr'); }
+setInterval(() => { if (!S || !S.ch) return; const now = Date.now();
+  Object.entries(S.ch).forEach(([k, e]) => { const id = +k;
+    if (!e.told && now >= id * CH_MS && now < (id + 1) * CH_MS && e.score == null && !$('#coach').classList.contains('on')) { e.told = 1; save();
+      celebrate({ src: (SEED[1] || {}).src, score: '🏆', title: 'Your Crowd Championship is live!', text: `${CH_N} photo pairs · $${chPool(chPlayers(id))} prize pool · play any time this hour.`, cta: '🏆 Play now', onCta: chPlay, later: 'Later' }); }
+    if (!e.paid && e.score != null && now >= (id + 1) * CH_MS) { const n = chPlayers(id, id * CH_MS), r = cpRng(id * 19 + 3); let above = 0, tie = 0;
+      for (let i = 0; i < n - 1; i++) { let sc = 0; for (let j = 0; j < CH_N; j++) if (r() < .6) sc++; if (sc > e.score) above++; else if (sc === e.score) tie++; }
+      const rank = 1 + above + Math.floor(tie * Math.min(1, e.ms / 90000)), W = Math.max(1, Math.ceil(n * .2)), pool = chPool(n); let prize = 0; if (rank <= W) { const sum = W * (W + 1) / 2; prize = Math.max(1, +(pool * (W - rank + 1) / sum).toFixed(2)); }
+      e.paid = 1; e.rank = rank; e.prize = prize; if (prize) S.cash = +((S.cash || 0) + prize).toFixed(2); save(); paintWallet();
+      if (!$('#coach').classList.contains('on')) celebrate({ src: (SEED[1] || {}).src, score: '🏆', title: prize ? `You won $${prize.toFixed(2)}!` : 'Championship results', text: `You finished <b>#${rank}</b> of ${n} with ${e.score}/${CH_N}. ${prize ? 'Added to your cash.' : `The top ${W} won this time.`}`, cta: '🏆 Book the next one', onCta: () => openComps(), later: 'Keep voting' }); } }); }, 4000);
+const chRowHTML = () => { const cur = chId(), E = S.ch || {}, live = E[cur] && E[cur].score == null, nxt = cur + 1, booked = E[nxt], id = live ? cur : nxt, n = chPlayers(id);
+  const lab = live ? `<b>LIVE</b>` : `<b data-chl>${hm(nxt * CH_MS - Date.now())}</b>`;
+  return `<button class="tsr2 chrow" id="chRow"><span class="tsr2-t"><em class="sp-tag ch-tag">CROWD CHAMPIONSHIP</em>${lab}</span><span class="tsr2-p">$${chPool(n)}<small class="sp-up">↑</small></span><span class="tsr2-n">${n}</span><span class="tsr2-e">${S.geoBlock ? '🚫' : live ? '▶ Play' : booked ? '🔔 ✓' : `$${CH_ENTRY}`}</span></button>`; };
+document.addEventListener('click', e => { if (e.target.closest('#chRow')) { e.preventDefault(); chBuy(); } else if (e.target.closest('#qsChip')) { e.preventDefault(); sprEnter(); } });
+const qsChipHTML = () => { if (S.geoBlock) return ''; const id = sprId(), e = (S.cs || {})[id], n = sprPlayers(id);
+  return `<button class="qs-chip" id="qsChip">🎯 <span><b>Quick Sprint</b> · 10 pairs · ${e && e.score != null ? `you got ${e.score}/10 · results in <i data-qsl>${mmss(sprLeft(id))}</i>` : `$${sprPool(n)} pool · <i data-qsl>${mmss(sprLeft(id))}</i> left`}</span><em>${e ? '✓' : '$1'}</em></button>`; };
+setInterval(() => { document.querySelectorAll('[data-qsl]').forEach(x => x.textContent = mmss(sprLeft(sprId()))); }, 1000);
+"""
+R9("function fcNotify() {", CH+"function fcNotify() {")
+# Tournaments: hourly championship row instead of the quick sprint
+R9('<div class="tsl2">${sprRowHTML()}${frRows}${rows}</div>','<div class="tsl2">${chRowHTML()}${frRows}${rows}</div>')
+# Vote page: quick sprint chip under the wins track
+R9('<div class="vh" id="jRes" aria-live="polite"></div>','${qsChipHTML()}<div class="vh" id="jRes" aria-live="polite"></div>')
+# the gentle upsell and the sprint result point to the quick sprint on the Vote page
+s=s.replace("if ($('#cpUps')) $('#cpUps').onclick = () => { c.classList.remove('on', 'cr'); openComps(); };","if ($('#cpUps')) $('#cpUps').onclick = () => { c.classList.remove('on', 'cr'); sprEnter(); };",1)
+s=s.replace("cta: '🎯 Play the next Sprint · $1', onCta: () => openComps(),","cta: '🎯 Play the next Sprint · $1', onCta: () => { go('judge'); sprEnter(); },",1)
+s=s.replace("Next Crowd Sprint in ${mmss(sprLeft(id))} · $1 entry","Quick Sprint · ${mmss(sprLeft(id))} left · $1 entry",1)
+s=s.replace('</style>',""".qs-chip{display:flex;align-items:center;gap:8px;width:100%;margin:10px 0 0;padding:10px 12px;border:0;border-radius:14px;font:inherit;font-size:.85rem;text-align:left;cursor:pointer}.qs-chip i{font-style:normal;font-weight:800}.qs-chip em{margin-left:auto;font-style:normal;font-weight:900;padding:5px 12px;border-radius:999px}
+html:not(.yg) .qs-chip{background:#EAF3EC;box-shadow:inset 0 0 0 1.5px #2F6B3F;color:#2B2320}html:not(.yg) .qs-chip em{background:#2F6B3F;color:#fff}
+html.yg .qs-chip{background:#0E3A2A;box-shadow:inset 0 0 0 1.5px #2EE59D;color:#fff}html.yg .qs-chip em{background:#2EE59D;color:#06261A}
+.tsr2.chrow .tsr2-t{flex-direction:column;align-items:flex-start!important;gap:0!important}.tsr2.chrow .ch-tag{position:static!important;font-style:normal;display:block;font-size:.5rem;font-weight:900;letter-spacing:.04em;padding:1px 5px;border-radius:6px;margin-bottom:2px;white-space:nowrap}
+html:not(.yg) .tsr2.chrow{background:#EAF3EC!important;box-shadow:inset 0 0 0 2px #2F6B3F!important}html:not(.yg) .tsr2.chrow .ch-tag{background:#2F6B3F;color:#fff}html:not(.yg) .tsr2.chrow .tsr2-e{background:#2F6B3F!important;color:#fff!important}
+html.yg .tsr2.chrow{background:#0E3A2A!important;box-shadow:inset 0 0 0 2px #2EE59D!important}html.yg .tsr2.chrow .ch-tag{background:#2EE59D;color:#06261A}html.yg .tsr2.chrow .tsr2-e{background:#2EE59D!important;color:#06261A!important}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('champ ok')
+s=open(d+'yofi-simple.html').read()
+a="if (sprLeft(id) < 70e3) { toast('This round is closing · join the next one'); return; }"; assert s.count(a)==1
+s=s.replace(a,"if (sprLeft(id) < 30e3) { toast(`Next Quick Sprint starts in ${mmss(sprLeft(id))}`); return; }")
+s=s.replace('</style>','#judge .qs-chip{margin:8px 0 4px}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s)
+s=open(d+'yofi-simple.html').read()
+a="<b>Quick Sprint</b> · 10 pairs · ${e && e.score != null ? `you got ${e.score}/10 · results in <i data-qsl>${mmss(sprLeft(id))}</i>` : `$${sprPool(n)} pool · <i data-qsl>${mmss(sprLeft(id))}</i> left`}"
+assert s.count(a)==1
+s=s.replace(a,"<b>Quick Sprint</b> · ${e && e.score != null ? `${e.score}/10 · results <i data-qsl>${mmss(sprLeft(id))}</i>` : `$${sprPool(n)} · <i data-qsl>${mmss(sprLeft(id))}</i>`}")
+s=s.replace('#judge .qs-chip{margin:8px 0 4px}','#judge .qs-chip{margin:6px 0 2px;padding:6px 10px!important;font-size:.8rem!important;white-space:nowrap}#judge .qs-chip em{padding:3px 10px!important}',1)
+open(d+'yofi-simple.html','w').write(s)
+s=open(d+'yofi-simple.html').read()
+a='${qsChipHTML()}<div class="vh" id="jRes" aria-live="polite"></div>'; assert s.count(a)==1
+s=s.replace(a,'<div class="vh" id="jRes" aria-live="polite"></div>')
+a='<div class="tot-h">${nextUpHTML()}'; assert s.count(a)==1
+s=s.replace(a,'${qsChipHTML()}<div class="tot-h">${nextUpHTML()}')
+s=s.replace('#judge .qs-chip{margin:6px 0 2px;','#judge .qs-chip{margin:0 0 6px;',1)
+open(d+'yofi-simple.html','w').write(s)
