@@ -186,3 +186,17 @@ s=open(d+'yofi-simple.html').read()
 a="i === 2 ? '<u>📦</u>×3'"; assert s.count(a)==1
 s=s.replace(a,"i === 2 ? '<u>🎁</u>×3'")
 open(d+'yofi-simple.html','w').write(s)
+
+# ---------- "Use your coins" only lists coin spends; first photo in a new category earns +100 coins ----------
+s=open(d+'yofi-simple.html').read()
+def R6(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a)); s=s.replace(a,b)
+a=s.index("    ${(() => { const miss = CATS8.filter(k => k !== 'any' && !S.photos.some(p => p.cat === k)); return miss.length ? `<div class=\"ug-cat\">")
+b=s.index("})()}\n", a)+len("})()}\n")
+s=s[:a]+s[b:]
+R6("📷 Upload photo</button>","📷 Upload <i class=\"nc-b\">+100</i></button>",3)
+R6("function showResult(p, o = {}) {","""function showResult(p, o = {}) {
+  if (o.fresh && !o.first && p && p.cat && p.cat !== 'any' && !(S.catBonus || []).includes(p.cat) && S.photos.filter(x => x.cat === p.cat).length === 1) {
+    S.catBonus = (S.catBonus || []).concat(p.cat); S.gems += 100; save(); setTimeout(() => { paintGems(); gemExplosion(100, { label: `New category · ${crownName(p.cat)}` }); }, 2600); }""")
+s=s.replace('</style>','.bcc-go .nc-b{font-style:normal;font-weight:900;padding:1px 6px;border-radius:999px;margin-left:2px;background:rgba(255,255,255,.25)}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('newcat ok')

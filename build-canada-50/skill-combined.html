@@ -483,6 +483,7 @@ html .wallet.cxw{display:none!important}
 .tsr2.frrow.pulse{animation:frp 1s ease-in-out 3}@keyframes frp{50%{transform:scale(1.03)}}
 html #shell > .wallet #gemPill .gplus{transform:none!important;align-self:center!important;margin-left:8px!important}
 html .stk-steps i.m u.bx10{font-size:1.25rem!important}
+.bcc-go .nc-b{font-style:normal;font-weight:900;padding:1px 6px;border-radius:999px;margin-left:2px;background:rgba(255,255,255,.25)}
 </style>
 </head>
 <body>
@@ -1481,6 +1482,8 @@ function closeFlow() { if (EN && EN.variants && EN.p) PEND[EN.p.id] = { cat: EN.
 $('#flowBack').onclick = () => { if (!S.user) { openSignup(); return; } closeFlow(); };
 
 function showResult(p, o = {}) {
+  if (o.fresh && !o.first && p && p.cat && p.cat !== 'any' && !(S.catBonus || []).includes(p.cat) && S.photos.filter(x => x.cat === p.cat).length === 1) {
+    S.catBonus = (S.catBonus || []).concat(p.cat); S.gems += 100; save(); setTimeout(() => { paintGems(); gemExplosion(100, { label: `New category · ${crownName(p.cat)}` }); }, 2600); }
   if (S.user && o.win && o.prevTotal == null) {
     const g0 = goalFor(p);
     if (!(g0 && goalReady(g0, p)) && stageOf(p.s.total) < 2) {
@@ -2101,7 +2104,6 @@ function useGems() {
   openSheet(`<div class="ug"><h2>Use your coins</h2><p class="sub">You have <b>${Math.floor(S.gems).toLocaleString()} 🟡</b>. Here’s what they can do for you right now.</p>
     ${false ? `<button class="ug-r ug-tix" id="ugTix"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free cash entr${S.cashTix === 1 ? 'y' : 'ies'}${S.cashTix > 1 ? ` · ${S.cashTix}` : ''}</b><small>Play a $1 challenge or tournament free. Win real cash.</small></span><em class="claim">Claim</em></button>` : ''}
     ${swapRowHTML()}${I.length ? I.map((x, i) => `<button class="ug-r" data-ug="${i}"><span class="ug-i">${x.ic}</span><span class="ug-t"><b>${x.t}</b><small>${x.d}</small></span><em class="${S.gems < x.cost ? 'need' : ''}">${x.cost} 🟡</em></button>`).join('') : `<p class="ug-none">Upload a photo in Studio and your coins can start working for you.</p>`}
-    ${(() => { const miss = CATS8.filter(k => k !== 'any' && !S.photos.some(p => p.cat === k)); return miss.length ? `<div class="ug-cat"><b>📷 Challenge in a new category</b><small>Upload a photo and enhance it to ${CFG.QUALIFY}+ to compete for these pots</small><div class="ug-cc">${miss.map(k => `<button data-ugc="${k}">${gi(k)}${esc(crownName(k))}</button>`).join('')}</div></div>` : ''; })()}
     <button class="link ug-buy" id="ugBuy">Get more coins</button></div>`);
   document.querySelectorAll('#sheetBody [data-ugc]').forEach(b => b.onclick = () => { const k = b.dataset.ugc; closeSheet(); addCatPhoto(k); });
   document.querySelectorAll('#sheetBody [data-ug]').forEach(b => b.onclick = () => { const x = I[+b.dataset.ug]; if (S.gems < x.cost) { closeSheet(); runOut('gems', `You need ${x.cost - S.gems} more coins`, null, x.cost - S.gems); return; } x.go(); });
@@ -3367,7 +3369,7 @@ const crownGrid = () => `<div class="tcg">${CATS8.map(k => { const h = frHold(k)
   return `<div class="bcc ${me ? 'me' : ''}"><div class="bcc-t">${gi(k)}<b>${esc(crownName(k))}</b></div>
     <small class="bcc-l">Pot · pays Sunday</small><b class="bcc-pot">${money(frPot(k).pot)}</b><p class="bcc-hold">${CRW}<b>${h ? (me ? 'You hold it' : '@' + esc(h)) : 'Up for grabs'}</b></p><small class="bcc-hint">${h ? (h === 'you' ? 'Defend it in every challenge' : frRev(k) === h ? 'They took it from you' : `Beat @${esc(h)} to take it`) : 'Win a challenge to take it'}</small>
     <button class="bcc-ph" data-crw="${k}" aria-label="Challenge a friend in ${esc(crownName(k))}">${h && !me ? `<img src="${lgPhoto(h, k)}" alt="" loading="lazy">` : mp ? `<img src="${mp.src}" alt="" loading="lazy">` : `<span class="tcc-empty">${gi(k)}</span>`}</button>
-    ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${h && h !== 'you' && frRev(k) === h ? 'rev' : ''}" data-crw="${k}">${h && h !== 'you' && frRev(k) === h ? 'Rematch' : `${VS_IC}Compete`}</button>` : `<button class="bcc-go up" data-crw="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>`;
+    ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${h && h !== 'you' && frRev(k) === h ? 'rev' : ''}" data-crw="${k}">${h && h !== 'you' && frRev(k) === h ? 'Rematch' : `${VS_IC}Compete`}</button>` : `<button class="bcc-go up" data-crw="${k}" data-addk="${k}">📷 Upload <i class="nc-b">+100</i></button>`}</div>`; }).join('')}</div>`;
 function crownTap(e, k) { const a = e.target.closest('[data-addk]');
   if (a) { closeSheet(); addCatPhoto(k); return; }
   crownGo(k); }
@@ -3791,7 +3793,7 @@ function leagueHTML() {
         <b class="bcc-pot">$<span data-jp="${k}">${Math.round(L.jp[k]).toLocaleString()}</span></b>
         <p class="bcc-pl ${y >= LG_SHARE ? 'in' : ''}"><span class="t">${CRW}<b>${me ? 'You' : K.n}</b></span><i></i><span class="y">You <b>${Math.min(Math.max(0, y), LG_SHARE)}/${LG_SHARE}</b></span></p>
         <button class="bcc-ph" data-lgc="${k}" aria-label="${esc(crownName(k))} blue ribbon holder’s photo"><img src="${lgHold(k).h === 'you' && mp ? mp.src : lgPhoto(lgHold(k).h, k)}" alt="" loading="lazy"></button>
-        ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? 'rev' : ''}" data-lgc="${k}">${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? 'Rematch' : `${VS_IC}Compete`}</button>` : `<button class="bcc-go up" data-lgc="${k}" data-addk="${k}">📷 Upload photo</button>`}</div>`; }).join('')}</div>
+        ${S.photos.some(p => fitsTheme(p, k)) ? `<button class="bcc-go ${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? 'rev' : ''}" data-lgc="${k}">${lgHold(k).h !== 'you' && (lgHold(k).hist || [])[0] === 'you' ? 'Rematch' : `${VS_IC}Compete`}</button>` : `<button class="bcc-go up" data-lgc="${k}" data-addk="${k}">📷 Upload <i class="nc-b">+100</i></button>`}</div>`; }).join('')}</div>
     <button class="bt-gem" id="btGem"><span>🟡</span><span><b>Coin challenge</b><small>Practice for coins · no stars at stake</small></span><i>›</i></button>`;
 }
 function bindLeague() {
@@ -4014,7 +4016,7 @@ function crewsHTML() {
       <small class="bcc-l">Pot · pays Sunday</small><b class="bcc-pot">${money(c.pot[k] || 0)}</b>
       <p class="bcc-hold">${CRW}<b>${h ? (me ? 'You hold it' : '@' + esc(h)) : 'Up for grabs'}</b></p><small class="bcc-hint">${h ? (me ? `Held ${heldFor(c.since[k] || Date.now())}` : rev ? 'They took it from you' : `Beat @${esc(h)} to take it`) : 'Win a challenge to take it'}</small>
       <button class="bcc-ph" data-cwk="${k}" aria-label="${esc(crownName(k))} club blue ribbon">${h && !me ? `<img src="${lgPhoto(h, k)}" alt="" loading="lazy">` : mp ? `<img src="${mp.src}" alt="" loading="lazy">` : `<span class="tcc-empty">${gi(k)}</span>`}</button>
-      ${!has ? `<button class="bcc-go up" data-cwk="${k}" data-addk="${k}">📷 Upload photo</button>` : `<button class="bcc-go ${rev ? 'rev' : ''}" data-cwk="${k}">${rev ? 'Rematch' : me ? `${VS_IC}Defend` : `${VS_IC}Compete`}</button>`}</div>`; }).join('')}</div>`;
+      ${!has ? `<button class="bcc-go up" data-cwk="${k}" data-addk="${k}">📷 Upload <i class="nc-b">+100</i></button>` : `<button class="bcc-go ${rev ? 'rev' : ''}" data-cwk="${k}">${rev ? 'Rematch' : me ? `${VS_IC}Defend` : `${VS_IC}Compete`}</button>`}</div>`; }).join('')}</div>`;
   const feed = (c.feed || []).length ? `<h3 class="fr-sh">Friends activity</h3><div class="cw-feed">${c.feed.slice(0, 6).map(e => `<p><small>${Date.now() - e.t < 6e4 ? 'just now' : heldFor(e.t) + ' ago'}</small>${e.m}</p>`).join('')}</div>` : '';
   return head + dareWaitHTML(c) + chips + mem + cards + feed;
 }
