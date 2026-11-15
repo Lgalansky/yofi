@@ -687,3 +687,20 @@ html.yg .qs2-tb th{color:#C9B8FF}html.yg .qs2-tb td{background:#241544;color:#ff
 html.yg .qs2-box.cash,html.yg .qs2-box.win{background:#0E3A2A}html.yg .qs2-big,html.yg .qs2-bk{color:#2EE59D}html.yg .qs2-box span{color:#C9FBE5}html.yg .qs2-box.lose{background:#241544}html.yg .qs2-box.lose .qs2-bk{color:#FF7A9A}html.yg .qs2-sub{color:#E9E2FF}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('qs ui ok')
+
+# ---------- One newbie progression: upload → improve → qualify → free challenge → voting; the voting loop's first challenge pop is the cash pot intro; Quick Sprint only after that ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA("label: '🏆 Next: win real cash', go: () => { closeFlow(); potIntro(p); } });",
+   "label: '🟡 Next: vote and earn coins', go: () => { closeFlow(); S.cpN = 0; save(); go('judge'); renderJudge(); $('#judge').scrollTop = 0; } });")
+RA(" Then go for today’s <b>cash pot</b>.`, cta: 'Start now · Free'","`, cta: 'Start now · Free'")
+RA("if (!comboHit && !S.geoBlock && S.votes >= 15 && (S.cpN || 0) >= (S.qsTried ? 50 : 20) && Date.now() - (S.qsPopAt || 0) > 15 * 60000) {",
+   "if (!comboHit && !S.geoBlock && S.potSeen && S.votes >= 15 && (S.cpN || 0) >= (S.qsTried ? 50 : 20) && Date.now() - (S.qsPopAt || 0) > 15 * 60000) {")
+# the voting loop's challenge pop: the first cash one is the full pot intro
+RA("function openBattle() {\n  S.btAlt = !S.btAlt; save();",
+   "function openBattle() {\n  if (!S.potSeen && !openBattle.skipCash && !S.minor && !S.geoBlock) { const pp = S.photos.filter(q => q.s && q.s.total >= CFG.QUALIFY).sort((a, b) => b.s.total - a.s.total)[0]; if (pp) { S.potSeen = 1; S.cpN = 0; save(); potIntro(pp); return; } }\n  S.btAlt = !S.btAlt; save();")
+RA("const qsChipHTML = () => S.geoBlock ? '' :","const qsChipHTML = () => (S.geoBlock || !S.potSeen) ? '' :")
+RA("Later · earn coins by judging","Not now · keep voting")
+RA("<p class=\"pi-k\">Next step · real cash</p><h2 class=\"pi-h\">Win today’s cash pot</h2>","<p class=\"pi-k\">New · real cash challenges</p><h2 class=\"pi-h\">Win today’s cash pot</h2>")
+open(d+'yofi-simple.html','w').write(s); print('flow1 ok')
