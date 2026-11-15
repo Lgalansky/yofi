@@ -533,30 +533,6 @@ s=s.replace("Quick Sprint · from $2 · win up to $25, result instantly","Quick 
 s=s.replace('</style>',""".qs-lb{max-height:none}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('h2h ok')
-
-# ---------- Sign-up offer: $2 bonus cash (entries only, used first; winnings are real cash) ----------
-s=open(d+'yofi-simple.html').read()
-def RA(a,b):
-    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
-RA('<b id="cashNum">$0.00</b></span></button>','<b id="cashNum">$0.00</b></span><em id="bonNum" class="bon"></em></button>')
-RA("function paintWallet() { $('#cashNum').textContent = '$' + (S.cash || 0).toFixed(2);",
-   "function paintWallet() { $('#cashNum').textContent = '$' + (S.cash || 0).toFixed(2); { const bt = $('#bonNum'); if (bt) { bt.textContent = S.bonus > 0 ? '+$' + (+S.bonus).toFixed(2).replace('.00', '') + ' bonus' : ''; bt.style.display = S.bonus > 0 ? '' : 'none'; } }")
-RA("if ((S.cash || 0) < stake) { c.classList.remove('on', 'cr');","if ((S.cash || 0) + (S.bonus || 0) < stake) { c.classList.remove('on', 'cr');")
-RA("S.cash = +((S.cash || 0) - stake).toFixed(2); save(); paintWallet();",
-   "{ const fb = Math.min(S.bonus || 0, stake); S.bonus = +((S.bonus || 0) - fb).toFixed(2); S.cash = +((S.cash || 0) - (stake - fb)).toFixed(2); } save(); paintWallet();")
-RA("<small>You and 1 real player get the same 10 pairs · most right wins · ties go to the fastest.</small>",
-   "${S.bonus > 0 ? `<p class=\"qs-bon\">🎁 Your $${(+S.bonus).toFixed(2).replace('.00', '')} bonus cash is used first</p>` : ''}<small>You and 1 real player get the same 10 pairs · most right wins · ties go to the fastest.</small>")
-RA("${pr ? '🎯 Play for real' :","${pr ? (S.bonus >= 2 ? '🎯 Play for real · on us' : '🎯 Play for real') :")
-RA("<p class=\"qs-prac\">${prize ?","${pr && S.bonus >= 2 ? `<p class=\"qs-bon\">🎁 You have <b>$${(+S.bonus).toFixed(2).replace('.00', '')} bonus cash</b>. Your first cash game is on us.</p>` : ''}<p class=\"qs-prac\">${prize ?")
-RA("${S.qsTried ? 'from $2' :","${S.qsTried ? (S.bonus >= 2 ? '$2 free' : 'from $2') :")
-s=s.replace("function fcNotify() {",r"""setInterval(() => { if (S.obDone && !S.bonusGiven) { S.bonusGiven = 1; S.bonus = (S.bonus || 0) + 2; save(); paintWallet(); setTimeout(() => toast('🎁 Welcome! $2 bonus cash to play your first 1 v 1'), 1500); } }, 2000);
-function fcNotify() {""",1)
-s=s.replace('</style>',""".bon{display:block;font-style:normal;font-size:.62rem;font-weight:900;line-height:1;margin-left:4px;padding:3px 6px;border-radius:999px;white-space:nowrap}
-html:not(.yg) .bon{background:#2F6B3F;color:#fff}html.yg .bon{background:#2EE59D;color:#06261A}
-.qs-bon{margin:0 0 8px!important;padding:8px 10px;border-radius:10px;font-size:.82rem;font-weight:700}
-html:not(.yg) .qs-bon{background:#EAF3EC;color:#1F4A2B}html.yg .qs-bon{background:#0E3A2A;color:#C9FBE5}
-</style>""",1)
-open(d+'yofi-simple.html','w').write(s); print('bonus ok')
 s=open(d+'yofi-simple.html').read()
 assert s.count('<b>+$${amt.toLocaleString()}</b>')==1
 s=s.replace('<b>+$${amt.toLocaleString()}</b>','<b>+$${amt % 1 ? amt.toFixed(2) : amt.toLocaleString()}</b>')
@@ -594,3 +570,120 @@ html:not(.yg) .pi-k{color:#2F6B3F}html:not(.yg) .pi-card{background:#fff;box-sha
 html.yg .pi-k{color:#2EE59D}html.yg .pi-card{background:#1B0F33;box-shadow:inset 0 0 0 2px #FFC93C}html.yg .pi-pot{color:#2EE59D}html.yg .pi-vs>i{background:#FFC93C;color:#1B0F33}html.yg .pi-st li>span{background:#C13CFF;color:#fff}html.yg .pi-vs img{box-shadow:0 0 0 2px #C13CFF}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('pot intro ok')
+
+# ---------- Quick Sprint screens redone: stake picker, exciting run (clock, race vs opponent, +1, shake, % reveal, dots), Round complete table ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+i=s.index('function sprEnter(stake) {'); j=s.index('function sprDone('); k=s.index('\nfunction ', j+10)
+names=s[s.index('const QS_NAMES',i):].split('\n',1)[0]
+s=s[:i]+names+'\n'+r"""const QS_X = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+function sprEnter(stake) {
+  if (S.geoBlock) { toast('Cash contests aren’t available in your state'); return; }
+  const c = $('#coach');
+  if (!stake) { if ($('#sheet').classList.contains('on')) closeSheet();
+    let sel = QS_STAKES.includes(window.__qsStake) ? window.__qsStake : QS_STAKES[0];
+    c.innerHTML = `<div class="cpr qs2 qs2-pick" role="dialog" aria-modal="true"><button class="qs2-x" id="qsX" aria-label="Close">${QS_X}</button>
+      <h2 class="qs2-t">🎯 Quick Sprint</h2><p class="qs2-sub">1 vs 1 · 10 photo pairs</p><h3 class="qs2-q">Choose your entry</h3>
+      <div class="qs2-st">${QS_STAKES.map(st => `<button data-qst="${st}"><span><small>Entry</small><b class="e">${qsM(st)}</b></span><i></i><span><small>Winner gets</small><b>${qsM(qsPay(st)[0])}</b></span><em class="rd"></em></button>`).join('')}</div>
+      <p class="qs2-rule">Most correct answers wins.<br>Tied score? Fastest player wins.</p>
+      <button class="bt-cta qs2-go" id="qsPlay"></button><button class="bt-no" id="qsNo">Not now</button></div>`;
+    c.classList.add('on', 'cr'); c.onclick = null;
+    const paint = () => { c.querySelectorAll('[data-qst]').forEach(b => b.classList.toggle('on', +b.dataset.qst === sel)); $('#qsPlay').textContent = `Play · ${qsM(sel)} entry`; };
+    c.querySelectorAll('[data-qst]').forEach(b => b.onclick = () => { sel = +b.dataset.qst; paint(); }); paint();
+    $('#qsPlay').onclick = () => sprEnter(sel); $('#qsX').onclick = $('#qsNo').onclick = () => c.classList.remove('on', 'cr'); return; }
+  if ((S.cash || 0) < stake) { c.classList.remove('on', 'cr'); openStore(`Quick Sprint entry is ${qsM(stake)} cash.`); return; }
+  S.cash = +((S.cash || 0) - stake).toFixed(2); save(); paintWallet(); if ($('#sheet').classList.contains('on')) closeSheet();
+  window.__qsPractice = 0; window.__qsStake = stake; window.__qsSet = Math.floor(Math.random() * 900000) + 1000; qsRun(); }
+function qsOpp(id) { const r = cpRng(id * 7 + 1), h = QS_NAMES[Math.floor(r() * QS_NAMES.length)], seq = [...Array(SPR_N)].map(() => r() < .62); return { h, seq, sc: seq.filter(Boolean).length, ms: 18000 + Math.floor(r() * 22000) }; }
+function qsRun() { const id = window.__qsSet, pr = window.__qsPractice, pairs = cpPairs(SPR_N, id * 97 + 13, true), O = qsOpp(id), c = $('#coach'), res = [];
+  const prize = pr ? `${QS_COIN_PAY[0]} ${gemIcon('')}` : qsM(qsPay(window.__qsStake || 2)[0]);
+  let i = 0, right = 0, lock = false; const t0 = Date.now();
+  c.innerHTML = `<div class="cpr qs2 qs2-run" role="dialog" aria-modal="true"><h2 class="qs2-t">🎯 Quick Sprint${pr ? ' <small>· coins</small>' : ''}</h2>
+    <div class="qs2-prize"><small>🏆 Winner gets</small><b>${prize}</b></div>
+    <div class="qs2-stat"><span id="qsPair"></span><span id="qsClock">⏱ 0.0s</span><span class="g" id="qsRight"></span></div>
+    <p class="qs2-race" id="qsRace"></p>
+    <h3 class="qs2-q">Which photo did the crowd pick?</h3>
+    <div class="qs2-p" id="qsP"></div>
+    <div class="qs2-fb" id="qsFb"><span class="qs2-fbi">👆</span><span><b>Tap your pick</b><small>Same 10 pairs @${esc(O.h)} played</small></span></div>
+    <div class="qs2-dots" id="qsDots"></div><p class="qs2-next" id="qsNext"></p></div>`;
+  c.classList.add('on', 'cr'); c.onclick = null;
+  const clk = setInterval(() => { const e = $('#qsClock'); if (!e) { clearInterval(clk); return; } e.textContent = '⏱ ' + ((Date.now() - t0) / 1000).toFixed(1) + 's'; }, 100);
+  const dots = () => { $('#qsDots').innerHTML = [...Array(SPR_N)].map((_, j) => `<i class="${j < res.length ? (res[j] ? 'ok' : 'bad') : j === res.length ? 'now' : ''}">${j < res.length ? (res[j] ? '✓' : '✕') : ''}</i>`).join(''); };
+  const race = () => { const o = O.seq.slice(0, res.length).filter(Boolean).length, df = right - o;
+    $('#qsRace').innerHTML = res.length ? `vs <b>@${esc(O.h)}</b> · ${o} correct by now · <span class="${df > 0 ? 'up' : df < 0 ? 'dn' : ''}">${df > 0 ? `you’re ${df} ahead 🔥` : df < 0 ? `you’re ${-df} behind` : 'neck and neck'}</span>` : `vs <b>@${esc(O.h)}</b> · real player · same 10 pairs`; };
+  const draw = () => { const p = pairs[i]; lock = false;
+    $('#qsPair').textContent = `Pair ${i + 1} of ${SPR_N}`; $('#qsRight').textContent = `${right} correct`; race(); dots(); $('#qsNext').textContent = '';
+    const P = $('#qsP'); P.innerHTML = [['a', p.a, p.pa], ['b', p.b, 100 - p.pa]].map(([k, x, sh]) => `<button data-cp="${k}"><img src="${x.src}" alt=""><span class="cpr-pc" data-sh="${sh}"></span><em class="qs2-ck"></em></button>`).join('<span class="qs2-vs">VS</span>');
+    P.classList.remove('done'); P.classList.add('in'); setTimeout(() => P.classList.remove('in'), 320);
+    P.querySelectorAll('[data-cp]').forEach(btn => btn.onclick = () => { if (lock) return; lock = true;
+      const win = (btn.dataset.cp === 'a') === (p.pa >= 50), sh = Math.max(p.pa, 100 - p.pa); res.push(win); if (win) right++; i++;
+      P.classList.add('done'); P.querySelectorAll('.cpr-pc').forEach(e => e.textContent = e.dataset.sh + '%');
+      P.querySelectorAll('[data-cp]').forEach(b2 => b2.classList.add(((b2.dataset.cp === 'a') === (p.pa >= 50)) ? 'crowd' : 'not'));
+      btn.classList.add(win ? 'ok' : 'bad'); if (win) btn.insertAdjacentHTML('beforeend', '<b class="qs2-plus">+1</b>');
+      const F = $('#qsFb'); F.className = 'qs2-fb ' + (win ? 'ok' : 'bad');
+      F.innerHTML = win ? `<span class="qs2-fbi">✓</span><span><b>Correct!</b><small>You picked the crowd favourite · ${sh}%</small></span>` : `<span class="qs2-fbi">✕</span><span><b>Not this one</b><small>The crowd picked the other photo · ${sh}%</small></span>`;
+      $('#qsRight').textContent = `${right} correct`; race(); dots();
+      try { navigator.vibrate && navigator.vibrate(win ? 15 : [30, 40, 30]); } catch (e) {}
+      $('#qsNext').textContent = i < SPR_N ? 'Next pair…' : 'Counting up…';
+      setTimeout(() => { if (!$('#qsP')) return;
+        if (i < SPR_N) { F.className = 'qs2-fb'; F.innerHTML = `<span class="qs2-fbi">👆</span><span><b>Tap your pick</b><small>${SPR_N - i} pair${SPR_N - i > 1 ? 's' : ''} to go</small></span>`; draw(); }
+        else { clearInterval(clk); sprDone(id, right, Date.now() - t0); } }, 1050); }); };
+  draw(); }
+function sprDone(id, right, ms) { const O = qsOpp(id), pr = window.__qsPractice, st = window.__qsStake || 2;
+  const all = [{ h: O.h, sc: O.sc, ms: O.ms }, { h: 'You', sc: right, ms, me: 1 }].sort((x, y) => y.sc - x.sc || x.ms - y.ms), won = !!all[0].me, pay = pr ? QS_COIN_PAY[0] : qsPay(st)[0];
+  if (pr) { S.qsTried = 1; if (won) { S.gems = (S.gems || 0) + pay; setTimeout(paintGems, 200); } save(); }
+  else if (won) { S.cash = +((S.cash || 0) + pay).toFixed(2); save(); setTimeout(paintWallet, 200); }
+  const c = $('#coach'), diff = Math.abs(O.sc - right), rw = x => x === all[0] ? (pr ? `${pay} ${gemIcon('')}` : qsM(pay)) : '—';
+  const box = pr ? `<div class="qs2-box cash"><p class="qs2-bk">🎯 Real cash</p><h3>Now play for real</h3><b class="qs2-big">${qsM(qsPay(2)[0])}</b><span>Winner’s prize</span><small>$2 entry · 1 vs 1 · 10 pairs</small></div>`
+    : won ? `<div class="qs2-box win"><p class="qs2-bk">🏆 You won</p><b class="qs2-big">${qsM(pay)}</b><span>Added to your cash</span></div>`
+    : `<div class="qs2-box lose"><p class="qs2-bk">So close</p><h3>${diff ? `@${esc(O.h)} won by ${diff}` : `@${esc(O.h)} won on time`}</h3><small>New pairs, new opponent. Run it back?</small></div>`;
+  c.innerHTML = `<div class="cpr qs2 qs2-res ${won ? 'won' : 'lost'}" role="dialog" aria-modal="true"><button class="qs2-x" id="qsX" aria-label="Close">${QS_X}</button>
+    <h2 class="qs2-t big">Round complete</h2><p class="qs2-sub" id="qsHead">${won ? (pr ? `You won ${pay} ${gemIcon('')}` : `You beat @${esc(O.h)}!`) : `@${esc(O.h)} took this one`}</p>
+    <table class="qs2-tb"><thead><tr><th></th><th>Player</th><th>Correct</th><th>Time</th><th>Reward</th></tr></thead><tbody>${all.map((x, j) => `<tr class="${x.me ? 'me' : ''}"><td>${j + 1}</td><td>${x.me ? 'You' : '@' + esc(x.h)}</td><td>${x.sc}/${SPR_N}</td><td>${(x.ms / 1000).toFixed(1)}s</td><td class="rw">${rw(x)}</td></tr>`).join('')}</tbody></table>
+    ${box}<button class="bt-cta qs2-go" id="qsAgain">${pr ? 'Play for real cash' : `Play again · ${qsM(st)}`}</button><button class="bt-no" id="cpBack">Keep voting</button></div>`;
+  if (won && !pr) setTimeout(() => cashExplosion && cashExplosion(pay, { label: 'Quick Sprint' }), 400);
+  const shut = () => c.classList.remove('on', 'cr');
+  $('#qsAgain').onclick = () => { shut(); pr ? sprEnter() : sprEnter(st); }; $('#cpBack').onclick = shut; $('#qsX').onclick = shut; }"""+s[k:]
+RA("window.__qsSet = Math.floor(Math.random() * 900000) + 1000; cpRun('sprint'); }","window.__qsSet = Math.floor(Math.random() * 900000) + 1000; qsRun(); }")
+s=s.replace('</style>',""".qs2{position:relative;text-align:center}.qs2-x{position:absolute;right:8px;top:8px;border:0;background:none;color:inherit;padding:4px;cursor:pointer;z-index:2}
+.qs2-t{margin:0 0 8px;font-size:1.35rem}.qs2-t.big{font-size:1.75rem;margin:4px 0 6px}.qs2-t small{font-size:.8rem;opacity:.7}
+.qs2-sub{margin:0 0 10px;font-size:.92rem;font-weight:700}.qs2-sub svg{width:1em;height:1em;vertical-align:-.15em}.qs2 .qs2-q{margin:8px 0 10px;font-size:1.12rem;line-height:1.2;height:auto;white-space:normal;overflow:visible}
+.qs2-prize{border-radius:16px;padding:7px 10px 9px;margin:0 0 8px}.qs2-prize small{display:block;font-size:.72rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.qs2-prize b{display:block;font-size:2.1rem;line-height:1.05}.qs2-prize svg{width:.8em;height:.8em;vertical-align:-.05em}
+.qs2-stat{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;border-radius:999px;padding:7px 14px;font-size:.74rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase}.qs2-stat span:first-child{text-align:left}.qs2-stat span:last-child{text-align:right}#qsClock{font-variant-numeric:tabular-nums}
+.qs2-race{margin:6px 0 0;font-size:.78rem;min-height:1.2em}.qs2-race span{font-weight:900}
+.qs2-p{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}.qs2-p.in button{animation:qsIn .3s ease-out}
+.qs2-p button{position:relative;border:0;padding:0;background:none;cursor:pointer;transition:transform .15s}.qs2-p button:active{transform:scale(.97)}
+.qs2-p img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:16px;display:block;transition:box-shadow .2s,filter .2s}
+.qs2-vs{width:40px;height:40px;margin:0 -12px;z-index:1;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:.85rem;border:3px solid}
+.qs2-p .cpr-pc{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);font-weight:900;font-size:.9rem;padding:3px 10px;border-radius:999px;background:rgba(0,0,0,.65);color:#fff;opacity:0;transition:opacity .2s}.qs2-p.done .cpr-pc{opacity:1}
+.qs2-p button.crowd img{box-shadow:0 0 0 4px #2F9E55,0 0 20px rgba(47,158,85,.65)}.qs2-p button.bad img{box-shadow:0 0 0 4px #D6453D}.qs2-p button.bad{animation:qsShake .35s}.qs2-p button.not:not(.bad) img{filter:grayscale(.6) brightness(.8)}
+.qs2-p button.crowd .qs2-ck{position:absolute;right:8px;top:8px;width:30px;height:30px;border-radius:50%;background:#2F9E55;border:2px solid #fff;display:grid;place-items:center;animation:qsPlus .4s ease-out}.qs2-p button.crowd .qs2-ck::after{content:'✓';color:#fff;font-weight:900;font-style:normal}
+.qs2-plus{position:absolute;left:8px;top:8px;padding:2px 10px;border-radius:999px;background:#2F9E55;color:#fff;font-size:1.1rem;animation:qsPlus .6s ease-out}
+@keyframes qsIn{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}@keyframes qsPlus{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.3);opacity:1}100%{transform:none}}@keyframes qsShake{0%,100%{transform:none}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}@keyframes qsPop{0%{transform:scale(.95)}50%{transform:scale(1.04)}100%{transform:none}}
+.qs2-fb{display:flex;align-items:center;gap:12px;text-align:left;border-radius:16px;padding:9px 14px;margin:12px 0 10px;min-height:60px;box-sizing:border-box}.qs2-fb b{display:block;font-size:1.15rem;line-height:1.15}.qs2-fb small{font-size:.8rem}
+.qs2-fbi{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:1.1rem}.qs2-fb.ok{animation:qsPop .35s}.qs2-fb.ok .qs2-fbi{background:#2F9E55;color:#fff}.qs2-fb.bad .qs2-fbi{background:#D6453D;color:#fff}
+.qs2-dots{display:flex;justify-content:center;gap:6px}.qs2-dots i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:.72rem;font-weight:900;color:#fff}.qs2-dots i.ok{background:#2F9E55}.qs2-dots i.bad{background:#D6453D}.qs2-dots i.now{box-shadow:0 0 0 3px #D9A441}
+.qs2-next{margin:8px 0 0;font-style:italic;font-size:.85rem;min-height:1.1em;opacity:.7}
+.qs2-st{display:grid;gap:10px;margin:0 0 12px}.qs2-st button{display:grid;grid-template-columns:auto 1px 1fr auto;gap:16px;align-items:center;text-align:left;padding:12px 16px;border-radius:16px;border:2px solid;cursor:pointer;font:inherit}
+.qs2-st small{display:block;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.qs2-st b{display:block;font-size:2rem;line-height:1.05}.qs2-st i{align-self:stretch;opacity:.25;background:currentColor}
+.qs2-st .rd{width:26px;height:26px;border-radius:50%;border:2px solid;display:grid;place-items:center;box-sizing:border-box}.qs2-st button.on .rd::after{content:'✓';font-style:normal;font-weight:900;font-size:.9rem}
+.qs2-rule{font-size:.9rem;margin:0 0 12px;line-height:1.4}
+.qs2-tb{width:100%;border-collapse:separate;border-spacing:0 4px;font-size:.86rem;margin:0 0 10px}.qs2-tb th{font-size:.74rem;font-weight:900;text-align:left;padding:4px 6px}.qs2-tb td{padding:10px 6px;text-align:left;font-weight:700}
+.qs2-tb th:first-child,.qs2-tb td:first-child{width:14px;padding-right:0}.qs2-tb td:first-child{border-radius:10px 0 0 10px}.qs2-tb td:last-child{border-radius:0 10px 10px 0}.qs2-tb .rw{font-weight:900;white-space:nowrap}.qs2-tb .rw svg{width:1em;height:1em;vertical-align:-.15em}.qs2-tb tr.me td{font-weight:900}
+.qs2-box{border-radius:16px;padding:12px 14px 14px;margin:0 0 12px}.qs2-bk{margin:0;font-size:.74rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.qs2-box h3{margin:4px 0 2px;font-size:1.25rem}
+.qs2-big{display:block;font-size:2.6rem;line-height:1.05}.qs2-box span{display:block;font-weight:800}.qs2-box small{display:block;margin-top:4px;font-size:.82rem;opacity:.8}
+html:not(.yg) .qs2-t,html:not(.yg) .qs2-q,html:not(.yg) .qs2-box h3{color:#1F2F55}html:not(.yg) .qs2-prize{background:#1F2F55;color:#fff;box-shadow:inset 0 0 0 2px #D9A441}html:not(.yg) .qs2-prize small{color:#F2D58A}
+html:not(.yg) .qs2-stat{background:#F3EBDD;box-shadow:inset 0 0 0 1.5px #E2D6BF;color:#2B2320}html:not(.yg) .qs2-stat .g{color:#2F6B3F}html:not(.yg) .qs2-race{color:#5B4E45}html:not(.yg) .qs2-race .up{color:#2F6B3F}html:not(.yg) .qs2-race .dn{color:#9E2F2A}
+html:not(.yg) .qs2-vs{background:#1F2F55;color:#fff;border-color:#fff}html:not(.yg) .qs2-fb{background:#F3EBDD;color:#2B2320}html:not(.yg) .qs2-fbi{background:#fff}html:not(.yg) .qs2-fb.ok{background:#DDF0E1;color:#1F4A2B}html:not(.yg) .qs2-fb.bad{background:#F8E1DF;color:#7A2420}html:not(.yg) .qs2-dots i:not(.ok):not(.bad){background:#EEE6D8;box-shadow:inset 0 0 0 1.5px #D8CCB6}html:not(.yg) .qs2-dots i.now{box-shadow:0 0 0 3px #D9A441}
+html:not(.yg) .qs2-st button{background:#fff;border-color:#D8CCB6;color:#2B2320}html:not(.yg) .qs2-st b{color:#2F6B3F}html:not(.yg) .qs2-st button.on{background:#E6F3E9;border-color:#2F6B3F}html:not(.yg) .qs2-st .rd{border-color:#2B2320}html:not(.yg) .qs2-st button.on .rd{background:#2F6B3F;border-color:#2F6B3F;color:#fff}html:not(.yg) .qs2-rule{color:#2B2320}
+html:not(.yg) .qs2-tb th{color:#1F2F55}html:not(.yg) .qs2-tb td{background:#fff;color:#2B2320}html:not(.yg) .qs2-tb tr.me td{background:#FFF3D1}html:not(.yg) .qs2-tb .rw{color:#2F6B3F}
+html:not(.yg) .qs2-box.cash,html:not(.yg) .qs2-box.win{background:#E6F3E9}html:not(.yg) .qs2-big,html:not(.yg) .qs2-bk{color:#2F6B3F}html:not(.yg) .qs2-box span{color:#1F4A2B}html:not(.yg) .qs2-box.lose{background:#F3EBDD}html:not(.yg) .qs2-box.lose .qs2-bk{color:#9E2F2A}html:not(.yg) .qs2-sub{color:#1F2F55}
+html.yg .qs2-t,html.yg .qs2-q,html.yg .qs2-box h3{color:#fff}html.yg .qs2-prize{background:linear-gradient(135deg,#FF3E9A,#8B3DFF);color:#fff;box-shadow:inset 0 0 0 2px #FFC93C}html.yg .qs2-prize small{color:#FFE9A6}
+html.yg .qs2-stat{background:#241544;color:#fff}html.yg .qs2-stat .g{color:#2EE59D}html.yg .qs2-race{color:#C9B8FF}html.yg .qs2-race .up{color:#2EE59D}html.yg .qs2-race .dn{color:#FF7A9A}
+html.yg .qs2-vs{background:#FFC93C;color:#1B0F33;border-color:#1B0F33}html.yg .qs2-fb{background:#241544;color:#fff}html.yg .qs2-fbi{background:#3A2766}html.yg .qs2-fb.ok{background:#0E3A2A;color:#C9FBE5}html.yg .qs2-fb.bad{background:#3A1020;color:#FFC2CC}html.yg .qs2-dots i:not(.ok):not(.bad){background:#2A1A46}
+html.yg .qs2-st button{background:#1B0F33;border-color:#3A2766;color:#fff}html.yg .qs2-st b{color:#2EE59D}html.yg .qs2-st button.on{background:#0E3A2A;border-color:#2EE59D}html.yg .qs2-st .rd{border-color:#fff}html.yg .qs2-st button.on .rd{background:#2EE59D;border-color:#2EE59D;color:#06261A}html.yg .qs2-rule{color:#E9E2FF}
+html.yg .qs2-tb th{color:#C9B8FF}html.yg .qs2-tb td{background:#241544;color:#fff}html.yg .qs2-tb tr.me td{background:#3A2766}html.yg .qs2-tb .rw{color:#2EE59D}
+html.yg .qs2-box.cash,html.yg .qs2-box.win{background:#0E3A2A}html.yg .qs2-big,html.yg .qs2-bk{color:#2EE59D}html.yg .qs2-box span{color:#C9FBE5}html.yg .qs2-box.lose{background:#241544}html.yg .qs2-box.lose .qs2-bk{color:#FF7A9A}html.yg .qs2-sub{color:#E9E2FF}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('qs ui ok')
