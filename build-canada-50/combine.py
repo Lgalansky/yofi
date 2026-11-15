@@ -385,7 +385,7 @@ s=open(d+'yofi-preview.html').read()
 def R7(a,b):
     global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
 R7("const EN_PACKS = [{ en: 50, usd: 1, gems: 150 }, { en: 150, usd: 2, gems: 400, tag: 'Popular' }, { en: 500, usd: 5, gems: 1200, tag: 'Best value' }];",
-   "const EN_PACKS = [{ en: 50, usd: 1, gems: 150 }]; EN_PACKS[1] = EN_PACKS[0]; const EN_SHOW = 1;")
+   "const EN_PACKS = [{ en: 50, usd: 1, gems: 150 }, { en: 150, usd: 2, gems: 400, tag: 'Popular' }, { en: 500, usd: 5, gems: 1200, tag: 'Best value' }]; const EN_SHOW = 3;")
 s=s.replace("EN_PACKS.map((k, i) => card(","EN_PACKS.slice(0, EN_SHOW).map((k, i) => card(",1)
 s=s.replace("${EN_PACKS.map((k, i) => `<div class=\"srow\">","${EN_PACKS.slice(0, EN_SHOW).map((k, i) => `<div class=\"srow\">",1)
 R7('<button class="wb tixp" id="tixPill"','<button class="wb enpl" id="enPill" aria-label="Energy. Tap to buy 50 energy for $1"><span>⚡</span><b id="enNum">0</b></button><button class="wb tixp" id="tixPill"')

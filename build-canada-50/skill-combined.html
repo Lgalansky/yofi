@@ -4341,7 +4341,7 @@ const isLive = () => tUnlocked() && fighters().length > 0 && (S.votes || 0) % 3 
 function paintEnergy() { const e = energy(), b = document.querySelector('#judge .en-bar i'), t = document.querySelector('#judge .en-n'), nx = document.querySelector('#judge .en-nx');
   if (b) b.style.width = (e / EN_MAX * 100) + '%'; if (t) t.innerHTML = e > EN_MAX ? `${EN_MAX}<small> +${e - EN_MAX}</small>` : `${e}/${EN_MAX}`; if (nx) nx.textContent = `+5 ⚡ in ${enNext()}`; }
 setInterval(() => { if (S && $('#panes') && $('#panes').dataset.at === 'judge') paintEnergy(); }, 1000);
-const EN_PACKS = [{ en: 50, usd: 1, gems: 150 }]; EN_PACKS[1] = EN_PACKS[0]; const EN_SHOW = 1;
+const EN_PACKS = [{ en: 50, usd: 1, gems: 150 }, { en: 150, usd: 2, gems: 400, tag: 'Popular' }, { en: 500, usd: 5, gems: 1200, tag: 'Best value' }]; const EN_SHOW = 3;
 function addEnergy(n) { energy(); S.en += n; S.enAt = Date.now(); save(); if ($('#panes').dataset.at === 'judge') renderJudge(); toast(`⚡ +${n} energy! Keep judging.`); }
 const enPackHTML = () => `<div class="srows">${EN_PACKS.slice(0, EN_SHOW).map((k, i) => `<div class="srow">${k.tag ? `<span class="enp-t">${k.tag}</span>` : ''}<span class="si">⚡</span><span class="sv"><b>${k.en}</b><small>energy</small></span><button class="sb" data-enusd="${i}">Pay $${k.usd} cash</button></div>`).join('')}</div>`;
 function enCash(k, then) { const c = S.cash || 0;
