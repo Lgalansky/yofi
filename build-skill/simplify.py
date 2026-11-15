@@ -533,3 +533,32 @@ s=s.replace("Quick Sprint · from $2 · win up to $25, result instantly","Quick 
 s=s.replace('</style>',""".qs-lb{max-height:none}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('h2h ok')
+
+# ---------- Sign-up offer: $2 bonus cash (entries only, used first; winnings are real cash) ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA('<b id="cashNum">$0.00</b></span></button>','<b id="cashNum">$0.00</b></span><em id="bonNum" class="bon"></em></button>')
+RA("function paintWallet() { $('#cashNum').textContent = '$' + (S.cash || 0).toFixed(2);",
+   "function paintWallet() { $('#cashNum').textContent = '$' + (S.cash || 0).toFixed(2); { const bt = $('#bonNum'); if (bt) { bt.textContent = S.bonus > 0 ? '+$' + (+S.bonus).toFixed(2).replace('.00', '') + ' bonus' : ''; bt.style.display = S.bonus > 0 ? '' : 'none'; } }")
+RA("if ((S.cash || 0) < stake) { c.classList.remove('on', 'cr');","if ((S.cash || 0) + (S.bonus || 0) < stake) { c.classList.remove('on', 'cr');")
+RA("S.cash = +((S.cash || 0) - stake).toFixed(2); save(); paintWallet();",
+   "{ const fb = Math.min(S.bonus || 0, stake); S.bonus = +((S.bonus || 0) - fb).toFixed(2); S.cash = +((S.cash || 0) - (stake - fb)).toFixed(2); } save(); paintWallet();")
+RA("<small>You and 1 real player get the same 10 pairs · most right wins · ties go to the fastest.</small>",
+   "${S.bonus > 0 ? `<p class=\"qs-bon\">🎁 Your $${(+S.bonus).toFixed(2).replace('.00', '')} bonus cash is used first</p>` : ''}<small>You and 1 real player get the same 10 pairs · most right wins · ties go to the fastest.</small>")
+RA("${pr ? '🎯 Play for real' :","${pr ? (S.bonus >= 2 ? '🎯 Play for real · on us' : '🎯 Play for real') :")
+RA("<p class=\"qs-prac\">${prize ?","${pr && S.bonus >= 2 ? `<p class=\"qs-bon\">🎁 You have <b>$${(+S.bonus).toFixed(2).replace('.00', '')} bonus cash</b>. Your first cash game is on us.</p>` : ''}<p class=\"qs-prac\">${prize ?")
+RA("${S.qsTried ? 'from $2' :","${S.qsTried ? (S.bonus >= 2 ? '$2 free' : 'from $2') :")
+s=s.replace("function fcNotify() {",r"""setInterval(() => { if (S.obDone && !S.bonusGiven) { S.bonusGiven = 1; S.bonus = (S.bonus || 0) + 2; save(); paintWallet(); setTimeout(() => toast('🎁 Welcome! $2 bonus cash to play your first 1 v 1'), 1500); } }, 2000);
+function fcNotify() {""",1)
+s=s.replace('</style>',""".bon{display:block;font-style:normal;font-size:.62rem;font-weight:900;line-height:1;margin-left:4px;padding:3px 6px;border-radius:999px;white-space:nowrap}
+html:not(.yg) .bon{background:#2F6B3F;color:#fff}html.yg .bon{background:#2EE59D;color:#06261A}
+.qs-bon{margin:0 0 8px!important;padding:8px 10px;border-radius:10px;font-size:.82rem;font-weight:700}
+html:not(.yg) .qs-bon{background:#EAF3EC;color:#1F4A2B}html.yg .qs-bon{background:#0E3A2A;color:#C9FBE5}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('bonus ok')
+s=open(d+'yofi-simple.html').read()
+assert s.count('<b>+$${amt.toLocaleString()}</b>')==1
+s=s.replace('<b>+$${amt.toLocaleString()}</b>','<b>+$${amt % 1 ? amt.toFixed(2) : amt.toLocaleString()}</b>')
+s=s.replace("'🎯 Play for real · on us'","'🎯 Play on us'",1)
+open(d+'yofi-simple.html','w').write(s); print('fmt ok')
