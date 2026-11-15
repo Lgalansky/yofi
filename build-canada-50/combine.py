@@ -213,33 +213,33 @@ s=open(d+'yofi-preview.html').read()
 def R4(a,b,n=1):
     global s; assert s.count(a)==n,(a[:80],s.count(a)); s=s.replace(a,b)
 # unlimited voting
-R4("function paintEnergy() {", "function paintEnergy() {}\nfunction paintEnergyOld() {")
-R4("function energy() {", "function energy() { S.en = EN_MAX; return EN_MAX; }\nfunction energyOld() {")
+# (energy back) R4("function paintEnergy() {", "function paintEnergy() {}\nf
+# (energy back) R4("function energy() {", "function energy() { S.en = EN_MAX
 # count votes toward a ticket
 R4("  S.votes++; S.since++;", "  S.votes++; S.tixV = (S.tixV || 0) + 1; if (S.tixV >= TIX_EVERY) { S.tixV = 0; S.cashTix = (S.cashTix || 0) + 1; setTimeout(() => { paintTix(); ticketPop(); }, 1600); } S.since++;")
 # energy bar -> ticket bar
-a=s.index('`<div class="jf-en"><div class="en-top"><span class="en-ic">⚡</span>'); b=s.index('</div>`}', a)+len('</div>`}')
-s=s[:a]+'`<button class="jf-en tkp" id="tkpBar" aria-label="Free entry progress. See your tickets"><div class="en-top"><span class="en-ic">🎟️</span><span class="en-bar"><i style="width:${Math.min(100, (S.tixV || 0) / TIX_EVERY * 100)}%"></i></span><span class="en-n">${S.tixV || 0}/${TIX_EVERY}</span></div><small class="tkp-l">votes to your next free entry</small></button>`}'+s[b:]
+# (energy back) a=s.index('`<div class="jf-en"><div class="en-top"><span cla
+# (energy back) s=s[:a]+'`<button class="jf-en tkp" id="tkpBar" aria-label="
 # 10th step: loot box again
 R4("i === 9 ? `<u class=\"tkb\">🎟️</u><span class=\"tkl\">FREE $1</span>${(S.cashTix || 0) ? `<em class=\"chtx\">${S.cashTix}</em>` : ''}` : ''","i === 9 ? '<u>🧰</u>×10' : ''")
 R4("${i === 9 ? 'data-chtix role=\"button\" aria-label=\"Big chest at 10 in a row. See your tickets\"' : ''}","")
 # chest: coins, and a bonus ticket only in epic or legendary chests; no energy
 R4("const want = rar.k === 'rare' ? 2 : 1,","const want = (rar.k === 'epic' || rar.k === 'legend') ? 1 : 0,")
-R4("<div class=\"ch-it\" style=\"animation-delay:.45s\"><b>+${rar.e}</b><small>⚡ energy</small></div>","")
-R4("toast(`⚡ +${rar.e} energy`);","")
+# (energy back) R4("<div class=\"ch-it\" style=\"animation-delay:.45s\"><b>+
+# (energy back) R4("toast(`⚡ +${rar.e} energy`);","")
 # lucky boxes: coins instead of energy
-R4("{ w: .3, k: 'e', n: 5 }","{ w: .3, k: 'g', n: 10 * LM }"); R4("{ w: .3, k: 'e', n: 10 }","{ w: .3, k: 'g', n: 15 * LM }"); R4("{ w: .05, k: 'e', n: 25 }","{ w: .05, k: 'g', n: 150 * LM }")
+# (energy back) R4("{ w: .3, k: 'e', n: 5 }","{ w: .3, k: 'g', n: 10 * LM }"
 # free entries panel: progress is votes now
 s=s.replace("if (!n) { const c = Math.min(S.combo || 0, 10);","if (!n) { const c = S.tixV || 0;")
 s=_re.sub(r'<span class="ut0-i">🧰</span><div><b>Pick the winner 10 times in a row</b><small>On the (Vote|Judge) page\. The big chest opens and gives you free entries\.</small></div>',
           lambda m: f'<span class="ut0-i">🎟️</span><div><b>Every {{TIX_EVERY}} votes = 1 free entry</b><small>Keep going on the {m.group(1)} page. A big chest at 10 in a row can hold a bonus entry too.</small></div>'.replace('{TIX_EVERY}','${TIX_EVERY}'), s)
 s=s.replace('<div class="ut0-bar"><i style="width:${c * 10}%"></i></div><p class="ut0-n">${c} of 10 in a row</p>','<div class="ut0-bar"><i style="width:${c / TIX_EVERY * 100}%"></i></div><p class="ut0-n">${c} of ${TIX_EVERY} votes</p>')
 # header ticket pill
-R4('<button class="wplus" id="walletPlus" aria-label="Add funds">+</button>','<button class="wb tixp" id="tixPill" aria-label="Free tournament entries"><span class="tx-ic">🎟️</span><b id="tixNum">0</b><svg class="tx-ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5"/><circle class="f" cx="18" cy="18" r="15.5"/></svg></button><button class="wplus" id="walletPlus" aria-label="Add funds">+</button>')
+R4('<button class="wplus" id="walletPlus" aria-label="Add funds">+</button>','<button class="wb tixp" id="tixPill" aria-label="Free tournament entries"><span class="tx-ic">🎟️</span><b id="tixNum">0</b><small id="tixProg" class="tx-pr">0/25</small><svg class="tx-ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5"/><circle class="f" cx="18" cy="18" r="15.5"/></svg></button><button class="wplus" id="walletPlus" aria-label="Add funds">+</button>')
 JS = r"""
 function paintTix() { const b = document.getElementById('tixPill'); if (!b || !S) return; const n = S.cashTix || 0, v = S.tixV || 0;
   b.classList.toggle('has', n > 0); document.getElementById('tixNum').textContent = n;
-  b.style.setProperty('--p', n ? 0 : (v / TIX_EVERY).toFixed(3));
+  b.style.setProperty('--p', 0); const pr = document.getElementById('tixProg'); if (pr) pr.textContent = `${v}/${TIX_EVERY}`;
   b.setAttribute('aria-label', n ? `${n} free tournament entr${n === 1 ? 'y' : 'ies'}` : `${v} of ${TIX_EVERY} votes to your next free entry`); }
 setInterval(paintTix, 800);
 document.addEventListener('click', e => { if (e.target.closest('#tixPill') || e.target.closest('#tkpBar')) useTickets(); });
@@ -248,22 +248,22 @@ R4("function fcNotify() {", JS+"function fcNotify() {")
 R4("const STK = [3, 5, 10];","const STK = [3, 5, 10]; const TIX_EVERY = 25;")
 s=s.replace('</style>',"""html .wallet{display:flex!important;gap:6px}html .wallet .wb.cash,html .wallet .wb.gems{flex:1 1 0;min-width:0}html .wallet .wplus{flex:none}
 .wb.tixp{flex:none;display:flex;align-items:center;justify-content:center;gap:4px;min-width:62px;padding:0 10px!important;border:0;cursor:pointer;border-radius:16px;background-repeat:no-repeat!important;background-position:8px calc(100% - 5px)!important;background-size:calc((100% - 16px) * var(--p, 0)) 3px!important}
-.tixp .tx-ic{font-size:1.15rem;line-height:1}.tixp b{font-weight:900;font-size:1.05rem}.tixp .tx-ring{display:none}
+.tixp .tx-ic{font-size:1.15rem;line-height:1}.wb.tixp{min-width:0!important;padding:0 7px!important;gap:3px!important}.tixp b{font-size:.95rem!important}.tixp .tx-ic{font-size:1rem!important}.tixp .tx-pr{font-size:.66rem!important;padding-left:4px!important}html .wallet .wb.cash small,html .wallet .wb.gems small{display:none!important}.tixp .tx-pr{font-size:.72rem;font-weight:800;opacity:.75;padding-left:5px;margin-left:2px;border-left:1.5px solid currentColor}.tixp b{font-weight:900;font-size:1.05rem}.tixp .tx-ring{display:none}
 html:not(.yg) .wb.tixp{background-color:#F7F1E7!important;background-image:linear-gradient(#D9A441,#D9A441)!important;box-shadow:inset 0 0 0 1.5px #CDBB98;color:#2B2320}html:not(.yg) .tixp .tx-ring circle{stroke:#EADCC6}html:not(.yg) .tixp .tx-ring .f{stroke:#D9A441}html:not(.yg) .wb.tixp.has{background-color:#FFF3D1!important;box-shadow:inset 0 0 0 2px #D9A441}
 html.yg .wb.tixp{background-color:#1E1236!important;background-image:linear-gradient(#FFC93C,#FFC93C)!important;box-shadow:inset 0 0 0 1.5px #3A2760;color:#fff}html.yg .tixp .tx-ring circle{stroke:#33204F}html.yg .tixp .tx-ring .f{stroke:#FFC93C}html.yg .wb.tixp.has{box-shadow:inset 0 0 0 2px #FFC93C}
 .jf-en.tkp{display:block;width:100%;border:0;background:none;padding:0;text-align:left;cursor:pointer;font:inherit;color:inherit}.tkp-l{display:block;margin:2px 0 0 30px;font-size:.78rem;opacity:.8}
-.t-energy,#enPlus{display:none!important}
+# (energy back) .t-energy,#enPlus{display:none!important}
 </style>""",1)
 open(d+'yofi-preview.html','w').write(s); print('tickets ok')
 
 # ---------- energy is gone: remove what players would still see ----------
 s=open(d+'yofi-preview.html').read()
-s=s.replace(".enfly{",".enfly{display:none!important;",1) if ".enfly{" in s else s+""
-s=s.replace("</style>",".enfly{display:none!important}\n</style>",1)
-a="<b>${gemIcon('')}100 <i>+</i> ⚡50</b><small>Coins to enhance it · energy to vote and earn more</small>"
-assert s.count(a)==1; s=s.replace(a,"<b>${gemIcon('')}100</b><small>Coins to enhance your photo</small>")
-a=" + tile('⚡', CASH_EN[i], 'Free energy', 'en')"
-assert s.count(a)==1; s=s.replace(a,"")
+# (energy back) s=s.replace(".enfly{",".enfly{display:none!important;",1) if
+# (energy back) s=s.replace("</style>",".enfly{display:none!important}\n</st
+# a="<b>${gemIcon('')}100 <i>+</i> ⚡50</b><small>Coins to enhance it · energy to vote and earn more</small>"
+# assert s.count(a)==1; s=s.replace(a,"<b>${gemIcon('')}100</b><small>Coins to enhance your photo</small>")
+# a=" + tile('⚡', CASH_EN[i], 'Free energy', 'en')"
+# assert s.count(a)==1; s=s.replace(a,"")
 open(d+'yofi-preview.html','w').write(s); print('energy text ok')
 
 # ---------- batch: loot boxes at 3/6/10, chest surprise, 50 votes per ticket, interests before the picker, wording, clubs, packs, layout ----------
@@ -274,7 +274,7 @@ def R5(a,b,n=1):
 R5("const STK = [3, 5, 10];","const STK = [3, 6, 10];")
 R5("const streakX = c => c >= 10 ? 10 : c >= 5 ? 5 : c >= 3 ? 3 : 1;","const streakX = c => c >= 10 ? 10 : c >= 6 ? 6 : c >= 3 ? 3 : 1;")
 R5("({ 3: 3, 5: 5, 10: 10 })[S.combo]","({ 3: 3, 6: 5, 10: 10 })[S.combo]")
-R5("${[2, 4, 9].includes(i) ? 'm m' + (i + 1) : ''}","${[2, 5, 9].includes(i) ? 'm m' + (i + 1) : ''}")
+R5("${[2, 4, 9].includes(i) ? 'm m' + (i + 1) : ''}","${[2, 5, 9].includes(i) ? 'm m' + (i === 5 ? 5 : i + 1) : ''}")
 R5("i === 4 ? '<u>🎁</u>×5' :","i === 5 ? '<u>🎁</u>×6' :")
 # chest: no ticket; surprise = double coins on the next 10 votes
 R5("const want = (rar.k === 'epic' || rar.k === 'legend') ? 1 : 0,","const want = 0,")
@@ -282,7 +282,7 @@ R5("const tk = chestTix(rar);","const tk = chestTix(rar); S.boostN = 10;")
 R5("${tk ? `<div class=\"ch-it\" style=\"animation-delay:.7s\">","<div class=\"ch-it\" style=\"animation-delay:.45s\"><b>2×</b><small>coins on your next 10 votes</small></div>${tk ? `<div class=\"ch-it\" style=\"animation-delay:.7s\">")
 R5("S.gems += earn; meterAdd(earn);","if (S.boostN > 0) { S.boostN--; earn *= 2; } S.gems += earn; meterAdd(earn);")
 # 50 votes per free entry
-R5("const TIX_EVERY = 25;","const TIX_EVERY = 50;")
+# tickets: 25 votes
 # interests come before the photo picker (first photo only)
 R5("  if (!S.likes) await new Promise(res => { window.__obAfter = res;","  if (false) await new Promise(res => { window.__obAfter = res;")
 s=s.replace("document.getElementById('file').click()","yWL()")
@@ -321,7 +321,7 @@ R5("name: 'Expression', short: 'Expression', verb: 'Improve Expression'","name: 
 R5("{ k: 'expr', name: 'Expression',","{ k: 'expr', name: 'Wow factor',")
 # 25+: Tournaments, not Shows (keep "Best in Show")
 s=re.sub(r'\bShows\b','Tournaments',s)
-s=s.replace('</style>',"""html .stk-steps{grid-template-columns:1fr 1fr 46px 1fr 1fr 46px 1fr 1fr 1fr 46px!important}
+s=s.replace('</style>',"""html.yg #judge .stk-steps,html:not(.yg) #judge .stk-steps{grid-template-columns:1fr 1fr 46px 1fr 1fr 46px 1fr 1fr 1fr 52px!important}
 html .stk-steps i.m10{animation:none!important}html .stk-steps i.m10 u{font-size:1.3rem!important}
 html.yg .stk-steps i.m10:not(.on){background:#241640!important;box-shadow:inset 0 0 0 1.5px #FFC93C!important;color:#fff!important}html.yg .stk-steps i.m10.on{background:#FFC93C!important;color:#2A1600!important;box-shadow:none!important}
 html:not(.yg) .stk-steps i.m10:not(.on){background:#fff!important;box-shadow:inset 0 0 0 2px #C99A3B!important;color:#2B2320!important}html:not(.yg) .stk-steps i.m10.on{background:#D9A441!important;color:#2B2320!important;box-shadow:none!important}
