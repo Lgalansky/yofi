@@ -1,6 +1,6 @@
 import re, colorsys
 d='/tmp/claude-0/-home-user-yofi/c69be753-0b48-5242-b029-4f4be89f4655/scratchpad/'
-s=open(d+'yofi-preview.html').read()
+s=open(d+'yofi-skill-base.html').read()
 def R(a,b,n=None):
     global s; c=s.count(a); assert c>=1 and (n is None or c==n),(a[:90],c); s=s.replace(a,b)
 

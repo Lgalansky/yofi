@@ -144,7 +144,7 @@ from cssfix import cssfix
 s=open(d+'yofi-ca50.html').read(); s=words(s); s=cssfix(s); open(d+'yofi-ca50.html','w').write(s)
 # ---------- age bracket 1 (25 to 34) keeps the original, younger feature names ----------
 s=open(d+'yofi-ca50.html').read()
-orig=open(d+'yofi-preview.html').read()
+orig=open(d+'yofi-skill-base.html').read()
 i=orig.index("const CRW = '"); j=orig.index("';", i); CRW_Y=orig[i+len("const CRW = '"):j].replace('<svg class="crw-ic"','<svg data-y="1" class="crw-ic"')
 YJS = r"""
 // Age bracket 1 (25 to 34) sees the younger names: Battle, Crown, Points, Gems, Friends, Studio, Tournaments, Judge
