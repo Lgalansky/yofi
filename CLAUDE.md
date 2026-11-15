@@ -12,7 +12,7 @@ There are two versions of Yofi. Before making any change, ask the user which one
 
 Each version keeps its own saved player data (`yofi.proto.v1` for Skill, `yofi.real.v1` for Real Money).
 
-The Skill preview is now one app with two looks: ages 18 to 24 get the original dark Yofi, 25+ get the Fall Fair look. It is built by the scripts in `build-canada-50/` on the `canada-50` branch (see its README). The Canada 50+ version itself is parked and no longer maintained.
+The Skill preview is now one app with two looks: ages 18 to 24 get the original dark Yofi, 25+ get the Fall Fair look. It is built by the scripts in `build-skill/` on `main` (see its README). Make Skill changes there and rebuild. The Canada 50+ version is parked and no longer maintained.
 
 ## Save every version automatically
 After every change to the app, before you finish your reply:
