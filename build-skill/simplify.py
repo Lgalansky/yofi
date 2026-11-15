@@ -456,3 +456,33 @@ html.yg .qs-st button{background:#0E3A2A;box-shadow:inset 0 0 0 1.5px #2EE59D;co
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('stakes ok')
 s=open(d+'yofi-simple.html').read(); s=s.replace("'🎯 Play the next Sprint · $1'","'🎯 Play a Quick Sprint · from $2'",1); open(d+'yofi-simple.html','w').write(s)
+
+# ---------- Crowd Picks retired from the loop: one free Quick Sprint practice for newbies, then real Quick Sprint invites only (every 50 votes, 15 min apart) ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA("if (!comboHit && S.votes >= 15 && (S.cpN || 0) >= 20) { S.cpN = 0; save(); renderJudge(); judging = false; crowdPop(); return; }",
+   "if (!comboHit && !S.geoBlock && S.votes >= 15 && (S.cpN || 0) >= (S.qsTried ? 50 : 20) && Date.now() - (S.qsPopAt || 0) > 15 * 60000) { S.cpN = 0; S.qsPopAt = Date.now(); save(); renderJudge(); judging = false; qsPop(); return; }")
+RA("function crowdPop() {", r"""function sprPractice() { if ($('#sheet').classList.contains('on')) closeSheet(); window.__qsPractice = 1; window.__qsStake = 2; window.__qsSet = Math.floor(Math.random() * 900000) + 1000; cpRun('sprint'); }
+function qsPop() { if (!S.qsTried) celebrate({ src: (SEED[6] || {}).src, score: '🎯', title: 'Try Quick Sprint free', text: `Pick the photo the crowd chose in <b>10 pairs</b>. Have a free practice, then play real players for cash: <b>$2</b> or <b>$5</b> tables, win up to <b>$25</b>.`, cta: '🎯 Practise free', onCta: sprPractice, later: 'Keep voting' });
+  else celebrate({ src: (SEED[6] || {}).src, score: '🎯', title: 'Quick Sprint', text: `10 pairs against 9 real players. Top 3 win cash: up to <b>$10</b> on the $2 table, <b>$25</b> on the $5 table.`, cta: '🎯 Play · from $2', onCta: () => sprEnter(), later: 'Keep voting' }); }
+function crowdPop() {""")
+# Use your coins: no Crowd Picks row
+RA("""<button class="ug-r" id="ugCp"><span class="ug-i">🎯</span><span class="ug-t"><b>Crowd Picks</b><small>Pick the crowd’s favourite 5 in a row · win up to ×6</small></span><em>${CP_STAKE} 🟡</em></button>""","")
+RA("window.__qsStake = stake; window.__qsSet","window.__qsPractice = 0; window.__qsStake = stake; window.__qsSet")
+RA("sprint ? '🎯 Quick Sprint'","sprint ? (window.__qsPractice ? '🎯 Free practice' : '🎯 Quick Sprint')")
+# results: practice pays nothing and says what it would have won
+RA("if (prize) { S.cash = +((S.cash || 0) + prize).toFixed(2); save(); setTimeout(paintWallet, 200); }",
+   "const pr = window.__qsPractice; if (pr) { S.qsTried = 1; save(); } if (prize && !pr) { S.cash = +((S.cash || 0) + prize).toFixed(2); save(); setTimeout(paintWallet, 200); }")
+RA("<h2>${prize ? `You won ${qsM(prize)}!` : `${ord(rank)} of 10`}</h2><p>",
+   "<h2>${pr ? (prize ? `You’d have won ${qsM(prize)}!` : `You’d be ${ord(rank)} of 10`) : prize ? `You won ${qsM(prize)}!` : `${ord(rank)} of 10`}</h2>${pr ? `<p class=\"qs-prac\">Free practice · prizes shown for the $2 table</p>` : ''}<p>")
+RA("<button class=\"bt-cta\" id=\"qsAgain\">🎯 Play again · ${qsM(window.__qsStake || 5)}</button>",
+   "<button class=\"bt-cta\" id=\"qsAgain\">${pr ? '🎯 Play for real' : `🎯 Play again · ${qsM(window.__qsStake || 5)}`}</button>")
+RA("sprEnter(window.__qsStake || 5); };","pr ? sprEnter() : sprEnter(window.__qsStake || 5); };")
+RA("if (prize) setTimeout(() => cashExplosion","if (prize && !pr) setTimeout(() => cashExplosion")
+# Vote page line: new players try it free
+RA("instant</span><em>from $2</em>","instant</span><em>${S.qsTried ? 'from $2' : 'Try free'}</em>")
+RA("else if (e.target.closest('#qsChip')) { e.preventDefault(); sprEnter(); }","else if (e.target.closest('#qsChip')) { e.preventDefault(); S.qsTried ? sprEnter() : sprPractice(); }")
+s=s.replace('</style>',""".qs-prac{margin:-4px 0 4px!important;font-size:.78rem;font-weight:800;opacity:.8}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('practice ok')
