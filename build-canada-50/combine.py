@@ -379,3 +379,43 @@ a='<button class="enh-go" id="roBuy">Buy · $${(+cfg.usd).toFixed(2)}</button>'
 assert s.count(a)==1
 s=s.replace(a,'<button class="enh-go" id="roBuy">${kind === \'energy\' ? `Pay $${cfg.usd} from cash` : `Buy · $${(+cfg.usd).toFixed(2)}`}</button>')
 open(d+'yofi-preview.html','w').write(s)
+
+# ---------- energy in the wallet: one pack, 50 energy for $1 from cash ----------
+s=open(d+'yofi-preview.html').read()
+def R7(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+R7("const EN_PACKS = [{ en: 50, usd: 1, gems: 150 }, { en: 150, usd: 2, gems: 400, tag: 'Popular' }, { en: 500, usd: 5, gems: 1200, tag: 'Best value' }];",
+   "const EN_PACKS = [{ en: 50, usd: 1, gems: 150 }]; EN_PACKS[1] = EN_PACKS[0]; const EN_SHOW = 1;")
+s=s.replace("EN_PACKS.map((k, i) => card(","EN_PACKS.slice(0, EN_SHOW).map((k, i) => card(",1)
+s=s.replace("${EN_PACKS.map((k, i) => `<div class=\"srow\">","${EN_PACKS.slice(0, EN_SHOW).map((k, i) => `<div class=\"srow\">",1)
+R7('<button class="wb tixp" id="tixPill"','<button class="wb enpl" id="enPill" aria-label="Energy. Tap to buy 50 energy for $1"><span>⚡</span><b id="enNum">0</b></button><button class="wb tixp" id="tixPill"')
+EW = r"""
+function paintEnPill() { const b = document.getElementById('enNum'); if (b && S) b.textContent = energy(); }
+setInterval(paintEnPill, 800);
+function enQuick() { const e = energy(), c = S.cash || 0;
+  openSheet(`<div class="ug enq"><h2>⚡ Energy</h2><p class="sub">You have <b>${e} energy</b>. Each vote uses 1, and it refills +5 an hour for free.</p>
+    <div class="enq-c"><span class="enq-i">⚡</span><div><b>50 energy</b><small>Paid from your cash · you have ${money(c)}</small></div></div>
+    <button class="btn block" id="enqGo">Pay $1 from cash</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`);
+  $('#enqGo').onclick = () => { closeSheet(); enCash(EN_PACKS[0], () => { addEnergy(EN_PACKS[0].en); paintEnPill(); }); }; }
+document.addEventListener('click', e => { if (e.target.closest('#enPill')) { e.preventDefault(); enQuick(); } });
+"""
+R7("function fcNotify() {", EW+"function fcNotify() {")
+s=s.replace('</style>',""".wb.enpl{flex:none;display:flex;align-items:center;justify-content:center;gap:2px;padding:0 8px!important;border:0;border-radius:16px;cursor:pointer;font:inherit}.enpl span{font-size:.95rem}.enpl b{font-weight:900;font-size:.95rem}
+html:not(.yg) .wb.enpl{background:#F7F1E7;box-shadow:inset 0 0 0 1.5px #CDBB98;color:#2B2320}html.yg .wb.enpl{background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760;color:#fff}
+html .wallet .wb.cash b,html .wallet .wb.gems b{font-size:1rem!important}html .wallet{gap:5px!important}html .wallet .wb.cash,html .wallet .wb.gems{padding-left:8px!important;padding-right:8px!important}
+.enq-c{display:flex;gap:14px;align-items:center;margin:14px 0;padding:14px;border-radius:16px}.enq-i{font-size:2rem}.enq-c b{display:block;font-size:1.1rem}
+html:not(.yg) .enq-c{background:#fff;box-shadow:inset 0 0 0 1.5px #CDBB98}html.yg .enq-c{background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760}
+</style>""",1)
+open(d+'yofi-preview.html','w').write(s); print('energy wallet ok')
+s=open(d+'yofi-preview.html').read()
+s=s.replace('</style>',"""html #shell > .wallet{display:flex!important;gap:5px!important}html #shell > .wallet #wCash,html #shell > .wallet #gemPill{flex:1 1 0!important;min-width:0!important;width:auto!important}
+html #shell > .wallet #enPill,html #shell > .wallet #tixPill{flex:0 0 auto!important;width:auto!important;min-width:0!important}html #shell > .wallet #walletPlus{display:none!important}
+html #shell > .wallet #enPill>span{display:inline!important;min-width:0!important}
+</style>""",1)
+open(d+'yofi-preview.html','w').write(s)
+s=open(d+'yofi-preview.html').read()
+s=s.replace('</style>',"""html #shell > .wallet .wb{padding:0 6px!important;gap:4px!important}html #shell > .wallet .wb b{font-size:.9rem!important;letter-spacing:-.01em}html #shell > .wallet .wb svg{width:18px!important;height:18px!important}
+html #shell > .wallet #gemPill .gplus{position:static!important;flex:none;width:20px!important;height:20px!important;margin-left:2px}html #shell > .wallet #gemPill .gplus svg{width:10px!important;height:10px!important}
+html #shell > .wallet #tixPill .tx-pr{font-size:.62rem!important}
+</style>""",1)
+open(d+'yofi-preview.html','w').write(s)

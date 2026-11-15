@@ -441,6 +441,17 @@ html .nxu{max-width:100%!important;overflow:hidden}html .nxu .d{min-width:0;over
 .up-ok{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:99998;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;transform:translateY(-130%);transition:transform .3s ease;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 .up-ok.on{transform:none}.up-ok img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none}.up-ok span{flex:1;min-width:0;display:flex;flex-direction:column}.up-ok small{font-size:.85rem}.up-ok button{border:0;background:none;font-size:1rem;cursor:pointer;color:inherit;opacity:.7}
 html:not(.yg) .up-ok{background:#2F6B3F;color:#fff}html.yg .up-ok{background:#118A4A;color:#fff}
+.wb.enpl{flex:none;display:flex;align-items:center;justify-content:center;gap:2px;padding:0 8px!important;border:0;border-radius:16px;cursor:pointer;font:inherit}.enpl span{font-size:.95rem}.enpl b{font-weight:900;font-size:.95rem}
+html:not(.yg) .wb.enpl{background:#F7F1E7;box-shadow:inset 0 0 0 1.5px #CDBB98;color:#2B2320}html.yg .wb.enpl{background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760;color:#fff}
+html .wallet .wb.cash b,html .wallet .wb.gems b{font-size:1rem!important}html .wallet{gap:5px!important}html .wallet .wb.cash,html .wallet .wb.gems{padding-left:8px!important;padding-right:8px!important}
+.enq-c{display:flex;gap:14px;align-items:center;margin:14px 0;padding:14px;border-radius:16px}.enq-i{font-size:2rem}.enq-c b{display:block;font-size:1.1rem}
+html:not(.yg) .enq-c{background:#fff;box-shadow:inset 0 0 0 1.5px #CDBB98}html.yg .enq-c{background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760}
+html #shell > .wallet{display:flex!important;gap:5px!important}html #shell > .wallet #wCash,html #shell > .wallet #gemPill{flex:1 1 0!important;min-width:0!important;width:auto!important}
+html #shell > .wallet #enPill,html #shell > .wallet #tixPill{flex:0 0 auto!important;width:auto!important;min-width:0!important}html #shell > .wallet #walletPlus{display:none!important}
+html #shell > .wallet #enPill>span{display:inline!important;min-width:0!important}
+html #shell > .wallet .wb{padding:0 6px!important;gap:4px!important}html #shell > .wallet .wb b{font-size:.9rem!important;letter-spacing:-.01em}html #shell > .wallet .wb svg{width:18px!important;height:18px!important}
+html #shell > .wallet #gemPill .gplus{position:static!important;flex:none;width:20px!important;height:20px!important;margin-left:2px}html #shell > .wallet #gemPill .gplus svg{width:10px!important;height:10px!important}
+html #shell > .wallet #tixPill .tx-pr{font-size:.62rem!important}
 </style>
 </head>
 <body>
@@ -516,7 +527,7 @@ html:not(.yg) .up-ok{background:#2F6B3F;color:#fff}html.yg .up-ok{background:#11
     <div class="wallet" aria-label="Wallet">
       <button class="wb cash" id="wCash" aria-label="Cash balance"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="8" width="28" height="17" rx="3" fill="#21C77A"/><rect x="5" y="11" width="22" height="11" rx="2" fill="none" stroke="#0E8F55" stroke-width="1.5"/><circle cx="16" cy="16.5" r="4.2" fill="#FFD84D"/><path d="M16 14v5M17.4 14.9c-.4-.5-2.8-.7-2.8.6 0 1.4 2.8.7 2.8 2.1 0 1.2-2.4 1.1-2.9.5" stroke="#0E8F55" stroke-width="1.1" fill="none" stroke-linecap="round"/></svg><span><small>Cash</small><b id="cashNum">$0.00</b></span></button>
       <button class="wb gems" id="gemPill" aria-label="Coins balance. See what your coins can do"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="gm-c" href="#gemPath"/><use class="gm-g" href="#gemPathY"/></svg><span><small>Coins</small><b id="gemNum">0</b></span><span class="gplus" aria-hidden="true"><svg viewBox="0 0 12 12" width="12" height="12"><path d="M6 1.5v9M1.5 6h9" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span></button>
-      <button class="wb tixp" id="tixPill" aria-label="Free tournament entries"><span class="tx-ic">🎟️</span><b id="tixNum">0</b><small id="tixProg" class="tx-pr">0/25</small><svg class="tx-ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5"/><circle class="f" cx="18" cy="18" r="15.5"/></svg></button><button class="wplus" id="walletPlus" aria-label="Add funds">+</button>
+      <button class="wb enpl" id="enPill" aria-label="Energy. Tap to buy 50 energy for $1"><span>⚡</span><b id="enNum">0</b></button><button class="wb tixp" id="tixPill" aria-label="Free tournament entries"><span class="tx-ic">🎟️</span><b id="tixNum">0</b><small id="tixProg" class="tx-pr">0/25</small><svg class="tx-ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5"/><circle class="f" cx="18" cy="18" r="15.5"/></svg></button><button class="wplus" id="walletPlus" aria-label="Add funds">+</button>
     </div>
     <div class="panes" id="panes" data-at="judge">
       <section class="pane" id="judge" aria-label="Vote on photos"></section>
@@ -2010,7 +2021,7 @@ function openStore(reason, onBuy, tab) {
   const card = (tag, tiles, btn, attr, cls = '') => `<div class="sp-card ${cls}">${tag ? `<span class="sp-tag">${tag}</span>` : ''}<div class="sp-row">${tiles}</div><button class="sp-go" ${attr}>${btn}</button></div>`;
   const head = { energy: ['Get energy', `Vote with bigger bets to earn coins faster. Refills +5 an hour free. You have <b>${energy()} ⚡</b>`], gems: ['Get coins', `Touch up photos, play coin challenges and win back your 🏅 medal. You have <b>${S.gems.toLocaleString()} 🟡</b>`], cash: ['Add cash', 'Play blue ribbon challenges, friends and tournaments. A small coin bonus included'] }[T];
   const body = `<h3 class="sp-h">${head[0]}</h3><p class="sp-s">${head[1]}</p><div class="sp-list">` + (T === 'energy'
-    ? EN_PACKS.map((k, i) => card(k.tag, tile('⚡', k.en.toLocaleString(), 'Energy', 'en') + tile('⚖️', '~' + Math.round(k.en / 2), 'votes at ×2', 'mut'), `Pay $${k.usd} cash`, `data-enusd="${i}"`)).join('')
+    ? EN_PACKS.slice(0, EN_SHOW).map((k, i) => card(k.tag, tile('⚡', k.en.toLocaleString(), 'Energy', 'en') + tile('⚖️', '~' + Math.round(k.en / 2), 'votes at ×2', 'mut'), `Pay $${k.usd} cash`, `data-enusd="${i}"`)).join('')
     : T === 'gems'
     ? GEM_PACKS.map((k, i) => card(k.tag, tile(GEM, k.gems.toLocaleString(), 'Coins', 'gm') + tile('✨', '~' + Math.floor(k.gems / 100), 'enhances', 'mut'), `Buy $${k.usd}`, `data-gbuy="${i}"`)).join('')
     : (OFFER ? card(esc(OFFER.label), tile('💵', '$' + OFFER.cash, 'Cash', 'cs') + tile(GEM, OFFER.gems.toLocaleString(), 'Free coins', 'gm'), `Add $${OFFER.cash}`, 'data-offer', 'offer') : '')
@@ -4180,6 +4191,15 @@ function upDone(p) { const old = document.getElementById('upOk'); if (old) old.r
   b.innerHTML = `<img src="${p.src}" alt=""><span><b>✓ Photo uploaded</b><small>Saved in <b>${esc(nm)}</b> · find it in ${y ? 'Studio' : 'Touch-ups'} under Switch</small></span><button aria-label="Dismiss">✕</button>`;
   document.body.appendChild(b); requestAnimationFrame(() => b.classList.add('on'));
   const bye = () => { b.classList.remove('on'); setTimeout(() => b.remove(), 300); }; b.querySelector('button').onclick = bye; setTimeout(bye, 6000); }
+
+function paintEnPill() { const b = document.getElementById('enNum'); if (b && S) b.textContent = energy(); }
+setInterval(paintEnPill, 800);
+function enQuick() { const e = energy(), c = S.cash || 0;
+  openSheet(`<div class="ug enq"><h2>⚡ Energy</h2><p class="sub">You have <b>${e} energy</b>. Each vote uses 1, and it refills +5 an hour for free.</p>
+    <div class="enq-c"><span class="enq-i">⚡</span><div><b>50 energy</b><small>Paid from your cash · you have ${money(c)}</small></div></div>
+    <button class="btn block" id="enqGo">Pay $1 from cash</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`);
+  $('#enqGo').onclick = () => { closeSheet(); enCash(EN_PACKS[0], () => { addEnergy(EN_PACKS[0].en); paintEnPill(); }); }; }
+document.addEventListener('click', e => { if (e.target.closest('#enPill')) { e.preventDefault(); enQuick(); } });
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -4321,9 +4341,9 @@ const isLive = () => tUnlocked() && fighters().length > 0 && (S.votes || 0) % 3 
 function paintEnergy() { const e = energy(), b = document.querySelector('#judge .en-bar i'), t = document.querySelector('#judge .en-n'), nx = document.querySelector('#judge .en-nx');
   if (b) b.style.width = (e / EN_MAX * 100) + '%'; if (t) t.innerHTML = e > EN_MAX ? `${EN_MAX}<small> +${e - EN_MAX}</small>` : `${e}/${EN_MAX}`; if (nx) nx.textContent = `+5 ⚡ in ${enNext()}`; }
 setInterval(() => { if (S && $('#panes') && $('#panes').dataset.at === 'judge') paintEnergy(); }, 1000);
-const EN_PACKS = [{ en: 50, usd: 1, gems: 150 }, { en: 150, usd: 2, gems: 400, tag: 'Popular' }, { en: 500, usd: 5, gems: 1200, tag: 'Best value' }];
+const EN_PACKS = [{ en: 50, usd: 1, gems: 150 }]; EN_PACKS[1] = EN_PACKS[0]; const EN_SHOW = 1;
 function addEnergy(n) { energy(); S.en += n; S.enAt = Date.now(); save(); if ($('#panes').dataset.at === 'judge') renderJudge(); toast(`⚡ +${n} energy! Keep judging.`); }
-const enPackHTML = () => `<div class="srows">${EN_PACKS.map((k, i) => `<div class="srow">${k.tag ? `<span class="enp-t">${k.tag}</span>` : ''}<span class="si">⚡</span><span class="sv"><b>${k.en}</b><small>energy</small></span><button class="sb" data-enusd="${i}">Pay $${k.usd} cash</button></div>`).join('')}</div>`;
+const enPackHTML = () => `<div class="srows">${EN_PACKS.slice(0, EN_SHOW).map((k, i) => `<div class="srow">${k.tag ? `<span class="enp-t">${k.tag}</span>` : ''}<span class="si">⚡</span><span class="sv"><b>${k.en}</b><small>energy</small></span><button class="sb" data-enusd="${i}">Pay $${k.usd} cash</button></div>`).join('')}</div>`;
 function enCash(k, then) { const c = S.cash || 0;
   if (c < k.usd) { openStore(`${k.en} energy costs ${money(k.usd)} from your cash. You have ${money(c)}. Add cash first.`); setTimeout(() => { const t = [...document.querySelectorAll('#sheetBody button')].find(b => /^\s*\S*\s*Cash\s*$/.test(b.textContent)); if (t) t.click(); }, 50); return; }
   S.cash = +(c - k.usd).toFixed(2); save(); paintWallet(); toast(`⚡ +${k.en} energy · ${money(k.usd)} from your cash`); then(); }
