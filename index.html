@@ -4839,6 +4839,8 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .dw h3{margin:14px 0 4px;font:900 1.25rem 'Bricolage Grotesque',sans-serif}.dw p{margin:0;color:#C9B4F5;font-size:.9rem}.dw p svg,.dw h3 svg{width:14px;height:14px;vertical-align:-2px}.dw-s{margin-top:8px!important;font-size:.82rem!important;color:#A994D6!important}
 .dw-go{margin-top:14px}.dw-b{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px}.dw-re{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:#25D366;color:#fff;font-weight:800;text-decoration:none}.dw-re svg{width:18px;height:18px}.dw-x{color:#C9B4F5!important}
 .dw-vs{position:relative}.dw .lgv-x{top:calc(50% - 12px);width:44px;height:44px;font-size:.95rem}
+.ut0-how{display:flex;gap:14px;align-items:center;margin:14px 0 12px;padding:14px;border-radius:16px;background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2760}.ut0-i{font-size:2rem}.ut0-how b{display:block;font-weight:800;font-size:1.05rem;color:#fff}.ut0-how small{color:#C9B4F5;font-size:.9rem}
+.ut0-bar{height:10px;border-radius:9px;background:#2A1A46;overflow:hidden}.ut0-bar i{display:block;height:100%;background:#FFC93C;border-radius:9px}.ut0-n{margin:6px 0 16px;font-weight:700;color:#C9B4F5;text-align:center}
 </style>
 </head>
 <body>
@@ -9316,6 +9318,12 @@ function ticketPop() {
 // Use your tickets: pick which $1 tournament a free entry goes on
 function useTickets() {
   const n = S.cashTix || 0, SL = tSlots().filter(t => !t.gem).slice(0, 4);
+  if (!n) { const c = Math.min(S.combo || 0, 10);
+    openSheet(`<div class="ug ut0"><h2>Free entries</h2><p class="sub">You don’t have a free entry yet. Each one enters a <b>$1 tournament</b> free.</p>
+      <div class="ut0-how"><span class="ut0-i">🧰</span><div><b>Pick the winner 10 times in a row</b><small>On the Judge page. The big chest opens and gives you free entries.</small></div></div>
+      <div class="ut0-bar"><i style="width:${c * 10}%"></i></div><p class="ut0-n">${c} of 10 in a row</p>
+      <button class="btn block" id="ut0Go">Keep judging</button><button class="link ug-buy" id="utAll">See tournaments</button></div>`);
+    $('#ut0Go').onclick = () => { closeSheet(); go('judge'); }; $('#utAll').onclick = () => { closeSheet(); openComps(null); }; return; }
   openSheet(`<div class="ug"><h2>Use your tickets</h2><p class="sub">You have <b>🎟️ ${n} free entr${n === 1 ? 'y' : 'ies'}</b>. Each one enters a <b>$1 tournament</b> free. Win real cash.</p>
     ${SL.map((t, i) => `<button class="ug-r ug-tix" data-ut="${i}"><span class="ug-i">🏆</span><span class="ug-t"><b>${t.myst ? '🎰 Mystery tournament' : `US$${t.gtd} tournament`}</b><small>Starts in <span data-tat="${t.now ? 'next' : t.at}">${tLeft(t.at)}</span> · ${T_N} players · ${t.myst ? 'win up to $1,000' : 'guaranteed prize'}</small></span><em class="claim">Use ticket</em></button>`).join('')}
     <button class="link ug-buy" id="utAll">See all tournaments</button></div>`);
