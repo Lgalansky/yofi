@@ -59,6 +59,8 @@ EXTRA = """
 html.yg .ca-hero{display:none!important}
 html:not(.yg) .hx-in.hxp-low{display:none!important}
 #ageGate{z-index:100000}
+#ageGate .ob-bub button{background:#EADCC6!important;color:#2B2320!important}#ageGate .ob-bub button[aria-pressed="true"]{background:#2D4E86!important;color:#fff!important}
+html.yg #ageGate .ob-bub button[aria-pressed="true"]{background:linear-gradient(135deg,#FF2D8E,#7B3CFF)!important}html.yg #ageGate .btn:not(:disabled){background:linear-gradient(135deg,#FF2D8E,#7B3CFF)!important}
 """
 # one style block in place of the Fall Fair ones
 first=s.index('<style>'); s=re.sub(r'<style>.*?</style>\s*', '', s, flags=re.S)
@@ -66,7 +68,7 @@ s=s[:first]+'<style>'+Y+'\n'+F+EXTRA+'</style>\n'+s[first:]
 
 # theme class before first paint: saved bracket decides; no bracket yet -> original look
 s=s.replace('<html lang="en" data-theme="light">','<html lang="en" class="yg">',1)
-s=s.replace('<body>','<body>\n<script>try{var _b=(JSON.parse(localStorage.getItem("yofi.proto.v1")||"{}")||{}).ageBr;if(_b&&_b!=="18 to 24"){document.documentElement.classList.remove("yg");document.documentElement.setAttribute("data-theme","light")}}catch(e){}</script>',1)
+s=s.replace('<body>','<body>\n<script>try{var _b=(JSON.parse(localStorage.getItem("yofi.proto.v1")||"{}")||{}).ageBr;window.__young=!(_b&&_b!=="18 to 24");if(!window.__young){document.documentElement.classList.remove("yg");document.documentElement.setAttribute("data-theme","light")}}catch(e){window.__young=true}</script>',1)
 
 def R(a,b,n=1):
     global s; assert s.count(a)==n,(a[:80],s.count(a)); s=s.replace(a,b)
@@ -79,6 +81,26 @@ s=s.replace("setTimeout(youngPass, 0);","setTimeout(() => { setLook(); youngPass
 
 R("const OB_AGES = ['25 to 34',","const OB_AGES = ['18 to 24', '25 to 34',")
 R("const OB_PRE = { '25 to 34':","const OB_PRE = { '18 to 24': ['Travel', 'Dogs', 'Dinner parties', 'Beach'], '25 to 34':")
+# under 25: Skill categories and their own interest bubbles; 25+: Fall Fair categories and interests
+R("${GI_CA[k] || GICON[k] || GICON.star}</svg>`;","${(!window.__young && GI_CA[k]) || GICON[k] || GICON.star}</svg>`;")
+R("const OB_INT = [","const OB_INT_O = [")
+R("const OB_PRE = { '18 to 24': ['Travel', 'Dogs', 'Dinner parties', 'Beach'],", """const OB_INT_Y = [['Selfies', 3, 'selfie'], ['Bodybuilding', 3, 'fitness'], ['Fashion', 3, 'style'], ['Nights out', 3, 'night'], ['Travel', 2, 'travel'], ['Gym', 2, 'fitness'],
+  ['Makeup', 2, 'selfie'], ['Festivals', 2, 'night'], ['Beach', 2, 'travel'], ['Dogs', 2, 'pets'], ['Food', 2, 'food'], ['Sneakers', 1, 'style'], ['Streetwear', 1, 'style'], ['Partying', 1, 'night'],
+  ['Running', 1, 'fitness'], ['Road trips', 1, 'travel'], ['Cats', 1, 'pets'], ['Brunch', 1, 'food'], ['Cooking', 1, 'food'], ['Cars', 1, 'any'], ['Music', 1, 'night']];
+let OB_INT = window.__young ? OB_INT_Y : OB_INT_O;
+const OB_PRE = { '18 to 24': ['Selfies', 'Bodybuilding', 'Fashion', 'Nights out', 'Travel'],""")
+a=s.index("const WALL_SHORT = {"); b=s.index("};", a)+2; s=s[:b]+"\napplyNames();"+s[b:]
+R("function setLook() { const y = isYoung(), r = document.documentElement;", """// category names follow the look: Skill names for under 25, Fall Fair names for 25+
+function applyNames() { const y = !!window.__young, A = applyNames; if (!A.o) A.o = { fc: FC_THEMES.map(t => t[1]), pc: PCATS.map(t => t[1]), ch: { ...CHAL }, ws: { ...WALL_SHORT } };
+  const FY = { selfie: 'Best Selfie', style: 'Best Outfit', fitness: 'Best Gym', pets: 'Best Pet', food: 'Best Cooking', travel: 'Best Holiday', night: 'Best Night Out', any: 'Best Anything' };
+  const PY = { selfie: 'Selfies', night: 'Night out', travel: 'Holiday', food: 'Cooking', style: 'Outfit', fitness: 'Gym' };
+  const CY = { Pets: 'Best Pet', Nature: 'Best Holiday', Wildlife: 'Best Anything', People: 'Best Selfie', Travel: 'Best Holiday', Food: 'Best Cooking', Cities: 'Best Night Out', Action: 'Best Gym' };
+  const WY = { selfie: 'Selfie', food: 'Cooking', travel: 'Holiday', night: 'Night out', fitness: 'Gym', style: 'Outfit' };
+  FC_THEMES.forEach((t, i) => t[1] = y ? (FY[t[0]] || A.o.fc[i]) : A.o.fc[i]);
+  PCATS.forEach((t, i) => t[1] = y && PY[t[0]] ? PY[t[0]] : A.o.pc[i]);
+  Object.keys(CHAL).forEach(k => CHAL[k] = y && CY[k] ? CY[k] : A.o.ch[k]);
+  Object.keys(WALL_SHORT).forEach(k => WALL_SHORT[k] = y && WY[k] ? WY[k] : A.o.ws[k]); }
+function setLook() { const y = isYoung(), r = document.documentElement; window.__young = y; OB_INT = y ? OB_INT_Y : OB_INT_O; applyNames();""")
 # neutral, 18+
 R('<p>Yofi has cash prizes, so you must be the age of majority in your province (<b>19+</b>, or 18+ in AB, MB and QC) to play.</p>','<p>Yofi has cash prizes, so you must be <b>18 or over</b> to play.</p>')
 R('I confirm I’m of legal age in my province','I confirm I’m <b>18 or over</b>')

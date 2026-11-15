@@ -414,11 +414,13 @@ html:not(.yg){
 html.yg .ca-hero{display:none!important}
 html:not(.yg) .hx-in.hxp-low{display:none!important}
 #ageGate{z-index:100000}
+#ageGate .ob-bub button{background:#EADCC6!important;color:#2B2320!important}#ageGate .ob-bub button[aria-pressed="true"]{background:#2D4E86!important;color:#fff!important}
+html.yg #ageGate .ob-bub button[aria-pressed="true"]{background:linear-gradient(135deg,#FF2D8E,#7B3CFF)!important}html.yg #ageGate .btn:not(:disabled){background:linear-gradient(135deg,#FF2D8E,#7B3CFF)!important}
 html.yg .gm-c,html:not(.yg) .gm-g{display:none}
 </style>
 </head>
 <body>
-<script>try{var _b=(JSON.parse(localStorage.getItem("yofi.proto.v1")||"{}")||{}).ageBr;if(_b&&_b!=="18 to 24"){document.documentElement.classList.remove("yg");document.documentElement.setAttribute("data-theme","light")}}catch(e){}</script>
+<script>try{var _b=(JSON.parse(localStorage.getItem("yofi.proto.v1")||"{}")||{}).ageBr;window.__young=!(_b&&_b!=="18 to 24");if(!window.__young){document.documentElement.classList.remove("yg");document.documentElement.setAttribute("data-theme","light")}}catch(e){window.__young=true}</script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <linearGradient id="gemGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7FE3FF"/><stop offset=".55" stop-color="#2A8CFF"/><stop offset="1" stop-color="#7B3CFF"/></linearGradient>
@@ -2645,7 +2647,7 @@ function askCategory(p, done, closable = false, hint = null) {
   $('#flowBody').querySelectorAll('.pcats button').forEach(b => b.onclick = () => { p.cat = b.dataset.k; save(); done(); });
 }
 const GI_CA = { selfie: '<circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M3 20c0-3.3 2.2-6 5-6s5 2.7 5 6"/><path d="M13.5 20c0-2.6 1.6-4.6 3.5-4.6s3.5 2 3.5 4.6"/>', style: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>', fitness: '<path d="M12 21v-8"/><path d="M7.5 4c0 5 1.8 9 4.5 9s4.5-4 4.5-9L14.2 6 12 3 9.8 6z"/><path d="M12 18c-1.8-2-4.5-2.2-5.8-1.2 1 2 3.8 3 5.8 1.2zM12 18c1.8-2 4.5-2.2 5.8-1.2-1 2-3.8 3-5.8 1.2z"/>', night: '<path d="M5 19C5 10 11 5 20 5c0 9-5 14-14 14"/><path d="M5 19l8-8"/>' };
-const gi = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GI_CA[k] || GICON[k] || GICON.star}</svg>`;
+const gi = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${(!window.__young && GI_CA[k]) || GICON[k] || GICON.star}</svg>`;
 const ROOMS = [
   { name: 'First Light', theme: 'r1', blurb: 'Light, life and everyday wonder.', slots: [['portrait', 'People', ['portrait']], ['pets', 'Pets', ['pets']], ['landscape', 'Nature', ['landscape']], ['star', 'Wildcard', null]] },
   { name: 'Rising Star', theme: 'r2', blurb: 'Big views and bold subjects.', slots: [['wildlife', 'Wildlife', ['wildlife']], ['travel', 'Travel', ['travel']], ['food', 'Food', ['food']], ['star', 'Wildcard', null]] },
@@ -4048,10 +4050,14 @@ setInterval(() => {
 }, 2000);
 
 const OB_AGES = ['18 to 24', '25 to 34', '35 to 44', '45 to 54', '55 to 64', '65 and over'];
-const OB_INT = [['Gardening', 3, 'fitness'], ['Grandkids', 3, 'selfie'], ['Baking', 2, 'food'], ['Travel', 3, 'travel'], ['Dogs', 2, 'pets'], ['Flowers', 2, 'fitness'], ['Cottage life', 2, 'travel'], ['Birds', 1, 'night'],
+const OB_INT_O = [['Gardening', 3, 'fitness'], ['Grandkids', 3, 'selfie'], ['Baking', 2, 'food'], ['Travel', 3, 'travel'], ['Dogs', 2, 'pets'], ['Flowers', 2, 'fitness'], ['Cottage life', 2, 'travel'], ['Birds', 1, 'night'],
   ['Fall colours', 2, 'night'], ['Family', 2, 'selfie'], ['Quilting & crafts', 1, 'style'], ['Cats', 1, 'pets'], ['Home decor', 2, 'style'], ['Sunsets', 1, 'night'], ['Dinner parties', 1, 'food'], ['Winter scenes', 1, 'night'],
   ['Golf', 1, 'night'], ['Beach', 1, 'travel'], ['Weddings', 1, 'selfie'], ['Fishing', 1, 'night'], ['Vintage finds', 1, 'style']];
-const OB_PRE = { '18 to 24': ['Travel', 'Dogs', 'Dinner parties', 'Beach'], '25 to 34': ['Travel', 'Dogs', 'Dinner parties', 'Home decor'], '35 to 44': ['Family', 'Travel', 'Baking', 'Dogs'], '45 to 54': ['Gardening', 'Family', 'Travel', 'Cottage life', 'Baking'], '55 to 64': ['Gardening', 'Grandkids', 'Travel', 'Flowers', 'Baking'], '65 and over': ['Grandkids', 'Gardening', 'Birds', 'Quilting & crafts'] };
+const OB_INT_Y = [['Selfies', 3, 'selfie'], ['Bodybuilding', 3, 'fitness'], ['Fashion', 3, 'style'], ['Nights out', 3, 'night'], ['Travel', 2, 'travel'], ['Gym', 2, 'fitness'],
+  ['Makeup', 2, 'selfie'], ['Festivals', 2, 'night'], ['Beach', 2, 'travel'], ['Dogs', 2, 'pets'], ['Food', 2, 'food'], ['Sneakers', 1, 'style'], ['Streetwear', 1, 'style'], ['Partying', 1, 'night'],
+  ['Running', 1, 'fitness'], ['Road trips', 1, 'travel'], ['Cats', 1, 'pets'], ['Brunch', 1, 'food'], ['Cooking', 1, 'food'], ['Cars', 1, 'any'], ['Music', 1, 'night']];
+let OB_INT = window.__young ? OB_INT_Y : OB_INT_O;
+const OB_PRE = { '18 to 24': ['Selfies', 'Bodybuilding', 'Fashion', 'Nights out', 'Travel'], '25 to 34': ['Travel', 'Dogs', 'Dinner parties', 'Home decor'], '35 to 44': ['Family', 'Travel', 'Baking', 'Dogs'], '45 to 54': ['Gardening', 'Family', 'Travel', 'Cottage life', 'Baking'], '55 to 64': ['Gardening', 'Grandkids', 'Travel', 'Flowers', 'Baking'], '65 and over': ['Grandkids', 'Gardening', 'Birds', 'Quilting & crafts'] };
 function obRank() { const r = {}; (S.likes || []).forEach(n => { const x = OB_INT.find(i => i[0] === n); if (x) r[x[2]] = (r[x[2]] || 0) + 1; }); return r; }
 function obSort() { if (!S.likes) return; const r = obRank(), o = ['selfie', 'style', 'fitness', 'pets', 'food', 'travel', 'night', 'any'];
   CATS8.sort((a, b) => (a === 'any') - (b === 'any') || (r[b] || 0) - (r[a] || 0) || o.indexOf(a) - o.indexOf(b)); }
@@ -4095,7 +4101,17 @@ const YOUNG_W = [[/Today’s photo challenges/g, 'Battle for the crown'], [/\bHe
   [/\bClubs\b/g, 'Friends'], [/\bClub pot\b/g, 'Friends pot'], [/\bclub pot\b/g, 'friends pot'], [/\bClub\b/g, 'Friends group'], [/\bclub\b/g, 'friends group'], [/\bTouch-ups\b/g, 'Studio'], [/\bTouch up\b/g, 'Enhance'], [/\btouch up\b/g, 'enhance'],
   [/\bShows\b/g, 'Tournaments'], [/^Vote$/, 'Judge'], [/^Compete$/, 'Battle'], [/\bCHALLENGE\b/g, 'BATTLE'], [/\bChallenges\b/g, 'Battles'], [/\bchallenges\b/g, 'battles'], [/\bChallenge\b/g, 'Battle'], [/\bchallenge\b/g, 'battle'], [/^Enter · /, 'Battle · ']];
 const isYoung = () => S && (!S.ageBr || S.ageBr === '18 to 24');
-function setLook() { const y = isYoung(), r = document.documentElement; r.classList.toggle('yg', y); if (y) r.removeAttribute('data-theme'); else r.setAttribute('data-theme', 'light'); }
+// category names follow the look: Skill names for under 25, Fall Fair names for 25+
+function applyNames() { const y = !!window.__young, A = applyNames; if (!A.o) A.o = { fc: FC_THEMES.map(t => t[1]), pc: PCATS.map(t => t[1]), ch: { ...CHAL }, ws: { ...WALL_SHORT } };
+  const FY = { selfie: 'Best Selfie', style: 'Best Outfit', fitness: 'Best Gym', pets: 'Best Pet', food: 'Best Cooking', travel: 'Best Holiday', night: 'Best Night Out', any: 'Best Anything' };
+  const PY = { selfie: 'Selfies', night: 'Night out', travel: 'Holiday', food: 'Cooking', style: 'Outfit', fitness: 'Gym' };
+  const CY = { Pets: 'Best Pet', Nature: 'Best Holiday', Wildlife: 'Best Anything', People: 'Best Selfie', Travel: 'Best Holiday', Food: 'Best Cooking', Cities: 'Best Night Out', Action: 'Best Gym' };
+  const WY = { selfie: 'Selfie', food: 'Cooking', travel: 'Holiday', night: 'Night out', fitness: 'Gym', style: 'Outfit' };
+  FC_THEMES.forEach((t, i) => t[1] = y ? (FY[t[0]] || A.o.fc[i]) : A.o.fc[i]);
+  PCATS.forEach((t, i) => t[1] = y && PY[t[0]] ? PY[t[0]] : A.o.pc[i]);
+  Object.keys(CHAL).forEach(k => CHAL[k] = y && CY[k] ? CY[k] : A.o.ch[k]);
+  Object.keys(WALL_SHORT).forEach(k => WALL_SHORT[k] = y && WY[k] ? WY[k] : A.o.ws[k]); }
+function setLook() { const y = isYoung(), r = document.documentElement; window.__young = y; OB_INT = y ? OB_INT_Y : OB_INT_O; applyNames(); r.classList.toggle('yg', y); if (y) r.removeAttribute('data-theme'); else r.setAttribute('data-theme', 'light'); }
 function youngPass() { if (!isYoung() || !document.body) return;
   const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, { acceptNode: n => { const p = n.parentElement; return !p || p.closest('script,style,textarea,input,.wm') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; } });
   let n; while ((n = w.nextNode())) { const t = n.nodeValue; if (!t || !t.trim()) continue; let u = t; for (const [a, b] of YOUNG_W) { if (a.source.startsWith('^')) { if (a.test(u.trim())) u = u.replace(u.trim(), u.trim().replace(a, b)); } else u = u.replace(a, b); } if (u !== t) n.nodeValue = u; }
@@ -5475,6 +5491,7 @@ function photoSwitcher() {
 let WALL = true;
 const WALL_CATS = CATS8; // the friend challenge categories; everything else hangs in Anything
 const WALL_SHORT = { style: 'Fashion', city: 'City', action: 'Sport', garden: 'Garden', any: 'Anything', pets: 'Pet', selfie: 'Family', food: 'Kitchen', travel: 'Travel', night: 'Nature', fitness: 'Garden', style: 'Home' };
+applyNames();
 const wallOf = c => WALL_CATS.includes(c) ? c : CAT_MAP[c] || 'any';
 const wallName = k => WALL_SHORT[k] || pcatName(k);
 const WALL_REWARD = [[3, 100, 'gems'], [WALL_CATS.length, 250, 'gems']]; // categories ready to play (70+)
