@@ -1930,8 +1930,9 @@ function showCoach() {
 }
 
 const GEM_PACKS = [{ gems: 500, usd: 4.99 }, { gems: 1200, usd: 9.99, tag: 'Popular' }, { gems: 3000, usd: 19.99, tag: 'Best value' }];
-const CASH_EN = [50, 150, 400]; // bonus energy with each cash deposit
+const CASH_EN = [25, 50, 150, 400]; // bonus energy with each cash deposit
 const PACKS = [
+  { t: 'Try it', sub: 'A small top-up to play.', cash: 5, bonus: 0, gems: 10, free: 10, cls: '' },
   { t: 'Starter', sub: 'Great way to get started.', cash: 10, bonus: 1, gems: 20, free: 25, cls: '' },
   { t: 'Plus', sub: 'More photos. More chances.', cash: 25, bonus: 3, gems: 50, free: 40, cls: 'plus' },
   { t: 'Pro', sub: 'Best value. Bigger wins.', cash: 50, bonus: 7, gems: 100, free: 60, cls: 'pro' }
@@ -2026,7 +2027,7 @@ function openStore(reason, onBuy, tab) {
     : T === 'gems'
     ? GEM_PACKS.map((k, i) => card(k.tag, tile(GEM, k.gems.toLocaleString(), 'Coins', 'gm') + tile('✨', '~' + Math.floor(k.gems / 100), 'enhances', 'mut'), `Buy $${k.usd}`, `data-gbuy="${i}"`)).join('')
     : (OFFER ? card(esc(OFFER.label), tile('💵', '$' + OFFER.cash, 'Cash', 'cs') + tile(GEM, OFFER.gems.toLocaleString(), 'Free coins', 'gm'), `Add $${OFFER.cash}`, 'data-offer', 'offer') : '')
-      + PACKS.map((k, i) => card(i === 2 ? 'Best value' : '', tile('💵', '$' + k.cash, 'Cash', 'cs') + tile(GEM, k.gems.toLocaleString(), 'Free coins', 'gm') + tile('⚡', CASH_EN[i], 'Free energy', 'en'), `Add $${k.cash}`, `data-buy="${i}"`)).join('')) + '</div>';
+      + PACKS.map((k, i) => card(i === 3 ? 'Best value' : i === 2 ? 'Popular' : '', tile('💵', '$' + k.cash, 'Cash', 'cs') + tile(GEM, k.gems.toLocaleString(), 'Free coins', 'gm') + tile('⚡', CASH_EN[i], 'Free energy', 'en'), `Add $${k.cash}`, `data-buy="${i}"`)).join('')) + '</div>';
   openSheet(`<div class="shop2 shop4"><div class="sp-top"><h2>Shop</h2><button class="sp-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <div class="sp-tabs" role="tablist">${[['energy', '⚡', 'Energy'], ['gems', GEM, 'Coins'], ['cash', '💵', 'Cash']].map(([k, ic, l]) => `<button role="tab" data-shtab="${k}" class="t-${k}" aria-selected="${k === T}"><span class="ti">${ic}</span>${l}</button>`).join('')}</div>
     ${body}

@@ -426,3 +426,13 @@ assert s.count(a)==1
 s=s.replace(a,"  SHOPTAB = 'cash';\n  const T = SHOPTAB;")
 s=s.replace('</style>','#sheetBody .sp-tabs{display:none!important}\n</style>',1)
 open(d+'yofi-preview.html','w').write(s)
+# ---------- $5 cash pack ----------
+s=open(d+'yofi-preview.html').read()
+a="const CASH_EN = [50, 150, 400];"; assert s.count(a)==1; s=s.replace(a,"const CASH_EN = [25, 50, 150, 400];")
+a="const PACKS = [\n  { t: 'Starter',"; assert s.count(a)==1
+s=s.replace(a,"const PACKS = [\n  { t: 'Try it', sub: 'A small top-up to play.', cash: 5, bonus: 0, gems: 10, free: 10, cls: '' },\n  { t: 'Starter',")
+open(d+'yofi-preview.html','w').write(s)
+s=open(d+'yofi-preview.html').read()
+a="PACKS.map((k, i) => card(i === 2 ? 'Best value' : '',"; assert s.count(a)==1
+s=s.replace(a,"PACKS.map((k, i) => card(i === 3 ? 'Best value' : i === 2 ? 'Popular' : '',")
+open(d+'yofi-preview.html','w').write(s)
