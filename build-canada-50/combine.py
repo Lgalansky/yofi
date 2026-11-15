@@ -158,3 +158,13 @@ R2("  await sleep(2000); clearInterval(iv);",
 s=s.replace('>Start playing · ${picked.size} picked<','>${window.__obAfter ? \'Continue\' : \'Start playing\'} · ${picked.size} picked<',1)
 s=s.replace('<h1>What do you love to photograph?</h1>','<h1>${window.__obAfter ? \'Nice photo! What else do you love to photograph?\' : \'What do you love to photograph?\'}</h1>',1)
 open(d+'yofi-preview.html','w').write(s); print('start ok')
+
+# ---------- tournament loss: only suggest a new photo, and open the picker without jumping to Touch-ups ----------
+s=open(d+'yofi-preview.html').read()
+a="<div class=\"tw-b\"><button id=\"twNew\">📷 Try a new photo</button>${lowestOpen(p) ? `<button id=\"twEnh\" data-k=\"${k}\">✨ Touch up ${esc(c.short.toLowerCase())} · ${fixCost(p)} 🟡</button>` : ''}</div>"
+assert s.count(a)==1, s.count(a)
+s=s.replace(a,"<div class=\"tw-b\"><button id=\"twNew\">📷 Try a new photo</button></div>")
+a="if ($('#twNew')) $('#twNew').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); go('studio'); pickPhoto(true); };"
+assert s.count(a)==1
+s=s.replace(a,"if ($('#twNew')) $('#twNew').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); pickPhoto(true); };")
+open(d+'yofi-preview.html','w').write(s); print('tourney ok')

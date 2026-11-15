@@ -5272,7 +5272,7 @@ function whyLostHTML(T) {
   if (T.out < 0) return ''; const M = T.rounds[T.out], p = S.photos.find(x => x.id === T.pid); if (!p || M.spec) return '';
   const k = lowestOpen(p) || C.reduce((a, c) => (p.s[c.k] < p.s[a.k] ? c : a)).k, c = C.find(x => x.k === k), mine = p.s[k], theirs = Math.min(97, Math.max(mine + 9, p.s.total + 4));
   return `<div class="tk-why"><b>Why you lost</b><p>@${esc(M.opp.h)}’s photo won on <b>${esc(c.name.toLowerCase())}</b>: ${theirs} vs your ${mine}.</p>
-    <div class="tw-b"><button id="twNew">📷 Try a new photo</button>${lowestOpen(p) ? `<button id="twEnh" data-k="${k}">✨ Touch up ${esc(c.short.toLowerCase())} · ${fixCost(p)} 🟡</button>` : ''}</div></div>`;
+    <div class="tw-b"><button id="twNew">📷 Try a new photo</button></div></div>`;
 }
 function tRecap(T) { if (T.out < 0) return ''; const M = T.rounds[T.out];
   return `<div class="tk-rc"><small>Your last match · ${T.out === T_LAST ? 'Best in Show' : T_NAMES[T.out]}</small><div><span class="me"><img src="${T.src}" alt=""><b>You</b></span><em>${M.mv}<i>–</i>${M.ov}</em><span><img src="${M.opp.src}" alt=""><b>@${esc(M.opp.h)}</b></span></div><p>${M.ov - M.mv <= 4 ? `So close! Just ${M.ov - M.mv} vote${M.ov - M.mv === 1 ? '' : 's'} in it.` : `${M.ov} of ${T_VOTES} members picked @${esc(M.opp.h)}.`}</p></div>`; }
@@ -5340,7 +5340,7 @@ function paintTourney() {
       ${tPyramid(T, won ? 4 : T.out, won ? -1 : T.out)}
       <button class="btn block kg-go tk-join" id="tkAgain">${(S.cash || 0) >= (T.fee || 1) ? `Rematch · next starts in ${tMins()}` : `Top up $5 & rematch · starts in ${tMins()}`}</button>
       <div style="text-align:center"><button class="link" data-shclose>Back to judging</button></div>`;
-    if ($('#twNew')) $('#twNew').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); go('studio'); pickPhoto(true); };
+    if ($('#twNew')) $('#twNew').onclick = () => { closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); pickPhoto(true); };
     if ($('#twEnh')) $('#twEnh').onclick = () => { const p = S.photos.find(x => x.id === T.pid); if (!p) return; window.__pickRet = { label: 'Back to tournaments', go: () => { tArm(); openTourney(); } }; closeSheet(); startEnhance(p, $('#twEnh').dataset.k); };
     $('#tkAgain').onclick = () => { tTier(T.fee || 1); S.tour = null; save(); if ((S.cash || 0) < T_FEE) { quickPack(5, 500, 'Rematch top-up', () => openTourney()); return; } closeSheet(); openTourney(); };
     bind(); return;
