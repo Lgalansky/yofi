@@ -931,7 +931,7 @@ function tierLockPop(f, mine) {
     <span class="tlk-tag">Locked</span>
     <h2 id="crT">${L.n} tables</h2>
     <p class="tlk-p">$${f} tournaments need a photo scoring <b>${L.at}+</b>.</p>
-    <div class="tlk-bar"><div class="tlk-lab"><span>Your best <b>${v}</b></span><span>${L.ic} <b>${L.at}</b></span></div><div class="tlk-tr"><i style="width:${pct}%"></i></div><small>${gap} star${gap === 1 ? '' : 's'} to unlock up to <b>$${T_TIERS[f].gtd}</b> guaranteed</small></div>
+    <div class="tlk-bar"><div class="tlk-lab"><span>Your best <b>${v}</b></span><span>${L.ic} <b>${L.at}</b></span></div><div class="tlk-tr"><i style="width:${pct}%"></i></div><small>${gap} point${gap === 1 ? '' : 's'} to unlock up to <b>$${T_TIERS[f].gtd}</b> guaranteed</small></div>
     <button class="bt-cta" id="tlkGo">Touch up to ${L.at}</button>
     <button class="bt-no" id="tlkNo">Not now</button></div>`;
   c.classList.add('on', 'cr');
@@ -1763,7 +1763,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#sheet'
 function openSignup(then, opts = {}) {
   const p = cur();
   openSheet(`<h2>Save your photo and coins</h2>
-    <p class="sub">${p ? `Your photo is at ${p.s.total}${p.s.total < CFG.QUALIFY ? ` and ${CFG.QUALIFY - p.s.total} stars from qualifying` : ' and qualified'}. ` : ''}Create your account so nothing gets lost. You’ll get ${CFG.SIGNUP} extra coins.</p>
+    <p class="sub">${p ? `Your photo is at ${p.s.total}${p.s.total < CFG.QUALIFY ? ` and ${CFG.QUALIFY - p.s.total} points from qualifying` : ' and qualified'}. ` : ''}Create your account so nothing gets lost. You’ll get ${CFG.SIGNUP} extra coins.</p>
     <label class="field">Username<input id="suH" autocomplete="username" placeholder="e.g. goldenhourgreg" maxlength="24"></label>
     <label class="field">Email<input id="suE" type="email" autocomplete="email" placeholder="you@example.com"></label>
     <p class="err" id="suErr"></p>
@@ -2425,7 +2425,7 @@ function openEntryGuide(c, bestP) {
     <div class="ceg-top"><button class="ceg-x" id="cegBack" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
       <span class="wm">Yofi</span><button class="ceg-x" id="cegX" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <span class="fc-chip" data-cg>${IC.clock}${esc(c.t)} · Ends in ${fmtLeft(cxLeft(c))}</span>
-    <h2 class="fc-h">You’re ${need - bestP.s.total} star${need - bestP.s.total === 1 ? '' : 's'} away!</h2>
+    <h2 class="fc-h">You’re ${need - bestP.s.total} point${need - bestP.s.total === 1 ? '' : 's'} away!</h2>
     <p class="fc-p">Your photo scores ${bestP.s.total}. Touch up it to ${need}+ and you’re in.</p>
     <button class="fc-box en2" id="cegBox" aria-label="Touch up this photo"><span class="en2-ph"><img src="${bestP.src}" alt=""></span>
       <span class="en2-sc"><i>${bestP.s.total}</i><em></em><i class="to">${need}+</i></span>
@@ -2968,7 +2968,7 @@ function openFill(r, s, pref) {
   const close = S.photos.filter(p => fitsSlot(p, sl) && p.s.total < mn).sort((a, b) => b.s.total - a.s.total)[0];
   if (!ok.length) { openUnlock(r, s, sl, wild, theme.trim(), close); return; }
   openSheet(`<h2>Add to the ${sl[1]} frame</h2>
-    <p class="sub">${ok.length ? `Pick a ${mn}+ ${wild ? '' : theme}photo${wild ? ' from any category' : ''}. ${framed(r, s) ? ' It replaces the photo in that frame now.' : ''}` : `This frame takes ${wild ? 'a photo from any category' : 'a ' + theme.trim() + ' photo'} scoring ${mn}+ that isn’t already hanging.${close ? ` Your best one is at ${close.s.total}, ${mn - close.s.total} stars away.` : wild ? '' : ` You don’t have one yet. Pick ${theme.trim()} when you upload a photo.`}`}</p>
+    <p class="sub">${ok.length ? `Pick a ${mn}+ ${wild ? '' : theme}photo${wild ? ' from any category' : ''}. ${framed(r, s) ? ' It replaces the photo in that frame now.' : ''}` : `This frame takes ${wild ? 'a photo from any category' : 'a ' + theme.trim() + ' photo'} scoring ${mn}+ that isn’t already hanging.${close ? ` Your best one is at ${close.s.total}, ${mn - close.s.total} points away.` : wild ? '' : ` You don’t have one yet. Pick ${theme.trim()} when you upload a photo.`}`}</p>
     ${ok.length ? `<div class="pickgrid">${ok.map(p => `<button data-p="${p.id}" aria-label="Photo scoring ${p.s.total}"><img src="${p.src}" alt=""><span>${p.s.total}</span></button>`).join('')}</div>`
       : `<div class="actions">${close ? '<button class="btn block" id="fImprove">Touch up my best photo</button>' : ''}<button class="btn ${close ? 'quiet ' : ''}block" id="fNew">Upload a new photo</button></div>`}`);
   document.querySelectorAll('#sheetBody .pickgrid button').forEach(b => b.onclick = () => hang(r, s, b.dataset.p));
@@ -3042,7 +3042,7 @@ function hang(r, s, pid) {
 }
 function openFramed(r, s) {
   const p = framed(r, s), sl = ROOMS[r].slots[s];
-  openSheet(`<h2>${sl[1]}</h2><p class="sub">Score ${p.s.total}. ${p.s.total >= CFG.QUALIFY ? 'This one can also enter cash competitions.' : `${CFG.QUALIFY - p.s.total} stars from entering cash competitions.`}</p>
+  openSheet(`<h2>${sl[1]}</h2><p class="sub">Score ${p.s.total}. ${p.s.total >= CFG.QUALIFY ? 'This one can also enter cash competitions.' : `${CFG.QUALIFY - p.s.total} points from entering cash competitions.`}</p>
     <div class="hero-photo" style="max-height:46vh;margin-bottom:12px"><img src="${p.src}" alt=""></div>
     <div class="actions"><button class="btn block" id="frImp">Improve it in Touch up</button><button class="btn quiet block" id="frOff">Remove from gallery</button></div>`);
   $('#frImp').onclick = () => { closeSheet(); S.cur = p.id; save(); go('studio'); };
@@ -4072,7 +4072,7 @@ function obLikes(g, picked) { picked = picked || new Set(S.likes0 || OB_PRE[S.ag
       <button class="btn block" id="obGo2" ${picked.size ? '' : 'disabled'}>Start playing · ${picked.size} picked</button><button class="link ob-back" id="obB2">Back</button></div>`;
     g.querySelectorAll('[data-ol]').forEach(b => b.onclick = () => { const n = b.dataset.ol; picked.has(n) ? picked.delete(n) : picked.add(n); S.likes0 = [...picked]; draw(); });
     g.querySelector('#obB2').onclick = () => obAge(g);
-    g.querySelector('#obGo2').onclick = () => { S.likes = [...picked]; S.obDone = 1; save(); setLook(); youngPass(); obSort(); g.className = ''; setTimeout(() => g.remove(), 300); if (typeof renderGallery === 'function') renderGallery(); paintTop(); }; };
+    g.querySelector('#obGo2').onclick = () => { S.likes = [...picked]; S.obDone = 1; save(); setLook(); if (!isYoungW() && window.__ywDone) { location.reload(); return; } youngPass(); obSort(); g.className = ''; setTimeout(() => g.remove(), 300); if (typeof renderGallery === 'function') renderGallery(); paintTop(); }; };
   draw(); }
 function obDone(g) { obSort(); const r = obRank(), top = CATS8.filter(k => k !== 'any' && r[k]).slice(0, 5).concat('any'), L = lgS();
   const why = k => k === 'any' ? 'Open to every photo' : 'Because you picked ' + (S.likes || []).filter(n => (OB_INT.find(i => i[0] === n) || [])[2] === k).map(n => n.toLowerCase()).join(', ');
@@ -4112,11 +4112,12 @@ function applyNames() { const y = !!window.__young, A = applyNames; if (!A.o) A.
   Object.keys(CHAL).forEach(k => CHAL[k] = y && CY[k] ? CY[k] : A.o.ch[k]);
   Object.keys(WALL_SHORT).forEach(k => WALL_SHORT[k] = y && WY[k] ? WY[k] : A.o.ws[k]); }
 function setLook() { const y = isYoung(), r = document.documentElement; window.__young = y; OB_INT = y ? OB_INT_Y : OB_INT_O; applyNames(); r.classList.toggle('yg', y); if (y) r.removeAttribute('data-theme'); else r.setAttribute('data-theme', 'light'); }
-function youngPass() { if (!isYoung() || !document.body) return;
+const isYoungW = () => S && S.ageBr === '18 to 24';
+function youngPass() { if (!isYoungW() || !document.body) return;
   const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, { acceptNode: n => { const p = n.parentElement; return !p || p.closest('script,style,textarea,input,.wm') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; } });
-  let n; while ((n = w.nextNode())) { const t = n.nodeValue; if (!t || !t.trim()) continue; let u = t; for (const [a, b] of YOUNG_W) { if (a.source.startsWith('^')) { if (a.test(u.trim())) u = u.replace(u.trim(), u.trim().replace(a, b)); } else u = u.replace(a, b); } if (u !== t) n.nodeValue = u; }
+  let n; while ((n = w.nextNode())) { const t = n.nodeValue; if (!t || !t.trim()) continue; let u = t; for (const [a, b] of YOUNG_W) { if (a.source.startsWith('^')) { if (a.test(u.trim())) u = u.replace(u.trim(), u.trim().replace(a, b)); } else u = u.replace(a, b); } if (u !== t) { n.nodeValue = u; window.__ywDone = 1; } }
   document.querySelectorAll('svg.crw-ic:not([data-y])').forEach(el => { el.outerHTML = CRW_Y; }); }
-let youngQ = 0; new MutationObserver(() => { if (!isYoung() || youngQ) return; youngQ = requestAnimationFrame(() => { youngQ = 0; youngPass(); }); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+let youngQ = 0; new MutationObserver(() => { if (!isYoungW() || youngQ) return; youngQ = requestAnimationFrame(() => { youngQ = 0; youngPass(); }); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 setTimeout(() => { setLook(); youngPass(); }, 0);
 
 // landing: review dots follow the swipe; Help / Terms / Privacy open a short note
@@ -5608,7 +5609,7 @@ function renderStudio() {
 function sdSmart() { const ok = S.photos.filter(x => !photoLock(x) && lowestOpen(x) && nextLvl(x.s.total));
   if (!ok.length) { window.__sdWhy = ''; return; }
   const b = ok.reduce((a, x) => (nextLvl(x.s.total).at - x.s.total) < (nextLvl(a.s.total).at - a.s.total) ? x : a), L = nextLvl(b.s.total), n = L.at - b.s.total;
-  S.cur = b.id; save(); window.__sdWhy = ok.length > 1 ? `Closest to levelling up · <b>${n} star${n === 1 ? '' : 's'} to ${L.ic} ${L.n}</b>` : ''; }
+  S.cur = b.id; save(); window.__sdWhy = ok.length > 1 ? `Closest to levelling up · <b>${n} point${n === 1 ? '' : 's'} to ${L.ic} ${L.n}</b>` : ''; }
 function renderStudio0() {
   const st = $('#studio');
   if (S.user) paintAvatar();

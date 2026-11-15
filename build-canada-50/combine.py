@@ -101,6 +101,16 @@ function applyNames() { const y = !!window.__young, A = applyNames; if (!A.o) A.
   Object.keys(CHAL).forEach(k => CHAL[k] = y && CY[k] ? CY[k] : A.o.ch[k]);
   Object.keys(WALL_SHORT).forEach(k => WALL_SHORT[k] = y && WY[k] ? WY[k] : A.o.ws[k]); }
 function setLook() { const y = isYoung(), r = document.documentElement; window.__young = y; OB_INT = y ? OB_INT_Y : OB_INT_O; applyNames();""")
+# photo scores stay in points (stars are only the daily pot points)
+for a,b in [("- p.s.total} stars from qualifying","- p.s.total} points from qualifying"),("<small>${gap} star${gap === 1 ? '' : 's'} t","<small>${gap} point${gap === 1 ? '' : 's'} t"),
+            ("You’re ${need - bestP.s.total} star${need - bestP.s.total ==","You’re ${need - bestP.s.total} point${need - bestP.s.total =="),("${mn - close.s.total} stars away.","${mn - close.s.total} points away."),
+            ("- p.s.total} stars from entering cash compe","- p.s.total} points from entering cash compe"),("Closest to levelling up · <b>${n} star${n === 1 ? '' : 's'}","Closest to levelling up · <b>${n} point${n === 1 ? '' : 's'}")]:
+    assert a in s, a; s=s.replace(a,b)
+# younger words only once 18 to 24 is chosen; if the words were switched and she then picks 25+, reload so every label resets
+R("function youngPass() { if (!isYoung()","const isYoungW = () => S && S.ageBr === '18 to 24';\nfunction youngPass() { if (!isYoungW()")
+R("if (!isYoung() || youngQ)","if (!isYoungW() || youngQ)")
+R("S.likes = [...picked]; S.obDone = 1; save(); setLook(); youngPass();","S.likes = [...picked]; S.obDone = 1; save(); setLook(); if (!isYoungW() && window.__ywDone) { location.reload(); return; } youngPass();")
+R("if (u !== t) n.nodeValue = u;","if (u !== t) { n.nodeValue = u; window.__ywDone = 1; }")
 # neutral, 18+
 R('<p>Yofi has cash prizes, so you must be the age of majority in your province (<b>19+</b>, or 18+ in AB, MB and QC) to play.</p>','<p>Yofi has cash prizes, so you must be <b>18 or over</b> to play.</p>')
 R('I confirm I’m of legal age in my province','I confirm I’m <b>18 or over</b>')
