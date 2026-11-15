@@ -562,3 +562,35 @@ assert s.count('<b>+$${amt.toLocaleString()}</b>')==1
 s=s.replace('<b>+$${amt.toLocaleString()}</b>','<b>+$${amt % 1 ? amt.toFixed(2) : amt.toLocaleString()}</b>')
 s=s.replace("'🎯 Play for real · on us'","'🎯 Play on us'",1)
 open(d+'yofi-simple.html','w').write(s); print('fmt ok')
+
+# ---------- After the first free coin challenge: introduce the category cash pot ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA("const cupNext = () => ({ label: '🟡 Earn more coins by judging', go: () => { closeFlow(); go('judge'); renderJudge(); $('#judge').scrollTop = 0; } });",
+   "const cupNext = () => ({ label: '🏆 Next: win real cash', go: () => { closeFlow(); potIntro(p); } });")
+RA("Your first challenge is <b>free</b>, win <b>${GB_FREE_WIN} coins</b>.`, cta: 'Start now · Free'",
+   "Your first challenge is <b>free</b>, win <b>${GB_FREE_WIN} coins</b>. Then go for today’s <b>cash pot</b>.`, cta: 'Start now · Free'")
+RA("function openGemBattle(stake, after, opt = {}) {", r"""function potIntro(p) { const L = lgS(), k = (p && CATS8.find(x => fitsTheme(p, x))) || CATS8[0], H = lgHold(k), hp = H.h === 'you' ? '' : lgPhoto(H.h, k);
+  setTimeout(() => { openSheet(`<div class="pi"><button class="pi-x" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <p class="pi-k">Next step · real cash</p><h2 class="pi-h">Win today’s cash pot</h2>
+    <div class="pi-card"><span class="pi-c">${gi(k)}<b>${esc(crownName(k))}</b></span><b class="pi-pot">$${Math.round(L.jp[k]).toLocaleString()}</b><small>in today’s pot · paid at midnight · <span data-wk>${dayLeft()}</span> left</small>
+      <div class="pi-vs"><figure><img src="${p ? p.src : ''}" alt=""><figcaption>You</figcaption></figure><i>VS</i><figure><img src="${hp}" alt=""><figcaption>@${esc(H.h)}<br>${CRW}blue ribbon</figcaption></figure></div></div>
+    <ol class="pi-st"><li><span>1</span><p><b>$1</b> a challenge. <b>85¢</b> goes into today’s pot.</p></li><li><span>2</span><p>Win <b>+1 ⭐</b>, lose <b>−1 ⭐</b>. Beat the blue ribbon holder and <b>your photo goes on the card</b>.</p></li><li><span>3</span><p>At midnight the <b>most ⭐</b> wins <b>half the pot</b>. Everyone on <b>5+ ⭐</b> shares the other half.</p></li></ol>
+    <button class="btn block pi-go" id="piGo">${VS_IC}Challenge for the pot · $1</button><div style="text-align:center"><button class="link pi-later" id="piLater">Later · earn coins by judging</button></div></div>`);
+    $('#piGo').onclick = () => { closeSheet(); go('gallery'); setTimeout(() => lgCat(k), 350); };
+    $('#piLater').onclick = () => { closeSheet(); go('judge'); renderJudge(); $('#judge').scrollTop = 0; };
+    document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); }, 380); }
+function openGemBattle(stake, after, opt = {}) {""")
+s=s.replace('</style>',""".pi{position:relative;padding:6px 4px 4px;text-align:center}.pi-x{position:absolute;right:0;top:0;border:0;background:none;color:inherit;padding:4px;cursor:pointer}
+.pi-k{margin:4px 0 2px;font-size:.72rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.pi-h{margin:0 0 12px;font-size:1.6rem;line-height:1.1}
+.pi-card{border-radius:18px;padding:12px 12px 10px;margin-bottom:12px}.pi-c{display:inline-flex;align-items:center;gap:6px;font-size:.9rem}.pi-c svg{width:20px;height:20px}
+.pi-pot{display:block;font-size:2.6rem;line-height:1.05;margin:4px 0 0}.pi-card>small{display:block;font-size:.78rem;opacity:.85;margin-bottom:10px}
+.pi-vs{display:flex;align-items:center;justify-content:center;gap:8px}.pi-vs figure{margin:0;flex:1;max-width:130px}.pi-vs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;display:block}
+.pi-vs figcaption{font-size:.75rem;font-weight:800;margin-top:4px;line-height:1.25}.pi-vs figcaption .crw-ic{width:12px;height:14px;vertical-align:-2px;margin-right:2px}.pi-vs>i{font-style:normal;font-weight:900;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none}
+.pi-st{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px;text-align:left}.pi-st li{display:flex;gap:10px;align-items:flex-start}.pi-st li>span{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:.8rem}.pi-st p{margin:0;font-size:.9rem;line-height:1.35}
+.pi-later{margin-top:8px}
+html:not(.yg) .pi-k{color:#2F6B3F}html:not(.yg) .pi-card{background:#fff;box-shadow:inset 0 0 0 2px #D9A441}html:not(.yg) .pi-pot{color:#2F6B3F}html:not(.yg) .pi-vs>i{background:#2D4E86;color:#fff}html:not(.yg) .pi-st li>span{background:#2D4E86;color:#fff}html:not(.yg) .pi-vs img{box-shadow:0 0 0 2px #2D4E86}
+html.yg .pi-k{color:#2EE59D}html.yg .pi-card{background:#1B0F33;box-shadow:inset 0 0 0 2px #FFC93C}html.yg .pi-pot{color:#2EE59D}html.yg .pi-vs>i{background:#FFC93C;color:#1B0F33}html.yg .pi-st li>span{background:#C13CFF;color:#fff}html.yg .pi-vs img{box-shadow:0 0 0 2px #C13CFF}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('pot intro ok')
