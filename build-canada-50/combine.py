@@ -136,3 +136,25 @@ R("const KEY = 'yofi.ca50.v1'","const KEY = 'yofi.proto.v1'")
 s=re.sub(r'<title>[^<]*</title>','<title>Yofi - Skill (Preview)</title>',s,1)
 open(d+'yofi-preview.html','w').write(s)
 print('combined', len(s)//1024, 'KB; css y', len(Y)//1024, 'KB f', len(F)//1024, 'KB')
+
+# ---------- new start: age page -> landing; interests after the first photo is scored ----------
+s=open(d+'yofi-preview.html').read()
+def R2(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+R2("function obAge(g) { const prog = n => `<div class=\"ob-prog\">${[1, 2].map(i => `<i class=\"${i <= n ? 'on' : ''}\"></i>`).join('')}</div>`;",
+   "function obAge(g) { const prog = n => '';")
+R2("g.querySelector('#obGo1').onclick = () => obLikes(g);",
+   "g.querySelector('#obGo1').onclick = () => { S.age18 = 1; S.adult = 1; S.obDone = 1; save(); setLook(); if (!isYoungW() && window.__ywDone) { location.reload(); return; } youngPass(); g.className = ''; setTimeout(() => g.remove(), 300); if (typeof renderGallery === 'function') renderGallery(); paintTop(); };")
+# age gate: no 18+ tick page, the age page is the first screen
+a=s.index("  if (S.age18 && S.obDone) return; if (S.age18) {"); b=s.index("\n}\nsetTimeout(ageGate, 0);", a)
+s=s[:a]+"  if (S.obDone && S.ageBr) return; let g0 = document.getElementById('ageGate'); if (!g0) { g0 = document.createElement('div'); g0.id = 'ageGate'; document.body.appendChild(g0); } g0.className = 'on'; obAge(g0);"+s[b:]
+# interests: a callback mode used after the first photo
+R2("g.querySelector('#obGo2').onclick = () => { S.likes = [...picked]; S.obDone = 1; save();",
+   "g.querySelector('#obGo2').onclick = () => { if (window.__obAfter) { const f = window.__obAfter; window.__obAfter = null; S.likes = [...picked]; save(); obSort(); g.className = ''; setTimeout(() => g.remove(), 300); f(); return; } S.likes = [...picked]; S.obDone = 1; save();")
+R2('<button class="link ob-back" id="obB2">Back</button>','${window.__obAfter ? \'\' : \'<button class="link ob-back" id="obB2">Back</button>\'}')
+R2("g.querySelector('#obB2').onclick = () => obAge(g);","if (g.querySelector('#obB2')) g.querySelector('#obB2').onclick = () => obAge(g);")
+R2("  await sleep(2000); clearInterval(iv);",
+   "  await sleep(2000); clearInterval(iv);\n  if (!S.likes) await new Promise(res => { window.__obAfter = res; let g1 = document.getElementById('ageGate'); if (!g1) { g1 = document.createElement('div'); g1.id = 'ageGate'; document.body.appendChild(g1); } g1.className = 'on'; obLikes(g1); });")
+s=s.replace('>Start playing · ${picked.size} picked<','>${window.__obAfter ? \'Continue\' : \'Start playing\'} · ${picked.size} picked<',1)
+s=s.replace('<h1>What do you love to photograph?</h1>','<h1>${window.__obAfter ? \'Nice photo! What else do you love to photograph?\' : \'What do you love to photograph?\'}</h1>',1)
+open(d+'yofi-preview.html','w').write(s); print('start ok')

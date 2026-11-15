@@ -1379,6 +1379,7 @@ $('#file').addEventListener('change', async e => {
   await sleep(60);
   const s = capUpload(Engine.score(Engine.analyze(id)));
   await sleep(2000); clearInterval(iv);
+  if (!S.likes) await new Promise(res => { window.__obAfter = res; let g1 = document.getElementById('ageGate'); if (!g1) { g1 = document.createElement('div'); g1.id = 'ageGate'; document.body.appendChild(g1); } g1.className = 'on'; obLikes(g1); });
   const p = { id: uid(), src, orig: src, s, start: s.total, enh: 0, q: s.total >= CFG.QUALIFY, at: Date.now() }; if (window.__preCat) { p.cat = window.__preCat; window.__preCat = null; }
   S.photos.unshift(p); S.cur = p.id; WALL = false;
   const first = !S.onboarded && S.photos.length === 1;
@@ -4065,18 +4066,18 @@ const OB_PRE = { '18 to 24': ['Selfies', 'Bodybuilding', 'Fashion', 'Nights out'
 function obRank() { const r = {}; (S.likes || []).forEach(n => { const x = OB_INT.find(i => i[0] === n); if (x) r[x[2]] = (r[x[2]] || 0) + 1; }); return r; }
 function obSort() { if (!S.likes) return; const r = obRank(), o = ['selfie', 'style', 'fitness', 'pets', 'food', 'travel', 'night', 'any'];
   CATS8.sort((a, b) => (a === 'any') - (b === 'any') || (r[b] || 0) - (r[a] || 0) || o.indexOf(a) - o.indexOf(b)); }
-function obAge(g) { const prog = n => `<div class="ob-prog">${[1, 2].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</div>`;
+function obAge(g) { const prog = n => '';
   g.innerHTML = `<div class="ag-in ob">${prog(1)}<h1>Which age group are you in?</h1><p>We use this to suggest challenges you’ll enjoy. We never show it to other members.</p>
     <div class="ob-ages">${OB_AGES.map(a => `<button type="button" data-oa="${a}" aria-pressed="${a === S.ageBr}">${a}</button>`).join('')}</div><button class="btn block" id="obGo1" ${S.ageBr ? '' : 'disabled'}>Continue</button></div>`;
   g.querySelectorAll('[data-oa]').forEach(b => b.onclick = () => { S.ageBr = b.dataset.oa; S.likes0 = null; save(); setLook(); obAge(g); });
-  g.querySelector('#obGo1').onclick = () => obLikes(g); }
+  g.querySelector('#obGo1').onclick = () => { S.age18 = 1; S.adult = 1; S.obDone = 1; save(); setLook(); if (!isYoungW() && window.__ywDone) { location.reload(); return; } youngPass(); g.className = ''; setTimeout(() => g.remove(), 300); if (typeof renderGallery === 'function') renderGallery(); paintTop(); }; }
 function obLikes(g, picked) { picked = picked || new Set(S.likes0 || OB_PRE[S.ageBr] || []);
-  const draw = () => { g.innerHTML = `<div class="ag-in ob"><div class="ob-prog"><i class="on"></i><i class="on"></i></div><h1>What do you love to photograph?</h1><p>We’ve suggested a few for ${esc(S.ageBr || 'you')}. Tap to change.</p>
+  const draw = () => { g.innerHTML = `<div class="ag-in ob"><div class="ob-prog"><i class="on"></i><i class="on"></i></div><h1>${window.__obAfter ? 'Nice photo! What else do you love to photograph?' : 'What do you love to photograph?'}</h1><p>We’ve suggested a few for ${esc(S.ageBr || 'you')}. Tap to change.</p>
       <div class="ob-bub">${OB_INT.map(([n, z]) => `<button type="button" class="s${z}" data-ol="${esc(n)}" aria-pressed="${picked.has(n)}">${esc(n)}</button>`).join('')}</div>
-      <button class="btn block" id="obGo2" ${picked.size ? '' : 'disabled'}>Start playing · ${picked.size} picked</button><button class="link ob-back" id="obB2">Back</button></div>`;
+      <button class="btn block" id="obGo2" ${picked.size ? '' : 'disabled'}>${window.__obAfter ? 'Continue' : 'Start playing'} · ${picked.size} picked</button>${window.__obAfter ? '' : '<button class="link ob-back" id="obB2">Back</button>'}</div>`;
     g.querySelectorAll('[data-ol]').forEach(b => b.onclick = () => { const n = b.dataset.ol; picked.has(n) ? picked.delete(n) : picked.add(n); S.likes0 = [...picked]; draw(); });
-    g.querySelector('#obB2').onclick = () => obAge(g);
-    g.querySelector('#obGo2').onclick = () => { S.likes = [...picked]; S.obDone = 1; save(); setLook(); if (!isYoungW() && window.__ywDone) { location.reload(); return; } youngPass(); obSort(); g.className = ''; setTimeout(() => g.remove(), 300); if (typeof renderGallery === 'function') renderGallery(); paintTop(); }; };
+    if (g.querySelector('#obB2')) g.querySelector('#obB2').onclick = () => obAge(g);
+    g.querySelector('#obGo2').onclick = () => { if (window.__obAfter) { const f = window.__obAfter; window.__obAfter = null; S.likes = [...picked]; save(); obSort(); g.className = ''; setTimeout(() => g.remove(), 300); f(); return; } S.likes = [...picked]; S.obDone = 1; save(); setLook(); if (!isYoungW() && window.__ywDone) { location.reload(); return; } youngPass(); obSort(); g.className = ''; setTimeout(() => g.remove(), 300); if (typeof renderGallery === 'function') renderGallery(); paintTop(); }; };
   draw(); }
 function obDone(g) { obSort(); const r = obRank(), top = CATS8.filter(k => k !== 'any' && r[k]).slice(0, 5).concat('any'), L = lgS();
   const why = k => k === 'any' ? 'Open to every photo' : 'Because you picked ' + (S.likes || []).filter(n => (OB_INT.find(i => i[0] === n) || [])[2] === k).map(n => n.toLowerCase()).join(', ');
@@ -4087,14 +4088,7 @@ function obDone(g) { obSort(); const r = obRank(), top = CATS8.filter(k => k !==
 // Yofi is adults only: confirm age once, then age bracket and interests
 function ageGate() {
   if (S.likes) { try { obSort(); if ($('#panes').dataset.at === 'gallery') renderGallery(); } catch (e) {} }
-  if (S.age18 && S.obDone) return; if (S.age18) { let g0 = document.getElementById('ageGate'); if (!g0) { g0 = document.createElement('div'); g0.id = 'ageGate'; document.body.appendChild(g0); } g0.className = 'on'; obAge(g0); return; } let g = document.getElementById('ageGate'); if (!g) { g = document.createElement('div'); g.id = 'ageGate'; document.body.appendChild(g); }
-  g.innerHTML = `<div class="ag-in"><span class="wm">Yofi</span><div class="ag-b">18+</div><h1>Adults only</h1><p>Yofi has cash prizes, so you must be <b>18 or over</b> to play.</p>
-    <label class="ag-tk"><input type="checkbox" id="agOk"><span class="ag-bx"></span><span>I confirm I’m <b>18 or over</b></span></label>
-    <button class="btn block" id="agGo" disabled>Continue</button></div>`;
-  g.className = 'on';
-  const ok = g.querySelector('#agOk'), go = g.querySelector('#agGo');
-  ok.onchange = () => { go.disabled = !ok.checked; };
-  go.onclick = () => { if (!ok.checked) return; S.age18 = 1; S.adult = 1; save(); obAge(g); };
+  if (S.obDone && S.ageBr) return; let g0 = document.getElementById('ageGate'); if (!g0) { g0 = document.createElement('div'); g0.id = 'ageGate'; document.body.appendChild(g0); } g0.className = 'on'; obAge(g0);
 }
 setTimeout(ageGate, 0);
 
