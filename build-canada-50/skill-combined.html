@@ -1440,7 +1440,6 @@ function closeFlow() { if (EN && EN.variants && EN.p) PEND[EN.p.id] = { cat: EN.
 $('#flowBack').onclick = () => { if (!S.user) { openSignup(); return; } closeFlow(); };
 
 function showResult(p, o = {}) {
-  if (o.fresh && p) setTimeout(() => upDone(p), 600);
   if (S.user && o.win && o.prevTotal == null) {
     const g0 = goalFor(p);
     if (!(g0 && goalReady(g0, p)) && stageOf(p.s.total) < 2) {
@@ -3393,7 +3392,7 @@ function needPic(then) {
   c.classList.add('on', 'cr');
   const close = () => c.classList.remove('on', 'cr');
   $('#picNo').onclick = () => { close(); S.picSkip = true; save(); then(); }; c.onclick = e => { if (e.target === c) close(); };
-  $('#picGo').onclick = () => { close(); pickProfilePic(() => { toast('Looking good! Now challenge your friend.'); if ($('#panes').dataset.at === 'gallery') renderGallery(); then(); }); };
+  $('#picGo').onclick = () => { close(); pickProfilePic(() => { picDone(); if ($('#panes').dataset.at === 'gallery') renderGallery(); then(); }); };
 }
 /* Shared photo picker: your photos for a game, plus "+ New photo" scored right here */
 function pickerHTML(o) {
@@ -4171,6 +4170,11 @@ function oldPass() { if (isYoungW() || !document.body) return;
 let oldQ = 0; new MutationObserver(() => { if (isYoungW() || oldQ) return; oldQ = requestAnimationFrame(() => { oldQ = 0; oldPass(); }); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 setTimeout(oldPass, 0);
 
+function picDone() { const old = document.getElementById('upOk'); if (old) old.remove();
+  const b = document.createElement('div'); b.id = 'upOk'; b.className = 'up-ok'; b.setAttribute('role', 'status');
+  b.innerHTML = `<img src="${S.user.pic}" alt=""><span><b>✓ Profile photo saved</b><small>It’s your picture at the top right, and friends see it on every challenge</small></span><button aria-label="Dismiss">✕</button>`;
+  document.body.appendChild(b); requestAnimationFrame(() => b.classList.add('on'));
+  const bye = () => { b.classList.remove('on'); setTimeout(() => b.remove(), 300); }; b.querySelector('button').onclick = bye; setTimeout(bye, 5000); }
 function upDone(p) { const old = document.getElementById('upOk'); if (old) old.remove();
   const k = p.cat || 'any', nm = crownName(k), y = !!window.__young;
   const b = document.createElement('div'); b.id = 'upOk'; b.className = 'up-ok'; b.setAttribute('role', 'status');

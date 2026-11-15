@@ -333,9 +333,16 @@ open(d+'yofi-preview.html','w').write(s); print('batch ok')
 s=open(d+'yofi-preview.html').read()
 a="function showResult(p, o = {}) {"
 assert s.count(a)==1
-s=s.replace(a, a+r"""
-  if (o.fresh && p) setTimeout(() => upDone(p), 600);""",1)
+# profile photo from the selfie pop-up: confirm it was saved and where
+a2="$('#picGo').onclick = () => { close(); pickProfilePic(() => { toast('Looking good! Now challenge your friend.');"
+assert s.count(a2)==1
+s=s.replace(a2,"$('#picGo').onclick = () => { close(); pickProfilePic(() => { picDone();")
 UP = r"""
+function picDone() { const old = document.getElementById('upOk'); if (old) old.remove();
+  const b = document.createElement('div'); b.id = 'upOk'; b.className = 'up-ok'; b.setAttribute('role', 'status');
+  b.innerHTML = `<img src="${S.user.pic}" alt=""><span><b>✓ Profile photo saved</b><small>It’s your picture at the top right, and friends see it on every challenge</small></span><button aria-label="Dismiss">✕</button>`;
+  document.body.appendChild(b); requestAnimationFrame(() => b.classList.add('on'));
+  const bye = () => { b.classList.remove('on'); setTimeout(() => b.remove(), 300); }; b.querySelector('button').onclick = bye; setTimeout(bye, 5000); }
 function upDone(p) { const old = document.getElementById('upOk'); if (old) old.remove();
   const k = p.cat || 'any', nm = crownName(k), y = !!window.__young;
   const b = document.createElement('div'); b.id = 'upOk'; b.className = 'up-ok'; b.setAttribute('role', 'status');
