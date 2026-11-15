@@ -4832,6 +4832,13 @@ em.medal{font-style:normal!important;font-size:1.9rem!important;line-height:1;ma
 .yd-r.ev{grid-template-columns:1fr auto 44px;padding:14px 16px}.yd-r.ev .yd-d i{width:18px;height:18px;background:transparent;box-shadow:inset 0 0 0 2px #9B6BFF}.yd-r.ev .yd-d i.on{background:#FFC93C;box-shadow:0 0 8px rgba(255,201,60,.6)}
 .yd-r.ev .yd-s{font-size:1rem;font-weight:700;color:#E6DDF5}.yd-r.ev.in .yd-s{color:#2EE59D}.yd-r.ev.in .yd-d i.on{background:#2EE59D}
 .yd-r.ev.na{opacity:1;grid-template-columns:1fr auto}.yd-add{font-weight:800;color:#FF7AC6;white-space:nowrap}
+.dw{margin:0 0 14px;padding:16px;border-radius:20px;text-align:center;background:linear-gradient(180deg,#24153F,#1A0F30);box-shadow:inset 0 0 0 2px #9B6BFF}.dw.ready{box-shadow:inset 0 0 0 2px #2EE59D}.dw.sh{background:none;box-shadow:none;padding:4px 0 0;margin:0}
+.dw-h{margin:0 0 14px;font:900 1.9rem 'Bricolage Grotesque',sans-serif}.dw-vs{display:flex;align-items:center;justify-content:center;gap:10px}.dw-p{width:110px;display:flex;flex-direction:column;align-items:center;gap:6px}.dw-p img,.dw-p.q .dw-dots{width:110px;height:140px;border-radius:16px;object-fit:cover;box-shadow:0 0 0 3px #FF3EA5}
+.dw-p.q .dw-dots{display:flex;align-items:center;justify-content:center;gap:7px;background:#2A1A46;box-shadow:inset 0 0 0 3px #6A4FA0;border:0;outline:2px dashed transparent}.dw-dots i{width:11px;height:11px;border-radius:50%;background:#C9A8FF;animation:dwd 1.2s infinite ease-in-out}.dw-dots i:nth-child(2){animation-delay:.2s}.dw-dots i:nth-child(3){animation-delay:.4s}
+@keyframes dwd{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}.dw-p b{font-size:.9rem}.dw.ready .dw-p:first-child img{box-shadow:0 0 0 3px #FFC93C}
+.dw h3{margin:14px 0 4px;font:900 1.25rem 'Bricolage Grotesque',sans-serif}.dw p{margin:0;color:#C9B4F5;font-size:.9rem}.dw p svg,.dw h3 svg{width:14px;height:14px;vertical-align:-2px}.dw-s{margin-top:8px!important;font-size:.82rem!important;color:#A994D6!important}
+.dw-go{margin-top:14px}.dw-b{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px}.dw-re{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:#25D366;color:#fff;font-weight:800;text-decoration:none}.dw-re svg{width:18px;height:18px}.dw-x{color:#C9B4F5!important}
+.dw-vs{position:relative}.dw .lgv-x{top:calc(50% - 12px);width:44px;height:44px;font-size:.95rem}
 </style>
 </head>
 <body>
@@ -8397,15 +8404,31 @@ function frDare(k0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPi
     $('#fcPick').innerHTML = pickerHTML(po); const getSel = bindPicker(po); setCat();
     $('#bfGo').onclick = e => { const pid = getSel(); if (!pid) { e.preventDefault(); toast('Pick a photo, or upload one.'); return; }
       const c = crewCur() || newCrew(S.user && S.user.h ? `${S.user.h}’s friends` : 'My friends');
-      c.dare = { k: th, pid, at: Date.now() }; e.currentTarget.href = e.currentTarget.href.replace('crew%2Fnew000', 'crew%2F' + c.id.slice(0, 6)); if (!c.pend || !c.pend.length) c.pend = CREW_POOL.filter(h => !c.members.includes(h)).slice(0, 2); c.joinAt = Date.now() + 8000; save();
-      setTimeout(() => { closeSheet(); GV.tab = 'friends'; go('gallery'); toast('✓ Invite sent. The battle starts when they accept.'); }, 300); };
+      e.currentTarget.href = e.currentTarget.href.replace('crew%2Fnew000', 'crew%2F' + c.id.slice(0, 6)); c.dare = { k: th, pid, at: Date.now(), gem: frGem(), st: frSt(), wa: e.currentTarget.href }; if (!c.pend || !c.pend.length) c.pend = CREW_POOL.filter(h => !c.members.includes(h)).slice(0, 2); c.joinAt = Date.now() + 8000; save();
+      setTimeout(() => { closeSheet(); GV.tab = 'friends'; go('gallery'); setTimeout(() => { openSheet(`<div class="cwn">${dareWaitHTML(c, true)}</div>`); bindDareWait(c); }, 350); }, 300); };
   };
   paint(); }
-function dareAccepted(c, h) { const D = c.dare; if (!D) return; const k = D.k, gem = frGem();
+// After "Battle a friend": make it obvious you're waiting for your friend, then that they're ready
+function dareWaitHTML(c, sheet) { const D = c && c.dare; if (!D || D.fought) return '';
+  const me = S.photos.find(p => p.id === D.pid) || lgMine(D.k), cn = esc(crownName(D.k)), ago = Date.now() - D.at < 6e4 ? 'just now' : heldFor(D.at) + ' ago';
+  const stake = D.gem ? `${FR_GEM} ${gemIcon('')}` : `$${D.st || 1}`;
+  if (D.done && D.h) return `<div class="dw ready"><div class="dw-vs"><div class="dw-p"><img src="${lgPhoto(D.h, D.k)}" alt=""><b>@${esc(D.h)}</b></div><span class="lgv-x">VS</span><div class="dw-p"><img src="${me ? me.src : ''}" alt=""><b>You${me ? ' · ' + me.s.total : ''}</b></div></div>
+    <h3>✓ @${esc(D.h)} accepted!</h3><p>Your ${cn} battle is ready · ${stake} each</p><button class="btn block dw-go" id="dwGo">${VS_IC}Battle now</button></div>`;
+  return `<div class="dw ${sheet ? 'sh' : ''}">${sheet ? '<h2 class="dw-h">Invite sent!</h2>' : ''}<div class="dw-vs"><div class="dw-p"><img src="${me ? me.src : ''}" alt=""><b>You${me ? ' · ' + me.s.total : ''}</b></div><span class="lgv-x">VS</span><div class="dw-p q"><span class="dw-dots"><i></i><i></i><i></i></span><b>Your friend</b></div></div>
+    <h3>Waiting for your friend to accept</h3><p>${cn} battle · ${stake} each · sent ${ago}</p>
+    <p class="dw-s">Nothing is charged until they accept. The battle starts as soon as they join, and we’ll let you know.</p>
+    ${sheet ? `<button class="btn block dw-go" id="dwJudge">Keep judging while you wait</button><div style="text-align:center"><button class="link" id="dwOk">Back to Friends</button></div>`
+      : `<div class="dw-b"><a class="dw-re" id="dwRe" href="${D.wa || '#'}" target="_blank" rel="noopener">${WA_ICON}Send again</a><button class="link dw-x" id="dwX">Cancel invite</button></div>`}</div>`; }
+function bindDareWait(c) { const D = c && c.dare; if (!D) return;
+  if ($('#dwGo')) $('#dwGo').onclick = () => { const me = S.photos.find(p => p.id === D.pid) || lgMine(D.k); if (!me) { addCatPhoto(D.k); return; } S.frSt = D.gem ? 'gem' : (D.st || 1); frPay(() => { D.fought = 1; save(); crewFight(c, D.k, D.h, me.id); }); };
+  if ($('#dwX')) $('#dwX').onclick = () => { delete c.dare; c.pend = []; save(); toast('Invite cancelled'); renderGallery(); };
+  if ($('#dwJudge')) $('#dwJudge').onclick = () => { closeSheet(); go('judge'); };
+  if ($('#dwOk')) $('#dwOk').onclick = () => closeSheet(); }
+function dareAccepted(c, h) { const D = c.dare; if (!D) return; D.h = h; save(); if (GV.tab === 'friends' && $('#panes').dataset.at === 'gallery') renderGallery(); const k = D.k, gem = D.gem;
   if (gem) { S.gems += 50; save(); paintGems(); }
   const me = S.photos.find(p => p.id === D.pid) || lgMine(k);
   celebrate({ src: lgPhoto(h, k), score: VS_IC, title: `@${esc(h)} accepted!`, text: `Your <b>${esc(crownName(k))}</b> battle is on · ${frLab()} each.${gem ? ` You both got <b>${frLab()}</b> for joining.` : ''}`,
-    cta: `${VS_IC}Battle now`, onCta: () => { if (!me) { addCatPhoto(k); return; } frPay(() => crewFight(c, k, h, me.id)); }, later: 'Later' }); }
+    cta: `${VS_IC}Battle now`, onCta: () => { if (!me) { addCatPhoto(k); return; } S.frSt = D.gem ? 'gem' : (D.st || 1); frPay(() => { D.fought = 1; save(); crewFight(c, k, h, me.id); }); }, later: 'Later' }); }
 function crewInvite(c, first) {
   const link = `https://yofi.app/crew/${c.id.slice(0, 6)}`, msg = `Join my Yofi friends group “${c.name}” 👑 Battle me for the crowns and the weekly pots: ${link}`;
   openSheet(`<div class="cwn"><h2>${first ? 'Invite your mates first' : `Invite to ${esc(c.name)}`}</h2><p class="sub">${first ? `Nobody has joined <b>${esc(c.name)}</b> yet. Send the invite and battle them when they join.` : 'Anyone who joins with this link is in your group and can battle anyone else in it.'}</p>
@@ -8437,9 +8460,9 @@ function crewsHTML() {
       <button class="bcc-ph" data-cwk="${k}" aria-label="${esc(crownName(k))} friends crown">${h && !me ? `<img src="${lgPhoto(h, k)}" alt="" loading="lazy">` : mp ? `<img src="${mp.src}" alt="" loading="lazy">` : `<span class="tcc-empty">${gi(k)}</span>`}</button>
       ${!has ? `<button class="bcc-go up" data-cwk="${k}" data-addk="${k}">📷 Upload photo</button>` : `<button class="bcc-go ${rev ? 'rev' : ''}" data-cwk="${k}">${rev ? '🔥 Take revenge' : me ? `${VS_IC}Defend` : `${VS_IC}Battle`}</button>`}</div>`; }).join('')}</div>`;
   const feed = (c.feed || []).length ? `<h3 class="fr-sh">Friends activity</h3><div class="cw-feed">${c.feed.slice(0, 6).map(e => `<p><small>${Date.now() - e.t < 6e4 ? 'just now' : heldFor(e.t) + ' ago'}</small>${e.m}</p>`).join('')}</div>` : '';
-  return head + chips + mem + cards + feed;
+  return head + dareWaitHTML(c) + chips + mem + cards + feed;
 }
-function bindCrews() {
+function bindCrews() { bindDareWait(crewCur && crewCur());
   if ($('#cwRules')) $('#cwRules').onclick = crewRules;
   document.querySelectorAll('#gallery #cwNew').forEach(b => b.onclick = crewCreate);
   if ($('#cwInv')) $('#cwInv').onclick = () => crewInvite(crewCur());
