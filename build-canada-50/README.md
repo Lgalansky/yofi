@@ -12,3 +12,5 @@ The scripts use absolute paths from the session they were written in, so update 
 `combine.py` merges the Fall Fair build with `skill-base.html` (the Skill preview before the merge) into `skill-combined.html`:
 ages 18 to 24 (and anyone who hasn't picked an age yet) get the original dark Yofi look and words; 25+ get Fall Fair.
 It is neutral (18+, no Canada wording) and uses the Skill save (`yofi.proto.v1`). Build order: ca50.py, ff.py, more.py, combine.py.
+
+After combine.py, run simplify.py (simpler Vote page, energy and tickets on the Vote page, Freerolls in the tournament schedule). It writes yofi-simple.html, which is published as the Skill preview.
