@@ -59,6 +59,8 @@ EXTRA = """
 html.yg .ca-hero{display:none!important}
 html:not(.yg) .hx-in.hxp-low{display:none!important}
 #ageGate{z-index:100000}
+html:not(.yg) #avatar.av,html:not(.yg) .av{color:#FFFFFF!important}
+html:not(.yg) .catchip{background:rgba(255,255,255,.94)!important;color:#2B2320!important;box-shadow:0 2px 10px rgba(0,0,0,.2)!important}html:not(.yg) .catchip svg{color:#2D4E86!important}
 #ageGate .ob-bub button{background:#EADCC6!important;color:#2B2320!important}#ageGate .ob-bub button[aria-pressed="true"]{background:#2D4E86!important;color:#fff!important}
 html.yg #ageGate .ob-bub button[aria-pressed="true"]{background:linear-gradient(135deg,#FF2D8E,#7B3CFF)!important}html.yg #ageGate .btn:not(:disabled){background:linear-gradient(135deg,#FF2D8E,#7B3CFF)!important}
 """
