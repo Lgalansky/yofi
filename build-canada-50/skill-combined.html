@@ -452,6 +452,7 @@ html #shell > .wallet #enPill>span{display:inline!important;min-width:0!importan
 html #shell > .wallet .wb{padding:0 6px!important;gap:4px!important}html #shell > .wallet .wb b{font-size:.9rem!important;letter-spacing:-.01em}html #shell > .wallet .wb svg{width:18px!important;height:18px!important}
 html #shell > .wallet #gemPill .gplus{position:static!important;flex:none;width:20px!important;height:20px!important;margin-left:2px}html #shell > .wallet #gemPill .gplus svg{width:10px!important;height:10px!important}
 html #shell > .wallet #tixPill .tx-pr{font-size:.62rem!important}
+#sheetBody .sp-tabs{display:none!important}
 </style>
 </head>
 <body>
@@ -2014,7 +2015,7 @@ function openStore(reason, onBuy, tab) {
     $('#qoAll').onclick = () => openStore(null, onBuy, 'gems'); $('#qoStore').onclick = () => openStore(null, onBuy, 'gems');
     return;
   }
-  SHOPTAB = tab || SHOPTAB;
+  SHOPTAB = 'cash';
   const T = SHOPTAB;
   const tile = (ic, v, lab, cls) => `<div class="sp-t ${cls}"><span class="sp-ic">${ic}</span><b>${v}</b><small>${lab}</small></div>`;
   const GEM = `<span class="sp-gem">${gemIcon('')}</span>`;

@@ -419,3 +419,10 @@ html #shell > .wallet #gemPill .gplus{position:static!important;flex:none;width:
 html #shell > .wallet #tixPill .tx-pr{font-size:.62rem!important}
 </style>""",1)
 open(d+'yofi-preview.html','w').write(s)
+# ---------- shop: cash packs only (they include coins and energy); no Energy / Coins tabs ----------
+s=open(d+'yofi-preview.html').read()
+a="  SHOPTAB = tab || SHOPTAB;\n  const T = SHOPTAB;"
+assert s.count(a)==1
+s=s.replace(a,"  SHOPTAB = 'cash';\n  const T = SHOPTAB;")
+s=s.replace('</style>','#sheetBody .sp-tabs{display:none!important}\n</style>',1)
+open(d+'yofi-preview.html','w').write(s)
