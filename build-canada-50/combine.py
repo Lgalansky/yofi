@@ -328,3 +328,24 @@ html:not(.yg) .stk-steps i.m10:not(.on){background:#fff!important;box-shadow:ins
 html .nxu{max-width:100%!important;overflow:hidden}html .nxu .d{min-width:0;overflow:hidden;gap:3px!important;flex-shrink:1}html .nxu .d i{flex:0 0 auto;width:7px!important;height:7px!important}
 </style>""",1)
 open(d+'yofi-preview.html','w').write(s); print('batch ok')
+
+# ---------- upload confirmation: say it worked and where the photo is ----------
+s=open(d+'yofi-preview.html').read()
+a="function showResult(p, o = {}) {"
+assert s.count(a)==1
+s=s.replace(a, a+r"""
+  if (o.fresh && p) setTimeout(() => upDone(p), 600);""",1)
+UP = r"""
+function upDone(p) { const old = document.getElementById('upOk'); if (old) old.remove();
+  const k = p.cat || 'any', nm = crownName(k), y = !!window.__young;
+  const b = document.createElement('div'); b.id = 'upOk'; b.className = 'up-ok'; b.setAttribute('role', 'status');
+  b.innerHTML = `<img src="${p.src}" alt=""><span><b>✓ Photo uploaded</b><small>Saved in <b>${esc(nm)}</b> · find it in ${y ? 'Studio' : 'Touch-ups'} under Switch</small></span><button aria-label="Dismiss">✕</button>`;
+  document.body.appendChild(b); requestAnimationFrame(() => b.classList.add('on'));
+  const bye = () => { b.classList.remove('on'); setTimeout(() => b.remove(), 300); }; b.querySelector('button').onclick = bye; setTimeout(bye, 6000); }
+"""
+s=s.replace("function fcNotify() {", UP+"function fcNotify() {",1)
+s=s.replace('</style>',""".up-ok{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:99998;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;transform:translateY(-130%);transition:transform .3s ease;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.up-ok.on{transform:none}.up-ok img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none}.up-ok span{flex:1;min-width:0;display:flex;flex-direction:column}.up-ok small{font-size:.85rem}.up-ok button{border:0;background:none;font-size:1rem;cursor:pointer;color:inherit;opacity:.7}
+html:not(.yg) .up-ok{background:#2F6B3F;color:#fff}html.yg .up-ok{background:#118A4A;color:#fff}
+</style>""",1)
+open(d+'yofi-preview.html','w').write(s); print('upload ok')
