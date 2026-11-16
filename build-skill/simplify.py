@@ -1542,3 +1542,23 @@ html.yg .pnf-vs img{box-shadow:0 0 0 3px #C13CFF}html.yg .pnf-vs figcaption{back
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('pnf ok')
 s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.pnf-vs img{aspect-ratio:1/1!important;height:auto!important;max-height:none!important}.pnf-vs{margin-left:22px!important;margin-right:22px!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('pnf square ok')
+
+# ---------- Freeroll entry needs a photo scoring 80+ ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("const FR_CUT = 85,","const FR_MIN = 80, FR_CUT = 85,")
+RA("🏁 Top ${FR_FINAL} cut-off: about <b>${FR_CUT}+</b> · each photo can enter <b>once a day</b>","✅ Photos need <b>${FR_MIN}+</b> to enter · each photo can enter <b>once a day</b>")
+RA("<small>${u ? 'Entered today' : `≈ #${r.toLocaleString()}`}</small>","<small>${u ? 'Entered today' : p.s.total < FR_MIN ? `Needs ${FR_MIN}+` : `≈ #${r.toLocaleString()}`}</small>")
+RA("class=\"${u ? 'used' : inF ? 'in' : ''}\"","class=\"${u ? 'used' : p.s.total < FR_MIN ? 'low' : inF ? 'in' : ''}\"")
+RA("const open = P.filter(p => !used.includes(p.id));","const open = P.filter(p => !used.includes(p.id) && p.s.total >= FR_MIN), cand = P.filter(p => !used.includes(p.id));")
+RA("let sel = open.length ? open[0].id : null;","let sel = open.length ? open[0].id : cand.length ? cand[0].id : null;")
+RA("const r = frRank(p.s.total), gap = FR_CUT - p.s.total;\n    I.innerHTML =",
+   "const r = frRank(p.s.total), gap = FR_CUT - p.s.total, ok = p.s.total >= FR_MIN, go = $('#frpGo'); if (go) go.disabled = !ok || go.dataset.lock === '1';\n    if (!ok) { I.innerHTML = `This photo scores <b>${p.s.total}</b>. Freerolls need <b>${FR_MIN}+</b>, so it needs <b>${FR_MIN - p.s.total} more points</b>. <button class=\"link frp-tu\" id=\"frpTu\">✨ Touch up to ${FR_MIN}+ · ${fixLab(p)}</button>`; }\n    else I.innerHTML =")
+RA("I.innerHTML = `<b>All your photos have entered today.</b> Upload a new one to play this Freeroll.`; return; }","I.innerHTML = `<b>All your photos have entered today.</b> Upload a new one to play this Freeroll.`; return; }\n    if (p.s.total < FR_MIN && 0) return;")
+RA("${open.length ? (S.cashTix > 0","${cand.length ? (S.cashTix > 0")
+RA("toast(`Touch up to ${FR_CUT}+, then enter the Freeroll`);","toast(`Touch up to ${p.s.total < FR_MIN ? FR_MIN : FR_CUT}+, then enter the Freeroll`);")
+RA("if ($('#frpGo')) $('#frpGo').onclick = () => {","if ($('#frpGo') && $('#frpGo').disabled) $('#frpGo').dataset.lock = '1';\n  if ($('#frpGo')) $('#frpGo').onclick = () => { { const q = S.photos.find(x => x.id === sel); if (!q || q.s.total < FR_MIN) return; }")
+RA("'Enter with a <b>Freeroll ticket</b>. Enter with <b>300 coins</b>, once an hour.'","'Enter with <b>300 coins</b>, once an hour. Your photo needs <b>80+</b>.'")
+s=s.replace('</style>','.frp2 .frp-g button.low{opacity:.75}html:not(.yg) .frp2 .frp-g button.low small{background:#F8E1DF;color:#7A2420}html.yg .frp2 .frp-g button.low small{background:#3A1020;color:#FFC2CC}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('fr 80 ok')
