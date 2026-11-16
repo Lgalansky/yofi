@@ -1286,3 +1286,12 @@ RA("if (won && !L.raidAt) L.raidAt = Date.now() + 45000;","if (won && !L.raidAt)
 # 4) Sign-up carries on with what you tapped
 RA("e.preventDefault(); e.stopImmediatePropagation(); openSignup(); }, true);","e.preventDefault(); e.stopImmediatePropagation(); const tid = t.id; openSignup(() => setTimeout(() => { const n = tid && document.getElementById(tid); if (n) n.click(); }, 450)); }, true);")
 open(d+'yofi-simple.html','w').write(s); print('pacing ok')
+# ---------- No loot box at 3 in a row (boxes at 6 and 10 only) ----------
+s=open(d+'yofi-simple.html').read()
+for a,b in [("const STK = [3, 6, 10];","const STK = [6, 10];"),
+ ("${[2, 5, 9].includes(i) ? 'm m' + (i === 2 ? 3 : 5) : ''}","${[5, 9].includes(i) ? 'm m5' : ''}"),
+ ("${i === 2 ? '<u>🎁</u>×3' : i === 5 ?","${i === 5 ?")]:
+    assert s.count(a)==1,(a,s.count(a)); s=s.replace(a,b)
+open(d+'yofi-simple.html','w').write(s); print('no box at 3 ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace('1fr 1fr 46px 1fr 46px 1fr 1fr 1fr 1fr 46px!important','1fr 1fr 1fr 1fr 1fr 46px 1fr 1fr 1fr 46px!important'); open(d+'yofi-simple.html','w').write(s); print('track dots ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','html #judge .stk-row .stk-steps.stk-steps{grid-template-columns:1fr 1fr 1fr 1fr 1fr 46px 1fr 1fr 1fr 46px!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('grid ok')
