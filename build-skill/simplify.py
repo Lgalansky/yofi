@@ -1347,3 +1347,49 @@ for a,b,n in [("const QS_STAKES = [2, 5],","const QS_STAKES = [2, 5, 10, 20],",1
     assert s.count(a)==n,(a,s.count(a)); s=s.replace(a,b)
 s=s.replace('</style>','.qs2-pick .qs2-st{gap:7px}.qs2-pick .qs2-st button{padding:8px 14px}.qs2-pick .qs2-st b{font-size:1.6rem!important}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('stakes 10 20 ok')
+
+# ---------- Freeroll: one entry per photo per day, rank vs the top-20 cut-off, touch up to climb ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+i=s.index('function frEnter(f) {'); j=s.index('\n// reminder: when the final of an entered Freeroll starts', i)
+s=s[:i]+r"""const FR_CUT = 85, frRank = sc => Math.max(1, Math.round(FR_FINAL * Math.pow(1.35, FR_CUT - sc)));
+const frUsed = () => { const d = dayKey(); if (!S.frU || S.frU.d !== d) S.frU = { d, p: [] }; return S.frU.p; };
+function frEnter(f) { const P = S.photos.slice().sort((a, b) => b.s.total - a.s.total), used = frUsed();
+  if (!P.length) { closeSheet(); toast('Add a photo first, then enter the Freeroll.'); pickPhoto(true); return; }
+  const open = P.filter(p => !used.includes(p.id));
+  const tile = p => { const u = used.includes(p.id), r = frRank(p.s.total), inF = r <= FR_FINAL;
+    return `<button data-frp="${p.id}" ${u ? 'disabled' : ''} aria-pressed="false" class="${u ? 'used' : inF ? 'in' : ''}"><img src="${p.src}" alt=""><b>${p.s.total}</b><small>${u ? 'Entered today' : `≈ #${r.toLocaleString()}`}</small></button>`; };
+  openSheet(`<div class="ug frp frp2"><h2>Enter the ${frTime(f.start)} Freeroll</h2>
+    <p class="sub">Pick a photo. The <b>top ${FR_FINAL}</b> by score go to the final, and members vote for the <b>$${FR_PRIZE.join(' · $')}</b> winners.</p>
+    <div class="frp-cut">🏁 Top ${FR_FINAL} cut-off: about <b>${FR_CUT}+</b> · each photo can enter <b>once a day</b></div>
+    <div class="frp-g">${P.slice(0, 9).map(tile).join('')}</div>
+    <div id="frpInfo" class="frp-info"></div>
+    ${open.length ? `<button class="btn block" id="frpGo">Enter · use 1 🎟️</button>` : ''}
+    <button class="btn block frp-up" id="frpUp">📷 Upload a new photo</button>
+    <div style="text-align:center"><button class="link" id="frpBack">Back</button></div></div>`, { full: false });
+  let sel = open.length ? open[0].id : null;
+  const paint = () => { document.querySelectorAll('#sheetBody [data-frp]').forEach(x => x.setAttribute('aria-pressed', x.dataset.frp === sel)); const p = S.photos.find(x => x.id === sel), I = $('#frpInfo');
+    if (!p) { I.innerHTML = `<b>All your photos have entered today.</b> Upload a new one to play this Freeroll.`; return; }
+    const r = frRank(p.s.total), gap = FR_CUT - p.s.total;
+    I.innerHTML = r <= FR_FINAL ? `✅ <b>Top ${FR_FINAL} spot</b> · this ${p.s.total} photo is about <b>#${r}</b> by score` : `This ${p.s.total} photo is about <b>#${r.toLocaleString()}</b>. <b>${gap} more points</b> gets it into the top ${FR_FINAL}. <button class="link frp-tu" id="frpTu">✨ Touch up to climb · ${fixLab(p)}</button>`;
+    if ($('#frpTu')) $('#frpTu').onclick = () => { closeSheet(); S.cur = p.id; save(); WALL = false; go('studio'); renderStudio(); toast(`Touch up to ${FR_CUT}+, then enter the Freeroll`); }; };
+  document.querySelectorAll('#sheetBody [data-frp]').forEach(b => b.onclick = () => { if (b.disabled) return; sel = b.dataset.frp; paint(); }); paint();
+  $('#frpBack').onclick = () => closeSheet();
+  $('#frpUp').onclick = () => { closeSheet(); pickPhoto(true); };
+  if ($('#frpGo')) $('#frpGo').onclick = () => { if (!(S.cashTix > 0)) { toast('You need a ticket'); return; } const p = S.photos.find(x => x.id === sel); if (!p) return; S.cashTix--; S.frE = S.frE || {}; frUsed().push(p.id);
+    const r = frRank(p.s.total); S.frE[f.id] = { pid: p.id, score: p.s.total, start: f.start, fin: f.fin, end: f.end, bell: true, rank: Math.max(1, Math.round(r * (0.85 + Math.random() * 0.3))) }; save(); paintTix && paintTix(); closeSheet();
+    celebrate({ src: p.src, score: p.s.total, title: 'You’re in!', text: `Your ${p.s.total} photo is entered in the <b>${frTime(f.start)} Freeroll</b>, about <b>#${r.toLocaleString()}</b> by score${r <= FR_FINAL ? ': on track for the final' : ` (top ${FR_FINAL} make the final)`}. The final starts at <b>${frTime(f.fin)}</b>. 🔔 We’ll tell you when it starts.`, cta: 'Keep voting', onCta: () => go('judge'), later: 'See tournaments', onLater: () => openComps() }); }; }"""+s[j:]
+RA("const rank = e.rank || (e.rank = Math.max(1, Math.round((100 - e.score) * 22 + Math.random() * 30)));","const rank = e.rank || (e.rank = frRank(e.score));")
+s=s.replace('</style>',""".frp2 .frp-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.frp2 .frp-g button{position:relative;padding:0;border:0;border-radius:14px;overflow:hidden;cursor:pointer;background:none}
+.frp2 .frp-g img{width:100%;aspect-ratio:1;object-fit:cover;display:block}.frp2 .frp-g b{position:absolute;left:6px;top:6px;padding:1px 8px;border-radius:999px;background:rgba(0,0,0,.65);color:#fff;font-size:.85rem}
+.frp2 .frp-g small{display:block;padding:4px 2px;font-size:.74rem;font-weight:800;text-align:center}.frp2 .frp-g button[aria-pressed="true"]{box-shadow:0 0 0 3px #FBC20A}.frp2 .frp-g button.used{opacity:.45;cursor:default}
+.frp-cut{border-radius:12px;padding:8px 10px;font-size:.84rem}.frp-info{font-size:.88rem;line-height:1.4;margin:0 0 10px;min-height:2.6em}.frp-tu{display:block;margin-top:4px;font-weight:800}.frp-up{margin-top:8px}
+html:not(.yg) .frp2 .frp-g small{background:#F3EBDD;color:#5B4E45}html:not(.yg) .frp2 .frp-g button.in small{background:#DDF0E1;color:#1F4A2B}html:not(.yg) .frp-cut{background:#FFF6DC;color:#2B2320}html:not(.yg) .frp-info{color:#2B2320}
+html:not(.yg) .frp-up{background:#fff!important;color:#2D4E86!important;box-shadow:inset 0 0 0 2px #2D4E86!important}
+html.yg .frp2 .frp-g small{background:#241544;color:#C9B8FF}html.yg .frp2 .frp-g button.in small{background:#0E3A2A;color:#2EE59D}html.yg .frp-cut{background:#241544;color:#E9E2FF}html.yg .frp-info{color:#E9E2FF}
+html.yg .frp-up{background:transparent!important;color:#fff!important;box-shadow:inset 0 0 0 2px #C13CFF!important}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('freeroll photo ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.frp2 .frp-g button{aspect-ratio:auto!important;height:auto!important;display:flex!important;flex-direction:column}.frp2 .frp-g button img{flex:none}.frp2 .frp-g button small{position:static!important;display:block!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('fr labels ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.frp2 .frp-g button small{position:absolute!important;left:0;right:0;bottom:0;padding:5px 2px!important;font-size:.76rem!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('fr labels 2 ok')
