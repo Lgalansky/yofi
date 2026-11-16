@@ -1507,3 +1507,38 @@ s=open(d+'yofi-simple.html').read()
 a="if (S.votes >= 10 && !S.betIntro) { S.betIntro = true; save(); celebrate({ src: p.src, score: '🎁', title: 'Streaks unlocked!', text: 'Get picks right in a row to multiply your coins: <b>3 in a row ×3, 5 ×5, 10 ×10</b>, plus a gift box at each. One wrong pick and you’re back to ×1.', cta: 'Got it' }); return; }"
 assert s.count(a)==1; s=s.replace(a,"if (S.votes >= 10 && !S.betIntro) { S.betIntro = true; save(); }")
 open(d+'yofi-simple.html','w').write(s); print('no streaks pop ok')
+
+# ---------- First prize pool pop in the user's format: category challenge, big pool, photos, 3 short lines ----------
+s=open(d+'yofi-simple.html').read()
+i=s.index('function potIntro(p) {'); j=s.index('\nfunction ', i+10)
+s=s[:i]+r"""function potIntro(p) { const k = (p && CATS8.find(x => fitsTheme(p, x))) || CATS8[0], L = lgS(), H = lgHold(k), mine = lgMine(k);
+  if (!mine || H.h === 'you') { potCard(k); return; }
+  const opp = H.h, onVote = $('#panes').dataset.at === 'judge', cn = esc(crownName(k)), y = isYoungW(), CH = y ? 'Battle' : 'Challenge', ST = y ? 'points' : 'stars';
+  setTimeout(() => { openSheet(`<div class="pnf"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
+    <span class="pnf-ic">${gi(k)}</span><h2 class="pnf-t">${cn} ${CH}</h2>
+    <h3 class="pnf-h">Your first ${CH.toLowerCase()}</h3><p class="pnf-s">Your uploaded ${cn} photo is ready.</p>
+    <div class="pnf-pool"><small>Today’s ${cn} prize pool</small><b>$${Math.round(L.jp[k]).toLocaleString()}</b><em><span data-wk>${dayLeft()}</span> left · Pays at midnight</em></div>
+    <div class="pnf-vs"><figure><img src="${mine.src}" alt=""><figcaption>Your photo</figcaption></figure><span>VS</span><figure><img src="${lgPhoto(opp, k)}" alt=""><figcaption>@${esc(opp)}</figcaption></figure></div>
+    <p class="pnf-r">${y ? 'Judges' : 'Members'} vote. Win ${LG_SHARE} to qualify.</p>
+    <p class="pnf-k">⭐ Keep your ${ST}, even if you lose.</p>
+    <p class="pnf-sp">Qualifiers share 70% of the pool.<br>Most ${ST} wins the remaining 30%.</p>
+    <button class="btn block pc-go" id="pnGo">${VS_IC}${CH} now · $${LG_FEE}</button>
+    <div style="text-align:center"><button class="link pc-later" id="pnLater">${onVote ? (y ? 'Keep judging' : 'Keep voting') : 'Not now'}</button></div></div>`);
+    $('#pnGo').onclick = () => { closeSheet(); lgPay(() => lgFight(k, opp, true)); };
+    $('#pnLater').onclick = () => closeSheet();
+    document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); }, 380); }"""+s[j:]
+s=s.replace('</style>',""".pnf{position:relative;text-align:center;padding:4px 2px 2px}.pnf-ic svg{width:44px;height:44px;margin-top:4px}
+.pnf-t{margin:2px 26px 6px;font-size:1.9rem;line-height:1.05;text-transform:uppercase;letter-spacing:.01em}.pnf-h{margin:0;font-size:1.35rem}.pnf-s{margin:2px 0 12px;font-size:.95rem}
+.pnf-pool{border-radius:18px;padding:8px 12px 10px;margin:0 0 14px}.pnf-pool small{display:block;font-weight:800;font-size:.95rem}.pnf-pool b{display:block;font-size:2.8rem;line-height:1.1}.pnf-pool em{font-style:normal;font-weight:800;font-size:.9rem}
+.pnf-vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin:0 6px 12px}.pnf-vs figure{margin:0;position:relative}.pnf-vs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:18px;display:block}
+.pnf-vs figcaption{position:relative;margin:-14px auto 0;width:fit-content;max-width:100%;padding:3px 14px;border-radius:999px;font-weight:800;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pnf-vs>span{font-weight:900;font-size:1.4rem}
+.pnf-r{margin:0 0 8px;font-size:1.2rem;font-weight:800}.pnf-k{display:inline-block;margin:0 0 8px;padding:5px 16px;border-radius:999px;font-weight:700;font-size:.92rem}.pnf-sp{margin:0 0 14px;font-size:.88rem;line-height:1.4}
+html:not(.yg) .pnf-ic,html:not(.yg) .pnf-t,html:not(.yg) .pnf-h,html:not(.yg) .pnf-r,html:not(.yg) .pnf-vs>span{color:#1F2F55}html:not(.yg) .pnf-t,html:not(.yg) .pnf-h,html:not(.yg) .pnf-r,html:not(.yg) .pnf-pool b{font-family:"Fraunces",serif}
+html:not(.yg) .pnf-s,html:not(.yg) .pnf-sp{color:#2B2320}html:not(.yg) .pnf-pool{background:#E6F3E9;box-shadow:inset 0 0 0 2px #2F6B3F;color:#1F4A2B}html:not(.yg) .pnf-pool b{color:#2F6B3F}
+html:not(.yg) .pnf-vs img{box-shadow:0 0 0 3px #1F2F55}html:not(.yg) .pnf-vs figcaption{background:#FFF1C9;color:#1F2F55}html:not(.yg) .pnf-k{background:#FFF1C9;color:#2B2320}
+html.yg .pnf-ic,html.yg .pnf-t,html.yg .pnf-h,html.yg .pnf-r,html.yg .pnf-vs>span{color:#fff}html.yg .pnf-ic{color:#FFC93C}html.yg .pnf-s,html.yg .pnf-sp{color:#C9B8FF}
+html.yg .pnf-pool{background:#0E3A2A;box-shadow:inset 0 0 0 2px #2EE59D;color:#C9FBE5}html.yg .pnf-pool b{color:#2EE59D;font-family:"Bricolage Grotesque",sans-serif}
+html.yg .pnf-vs img{box-shadow:0 0 0 3px #C13CFF}html.yg .pnf-vs figcaption{background:#FFC93C;color:#1B0F33}html.yg .pnf-k{background:#3A2A0A;color:#FFC93C}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('pnf ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.pnf-vs img{aspect-ratio:1/1!important;height:auto!important;max-height:none!important}.pnf-vs{margin-left:22px!important;margin-right:22px!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('pnf square ok')
