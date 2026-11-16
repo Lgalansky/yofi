@@ -1286,12 +1286,57 @@ RA("if (won && !L.raidAt) L.raidAt = Date.now() + 45000;","if (won && !L.raidAt)
 # 4) Sign-up carries on with what you tapped
 RA("e.preventDefault(); e.stopImmediatePropagation(); openSignup(); }, true);","e.preventDefault(); e.stopImmediatePropagation(); const tid = t.id; openSignup(() => setTimeout(() => { const n = tid && document.getElementById(tid); if (n) n.click(); }, 450)); }, true);")
 open(d+'yofi-simple.html','w').write(s); print('pacing ok')
-# ---------- No loot box at 3 in a row (boxes at 6 and 10 only) ----------
+
+# ---------- Prize pops prompt uploads; loot boxes never give energy; coin challenge buttons say Free; upload page after interests ----------
 s=open(d+'yofi-simple.html').read()
-for a,b in [("const STK = [3, 6, 10];","const STK = [6, 10];"),
- ("${[2, 5, 9].includes(i) ? 'm m' + (i === 2 ? 3 : 5) : ''}","${[5, 9].includes(i) ? 'm m5' : ''}"),
- ("${i === 2 ? '<u>🎁</u>×3' : i === 5 ?","${i === 5 ?")]:
-    assert s.count(a)==1,(a,s.count(a)); s=s.replace(a,b)
-open(d+'yofi-simple.html','w').write(s); print('no box at 3 ok')
-s=open(d+'yofi-simple.html').read(); s=s.replace('1fr 1fr 46px 1fr 46px 1fr 1fr 1fr 1fr 46px!important','1fr 1fr 1fr 1fr 1fr 46px 1fr 1fr 1fr 46px!important'); open(d+'yofi-simple.html','w').write(s); print('track dots ok')
-s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','html #judge .stk-row .stk-steps.stk-steps{grid-template-columns:1fr 1fr 1fr 1fr 1fr 46px 1fr 1fr 1fr 46px!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('grid ok')
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+# 1) prize pool pop for a category you have no photo in
+RA("function potCard(k) {", r"""function potUp(k) { const L = lgS(), H = lgHold(k), cn = esc(crownName(k)), onVote = $('#panes').dataset.at === 'judge';
+  setTimeout(() => { openSheet(`<div class="pc pc2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
+    <p class="pc-k">${gi(k)}<span>Daily cash challenge · ${cn}</span></p><h2 class="pc-h">Your photo. Real cash.</h2>
+    <div class="pc2-pool"><b>$${Math.round(L.jp[k]).toLocaleString()}</b><span>today’s prize pool<em>⏱ Pays at midnight · <span data-wk>${dayLeft()}</span> left</em></span></div>
+    <div class="pc-vs pc2-vs"><figure><button class="pu-add" id="puAdd" aria-label="Upload a ${cn} photo"><span>+</span><small>Your ${cn.toLowerCase()} photo</small></button><figcaption>You</figcaption></figure><span class="pc-x2">VS</span>
+      <figure><img src="${lgPhoto(H.h, k)}" alt=""><figcaption>@${esc(H.h)}</figcaption><small>${CRW}${isYoungW() ? 'Crown' : 'Blue ribbon'} · held ${heldFor(H.since)}</small></figure></div>
+    <p class="pu-t">You don’t have a <b>${cn.toLowerCase()}</b> photo yet. Upload one, get it to ${CFG.QUALIFY}+, then challenge for this pool.</p>
+    <button class="btn block pc-go" id="puGo">📷 Upload a ${cn.toLowerCase()} photo</button>
+    <div style="text-align:center"><button class="link pc-later" id="puLater">${onVote ? (isYoungW() ? 'Keep judging' : 'Keep voting') : 'Not now'}</button></div></div>`);
+    $('#puGo').onclick = $('#puAdd').onclick = () => { closeSheet(); addCatPhoto(k); };
+    $('#puLater').onclick = () => closeSheet();
+    document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); }, 380); }
+function potCard(k) {""")
+RA("const opp = iHold ? (R.find(r => !r.me) || {}).h : H.h; if (!mine || !opp) { lgCat(k); return; }\n  const os","const opp = iHold ? (R.find(r => !r.me) || {}).h : H.h; if (!mine) { potUp(k); return; } if (!opp) { lgCat(k); return; }\n  const os")
+RA("const L = lgS(), ks = CATS8.filter(k => lgMine(k));","const L = lgS(), ks = CATS8.filter(k => lgMine(k)), miss = CATS8.filter(k => k !== 'any' && !lgMine(k)).sort((a, b) => (L.jp[b] || 0) - (L.jp[a] || 0));\n    S.puAlt = !S.puAlt; save(); if (miss.length && S.potSeen && (!ks.length || S.puAlt)) { potUp(miss[0]); return; }")
+# 2) loot boxes: coins only, never energy
+RA("const P = kind === 3 ? [{ w: .6, k: 'g', n: 15 * LM }, { w: .3, k: 'e', n: 5 }, { w: .1, k: 'g', n: 50 * LM }]","const P = kind === 3 ? [{ w: .6, k: 'g', n: 15 * LM }, { w: .3, k: 'g', n: 25 * LM }, { w: .1, k: 'g', n: 50 * LM }]")
+RA(": [{ w: .5, k: 'g', n: 25 * LM }, { w: .3, k: 'e', n: 10 }, { w: .15, k: 'g', n: 100 * LM }, { w: .05, k: 'e', n: 25 }];",": [{ w: .5, k: 'g', n: 25 * LM }, { w: .3, k: 'g', n: 40 * LM }, { w: .15, k: 'g', n: 100 * LM }, { w: .05, k: 'g', n: 150 * LM }];")
+RA("energy(); S.en += rar.e; const tk","const tk")
+RA("""<div class="ch-it" style="animation-delay:.45s"><b>+${rar.e}</b><small>⚡ energy</small></div>""","")
+# 3) coin challenge start buttons say Free
+RA("`Challenge for ${stake} 🟡`","`Free challenge · ${stake} 🟡`")
+RA("cta: bme ? 'Challenge · 25 🟡'","cta: bme ? 'Free challenge · 25 🟡'")
+RA('id="gbAgain">Play again for coins','id="gbAgain">Play again free · coins')
+RA('id="gbAgain">Play again</button>','id="gbAgain">Play again · Free</button>')
+RA("if (!opt.revenge) $('#gbAgain').onclick","if (!opt.revenge && /coins|Free/.test($('#gbAgain').textContent)) $('#gbAgain').onclick")
+# 4) after interests: an upload page; the phone's photo picker only opens when the player taps
+RA("""${window.__obAfter ? `<label class="btn block ob-pick" id="obGo2" for="file" role="button">📷 Choose my photo · ${picked.size} picked</label>` :""","""${window.__obAfter ? `<button class="btn block" id="obGo2" type="button">Continue · ${picked.size} picked</button>` :""")
+RA("if (window.__obAfter) { window.__obAfter = null; S.likes = [...picked]; save(); obSort(); g.className = ''; setTimeout(() => g.remove(), 300); return; }",
+   "if (window.__obAfter) { window.__obAfter = null; S.likes = [...picked]; save(); obSort(); obUpload(g); return; }")
+RA("function obDone(g) {", r"""function obUpload(g) { const L = lgS(), k = CATS8.find(x => x !== 'any') || 'any', ex = SEED.filter(x => x.src).slice(0, 3);
+  g.innerHTML = `<div class="ag-in ob obu"><div class="ob-prog"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+    <h1>Upload your first photo</h1><p>Pick one you love. We’ll score it and help you improve it, then your <b>first challenge is free</b>.</p>
+    <div class="obu-ex">${ex.map(x => `<img src="${x.src}" alt="">`).join('')}</div>
+    <ul class="obu-l"><li>📷 Any photo from your phone</li><li>✨ Free score in seconds</li><li>🏆 Today’s ${esc(crownName(k))} prize pool: <b>$${Math.round(L.jp[k] || 0).toLocaleString()}</b></li></ul>
+    <label class="btn block ob-pick" id="obUp" for="file" role="button">📷 Upload photo · Free</label></div>`;
+  const f = $('#file'), done = () => { f.removeEventListener('change', done); g.className = ''; setTimeout(() => g.remove(), 300); };
+  f.addEventListener('change', done); }
+function obDone(g) {""")
+s=s.replace('</style>',""".pu-add{width:100%;aspect-ratio:1;border-radius:16px;border:2.5px dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;font:inherit;background:none}.pu-add span{font-size:2.4rem;line-height:1;font-weight:300}.pu-add small{font-size:.78rem;font-weight:700;padding:0 6px}
+.pu-t{margin:12px 0;font-size:.92rem;line-height:1.4}
+.obu-ex{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.obu-ex img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:14px}
+.obu-l{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:8px;font-size:1rem}
+html:not(.yg) .pu-add{border-color:#2D4E86;color:#2D4E86;background:#F3EBDD}html:not(.yg) .pu-t{color:#2B2320}
+html.yg .pu-add{border-color:#C13CFF;color:#E9E2FF;background:#241544}html.yg .pu-t{color:#E9E2FF}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('four ok')
+s=open(d+'yofi-simple.html').read(); a="cta: 'Let’s go', onCta: () => bt.classList.add('on')"; assert s.count(a)==1; s=s.replace(a,"cta: 'Let’s go · Free', onCta: () => bt.classList.add('on')"); open(d+'yofi-simple.html','w').write(s); print('lets go free ok')
