@@ -1465,3 +1465,8 @@ html.yg .tfil button{background:#241544;color:#E9E2FF}html.yg .tfil button[aria-
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('t filter ok')
 s=open(d+'yofi-simple.html').read(); a="|| ($('#flow').classList.contains('on') && !$('#flow').classList.contains('astab'))) { if (!gnOpen.n)"; assert s.count(a)==1; s=s.replace(a,"|| $('#flow').classList.contains('on')) { if (!gnOpen.n)"); open(d+'yofi-simple.html','w').write(s); print('no coin pop over tournaments ok')
+# ---------- Freeroll entry costs 300 coins (1 coin entry per hour) ----------
+s=open(d+'yofi-simple.html').read()
+for a,b in [("TIX_COINS = 1000","TIX_COINS = 300"),("Swap <b>1,000 coins</b> for one, once an hour.","Enter with <b>300 coins</b>, once an hour.")]:
+    assert s.count(a)==1,a; s=s.replace(a,b)
+open(d+'yofi-simple.html','w').write(s); print('300 coins ok')
