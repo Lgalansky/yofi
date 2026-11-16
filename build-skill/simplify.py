@@ -807,3 +807,11 @@ RA("<em>${r.n} 🏅</em>","<em>${r.n} ⭐</em>")
 s=s.replace('</style>',""".bcc-pl .t .st-ic{font-style:normal;font-size:.9em;margin-right:3px}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('stars ok')
+
+# ---------- No +100 coins for uploading to a new category ----------
+s=open(d+'yofi-simple.html').read()
+n1=s.count(' <i class="nc-b">+100</i>'); s=s.replace(' <i class="nc-b">+100</i>','')
+n2=s.count(' · <i class="nc-b">+100 🟡</i>'); s=s.replace(' · <i class="nc-b">+100 🟡</i>','')
+a="if (o.fresh && !o.first && p && p.cat && p.cat !== 'any' && !(S.catBonus"
+assert s.count(a)==1; s=s.replace(a,"if (false && o.fresh && !o.first && p && p.cat && p.cat !== 'any' && !(S.catBonus")
+open(d+'yofi-simple.html','w').write(s); print('no +100 ok', n1, n2)
