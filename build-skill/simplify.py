@@ -1907,3 +1907,9 @@ html.yg .btn.pc-real,html.yg .btn.qs3-real{background:linear-gradient(95deg,#1FB
 #coach .ppop .btn.pc-real{font-size:1rem!important}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('real btn ok')
+# ---------- Coin challenge pop for a category you have no photo in: show a rival photo and go to upload ----------
+s=open(d+'yofi-simple.html').read()
+for a,b in [("celebrate({ src: me0.src, score: '🟡', title: `${tn} coin challenge!`","celebrate({ src: bme ? bme.src : lgPhoto(lgHold(bth).h, bth), score: '🟡', title: bme ? `${tn} coin challenge!` : `Got a ${tn.toLowerCase()} photo?`"),
+ ("onCta: () => openGemBattle(25, null, { theme: bth }), later: 'Not now' }); return; } }","onCta: () => bme ? openGemBattle(25, null, { theme: bth }) : addCatPhoto(bth), later: 'Not now' }); return; } }")]:
+    assert s.count(a)==1,a[:60]; s=s.replace(a,b)
+open(d+'yofi-simple.html','w').write(s); print('coin pop upload ok')
