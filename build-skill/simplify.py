@@ -1742,3 +1742,13 @@ s=s.replace('</style>',""".obu-try{margin-top:14px}.obu-try p{margin:0 0 8px;fon
 html:not(.yg) .obu-try p{color:#5B4E45}html:not(.yg) .obu-try button{box-shadow:0 0 0 2px #E6D9C4}html.yg .obu-try p{color:#C9B8FF}html.yg .obu-try button{box-shadow:0 0 0 2px #3A2766}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('funnel fixes ok')
+# ---------- Sample photos work on iPhone: pass the image URL straight to the upload steps (no file faking) ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("$('#file').addEventListener('change', async e => {\n  const f = e.target.files && e.target.files[0]; if (!f) return;",
+   "$('#file').addEventListener('change', async e => {\n  const smp = window.__sampleURL; window.__sampleURL = null; const f = smp ? { type: 'image/jpeg' } : e.target.files && e.target.files[0]; if (!f) return;")
+RA("  const url = URL.createObjectURL(f);\n  let img;","  const url = smp || URL.createObjectURL(f);\n  let img;")
+RA("try { const bl = await (await fetch(x.src)).blob(), f = new File([bl], 'sample.jpg', { type: bl.type || 'image/jpeg' }), dt = new DataTransfer(); dt.items.add(f); const fi = $('#file'); fi.files = dt.files; window.__sample = 1; fi.dispatchEvent(new Event('change', { bubbles: true })); } catch (e) { toast('Could not load that photo. Try uploading your own.'); b.classList.remove('busy'); }",
+   "try { window.__sampleURL = x.src; window.__sample = 1; $('#file').dispatchEvent(new Event('change', { bubbles: true })); } catch (e) { window.__sampleURL = null; toast('Could not load that photo. Try uploading your own.'); b.classList.remove('busy'); }")
+open(d+'yofi-simple.html','w').write(s); print('sample ios ok')
