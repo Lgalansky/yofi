@@ -976,3 +976,15 @@ RA("<p>Win <b>+1 star</b>, lose <b>−1 star</b>.</p>","<p>Win <b>+1 star</b>. L
 RA("takeCrown(k, P.h); if (L.you[k]) L.you[k]--; save();","takeCrown(k, P.h); save();")
 RA("const ks = CATS8.filter(k => (L.you[k] || 0) > 0 && lgMine(k)); if (!ks.length) { save(); return; }","const ks = []; if (!ks.length) { save(); return; } // stars are never taken away")
 open(d+'yofi-simple.html','w').write(s); print('no star loss ok')
+
+# ---------- Shared 50% split equally between everyone on 3+ stars ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA("const lgShare = k => { const L = lgS(), y = L.you[k] || 0, top = lgKing(k); return y < LG_SHARE ? 0 : +(L.jp[k] * (1 - LG_KING) * y / (L.q[k] + y) + (top.me ? L.jp[k] * LG_KING : 0)).toFixed(2); };",
+   "const lgQn = k => Math.max(2, Math.round(lgS().jp[k] / 8)); // demo: players on 3+ stars today grows with the pool (about $8 of pool per qualifier)\nconst lgShare = k => { const L = lgS(), y = L.you[k] || 0, top = lgKing(k); return y < LG_SHARE ? 0 : +(L.jp[k] * (1 - LG_KING) / lgQn(k) + (top.me ? L.jp[k] * LG_KING : 0)).toFixed(2); };")
+RA("shares the other <b>50%</b>. More stars, bigger share.</p>","shares the other <b>50%</b> equally.</p>")
+RA("Everyone with 3+ stars shares the other 50%, by stars.","Everyone with 3+ stars shares the other 50% equally.")
+RA("'you’re sharing the pool · more stars, bigger share'","`you’re in · an equal share with ${lgQn(k) - 1} others`")
+RA("⭐ ${LG_SHARE}+ stars share <b>50%</b></p>","⭐ ${LG_SHARE}+ stars share <b>50%</b> equally</p>")
+open(d+'yofi-simple.html','w').write(s); print('equal ok')
