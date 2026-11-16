@@ -22,3 +22,10 @@ After every change to the app, before you finish your reply:
 3. Republish that project's artifact from the updated `index.html` so the two stay the same. For Skill, changes go to the preview first and only go to the live link when the user says "push live".
 
 Don't wait to be asked, and don't batch several changes into one commit at the end.
+
+## Product principle: a skill site, not a social game
+Use this to frame every piece of product advice.
+- Yofi is a real-money skill site. It is not a social game that makes players burn coins so they buy more.
+- Voters are the skill engine: their votes decide the contests. Coins are how we reward and motivate voting.
+- Coins are earned, never sold. They should lead to real-money chances (Freeroll entries, touch-ups that help a photo win), not to coin purchases.
+- Revenue comes from the rake on cash contests. Judge every idea by whether it brings more votes, more photos and more cash entries.
