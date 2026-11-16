@@ -1067,3 +1067,22 @@ function fcNotify() {""",1)
 s=s.replace('</style>',""".coin-ic{display:inline-flex;align-items:center;vertical-align:-.12em;line-height:1}.coin-ic svg{width:.95em!important;height:.95em!important;vertical-align:0!important}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('coin icons ok')
+
+# ---------- Your day: stars and prize pools instead of share/ribbons; 3 dots; shares shown as estimates ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("const dots = y => [1, 2, 3, 4, 5].map(i => `<i class=\"${i <= y ? 'on' : ''}\"></i>`).join('');","const dots = y => [...Array(LG_SHARE)].map((_, i) => `<i class=\"${i < y ? 'on' : ''}\"></i>`).join('');")
+RA("""body = `<div class="yd-sum"><div class="${inP.length ? 'hot' : ''}"><b class="gr">${money(inP.length ? tot : 0)}</b><small>Current share</small></div><div><b>🏅 ${held}</b><small>Blue ribbons held</small></div><div><b>⏱ ${dayLeft()}</b><small>Until payout</small></div></div>
+    <p class="yd-big">Have <em>${LG_SHARE} stars</em> at midnight to share the pot.</p>""",
+   """const stT = rows.reduce((a, r) => a + r.y, 0), pools = CATS8.reduce((a, k) => a + (L.jp[k] || 0), 0);
+    body = `<div class="yd-sum"><div class="${stT ? 'hot' : ''}"><b>⭐ ${stT}</b><small>Stars today</small></div><div><b class="gr">$${Math.round(pools).toLocaleString()}</b><small>Prize pools</small></div><div><b>⏱ ${dayLeft()}</b><small>Until payout</small></div></div>
+    ${inP.length ? `<p class="yd-big">You’ve qualified in <em>${inP.length} categor${inP.length === 1 ? 'y' : 'ies'}</em>. About <em>${money(tot)}</em> if it ended now.</p><p class="yd-est">An estimate: it changes as more players reach ${LG_SHARE} stars before midnight.</p>` : `<p class="yd-big">Have <em>${LG_SHARE} stars</em> at midnight to share the pot.</p>`}""")
+RA("let html = '<span class=\"hp-d\"><i></i><i></i><i></i><i></i><i></i></span>'","let html = '<span class=\"hp-d\"><i></i><i></i><i></i></span>'")
+RA("<span class=\"hp-d\">${[1, 2, 3, 4, 5].map(i => `<i class=\"${i <= best.y ? 'on' : ''}\"></i>`).join('')}</span>","<span class=\"hp-d\">${[...Array(LG_SHARE)].map((_, i) => `<i class=\"${i < best.y ? 'on' : ''}\"></i>`).join('')}</span>")
+RA("html = `<span class=\"hp-ok\">✓ ${money(t)}</span>","html = `<span class=\"hp-ok\">✓ ≈${money(t)}</span>")
+RA("lab = `In ${inP.length} pot${inP.length === 1 ? '' : 's'}, ${money(t)} so far`;","lab = `In ${inP.length} pot${inP.length === 1 ? '' : 's'}, about ${money(t)} if it ended now`;")
+RA("`you’re in · <b>${money(lgShare(k))}</b> so far`","`you’re in · about <b>${money(lgShare(k))}</b> if it ended now`")
+s=s.replace('</style>',""".yd-est{margin:-6px 0 12px;text-align:center;font-size:.8rem;opacity:.75}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('your day ok')
