@@ -1028,3 +1028,14 @@ RA("id=\"lbRev\">${VS_IC}Rematch · $1</button>", "id=\"lbRev\">${VS_IC}Rematch 
 RA("Rematch · ${c ? frLab() : '$1'}</button>", "Rematch · ${c ? frLab() : '$2'}</button>")
 RA("cta: 'Rematch · $1', onCta: () => revengePrep(null, k, P.h)", "cta: 'Rematch · $2', onCta: () => revengePrep(null, k, P.h)")
 open(d+'yofi-simple.html','w').write(s); print('v15 $2 ok')
+
+# ---------- $2 challenge price everywhere a player can see it ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+n=s.count('Each entry is $1 and most of it goes into that day’s prize pot.'); assert n>=1
+s=s.replace('Each entry is $1 and most of it goes into that day’s prize pot.','Each photo challenge is $2, and $1.60 of it goes into that category’s prize pot.')
+RA("Entries are $1. Prize pots pay at midnight.","Photo challenges are $2. Prize pots pay at midnight.")
+RA("cta: 'Rematch · $1', onCta: () => lgPay(() => lgFight(k, P.h, false, true))","cta: 'Rematch · $2', onCta: () => lgPay(() => lgFight(k, P.h, false, true))")
+RA("// every $1 challenge: 80¢ to today's pot, 20¢ house.","// every $2 challenge: $1.60 to today's pot, 40¢ house.")
+open(d+'yofi-simple.html','w').write(s); print('price2 ok', n)
