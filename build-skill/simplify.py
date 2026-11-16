@@ -1502,3 +1502,8 @@ html.yg .obu-c button{background:#241544;color:#E9E2FF}html.yg .obu-c button[ari
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('newbie cat ok')
 s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.obu-need[hidden]{display:none!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('need hidden ok')
+# ---------- Remove the "Streaks unlocked!" pop ----------
+s=open(d+'yofi-simple.html').read()
+a="if (S.votes >= 10 && !S.betIntro) { S.betIntro = true; save(); celebrate({ src: p.src, score: '🎁', title: 'Streaks unlocked!', text: 'Get picks right in a row to multiply your coins: <b>3 in a row ×3, 5 ×5, 10 ×10</b>, plus a gift box at each. One wrong pick and you’re back to ×1.', cta: 'Got it' }); return; }"
+assert s.count(a)==1; s=s.replace(a,"if (S.votes >= 10 && !S.betIntro) { S.betIntro = true; save(); }")
+open(d+'yofi-simple.html','w').write(s); print('no streaks pop ok')
