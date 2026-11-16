@@ -1853,13 +1853,13 @@ html:not(.yg) .mode-tag.coin{background:#FFF1C9;color:#5B3A00}html:not(.yg) .mod
 .near{margin:4px 0 0;font-size:.8rem;font-weight:700;line-height:1.3}html:not(.yg) .near{color:#2F6B3F}html.yg .near{color:#2EE59D}
 .co-ap{font-size:1.15rem!important}.co-card{display:block;margin:10px auto;font-weight:700}.co-f[hidden],.co-pay[hidden],.co-card[hidden]{display:none!important}
 #coach .ppop{max-height:92vh!important;padding:12px 12px 10px!important}
-#coach .ppop .pnf-ic svg{width:30px!important;height:30px!important}#coach .ppop .pnf-t{font-size:1.45rem!important;margin:0 24px 2px!important}#coach .ppop .pnf-h{font-size:1.1rem!important}#coach .ppop .pnf-s{margin:0 0 8px!important;font-size:.85rem!important}
+@media (max-height:860px){#coach .ppop .pnf-ic svg{width:30px!important;height:30px!important}#coach .ppop .pnf-t{font-size:1.45rem!important;margin:0 24px 2px!important}#coach .ppop .pnf-h{font-size:1.1rem!important}#coach .ppop .pnf-s{margin:0 0 8px!important;font-size:.85rem!important}
 #coach .ppop .pnf-pool{padding:5px 10px 6px!important;margin:0 0 8px!important}#coach .ppop .pnf-pool b{font-size:2rem!important}#coach .ppop .pnf-pool small,#coach .ppop .pnf-pool em{font-size:.8rem!important}
 #coach .ppop .pnf-vs{margin:0 34px 6px!important;gap:6px!important}#coach .ppop .pnf-vs figcaption{font-size:.75rem!important;padding:2px 10px!important}#coach .ppop .pnf-vs>span{font-size:1.1rem!important}
 #coach .ppop .pnf-r{font-size:1rem!important;margin:0 0 6px!important}#coach .ppop .pnf-k{font-size:.82rem!important;margin:0 0 6px!important;padding:3px 12px!important}#coach .ppop .pnf-sp{font-size:.78rem!important;margin:0 0 8px!important}
 #coach .ppop .pc-h{font-size:1.3rem!important;margin-bottom:6px!important}#coach .ppop .pc2-pool{margin-bottom:6px!important}#coach .ppop .pc2-pool>b{font-size:2rem!important}#coach .ppop .pc2-vs{margin:0 26px!important}
-#coach .ppop .pc2-vs img,#coach .ppop .pu-add{max-height:120px;aspect-ratio:1/1;width:100%;object-fit:cover}#coach .ppop .pc2-stake{margin:6px 0!important}#coach .ppop .pc2-me{margin-bottom:2px!important}#coach .ppop .pc2-st{font-size:1.2rem!important}#coach .ppop .pc2-how{margin:2px 0 8px!important;font-size:.76rem!important}
-#coach .ppop .pc-go{margin-top:0!important}#coach .ppop .pc-later{margin-top:2px!important}
+#coach .ppop .pc2-vs img,#coach .ppop .pu-add{aspect-ratio:1/1;width:100%;object-fit:cover}#coach .ppop .pc2-stake{margin:6px 0!important}#coach .ppop .pc2-me{margin-bottom:2px!important}#coach .ppop .pc2-st{font-size:1.2rem!important}#coach .ppop .pc2-how{margin:2px 0 8px!important;font-size:.76rem!important}
+#coach .ppop .pc-go{margin-top:0!important}#coach .ppop .pc-later{margin-top:2px!important}}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('modes ok')
 
@@ -1874,9 +1874,24 @@ RA("${VS_IC}Rematch · ${entryTxt()}</button>","${VS_IC}${cLab('Rematch', 'Free 
 RA("${VS_IC}${yg ? 'Battle' : 'Challenge'} again · ${entryTxt()}</button>","${VS_IC}${cLab((yg ? 'Battle' : 'Challenge') + ' again', 'Free ' + (yg ? 'battle' : 'challenge') + ' again')} · ${entryTxt()}</button>")
 s=s.replace('</style>',"""#coach .ppop{max-height:calc(100vh - 14px)!important;padding:10px 12px 8px!important}#coach:has(.ppop){padding-top:6px!important;padding-bottom:6px!important}
 #coach .ppop .pc-go{white-space:nowrap;font-size:1rem!important}.pc2-pool>b,.pnf-pool b,.pr3-pool>b{white-space:nowrap}.pc2-pool>b svg,.pnf-pool b svg,.pr3-pool>b svg,.pc2-pool>b .coin-ic svg{width:.62em!important;height:.62em!important;vertical-align:.08em!important}
-#coach .ppop .pnf-vs{margin:0 54px 4px!important}#coach .ppop .pnf-sp{line-height:1.3!important}#coach .ppop .pnf-k{margin-bottom:4px!important}
+@media (max-height:860px){#coach .ppop .pnf-vs{margin:0 54px 4px!important}#coach .ppop .pnf-sp{line-height:1.3!important}#coach .ppop .pnf-k{margin-bottom:4px!important}
 #coach .ppop .pc-k{margin-top:0!important;font-size:.7rem!important}#coach .ppop .pc2-vs{margin:0 46px!important}#coach .ppop .pc2-vs figcaption{font-size:.85rem!important;margin-top:3px!important}#coach .ppop .pc2-vs small{font-size:.66rem!important}
 #coach .ppop .pc2-stake{display:flex!important;gap:6px!important}#coach .ppop .pc2-stake>div{flex:1;padding:4px 6px!important}#coach .ppop .pc2-stake b{font-size:.62rem!important}#coach .ppop .pc2-stake span{font-size:.72rem!important}
-#coach .ppop .pc2-me p{font-size:.8rem!important}#coach .ppop .pc-real{margin-top:4px!important;font-size:.85rem!important}
+#coach .ppop .pc2-me p{font-size:.8rem!important}#coach .ppop .pc-real{margin-top:4px!important;font-size:.85rem!important}}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('modes2 ok')
+# ---------- Prize pops: roomy on normal phones (heading clear of the ✕, equal photos) ----------
+s=open(d+'yofi-simple.html').read()
+s=s.replace('</style>','#coach .ppop .pc-k{padding:0 30px;line-height:1.35}#coach .ppop .pc-h{margin-top:4px}#coach .ppop .pc2-pool{margin-top:10px}#coach .ppop .pc2-vs{align-items:start}#coach .ppop .pc2-vs figure>img,#coach .ppop .pu-add{width:100%;aspect-ratio:1/1;height:auto;object-fit:cover;display:block;box-sizing:border-box}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('roomy ok')
+# ---------- Prize pops: pool stacked and centred, one-line heading ----------
+s=open(d+'yofi-simple.html').read()
+n=s.count("${isCash() ? 'Daily cash challenge' : 'Daily coin challenge'} · "); assert n==2,n
+s=s.replace("${isCash() ? 'Daily cash challenge' : 'Daily coin challenge'} · ","${isCash() ? 'Cash challenge' : 'Coin challenge'} · ")
+s=s.replace('</style>','#coach .ppop .pc2-pool{flex-direction:column!important;gap:2px!important;text-align:center}#coach .ppop .pc2-pool>span{text-align:center!important}#coach .ppop .pc2-pool em{white-space:normal!important}#coach .ppop .pc2-pool>b{font-size:2.3rem!important}#coach .ppop .pc-k{white-space:nowrap}#coach .ppop .pc-h{font-size:1.45rem!important}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('pool stacked ok')
+# ---------- Prize pops: equal, bigger photos; heading clear of the ✕ ----------
+s=open(d+'yofi-simple.html').read()
+s=s.replace('</style>','#coach .ppop .pc2-vs{margin:4px 12px 0!important;grid-template-columns:1fr auto 1fr!important;gap:8px!important}#coach .ppop .pc2-vs figure{min-width:0}#coach .ppop .pc2-vs figure>img,#coach .ppop .pc2-vs .pu-add{width:100%!important;max-width:150px;margin:0 auto;aspect-ratio:1/1!important;height:auto!important;max-height:none!important;display:flex}#coach .ppop .pc-k{padding:0 34px!important;font-size:.68rem!important}#coach .ppop .pc-h{padding:0 18px}\n@media (max-height:700px){#coach .ppop .pc2-vs figure>img,#coach .ppop .pc2-vs .pu-add{max-width:112px}#coach .ppop .pc2-how{display:none}}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('pop photos ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','#coach .ppop .pc-x{top:4px!important;right:4px!important}#coach .ppop .pc-k{margin-top:22px!important}#coach .ppop .pc2 .pc-k{margin-top:24px!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('x clear ok')
