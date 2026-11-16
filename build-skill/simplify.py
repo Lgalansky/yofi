@@ -853,3 +853,17 @@ html.yg .th-t.t-ko{background:#1E1236;box-shadow:inset 0 0 0 1.5px #FF3FA4}html.
 html.yg .th-t.t-gm{background:#1C1840;box-shadow:inset 0 0 0 1.5px #4A4AB0}html.yg .th-t.t-gm em{background:linear-gradient(95deg,#7A5CFF,#3B6CF5);color:#fff}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('t how ok')
+
+# ---------- More winners: 3+ stars (was 5) share the 50%, split by stars ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA('LG_SHARE = 5','LG_SHARE = 3')
+RA('Collect 5 stars in a category by midnight to share the pot','Collect 3 stars in a category by midnight to share the pot')
+RA("'Earn 5 stars to share the pot'","'Earn 3 stars to share the pot'")
+RA('<p>Everyone with <b>5+ stars</b> shares the other <b>50%</b>, by stars.</p>','<p>Everyone with <b>3+ stars</b> shares the other <b>50%</b>. More stars, bigger share.</p>')
+RA('🏆 Most stars wins 50% · 5+ stars share 50%','🏆 Most stars wins 50% · 3+ stars share 50%')
+RA('Everyone with 5+ stars shares the other 50%, by stars.','Everyone with 3+ stars shares the other 50%, by stars.')
+RA('<b>⭐ 5+ stars</b><small>Share 50% of the pool</small>','<b>⭐ 3+ stars</b><small>Share 50% of the pool</small>')
+RA('${[1, 2, 3, 4, 5].map(i => `<i class="${i <= y ? \'on\' : \'\'}">⭐</i>`).join(\'\')}','${[...Array(LG_SHARE)].map((_, j) => `<i class="${j < y ? \'on\' : \'\'}">⭐</i>`).join(\'\')}')
+open(d+'yofi-simple.html','w').write(s); print('share3 ok')
