@@ -1758,7 +1758,7 @@ function showResult(p, o = {}) {
   if (b('#toComps')) b('#toComps').onclick = () => { if (!S.user) { openSignup(() => openComps(p)); return; } closeFlow(); openComps(p); };
   if (b('#toGal')) b('#toGal').onclick = () => { if (!S.user) { openSignup(() => hangPhoto(p)); return; } closeFlow(); hangPhoto(p); };
   if (b('#saveNow')) b('#saveNow').onclick = () => openSignup();
-  if (!S.user) body.addEventListener('click', e => { if (S.user) return; const t = e.target.closest('button'); if (!t || t.matches('[data-cat]')) return; e.preventDefault(); e.stopImmediatePropagation(); openSignup(); }, true);
+  if (!S.user) body.addEventListener('click', e => { if (S.user) return; const t = e.target.closest('button'); if (!t || t.matches('[data-cat]')) return; e.preventDefault(); e.stopImmediatePropagation(); const tid = t.id; openSignup(() => setTimeout(() => { const n = tid && document.getElementById(tid); if (n) n.click(); }, 450)); }, true);
   if (o.win) setTimeout(() => gemExplosion(o.win, { label: o.first ? 'Welcome gift' : 'Daily upload bonus', from: body.querySelector('.hero-photo') }), 450);
   else paintGems();
 }
@@ -2330,7 +2330,9 @@ function useGems() {
   if ($('#ugTix')) $('#ugTix').onclick = () => { closeSheet(); ticketPop(); };
 }
 // once a session, when judging has piled up 100+ coins, suggest the best way to spend them
+const popPaced = () => (S.votes || 0) - (S.lastPopV == null ? -99 : S.lastPopV) < 8;
 function gemNudge(force) {
+  if (!force && popPaced()) return false;
   // pops each time judging takes you past a new 100 coins (at most every 15 votes), or on opening the app with 150+
   if (!S.user || S.gems < 100 || (S.votes || 0) < 12 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || document.querySelector('.fcd')) return false;
   const mark = Math.floor(S.gems / 100) * 100;
@@ -4063,7 +4065,7 @@ function vsCountdown(o, then) {
   show('2', 750, () => show('1', 750, () => show('GO!', 750, () => setTimeout(() => { d.remove(); then(); }, 550))));
 }
 function lgFight(k, h, isKing, rematch, pid) {
-  const L = lgS(), P = L.pl.find(p => p.h === h), me = S.photos.find(x => x.id === pid) || lgMine(k), cur = lgCurOf(), N = 15; if (!P || !me) return;
+  const L = lgS(), P = L.pl.find(p => p.h === h), me = S.photos.find(x => x.id === pid) || lgMine(k), cur = lgCurOf(), N = 15; if (!P || !me) return; S.lgPlayed = (S.lgPlayed || 0) + 1;
   const their = P.sc[k], pWin = Math.max(.2, Math.min(.8, .5 + (me.s.total - their) / 30)), won = Math.random() < pWin;
   const mv = won ? 8 + Math.floor(Math.random() * 3) : 4 + Math.floor(Math.random() * 4), tv = N - mv, src = lgPhoto(h, k), wasK = lgKing(k);
   // settle now
@@ -4074,7 +4076,7 @@ function lgFight(k, h, isKing, rematch, pid) {
   else { P.cr[k]++; me.losses = (me.losses || 0) + 1; if (me.losses >= PH_LIVES) me.retired = Date.now(); }
   if (cur === 'cash') L.jp[k] = +(L.jp[k] + LG_CUT * LG_FEE).toFixed(2);
   const nk = lgKing(k), kingMsg = crownMsg || (nk.h !== wasK.h ? (nk.me ? `🏆 You’re top scorer in ${esc(crownName(k))}!` : `🏆 @${esc(nk.h)} is now top scorer`) : '');
-  if (won && !L.raidAt) L.raidAt = Date.now() + 45000; if (won) setTimeout(paintTop, 0);
+  if (won && !L.raidAt) L.raidAt = Date.now() + 10 * 60000; if (won) setTimeout(paintTop, 0);
   save(); setTimeout(paintTop, 0);
   const go2 = () => {
     const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>${isKing ? 'Head-to-head' : wasHolder ? 'Blue ribbon defence' : rematch ? 'Rematch' : 'Challenge'}</b><span></span></div><span class="kg2-cat">${gi(k)}${esc(crownName(k).toUpperCase())}</span>`;
@@ -4715,6 +4717,8 @@ document.addEventListener('click', e => { if (e.target.closest('#tshHow')) { e.p
     setTimeout(() => { try { if (S.user && S.gbDone && $('#panes').dataset.at === 'gallery' && !$('#flow').classList.contains('on')) { go('judge'); renderJudge(); } } catch (e) {} }, 400); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else setTimeout(run, 0);
 })();
+(function popClock() { const C = $('#coach'); if (!C) return; new MutationObserver(() => { if (C.classList.contains('on') && $('#panes').dataset.at === 'judge' && S) { S.lastPopV = S.votes || 0; } }).observe(C, { attributes: true, attributeFilter: ['class'] });
+  const SH = $('#sheet'); if (SH) new MutationObserver(() => { if (SH.classList.contains('on') && $('#panes').dataset.at === 'judge' && S) { S.lastPopV = S.votes || 0; } }).observe(SH, { attributes: true, attributeFilter: ['class'] }); })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -5027,7 +5031,7 @@ async function vote(pick) {
   await sleep(tier === 20 ? 2800 : tier > 1 ? 1800 : 1100);
   if (false && window.__meterHit) { window.__meterHit = 0; renderJudge(); judging = false; if (typeof paintTixTag === 'function') paintTixTag(); ticketPop(); return; }
   if (false && !comboHit && tDue()) { renderJudge(); $('#judge').scrollTop = 0; judging = false; if (tPrompt()) { if (S.since >= CFG.BATTLE_EVERY - 1) S.since = Math.max(0, CFG.BATTLE_EVERY - 3); save(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; } }
-  if (!comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.user && fighters().length) { S.frIntro = 1; S.since = 0; save(); renderJudge(); judging = false;
+  if (!comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.lgPlayed && !popPaced() && S.user && fighters().length) { S.frIntro = 1; S.since = 0; save(); renderJudge(); judging = false;
     const me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
     celebrate({ src: me.src, score: VS_IC, title: 'Invite a friend!', text: `You’ve got the eye. Now start a club, invite your mates on WhatsApp and challenge them for the <b>blue ribbons</b> and <b>weekly pots</b>.`, cta: `${VS_IC}Compete with friends`, onCta: () => challengeWith(me), later: 'Keep judging' });
     return; }
@@ -5127,6 +5131,7 @@ function chestOpen() {
 }
 function luckyDrop() {
   const LM = S.lastMult || 1, sure = 30 * LM, c = $('#coach');
+  if (popPaced()) { S.gems += sure; save(); gemExplosion(sure, { label: 'Lucky drop · 4 in a row' }); return; }
   const PRIZES = [15 * LM, 60 * LM, 120 * LM], W = [0.45, 0.4, 0.15];
   const roll = () => { let r = Math.random(), i = 0; while (r > W[i]) { r -= W[i]; i++; } return PRIZES[i]; };
   c.innerHTML = `<div class="crbox lucky" role="dialog" aria-modal="true" aria-labelledby="crT">
@@ -5531,7 +5536,7 @@ function buyTicket() {
 }
 function payCash(amt, what, then) {
   if (amt === 1 && (S.cashTix || 0) > 0) { S.cashTix--; save(); toast(`🎟️ Free entry used${S.cashTix ? ` · ${S.cashTix} left` : ''}`); then(); return true; }
-  if ((S.cash || 0) < amt) { openStore(`${what} costs ${money(amt)} cash.`, () => (S.cash || 0) >= amt && then()); return false; }
+  if ((S.cash || 0) < amt) { openStore(`${what} costs ${money(amt)} cash.`, () => { if ((S.cash || 0) >= amt) { S.cash = +((S.cash || 0) - amt).toFixed(2); save(); paintWallet(); then(); } }); return false; }
   S.cash = +((S.cash || 0) - amt).toFixed(2); save(); paintWallet(); then(); return true;
 }
 function openKing(cat) {
