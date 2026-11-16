@@ -701,6 +701,12 @@ html.yg .pz2-ret{background:#241544;box-shadow:inset 0 0 0 1.5px #FFC93C;color:#
 .ro-free[hidden]{display:none!important}
 .plv{display:inline-flex!important;gap:2px;align-items:center;vertical-align:-2px;margin-right:3px}.plv .lvh svg{display:block;fill:#D9D2C7}.plv .lvh.on svg{fill:#D6453D}html.yg .plv .lvh svg{fill:#3A2766}html.yg .plv .lvh.on svg{fill:#FF4F7B}
 .ro-plus{font-size:.45em;vertical-align:.5em;margin-left:4px;padding:2px 8px;border-radius:999px;background:#2F6B3F!important;color:#fff!important;-webkit-text-fill-color:#fff!important}html.yg .ro-plus{background:#2EE59D!important;color:#06261A!important;-webkit-text-fill-color:#06261A!important}
+.pu-add{width:100%;aspect-ratio:1;border-radius:16px;border:2.5px dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;font:inherit;background:none}.pu-add span{font-size:2.4rem;line-height:1;font-weight:300}.pu-add small{font-size:.78rem;font-weight:700;padding:0 6px}
+.pu-t{margin:12px 0;font-size:.92rem;line-height:1.4}
+.obu-ex{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.obu-ex img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:14px}
+.obu-l{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:8px;font-size:1rem}
+html:not(.yg) .pu-add{border-color:#2D4E86;color:#2D4E86;background:#F3EBDD}html:not(.yg) .pu-t{color:#2B2320}
+html.yg .pu-add{border-color:#C13CFF;color:#E9E2FF;background:#241544}html.yg .pu-t{color:#E9E2FF}
 </style>
 </head>
 <body>
@@ -4374,11 +4380,19 @@ function obAge(g) { const prog = n => '';
 function obLikes(g, picked) { picked = picked || new Set(S.likes0 || OB_PRE[S.ageBr] || []);
   const draw = () => { g.innerHTML = `<div class="ag-in ob"><div class="ob-prog"><i class="on"></i><i class="on"></i></div><h1>${window.__obAfter ? 'Before you pick a photo: what do you love to photograph?' : 'What do you love to photograph?'}</h1><p>We’ve suggested a few for ${esc(S.ageBr || 'you')}. Tap to change.</p>
       <div class="ob-bub">${OB_INT.map(([n, z]) => `<button type="button" class="s${z}" data-ol="${esc(n)}" aria-pressed="${picked.has(n)}">${esc(n)}</button>`).join('')}</div>
-      ${window.__obAfter ? `<label class="btn block ob-pick" id="obGo2" for="file" role="button">📷 Choose my photo · ${picked.size} picked</label>` : `<button class="btn block" id="obGo2" ${picked.size ? '' : 'disabled'}>Start playing · ${picked.size} picked</button>`}${window.__obAfter ? '' : '<button class="link ob-back" id="obB2">Back</button>'}</div>`;
+      ${window.__obAfter ? `<button class="btn block" id="obGo2" type="button">Continue · ${picked.size} picked</button>` : `<button class="btn block" id="obGo2" ${picked.size ? '' : 'disabled'}>Start playing · ${picked.size} picked</button>`}${window.__obAfter ? '' : '<button class="link ob-back" id="obB2">Back</button>'}</div>`;
     g.querySelectorAll('[data-ol]').forEach(b => b.onclick = () => { const n = b.dataset.ol; picked.has(n) ? picked.delete(n) : picked.add(n); S.likes0 = [...picked]; draw(); });
     if (g.querySelector('#obB2')) g.querySelector('#obB2').onclick = () => obAge(g);
-    g.querySelector('#obGo2').onclick = () => { if (window.__obAfter) { window.__obAfter = null; S.likes = [...picked]; save(); obSort(); g.className = ''; setTimeout(() => g.remove(), 300); return; } S.likes = [...picked]; S.obDone = 1; save(); setLook(); if (!isYoungW() && window.__ywDone) { location.reload(); return; } youngPass(); obSort(); g.className = ''; setTimeout(() => g.remove(), 300); if (typeof renderGallery === 'function') renderGallery(); paintTop(); }; };
+    g.querySelector('#obGo2').onclick = () => { if (window.__obAfter) { window.__obAfter = null; S.likes = [...picked]; save(); obSort(); obUpload(g); return; } S.likes = [...picked]; S.obDone = 1; save(); setLook(); if (!isYoungW() && window.__ywDone) { location.reload(); return; } youngPass(); obSort(); g.className = ''; setTimeout(() => g.remove(), 300); if (typeof renderGallery === 'function') renderGallery(); paintTop(); }; };
   draw(); }
+function obUpload(g) { const L = lgS(), k = CATS8.find(x => x !== 'any') || 'any', ex = SEED.filter(x => x.src).slice(0, 3);
+  g.innerHTML = `<div class="ag-in ob obu"><div class="ob-prog"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+    <h1>Upload your first photo</h1><p>Pick one you love. We’ll score it and help you improve it, then your <b>first challenge is free</b>.</p>
+    <div class="obu-ex">${ex.map(x => `<img src="${x.src}" alt="">`).join('')}</div>
+    <ul class="obu-l"><li>📷 Any photo from your phone</li><li>✨ Free score in seconds</li><li>🏆 Today’s ${esc(crownName(k))} prize pool: <b>$${Math.round(L.jp[k] || 0).toLocaleString()}</b></li></ul>
+    <label class="btn block ob-pick" id="obUp" for="file" role="button">📷 Upload photo · Free</label></div>`;
+  const f = $('#file'), done = () => { f.removeEventListener('change', done); g.className = ''; setTimeout(() => g.remove(), 300); };
+  f.addEventListener('change', done); }
 function obDone(g) { obSort(); const r = obRank(), top = CATS8.filter(k => k !== 'any' && r[k]).slice(0, 5).concat('any'), L = lgS();
   const why = k => k === 'any' ? 'Open to every photo' : 'Because you picked ' + (S.likes || []).filter(n => (OB_INT.find(i => i[0] === n) || [])[2] === k).map(n => n.toLowerCase()).join(', ');
   g.innerHTML = `<div class="ag-in ob"><div class="ob-prog"><i class="on"></i><i class="on"></i><i class="on"></i></div><h1>Your challenges</h1><p>Picked from what you love. You can change them any time in your account.</p>
@@ -5065,8 +5079,8 @@ function miniDrop(kind) {
   if (kind === 10) { chestOpen(); return; }
   // pick one of three boxes; then the other two are revealed (near miss)
   const LM = S.lastMult || 1, c = $('#coach');
-  const P = kind === 3 ? [{ w: .6, k: 'g', n: 15 * LM }, { w: .3, k: 'e', n: 5 }, { w: .1, k: 'g', n: 50 * LM }]
-    : [{ w: .5, k: 'g', n: 25 * LM }, { w: .3, k: 'e', n: 10 }, { w: .15, k: 'g', n: 100 * LM }, { w: .05, k: 'e', n: 25 }];
+  const P = kind === 3 ? [{ w: .6, k: 'g', n: 15 * LM }, { w: .3, k: 'g', n: 25 * LM }, { w: .1, k: 'g', n: 50 * LM }]
+    : [{ w: .5, k: 'g', n: 25 * LM }, { w: .3, k: 'g', n: 40 * LM }, { w: .15, k: 'g', n: 100 * LM }, { w: .05, k: 'g', n: 150 * LM }];
   const roll = () => { let r = Math.random(); for (const x of P) { if (r < x.w) return x; r -= x.w; } return P[0]; };
   const boxes = [roll(), roll(), roll()], top = P.reduce((a, x) => x.k === 'g' && x.n > a ? x.n : a, 0);
   const lab = x => x.k === 'g' ? `<b>+${x.n}</b><small>🟡 coins</small>` : `<b>+${x.n}</b><small>⚡ energy</small>`;
@@ -5121,9 +5135,9 @@ function chestOpen() {
     setTimeout(() => {
       box.classList.add('open'); box.innerHTML = '✨';
       const shield = false;
-      S.gems += coins; meterAdd(coins); energy(); S.en += rar.e; const tk = chestTix(rar); S.boostN = 10; window.__chTk = tk; if (tk) S.cashTix = (S.cashTix || 0) + tk; save(); paintTop(); if (typeof paintEnergy === 'function') paintEnergy();
+      S.gems += coins; meterAdd(coins); const tk = chestTix(rar); S.boostN = 10; window.__chTk = tk; if (tk) S.cashTix = (S.cashTix || 0) + tk; save(); paintTop(); if (typeof paintEnergy === 'function') paintEnergy();
       $('#chArea').innerHTML = `<span class="ch-rar r-${rar.k}">${rar.n} chest</span>
-        <div class="ch-items"><div class="ch-it" style="animation-delay:.1s"><b>+${coins}</b><small>🟡 coins</small></div><div class="ch-it" style="animation-delay:.45s"><b>+${rar.e}</b><small>⚡ energy</small></div><div class="ch-it" style="animation-delay:.45s"><b>2×</b><small>coins on your next 10 votes</small></div>${tk ? `<div class="ch-it" style="animation-delay:.7s"><b>🎟️${tk > 1 ? '×' + tk : ''}</b><small>free $1 entr${tk > 1 ? 'ies' : 'y'}</small></div>` : ''}</div>
+        <div class="ch-items"><div class="ch-it" style="animation-delay:.1s"><b>+${coins}</b><small>🟡 coins</small></div><div class="ch-it" style="animation-delay:.45s"><b>2×</b><small>coins on your next 10 votes</small></div>${tk ? `<div class="ch-it" style="animation-delay:.7s"><b>🎟️${tk > 1 ? '×' + tk : ''}</b><small>free $1 entr${tk > 1 ? 'ies' : 'y'}</small></div>` : ''}</div>
         <button class="bt-cta" id="chDone" style="animation:cpop .4s .8s both">Collect</button>`;
       $('#chDone').onclick = () => { c.classList.remove('on', 'cr'); gemExplosion(coins, { label: `${rar.n} chest` }); toast(`⚡ +${rar.e} energy`);  if (window.__chTk) { window.__chTk = 0; setTimeout(ticketPop, 1400); } };
     }, 500);
@@ -5295,8 +5309,20 @@ function potIntro(p) { const k = (p && CATS8.find(x => fitsTheme(p, x))) || CATS
     $('#pnGo').onclick = () => { closeSheet(); lgPay(() => lgFight(k, opp, true)); };
     $('#pnLater').onclick = () => closeSheet();
     document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); }, 380); }
+function potUp(k) { const L = lgS(), H = lgHold(k), cn = esc(crownName(k)), onVote = $('#panes').dataset.at === 'judge';
+  setTimeout(() => { openSheet(`<div class="pc pc2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
+    <p class="pc-k">${gi(k)}<span>Daily cash challenge · ${cn}</span></p><h2 class="pc-h">Your photo. Real cash.</h2>
+    <div class="pc2-pool"><b>$${Math.round(L.jp[k]).toLocaleString()}</b><span>today’s prize pool<em>⏱ Pays at midnight · <span data-wk>${dayLeft()}</span> left</em></span></div>
+    <div class="pc-vs pc2-vs"><figure><button class="pu-add" id="puAdd" aria-label="Upload a ${cn} photo"><span>+</span><small>Your ${cn.toLowerCase()} photo</small></button><figcaption>You</figcaption></figure><span class="pc-x2">VS</span>
+      <figure><img src="${lgPhoto(H.h, k)}" alt=""><figcaption>@${esc(H.h)}</figcaption><small>${CRW}${isYoungW() ? 'Crown' : 'Blue ribbon'} · held ${heldFor(H.since)}</small></figure></div>
+    <p class="pu-t">You don’t have a <b>${cn.toLowerCase()}</b> photo yet. Upload one, get it to ${CFG.QUALIFY}+, then challenge for this pool.</p>
+    <button class="btn block pc-go" id="puGo">📷 Upload a ${cn.toLowerCase()} photo</button>
+    <div style="text-align:center"><button class="link pc-later" id="puLater">${onVote ? (isYoungW() ? 'Keep judging' : 'Keep voting') : 'Not now'}</button></div></div>`);
+    $('#puGo').onclick = $('#puAdd').onclick = () => { closeSheet(); addCatPhoto(k); };
+    $('#puLater').onclick = () => closeSheet();
+    document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); }, 380); }
 function potCard(k) { const L = lgS(), H = lgHold(k), iHold = H.h === 'you', y = L.you[k] || 0, R = lgRank(k), K = R[0], mine = lgMine(k);
-  const opp = iHold ? (R.find(r => !r.me) || {}).h : H.h; if (!mine || !opp) { lgCat(k); return; }
+  const opp = iHold ? (R.find(r => !r.me) || {}).h : H.h; if (!mine) { potUp(k); return; } if (!opp) { lgCat(k); return; }
   const os = (R.find(r => r.h === opp) || {}).n || 0, lead = K && !K.me && K.h === opp && os > 0, rev = !iHold && (H.hist || [])[0] === 'you', onVote = $('#panes').dataset.at === 'judge', need = Math.max(0, LG_SHARE - y);
   const stars = n => [...Array(LG_SHARE)].map((_, j) => `<i class="${j < n ? 'on' : ''}">⭐</i>`).join('');
   setTimeout(() => { openSheet(`<div class="pc pc2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
@@ -5333,7 +5359,7 @@ function openGemBattle(stake, after, opt = {}) {
       ${vs(0, 0, false, false, false)}
       ${free ? '' : `<div class="gb-st" role="group" aria-label="Stake">${GB_STAKES.map(v => `<button data-gs="${v}" aria-pressed="${v === stake}"><b>${v}</b><small>🟡 coins</small></button>`).join('')}</div>`}
       ${opt.revenge ? '<div class="kg2-pot gbz"><small>Win back</small><b>🏅 Champion Medal</b></div>' : `<div class="kg2-pot gbz"><small>Winner takes</small><b>🟡 ${win()}</b></div>`}
-      ${short ? `<button class="btn block kg2-go" id="gbBuy">Get more coins</button>` : `<button class="btn block kg2-go" id="gbGo">${opt.revenge ? 'Rematch · Free' : free ? 'Start now · Free' : `Challenge for ${stake} 🟡`}</button>`}
+      ${short ? `<button class="btn block kg2-go" id="gbBuy">Get more coins</button>` : `<button class="btn block kg2-go" id="gbGo">${opt.revenge ? 'Rematch · Free' : free ? 'Start now · Free' : `Free challenge · ${stake} 🟡`}</button>`}
       <div style="text-align:center"><button class="link kg2-back" data-shclose>Not now</button></div></div>`, { full: true, cover: true });
     document.querySelectorAll('#gb [data-gs]').forEach(b => b.onclick = () => { stake = +b.dataset.gs; pick(); });
     if ($('#gbBuy')) $('#gbBuy').onclick = () => runOut('gems', `You need ${stake - S.gems} more coins`, () => pick(), stake - S.gems);
@@ -5368,12 +5394,12 @@ function openGemBattle(stake, after, opt = {}) {
         ${opt.revenge ? (won ? `<div class="kg2-next win"><small>Rematch!</small><b>🏅 Medal back</b><span>It's back on your photo</span></div>` : `<div class="kg2-next lose"><small>@${esc(o.h)} holds on</small><b>🏅 Medal stays with them</b><span>Get it back for ${REPAIR_GEMS} coins</span></div>`)
           : won ? `<div class="kg2-next gemw"><small>You won</small><b>🟡 ${prize}</b><span>Added to your coins</span></div>${firstMedal ? `<p class="gb-medal">🏅 Your best photo now wears the <b>Champion Medal</b>. Rivals will try to take it, so win it back if they do.</p>` : ''}`
           : `<div class="kg2-next lose"><small>${free ? 'Free challenge' : 'You lost'}</small><b>${free ? 'No cost' : `🟡 ${stake}`}</b><span>Touch up your photo to win more votes</span></div>`}
-        ${nx ? `<button class="btn block kg2-go" id="gbNext">${nx.label}</button><div style="text-align:center"><button class="link kg2-back" id="gbAgain">Play again for coins</button></div>`
-          : `<button class="btn block kg2-go" id="gbAgain">Play again</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back</button></div>`}`;
+        ${nx ? `<button class="btn block kg2-go" id="gbNext">${nx.label}</button><div style="text-align:center"><button class="link kg2-back" id="gbAgain">Play again free · coins</button></div>`
+          : `<button class="btn block kg2-go" id="gbAgain">Play again · Free</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back</button></div>`}`;
       if (won && !opt.revenge) setTimeout(() => gemExplosion(prize, { label: 'Coin challenge win' }), 300);
       if (opt.revenge) { const a = $('#gbAgain'); a.textContent = won ? 'Done' : `Get it back · ${REPAIR_GEMS} 🟡`; a.onclick = () => { closeSheet(); if (!won) repairPhoto(); }; paintTop(); }
       if (nx) $('#gbNext').onclick = () => { closeSheet(); nx.go(); };
-      if (!opt.revenge) $('#gbAgain').onclick = () => openGemBattle(stake || 25);
+      if (!opt.revenge && /coins|Free/.test($('#gbAgain').textContent)) $('#gbAgain').onclick = () => openGemBattle(stake || 25);
       document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
     }, 200);
   };
@@ -6051,9 +6077,10 @@ function openBattle() {
   if (!S.potSeen && !openBattle.skipCash && !S.minor && !S.geoBlock) { const pp = S.photos.filter(q => q.s && q.s.total >= CFG.QUALIFY).sort((a, b) => b.s.total - a.s.total)[0]; if (pp) { S.potSeen = 1; S.cpN = 0; save(); potIntro(pp); return; } }
   S.btAlt = !S.btAlt; save();
   const bth = pickBattleTheme(), bme = fitFor(bth)[0], tn = thName(bth);
-  if (!S.btAlt && !openBattle.skipCash) { const me0 = bme || fighters()[0]; if (me0) { celebrate({ src: me0.src, score: '🟡', title: `${tn} coin challenge!`, text: bme ? `<b>Practice · no blue ribbons at stake.</b> A rival wants a <b>${tn.toLowerCase()}</b> challenge with your ${bme.s.total} photo. Stake <b>25 🟡</b>, win <b>50 🟡</b>. Result in 30 seconds.` : `A rival wants a <b>${tn.toLowerCase()}</b> challenge for <b>50 🟡</b>. You don’t have a ${tn.toLowerCase()} photo yet. Add one and play!`, cta: bme ? 'Challenge · 25 🟡' : `📷 Add a ${tn.toLowerCase()} photo`, onCta: () => openGemBattle(25, null, { theme: bth }), later: 'Not now' }); return; } }
+  if (!S.btAlt && !openBattle.skipCash) { const me0 = bme || fighters()[0]; if (me0) { celebrate({ src: me0.src, score: '🟡', title: `${tn} coin challenge!`, text: bme ? `<b>Practice · no blue ribbons at stake.</b> A rival wants a <b>${tn.toLowerCase()}</b> challenge with your ${bme.s.total} photo. Stake <b>25 🟡</b>, win <b>50 🟡</b>. Result in 30 seconds.` : `A rival wants a <b>${tn.toLowerCase()}</b> challenge for <b>50 🟡</b>. You don’t have a ${tn.toLowerCase()} photo yet. Add one and play!`, cta: bme ? 'Free challenge · 25 🟡' : `📷 Add a ${tn.toLowerCase()} photo`, onCta: () => openGemBattle(25, null, { theme: bth }), later: 'Not now' }); return; } }
   if (!openBattle.skipCash && !S.minor) { // cash challenges from judging are blue ribbon challenges
-    const L = lgS(), ks = CATS8.filter(k => lgMine(k));
+    const L = lgS(), ks = CATS8.filter(k => lgMine(k)), miss = CATS8.filter(k => k !== 'any' && !lgMine(k)).sort((a, b) => (L.jp[b] || 0) - (L.jp[a] || 0));
+    S.puAlt = !S.puAlt; save(); if (miss.length && S.potSeen && (!ks.length || S.puAlt)) { potUp(miss[0]); return; }
     if (ks.length) { const sc = k => { const y = L.you[k] || 0; return (y === LG_SHARE - 1 ? 100 : 0) + (L.hold && L.hold[k] && (L.hold[k].hist || [])[0] === 'you' ? 80 : 0) + y * 5 + Math.random() * 10; };
       const k = ks.sort((a, b) => sc(b) - sc(a))[0], H = lgHold(k), y = L.you[k] || 0, cn = crownName(k), mine = H.h === 'you';
       const why = y === LG_SHARE - 1 ? `One more star and you share today’s <b>${money(L.jp[k])}</b> ${esc(cn)} pot.` : y >= LG_SHARE ? `You’re in the ${esc(cn)} pot with <b>${y} stars</b>. Keep climbing.` : `Today’s ${esc(cn)} pot is <b>${money(L.jp[k])}</b>.`;
@@ -6100,7 +6127,7 @@ function openBattle() {
       <button class="bt-no" id="bNo">Not now</button></div>
     </div></div>`;
   bt.scrollTop = 0;
-  celebrate({ src: me.src, score: me.s.total, title: 'Time to compete!', text: `<b>@${esc(o.h)}</b> challenges your ${esc(cat)} photo. Higher score wins. Win <b>+${win.toLocaleString()} coins</b>, lose ${lose.toLocaleString()}.`, cta: 'Let’s go', onCta: () => bt.classList.add('on'), later: 'Not now' });
+  celebrate({ src: me.src, score: me.s.total, title: 'Time to compete!', text: `<b>@${esc(o.h)}</b> challenges your ${esc(cat)} photo. Higher score wins. Win <b>+${win.toLocaleString()} coins</b>, lose ${lose.toLocaleString()}.`, cta: 'Let’s go · Free', onCta: () => bt.classList.add('on'), later: 'Not now' });
   const close = () => bt.classList.remove('on');
   $('#bNo').onclick = () => { close(); maybeEnhanceNudge(); };
   $('#bGo').onclick = async () => {
