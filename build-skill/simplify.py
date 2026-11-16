@@ -1267,3 +1267,22 @@ a="openStore(`${what} costs ${money(amt)} cash.`, () => (S.cash || 0) >= amt && 
 assert s.count(a)==1
 s=s.replace(a,"openStore(`${what} costs ${money(amt)} cash.`, () => { if ((S.cash || 0) >= amt) { S.cash = +((S.cash || 0) - amt).toFixed(2); save(); paintWallet(); then(); } }); return false; }")
 open(d+'yofi-simple.html','w').write(s); print('pay after deposit ok')
+
+# ---------- Test fixes: calmer pops (one extra pop per 8 votes), invite after first cash challenge, raids only after 10 min, sign-up carries on ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+# 1) pacing: optional pops (coin nudge, lucky drop) wait until 8 votes after the last pop
+RA("function gemNudge(force) {","const popPaced = () => (S.votes || 0) - (S.lastPopV == null ? -99 : S.lastPopV) < 8;\nfunction gemNudge(force) {\n  if (!force && popPaced()) return false;")
+RA("function luckyDrop() {\n  const LM = S.lastMult || 1, sure = 30 * LM, c = $('#coach');","function luckyDrop() {\n  const LM = S.lastMult || 1, sure = 30 * LM, c = $('#coach');\n  if (popPaced()) { S.gems += sure; save(); gemExplosion(sure, { label: 'Lucky drop · 4 in a row' }); return; }")
+s=s.replace("function fcNotify() {",r"""(function popClock() { const C = $('#coach'); if (!C) return; new MutationObserver(() => { if (C.classList.contains('on') && $('#panes').dataset.at === 'judge' && S) { S.lastPopV = S.votes || 0; } }).observe(C, { attributes: true, attributeFilter: ['class'] });
+  const SH = $('#sheet'); if (SH) new MutationObserver(() => { if (SH.classList.contains('on') && $('#panes').dataset.at === 'judge' && S) { S.lastPopV = S.votes || 0; } }).observe(SH, { attributes: true, attributeFilter: ['class'] }); })();
+function fcNotify() {""",1)
+# 2) Invite a friend only after the first cash challenge
+RA("if (!comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.user && fighters().length) {","if (!comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.lgPlayed && !popPaced() && S.user && fighters().length) {")
+RA("const L = lgS(), P = L.pl.find(p => p.h === h), me = S.photos.find(x => x.id === pid) || lgMine(k), cur = lgCurOf(), N = 15; if (!P || !me) return;","const L = lgS(), P = L.pl.find(p => p.h === h), me = S.photos.find(x => x.id === pid) || lgMine(k), cur = lgCurOf(), N = 15; if (!P || !me) return; S.lgPlayed = (S.lgPlayed || 0) + 1;")
+# 3) Blue ribbon raids: 10 minutes after you take it, not 45 seconds
+RA("if (won && !L.raidAt) L.raidAt = Date.now() + 45000;","if (won && !L.raidAt) L.raidAt = Date.now() + 10 * 60000;")
+# 4) Sign-up carries on with what you tapped
+RA("e.preventDefault(); e.stopImmediatePropagation(); openSignup(); }, true);","e.preventDefault(); e.stopImmediatePropagation(); const tid = t.id; openSignup(() => setTimeout(() => { const n = tid && document.getElementById(tid); if (n) n.click(); }, 450)); }, true);")
+open(d+'yofi-simple.html','w').write(s); print('pacing ok')
