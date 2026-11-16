@@ -1262,3 +1262,8 @@ s=s.replace("function fcNotify() {",r"""(function navOrder() {
 function fcNotify() {""",1)
 s=s.replace('</style>','.ro-plus{font-size:.45em;vertical-align:.5em;margin-left:4px;padding:2px 8px;border-radius:999px;background:#2F6B3F!important;color:#fff!important;-webkit-text-fill-color:#fff!important}html.yg .ro-plus{background:#2EE59D!important;color:#06261A!important;-webkit-text-fill-color:#06261A!important}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('nav order ok')
+s=open(d+'yofi-simple.html').read()
+a="openStore(`${what} costs ${money(amt)} cash.`, () => (S.cash || 0) >= amt && then()); return false; }"
+assert s.count(a)==1
+s=s.replace(a,"openStore(`${what} costs ${money(amt)} cash.`, () => { if ((S.cash || 0) >= amt) { S.cash = +((S.cash || 0) - amt).toFixed(2); save(); paintWallet(); then(); } }); return false; }")
+open(d+'yofi-simple.html','w').write(s); print('pay after deposit ok')
