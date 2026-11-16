@@ -1683,3 +1683,30 @@ for a,b in [("const nt = (S && S.cashTix) || 0, E = (S && S.frE) || {};","const 
  ("S.cashTix--; S.frE = S.frE || {}; frUsed().push(p.id);","S.frE = S.frE || {}; frUsed().push(p.id);")]:
     assert s.count(a)==1,a[:50]; s=s.replace(a,b)
 open(d+'yofi-simple.html','w').write(s); print('coins only ok')
+
+# ---------- Prize pool pops open centred (not a slide-up sheet); first cash offer $10 + $5 free ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+for f in ['function potIntro(p)','function potUp(k)','function potCard(k)']:
+    i=s.index(f); j=s.index('\nfunction ',i+10); seg=s[i:j]
+    seg=seg.replace('openSheet(`','popOpen(`').replace('closeSheet()','popClose()').replace('#sheetBody [data-shclose]','#coach [data-shclose]')
+    s=s[:i]+seg+s[j:]
+RA("function potIntro(p) {","""function popOpen(html) { if ($('#sheet').classList.contains('on')) closeSheet(); const c = $('#coach'); c.innerHTML = `<div class="cpr ppop" role="dialog" aria-modal="true">${html}</div>`; c.classList.add('on', 'cr'); c.onclick = e => { if (e.target === c) popClose(); }; }
+function popClose() { const c = $('#coach'); c.classList.remove('on', 'cr'); }
+function potIntro(p) {""")
+# first cash offer
+RA("const w = !S.paidCash, cash = 5, coins = w ? 25 : 10;","const w = !S.paidCash, cash = w ? 10 : 5, coins = w ? 25 : 10;")
+RA("big: w ? `$${cash} <small class=\"ro-plus\">+ $2 free</small>` : `$${cash}`, sub: w ? 'cash to play · your first $2 challenge is on us' : 'cash to play'",
+   "big: w ? `$${cash} <small class=\"ro-plus\">+ $5 free</small>` : `$${cash}`, sub: w ? 'cash to play · plus $5 free to play with' : 'cash to play'")
+RA("applyOffer(cash + (w ? 2 : 0), 0, w ? 'Welcome offer · $2 free' : '$5 pack', onBuy)","applyOffer(cash + (w ? 5 : 0), 0, w ? 'Welcome offer · $5 free' : '$5 pack', onBuy)")
+s=s.replace('</style>','#coach .ppop{max-height:86vh;overflow:auto;padding:16px 14px 12px!important;text-align:center}#coach .ppop .pc-x{right:6px;top:6px}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('pop fix ok')
+
+# ---------- Reaching 80 points to the Freeroll; tournament unlock pops wait until 3 cash challenges ----------
+s=open(d+'yofi-simple.html').read()
+a="if (!window.__pickRet && o.prevTotal != null && L1 && L1.at > 70 && (!L0 || L1.at > L0.at)) setTimeout(() => celebrate("
+assert s.count(a)==1
+s=s.replace(a,"""if (!window.__pickRet && o.prevTotal != null && tot >= FR_MIN && o.prevTotal < FR_MIN && !S.frUnlock) { S.frUnlock = 1; save(); setTimeout(() => celebrate({ src: p.src, score: tot, title: 'Freeroll ready!', text: `Your photo reached <b>${tot}</b>. It can now enter the hourly <b>$${FR_PRIZE.reduce((x, z) => x + z, 0)} Freeroll</b> for <b>${TIX_COINS} coins</b>. Top ${FR_FINAL} go to the final.`, cta: '🎟️ Enter a Freeroll', onCta: () => { closeFlow(); window.__tFil = 'fr'; openComps(); }, later: 'Later' }), 2800); }
+  else if ((S.lgPlayed || 0) >= 3 && !window.__pickRet && o.prevTotal != null && L1 && L1.at > 70 && (!L0 || L1.at > L0.at)) setTimeout(() => celebrate(""",1)
+open(d+'yofi-simple.html','w').write(s); print('80 freeroll ok')
