@@ -1046,3 +1046,24 @@ SEL=".pc-pot,.pc2-pool>b,.pc-vs strong,.pz-pool>b,.pz-vs strong,.qs2-prize b,.qs
 sel=lambda pre: ",".join(pre+" "+x for x in SEL.split(","))
 s=s.replace('</style>',sel("html:not(.yg)")+"{font-family:\"Fraunces\",serif!important;font-weight:900!important;letter-spacing:0}\n"+sel("html.yg")+"{font-family:\"Bricolage Grotesque\",sans-serif!important;font-weight:900!important}\nhtml:not(.yg) .qs2-stat{font-weight:800!important;letter-spacing:.03em}\n</style>",1)
 open(d+'yofi-simple.html','w').write(s); print('font ok')
+
+# ---------- Replace the 🟡 emoji (and 💎 in the young look) with the real coin/gem icon everywhere ----------
+s=open(d+'yofi-simple.html').read()
+s=s.replace("function fcNotify() {",r"""(function coinIcons() {
+  const bad = () => window.__young ? /🟡|💎/ : /🟡/;
+  const fix = root => { if (!root || typeof gemIcon !== 'function') return; const re = bad(), list = [];
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => re.test(n.nodeValue) && !(n.parentElement && n.parentElement.closest('script,style,textarea,input,option,title')) ? 1 : 2 });
+    while (w.nextNode()) list.push(w.currentNode);
+    list.forEach(n => { if (!n.parentNode) return; const parts = n.nodeValue.split(window.__young ? /🟡|💎/ : /🟡/), f = document.createDocumentFragment();
+      parts.forEach((p, i) => { if (i) { const sp = document.createElement('span'); sp.className = 'coin-ic'; sp.innerHTML = gemIcon(''); f.appendChild(sp); } if (p) f.appendChild(document.createTextNode(p)); });
+      n.parentNode.replaceChild(f, n); }); };
+  let busy = false; const mo = new MutationObserver(ms => { if (busy) return; busy = true;
+    ms.forEach(m => { if (m.type === 'characterData') fix(m.target.parentNode); else m.addedNodes.forEach(x => x.nodeType === 1 ? fix(x) : x.parentNode && fix(x.parentNode)); });
+    mo.takeRecords(); busy = false; });
+  const go = () => { fix(document.body); mo.observe(document.body, { childList: true, subtree: true, characterData: true }); };
+  if (document.body) go(); else document.addEventListener('DOMContentLoaded', go);
+})();
+function fcNotify() {""",1)
+s=s.replace('</style>',""".coin-ic{display:inline-flex;align-items:center;vertical-align:-.12em;line-height:1}.coin-ic svg{width:.95em!important;height:.95em!important;vertical-align:0!important}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('coin icons ok')
