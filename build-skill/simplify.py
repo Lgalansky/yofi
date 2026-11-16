@@ -1340,3 +1340,10 @@ html.yg .pu-add{border-color:#C13CFF;color:#E9E2FF;background:#241544}html.yg .p
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('four ok')
 s=open(d+'yofi-simple.html').read(); a="cta: 'Let’s go', onCta: () => bt.classList.add('on')"; assert s.count(a)==1; s=s.replace(a,"cta: 'Let’s go · Free', onCta: () => bt.classList.add('on')"); open(d+'yofi-simple.html','w').write(s); print('lets go free ok')
+# ---------- Quick Sprint: $10 and $20 tables ----------
+s=open(d+'yofi-simple.html').read()
+for a,b,n in [("const QS_STAKES = [2, 5],","const QS_STAKES = [2, 5, 10, 20],",1),("win up to $8","win up to $32",2),
+ ("<b>$2</b> wins <b>$3.20</b>, <b>$5</b> wins <b>$8</b>.","<b>$2</b> wins <b>$3.20</b>, up to <b>$20</b> wins <b>$32</b>.",2)]:
+    assert s.count(a)==n,(a,s.count(a)); s=s.replace(a,b)
+s=s.replace('</style>','.qs2-pick .qs2-st{gap:7px}.qs2-pick .qs2-st button{padding:8px 14px}.qs2-pick .qs2-st b{font-size:1.6rem!important}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('stakes 10 20 ok')
