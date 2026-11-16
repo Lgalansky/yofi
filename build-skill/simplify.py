@@ -1675,3 +1675,11 @@ html.yg .pr3-im img{box-shadow:0 0 0 3px #C13CFF}html.yg .pr3-wb{background:#FFC
 html.yg .pr3-pool{background:#1B0F33;box-shadow:inset 0 0 0 2px #FFC93C;color:#E9E2FF}html.yg .pr3-pool>small{color:#C9B8FF}html.yg .pr3-alt{background:transparent!important;color:#fff!important;box-shadow:inset 0 0 0 2px #C13CFF!important}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('pr3 ok')
+# ---------- Freeroll entry is coins only (old tickets no longer enter) ----------
+s=open(d+'yofi-simple.html').read()
+for a,b in [("const nt = (S && S.cashTix) || 0, E = (S && S.frE) || {};","const nt = 0, E = (S && S.frE) || {};"),
+ ("const pay = S.cashTix > 0 ? 'tix' : ","const pay = "),
+ ("if (!(S.cashTix > 0)) { if (!swapReady() || S.gems < TIX_COINS) return; S.gems -= TIX_COINS; S.swapHr = frHourKey(); S.cashTix = (S.cashTix || 0) + 1;","{ if (!swapReady() || S.gems < TIX_COINS) return; S.gems -= TIX_COINS; S.swapHr = frHourKey();"),
+ ("S.cashTix--; S.frE = S.frE || {}; frUsed().push(p.id);","S.frE = S.frE || {}; frUsed().push(p.id);")]:
+    assert s.count(a)==1,a[:50]; s=s.replace(a,b)
+open(d+'yofi-simple.html','w').write(s); print('coins only ok')
