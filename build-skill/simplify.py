@@ -982,7 +982,7 @@ s=open(d+'yofi-simple.html').read()
 def RA(a,b):
     global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
 RA("const lgShare = k => { const L = lgS(), y = L.you[k] || 0, top = lgKing(k); return y < LG_SHARE ? 0 : +(L.jp[k] * (1 - LG_KING) * y / (L.q[k] + y) + (top.me ? L.jp[k] * LG_KING : 0)).toFixed(2); };",
-   "const lgQn = k => Math.max(2, Math.round(lgS().jp[k] / 8)); // demo: players on 3+ stars today grows with the pool (about $8 of pool per qualifier)\nconst lgShare = k => { const L = lgS(), y = L.you[k] || 0, top = lgKing(k); return y < LG_SHARE ? 0 : +(L.jp[k] * (1 - LG_KING) / lgQn(k) + (top.me ? L.jp[k] * LG_KING : 0)).toFixed(2); };")
+   "const lgQn = k => Math.max(2, Math.round(lgS().jp[k] / 16)); // demo: players on 3+ stars today grows with the pool (about $16 of pool per qualifier at $2 a challenge)\nconst lgShare = k => { const L = lgS(), y = L.you[k] || 0, top = lgKing(k); return y < LG_SHARE ? 0 : +(L.jp[k] * (1 - LG_KING) / lgQn(k) + (top.me ? L.jp[k] * LG_KING : 0)).toFixed(2); };")
 RA("shares the other <b>50%</b>. More stars, bigger share.</p>","shares the other <b>50%</b> equally.</p>")
 RA("Everyone with 3+ stars shares the other 50%, by stars.","Everyone with 3+ stars shares the other 50% equally.")
 RA("'you’re sharing the pool · more stars, bigger share'","`you’re in · an equal share with ${lgQn(k) - 1} others`")
@@ -1004,3 +1004,27 @@ RA("🏆 Most stars wins <b>50%</b> · ⭐ ${LG_SHARE}+ stars share <b>50%</b> e
 RA("every $1 challenge adds 85c","every $1 challenge adds 80c")
 RA("${frSt() === 1 ? '85¢' : money(.85 * frSt())} goes into the club pot","${frSt() === 1 ? '80¢' : money(.8 * frSt())} goes into the club pot")
 open(d+'yofi-simple.html','w').write(s); print('split ok')
+
+# ---------- 15 votes per photo challenge (was 30); pot challenges cost $2 (was $1) ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("N = 30", "N = 15", 5)
+RA("16 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 5)", "8 + Math.floor(Math.random() * 3) : 4 + Math.floor(Math.random() * 4)", 5)
+RA("a = 16 + Math.floor(Math.random() * 3)", "a = 8 + Math.floor(Math.random() * 3)", 2)
+RA("${30 - a}", "${15 - a}", 2)
+RA("<span>${30} votes</span>", "<span>${N} votes</span>")
+# $2 pot challenges
+RA("const LG_SHARE = 3, LG_KING = .3, LG_CUT = .8;", "const LG_FEE = 2, LG_SHARE = 3, LG_KING = .3, LG_CUT = .8;")
+RA("payCash(1, 'A challenge', then);", "payCash(LG_FEE, 'A challenge', then);")
+RA("if (cur === 'cash') L.jp[k] = +(L.jp[k] + LG_CUT).toFixed(2);", "if (cur === 'cash') L.jp[k] = +(L.jp[k] + LG_CUT * LG_FEE).toFixed(2);")
+RA("S.lg.jp[k] = +(S.lg.jp[k] + LG_CUT * (1 + Math.floor(Math.random() * 6))).toFixed(2);", "S.lg.jp[k] = +(S.lg.jp[k] + LG_CUT * LG_FEE * (1 + Math.floor(Math.random() * 6))).toFixed(2);")
+RA("Every challenge costs <b>$1</b>. <b>80¢</b> goes into that category’s daily cash pot.", "Every challenge costs <b>$2</b>. <b>$1.60</b> goes into that category’s daily cash pot.")
+RA("· <b>+1 star</b> · 80¢ goes into today’s pot", "· <b>+1 star</b> · $1.60 goes into today’s pot")
+RA("Today’s photo challenges`} · $1</button>", "Today’s photo challenges`} · $2</button>")
+RA("'Challenge now'} · $1</button>", "'Challenge now'} · $2</button>")
+RA("id=\"lbMore\">${VS_IC}Challenge again · $1</button>", "id=\"lbMore\">${VS_IC}Challenge again · $2</button>")
+RA("id=\"lbRev\">${VS_IC}Rematch · $1</button>", "id=\"lbRev\">${VS_IC}Rematch · $2</button>")
+RA("Rematch · ${c ? frLab() : '$1'}</button>", "Rematch · ${c ? frLab() : '$2'}</button>")
+RA("cta: 'Rematch · $1', onCta: () => revengePrep(null, k, P.h)", "cta: 'Rematch · $2', onCta: () => revengePrep(null, k, P.h)")
+open(d+'yofi-simple.html','w').write(s); print('v15 $2 ok')
