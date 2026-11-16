@@ -1913,3 +1913,31 @@ for a,b in [("celebrate({ src: me0.src, score: '🟡', title: `${tn} coin challe
  ("onCta: () => openGemBattle(25, null, { theme: bth }), later: 'Not now' }); return; } }","onCta: () => bme ? openGemBattle(25, null, { theme: bth }) : addCatPhoto(bth), later: 'Not now' }); return; } }")]:
     assert s.count(a)==1,a[:60]; s=s.replace(a,b)
 open(d+'yofi-simple.html','w').write(s); print('coin pop upload ok')
+
+# ---------- 80+ minimum stands out on the Freeroll entry; mode tag no longer overlaps the logo ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA('<div class="fe-ch">Choose one photo</div><p class="fe-min">Minimum score: ${FR_MIN} per photo</p>',
+   '<div class="fe-ch"><span>Choose one photo</span><em class="fe-req">Needs ${FR_MIN}+</em></div><p class="fe-min">Only photos scoring <b>${FR_MIN} or more</b> can enter</p>')
+RA("b.className = 'mode-tag ' + (isCash() ? 'cash' : 'coin');","b.className = 'ytag ' + (isCash() ? 'cash' : 'coin');")
+RA("b.id = 'modeTag'; b.className = 'mode-tag';","b.id = 'modeTag'; b.className = 'ytag';")
+s=s.replace('</style>',""".fe-ch{display:flex;align-items:center;justify-content:space-between;gap:8px}.fe-req{flex:none;font-style:normal;font-family:inherit;font-size:1rem;font-weight:900;padding:5px 12px;border-radius:999px;white-space:nowrap}
+html:not(.yg) .fe-req{background:#9E2F2A;color:#fff}html.yg .fe-req{background:#FF3FA4;color:#fff}.fe-min b{font-weight:900}html:not(.yg) .fe-min{color:#2B1D14}html.yg .fe-min{color:#fff}
+.ytag{display:inline-flex;align-items:center;gap:3px;margin-left:6px;padding:3px 9px;border-radius:999px;font-size:.72rem;font-weight:800;white-space:nowrap;position:static!important}.ytag svg{width:1em!important;height:1em!important}
+html:not(.yg) .ytag.coin{background:#FFF1C9;color:#5B3A00}html:not(.yg) .ytag.cash{background:#DDF0E1;color:#1F4A2B}html.yg .ytag.coin{background:#3A2A0A;color:#FFC93C}html.yg .ytag.cash{background:#0E3A2A;color:#2EE59D}
+@media (max-width:380px){.ytag{font-size:0;gap:0;padding:3px 6px}.ytag svg,.ytag .coin-ic{font-size:.8rem}}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('min80 ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','header.top .ytag{flex:none!important;width:auto!important;min-width:max-content}header.top .ptitle{min-width:0;overflow:hidden;text-overflow:ellipsis}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('ytag size ok')
+s=open(d+'yofi-simple.html').read()
+a="if (!b) { b = document.createElement('span'); b.id = 'modeTag'; b.className = 'ytag'; p.after(b); }"
+assert s.count(a)==1
+s=s.replace(a,"const cn = $('#cashNum'); if (!b || b.parentElement !== (cn && cn.parentElement)) { if (b) b.remove(); b = document.createElement('em'); b.id = 'modeTag'; b.className = 'ytag'; if (cn) cn.after(b); else p.after(b); }")
+s=s.replace('</style>','#wCash #modeTag{display:inline-flex;margin:0 0 0 6px;padding:2px 7px;font-size:.62rem;font-style:normal;vertical-align:.15em}#wCash #modeTag svg,#wCash #modeTag .coin-ic{display:none!important}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('tag in wallet ok')
+s=open(d+'yofi-simple.html').read()
+a="b.className = 'ytag ' + (isCash() ? 'cash' : 'coin');"; assert s.count(a)==1
+s=s.replace(a,"b.className = 'ytag ' + (isCash() ? 'yt-cash' : 'yt-coin');")
+s=s.replace('</style>','html:not(.yg) .ytag.yt-coin{background:#FFF1C9;color:#5B3A00}html:not(.yg) .ytag.yt-cash{background:#DDF0E1;color:#1F4A2B}html.yg .ytag.yt-coin{background:#3A2A0A;color:#FFC93C}html.yg .ytag.yt-cash{background:#0E3A2A;color:#2EE59D}#wCash #modeTag{transform:none!important;animation:none!important;letter-spacing:0;white-space:nowrap}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('ytag class ok')
