@@ -867,3 +867,99 @@ RA('Everyone with 5+ stars shares the other 50%, by stars.','Everyone with 3+ st
 RA('<b>⭐ 5+ stars</b><small>Share 50% of the pool</small>','<b>⭐ 3+ stars</b><small>Share 50% of the pool</small>')
 RA('${[1, 2, 3, 4, 5].map(i => `<i class="${i <= y ? \'on\' : \'\'}">⭐</i>`).join(\'\')}','${[...Array(LG_SHARE)].map((_, j) => `<i class="${j < y ? \'on\' : \'\'}">⭐</i>`).join(\'\')}')
 open(d+'yofi-simple.html','w').write(s); print('share3 ok')
+
+# ---------- Improved: Quick Sprint result, pot challenge card, pot challenge result ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA("else { clearInterval(clk); sprDone(id, right, Date.now() - t0); }","else { clearInterval(clk); window.__qsRes = res.slice(); sprDone(id, right, Date.now() - t0); }")
+# 1) Quick Sprint result
+i=s.index('function sprDone(id, right, ms) { const O = qsOpp(id)'); j=s.index('\nfunction ', i+10)
+s=s[:i]+r"""function sprDone(id, right, ms) { const O = qsOpp(id), pr = window.__qsPractice, st = window.__qsStake || 2, mine = window.__qsRes || [];
+  const won = right > O.sc || (right === O.sc && ms <= O.ms), pay = pr ? QS_COIN_PAY[0] : qsPay(st)[0], diff = Math.abs(O.sc - right), oh = '@' + esc(O.h);
+  if (pr) { S.qsTried = 1; if (won) { S.gems = (S.gems || 0) + pay; setTimeout(paintGems, 200); } save(); }
+  else if (won) { S.cash = +((S.cash || 0) + pay).toFixed(2); save(); setTimeout(paintWallet, 200); }
+  const c = $('#coach'), amt = pr ? `${pay} ${gemIcon('')}` : qsM(pay), pk = n => `${n} pick${n === 1 ? '' : 's'}`;
+  const head = won ? `You won ${amt}!` : diff === 0 ? 'Lost on time!' : diff === 1 ? 'So close!' : 'Not this time';
+  const sub = won ? (diff ? `You beat ${oh} by ${pk(diff)}` : `Same score, you were ${((O.ms - ms) / 1000).toFixed(1)}s faster`) : (diff ? `${oh} won by ${pk(diff)}` : `Same score, ${oh} was ${((ms - O.ms) / 1000).toFixed(1)}s faster`);
+  const side = (nm, sc, t, w) => `<div class="${w ? 'w' : ''}"><small>${nm}</small><b>${sc}<em>/${SPR_N}</em></b><span>⏱ ${(t / 1000).toFixed(1)}s</span>${w ? '<i class="qs3-badge">Winner</i>' : ''}</div>`;
+  const split = mine.map((v, j) => v !== O.seq[j]), row = (nm, arr) => `<div><b>${nm}</b><span>${arr.map((v, j) => `<i class="${v ? 'ok' : 'bad'} ${split[j] ? 'df' : ''}">${v ? '✓' : '✕'}</i>`).join('')}</span></div>`;
+  const up = pr ? `<div class="qs3-up"><span class="qs3-upi">🎯</span><div><b>Ready for real cash?</b><small>$2 entry · 1 vs 1 · winner gets <b>${qsM(qsPay(2)[0])}</b></small></div></div>`
+    : won ? `<div class="qs3-up win"><span class="qs3-upi">💵</span><div><b>${qsM(pay)} added to your cash</b><small>Play again or keep voting</small></div></div>` : '';
+  c.innerHTML = `<div class="cpr qs2 qs3 ${won ? 'won' : 'lost'}" role="dialog" aria-modal="true"><button class="qs2-x" id="qsX" aria-label="Close">${QS_X}</button>
+    ${won ? '<div class="wr-cf" aria-hidden="true">' + [...Array(10)].map((_, i) => `<i style="left:${(i * 37) % 95}%;animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('') + '</div>' : ''}
+    <p class="qs3-k">🎯 Quick Sprint${pr ? ' · coins' : ''}</p><h2 class="qs3-h" id="qsHead">${head}</h2><p class="qs3-sub">${sub}</p>
+    <div class="qs3-sb">${side('You', right, ms, won)}<span class="qs3-vs">VS</span>${side(oh, O.sc, O.ms, !won)}</div>
+    ${mine.length ? `<div class="qs3-cmp">${row('You', mine)}${row(oh, O.seq)}<p>Highlighted: the ${pk(split.filter(Boolean).length).replace('pick', 'pair')} where you split</p></div>` : ''}
+    ${up}<button class="bt-cta qs2-go" id="qsAgain">${pr ? `Play for ${qsM(qsPay(2)[0])}` : `Play again · ${qsM(st)} entry`}</button><button class="bt-no" id="cpBack">${isYoungW() ? 'Keep judging' : 'Keep voting'}</button></div>`;
+  if (won && !pr) setTimeout(() => cashExplosion && cashExplosion(pay, { label: 'Quick Sprint' }), 400);
+  const shut = () => c.classList.remove('on', 'cr');
+  $('#qsAgain').onclick = () => { shut(); pr ? sprEnter() : sprEnter(st); }; $('#cpBack').onclick = shut; $('#qsX').onclick = shut; }"""+s[j:]
+# 2) Pot challenge card
+i=s.index('function potCard(k) {'); j=s.index('\nfunction openGemBattle(', i)
+s=s[:i]+r"""function potCard(k) { const L = lgS(), H = lgHold(k), iHold = H.h === 'you', y = L.you[k] || 0, R = lgRank(k), K = R[0], mine = lgMine(k);
+  const opp = iHold ? (R.find(r => !r.me) || {}).h : H.h; if (!mine || !opp) { lgCat(k); return; }
+  const os = (R.find(r => r.h === opp) || {}).n || 0, lead = K && !K.me && K.h === opp && os > 0, rev = !iHold && (H.hist || [])[0] === 'you', onVote = $('#panes').dataset.at === 'judge', need = Math.max(0, LG_SHARE - y);
+  const stars = n => [...Array(LG_SHARE)].map((_, j) => `<i class="${j < n ? 'on' : ''}">⭐</i>`).join('');
+  setTimeout(() => { openSheet(`<div class="pc pc2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
+    <p class="pc-k">${gi(k)}<span>Daily cash challenge · ${esc(crownName(k))}</span></p><h2 class="pc-h">Your photo. Real cash.</h2>
+    <div class="pc2-pool"><b>$${Math.round(L.jp[k]).toLocaleString()}</b><span>today’s prize pool<em>⏱ Pays at midnight · <span data-wk>${dayLeft()}</span> left</em></span></div>
+    <div class="pc-vs pc2-vs"><figure><img src="${mine.src}" alt=""><figcaption>You</figcaption><small>${y} ⭐ today</small></figure><span class="pc-x2">VS</span>
+      <figure><img src="${lgPhoto(opp, k)}" alt=""><figcaption>@${esc(opp)}</figcaption><small>${iHold ? `${os} ⭐ today` : `${CRW}Blue ribbon · held ${heldFor(H.since)} · ${H.def} defence${H.def === 1 ? '' : 's'}`}</small>${lead ? '<em class="pc-lead">Stars leader</em>' : ''}</figure></div>
+    <div class="pc2-stake"><div class="w"><b>Win</b><span>+1 ⭐${iHold ? ' · keep your blue ribbon' : ' · your photo takes the blue ribbon'}</span></div><div class="l"><b>Lose</b><span>${y ? '−1 ⭐' : 'nothing to lose yet'}</span></div></div>
+    <div class="pc2-me"><span class="pc2-st">${stars(y)}</span><p><b>${Math.min(y, LG_SHARE)}/${LG_SHARE} stars</b> · ${need ? `${need} more win${need === 1 ? '' : 's'} to share the pool` : 'you’re sharing the pool · more stars, bigger share'}</p></div>
+    <p class="pc2-how">🏆 Most stars wins <b>50%</b> · ⭐ ${LG_SHARE}+ stars share <b>50%</b></p>
+    <button class="btn block pc-go" id="pcGo">${VS_IC}${iHold ? 'Defend your blue ribbon' : rev ? 'Rematch' : 'Challenge now'} · $1</button>
+    <div style="text-align:center"><button class="link pc-later" id="pcLater">${onVote ? (isYoungW() ? 'Keep judging' : 'Keep voting') : 'Not now'}</button></div></div>`);
+    $('#pcGo').onclick = () => { closeSheet(); if (rev) { revengePrep(null, k, opp); return; } lgPay(() => lgFight(k, opp, !iHold)); };
+    $('#pcLater').onclick = () => closeSheet();
+    document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); }, 380); }"""+s[j:]
+# 3) Pot challenge result
+a=s.index("const onVote = $('#panes').dataset.at === 'judge', rib = "); b=s.index("paintWallet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery();", a)
+s=s[:a]+r"""const onVote = $('#panes').dataset.at === 'judge', rib = `<span class="pz-rib">${CRW}</span>`, pm = Math.round(mv / N * 100), need = Math.max(0, LG_SHARE - y);
+      const SC = me.s || {}, SN = { light: 'lighting', comp: 'composition', colour: 'colour', subject: 'subject', tech: 'sharpness' }, wk = !won ? Object.keys(SN).filter(x => SC[x] != null).sort((p, q) => SC[p] - SC[q])[0] : null;
+      const ph = (img, nm, w) => `<figure class="${w ? 'win' : ''}"><div class="pz-im"><img src="${img}" alt="">${w ? rib : ''}</div><figcaption>${nm}</figcaption>${w ? '<em class="pz-wb">Winner</em>' : ''}</figure>`;
+      $('#lb').innerHTML = `<div class="pz pz2 ${won ? 'w' : 'l'}"><button class="pz-xx" data-shclose aria-label="Close">${QS_X}</button>${won ? '<div class="wr-cf" aria-hidden="true">' + [...Array(10)].map((_, i) => `<i style="left:${(i * 37) % 95}%;animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('') + '</div>' : ''}
+        <p class="pz-k"><i></i>${esc(crownName(k).toUpperCase())}<i></i></p>
+        <h1 class="pz-h">${won ? 'You won!' : tv - mv <= 4 ? 'So close!' : `@${esc(h)} takes it`}</h1><p class="pz2-s">${sub}</p>
+        <div class="pz2-vs">${ph(me.src, 'You', won)}<span class="pz2-x">VS</span>${ph(src, '@' + esc(h), !won)}</div>
+        <div class="pz2-bar"><i style="width:${pm}%"><b>${mv}</b></i><i style="width:${100 - pm}%"><b>${tv}</b></i></div><p class="pz2-bl"><span>You · ${pm}%</span><span>${30} votes</span><span>@${esc(h)} · ${100 - pm}%</span></p>
+        ${won ? `<p class="pz2-gain">+${g} ⭐${took ? ' · 🎗 your photo is on the card' : ''}</p>` : lost ? '<p class="pz2-gain l">−1 ⭐</p>' : '<p class="pz2-gain z">No stars lost: you had none yet</p>'}
+        <div class="pc2-me pz2-me"><span class="pc2-st">${[...Array(LG_SHARE)].map((_, j) => `<i class="${j < y ? 'on' : ''}">⭐</i>`).join('')}</span><p><b>${Math.min(y, LG_SHARE)}/${LG_SHARE} stars</b> · ${need ? `${need} more win${need === 1 ? '' : 's'} to share the pool` : `you’re in · <b>${money(lgShare(k))}</b> so far`}</p><small>Prize pool <b>$${Math.round(L.jp[k]).toLocaleString()}</b> · pays at midnight</small></div>
+        ${wk ? `<button class="pz2-tip" id="lbTip"><span class="pz2-ti">💡</span><span><b>Your ${SN[wk]} scored ${SC[wk]}</b><small>That’s your photo’s weakest area. Touch it up to win more votes.</small></span><em>Touch up ›</em></button>` : ''}
+        ${won ? `<button class="btn block pz-go" id="lbMore">${VS_IC}Challenge again · $1</button>` : `<button class="btn block pz-go" id="lbRev">${VS_IC}Rematch · $1</button>`}
+        <div style="text-align:center"><button class="link pz-back" data-shclose>${onVote ? (isYoungW() ? 'Keep judging' : 'Keep voting') : 'Back to challenges'}</button></div></div>`;
+      """+s[b:]
+RA("if ($('#lbMore')) $('#lbMore').onclick = () => { closeSheet(); potCard(k); };","if ($('#lbMore')) $('#lbMore').onclick = () => { closeSheet(); potCard(k); };\n      if ($('#lbTip')) $('#lbTip').onclick = () => { closeSheet(); S.cur = me.id; save(); WALL = false; go('studio'); renderStudio(); };")
+s=s.replace('</style>',""".qs3{text-align:center}.qs3-k{margin:2px 30px 2px;font-size:.74rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.qs3-h{margin:0;font-size:1.9rem;line-height:1.1}.qs3-h svg{width:.7em!important;height:.7em!important}.qs3-sub{margin:4px 0 12px;font-size:.92rem;font-weight:700}
+.qs3-sb{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:0 0 10px}.qs3-sb>div{position:relative;border-radius:16px;padding:10px 6px 8px}.qs3-sb small{display:block;font-weight:800;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.qs3-sb b{display:block;font-size:2.4rem;line-height:1.05}.qs3-sb b em{font-style:normal;font-size:.45em;opacity:.6}.qs3-sb span{font-size:.8rem;font-weight:700}
+.qs3-badge{position:absolute;top:-9px;left:50%;transform:translateX(-50%);padding:1px 10px;border-radius:999px;font-style:normal;font-size:.66rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}.qs3-vs{font-weight:900;font-size:.9rem;opacity:.7}
+.qs3-cmp{border-radius:14px;padding:8px 10px;margin:0 0 10px;text-align:left}.qs3-cmp>div{display:grid;grid-template-columns:78px 1fr;align-items:center;gap:6px;margin:3px 0}.qs3-cmp>div b{font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.qs3-cmp>div span{display:flex;gap:3px}
+.qs3-cmp i{flex:1;max-width:22px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:.62rem;font-weight:900;color:#fff;opacity:.45}.qs3-cmp i.ok{background:#2F9E55}.qs3-cmp i.bad{background:#D6453D}.qs3-cmp i.df{opacity:1;box-shadow:0 0 0 2px #FBC20A}.qs3-cmp p{margin:4px 0 0;font-size:.74rem;text-align:center;opacity:.8}
+.qs3-up{display:flex;align-items:center;gap:10px;text-align:left;border-radius:14px;padding:10px 12px;margin:0 0 12px}.qs3-upi{font-size:1.4rem}.qs3-up b{display:block;font-size:1rem}.qs3-up small{font-size:.82rem}
+.qs2 .bt-cta,.pz-go,.pc-go{text-transform:none!important;letter-spacing:0!important}
+.pc2 .pc-k{display:flex;align-items:center;justify-content:center;gap:6px;margin-right:24px;margin-left:24px}.pc2 .pc-k svg{width:16px;height:16px;flex:none}.pc2 .pc-h{font-size:1.6rem;margin-bottom:10px}
+.pc2-pool{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 12px}.pc2-pool>b{font-size:2.5rem;line-height:1}.pc2-pool>span{text-align:left;font-weight:800;font-size:.9rem;line-height:1.3}.pc2-pool em{display:block;font-style:normal;font-weight:700;font-size:.78rem;white-space:nowrap}
+.pc2-vs small{display:block;font-size:.74rem;font-weight:700;line-height:1.3;margin-top:2px}.pc2-vs small .crw-ic{width:11px;height:14px;vertical-align:-2px;margin-right:2px}
+.pc2-stake{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 8px}.pc2-stake>div{border-radius:12px;padding:7px 8px}.pc2-stake b{display:block;font-size:.72rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.pc2-stake span{font-size:.84rem;font-weight:700;line-height:1.25}
+.pc2-me{display:flex;flex-direction:column;align-items:center;gap:2px;margin:0 0 6px}.pc2-st{display:flex;gap:8px;font-size:1.5rem}.pc2-st i{font-style:normal;filter:grayscale(1);opacity:.3}.pc2-st i.on{filter:none;opacity:1}.pc2-me p{margin:0;font-size:.88rem}.pc2-me small{font-size:.78rem;opacity:.8}
+.pc2-how{margin:4px 0 12px;font-size:.82rem}
+.pz2-s{margin:2px 0 10px;font-size:.88rem;font-weight:700}.pz2-vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:8px}.pz2-vs figure{margin:0}.pz2-vs figcaption{margin-top:5px;font-weight:800;font-size:.92rem}.pz2-x{align-self:center;margin-top:-26px;font-weight:900}
+.pz2-bar{display:flex;height:30px;border-radius:999px;overflow:hidden;margin:12px 0 4px}.pz2-bar i{display:flex;align-items:center;padding:0 12px;min-width:44px;box-sizing:border-box;transition:width .6s}.pz2-bar i:last-child{justify-content:flex-end}.pz2-bar b{color:#fff;font-size:1rem}
+.pz2-bl{display:flex;justify-content:space-between;margin:0 0 8px;font-size:.76rem;font-weight:700}.pz2-gain{margin:2px 0 8px;font-weight:900;font-size:1.15rem}.pz2-gain.z{font-size:.85rem;font-weight:700;opacity:.8}
+.pz2-me{border-radius:16px;padding:10px 12px;margin:0 0 10px}
+.pz2-tip{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;border-radius:14px;padding:10px 12px;margin:0 0 12px;font:inherit;cursor:pointer}.pz2-ti{font-size:1.3rem}.pz2-tip b{display:block;font-size:.92rem}.pz2-tip small{font-size:.78rem;line-height:1.3}.pz2-tip em{margin-left:auto;font-style:normal;font-weight:900;font-size:.82rem;white-space:nowrap}
+html:not(.yg) .qs3-k{color:#2F6B3F}html:not(.yg) .qs3-h{color:#1F2F55}html:not(.yg) .qs3-sub{color:#5B4E45}html:not(.yg) .qs3-sb>div{background:#fff;box-shadow:inset 0 0 0 1.5px #E6D9C4;color:#2B2320}html:not(.yg) .qs3-sb>div.w{background:#FFF6DC;box-shadow:inset 0 0 0 2px #D9A441}html:not(.yg) .qs3-sb b{color:#1F2F55}html:not(.yg) .qs3-badge{background:#2D4E86;color:#fff}
+html:not(.yg) .qs3-cmp{background:#F3EBDD;color:#2B2320}html:not(.yg) .qs3-up{background:#E6F3E9;color:#1F4A2B}
+html:not(.yg) .pc2-pool>b{color:#2F6B3F}html:not(.yg) .pc2-pool>span{color:#2B2320}html:not(.yg) .pc2-pool em{color:#5B4E45}html:not(.yg) .pc2-vs small{color:#5B4E45}
+html:not(.yg) .pc2-stake .w{background:#E6F3E9;color:#1F4A2B}html:not(.yg) .pc2-stake .l{background:#F3EBDD;color:#5B4E45}html:not(.yg) .pc2-me{color:#2B2320}html:not(.yg) .pc2-how{color:#5B4E45}
+html:not(.yg) .pz2-s{color:#5B4E45}html:not(.yg) .pz2-x{color:#2B1D14}html:not(.yg) .pz2-bar i:first-child{background:#2D4E86}html:not(.yg) .pz2-bar i:last-child{background:#C98A12}html:not(.yg) .pz2-bl{color:#5B4E45}
+html:not(.yg) .pz2-gain{color:#2F6B3F}html:not(.yg) .pz2-gain.l{color:#9E2F2A}html:not(.yg) .pz2-gain.z{color:#5B4E45}html:not(.yg) .pz2-me{background:#fff;box-shadow:inset 0 0 0 1.5px #E6D9C4}html:not(.yg) .pz2-tip{background:#FFF6DC;box-shadow:inset 0 0 0 1.5px #E5C77A;color:#2B2320}html:not(.yg) .pz2-tip em{color:#2D4E86}
+html.yg .qs3-k{color:#2EE59D}html.yg .qs3-h{color:#fff}html.yg .qs3-sub{color:#C9B8FF}html.yg .qs3-sb>div{background:#241544;color:#E9E2FF}html.yg .qs3-sb>div.w{background:#2A1A46;box-shadow:inset 0 0 0 2px #FFC93C}html.yg .qs3-sb b{color:#fff}html.yg .qs3-badge{background:#FFC93C;color:#1B0F33}
+html.yg .qs3-cmp{background:#241544;color:#E9E2FF}html.yg .qs3-up{background:#0E3A2A;color:#C9FBE5}
+html.yg .pc2-pool>b{color:#2EE59D}html.yg .pc2-pool>span{color:#fff}html.yg .pc2-pool em{color:#C9B8FF}html.yg .pc2-vs small{color:#C9B8FF}
+html.yg .pc2-stake .w{background:#0E3A2A;color:#C9FBE5}html.yg .pc2-stake .l{background:#241544;color:#C9B8FF}html.yg .pc2-me{color:#E9E2FF}html.yg .pc2-how{color:#C9B8FF}
+html.yg .pz2-s{color:#C9B8FF}html.yg .pz2-x{color:#fff}html.yg .pz2-bar i:first-child{background:#C13CFF}html.yg .pz2-bar i:last-child{background:#FF8A00}html.yg .pz2-bl{color:#C9B8FF}
+html.yg .pz2-gain{color:#2EE59D}html.yg .pz2-gain.l{color:#FF7A9A}html.yg .pz2-gain.z{color:#C9B8FF}html.yg .pz2-me{background:#1B0F33;box-shadow:inset 0 0 0 1.5px #3A2766}html.yg .pz2-tip{background:#241544;box-shadow:inset 0 0 0 1.5px #FFC93C;color:#E9E2FF}html.yg .pz2-tip em{color:#FFC93C}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('improve2 ok')
