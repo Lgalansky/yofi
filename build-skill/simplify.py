@@ -1245,3 +1245,20 @@ a='`<span class="lv" aria-label'; assert s.count(a)==1; s=s.replace(a,'`<span cl
 s=s.replace('</style>','.plv{display:inline-flex!important;gap:2px;align-items:center;vertical-align:-2px;margin-right:3px}.plv .lvh svg{display:block;fill:#D9D2C7}.plv .lvh.on svg{fill:#D6453D}html.yg .plv .lvh svg{fill:#3A2766}html.yg .plv .lvh.on svg{fill:#FF4F7B}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('plv ok')
 s=open(d+'yofi-simple.html').read(); a="const fixCost = p => p && !p.tu1 ? 0 : fixCost0(p);"; assert s.count(a)==1; s=s.replace(a,"const fixCost = p => fixCost0(p);"); open(d+'yofi-simple.html','w').write(s); print('touch-ups cost coins ok')
+
+# ---------- Menu order Vote · Compete · Touch-ups · Tournaments; returning players open on Vote; first deposit gets the first $2 challenge on us ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("big: `$${cash}`, sub: 'cash to play', usd: cash,","big: w ? `$${cash} <small class=\"ro-plus\">+ $2 free</small>` : `$${cash}`, sub: w ? 'cash to play · your first $2 challenge is on us' : 'cash to play', usd: cash,")
+RA("checkout(`$${cash} cash`, cash, () => applyOffer(cash, 0, w ? 'Welcome offer' : '$5 pack', onBuy))","checkout(`$${cash} cash`, cash, () => applyOffer(cash + (w ? 2 : 0), 0, w ? 'Welcome offer · $2 free' : '$5 pack', onBuy))")
+s=s.replace("function fcNotify() {",r"""(function navOrder() {
+  const run = () => { const nav = document.querySelector('nav.seg'), j = $('#segJudge'), g = $('#segGallery'), st = $('#segStudio'), sw = document.querySelector('nav.seg .segsw'), pair = document.querySelector('nav.seg .segpair');
+    if (!nav || !j || !g) return; nav.insertBefore(j, g); if (sw) sw.style.display = 'none'; if (pair && st) { nav.insertBefore(st, pair); pair.style.display = 'none'; }
+    // returning players open on Vote; new players keep the upload path
+    setTimeout(() => { try { if (S.user && S.gbDone && $('#panes').dataset.at === 'gallery' && !$('#flow').classList.contains('on')) { go('judge'); renderJudge(); } } catch (e) {} }, 400); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else setTimeout(run, 0);
+})();
+function fcNotify() {""",1)
+s=s.replace('</style>','.ro-plus{font-size:.45em;vertical-align:.5em;margin-left:4px;padding:2px 8px;border-radius:999px;background:#2F6B3F!important;color:#fff!important;-webkit-text-fill-color:#fff!important}html.yg .ro-plus{background:#2EE59D!important;color:#06261A!important;-webkit-text-fill-color:#06261A!important}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('nav order ok')
