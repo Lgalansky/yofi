@@ -1760,3 +1760,24 @@ RA("window.yWL = function () { const f = document.getElementById('file'); if (S.
    "window.yWL = function () { const f = document.getElementById('file'); if (S.likes && S.obDone && !S.photos.length) { let g1 = document.getElementById('ageGate'); if (!g1) { g1 = document.createElement('div'); g1.id = 'ageGate'; document.body.appendChild(g1); } g1.className = 'on'; obUpload(g1); return; } if (S.likes || !S.obDone) { f.click(); return; }")
 RA("if (l && !l.closest('#ageGate') && S.obDone && !S.likes) { e.preventDefault(); yWL(); }","if (l && !l.closest('#ageGate') && S.obDone && (!S.likes || !S.photos.length)) { e.preventDefault(); yWL(); }")
 open(d+'yofi-simple.html','w').write(s); print('upload page always ok')
+
+# ---------- Welcome bonus moves to sign-up: guests get no upload gift; first touch-up asks them to sign up and claim 150 coins ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("win = first ? (S.giftEn ? 0 : CFG.FIRST_WIN) : upToday ? 0 : CFG.NEW_PHOTO;\n  S.upDay = todayKey(); S.gems += win; if (first && !S.giftEn) { S.giftEn = true; } save();",
+   "win = first ? 0 : upToday ? 0 : CFG.NEW_PHOTO;\n  S.upDay = todayKey(); S.gems += win; save();")
+RA("function startEnhance(p, cat) {","function startEnhance(p, cat) {\n  if (S.user && S.user.guest && !S.giftEn) { openSignup(() => setTimeout(() => startEnhance(p, cat), 600), { locked: false, bonus: 1 }); return; }")
+RA("S.user = { h, em }; S.gems += CFG.SIGNUP;","const wb = !S.giftEn ? CFG.FIRST_WIN + CFG.SIGNUP : CFG.SIGNUP; S.giftEn = true; S.giftAck = true; S.user = { h, em }; S.gems += wb;")
+RA("gemExplosion(CFG.SIGNUP, { label: `Welcome, @${h}` })","gemExplosion(wb, { label: `Welcome bonus · @${h}` })",2)
+RA("openSheet(`<h2>${opts.win ? 'Save your win' : 'Save your photo and coins'}</h2>",
+   "openSheet(`<h2>${opts.bonus ? 'Claim your welcome bonus' : opts.win ? 'Save your win' : 'Save your photo and coins'}</h2>${opts.bonus || !S.giftEn ? `<div class=\"wbx\"><span>🎁 Welcome bonus</span><b>${gemIcon('')}${(CFG.FIRST_WIN + CFG.SIGNUP).toLocaleString()} coins</b><small>Free when you create your account</small></div>` : ''}")
+RA("<p class=\"sub\">${opts.win ?","<p class=\"sub\">${opts.bonus ? 'Create your free account to touch up your photo and get it ready to compete. ' : ''}${opts.win ?")
+RA("${opts.win ? '' : p ?","${opts.win || opts.bonus ? '' : p ?")
+RA("Create your account so nothing gets lost. You’ll get ${CFG.SIGNUP} extra coins.","Create your account so nothing gets lost.")
+# welcome card on the empty studio no longer promises a gift up front
+RA("<div class=\"wl-gift\"><span>🎁 Free welcome gift</span><b>${gemIcon('')}100</b><small>Coins to touch up your photo</small></div>","<div class=\"wl-gift\"><span>🎁 Welcome bonus when you sign up</span><b>${gemIcon('')}${CFG.FIRST_WIN + CFG.SIGNUP}</b><small>Coins to touch up your photo</small></div>")
+s=s.replace('</style>',""".wbx{border-radius:16px;padding:10px 12px;margin:6px 0 10px;text-align:center}.wbx span{display:block;font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.wbx b{display:flex;align-items:center;justify-content:center;gap:6px;font-size:2rem;line-height:1.15}.wbx b svg{width:.8em!important;height:.8em!important}.wbx small{font-size:.82rem}
+html:not(.yg) .wbx{background:#FFF6DC;box-shadow:inset 0 0 0 2px #D9A441;color:#2B1D14}html:not(.yg) .wbx b{font-family:"Fraunces",serif;color:#2F6B3F}html.yg .wbx{background:#3A2A0A;box-shadow:inset 0 0 0 2px #FFC93C;color:#fff}html.yg .wbx b{color:#FFC93C}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('welcome bonus ok')
