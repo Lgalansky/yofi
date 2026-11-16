@@ -1562,3 +1562,59 @@ RA("if ($('#frpGo')) $('#frpGo').onclick = () => {","if ($('#frpGo') && $('#frpG
 RA("'Enter with a <b>Freeroll ticket</b>. Enter with <b>300 coins</b>, once an hour.'","'Enter with <b>300 coins</b>, once an hour. Your photo needs <b>80+</b>.'")
 s=s.replace('</style>','.frp2 .frp-g button.low{opacity:.75}html:not(.yg) .frp2 .frp-g button.low small{background:#F8E1DF;color:#7A2420}html.yg .frp2 .frp-g button.low small{background:#3A1020;color:#FFC2CC}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('fr 80 ok')
+
+# ---------- Freeroll entry sheet in the user's design ----------
+s=open(d+'yofi-simple.html').read()
+i=s.index('function frEnter(f) {'); j=s.index('\n// reminder: when the final', i)
+s=s[:i]+r"""function frEnter(f) { const P = S.photos.slice().sort((a, b) => b.s.total - a.s.total), used = frUsed(), y = isYoungW();
+  if (!P.length) { closeSheet(); toast('Add a photo first, then enter the Freeroll.'); pickPhoto(true); return; }
+  const open = P.filter(p => !used.includes(p.id) && p.s.total >= FR_MIN), cand = P.filter(p => !used.includes(p.id));
+  let sel = open.length ? open[0].id : null;
+  const tot = FR_PRIZE.reduce((a, b) => a + b, 0), ord = ['1st', '2nd', '3rd'];
+  const tile = p => { const u = used.includes(p.id), low = p.s.total < FR_MIN;
+    return `<div class="fe-t ${u ? 'used' : low ? 'low' : ''}" data-fet="${p.id}"><button class="fe-p" data-frp="${p.id}" ${u || low ? 'disabled' : ''} aria-pressed="false"><img src="${p.src}" alt=""><i class="fe-ck">✓</i></button>
+      <small>Score</small><b>${p.s.total}</b>${u ? '<em class="fe-s">Entered today</em>' : low ? `<em class="fe-s need">Needs +${FR_MIN - p.s.total}</em><button class="fe-en" data-fen="${p.id}">✨ ${y ? 'Enhance' : 'Touch up'} to ${FR_MIN}<span>${fixLab(p)}</span></button>` : '<em class="fe-s rd">Ready</em>'}</div>`; };
+  const pay = S.cashTix > 0 ? 'tix' : swapReady() && S.gems >= TIX_COINS ? 'coins' : 'no';
+  openSheet(`<div class="fe"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
+    <span class="fe-k">${frTime(f.start)} Freeroll</span>
+    <h2 class="fe-h">🏆 $${tot} in cash prizes</h2>
+    <div class="fe-pz">${FR_PRIZE.map((v, k) => `<span><small>${ord[k]}</small><b>$${v}</b></span>`).join('<i></i>')}</div>
+    <p class="fe-when">Starts ${frTime(f.start)} · Final vote ${frTime(f.fin)}</p>
+    <div class="fe-ch">Choose one photo</div><p class="fe-min">Minimum score: ${FR_MIN} per photo</p>
+    <div class="fe-g">${P.slice(0, 6).map(tile).join('')}</div>
+    <div style="text-align:center"><button class="fe-add" id="frpUp">＋ Add photos</button></div>
+    ${cand.length ? `<button class="btn block fe-go" id="frpGo" ${pay === 'no' ? 'disabled' : ''}>Enter photo · ${pay === 'tix' ? '🎟️ 1' : `${TIX_COINS.toLocaleString()} 🟡`}</button>
+      <p class="fe-one">${pay === 'no' ? (!swapReady() ? `You’ve used this hour’s ${y ? 'gem' : 'coin'} entry. Next one in ${frMinsLeft()} min.` : `You need ${(TIX_COINS - Math.floor(S.gems)).toLocaleString()} more 🟡. ${y ? 'Judge' : 'Vote'} to earn them.`) : 'One photo per tournament.'}</p>` : `<p class="fe-one">All your photos have entered today. Add a new one to play.</p>`}
+    <p class="fe-ft">Top ${FR_FINAL} scores reach the final. ${y ? 'Judges' : 'Members'} vote for the winners.<br>Each photo can enter once a day.</p></div>`, { full: false });
+  const paint = () => { document.querySelectorAll('#sheetBody [data-fet]').forEach(t => { const on = t.dataset.fet === sel; t.classList.toggle('sel', on); const st = t.querySelector('.fe-s.rd, .fe-s.sl'); if (st) { st.className = 'fe-s ' + (on ? 'sl' : 'rd'); st.textContent = on ? 'Selected' : 'Ready'; } });
+    const go = $('#frpGo'); if (go && pay !== 'no') go.disabled = !sel; };
+  document.querySelectorAll('#sheetBody [data-frp]').forEach(b => b.onclick = () => { if (b.disabled) return; sel = b.dataset.frp; paint(); }); paint();
+  document.querySelectorAll('#sheetBody [data-fen]').forEach(b => b.onclick = () => { const p = S.photos.find(x => x.id === b.dataset.fen); closeSheet(); S.cur = p.id; save(); WALL = false; go('studio'); renderStudio(); toast(`Touch up to ${FR_MIN}+, then enter the Freeroll`); });
+  document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
+  $('#frpUp').onclick = () => { closeSheet(); pickPhoto(true); };
+  if ($('#frpGo')) $('#frpGo').onclick = () => { const p = S.photos.find(x => x.id === sel); if (!p || p.s.total < FR_MIN) return;
+    if (!(S.cashTix > 0)) { if (!swapReady() || S.gems < TIX_COINS) return; S.gems -= TIX_COINS; S.swapHr = frHourKey(); S.cashTix = (S.cashTix || 0) + 1; window.__spent = true; S.gnMark = 99999; S.gnVote = (S.votes || 0) + 999; paintGems(); }
+    S.cashTix--; S.frE = S.frE || {}; frUsed().push(p.id);
+    const r = frRank(p.s.total); S.frE[f.id] = { pid: p.id, score: p.s.total, start: f.start, fin: f.fin, end: f.end, bell: true, rank: Math.max(1, Math.round(r * (0.85 + Math.random() * 0.3))) }; save(); paintTix && paintTix(); closeSheet();
+    celebrate({ src: p.src, score: p.s.total, title: 'You’re in!', text: `Your ${p.s.total} photo is entered in the <b>${frTime(f.start)} Freeroll</b>, about <b>#${r.toLocaleString()}</b> by score${r <= FR_FINAL ? ': on track for the final' : ` (top ${FR_FINAL} make the final)`}. The final starts at <b>${frTime(f.fin)}</b>. 🔔 We’ll tell you when it starts.`, cta: y ? 'Keep judging' : 'Keep voting', onCta: () => go('judge'), later: 'See tournaments', onLater: () => openComps() }); }; }"""+s[j:]
+s=s.replace('</style>',""".fe{position:relative;text-align:center;padding:4px 0 2px}.fe-k{display:inline-block;padding:4px 16px;border-radius:999px;font-weight:900;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase}
+.fe-h{margin:8px 0 8px;font-size:1.75rem;line-height:1.1}.fe-pz{display:flex;justify-content:center;align-items:center;gap:12px;margin:0 8px;padding:6px 10px;border-radius:12px}.fe-pz span{display:flex;align-items:baseline;gap:5px}.fe-pz small{font-weight:800;font-size:.8rem}.fe-pz b{font-size:1.2rem}.fe-pz i{width:1px;height:20px;opacity:.35;background:currentColor}
+.fe-when{margin:6px 0 10px;font-size:.88rem}.fe-ch{border-radius:14px;padding:8px 14px;text-align:left;font-size:1.3rem;font-weight:800}.fe-min{margin:4px 0 10px;font-size:.88rem}
+.fe-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 10px}.fe-t{border-radius:16px;padding:6px 6px 8px;display:flex;flex-direction:column;align-items:center}.fe-t small{font-size:.74rem;margin-top:4px}.fe-t>b{font-size:1.9rem;line-height:1}
+.fe-p{position:relative;width:100%;border:0;padding:0;background:none;cursor:pointer}.fe-p img{width:100%;aspect-ratio:1/1!important;height:auto!important;object-fit:cover;border-radius:10px;display:block}.fe-p[disabled]{cursor:default}
+.fe-ck{display:none;position:absolute;right:5px;top:5px;width:26px;height:26px;border-radius:50%;font-style:normal;font-weight:900;place-items:center;font-size:.9rem}.fe-t.sel .fe-ck{display:grid}
+.fe-s{display:inline-block;margin-top:5px;padding:2px 12px;border-radius:999px;font-style:normal;font-weight:800;font-size:.8rem}
+.fe-en{margin-top:5px;width:100%;border:0;border-radius:10px;padding:5px 4px;font:inherit;font-size:.72rem;font-weight:800;cursor:pointer;line-height:1.2}.fe-en span{display:block}.fe-en svg{width:.8em!important;height:.8em!important}
+.fe-t.used{opacity:.5}.fe-add{border-radius:999px;padding:6px 20px;font:inherit;font-weight:800;cursor:pointer;background:none;margin:0 0 10px}.fe-go{text-transform:none!important}.fe-one{margin:6px 0 8px;font-weight:800;font-size:.9rem}
+.fe-ft{margin:0;padding-top:8px;font-size:.8rem;line-height:1.4;border-top:1px solid rgba(127,113,103,.3)}
+html:not(.yg) .fe-k{background:#FFF1C9;box-shadow:inset 0 0 0 1.5px #E5C77A;color:#2B1D14}html:not(.yg) .fe-h{color:#2B1D14;font-family:"Fraunces",serif}html:not(.yg) .fe-pz{box-shadow:inset 0 0 0 1.5px #E5C77A;color:#2B1D14}html:not(.yg) .fe-pz b{font-family:"Fraunces",serif}
+html:not(.yg) .fe-when,html:not(.yg) .fe-min,html:not(.yg) .fe-ft{color:#5B4E45}html:not(.yg) .fe-ch{background:#FFF1C9;color:#2B1D14;font-family:"Fraunces",serif}html:not(.yg) .fe-t{background:#fff;box-shadow:inset 0 0 0 1.5px #E6D9C4;color:#2B1D14}html:not(.yg) .fe-t>b{font-family:"Fraunces",serif}
+html:not(.yg) .fe-t.sel{box-shadow:inset 0 0 0 3px #1F2F55}html:not(.yg) .fe-ck{background:#1F2F55;color:#fff;box-shadow:0 0 0 2px #fff}html:not(.yg) .fe-s{background:#F3EBDD;color:#2B1D14}html:not(.yg) .fe-s.sl{background:#DCE6F7;color:#1F2F55}html:not(.yg) .fe-s.need{background:#FFE9B0;color:#5B3A00}
+html:not(.yg) .fe-en{background:#1F2F55;color:#fff}html:not(.yg) .fe-add{border:1.5px solid #D9A441;color:#2B1D14}html:not(.yg) .fe-one{color:#2B1D14}
+html.yg .fe-k{background:#3A2A0A;color:#FFC93C}html.yg .fe-h{color:#fff}html.yg .fe-pz{box-shadow:inset 0 0 0 1.5px #FFC93C;color:#fff}html.yg .fe-when,html.yg .fe-min,html.yg .fe-ft{color:#C9B8FF}html.yg .fe-ch{background:#241544;color:#fff}
+html.yg .fe-t{background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2766;color:#fff}html.yg .fe-t.sel{box-shadow:inset 0 0 0 3px #FF3FA4}html.yg .fe-ck{background:#FF3FA4;color:#fff}html.yg .fe-s{background:#2A1A46;color:#E9E2FF}html.yg .fe-s.sl{background:#FF3FA4;color:#fff}html.yg .fe-s.need{background:#3A2A0A;color:#FFC93C}
+html.yg .fe-en{background:linear-gradient(95deg,#FF3FA4,#8B3CFF);color:#fff}html.yg .fe-add{border:1.5px solid #FFC93C;color:#fff}html.yg .fe-one{color:#fff}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('fe design ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.fe .fe-en{font-size:.7rem!important;line-height:1.25!important;padding:6px 4px!important;min-height:0!important;height:auto!important;letter-spacing:0!important;text-transform:none!important}.fe .fe-en span{font-size:.72rem;margin-top:1px}.fe .fe-en span svg{width:.85em!important;height:.85em!important;vertical-align:-.1em!important}.fe-t{align-self:start}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('fe btn ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.fe .fe-en>span{display:flex!important;justify-content:center;align-items:center;gap:3px;white-space:nowrap}.fe .fe-en>span .coin-ic{display:inline-flex!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('fe btn2 ok')
