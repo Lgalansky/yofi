@@ -1039,3 +1039,10 @@ RA("Entries are $1. Prize pots pay at midnight.","Photo challenges are $2. Prize
 RA("cta: 'Rematch · $1', onCta: () => lgPay(() => lgFight(k, P.h, false, true))","cta: 'Rematch · $2', onCta: () => lgPay(() => lgFight(k, P.h, false, true))")
 RA("// every $1 challenge: 80¢ to today's pot, 20¢ house.","// every $2 challenge: $1.60 to today's pot, 40¢ house.")
 open(d+'yofi-simple.html','w').write(s); print('price2 ok', n)
+
+# ---------- Amounts and scores on the new screens use the site's money font ----------
+s=open(d+'yofi-simple.html').read()
+SEL=".pc-pot,.pc2-pool>b,.pc-vs strong,.pz-pool>b,.pz-vs strong,.qs2-prize b,.qs2-big,.qs2-st b,.qs3-sb b,.qs3-h,.pz2-bar b,.pz2-gain:not(.z),.qs2-tb .rw,.pz2-me p b,.pc2-me p b,.qs3-up b b,.th-hd em,.qs2-stat"
+sel=lambda pre: ",".join(pre+" "+x for x in SEL.split(","))
+s=s.replace('</style>',sel("html:not(.yg)")+"{font-family:\"Fraunces\",serif!important;font-weight:900!important;letter-spacing:0}\n"+sel("html.yg")+"{font-family:\"Bricolage Grotesque\",sans-serif!important;font-weight:900!important}\nhtml:not(.yg) .qs2-stat{font-weight:800!important;letter-spacing:.03em}\n</style>",1)
+open(d+'yofi-simple.html','w').write(s); print('font ok')
