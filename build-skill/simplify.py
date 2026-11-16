@@ -1181,3 +1181,66 @@ html .tsr2.frrow.need .tsr2-e.tsr2-e{background:#CFC6B8!important;color:#4A3F37!
 .tsr2.frrow .tsr2-e{font-size:.9rem!important;white-space:nowrap}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('streak + freeroll ok')
+
+# ---------- Real-money focus: no coin sales, free first touch-up per photo, photo lives (5 losses), no energy cap, "Your eye" score ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+# 1) Free first touch-up on every photo
+RA("const fixCost = p => !p ? CFG.COST :","const fixLab = p => fixCost(p) ? fixCost(p) + ' 🟡' : 'Free';\nconst fixCost = p => p && !p.tu1 ? 0 : fixCost0(p);\nconst fixCost0 = p => !p ? CFG.COST :")
+RA("S.gems -= cost; save(); paintGems(); const firstRun","S.gems -= cost; p.tu1 = 1; save(); paintGems(); const firstRun")
+RA("${fixCost(p)} 🟡","${fixLab(p)}",4)
+RA("${fixCost(p)} ${G}","${fixCost(p) ? fixCost(p) + ' ' + G : 'Free'}")
+RA("${gemIcon()}${fixCost(p)}","${fixCost(p) ? gemIcon() + fixCost(p) : 'Free'}",2)
+RA("${gemIcon()}${cost}","${cost ? gemIcon() + cost : 'Free'}")
+# 2) No coin sales: cash packs are cash only; coin "+" and "need coins" lead to earning by voting
+RA("checkout(`$${k.cash} cash + ${k.gems.toLocaleString()} coins + ${CASH_EN[i]} energy`, k.cash, () => buyPack(i, onBuy));","checkout(`$${k.cash} cash`, k.cash, () => buyPack(i, onBuy));")
+RA("if (CASH_EN[i]) { energy(); S.en += CASH_EN[i]; S.enAt = Date.now(); }","")
+RA("setTimeout(() => { addGems(k.gems, `${k.t} pack`); if ($('#panes').dataset.at === 'studio' && !$('#flow').classList.contains('on')) setTimeout(renderStudio, 1900); }, 2300);","")
+RA("tile('💵', '$' + k.cash, 'Cash', 'cs') + tile(GEM, k.gems.toLocaleString(), 'Free coins', 'gm') + tile('⚡', CASH_EN[i], 'Free energy', 'en')","tile('💵', '$' + k.cash, 'Cash to play', 'cs')")
+RA("sub: `cash to play + ${coins.toLocaleString()} free coins`","sub: 'cash to play'")
+RA("checkout(`$${cash} cash + ${coins.toLocaleString()} coins`, cash, () => applyOffer(cash, coins,","checkout(`$${cash} cash`, cash, () => applyOffer(cash, 0,",2)
+RA("buy: () => checkout(`${GEM_PACKS[0].gems.toLocaleString()} coins`, GEM_PACKS[0].usd, () => { S.paidCash = true; addGems(GEM_PACKS[0].gems, `${GEM_PACKS[0].gems} coin pack`); if (onBuy) setTimeout(onBuy, 2000); }),",
+   "buy: () => { c.classList.remove('on', 'cr'); if ($('#flow').classList.contains('on')) closeFlow(); go('judge'); renderJudge(); },")
+RA("big: `${gemIcon('')}${GEM_PACKS[0].gems.toLocaleString()}`, sub: `coins · enough for ${Math.floor(GEM_PACKS[0].gems / 50)} improvements`,","big: `${gemIcon('')}+${STREAK_GEMS}`, sub: 'every session of 3 votes, plus coins for every vote',")
+RA("<button class=\"enh-go\" id=\"roBuy\">${kind === 'energy' ? `Pay $${cfg.usd} from cash` : `Buy · $${(+cfg.usd).toFixed(2)}`}</button>","<button class=\"enh-go\" id=\"roBuy\">${kind === 'energy' ? `Pay $${cfg.usd} from cash` : kind === 'gems' ? (isYoungW() ? '⚖️ Judge to earn' : '⚖️ Vote to earn') : `Buy · $${(+cfg.usd).toFixed(2)}`}</button>")
+RA("<button class=\"ro-all\" id=\"roAll\">See all packs</button></div>`;","${kind === 'gems' ? '<p class=\"ro-note\">Coins can’t be bought. Earn them by voting.</p>' : '<button class=\"ro-all\" id=\"roAll\">See all packs</button>'}</div>`;")
+RA("if (e.target.closest('#gemPill .gplus') || e.target.closest('#walletPlus')) { e.preventDefault(); e.stopPropagation(); openStore(); }","if (e.target.closest('#gemPill .gplus')) { e.preventDefault(); e.stopPropagation(); runOut('gems', 'Earn coins by voting'); } else if (e.target.closest('#walletPlus')) { e.preventDefault(); e.stopPropagation(); openStore(); }")
+# 3) No energy cap
+RA("function energy() { const now = Date.now(); if (S.en == null) { S.en = EN_MAX; S.enAt = now; }","function energy() { S.en = EN_MAX; S.enAt = Date.now(); return EN_MAX; const now = Date.now(); if (S.en == null) { S.en = EN_MAX; S.enAt = now; }")
+# 4) Photo lives: 5 losses in cash pot challenges, then the photo retires
+RA("const fighters = () => S.photos.filter(p => p.s.total >= CFG.QUALIFY)","const PH_LIVES = 5, livesLeft = p => Math.max(0, PH_LIVES - (p.losses || 0)), livesHTML = p => `<span class=\"lv\" aria-label=\"${livesLeft(p)} lives left\">${[...Array(PH_LIVES)].map((_, i) => `<i class=\"${i < livesLeft(p) ? 'on' : ''}\">${i < livesLeft(p) ? '❤️' : '🤍'}</i>`).join('')}</span>`;\nconst fighters = () => S.photos.filter(p => p.s.total >= CFG.QUALIFY && !p.retired)")
+RA("else { P.cr[k]++; }","else { P.cr[k]++; me.losses = (me.losses || 0) + 1; if (me.losses >= PH_LIVES) me.retired = Date.now(); }")
+RA("<small>${y} ⭐ today</small></figure><span class=\"pc-x2\">VS</span>","<small>${y} ⭐ today</small><small class=\"pc-lv\">${livesHTML(mine)} ${livesLeft(mine)} li${livesLeft(mine) === 1 ? 'fe' : 'ves'}</small></figure><span class=\"pc-x2\">VS</span>")
+RA("${wk ? `<button class=\"pz2-tip\"","${!won ? (me.retired ? `<div class=\"pz2-ret\"><b>📷 This photo has retired</b><span>${PH_LIVES} losses · it keeps its record in your gallery. Upload a new ${esc(crownName(k).toLowerCase())} photo to keep going for today’s pool. Your stars stay.</span><button class=\"btn block\" id=\"lbNew\">📷 Upload a new photo</button></div>` : `<p class=\"pz2-lv\">${livesHTML(me)} <b>${livesLeft(me)} li${livesLeft(me) === 1 ? 'fe' : 'ves'} left</b> on this photo</p>`) : ''}\n        ${wk && !me.retired ? `<button class=\"pz2-tip\"")
+RA("` : `<button class=\"btn block pz-go\" id=\"lbRev\">${VS_IC}Rematch · $2</button>`}","` : me.retired ? '' : `<button class=\"btn block pz-go\" id=\"lbRev\">${VS_IC}Rematch · $2</button>`}")
+RA("if ($('#lbTip')) $('#lbTip').onclick","if ($('#lbNew')) $('#lbNew').onclick = () => { closeSheet(); addCatPhoto(k); };\n      if ($('#lbTip')) $('#lbTip').onclick")
+# 5) Your eye: agreement with the crowd, shown on the Vote page
+RA("const agree = pct[pick] >= 50, mine = pct[pick];","const agree = pct[pick] >= 50, mine = pct[pick]; S.eyeN = (S.eyeN || 0) + 1; if (agree) S.eyeOk = (S.eyeOk || 0) + 1;")
+RA("<div class=\"vh\" id=\"jRes\" aria-live=\"polite\"></div>","${(S.eyeN || 0) >= 10 ? `<p class=\"eye\">👁️ <b>Your eye: ${Math.round((S.eyeOk || 0) / S.eyeN * 100)}%</b> agree with the crowd${S.potSeen && !S.geoBlock ? ' · that’s your Quick Sprint edge' : ''}</p>` : `<p class=\"eye\">👁️ Vote ${10 - (S.eyeN || 0)} more to see how often you agree with the crowd</p>`}<div class=\"vh\" id=\"jRes\" aria-live=\"polite\"></div>")
+s=s.replace('</style>',""".jf-en,.vs-en{display:none!important}.ro-note{margin:10px 0 0;font-size:.85rem;opacity:.8;text-align:center}
+.lv{display:inline-flex;gap:1px;font-size:.72rem;vertical-align:-.05em}.lv i{font-style:normal}.pc-lv{display:block;margin-top:2px}.pz2-lv{margin:0 0 10px;font-size:.88rem}
+.pz2-ret{border-radius:16px;padding:12px 14px;margin:0 0 10px;text-align:center}.pz2-ret b{display:block;font-size:1.05rem;margin-bottom:4px}.pz2-ret span{display:block;font-size:.85rem;line-height:1.35;margin-bottom:10px}
+.eye{margin:8px 0 0;text-align:center;font-size:.85rem}
+html:not(.yg) .pz2-ret{background:#FFF6DC;box-shadow:inset 0 0 0 1.5px #E5C77A;color:#2B2320}html:not(.yg) .eye{color:#5B4E45}html:not(.yg) .eye b{color:#2D4E86}html:not(.yg) .pz2-lv{color:#5B4E45}
+html.yg .pz2-ret{background:#241544;box-shadow:inset 0 0 0 1.5px #FFC93C;color:#E9E2FF}html.yg .eye{color:#C9B8FF}html.yg .eye b{color:#FFC93C}html.yg .pz2-lv{color:#C9B8FF}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('real money focus ok')
+s=open(d+'yofi-simple.html').read(); assert s.count("$('#roAll').onclick")==1; s=s.replace("$('#roAll').onclick","if ($('#roAll')) $('#roAll').onclick"); open(d+'yofi-simple.html','w').write(s); print('roAll ok')
+s=open(d+'yofi-simple.html').read()
+for a,b in [("tournaments. A small coin bonus included'","tournaments. Coins can’t be bought: earn them by voting.'"),
+ ("<span class=\"enp-t\">${cfg.tag || 'Most popular'}</span>","${kind === 'gems' ? '' : `<span class=\"enp-t\">${cfg.tag || 'Most popular'}</span>`}"),
+ ("<button class=\"ro-free ${cfg.freeCls || ''}\" id=\"roFree\">${cfg.free}</button>","<button class=\"ro-free ${cfg.freeCls || ''}\" id=\"roFree\" ${kind === 'gems' ? 'hidden' : ''}>${cfg.free}</button>"),
+ ('`<i class="${i < livesLeft(p) ? \'on\' : \'\'}">${i < livesLeft(p) ? \'❤️\' : \'🤍\'}</i>`','`<span class="lvh ${i < livesLeft(p) ? \'on\' : \'\'}">${i < livesLeft(p) ? \'❤️\' : \'🤍\'}</span>`')]:
+    assert s.count(a)==1,(a[:60],s.count(a)); s=s.replace(a,b)
+s=s.replace('</style>','.lv .lvh{display:inline!important;width:auto!important;height:auto!important;background:none!important;font-size:.85rem}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('polish ok')
+s=open(d+'yofi-simple.html').read()
+a="${i < livesLeft(p) ? '❤️' : '🤍'}</span>"; assert s.count(a)==1
+s=s.replace(a,"<svg viewBox=\"0 0 24 24\" width=\"13\" height=\"13\" aria-hidden=\"true\"><path d=\"M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.2 0 3.7 1.2 5.2 3 1.5-1.8 3-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z\"/></svg></span>")
+s=s.replace('</style>','.lv{gap:2px!important;align-items:center}.lv .lvh svg{display:block;fill:#D9D2C7}.lv .lvh.on svg{fill:#D6453D}html.yg .lv .lvh svg{fill:#3A2766}html.yg .lv .lvh.on svg{fill:#FF4F7B}\n.ro-free[hidden]{display:none!important}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('hearts ok')
+s=open(d+'yofi-simple.html').read()
+a='`<span class="lv" aria-label'; assert s.count(a)==1; s=s.replace(a,'`<span class="plv" aria-label')
+s=s.replace('</style>','.plv{display:inline-flex!important;gap:2px;align-items:center;vertical-align:-2px;margin-right:3px}.plv .lvh svg{display:block;fill:#D9D2C7}.plv .lvh.on svg{fill:#D6453D}html.yg .plv .lvh svg{fill:#3A2766}html.yg .plv .lvh.on svg{fill:#FF4F7B}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('plv ok')
