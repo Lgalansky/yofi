@@ -1895,3 +1895,15 @@ s=open(d+'yofi-simple.html').read()
 s=s.replace('</style>','#coach .ppop .pc2-vs{margin:4px 12px 0!important;grid-template-columns:1fr auto 1fr!important;gap:8px!important}#coach .ppop .pc2-vs figure{min-width:0}#coach .ppop .pc2-vs figure>img,#coach .ppop .pc2-vs .pu-add{width:100%!important;max-width:150px;margin:0 auto;aspect-ratio:1/1!important;height:auto!important;max-height:none!important;display:flex}#coach .ppop .pc-k{padding:0 34px!important;font-size:.68rem!important}#coach .ppop .pc-h{padding:0 18px}\n@media (max-height:700px){#coach .ppop .pc2-vs figure>img,#coach .ppop .pc2-vs .pu-add{max-width:112px}#coach .ppop .pc2-how{display:none}}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('pop photos ok')
 s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','#coach .ppop .pc-x{top:4px!important;right:4px!important}#coach .ppop .pc-k{margin-top:22px!important}#coach .ppop .pc2 .pc-k{margin-top:24px!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('x clear ok')
+
+# ---------- "Play for real" is a full-size button, same as the coin option ----------
+s=open(d+'yofi-simple.html').read()
+for a,b,n in [('class="link pc-real" id="pcReal">💵 Or play for real · $${LG_FEE}</button>','class="btn block pc-real" id="pcReal">💵 Play for real · $${LG_FEE}</button>',2),
+              ('class="link qs3-real" id="qsReal">','class="btn block qs3-real" id="qsReal">',1)]:
+    assert s.count(a)==n,(a,s.count(a)); s=s.replace(a,b)
+s=s.replace('</style>',""".btn.pc-real,.btn.qs3-real{margin:8px 0 0!important;text-transform:none!important;letter-spacing:0!important;white-space:nowrap}
+html:not(.yg) .btn.pc-real,html:not(.yg) .btn.qs3-real{background:#2F6B3F!important;color:#fff!important;box-shadow:none!important}
+html.yg .btn.pc-real,html.yg .btn.qs3-real{background:linear-gradient(95deg,#1FBF7A,#0E8F55)!important;color:#fff!important;box-shadow:none!important}
+#coach .ppop .btn.pc-real{font-size:1rem!important}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('real btn ok')
