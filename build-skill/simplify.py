@@ -1710,3 +1710,35 @@ assert s.count(a)==1
 s=s.replace(a,"""if (!window.__pickRet && o.prevTotal != null && tot >= FR_MIN && o.prevTotal < FR_MIN && !S.frUnlock) { S.frUnlock = 1; save(); setTimeout(() => celebrate({ src: p.src, score: tot, title: 'Freeroll ready!', text: `Your photo reached <b>${tot}</b>. It can now enter the hourly <b>$${FR_PRIZE.reduce((x, z) => x + z, 0)} Freeroll</b> for <b>${TIX_COINS} coins</b>. Top ${FR_FINAL} go to the final.`, cta: '🎟️ Enter a Freeroll', onCta: () => { closeFlow(); window.__tFil = 'fr'; openComps(); }, later: 'Later' }), 2800); }
   else if ((S.lgPlayed || 0) >= 3 && !window.__pickRet && o.prevTotal != null && L1 && L1.at > 70 && (!L0 || L1.at > L0.at)) setTimeout(() => celebrate(""",1)
 open(d+'yofi-simple.html','w').write(s); print('80 freeroll ok')
+
+# ---------- Funnel fixes: try with a sample photo; play as a guest, sign up after the first win (and before any cash) ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+# 1) sample photos on the first-upload page
+RA("""<label class="btn block ob-pick" id="obUp" for="file" role="button">📷 Upload photo · Free</label><p class="obu-need" id="obNeed">Pick a category first</p></div>`;""",
+   """<label class="btn block ob-pick" id="obUp" for="file" role="button">📷 Upload photo · Free</label><p class="obu-need" id="obNeed">Pick a category first</p>
+    <div class="obu-try" id="obTry"></div></div>`;
+  const tryP = c => { const pool = SEED.filter(x => x.src && x.cat === BATTLE_POOL[c]), list = (pool.length ? pool : SEED.filter(x => x.src)).slice(0, 3); return list; };
+  const paintTry = () => { const c = window.__preCat, T = $('#obTry'); if (!c) { T.innerHTML = ''; return; }
+    T.innerHTML = `<p>No photo to hand? <b>Try with one of ours</b></p><div>${tryP(c).map((x, i) => `<button type="button" data-try="${i}"><img src="${x.src}" alt=""></button>`).join('')}</div>`;
+    T.querySelectorAll('[data-try]').forEach(b => b.onclick = async () => { const x = tryP(c)[+b.dataset.try]; b.classList.add('busy');
+      try { const bl = await (await fetch(x.src)).blob(), f = new File([bl], 'sample.jpg', { type: bl.type || 'image/jpeg' }), dt = new DataTransfer(); dt.items.add(f); const fi = $('#file'); fi.files = dt.files; window.__sample = 1; fi.dispatchEvent(new Event('change', { bubbles: true })); } catch (e) { toast('Could not load that photo. Try uploading your own.'); b.classList.remove('busy'); } }); };""")
+RA("$('#obPool').innerHTML = c ? `🏆 Today’s ${esc(crownName(c))} prize pool: <b>$${Math.round(L.jp[c] || 0).toLocaleString()}</b>` : ''; };",
+   "$('#obPool').innerHTML = c ? `🏆 Today’s ${esc(crownName(c))} prize pool: <b>$${Math.round(L.jp[c] || 0).toLocaleString()}</b>` : ''; paintTry(); };")
+# 2) guest play: a guest account is made with the first photo
+RA("S.photos.unshift(p); S.cur = p.id; WALL = false;","if (!S.user) { S.user = { h: 'guest' + Math.floor(1000 + Math.random() * 9000), guest: 1 }; } S.photos.unshift(p); S.cur = p.id; WALL = false;")
+# sign up after the first free challenge
+RA("label: '🟡 Next: vote and earn coins', go: () => { closeFlow(); S.cpN = 0; save(); go('judge'); renderJudge(); $('#judge').scrollTop = 0; } });",
+   "label: '🟡 Next: vote and earn coins', go: () => { const nx = () => { closeFlow(); S.cpN = 0; save(); go('judge'); renderJudge(); $('#judge').scrollTop = 0; }; if (S.user && S.user.guest) { openSignup(nx, { locked: false, win: 1 }); return; } nx(); } });")
+RA("openSheet(`<h2>Save your photo and coins</h2>\n    <p class=\"sub\">${p ?",
+   "openSheet(`<h2>${opts.win ? 'Save your win' : 'Save your photo and coins'}</h2>\n    <p class=\"sub\">${opts.win ? `Nice! Keep your coins and your ${p ? p.s.total : ''} photo. ` : ''}${opts.win ? '' : p ?")
+RA("<button class=\"btn block\" id=\"suGo\">Create account</button>`, { locked: opts.locked !== false });",
+   "<button class=\"btn block\" id=\"suGo\">Create account</button>${opts.locked === false ? '<div style=\"text-align:center\"><button class=\"link\" id=\"suLater\">Later</button></div>' : ''}`, { locked: opts.locked !== false });\n  if ($('#suLater')) $('#suLater').onclick = () => { closeSheet(); if (then) then(); };")
+# an account is needed before any cash
+RA("function payCash(amt, what, then) {","function payCash(amt, what, then) {\n  if (S.user && S.user.guest) { openSignup(() => payCash(amt, what, then), { locked: false }); return false; }")
+s=s.replace('</style>',""".obu-try{margin-top:14px}.obu-try p{margin:0 0 8px;font-size:.9rem}.obu-try>div{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.obu-try button{border:0;padding:0;border-radius:12px;overflow:hidden;cursor:pointer;background:none}
+.obu-try img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}.obu-try button.busy{opacity:.5}
+html:not(.yg) .obu-try p{color:#5B4E45}html:not(.yg) .obu-try button{box-shadow:0 0 0 2px #E6D9C4}html.yg .obu-try p{color:#C9B8FF}html.yg .obu-try button{box-shadow:0 0 0 2px #3A2766}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('funnel fixes ok')
