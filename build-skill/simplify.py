@@ -2051,3 +2051,56 @@ s=s.replace(a,"${e ? 'IN ✓' : '🏅 PODIUM'}</span>")
 s=s.replace('</style>','.tsr2.pprow .pp-tag{white-space:nowrap}.tsr2.pprow .tsr2-p{white-space:nowrap}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('pp tag ok')
 s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.tsr2.pprow .tsr2-t{flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;gap:2px!important}.tsr2.pprow .pp-tag{display:inline-block!important;font-size:.6rem!important;font-weight:900!important;line-height:1.3!important;padding:2px 7px!important;border-radius:6px!important;letter-spacing:.04em!important}.tsr2.pprow .tsr2-t b{font-size:1rem}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('pp row ok')
+
+# ---------- Instant Podium Pick (1 v 1) alternating with Quick Sprint; scheduled Podium Pick every 30 minutes ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+# scheduled every 30 min (set PP_MS = 3600e3 for hourly)
+RA("const PP_COIN = 50, PP_CASH = 2, PP_DEMO = 120000,","const PP_MS = 1800e3, PP_COIN = 50, PP_CASH = 2, PP_DEMO = 120000,")
+RA("const ppSlot = (t = Date.now()) => Math.floor(t / 3600e3);","const ppSlot = (t = Date.now()) => Math.floor(t / PP_MS);")
+RA("return { sl, k, ph, ord, players, end: (sl + 1) * 3600e3 }; }","return { sl, k, ph, ord, players, end: (sl + 1) * PP_MS }; }")
+RA("const ppDue = e => Math.min((e.sl + 1) * 3600e3, e.at + PP_DEMO);","const ppDue = e => Math.min((e.sl + 1) * PP_MS, e.at + PP_DEMO);")
+RA("players = 140 + Math.floor(r() * 120) + Math.floor((Date.now() % 3600e3) / 60000) * 2;","players = 140 + Math.floor(r() * 120) + Math.floor((Date.now() % PP_MS) / 60000) * 4;")
+RA("if (S.potSeen && !(S.pp || {})[g.sl] && m <= 20)","if (S.potSeen && !(S.pp || {})[g.sl] && m <= 10)")
+# quick game runner switch
+s=s.replace("qsRun();","(window.__qsGame === 'pp' ? ppqRun() : qsRun());")
+RA('<h2 class="qs2-t">🎯 Quick Sprint</h2><p class="qs2-sub">1 vs 1 · 10 photo pairs</p>','<h2 class="qs2-t">${window.__qsGame === \'pp\' ? \'🏅 Podium Pick\' : \'🎯 Quick Sprint\'}</h2><p class="qs2-sub">${window.__qsGame === \'pp\' ? \'1 vs 1 · pick the top 3 of 5\' : \'1 vs 1 · 10 photo pairs\'}</p>')
+s=s.replace("function fcNotify() {",r"""function ppqRun() { window.__qsGame = 'qs'; const pr = window.__qsPractice, st = window.__qsStake || 2, r = cpRng(window.__qsSet || 7), ks = CATS8.filter(k => k !== 'any'), k = ks[Math.floor(r() * ks.length)];
+  const pool = SEED.filter(x => x.src && x.cat === BATTLE_POOL[k]), list = ppShuffle((pool.length >= 5 ? pool : SEED.filter(x => x.src)).slice(), r).slice(0, 5), ord = ppShuffle([0, 1, 2, 3, 4], r);
+  const opp = QS_NAMES[Math.floor(r() * QS_NAMES.length)], oa = ppShuffle([0, 1, 2, 3, 4], r); if (r() < .55) { const w = oa.indexOf(ord[0]); [oa[0], oa[w]] = [oa[w], oa[0]]; }
+  const os = ppScore(oa.slice(0, 3), ord), oms = 6000 + Math.floor(r() * 9000), t0 = Date.now(), y = isYoungW(); let picks = [];
+  const prize = pr ? `${QS_COIN_PAY[0]} 🟡` : qsM(qsPay(st)[0]);
+  const draw = () => { popOpen(`<div class="pp"><p class="pp-k">🏅 Podium Pick${pool.length >= 5 ? ` · ${esc(crownName(k))}` : ''} · vs @${esc(opp)}</p><h2 class="pp-h">Pick the crowd’s top 3</h2>
+    <p class="pp-m">Winner gets <b>${prize}</b> · same 5 photos as @${esc(opp)}</p>
+    <div class="pp-g">${list.map((p, i) => { const n = picks.indexOf(i); return `<button class="pp-t ${n >= 0 ? 'on' : ''}" data-pp="${i}"><img src="${p.src}" alt="">${n >= 0 ? `<i class="pp-b">${PP_MED[n]}</i>` : ''}</button>`; }).join('')}</div>
+    <p class="pp-i">${picks.length < 3 ? `Tap your <b>${['1st', '2nd', '3rd'][picks.length]}</b> place photo` : 'Your podium is set. Tap a photo to change it.'}</p>
+    <button class="btn block pc-go" id="ppqGo" ${picks.length < 3 ? 'disabled' : ''}>🏅 Lock in my podium</button>
+    <p class="pp-r">The crowd has already judged these photos. Higher score wins · tie goes to the faster player.</p></div>`);
+    document.querySelectorAll('#coach [data-pp]').forEach(b => b.onclick = () => { const i = +b.dataset.pp, n = picks.indexOf(i); if (n >= 0) picks.splice(n, 1); else if (picks.length < 3) picks.push(i); draw(); });
+    $('#ppqGo').onclick = () => { if (picks.length === 3) ppqDone(); }; };
+  const ppqDone = () => { const ms = Date.now() - t0, sc = ppScore(picks, ord), won = sc > os || (sc === os && ms <= oms), pay = pr ? QS_COIN_PAY[0] : qsPay(st)[0];
+    if (pr) { S.qsTried = 1; if (won) { S.gems = (S.gems || 0) + pay; setTimeout(paintGems, 200); } } else if (won) { S.cash = +((S.cash || 0) + pay).toFixed(2); setTimeout(paintWallet, 200); } save();
+    const top = ord.slice(0, 3), mk = (p, i) => top[i] === p ? '✅' : top.includes(p) ? '↕️' : '❌', amt = pr ? `${pay} 🟡` : qsM(pay);
+    popOpen(`<div class="pp"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🏅 Podium Pick${pr ? ' · coins' : ''}</p>
+      <h2 class="pp-h">${won ? `You won ${amt}!` : sc === os ? 'Lost on time!' : 'So close!'}</h2>
+      <p class="pp-m"><b>You ${sc}</b> · @${esc(opp)} ${os} points${sc === os ? ` · ${(ms / 1000).toFixed(1)}s vs ${(oms / 1000).toFixed(1)}s` : ''}</p>
+      <div class="pp-cmp"><small>Crowd’s top 3</small><div>${top.map((p, i) => `<figure><img src="${list[p].src}" alt=""><i>${PP_MED[i]}</i></figure>`).join('')}</div>
+        <small>Your picks</small><div>${picks.map((p, i) => `<figure><img src="${list[p].src}" alt=""><i>${mk(p, i)}</i></figure>`).join('')}</div></div>
+      <button class="btn block pc-go" id="ppqAgain">${pr ? `Play again · ${QS_COIN} 🟡` : `Play again · ${qsM(st)} entry`}</button>${pr ? `<button class="btn block pc-real" id="ppqReal">💵 Play for real · win ${qsM(qsPay(2)[0])}</button>` : ''}
+      <div style="text-align:center"><button class="link pc-later" id="ppqBack">${y ? 'Keep judging' : 'Keep voting'}</button></div></div>`);
+    if (won && !pr) setTimeout(() => cashExplosion && cashExplosion(pay, { label: 'Podium Pick' }), 400);
+    $('#ppqAgain').onclick = () => { popClose(); window.__qsGame = 'pp'; pr ? sprPractice() : sprEnter(st); };
+    if ($('#ppqReal')) $('#ppqReal').onclick = () => { popClose(); window.__qsGame = 'pp'; window.__qsReal = 1; sprEnter(); };
+    $('#ppqBack').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); };
+  draw(); }
+function qgPop() { const pp = !!S.qgAlt; S.qgAlt = !S.qgAlt; save(); if (!pp) { window.__qsGame = 'qs'; qsPop(); return; }
+  const c = isCash(); celebrate({ src: (SEED[3] || {}).src, score: '🏅', title: 'Podium Pick', text: `Pick the crowd’s <b>top 3 of 5 photos</b>, 1 v 1 against a real player. Highest score wins: ${c ? `up to <b>$32</b>` : `<b>${QS_COIN_PAY[0]} 🟡</b>`}.`, cta: c ? '🏅 Play · from $2' : `🏅 Play · ${QS_COIN} 🟡`, onCta: () => { window.__qsGame = 'pp'; sprEnter(); }, later: 'Keep voting' }); }
+function fcNotify() {""",1)
+RA("S.qsPopAt = Date.now(); save(); renderJudge(); judging = false; qsPop(); return; }","S.qsPopAt = Date.now(); save(); renderJudge(); judging = false; qgPop(); return; }")
+# Coming up line: alternate label, and tapping opens the right game
+RA("it.push({ ic: '🎯', t: `<b>Quick Sprint</b> · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per }); }",
+   "it.push(S.qgAlt ? { ic: '🏅', t: `<b>Podium Pick</b> · pick the top 3 · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per } : { ic: '🎯', t: `<b>Quick Sprint</b> · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per }); }")
+RA("if (x.k === 'q') { S.cpN = 0; S.qsPopAt = Date.now(); save(); sprEnter(); return; }","if (x.k === 'q') { S.cpN = 0; S.qsPopAt = Date.now(); window.__qsGame = S.qgAlt ? 'pp' : 'qs'; S.qgAlt = !S.qgAlt; save(); sprEnter(); return; }")
+RA("onCta: () => sprEnter(), later: 'Keep voting' }); }","onCta: () => { window.__qsGame = 'qs'; sprEnter(); }, later: 'Keep voting' }); }")
+open(d+'yofi-simple.html','w').write(s); print('pp quick ok')
