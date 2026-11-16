@@ -1752,3 +1752,11 @@ RA("  const url = URL.createObjectURL(f);\n  let img;","  const url = smp || URL
 RA("try { const bl = await (await fetch(x.src)).blob(), f = new File([bl], 'sample.jpg', { type: bl.type || 'image/jpeg' }), dt = new DataTransfer(); dt.items.add(f); const fi = $('#file'); fi.files = dt.files; window.__sample = 1; fi.dispatchEvent(new Event('change', { bubbles: true })); } catch (e) { toast('Could not load that photo. Try uploading your own.'); b.classList.remove('busy'); }",
    "try { window.__sampleURL = x.src; window.__sample = 1; $('#file').dispatchEvent(new Event('change', { bubbles: true })); } catch (e) { window.__sampleURL = null; toast('Could not load that photo. Try uploading your own.'); b.classList.remove('busy'); }")
 open(d+'yofi-simple.html','w').write(s); print('sample ios ok')
+# ---------- Players with no photo yet always get the upload page (category + samples), even if interests are already chosen ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("window.yWL = function () { const f = document.getElementById('file'); if (S.likes || !S.obDone) { f.click(); return; }",
+   "window.yWL = function () { const f = document.getElementById('file'); if (S.likes && S.obDone && !S.photos.length) { let g1 = document.getElementById('ageGate'); if (!g1) { g1 = document.createElement('div'); g1.id = 'ageGate'; document.body.appendChild(g1); } g1.className = 'on'; obUpload(g1); return; } if (S.likes || !S.obDone) { f.click(); return; }")
+RA("if (l && !l.closest('#ageGate') && S.obDone && !S.likes) { e.preventDefault(); yWL(); }","if (l && !l.closest('#ageGate') && S.obDone && (!S.likes || !S.photos.length)) { e.preventDefault(); yWL(); }")
+open(d+'yofi-simple.html','w').write(s); print('upload page always ok')
