@@ -1393,3 +1393,36 @@ html.yg .frp-up{background:transparent!important;color:#fff!important;box-shadow
 open(d+'yofi-simple.html','w').write(s); print('freeroll photo ok')
 s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.frp2 .frp-g button{aspect-ratio:auto!important;height:auto!important;display:flex!important;flex-direction:column}.frp2 .frp-g button img{flex:none}.frp2 .frp-g button small{position:static!important;display:block!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('fr labels ok')
 s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.frp2 .frp-g button small{position:absolute!important;left:0;right:0;bottom:0;padding:5px 2px!important;font-size:.76rem!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('fr labels 2 ok')
+
+# ---------- Coins to Freeroll in one flow: coin pill / row → photo picker → Enter · 1,000 coins ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+# picker: pay with coins when there is no ticket
+RA("${open.length ? `<button class=\"btn block\" id=\"frpGo\">Enter · use 1 🎟️</button>` : ''}",
+   "${open.length ? (S.cashTix > 0 ? `<button class=\"btn block\" id=\"frpGo\">Enter · use 1 🎟️</button>` : swapReady() && S.gems >= TIX_COINS ? `<button class=\"btn block\" id=\"frpGo\">Enter · ${TIX_COINS.toLocaleString()} 🟡</button><p class=\"frp-bal\">You have ${Math.floor(S.gems).toLocaleString()} 🟡 · one coin entry an hour</p>` : `<button class=\"btn block\" id=\"frpGo\" disabled>Enter · ${TIX_COINS.toLocaleString()} 🟡</button><p class=\"frp-bal\">${!swapReady() ? `You’ve used this hour’s coin entry. Next one in ${frMinsLeft()} min.` : `You need ${(TIX_COINS - Math.floor(S.gems)).toLocaleString()} more 🟡. ${isYoungW() ? 'Judge' : 'Vote'} to earn them.`}</p>`) : ''}")
+RA("if ($('#frpGo')) $('#frpGo').onclick = () => { if (!(S.cashTix > 0)) { toast('You need a ticket'); return; }",
+   "if ($('#frpGo')) $('#frpGo').onclick = () => { if (!(S.cashTix > 0)) { if (!swapReady() || S.gems < TIX_COINS) return; S.gems -= TIX_COINS; S.swapHr = frHourKey(); S.cashTix = (S.cashTix || 0) + 1; window.__spent = true; S.gnMark = 99999; S.gnVote = (S.votes || 0) + 999; paintGems(); }")
+# the next Freeroll you have not entered
+RA("const frUsed = () =>","const frNext = () => frSlots().find(f => !(S.frE || {})[f.id]) || frSlots()[0];\nconst frUsed = () =>")
+# swapping from the coin pill / tournaments pill goes straight to the photo picker
+RA("function swapTicket() { if (!swapReady()) {","function swapTicket() { if ($('#sheet').classList.contains('on')) closeSheet(); setTimeout(() => frEnter(frNext()), 350); return; if (!swapReady()) {")
+RA("<b>Freeroll ticket</b><small>${swapReady() ? 'Free entry to an hourly $20 Freeroll · 1 an hour' : `Next swap in ${frMinsLeft()} min`}</small>",
+   "<b>Enter the ${frTime(frNext().start)} Freeroll</b><small>${swapReady() ? `Your photo · $${FR_PRIZE.reduce((a, b) => a + b, 0)} cash prizes · 1 an hour` : `Next coin entry in ${frMinsLeft()} min`}</small>")
+# tournament rows: no ticket → picker (pays with coins)
+RA("if (!(S.cashTix > 0)) { toast(`Swap ${TIX_COINS.toLocaleString()} coins for a Freeroll ticket first`); useGems(); return; } frEnter(f);","frEnter(f);")
+RA("if ($('#tshTix')) $('#tshTix').onclick = () => { if (!(S.cashTix > 0)) swapTicket(); };","if ($('#tshTix')) $('#tshTix').onclick = () => frEnter(frNext());")
+s=s.replace('</style>',".frp-bal{margin:6px 0 0;text-align:center;font-size:.8rem;opacity:.85}\n</style>",1)
+open(d+'yofi-simple.html','w').write(s); print('fr flow ok')
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("frrow ${e ? 'in' : nt ? 'can' : 'need'}","frrow ${e ? 'in' : nt || (swapReady() && S.gems >= TIX_COINS) ? 'can' : 'need'}")
+RA("nt ? '🎟️ Enter' : '🔒 Ticket'}","nt ? '🎟️ Enter' : swapReady() && S.gems >= TIX_COINS ? `${TIX_COINS.toLocaleString()} 🟡` : `🔒 ${TIX_COINS.toLocaleString()} 🟡`}")
+RA("""🎟️ ${nt} Freeroll ticket${nt === 1 ? '' : 's'} · ${nt ? '<b>Use below</b>' : (swapReady() ? `<b>Swap ${TIX_COINS.toLocaleString()} 🟡</b>` : `next swap in ${frMinsLeft()}m`)}</button>""",
+   """${nt ? `🎟️ ${nt} Freeroll ticket${nt === 1 ? '' : 's'} · <b>Enter below</b>` : swapReady() ? `🎟️ Enter your photo · <b>${TIX_COINS.toLocaleString()} 🟡</b>` : `🎟️ Next coin entry in ${frMinsLeft()}m`}</button>""")
+open(d+'yofi-simple.html','w').write(s); print('fr rows ok')
+s=open(d+'yofi-simple.html').read()
+for a,b in [("· one coin entry an hour</p>","· one ${isYoungW() ? 'gem' : 'coin'} entry an hour</p>"),("You’ve used this hour’s coin entry.","You’ve used this hour’s ${isYoungW() ? 'gem' : 'coin'} entry.")]:
+    assert s.count(a)==1,a; s=s.replace(a,b)
+open(d+'yofi-simple.html','w').write(s); print('gem words ok')
