@@ -1470,3 +1470,35 @@ s=open(d+'yofi-simple.html').read()
 for a,b in [("TIX_COINS = 1000","TIX_COINS = 300"),("Swap <b>1,000 coins</b> for one, once an hour.","Enter with <b>300 coins</b>, once an hour.")]:
     assert s.count(a)==1,a; s=s.replace(a,b)
 open(d+'yofi-simple.html','w').write(s); print('300 coins ok')
+
+# ---------- Newbie: choose the category on the first-upload page; welcome gift without energy ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("""<ul class="obu-l"><li>📷 Any photo from your phone</li><li>✨ Free score in seconds</li><li>🏆 Today’s ${esc(crownName(k))} prize pool: <b>$${Math.round(L.jp[k] || 0).toLocaleString()}</b></li></ul>
+    <label class="btn block ob-pick" id="obUp" for="file" role="button">📷 Upload photo · Free</label></div>`;""",
+   """<h3 class="obu-h">What’s your photo of?</h3><div class="obu-c">${CATS8.map(c => `<button type="button" data-obc="${c}" aria-pressed="${window.__preCat === c}">${gi(c)}<span>${esc(crownName(c))}</span></button>`).join('')}</div>
+    <p class="obu-pool" id="obPool"></p>
+    <label class="btn block ob-pick" id="obUp" for="file" role="button">📷 Upload photo · Free</label><p class="obu-need" id="obNeed">Pick a category first</p></div>`;
+  const paintC = () => { const c = window.__preCat, u = $('#obUp'); g.querySelectorAll('[data-obc]').forEach(b => b.setAttribute('aria-pressed', b.dataset.obc === c)); u.classList.toggle('off', !c); $('#obNeed').hidden = !!c;
+    $('#obPool').innerHTML = c ? `🏆 Today’s ${esc(crownName(c))} prize pool: <b>$${Math.round(L.jp[c] || 0).toLocaleString()}</b>` : ''; };
+  g.querySelectorAll('[data-obc]').forEach(b => b.onclick = () => { window.__preCat = b.dataset.obc; paintC(); });
+  $('#obUp').addEventListener('click', e => { if (!window.__preCat) { e.preventDefault(); $('#obNeed').classList.remove('shk'); void $('#obNeed').offsetWidth; $('#obNeed').classList.add('shk'); } }); paintC();""")
+RA("<p>Pick one you love. We’ll score it and help you improve it, then your <b>first challenge is free</b>.</p>\n    <div class=\"obu-ex\">${ex.map(x => `<img src=\"${x.src}\" alt=\"\">`).join('')}</div>",
+   "<p>Pick one you love. We’ll score it and help you improve it, then your <b>first challenge is free</b>.</p>")
+# no energy in the welcome gift
+RA("if (first && !S.giftEn) { S.giftEn = true; energy(); S.en += 50; S.enAt = Date.now();  }","if (first && !S.giftEn) { S.giftEn = true; }")
+RA("S.gems += CFG.FIRST_WIN; energy(); S.en = Math.max(S.en, EN_MAX); S.enAt = Date.now(); S.tix = 1;","S.gems += CFG.FIRST_WIN; S.tix = 1;")
+n=s.count("setTimeout(() => { const t = document.createElement('div'); t.className = 'enfly'; t.innerHTML = '⚡<b>+50</b><small>Welcome gift · energy</small>'; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }, ")
+assert n==2,n
+import re
+s=re.sub(r"setTimeout\(\(\) => \{ const t = document\.createElement\('div'\); t\.className = 'enfly'; t\.innerHTML = '⚡<b>\+50</b><small>Welcome gift · energy</small>'; document\.body\.appendChild\(t\); setTimeout\(\(\) => t\.remove\(\), 2600\); \}, \d+\);","",s)
+RA("<b>${gemIcon('')}100 <i>+</i> ⚡50</b><small>Coins to enhance it · energy to vote and earn more</small>","<b>${gemIcon('')}100</b><small>Coins to touch up your photo</small>")
+s=s.replace('</style>',""".obu-h{margin:12px 0 8px;font-size:1.15rem}.obu-c{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 10px}
+.obu-c button{border:0;border-radius:12px;padding:8px 2px;font:inherit;font-size:.72rem;font-weight:800;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;line-height:1.15}.obu-c svg{width:22px;height:22px}
+.obu-pool{margin:0 0 10px;font-size:.92rem;min-height:1.3em;text-align:center}#obUp.off{opacity:.45}.obu-need{margin:6px 0 0;text-align:center;font-size:.85rem;font-weight:700}.obu-need.shk{animation:qsShake .35s}
+html:not(.yg) .obu-c button{background:#fff;box-shadow:inset 0 0 0 1.5px #E6D9C4;color:#2B2320}html:not(.yg) .obu-c button[aria-pressed="true"]{background:#2D4E86;color:#fff;box-shadow:none}html:not(.yg) .obu-need{color:#9E2F2A}
+html.yg .obu-c button{background:#241544;color:#E9E2FF}html.yg .obu-c button[aria-pressed="true"]{background:linear-gradient(135deg,#FF3FA4,#8B3CFF);color:#fff}html.yg .obu-need{color:#FF7A9A}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('newbie cat ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.obu-need[hidden]{display:none!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('need hidden ok')
