@@ -1618,3 +1618,20 @@ html.yg .fe-en{background:linear-gradient(95deg,#FF3FA4,#8B3CFF);color:#fff}html
 open(d+'yofi-simple.html','w').write(s); print('fe design ok')
 s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.fe .fe-en{font-size:.7rem!important;line-height:1.25!important;padding:6px 4px!important;min-height:0!important;height:auto!important;letter-spacing:0!important;text-transform:none!important}.fe .fe-en span{font-size:.72rem;margin-top:1px}.fe .fe-en span svg{width:.85em!important;height:.85em!important;vertical-align:-.1em!important}.fe-t{align-self:start}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('fe btn ok')
 s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.fe .fe-en>span{display:flex!important;justify-content:center;align-items:center;gap:3px;white-space:nowrap}.fe .fe-en>span .coin-ic{display:inline-flex!important}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('fe btn2 ok')
+
+# ---------- Freeroll entry: under-80 photos can be selected; the main button becomes "Touch up to 80" ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("data-frp=\"${p.id}\" ${u || low ? 'disabled' : ''}","data-frp=\"${p.id}\" ${u ? 'disabled' : ''}")
+RA("let sel = open.length ? open[0].id : null;","let sel = open.length ? open[0].id : cand.length ? cand[0].id : null;")
+RA("const go = $('#frpGo'); if (go && pay !== 'no') go.disabled = !sel; };",
+   """const go = $('#frpGo'), q = S.photos.find(x => x.id === sel), low = q && q.s.total < FR_MIN, one = $('#feOne');
+    if (go) { go.classList.toggle('fe-tu', !!low); go.disabled = !sel || (!low && pay === 'no');
+      go.innerHTML = low ? `✨ ${y ? 'Enhance' : 'Touch up'} to ${FR_MIN} · ${fixLab(q)}` : `Enter photo · ${pay === 'tix' ? '🎟️ 1' : `${TIX_COINS.toLocaleString()} 🟡`}`; }
+    if (one) one.innerHTML = low ? `This photo scores <b>${q.s.total}</b>. It needs <b>${FR_MIN - q.s.total} more points</b> to enter.` : one.dataset.t; };""")
+RA("<p class=\"fe-one\">${pay === 'no' ?","<p class=\"fe-one\" id=\"feOne\" data-t=\"${pay === 'no' ? (!swapReady() ? `You’ve used this hour’s ${y ? 'gem' : 'coin'} entry. Next one in ${frMinsLeft()} min.` : `You need ${(TIX_COINS - Math.floor(S.gems)).toLocaleString()} more 🟡. ${y ? 'Judge' : 'Vote'} to earn them.`) : 'One photo per tournament.'}\">${pay === 'no' ?")
+RA("if ($('#frpGo')) $('#frpGo').onclick = () => { const p = S.photos.find(x => x.id === sel); if (!p || p.s.total < FR_MIN) return;",
+   "if ($('#frpGo')) $('#frpGo').onclick = () => { const p = S.photos.find(x => x.id === sel); if (!p) return; if (p.s.total < FR_MIN) { closeSheet(); S.cur = p.id; save(); WALL = false; go('studio'); renderStudio(); toast(`Touch up to ${FR_MIN}+, then enter the Freeroll`); return; }")
+s=s.replace('</style>','html:not(.yg) .fe-go.fe-tu{background:#2F6B3F!important}html.yg .fe-go.fe-tu{background:linear-gradient(95deg,#FFB21C,#FF7A00)!important;color:#1B0F33!important}.fe-t.low.sel .fe-ck{display:grid}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('fe low ok')
