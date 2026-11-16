@@ -963,3 +963,16 @@ html.yg .pz2-s{color:#C9B8FF}html.yg .pz2-x{color:#fff}html.yg .pz2-bar i:first-
 html.yg .pz2-gain{color:#2EE59D}html.yg .pz2-gain.l{color:#FF7A9A}html.yg .pz2-gain.z{color:#C9B8FF}html.yg .pz2-me{background:#1B0F33;box-shadow:inset 0 0 0 1.5px #3A2766}html.yg .pz2-tip{background:#241544;box-shadow:inset 0 0 0 1.5px #FFC93C;color:#E9E2FF}html.yg .pz2-tip em{color:#FFC93C}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('improve2 ok')
+
+# ---------- Losing a challenge never costs a star (no star loss from challenges or raids) ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA("else { P.cr[k]++; if (L.you[k]) { L.you[k]--; lost = 1; } }","else { P.cr[k]++; }")
+RA("'Win +1 star'} · lose −1 star</p>","'Win +1 star'} · lose and you keep your stars</p>")
+RA("""lost ? '<p class="pz2-gain l">−1 ⭐</p>' : '<p class="pz2-gain z">No stars lost: you had none yet</p>'""","""'<p class="pz2-gain z">You keep your stars. Losing never costs a star.</p>'""")
+RA("<div class=\"l\"><b>Lose</b><span>${y ? '−1 ⭐' : 'nothing to lose yet'}</span></div>","<div class=\"l\"><b>Lose</b><span>you keep your stars</span></div>")
+RA("<p>Win <b>+1 star</b>, lose <b>−1 star</b>.</p>","<p>Win <b>+1 star</b>. Lose and you keep your stars.</p>")
+RA("takeCrown(k, P.h); if (L.you[k]) L.you[k]--; save();","takeCrown(k, P.h); save();")
+RA("const ks = CATS8.filter(k => (L.you[k] || 0) > 0 && lgMine(k)); if (!ks.length) { save(); return; }","const ks = []; if (!ks.length) { save(); return; } // stars are never taken away")
+open(d+'yofi-simple.html','w').write(s); print('no star loss ok')
