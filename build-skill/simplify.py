@@ -815,3 +815,41 @@ n2=s.count(' · <i class="nc-b">+100 🟡</i>'); s=s.replace(' · <i class="nc-b
 a="if (o.fresh && !o.first && p && p.cat && p.cat !== 'any' && !(S.catBonus"
 assert s.count(a)==1; s=s.replace(a,"if (false && o.fresh && !o.first && p && p.cat && p.cat !== 'any' && !(S.catBonus")
 open(d+'yofi-simple.html','w').write(s); print('no +100 ok', n1, n2)
+
+# ---------- Tournaments: "How tournaments work" link explaining each type ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA('<div class="tsh"><h1>Tournaments</h1><p>Guaranteed prizes</p>','<div class="tsh"><h1>Tournaments</h1><p>Guaranteed prizes</p><button class="link tsh-how" id="tshHow">ⓘ How tournaments work</button>')
+s=s.replace("function fcNotify() {",r"""function tHowOpen() { const c = $('#coach'), coin = gemIcon('');
+  const T = (cls, ic, name, when, entry, lines) => `<div class="th-t ${cls}"><div class="th-hd"><span class="th-ic">${ic}</span><b>${name}</b><em>${entry}</em></div><p class="th-when">${when}</p><ul>${lines.map(l => `<li>${l}</li>`).join('')}</ul></div>`;
+  c.innerHTML = `<div class="cpr th" role="dialog" aria-modal="true" aria-labelledby="thH"><button class="qs2-x" id="thX" aria-label="Close">${QS_X}</button>
+    <h2 class="th-h" id="thH">How tournaments work</h2><p class="th-sub">Four kinds of tournament. Each row on the schedule is colour coded.</p>
+    ${T('t-ch', '🏆', 'Crowd Championship', 'Every hour · top of the schedule', `$${CH_ENTRY}`, [`<b>${CH_N} photo pairs.</b> Pick the photo the crowd chose.`, 'Book ahead, then play any time during the hour. We remind you when it’s live.', '<b>85%</b> of entries go into the prize pool, so it grows as people join.', 'Most right wins, ties go to the fastest. Results at the end of the hour.'])}
+    ${T('t-fr', '🎟️', 'Freeroll', 'Every hour · gold rows', '🎟️ Free', ['Enter with a <b>Freeroll ticket</b>. Swap <b>1,000 coins</b> for one, once an hour.', 'Your best photo is ranked by its score.', `The <b>top ${FR_FINAL}</b> go through to a live final.`, `Final prizes: <b>$${FR_PRIZE[0]}</b> · <b>$${FR_PRIZE[1]}</b> · <b>$${FR_PRIZE[2]}</b> in real cash.`])}
+    ${T('t-ko', '⚔️', 'Knockout tournament', `Every 30 minutes · ${isYoungW() ? 'pink' : 'blue'} rows`, '$1', [`<b>${T_N} players</b>, your best photo against theirs.`, '<b>4 head-to-head rounds</b>, each decided live by member votes.', 'Win every round to take the <b>guaranteed prize</b>.', '<b>$25</b> every half hour, <b>$100</b> on the hour.'])}
+    ${T('t-gm', coin, 'Coin tournament', 'Every hour · purple rows', `${coin} 100`, ['Same knockout format, played for coins.', `Win the <b>${coin} 5,000</b> prize.`, 'Good practice before cash tournaments.'])}
+    <p class="th-ft">Cash prizes go straight to your cash balance. 18+ only, and cash tournaments aren’t available in every state.</p>
+    <button class="bt-cta" id="thOk">Got it</button></div>`;
+  c.classList.add('on', 'cr'); c.onclick = e => { if (e.target === c) c.classList.remove('on', 'cr'); };
+  $('#thX').onclick = $('#thOk').onclick = () => c.classList.remove('on', 'cr'); }
+document.addEventListener('click', e => { if (e.target.closest('#tshHow')) { e.preventDefault(); e.stopPropagation(); tHowOpen(); } }, true);
+function fcNotify() {""",1)
+s=s.replace('</style>',""".tsh-how{display:block;margin:6px auto 0;font-size:.9rem;font-weight:700}
+.th{position:relative;text-align:left;max-height:84vh;overflow:auto}.th-h{margin:4px 30px 2px 0;font-size:1.45rem}.th-sub{margin:0 0 12px;font-size:.88rem}
+.th-t{border-radius:16px;padding:10px 12px;margin:0 0 10px}.th-hd{display:flex;align-items:center;gap:8px}.th-ic{font-size:1.2rem;line-height:1}.th-ic svg{width:1.1em;height:1.1em}
+.th-hd b{font-size:1.05rem}.th-hd em{margin-left:auto;font-style:normal;font-weight:900;padding:3px 10px;border-radius:999px;white-space:nowrap;font-size:.85rem}.th-hd em svg{width:.85em!important;height:.85em!important;vertical-align:-.05em}
+.th-when{margin:2px 0 6px;font-size:.78rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;opacity:.8}.th-t ul{margin:0;padding-left:18px;display:grid;gap:4px}.th-t li{font-size:.88rem;line-height:1.35}.th-t li svg{width:.85em!important;height:.85em!important;vertical-align:-.05em}
+.th-ft{font-size:.78rem;margin:4px 0 12px;opacity:.8}
+html:not(.yg) .th-h{color:#1F2F55}html:not(.yg) .th-sub,html:not(.yg) .th-ft{color:#5B4E45}html:not(.yg) .th-t{color:#2B2320}
+html:not(.yg) .th-t.t-ch{background:#E6F3E9;box-shadow:inset 0 0 0 1.5px #2F6B3F}html:not(.yg) .th-t.t-ch em{background:#2F6B3F;color:#fff}
+html:not(.yg) .th-t.t-fr{background:#FFF6DC;box-shadow:inset 0 0 0 1.5px #D9A441}html:not(.yg) .th-t.t-fr em{background:#FBC20A;color:#2B1D14}
+html:not(.yg) .th-t.t-ko{background:#E8EEF8;box-shadow:inset 0 0 0 1.5px #2D4E86}html:not(.yg) .th-t.t-ko em{background:#2D4E86;color:#fff}
+html:not(.yg) .th-t.t-gm{background:#EFEAF8;box-shadow:inset 0 0 0 1.5px #6B5BB5}html:not(.yg) .th-t.t-gm em{background:#6B5BB5;color:#fff}
+html.yg .th-h{color:#fff}html.yg .th-sub,html.yg .th-ft{color:#C9B8FF}html.yg .th-t{color:#E9E2FF}
+html.yg .th-t.t-ch{background:#0E3A2A;box-shadow:inset 0 0 0 1.5px #2EE59D}html.yg .th-t.t-ch em{background:#2EE59D;color:#06261A}
+html.yg .th-t.t-fr{background:#3A2A0A;box-shadow:inset 0 0 0 1.5px #FFC93C}html.yg .th-t.t-fr em{background:#FFC93C;color:#1B0F33}
+html.yg .th-t.t-ko{background:#1E1236;box-shadow:inset 0 0 0 1.5px #FF3FA4}html.yg .th-t.t-ko em{background:linear-gradient(95deg,#FF3FA4,#8B3CFF);color:#fff}
+html.yg .th-t.t-gm{background:#1C1840;box-shadow:inset 0 0 0 1.5px #4A4AB0}html.yg .th-t.t-gm em{background:linear-gradient(95deg,#7A5CFF,#3B6CF5);color:#fff}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('t how ok')
