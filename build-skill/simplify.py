@@ -1781,3 +1781,102 @@ s=s.replace('</style>',""".wbx{border-radius:16px;padding:10px 12px;margin:6px 0
 html:not(.yg) .wbx{background:#FFF6DC;box-shadow:inset 0 0 0 2px #D9A441;color:#2B1D14}html:not(.yg) .wbx b{font-family:"Fraunces",serif;color:#2F6B3F}html.yg .wbx{background:#3A2A0A;box-shadow:inset 0 0 0 2px #FFC93C;color:#fff}html.yg .wbx b{color:#FFC93C}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('welcome bonus ok')
+
+# ---------- Coin players and cash players; plus Bronze tag, pop fit, friendlier first score, Apple Pay first ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+# --- mode helpers
+RA("const lgCurOf = () => 'cash';","""const isCash = () => !!(S && S.cashMode), LG_COIN = 25;
+const poolTxt = k => isCash() ? `$${Math.round(lgS().jp[k]).toLocaleString()}` : `${Math.round(lgS().jp[k]).toLocaleString()} 🟡`;
+const entryTxt = () => isCash() ? `$${LG_FEE}` : `Free · ${LG_COIN} 🟡`;
+const goCash = () => { if (!S.cashMode) { S.cashMode = Date.now(); save(); paintMode(); } };
+function paintMode() { let b = $('#modeTag'); const p = document.querySelector('.a18-pill'); if (!p || !S || !S.user) return; if (!b) { b = document.createElement('span'); b.id = 'modeTag'; b.className = 'mode-tag'; p.after(b); } b.className = 'mode-tag ' + (isCash() ? 'cash' : 'coin'); b.textContent = isCash() ? '💵 Cash play' : '🟡 Coin play'; }
+setInterval(paintMode, 1500);
+const lgCurOf = () => isCash() ? 'cash' : 'gems';""")
+RA("if (lgCurOf() === 'gems') { if (S.gems < 50) { closeSheet(); runOut('gems', `You need ${50 - S.gems} more coins`, null, 50 - S.gems); return; } S.gems -= 50; save(); paintGems(); then(); return; }",
+   "if (lgCurOf() === 'gems') { if (S.gems < LG_COIN) { closeSheet(); runOut('gems', `You need ${LG_COIN - Math.floor(S.gems)} more coins`, null, LG_COIN - S.gems); return; } S.gems -= LG_COIN; save(); paintGems(); then(); return; }")
+# cash spend or deposit makes a cash player (one way)
+RA("S.cash = +((S.cash || 0) - amt).toFixed(2); save(); paintWallet(); then(); return true;","S.cash = +((S.cash || 0) - amt).toFixed(2); goCash(); save(); paintWallet(); then(); return true;")
+RA("S.cash = +((S.cash || 0) - amt).toFixed(2); save(); paintWallet(); then(); } }); return false; }","S.cash = +((S.cash || 0) - amt).toFixed(2); goCash(); save(); paintWallet(); then(); } }); return false; }")
+RA("S.cash = +((S.cash || 0) + cash).toFixed(2); S.paidCash = true; save(); cashExplosion(cash, { label });","S.cash = +((S.cash || 0) + cash).toFixed(2); S.paidCash = true; goCash(); save(); cashExplosion(cash, { label });")
+RA("S.cash = (S.cash || 0) + k.cash; S.paidCash = true; save();","S.cash = (S.cash || 0) + k.cash; S.paidCash = true; goCash(); save();")
+# --- pots: show coins for coin players, cash for cash players, with a "play for real" link
+for f in ['function potIntro(p)','function potUp(k)','function potCard(k)']:
+    i=s.index(f); j=s.index('\nfunction ',i+10); seg=s[i:j]
+    seg=seg.replace("$${Math.round(L.jp[k]).toLocaleString()}","${poolTxt(k)}")
+    seg=seg.replace("Daily cash challenge · ","${isCash() ? 'Daily cash challenge' : 'Daily coin challenge'} · ")
+    seg=seg.replace("<h2 class=\"pc-h\">Your photo. Real cash.</h2>","<h2 class=\"pc-h\">${isCash() ? 'Your photo. Real cash.' : 'Your photo. Win coins.'}</h2>")
+    seg=seg.replace("· $${LG_FEE}</button>","· ${entryTxt()}</button>${isCash() ? '' : `<button class=\"link pc-real\" id=\"pcReal\">💵 Or play for real · $${LG_FEE}</button>`}")
+    seg=seg.replace("'Challenge now'} · $2</button>","'Challenge now'} · ${entryTxt()}</button>${isCash() ? '' : `<button class=\"link pc-real\" id=\"pcReal\">💵 Or play for real · $${LG_FEE}</button>`}")
+    s=s[:i]+seg+s[j:]
+RA("$('#pnGo').onclick = () => { popClose(); lgPay(() => lgFight(k, opp, true)); };","$('#pnGo').onclick = () => { popClose(); lgPay(() => lgFight(k, opp, true)); };\n    if ($('#pcReal')) $('#pcReal').onclick = () => { popClose(); payCash(LG_FEE, 'A challenge', () => lgFight(k, opp, true)); };")
+RA("$('#pcGo').onclick = () => { popClose(); if (rev) { revengePrep(null, k, opp); return; } lgPay(() => lgFight(k, opp, !iHold)); };","$('#pcGo').onclick = () => { popClose(); if (rev) { revengePrep(null, k, opp); return; } lgPay(() => lgFight(k, opp, !iHold)); };\n    if ($('#pcReal')) $('#pcReal').onclick = () => { popClose(); payCash(LG_FEE, 'A challenge', () => lgFight(k, opp, !iHold)); };")
+RA("<p class=\"pnf-sp\">Qualifiers share 70% of the pool.","<p class=\"pnf-sp\">${isCash() ? '' : 'Win coins to touch up photos and enter cash Freerolls.<br>'}Qualifiers share 70% of the pool.")
+# result screen
+RA("<div class=\"pr3-pool\"><small>Prize pool</small><b>$${Math.round(L.jp[k]).toLocaleString()}</b>","<div class=\"pr3-pool\"><small>${isCash() ? 'Prize pool' : 'Coin pool'}</small><b>${poolTxt(k)}</b>")
+RA("you’re in · about <b>${money(lgShare(k))}</b>`}</p>","you’re in · about <b>${isCash() ? money(lgShare(k)) : Math.round(lgShare(k)) + ' 🟡'}</b>`}</p>")
+RA("${VS_IC}Rematch · $${LG_FEE}</button>","${VS_IC}Rematch · ${entryTxt()}</button>")
+RA("${VS_IC}${yg ? 'Battle' : 'Challenge'} again · $${LG_FEE}</button>","${VS_IC}${yg ? 'Battle' : 'Challenge'} again · ${entryTxt()}</button>")
+# --- Quick Sprint: coin players get the coin table; cash players the cash tables
+RA("function sprEnter(stake) {","function sprEnter(stake) {\n  if (!stake && !isCash() && !window.__qsReal) { sprPractice(); return; } window.__qsReal = 0;")
+RA("S.cash = +((S.cash || 0) - stake).toFixed(2); save(); paintWallet();","S.cash = +((S.cash || 0) - stake).toFixed(2); goCash(); save(); paintWallet();")
+RA("${S.qsTried ? 'from $2' :","${isCash() ? 'from $2' :")
+RA("<b>Quick Sprint</b> · 1 v 1 · win up to $32</span>","<b>Quick Sprint</b> · 1 v 1 · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}</span>")
+RA("function qsPop() { if (!S.qsTried)","function qsPop() { if (!isCash())")
+RA("<button class=\"bt-cta qs2-go\" id=\"qsAgain\">${pr ? `Play for ${qsM(qsPay(2)[0])}` : `Play again · ${qsM(st)} entry`}</button>",
+   "<button class=\"bt-cta qs2-go\" id=\"qsAgain\">${pr ? `Play again · ${QS_COIN} 🟡` : `Play again · ${qsM(st)} entry`}</button>${pr ? `<button class=\"link qs3-real\" id=\"qsReal\">💵 Play for real · win ${qsM(qsPay(2)[0])}</button>` : ''}")
+RA("$('#qsAgain').onclick = () => { shut(); pr ? sprEnter() : sprEnter(st); };","$('#qsAgain').onclick = () => { shut(); pr ? sprPractice() : sprEnter(st); }; if ($('#qsReal')) $('#qsReal').onclick = () => { shut(); window.__qsReal = 1; sprEnter(); };")
+# --- Freeroll win: the bridge to cash play
+RA("// reminder: when the final of an entered Freeroll starts","""// result: a place in the final can win real cash, the natural first cash play
+setInterval(() => { if (!S || !S.frE) return; const now = Date.now();
+  Object.entries(S.frE).forEach(([id, e]) => { if (e.paid || now < e.end) return; e.paid = 1; const rank = e.rank || frRank(e.score), p = S.photos.find(x => x.id === e.pid);
+    const place = rank <= FR_FINAL && Math.random() < .3 ? 1 + Math.floor(Math.random() * 3) : 0, won = place ? FR_PRIZE[place - 1] : 0; e.place = place; save();
+    if (!won) return; S.cash = +((S.cash || 0) + won).toFixed(2); save(); paintWallet();
+    celebrate({ src: p ? p.src : '', score: '🏆', title: `You won $${won}!`, text: `Your photo finished <b>${['1st', '2nd', '3rd'][place - 1]}</b> in the ${frTime(e.start)} Freeroll. <b>$${won} real cash</b> is in your wallet.${isCash() ? '' : ' Use it to play a cash challenge, no deposit needed.'}`, cta: isCash() ? 'Keep playing' : `💵 Play a $${LG_FEE} cash challenge`, onCta: () => { if (isCash()) return; goCash(); const k = CATS8.find(x => lgMine(x)); if (k) potCard(k); }, later: 'Later' }); }); }, 5000);
+// reminder: when the final of an entered Freeroll starts""")
+# --- Bronze/Silver tag no longer covers "After"
+RA("<span class=\"best ${U ? 'lvup' : ''}\">${U ? `${U.ic} ${U.n}!` : 'After'}</span>","<span class=\"best\">After</span>${U ? `<span class=\"lvtag\">${U.ic} ${U.n}!</span>` : ''}")
+# --- friendlier first score
+RA("<small class=\"osc\">${tot < CFG.QUALIFY ? 'Score to compete' : 'Overall score'}${photoLock(p) ? '<span class=\"qready lk\">Entered</span>' : ''}</small><div><b>${tot}</b>${goalHTML(tot)}</div></div>${barsHTML(p.s, o.prev, true, p)}</div></div>`;",
+   "<small class=\"osc\">${tot < CFG.QUALIFY ? 'Score to compete' : 'Overall score'}${photoLock(p) ? '<span class=\"qready lk\">Entered</span>' : ''}</small><div><b>${tot}</b>${goalHTML(tot)}</div>${tot < CFG.QUALIFY && CFG.QUALIFY - tot <= 15 ? `<p class=\"near\">✨ ${CFG.QUALIFY - tot} points to go. One touch-up usually gets you there.</p>` : ''}</div>${barsHTML(p.s, o.prev, true, p)}</div></div>`;")
+RA("<small class=\"osc\">${tot < CFG.QUALIFY ? 'Score to compete' : 'Overall score'}${photoLock(p) ? '<span class=\"qready lk\">Entered</span>' : ''}</small><div><b>${tot}</b>${goalHTML(tot)}</div></div>${barsHTML(p.s, null, !lk, p)}</div>",
+   "<small class=\"osc\">${tot < CFG.QUALIFY ? 'Score to compete' : 'Overall score'}${photoLock(p) ? '<span class=\"qready lk\">Entered</span>' : ''}</small><div><b>${tot}</b>${goalHTML(tot)}</div>${tot < CFG.QUALIFY && CFG.QUALIFY - tot <= 15 ? `<p class=\"near\">✨ ${CFG.QUALIFY - tot} points to go. One touch-up usually gets you there.</p>` : ''}</div>${barsHTML(p.s, null, !lk, p)}</div>")
+# --- Apple Pay first; card details behind a link
+RA("<button class=\"co-ap\" data-pay>Apple Pay</button>\n    <p class=\"co-or\">or pay with card</p>\n    <div class=\"co-f\">",
+   "<button class=\"co-ap\" data-pay> Pay $${(+price).toFixed(2)}</button>\n    <button class=\"link co-card\" id=\"coCard\" onclick=\"this.nextElementSibling.hidden=false;this.nextElementSibling.nextElementSibling.hidden=false;this.hidden=true\">Pay with card instead</button>\n    <div class=\"co-f\" hidden>")
+RA("<button class=\"co-pay\" data-pay>🔒 Pay $${(+price).toFixed(2)}</button>","<button class=\"co-pay\" data-pay hidden>🔒 Pay $${(+price).toFixed(2)}</button>")
+s=s.replace('</style>',""".mode-tag{display:inline-flex;align-items:center;gap:3px;margin-left:6px;padding:3px 9px;border-radius:999px;font-size:.72rem;font-weight:800;white-space:nowrap}.mode-tag svg{width:1em!important;height:1em!important}
+html:not(.yg) .mode-tag.coin{background:#FFF1C9;color:#5B3A00}html:not(.yg) .mode-tag.cash{background:#DDF0E1;color:#1F4A2B}html.yg .mode-tag.coin{background:#3A2A0A;color:#FFC93C}html.yg .mode-tag.cash{background:#0E3A2A;color:#2EE59D}
+.pc-real,.qs3-real{display:block;margin:8px auto 0;font-weight:800;font-size:.92rem}
+.vcard .lvtag{position:absolute;right:6px;bottom:auto;top:6px;z-index:2;padding:3px 9px;border-radius:999px;font-size:.72rem;font-weight:900;background:#FBC20A;color:#2B1D14;box-shadow:0 2px 6px rgba(0,0,0,.25)}.vgrid.ba .vcard{position:relative}
+.near{margin:4px 0 0;font-size:.8rem;font-weight:700;line-height:1.3}html:not(.yg) .near{color:#2F6B3F}html.yg .near{color:#2EE59D}
+.co-ap{font-size:1.15rem!important}.co-card{display:block;margin:10px auto;font-weight:700}.co-f[hidden],.co-pay[hidden],.co-card[hidden]{display:none!important}
+#coach .ppop{max-height:92vh!important;padding:12px 12px 10px!important}
+#coach .ppop .pnf-ic svg{width:30px!important;height:30px!important}#coach .ppop .pnf-t{font-size:1.45rem!important;margin:0 24px 2px!important}#coach .ppop .pnf-h{font-size:1.1rem!important}#coach .ppop .pnf-s{margin:0 0 8px!important;font-size:.85rem!important}
+#coach .ppop .pnf-pool{padding:5px 10px 6px!important;margin:0 0 8px!important}#coach .ppop .pnf-pool b{font-size:2rem!important}#coach .ppop .pnf-pool small,#coach .ppop .pnf-pool em{font-size:.8rem!important}
+#coach .ppop .pnf-vs{margin:0 34px 6px!important;gap:6px!important}#coach .ppop .pnf-vs figcaption{font-size:.75rem!important;padding:2px 10px!important}#coach .ppop .pnf-vs>span{font-size:1.1rem!important}
+#coach .ppop .pnf-r{font-size:1rem!important;margin:0 0 6px!important}#coach .ppop .pnf-k{font-size:.82rem!important;margin:0 0 6px!important;padding:3px 12px!important}#coach .ppop .pnf-sp{font-size:.78rem!important;margin:0 0 8px!important}
+#coach .ppop .pc-h{font-size:1.3rem!important;margin-bottom:6px!important}#coach .ppop .pc2-pool{margin-bottom:6px!important}#coach .ppop .pc2-pool>b{font-size:2rem!important}#coach .ppop .pc2-vs{margin:0 26px!important}
+#coach .ppop .pc2-vs img,#coach .ppop .pu-add{max-height:120px;aspect-ratio:1/1;width:100%;object-fit:cover}#coach .ppop .pc2-stake{margin:6px 0!important}#coach .ppop .pc2-me{margin-bottom:2px!important}#coach .ppop .pc2-st{font-size:1.2rem!important}#coach .ppop .pc2-how{margin:2px 0 8px!important;font-size:.76rem!important}
+#coach .ppop .pc-go{margin-top:0!important}#coach .ppop .pc-later{margin-top:2px!important}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('modes ok')
+
+# ---------- Coin buttons on one line ("Free challenge · 25"), pool coin icon inline, pops fit a 660px screen ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("const entryTxt = () => isCash() ? `$${LG_FEE}` : `Free · ${LG_COIN} 🟡`;","const entryTxt = () => isCash() ? `$${LG_FEE}` : `${LG_COIN} 🟡`;\nconst cLab = (l, f) => isCash() ? l : f;")
+RA("${VS_IC}${CH} now · ${entryTxt()}</button>","${VS_IC}${cLab(CH + ' now', 'Free ' + CH.toLowerCase())} · ${entryTxt()}</button>")
+RA("${VS_IC}${iHold ? 'Defend your blue ribbon' : rev ? 'Rematch' : 'Challenge now'} · ${entryTxt()}</button>","${VS_IC}${iHold ? cLab('Defend your blue ribbon', 'Free defence') : rev ? cLab('Rematch', 'Free rematch') : cLab('Challenge now', 'Free challenge')} · ${entryTxt()}</button>")
+RA("${VS_IC}Rematch · ${entryTxt()}</button>","${VS_IC}${cLab('Rematch', 'Free rematch')} · ${entryTxt()}</button>")
+RA("${VS_IC}${yg ? 'Battle' : 'Challenge'} again · ${entryTxt()}</button>","${VS_IC}${cLab((yg ? 'Battle' : 'Challenge') + ' again', 'Free ' + (yg ? 'battle' : 'challenge') + ' again')} · ${entryTxt()}</button>")
+s=s.replace('</style>',"""#coach .ppop{max-height:calc(100vh - 14px)!important;padding:10px 12px 8px!important}#coach:has(.ppop){padding-top:6px!important;padding-bottom:6px!important}
+#coach .ppop .pc-go{white-space:nowrap;font-size:1rem!important}.pc2-pool>b,.pnf-pool b,.pr3-pool>b{white-space:nowrap}.pc2-pool>b svg,.pnf-pool b svg,.pr3-pool>b svg,.pc2-pool>b .coin-ic svg{width:.62em!important;height:.62em!important;vertical-align:.08em!important}
+#coach .ppop .pnf-vs{margin:0 54px 4px!important}#coach .ppop .pnf-sp{line-height:1.3!important}#coach .ppop .pnf-k{margin-bottom:4px!important}
+#coach .ppop .pc-k{margin-top:0!important;font-size:.7rem!important}#coach .ppop .pc2-vs{margin:0 46px!important}#coach .ppop .pc2-vs figcaption{font-size:.85rem!important;margin-top:3px!important}#coach .ppop .pc2-vs small{font-size:.66rem!important}
+#coach .ppop .pc2-stake{display:flex!important;gap:6px!important}#coach .ppop .pc2-stake>div{flex:1;padding:4px 6px!important}#coach .ppop .pc2-stake b{font-size:.62rem!important}#coach .ppop .pc2-stake span{font-size:.72rem!important}
+#coach .ppop .pc2-me p{font-size:.8rem!important}#coach .ppop .pc-real{margin-top:4px!important;font-size:.85rem!important}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('modes2 ok')
