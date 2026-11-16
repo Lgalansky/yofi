@@ -1086,3 +1086,34 @@ RA("`you’re in · <b>${money(lgShare(k))}</b> so far`","`you’re in · about 
 s=s.replace('</style>',""".yd-est{margin:-6px 0 12px;text-align:center;font-size:.8rem;opacity:.75}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('your day ok')
+
+# ---------- First-time prize pool intro (newbies): simpler card, button above the fold; regular card after that ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("function potIntro(p) { potCard((p && CATS8.find(x => fitsTheme(p, x))) || CATS8[0]); }", r"""function potIntro(p) { const k = (p && CATS8.find(x => fitsTheme(p, x))) || CATS8[0], L = lgS(), H = lgHold(k), mine = lgMine(k);
+  if (!mine || H.h === 'you') { potCard(k); return; }
+  const opp = H.h, onVote = $('#panes').dataset.at === 'judge', cn = esc(crownName(k));
+  setTimeout(() => { openSheet(`<div class="pn"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
+    <span class="pn-new">New · Daily prize pools</span><h2 class="pn-h">Win real cash with your photo</h2>
+    <div class="pn-pool"><small>${gi(k)} Today’s ${cn} prize pool</small><b>$${Math.round(L.jp[k]).toLocaleString()}</b><em>⏱ Pays at midnight · <span data-wk>${dayLeft()}</span> left</em></div>
+    <ol class="pn-st"><li><span>1</span><p><b>Challenge for $2.</b> Your photo against another. Members vote.</p></li>
+      <li><span>2</span><p><b>Win ${LG_SHARE} to qualify.</b> Lose and you keep your stars.</p></li>
+      <li><span>3</span><p><b>Share 70% of the pool</b> at midnight. Most stars wins 30%.</p></li></ol>
+    <div class="pn-vs"><img src="${mine.src}" alt=""><span class="pn-x">VS</span><img src="${lgPhoto(opp, k)}" alt=""><p><b>You vs @${esc(opp)}</b><small>${CRW}holds the ${cn} blue ribbon</small></p></div>
+    <button class="btn block pc-go" id="pnGo">${VS_IC}Challenge now · $${LG_FEE}</button>
+    <div style="text-align:center"><button class="link pc-later" id="pnLater">${onVote ? (isYoungW() ? 'Keep judging' : 'Keep voting') : 'Not now'}</button></div></div>`);
+    $('#pnGo').onclick = () => { closeSheet(); lgPay(() => lgFight(k, opp, true)); };
+    $('#pnLater').onclick = () => closeSheet();
+    document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); }, 380); }""")
+s=s.replace('</style>',""".pn{position:relative;text-align:center;padding:4px 2px 2px}.pn-new{display:inline-block;margin:6px 0 6px;padding:4px 12px;border-radius:999px;font-size:.74rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.pn-h{margin:0 26px 10px;font-size:1.6rem;line-height:1.1}.pn-pool{border-radius:18px;padding:10px 12px;margin:0 0 12px}.pn-pool small{display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:.88rem}.pn-pool small svg{width:16px;height:16px}
+.pn-pool b{display:block;font-size:2.8rem;line-height:1.05;margin:2px 0}.pn-pool em{font-style:normal;font-size:.82rem;font-weight:700}
+.pn-st{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:8px;text-align:left}.pn-st li{display:flex;gap:10px;align-items:flex-start}.pn-st li>span{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:.85rem}.pn-st p{margin:2px 0 0;font-size:.92rem;line-height:1.35}
+.pn-vs{display:flex;align-items:center;gap:8px;border-radius:16px;padding:8px 10px;margin:0 0 12px;text-align:left}.pn-vs img{width:52px;height:52px;border-radius:12px;object-fit:cover;flex:none}.pn-x{font-weight:900;font-size:.8rem;flex:none}.pn-vs p{margin:0 0 0 4px;line-height:1.25}.pn-vs b{display:block;font-size:.92rem}.pn-vs small{font-size:.78rem}.pn-vs small .crw-ic{width:11px;height:14px;vertical-align:-2px;margin-right:3px}
+html:not(.yg) .pn-new{background:#FBC20A;color:#2B1D14}html:not(.yg) .pn-h{color:#1F2F55}html:not(.yg) .pn-pool{background:#E6F3E9;box-shadow:inset 0 0 0 2px #2F6B3F;color:#1F4A2B}html:not(.yg) .pn-pool b{color:#2F6B3F;font-family:"Fraunces",serif;font-weight:900}
+html:not(.yg) .pn-st li>span{background:#2D4E86;color:#fff}html:not(.yg) .pn-st p{color:#2B2320}html:not(.yg) .pn-vs{background:#FFF6DC;box-shadow:inset 0 0 0 1.5px #E5C77A;color:#2B2320}html:not(.yg) .pn-vs img{box-shadow:0 0 0 2px #2D4E86}
+html.yg .pn-new{background:#FFC93C;color:#1B0F33}html.yg .pn-h{color:#fff}html.yg .pn-pool{background:#0E3A2A;box-shadow:inset 0 0 0 2px #2EE59D;color:#C9FBE5}html.yg .pn-pool b{color:#2EE59D;font-family:"Bricolage Grotesque",sans-serif;font-weight:900}
+html.yg .pn-st li>span{background:#C13CFF;color:#fff}html.yg .pn-st p{color:#E9E2FF}html.yg .pn-vs{background:#241544;box-shadow:inset 0 0 0 1.5px #FFC93C;color:#E9E2FF}html.yg .pn-vs img{box-shadow:0 0 0 2px #C13CFF}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('newbie pot ok')
