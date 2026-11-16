@@ -1973,3 +1973,81 @@ for a,b in [("else if (S.btAlt) x = { ic: '🟡', t: `<b>Coin challenge</b> · w
             ("const bth = pickBattleTheme(), bme = fitFor(bth)[0], tn = thName(bth);","const bth = (!S.btAlt && S.nextBth) || pickBattleTheme(), bme = fitFor(bth)[0], tn = thName(bth); if (!S.btAlt) S.nextBth = null;")]:
     assert s.count(a)==1,a[:50]; s=s.replace(a,b)
 open(d+'yofi-simple.html','w').write(s); print('coin theme ahead ok')
+
+# ---------- Podium Pick: hourly, 5 photos, pick the crowd's 1st/2nd/3rd; coin or cash pool; voters decide ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+s=s.replace("function fcNotify() {",r"""const PP_COIN = 50, PP_CASH = 2, PP_DEMO = 120000, PP_MED = ['🥇', '🥈', '🥉'];
+const ppSlot = (t = Date.now()) => Math.floor(t / 3600e3);
+const ppOrd = n => n + (n % 10 === 1 && n % 100 !== 11 ? 'st' : n % 10 === 2 && n % 100 !== 12 ? 'nd' : n % 10 === 3 && n % 100 !== 13 ? 'rd' : 'th');
+function ppShuffle(a, r) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function ppGame(sl = ppSlot()) { const ks = CATS8.filter(k => k !== 'any'), k = ks[sl % ks.length], r = cpRng(sl * 13 + 7);
+  const pool = SEED.filter(x => x.src && x.cat === BATTLE_POOL[k]), list = ppShuffle((pool.length >= 5 ? pool : SEED.filter(x => x.src)).slice(), r);
+  const ph = list.slice(0, 5).map((x, i) => ({ src: x.src, h: (x.owner && x.owner.h) || QS_NAMES[(sl + i) % QS_NAMES.length] }));
+  const ord = ppShuffle([0, 1, 2, 3, 4], r), players = 140 + Math.floor(r() * 120) + Math.floor((Date.now() % 3600e3) / 60000) * 2;
+  return { sl, k, ph, ord, players, end: (sl + 1) * 3600e3 }; }
+const ppScore = (p, ord) => { const t = ord.slice(0, 3); return p.reduce((a, x, i) => a + (t[i] === x ? 10 : t.includes(x) ? 5 : 0), 0); };
+const ppPool = (n, cur) => cur === 'cash' ? `$${Math.round(n * PP_CASH * .8).toLocaleString()}` : `${Math.round(n * PP_COIN * .8).toLocaleString()} 🟡`;
+const ppDue = e => Math.min((e.sl + 1) * 3600e3, e.at + PP_DEMO);
+function ppOpen() { const g = ppGame(), e = (S.pp || {})[g.sl], cash = e ? e.cur === 'cash' : isCash(), y = isYoungW(), cn = esc(crownName(g.k)); let picks = e ? e.picks.slice() : [];
+  const draw = () => { const n3 = picks.length === 3;
+    popOpen(`<div class="pp"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
+      <p class="pp-k">🏅 Podium Pick · ${cn}</p><h2 class="pp-h">Pick the crowd’s top 3</h2>
+      <p class="pp-m"><b>${ppPool(g.players, cash ? 'cash' : 'gems')}</b> pool · ${g.players} players · closes ${frTime(g.end)}</p>
+      <div class="pp-g">${g.ph.map((p, i) => { const n = picks.indexOf(i); return `<button class="pp-t ${n >= 0 ? 'on' : ''}" data-pp="${i}" ${e ? 'disabled' : ''}><img src="${p.src}" alt="">${n >= 0 ? `<i class="pp-b">${PP_MED[n]}</i>` : ''}</button>`; }).join('')}</div>
+      <p class="pp-i">${e ? `✅ <b>You’re in.</b> Results at ${frTime(ppDue(e))} <small>(demo: about 2 min)</small>` : n3 ? 'Your podium is set. Tap a photo to change it.' : `Tap your <b>${['1st', '2nd', '3rd'][picks.length]}</b> place photo`}</p>
+      ${e ? '' : `<button class="btn block pc-go" id="ppGo" ${n3 ? '' : 'disabled'}>🏅 Enter · ${cash ? `$${PP_CASH}` : `${PP_COIN} 🟡`}</button>${cash ? '' : `<button class="btn block pc-real" id="ppReal" ${n3 ? '' : 'disabled'}>💵 Play for real · $${PP_CASH}</button>`}`}
+      <p class="pp-r">10 pts for each photo in the right place · 5 if it made the top 3 in a different place. Top 10% share the pool. ${y ? 'Judges' : 'Voters'} decide.</p>
+      <div style="text-align:center"><button class="link pc-later" id="ppLater">${$('#panes').dataset.at === 'judge' ? (y ? 'Keep judging' : 'Keep voting') : 'Not now'}</button></div></div>`);
+    document.querySelectorAll('#coach [data-pp]').forEach(b => b.onclick = () => { const i = +b.dataset.pp, n = picks.indexOf(i); if (n >= 0) picks.splice(n, 1); else if (picks.length < 3) picks.push(i); draw(); });
+    const rec = cur => { S.pp = S.pp || {}; S.pp[g.sl] = { sl: g.sl, picks: picks.slice(), cur, at: Date.now(), players: g.players }; save(); toast('🏅 You’re in! Results soon.'); setTimeout(ppOpen, 300); };
+    if ($('#ppGo')) $('#ppGo').onclick = () => { if (picks.length < 3) return; if (cash) { popClose(); payCash(PP_CASH, 'Podium Pick', () => rec('cash')); return; }
+      if (S.gems < PP_COIN) { popClose(); runOut('gems', `You need ${PP_COIN - Math.floor(S.gems)} more coins`); return; } S.gems -= PP_COIN; paintGems(); rec('gems'); };
+    if ($('#ppReal')) $('#ppReal').onclick = () => { if (picks.length < 3) return; popClose(); payCash(PP_CASH, 'Podium Pick', () => rec('cash')); };
+    $('#ppLater').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); };
+  draw(); }
+function ppResult(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc = ppScore(e.picks, g.ord), n = e.players || g.players; let better = 0;
+  for (let i = 0; i < n - 1; i++) { const a = ppShuffle([0, 1, 2, 3, 4], r); if (r() < .45) { const w = a.indexOf(g.ord[0]); [a[0], a[w]] = [a[w], a[0]]; } if (ppScore(a.slice(0, 3), g.ord) > sc) better++; }
+  const rank = better + 1, paid = Math.max(3, Math.ceil(n * .1)), win = rank <= paid, net = n * (e.cur === 'cash' ? PP_CASH : PP_COIN) * .8;
+  const prize = win ? (e.cur === 'cash' ? +(net / paid).toFixed(2) : Math.round(net / paid)) : 0, amt = e.cur === 'cash' ? money(prize) : `${prize.toLocaleString()} 🟡`;
+  Object.assign(e, { done: 1, score: sc, rank, prize }); if (prize) { if (e.cur === 'cash') { S.cash = +((S.cash || 0) + prize).toFixed(2); paintWallet(); } else { S.gems += prize; paintGems(); } } save();
+  const top = g.ord.slice(0, 3), mk = (p, i) => top[i] === p ? '✅' : top.includes(p) ? '↕️' : '❌', y = isYoungW();
+  popOpen(`<div class="pp"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
+    <p class="pp-k">🏅 Podium Pick · ${esc(crownName(g.k))} · results</p><h2 class="pp-h">${prize ? `You won ${amt}!` : `${sc} points`}</h2>
+    <p class="pp-m"><b>${sc} points</b> · ${ppOrd(rank)} of ${n}${prize ? '' : ` · top ${paid} paid`}</p>
+    <div class="pp-cmp"><small>Crowd’s top 3</small><div>${top.map((p, i) => `<figure><img src="${g.ph[p].src}" alt=""><i>${PP_MED[i]}</i></figure>`).join('')}</div>
+      <small>Your picks</small><div>${e.picks.map((p, i) => `<figure><img src="${g.ph[p].src}" alt=""><i>${mk(p, i)}</i></figure>`).join('')}</div></div>
+    <p class="pp-r">✅ right place · ↕️ in the top 3, different place · ❌ not in the top 3</p>
+    <button class="btn block pc-go" id="ppOk">${y ? 'Keep judging' : 'Keep voting'}</button></div>`);
+  if (prize) setTimeout(() => e.cur === 'cash' ? cashExplosion && cashExplosion(prize, { label: 'Podium Pick' }) : gemExplosion(prize, { label: 'Podium Pick' }), 500);
+  $('#ppOk').onclick = () => { popClose(); go('judge'); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
+setInterval(() => { if (!S || !S.pp || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return; const now = Date.now();
+  const e = Object.values(S.pp).find(x => !x.done && now >= ppDue(x)); if (e) ppResult(e); }, 3000);
+const ppRowHTML = () => { if (!S || S.geoBlock) return ''; const g = ppGame(), e = (S.pp || {})[g.sl], cash = e ? e.cur === 'cash' : isCash();
+  return `<button class="tsr2 pprow ${e ? 'in' : ''}" id="ppRow"><span class="tsr2-t"><span class="fr-tag pp-tag">${e ? 'YOU’RE IN ✓' : 'PODIUM PICK'}</span><b>${tLeft(g.end)}</b></span><span class="tsr2-p">${ppPool(g.players, cash ? 'cash' : 'gems')}</span><span class="tsr2-n"><small>Pick top 3</small></span><span class="tsr2-e">${e ? 'View' : cash ? `$${PP_CASH}` : `${PP_COIN} 🟡`}</span></button>`; };
+document.addEventListener('click', e => { if (e.target.closest('#ppRow')) { e.preventDefault(); e.stopPropagation(); ppOpen(); } }, true);
+function fcNotify() {""",1)
+RA('<div class="tsl2" data-tfl="${TF}">${chRowHTML()}${frRows}${rows}</div>','<div class="tsl2" data-tfl="${TF}">${ppRowHTML()}${chRowHTML()}${frRows}${rows}</div>')
+# Coming up: Podium Pick in its last 20 minutes, if not entered
+RA("return it.sort((p, q) => p.need - q.need)[0] || null; }",
+   "{ const g = ppGame(), m = Math.ceil((g.end - Date.now()) / 60000); if (S.potSeen && !(S.pp || {})[g.sl] && m <= 20) return { ic: '🏅', t: `<b>Podium Pick · ${esc(crownName(g.k))}</b> · pick the top 3`, k: 'p', need: 0, per: 1, mins: m }; }\n  return it.sort((p, q) => p.need - q.need)[0] || null; }")
+RA("function upNow() { const x = upNext(); if (!x) return;","function upNow() { const x = upNext(); if (!x) return; if (x.k === 'p') { ppOpen(); return; }")
+RA('<em>${x.need ? `in ${x.need} vote${x.need === 1 ? \'\' : \'s\'}` : \'Now\'}</em>','<em>${x.k === \'p\' ? `${x.mins} min left` : x.need ? `in ${x.need} vote${x.need === 1 ? \'\' : \'s\'}` : \'Now\'}</em>')
+s=s.replace('</style>',""".pp{position:relative;text-align:center;padding:4px 2px 2px}.pp-k{margin:22px 30px 2px;font-size:.74rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.pp-h{margin:0 0 4px;font-size:1.5rem;line-height:1.15}
+.pp-m{margin:0 0 10px;font-size:.88rem}.pp-g{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:0 0 8px}.pp-t{grid-column:span 2;position:relative;border:0;padding:0;border-radius:14px;overflow:hidden;cursor:pointer;background:none}.pp-t:nth-child(4){grid-column:2/span 2}.pp-t:nth-child(5){grid-column:4/span 2}
+.pp-t img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}.pp-t.on img{filter:brightness(.82)}.pp-b{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-style:normal;font-size:2.2rem;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));animation:qsPlus .35s ease-out}
+.pp-i{margin:0 0 10px;font-size:.92rem;min-height:1.3em}.pp-i small{opacity:.7}.pp-r{margin:8px 0 4px;font-size:.76rem;line-height:1.4;opacity:.85}.pp .pc-go,.pp .pc-real{text-transform:none!important}
+.pp-cmp{text-align:left;margin:0 0 4px}.pp-cmp small{display:block;font-size:.72rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;margin:6px 0 4px;opacity:.75}.pp-cmp>div{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pp-cmp figure{margin:0;position:relative}.pp-cmp img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;display:block}.pp-cmp figure i{position:absolute;right:4px;top:4px;font-style:normal;font-size:1.3rem;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+html:not(.yg) .pp-k{color:#2F6B3F}html:not(.yg) .pp-h{color:#1F2F55;font-family:"Fraunces",serif}html:not(.yg) .pp-m,html:not(.yg) .pp-i,html:not(.yg) .pp-r{color:#2B2320}html:not(.yg) .pp-m b{color:#2F6B3F}html:not(.yg) .pp-t{box-shadow:0 0 0 2px #E6D9C4}html:not(.yg) .pp-t.on{box-shadow:0 0 0 3px #D9A441}
+html.yg .pp-k{color:#2EE59D}html.yg .pp-h{color:#fff}html.yg .pp-m,html.yg .pp-i,html.yg .pp-r{color:#E9E2FF}html.yg .pp-m b{color:#2EE59D}html.yg .pp-t{box-shadow:0 0 0 2px #3A2766}html.yg .pp-t.on{box-shadow:0 0 0 3px #FFC93C}
+.tsr2.pprow .pp-tag{background:#2D4E86!important;color:#fff!important}html.yg .tsr2.pprow .pp-tag{background:#C13CFF!important}.tsr2.pprow .tsr2-n small{font-size:.72rem;font-weight:800;line-height:1.1;text-align:center}
+html:not(.yg) .tsr2.pprow{background:#EEF2FA!important;box-shadow:inset 0 0 0 1.5px #2D4E86!important}html.yg .tsr2.pprow{background:#24164A!important;box-shadow:inset 0 0 0 1.5px #C13CFF!important}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('podium ok')
+s=open(d+'yofi-simple.html').read(); a="${e ? 'YOU’RE IN ✓' : 'PODIUM PICK'}</span>"; assert s.count(a)==1
+s=s.replace(a,"${e ? 'IN ✓' : '🏅 PODIUM'}</span>")
+s=s.replace('</style>','.tsr2.pprow .pp-tag{white-space:nowrap}.tsr2.pprow .tsr2-p{white-space:nowrap}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('pp tag ok')
+s=open(d+'yofi-simple.html').read(); s=s.replace('</style>','.tsr2.pprow .tsr2-t{flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;gap:2px!important}.tsr2.pprow .pp-tag{display:inline-block!important;font-size:.6rem!important;font-weight:900!important;line-height:1.3!important;padding:2px 7px!important;border-radius:6px!important;letter-spacing:.04em!important}.tsr2.pprow .tsr2-t b{font-size:1rem}\n</style>',1); open(d+'yofi-simple.html','w').write(s); print('pp row ok')
