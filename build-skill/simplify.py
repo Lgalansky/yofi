@@ -1635,3 +1635,43 @@ RA("if ($('#frpGo')) $('#frpGo').onclick = () => { const p = S.photos.find(x => 
    "if ($('#frpGo')) $('#frpGo').onclick = () => { const p = S.photos.find(x => x.id === sel); if (!p) return; if (p.s.total < FR_MIN) { closeSheet(); S.cur = p.id; save(); WALL = false; go('studio'); renderStudio(); toast(`Touch up to ${FR_MIN}+, then enter the Freeroll`); return; }")
 s=s.replace('</style>','html:not(.yg) .fe-go.fe-tu{background:#2F6B3F!important}html.yg .fe-go.fe-tu{background:linear-gradient(95deg,#FFB21C,#FF7A00)!important;color:#1B0F33!important}.fe-t.low.sel .fe-ck{display:grid}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('fe low ok')
+
+# ---------- Pot challenge result in the user's format ----------
+s=open(d+'yofi-simple.html').read()
+a=s.index("$('#lb').innerHTML = `<div class=\"pz pz2 ${won ? 'w' : 'l'}\">"); b=s.index("paintWallet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'battle') renderGallery();", a)
+s=s[:a]+r"""const yg = isYoungW(), ST = yg ? 'points' : 'stars', mg = Math.abs(mv - tv), cfB = won ? '<div class="wr-cf" aria-hidden="true">' + [...Array(10)].map((_, i) => `<i style="left:${(i * 37) % 95}%;animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('') + '</div>' : '';
+      const H1 = won ? `Won by ${mg} vote${mg === 1 ? '' : 's'}` : `Lost by ${mg} vote${mg === 1 ? '' : 's'}`;
+      const sub2 = took ? `Your photo takes the ${cn} ${yg ? 'crown' : 'blue ribbon'}.` : kept ? `You keep the ${cn} ${yg ? 'crown' : 'blue ribbon'}.` : won ? `+${g} ${g > 1 ? ST : ST.slice(0, -1)} towards today’s pool.` : lostCrown ? `@${esc(h)} takes your ${yg ? 'crown' : 'blue ribbon'}.` : `@${esc(h)} keeps the ${yg ? 'crown' : 'blue ribbon'}.`;
+      const hold = lgHold(k).h, fig = (img, nm, v, w, rb) => `<figure class="${w ? 'win' : ''}"><div class="pr3-im"><img src="${img}" alt="">${rb ? rib : ''}</div><figcaption>${nm}</figcaption><em class="pr3-wb">${w ? 'Winner' : ''}</em><strong>${v} vote${v === 1 ? '' : 's'}</strong></figure>`;
+      const star = on => `<svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z" class="${on ? 'on' : ''}"/></svg>`;
+      $('#lb').innerHTML = `<div class="pr3 ${won ? 'w' : 'l'}"><button class="pz-xx" data-shclose aria-label="Close">${QS_X}</button>${cfB}
+        <span class="pr3-k">${cn}</span><h1 class="pr3-h">${H1}</h1><p class="pr3-s">${sub2}</p>
+        <div class="pr3-vs">${fig(me.src, 'You', mv, won, hold === 'you')}<span class="pr3-x">VS</span>${fig(src, '@' + esc(h), tv, !won, hold === h)}</div>
+        <div class="pr3-bar"><i style="width:${pm}%"><b>${pm}%</b></i><i style="width:${100 - pm}%"><b>${100 - pm}%</b></i></div><p class="pr3-n">${N} votes</p>
+        <div class="pr3-pool"><small>Prize pool</small><b>$${Math.round(L.jp[k]).toLocaleString()}</b>
+          <div class="pr3-st">${[...Array(LG_SHARE)].map((_, j) => star(j < y)).join('')}</div>
+          <p><b>${Math.min(y, LG_SHARE)}/${LG_SHARE} ${ST}</b> · ${need ? `${need} win${need === 1 ? '' : 's'} to qualify` : `you’re in · about <b>${money(lgShare(k))}</b>`}</p>
+          <span>70% shared equally by players with ${LG_SHARE}+ ${ST}.<br>Pays at midnight.</span></div>
+        ${!won ? (me.retired ? `<div class="pz2-ret"><b>📷 This photo has retired</b><span>${PH_LIVES} losses. Upload a new ${cn.toLowerCase()} photo to keep going for today’s pool. Your ${ST} stay.</span><button class="btn block" id="lbNew">📷 Upload a new photo</button></div>` : `<p class="pr3-lv">${livesHTML(me)} <b>${livesLeft(me)} li${livesLeft(me) === 1 ? 'fe' : 'ves'} left</b> on this photo</p>`) : ''}
+        ${!won && !me.retired ? `<button class="btn block pr3-go" id="lbTip">✨ ${yg ? 'Enhance' : 'Touch up'} photo</button><button class="btn block pr3-alt" id="lbRev">${VS_IC}Rematch · $${LG_FEE}</button>` : won ? `<button class="btn block pr3-go" id="lbMore">${VS_IC}${yg ? 'Battle' : 'Challenge'} again · $${LG_FEE}</button>` : ''}
+        <div style="text-align:center"><button class="link pz-back" data-shclose>${onVote ? (yg ? 'Keep judging' : 'Keep voting') : 'Back to challenges'}</button></div></div>`;
+      """+s[b:]
+s=s.replace('</style>',""".pr3{position:relative;text-align:center;padding:6px 2px 4px}.pr3-k{display:inline-block;padding:5px 18px;border-radius:999px;font-weight:800;font-size:.95rem}
+.pr3-h{margin:10px 0 2px;font-size:2.2rem;line-height:1.05}.pr3-s{margin:0 0 14px;font-size:1rem}
+.pr3-vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:10px}.pr3-vs figure{margin:0}.pr3-im{position:relative}.pr3-im img{width:100%;aspect-ratio:1/1!important;height:auto!important;object-fit:cover;border-radius:18px;display:block}
+.pr3-im .pz-rib{position:absolute;right:-8px;top:-12px}.pr3-vs figcaption{margin-top:8px;font-weight:800;font-size:1.05rem}.pr3-wb{display:inline-block;min-height:22px;margin-top:3px;padding:1px 14px;border-radius:999px;font-style:normal;font-weight:900;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase}
+.pr3-vs figure:not(.win) .pr3-wb{background:none!important}.pr3-vs strong{display:block;font-size:1.8rem;line-height:1.1;margin-top:2px}.pr3-x{align-self:center;margin-top:-60px;font-weight:900;font-size:1.4rem}
+.pr3-bar{display:flex;height:30px;border-radius:999px;overflow:hidden;margin:14px 0 4px}.pr3-bar i{display:flex;align-items:center;padding:0 14px;min-width:54px;box-sizing:border-box}.pr3-bar i:last-child{justify-content:flex-end}.pr3-bar b{color:#fff;font-size:1rem}
+.pr3-n{margin:0 0 12px;font-size:.92rem}.pr3-pool{border-radius:18px;padding:12px 14px;margin:0 0 12px}.pr3-pool>small{display:block;font-size:.85rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.pr3-pool>b{display:block;font-size:2.6rem;line-height:1.1}
+.pr3-st{display:flex;justify-content:center;gap:10px;margin:4px 0}.pr3-st path{fill:none;stroke:#E2A92B;stroke-width:1.6;stroke-linejoin:round}.pr3-st path.on{fill:#FBC20A;stroke:#E2A92B}
+.pr3-pool p{margin:2px 0 4px;font-size:1rem}.pr3-pool>span{display:block;font-size:.85rem;line-height:1.4}.pr3-lv{margin:0 0 12px;font-size:.95rem}.pr3-go,.pr3-alt{text-transform:none!important}.pr3-alt{margin-top:10px}
+html:not(.yg) .pr3-k{background:#1F2F55;color:#fff}html:not(.yg) .pr3-h,html:not(.yg) .pr3-vs strong,html:not(.yg) .pr3-pool>b,html:not(.yg) .pr3-pool p b{color:#2B1D14;font-family:"Fraunces",serif}html:not(.yg) .pr3-s,html:not(.yg) .pr3-n,html:not(.yg) .pr3-lv{color:#2B2320}
+html:not(.yg) .pr3-im img{box-shadow:0 0 0 3px #2D4E86}html:not(.yg) .pr3-wb{background:#1F2F55;color:#fff}html:not(.yg) .pr3-x,html:not(.yg) .pr3-vs figcaption{color:#2B1D14}
+html:not(.yg) .pr3-bar i:first-child{background:#6B86B8}html:not(.yg) .pr3-bar i:last-child{background:#1F3F8F}html:not(.yg) .pr3.w .pr3-bar i:first-child{background:#1F3F8F}html:not(.yg) .pr3.w .pr3-bar i:last-child{background:#6B86B8}
+html:not(.yg) .pr3-pool{background:#fff;box-shadow:inset 0 0 0 2px #E5C77A;color:#2B2320}html:not(.yg) .pr3-pool>small{color:#5B4E45}html:not(.yg) .pr3-go{background:#1F3F8F!important;color:#fff!important}
+html:not(.yg) .pr3-alt{background:#fff!important;color:#1F3F8F!important;box-shadow:inset 0 0 0 2px #1F3F8F!important}
+html.yg .pr3-k{background:#FFC93C;color:#1B0F33}html.yg .pr3-h,html.yg .pr3-vs strong,html.yg .pr3-pool>b,html.yg .pr3-x,html.yg .pr3-vs figcaption{color:#fff}html.yg .pr3-s,html.yg .pr3-n,html.yg .pr3-lv{color:#C9B8FF}
+html.yg .pr3-im img{box-shadow:0 0 0 3px #C13CFF}html.yg .pr3-wb{background:#FFC93C;color:#1B0F33}html.yg .pr3-bar i:first-child{background:#6A4FA0}html.yg .pr3-bar i:last-child{background:#FF3FA4}html.yg .pr3.w .pr3-bar i:first-child{background:#FF3FA4}html.yg .pr3.w .pr3-bar i:last-child{background:#6A4FA0}
+html.yg .pr3-pool{background:#1B0F33;box-shadow:inset 0 0 0 2px #FFC93C;color:#E9E2FF}html.yg .pr3-pool>small{color:#C9B8FF}html.yg .pr3-alt{background:transparent!important;color:#fff!important;box-shadow:inset 0 0 0 2px #C13CFF!important}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('pr3 ok')
