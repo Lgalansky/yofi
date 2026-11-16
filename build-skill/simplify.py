@@ -988,3 +988,19 @@ RA("Everyone with 3+ stars shares the other 50%, by stars.","Everyone with 3+ st
 RA("'you’re sharing the pool · more stars, bigger share'","`you’re in · an equal share with ${lgQn(k) - 1} others`")
 RA("⭐ ${LG_SHARE}+ stars share <b>50%</b></p>","⭐ ${LG_SHARE}+ stars share <b>50%</b> equally</p>")
 open(d+'yofi-simple.html','w').write(s); print('equal ok')
+
+# ---------- Prize pools: 20% rake (80c of $1 to the pool); most stars wins 30%, 3+ stars share 70% equally ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a)); s=s.replace(a,b)
+RA("LG_KING = .5, LG_CUT = .85; // every $1 battle: 85¢ to today's pot, 15¢ house.","LG_KING = .3, LG_CUT = .8; // every $1 challenge: 80¢ to today's pot, 20¢ house. Most stars 30%, 3+ stars share 70%.")
+RA("<b>85¢</b> goes into that category’s daily cash pot.","<b>80¢</b> goes into that category’s daily cash pot.")
+RA("wins <b>50%</b> of the pot.</p>","wins <b>30%</b> of the pot.</p>")
+RA("shares the other <b>50%</b> equally.</p>","share the other <b>70%</b> equally.</p>")
+RA("🏆 Most stars wins 50% · 3+ stars share 50%","🏆 Most stars wins 30% · 3+ stars share 70%")
+RA("· <b>+1 star</b> · 85¢ goes into today’s pot","· <b>+1 star</b> · 80¢ goes into today’s pot")
+RA("At midnight the highest score takes 50% of the pot. Everyone with 3+ stars shares the other 50% equally.","At midnight the most stars takes 30% of the pot. Everyone with 3+ stars shares the other 70% equally.")
+RA("🏆 Most stars wins <b>50%</b> · ⭐ ${LG_SHARE}+ stars share <b>50%</b> equally","🏆 Most stars wins <b>30%</b> · ⭐ ${LG_SHARE}+ stars share <b>70%</b> equally")
+RA("every $1 challenge adds 85c","every $1 challenge adds 80c")
+RA("${frSt() === 1 ? '85¢' : money(.85 * frSt())} goes into the club pot","${frSt() === 1 ? '80¢' : money(.8 * frSt())} goes into the club pot")
+open(d+'yofi-simple.html','w').write(s); print('split ok')
