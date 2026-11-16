@@ -1426,3 +1426,18 @@ s=open(d+'yofi-simple.html').read()
 for a,b in [("· one coin entry an hour</p>","· one ${isYoungW() ? 'gem' : 'coin'} entry an hour</p>"),("You’ve used this hour’s coin entry.","You’ve used this hour’s ${isYoungW() ? 'gem' : 'coin'} entry.")]:
     assert s.count(a)==1,a; s=s.replace(a,b)
 open(d+'yofi-simple.html','w').write(s); print('gem words ok')
+
+# ---------- Freeroll entry: choose which Freeroll (time, countdown, prizes); entered ones marked ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA('<div class="ug frp frp2"><h2>Enter the ${frTime(f.start)} Freeroll</h2>',
+   """<div class="ug frp frp2"><h2>Enter a Freeroll</h2><p class="frw-l">Which Freeroll?</p><div class="frw">${frSlots().map(x => { const inn = (S.frE || {})[x.id]; return `<button data-frs="${x.id}" ${inn ? 'disabled' : ''} aria-pressed="${x.id === f.id}"><b>${frTime(x.start)}</b><small>${inn ? '✓ You’re in' : `starts in ${frIn(x.start - Date.now())}`}</small></button>`; }).join('')}</div><p class="frw-d">🏆 <b>${frTime(f.start)} Freeroll</b> · photos ranked at ${frTime(f.start)} · final vote at ${frTime(f.fin)} · prizes $${FR_PRIZE.join(' · $')}</p>""")
+RA("$('#frpBack').onclick = () => closeSheet();","$('#frpBack').onclick = () => closeSheet();\n  document.querySelectorAll('#sheetBody [data-frs]').forEach(b => b.onclick = () => { if (b.disabled) return; const x = frSlots().find(z => z.id === b.dataset.frs); if (x && x.id !== f.id) frEnter(x); });")
+s=s.replace('</style>',""".frw-l{margin:2px 0 6px;font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.75}.frw{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 8px}
+.frw button{border:0;border-radius:12px;padding:7px 2px;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px}.frw b{font-size:.9rem;white-space:nowrap}.frw small{font-size:.66rem;font-weight:700;white-space:nowrap}.frw button[disabled]{cursor:default}
+.frw-d{margin:0 0 8px;font-size:.82rem;line-height:1.35}
+html:not(.yg) .frw button{background:#fff;box-shadow:inset 0 0 0 1.5px #E6D9C4;color:#2B2320}html:not(.yg) .frw button[aria-pressed="true"]{background:#FFF6DC;box-shadow:inset 0 0 0 2.5px #D9A441}html:not(.yg) .frw button[disabled]{background:#E6F3E9;box-shadow:inset 0 0 0 1.5px #2F6B3F;color:#1F4A2B}html:not(.yg) .frw-d{color:#2B2320}
+html.yg .frw button{background:#241544;color:#E9E2FF}html.yg .frw button[aria-pressed="true"]{background:#3A2A0A;box-shadow:inset 0 0 0 2.5px #FFC93C}html.yg .frw button[disabled]{background:#0E3A2A;color:#2EE59D}html.yg .frw-d{color:#E9E2FF}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('fr when ok')
