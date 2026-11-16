@@ -1441,3 +1441,27 @@ html:not(.yg) .frw button{background:#fff;box-shadow:inset 0 0 0 1.5px #E6D9C4;c
 html.yg .frw button{background:#241544;color:#E9E2FF}html.yg .frw button[aria-pressed="true"]{background:#3A2A0A;box-shadow:inset 0 0 0 2.5px #FFC93C}html.yg .frw button[disabled]{background:#0E3A2A;color:#2EE59D}html.yg .frw-d{color:#E9E2FF}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('fr when ok')
+
+# ---------- Tournaments filter (All · Freerolls · Cash · Coins); coin entry opens Freerolls; entry sheet without time chips ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA("const frRows = frSlots().slice(0, 2)","const TF = window.__tFil || 'all', frRows = frSlots().slice(0, TF === 'fr' ? 4 : 2)")
+RA('<div class="tsh-c"><span>Starts in</span><span>Prize</span><span>Players</span><span>Entry</span></div><div class="tsl2">${chRowHTML()}${frRows}${rows}</div>',
+   '<div class="tfil" role="tablist">${[[\'all\', \'All\'], [\'fr\', \'🎟️ Freerolls\'], [\'cash\', \'💵 Cash\'], [\'gem\', `${gemIcon(\'\')} ${isYoungW() ? \'Gems\' : \'Coins\'}`]].map(([k, l]) => `<button role="tab" data-tf="${k}" aria-selected="${TF === k}">${l}</button>`).join(\'\')}</div><div class="tsh-c"><span>Starts in</span><span>Prize</span><span>Players</span><span>Entry</span></div><div class="tsl2" data-tfl="${TF}">${chRowHTML()}${frRows}${rows}</div>')
+# remove the time chips inside the entry sheet; keep the one-line summary
+a=s.index('<p class="frw-l">Which Freeroll?</p>'); b=s.index('<p class="frw-d">', a); s=s[:a]+s[b:]
+RA('<div class="ug frp frp2"><h2>Enter a Freeroll</h2>','<div class="ug frp frp2"><h2>Enter the ${frTime(f.start)} Freeroll</h2>')
+# coin entry → Tournaments filtered to Freerolls
+RA("function swapTicket() { if ($('#sheet').classList.contains('on')) closeSheet(); setTimeout(() => frEnter(frNext()), 350); return;",
+   "function swapTicket() { if ($('#sheet').classList.contains('on')) closeSheet(); window.__tFil = 'fr'; setTimeout(() => { openComps(); setTimeout(() => { const r = document.querySelector('.frrow:not(.in)'); if (r) { r.scrollIntoView({ block: 'center' }); r.classList.add('pulse'); } }, 300); }, 350); return;")
+RA("<b>Enter the ${frTime(frNext().start)} Freeroll</b>","<b>Enter a Freeroll</b>")
+s=s.replace("function fcNotify() {",r"""document.addEventListener('click', e => { const t = e.target.closest('[data-tf]'); if (!t) return; e.preventDefault(); window.__tFil = t.dataset.tf; const sc = $('#flowBody') ? $('#flowBody').scrollTop : 0; openComps(); if ($('#flowBody')) $('#flowBody').scrollTop = sc; });
+function fcNotify() {""",1)
+s=s.replace('</style>',""".tfil{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:10px 0 4px}.tfil button{border:0;border-radius:999px;padding:7px 12px;font:inherit;font-size:.85rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px}.tfil button svg{width:1em;height:1em}
+.tsl2[data-tfl="fr"]>:not(.frrow),.tsl2[data-tfl="cash"]>.frrow,.tsl2[data-tfl="cash"]>.gemt,.tsl2[data-tfl="gem"]>:not(.gemt){display:none!important}
+html:not(.yg) .tfil button{background:#fff;box-shadow:inset 0 0 0 1.5px #E6D9C4;color:#2B2320}html:not(.yg) .tfil button[aria-selected="true"]{background:#2D4E86;color:#fff;box-shadow:none}
+html.yg .tfil button{background:#241544;color:#E9E2FF}html.yg .tfil button[aria-selected="true"]{background:linear-gradient(95deg,#FF3FA4,#8B3CFF);color:#fff}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('t filter ok')
+s=open(d+'yofi-simple.html').read(); a="|| ($('#flow').classList.contains('on') && !$('#flow').classList.contains('astab'))) { if (!gnOpen.n)"; assert s.count(a)==1; s=s.replace(a,"|| $('#flow').classList.contains('on')) { if (!gnOpen.n)"); open(d+'yofi-simple.html','w').write(s); print('no coin pop over tournaments ok')
