@@ -641,7 +641,7 @@ function sprDone(id, right, ms) { const O = qsOpp(id), pr = window.__qsPractice,
   c.innerHTML = `<div class="cpr qs2 qs2-res ${won ? 'won' : 'lost'}" role="dialog" aria-modal="true"><button class="qs2-x" id="qsX" aria-label="Close">${QS_X}</button>
     <h2 class="qs2-t big">Round complete</h2><p class="qs2-sub" id="qsHead">${won ? (pr ? `You won ${pay} ${gemIcon('')}` : `You beat @${esc(O.h)}!`) : `@${esc(O.h)} took this one`}</p>
     <table class="qs2-tb"><thead><tr><th></th><th>Player</th><th>Correct</th><th>Time</th><th>Reward</th></tr></thead><tbody>${all.map((x, j) => `<tr class="${x.me ? 'me' : ''}"><td>${j + 1}</td><td>${x.me ? 'You' : '@' + esc(x.h)}</td><td>${x.sc}/${SPR_N}</td><td>${(x.ms / 1000).toFixed(1)}s</td><td class="rw">${rw(x)}</td></tr>`).join('')}</tbody></table>
-    ${box}<button class="bt-cta qs2-go" id="qsAgain">${pr ? 'Play for real cash' : `Play again · ${qsM(st)}`}</button><button class="bt-no" id="cpBack">Keep voting</button></div>`;
+    ${box}<button class="bt-cta qs2-go" id="qsAgain">${pr ? 'Play for cash' : `Play again · ${qsM(st)}`}</button><button class="bt-no" id="cpBack">Keep voting</button></div>`;
   if (won && !pr) setTimeout(() => cashExplosion && cashExplosion(pay, { label: 'Quick Sprint' }), 400);
   const shut = () => c.classList.remove('on', 'cr');
   $('#qsAgain').onclick = () => { shut(); pr ? sprEnter() : sprEnter(st); }; $('#cpBack').onclick = shut; $('#qsX').onclick = shut; }"""+s[k:]
@@ -789,3 +789,11 @@ html.yg .pc-two{background:#241544;box-shadow:inset 0 0 0 1.5px #FFC93C;color:#E
 html.yg .pz-pool{background:#1B0F33;box-shadow:inset 0 0 0 1.5px #3A2766;color:#E9E2FF}html.yg .pz-sub{color:#C9B8FF}html.yg .pz-lost{color:#FF7A9A}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('pot card ok')
+
+# ---------- Progress bars: one solid gold everywhere; coin icons next to amounts smaller ----------
+s=open(d+'yofi-simple.html').read()
+s=s.replace('</style>',""".en-bar i,.aset-bar i,.pbar i,.rv-bar>i>i,.stk-fill,.ut0-bar i{background:#FBC20A!important;box-shadow:inset 0 -2px 0 rgba(160,110,0,.25)}
+.qs2-prize svg{width:.55em!important;height:.55em!important;vertical-align:.1em!important;margin-left:4px}
+.qs-chip em svg,.qs2-tb .rw svg,.qs2-sub svg,.qs-res h2 svg,#crGo svg,svg[class=""]{width:.8em!important;height:.8em!important;vertical-align:-.05em!important}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('gold ok')
