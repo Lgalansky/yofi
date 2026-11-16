@@ -1117,3 +1117,67 @@ html.yg .pn-new{background:#FFC93C;color:#1B0F33}html.yg .pn-h{color:#fff}html.y
 html.yg .pn-st li>span{background:#C13CFF;color:#fff}html.yg .pn-st p{color:#E9E2FF}html.yg .pn-vs{background:#241544;box-shadow:inset 0 0 0 1.5px #FFC93C;color:#E9E2FF}html.yg .pn-vs img{box-shadow:0 0 0 2px #C13CFF}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('newbie pot ok')
+
+# ---------- New Daily rewards (streak) pop from the user's design; Freeroll rows say clearly if you can enter or are in ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+i=s.index('function streakPop() {'); j=s.index('\nfunction ', i+10)
+old=s[i:j]; a0=old.index('const ART = ['); a1=old.index('];', a0)+2; ART=old[a0:a1]
+s=s[:i]+"function streakPop() {\n  const ds = dailyState(), n = Math.min(3, ds.D.sn || 0), done = ds.doneToday, st = ds.streak || 0, inToday = ds.D.last === ds.t, had = (ds.D.streak || 0) > 0 && !st, G = gemIcon('');\n  "+ART+r"""
+  const vw = isYoungW() ? 'Judge' : 'Vote', vd = isYoungW() ? 'judged' : 'voted';
+  const k = i => ds.D.got.includes(i) ? 'got' : i === ds.si ? 'now' : i < ds.si ? 'miss' : 'later';
+  const card = (nm, i) => { const q = k(i); return `<div class="dr-c ${q}"><small>${nm}</small><span class="dr-a">${q === 'got' ? '<b class="dr-ok">✓</b>' : q === 'miss' ? '<b class="dr-ms">✕</b>' : ART[i]}</span><em>${q === 'got' ? 'Done' : q === 'miss' ? 'Missed' : q === 'now' ? 'Now' : 'Later'}</em></div>`; };
+  const stLine = st ? `<b>${st}-day streak</b>${inToday ? '<span class="dr-pill ok">✓ Today complete</span>' : `<span class="dr-pill">${vw} 3 today</span>`}` : `<b>${had ? 'Your streak ended' : 'Start a streak'}</b><span class="dr-pill">${vw} 3 today</span>`;
+  const stSub = st ? (inToday ? 'Come back tomorrow to keep your streak.' : 'Vote on 3 photos today to keep it alive.') : 'Vote on 3 photos today to light your first 🔥';
+  const c = $('#coach');
+  c.innerHTML = `<div class="cpr dr" role="dialog" aria-modal="true" aria-labelledby="drT"><button class="qs2-x" id="drX" aria-label="Close">${QS_X}</button>
+    <p class="dr-k">Daily rewards</p>
+    ${done ? `<h2 class="dr-h" id="drT">${SESS[ds.si]} reward collected</h2><p class="dr-big ok">${G}+${STREAK_GEMS} coins ✓</p><span class="dr-when">${ds.si < 3 ? `Next reward from ${SESS_AT[ds.si + 1]}` : 'Next reward after midnight'}</span>`
+      : `<h2 class="dr-h" id="drT">Vote on 3 photos to earn</h2><p class="dr-big">${G}+${STREAK_GEMS} coins</p><span class="dr-when">${SESS[ds.si]} · available now</span>
+         <div class="dr-bars">${[0, 1, 2].map(x => `<i class="${x < n ? 'on' : ''}"></i>`).join('')}</div><p class="dr-n">${n} of 3 photos ${vd}</p>`}
+    <button class="bt-cta dr-go" id="drGo">⚖️ ${done ? `Keep ${isYoungW() ? 'judging' : 'voting'}` : n ? `${vw} ${3 - n} more` : `${vw} now`}</button>
+    <div class="dr-th"><b>Today’s rewards</b><span>${ds.gotToday} of 4 completed</span></div>
+    <div class="dr-g">${SESS.map(card).join('')}</div>
+    <p class="dr-note">Vote on 3 photos in each session to earn ${STREAK_GEMS} coins.</p>
+    <div class="dr-st"><span class="dr-fl">🔥</span><div><div class="dr-sl">${stLine}</div><small>${stSub}</small></div></div>
+    <button class="link dr-how" id="drHow">How it works</button>
+    <p class="dr-hw" id="drHw" hidden>There are 4 sessions a day: night (from midnight), morning (6am), afternoon (noon) and evening (6pm). Vote on 3 photos in a session to collect its coins. Vote on 3 photos on any day to add a day to your streak. Miss a day and the streak starts again.</p>
+    <button class="bt-no" id="drLater">Later</button></div>`;
+  c.classList.add('on', 'cr');
+  const close = () => c.classList.remove('on', 'cr');
+  $('#drGo').onclick = () => { close(); go('judge'); };
+  $('#drLater').onclick = $('#drX').onclick = close;
+  $('#drHow').onclick = () => { $('#drHw').hidden = !$('#drHw').hidden; };
+  c.onclick = e => { if (e.target === c) close(); };
+}"""+s[j:]
+# Freeroll rows: clear status
+RA("""<button class="tsr2 frrow ${e ? 'in' : ''}" data-frrow="${f.id}"><span class="tsr2-t"><span class="fr-tag">FREEROLL</span>""",
+   """<button class="tsr2 frrow ${e ? 'in' : nt ? 'can' : 'need'}" data-frrow="${f.id}"><span class="tsr2-t"><span class="fr-tag">${e ? 'YOU’RE IN ✓' : 'FREEROLL'}</span>""")
+RA("""<span class="tsr2-e">${e ? (e.bell ? '🔔 ✓' : '✓') : '🎟️ 1'}</span></button>`; }).join('');""",
+   """<span class="tsr2-e">${e ? (e.bell ? '🔔 On' : '🔔 Remind') : nt ? '🎟️ Enter' : '🔒 Ticket'}</span></button>`; }).join('');""")
+s=s.replace('</style>',""".dr{position:relative;text-align:center}.dr-k{margin:4px 30px 4px;font-size:.78rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase}.dr-h{margin:0;font-size:1.55rem;line-height:1.15}
+.dr-big{margin:2px 0 6px;font-size:2.4rem;font-weight:900;line-height:1.1}.dr-big svg{width:.85em!important;height:.85em!important;vertical-align:-.1em!important;margin-right:6px}
+.dr-when{display:inline-block;padding:4px 14px;border-radius:999px;font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.dr-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 10px 4px}.dr-bars i{height:12px;border-radius:999px}.dr-n{margin:0 0 10px;font-size:.88rem}
+.dr-go{margin-bottom:12px}.dr-th{display:flex;justify-content:space-between;align-items:baseline;margin:4px 2px 8px}.dr-th b{font-size:1.15rem}.dr-th span{font-weight:900;font-size:.95rem}
+.dr-g{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.dr-c{border-radius:14px;padding:8px 2px 6px;display:flex;flex-direction:column;align-items:center;gap:2px}.dr-c small{font-size:.74rem;font-weight:800}
+.dr-a{height:38px;display:grid;place-items:center}.dr-a svg{width:36px;height:36px}.dr-ok,.dr-ms{font-size:1.8rem;line-height:1}.dr-c em{font-style:normal;font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+.dr-note{margin:6px 0 10px;font-size:.8rem;opacity:.85}.dr-st{display:flex;align-items:center;gap:10px;text-align:left;padding-top:10px;border-top:1px solid rgba(127,113,103,.3)}.dr-fl{font-size:2rem}
+.dr-sl{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px}.dr-sl b{font-size:1.2rem}.dr-pill{padding:3px 10px;border-radius:999px;font-size:.76rem;font-weight:800}.dr-st small{font-size:.82rem}
+.dr-how{margin:8px auto 0;display:block}.dr-hw{font-size:.8rem;text-align:left;margin:6px 0 0;line-height:1.4}
+html:not(.yg) .dr-k{color:#5B4E45}html:not(.yg) .dr-h,html:not(.yg) .dr-th b,html:not(.yg) .dr-sl b{color:#2B1D14}html:not(.yg) .dr-big{color:#2D4E86;font-family:"Fraunces",serif}html:not(.yg) .dr-big.ok{color:#2F6B3F}
+html:not(.yg) .dr-when{background:#FFE9B0;color:#2B1D14}html:not(.yg) .dr-bars i{background:#F3EBDD;box-shadow:inset 0 0 0 1.5px #D8CCB6}html:not(.yg) .dr-bars i.on{background:#FBC20A;box-shadow:none}html:not(.yg) .dr-n,html:not(.yg) .dr-note,html:not(.yg) .dr-st small,html:not(.yg) .dr-hw{color:#5B4E45}
+html:not(.yg) .dr-th span{color:#2F6B3F}html:not(.yg) .dr-c{background:#FFFDF8;box-shadow:inset 0 0 0 1.5px #E6D9C4;color:#2B2320}html:not(.yg) .dr-c.now{background:#E3ECFA;box-shadow:inset 0 0 0 2.5px #2D4E86}html:not(.yg) .dr-c.now em{color:#1F2F55}
+html:not(.yg) .dr-c.miss{background:#EFEAE2;color:#5B4E45}html:not(.yg) .dr-ms{color:#5B4E45}html:not(.yg) .dr-ok{color:#2F9E55}html:not(.yg) .dr-c.later em{color:#7F7167;font-weight:700}html:not(.yg) .dr-c.got em{color:#2F6B3F}
+html:not(.yg) .dr-pill{background:#FFE9B0;color:#5B3A00}html:not(.yg) .dr-pill.ok{background:#DDF0E1;color:#1F4A2B}
+html.yg .dr-k{color:#C9B8FF}html.yg .dr-h,html.yg .dr-th b,html.yg .dr-sl b{color:#fff}html.yg .dr-big{color:#FFC93C;font-family:"Bricolage Grotesque",sans-serif}html.yg .dr-big.ok{color:#2EE59D}
+html.yg .dr-when{background:#3A2A0A;color:#FFC93C}html.yg .dr-bars i{background:#2A1A46}html.yg .dr-bars i.on{background:#FBC20A}html.yg .dr-n,html.yg .dr-note,html.yg .dr-st small,html.yg .dr-hw{color:#C9B8FF}
+html.yg .dr-th span{color:#2EE59D}html.yg .dr-c{background:#1E1236;box-shadow:inset 0 0 0 1.5px #3A2766;color:#E9E2FF}html.yg .dr-c.now{background:#2A1A46;box-shadow:inset 0 0 0 2.5px #FF3FA4}html.yg .dr-c.now em{color:#FF3FA4}
+html.yg .dr-c.miss{background:#160B2E;color:#8E7DB8}html.yg .dr-ms{color:#8E7DB8}html.yg .dr-ok{color:#2EE59D}html.yg .dr-c.got em{color:#2EE59D}html.yg .dr-c.later em{color:#8E7DB8}
+html.yg .dr-pill{background:#3A2A0A;color:#FFC93C}html.yg .dr-pill.ok{background:#0E3A2A;color:#2EE59D}
+.tsr2.frrow.in.in{box-shadow:inset 0 0 0 2.5px #2F9E55!important}html .tsr2.frrow.in .fr-tag.fr-tag{background:#2F9E55!important;color:#fff!important}html .tsr2.frrow.in .tsr2-e.tsr2-e{background:#fff!important;color:#2F6B3F!important;box-shadow:inset 0 0 0 2px #2F9E55}
+html .tsr2.frrow.need .tsr2-e.tsr2-e{background:#CFC6B8!important;color:#4A3F37!important}html.yg .tsr2.frrow.need .tsr2-e.tsr2-e.tsr2-e{background:#3A2766!important;color:#C9B8FF!important}
+.tsr2.frrow .tsr2-e{font-size:.9rem!important;white-space:nowrap}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('streak + freeroll ok')
