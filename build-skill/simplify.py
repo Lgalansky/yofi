@@ -797,3 +797,13 @@ s=s.replace('</style>',""".en-bar i,.aset-bar i,.pbar i,.rv-bar>i>i,.stk-fill,.u
 .qs-chip em svg,.qs2-tb .rw svg,.qs2-sub svg,.qs-res h2 svg,#crGo svg,svg[class=""]{width:.8em!important;height:.8em!important;vertical-align:-.05em!important}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('gold ok')
+
+# ---------- Category cards: the leader number is stars, not ribbons ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b):
+    global s; assert s.count(a)==1,(a[:80],s.count(a)); s=s.replace(a,b)
+RA("<span class=\"t\">${CRW}<b>${me ? 'You' : K.n}</b></span>","<span class=\"t\" aria-label=\"Top player has ${K.n} stars\"><span class=\"st-ic\">⭐</span><b>${K.n}</b></span>")
+RA("<em>${r.n} 🏅</em>","<em>${r.n} ⭐</em>")
+s=s.replace('</style>',""".bcc-pl .t .st-ic{font-style:normal;font-size:.9em;margin-right:3px}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('stars ok')
