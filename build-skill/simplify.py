@@ -1941,3 +1941,35 @@ a="b.className = 'ytag ' + (isCash() ? 'cash' : 'coin');"; assert s.count(a)==1
 s=s.replace(a,"b.className = 'ytag ' + (isCash() ? 'yt-cash' : 'yt-coin');")
 s=s.replace('</style>','html:not(.yg) .ytag.yt-coin{background:#FFF1C9;color:#5B3A00}html:not(.yg) .ytag.yt-cash{background:#DDF0E1;color:#1F4A2B}html.yg .ytag.yt-coin{background:#3A2A0A;color:#FFC93C}html.yg .ytag.yt-cash{background:#0E3A2A;color:#2EE59D}#wCash #modeTag{transform:none!important;animation:none!important;letter-spacing:0;white-space:nowrap}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('ytag class ok')
+
+# ---------- "Coming up" line on the Vote page: the next vote-count pop with a countdown; tap to open it now ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+a=s.index("const qsChipHTML = () =>"); b=s.index("\n", a)
+s=s[:a]+r"""function upNext() { if (!S || !S.user || S.geoBlock) return null; const L = lgS(), it = [];
+  if (fighters().length && tUnlocked()) { const need = Math.max(0, CFG.BATTLE_EVERY - (S.since || 0), 12 - (S.votes || 0)), per = CFG.BATTLE_EVERY; let x;
+    if (!S.potSeen) { const pp = fighters()[0], k = (pp && CATS8.find(c => fitsTheme(pp, c))) || 'any'; x = { ic: '🏆', t: `<b>Your first prize challenge</b> · ${esc(crownName(k))}`, k: 'b' }; }
+    else if (S.btAlt) x = { ic: '🟡', t: `<b>Coin challenge</b> · win 50 🟡`, k: 'b' };
+    else { const ks = CATS8.filter(c => lgMine(c)), miss = CATS8.filter(c => c !== 'any' && !lgMine(c)).sort((p, q) => (L.jp[q] || 0) - (L.jp[p] || 0)), up = miss.length && (!ks.length || !S.puAlt);
+      x = up ? { ic: '📷', t: `<b>${esc(crownName(miss[0]))} prize pool</b> · ${poolTxt(miss[0])}`, k: 'b' } : ks.length ? { ic: '🏆', t: `<b>${esc(crownName(ks[0]))} challenge</b> · ${poolTxt(ks[0])} pool`, k: 'b' } : null; }
+    if (x) it.push(Object.assign(x, { need, per })); }
+  if (S.potSeen) { const per = S.qsTried ? 50 : 20, need = Math.max(0, per - (S.cpN || 0), 15 - (S.votes || 0)); it.push({ ic: '🎯', t: `<b>Quick Sprint</b> · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per }); }
+  return it.sort((p, q) => p.need - q.need)[0] || null; }
+function upNow() { const x = upNext(); if (!x) return; if (x.k === 'q') { S.cpN = 0; S.qsPopAt = Date.now(); save(); sprEnter(); return; } S.since = 0; save(); openBattle(); }
+const qsChipHTML = () => { const x = upNext(); if (!x) return ''; const pct = Math.round(100 * (1 - x.need / x.per)), soon = x.need <= 1;
+  return `<button class="qs-chip upn ${soon ? 'soon' : ''}" id="qsChip"><span class="un-ic">${x.ic}</span><span class="un-t"><small>Coming up</small>${x.t}</span><em>${x.need ? `in ${x.need} vote${x.need === 1 ? '' : 's'}` : 'Now'}</em><i class="un-bar" style="width:${pct}%"></i></button>`; };
+setInterval(() => { const c = document.getElementById('qsChip'); if (!c || !S) return; const h = qsChipHTML(); if (!h) return; const t = document.createElement('div'); t.innerHTML = h; const n = t.firstElementChild; if (n.innerHTML !== c.innerHTML || n.className !== c.className) { c.className = n.className; c.innerHTML = n.innerHTML; } }, 600);"""+s[b:]
+RA("else if (e.target.closest('#qsChip')) { e.preventDefault(); S.qsTried ? sprEnter() : sprPractice(); }","else if (e.target.closest('#qsChip')) { e.preventDefault(); upNow(); }")
+s=s.replace('</style>',""".qs-chip.upn{position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;text-align:left;white-space:normal!important}.qs-chip.upn .un-ic{font-size:1.25rem;flex:none}.qs-chip.upn .un-t{flex:1;min-width:0;line-height:1.25}
+.qs-chip.upn .un-t small{display:block;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.75}.qs-chip.upn .un-t b{font-weight:900}.qs-chip.upn .un-t svg{width:.9em!important;height:.9em!important;vertical-align:-.1em!important}
+.qs-chip.upn em{flex:none;white-space:nowrap}.qs-chip.upn .un-bar{position:absolute;left:0;bottom:0;height:3px;background:#FBC20A;transition:width .4s}.qs-chip.upn.soon{animation:unGlow 1.2s ease-in-out infinite}
+@keyframes unGlow{50%{box-shadow:inset 0 0 0 2px #FBC20A,0 0 12px rgba(251,194,10,.6)}}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('up next ok')
+s=open(d+'yofi-simple.html').read()
+for a,b in [("else if (S.btAlt) x = { ic: '🟡', t: `<b>Coin challenge</b> · win 50 🟡`, k: 'b' };",
+             "else if (S.btAlt) { if (!S.nextBth || !B_THEMES.includes(S.nextBth)) { S.nextBth = pickBattleTheme(); save(); } const th = S.nextBth, tn = esc(thName(th)); x = fitFor(th).length ? { ic: '🟡', t: `<b>${tn} coin ${isYoungW() ? 'battle' : 'challenge'}</b> · win 50 🟡`, k: 'b' } : { ic: '📷', t: `<b>Got a ${tn.toLowerCase()} photo?</b> · coin ${isYoungW() ? 'battle' : 'challenge'}`, k: 'b' }; }"),
+            ("const bth = pickBattleTheme(), bme = fitFor(bth)[0], tn = thName(bth);","const bth = (!S.btAlt && S.nextBth) || pickBattleTheme(), bme = fitFor(bth)[0], tn = thName(bth); if (!S.btAlt) S.nextBth = null;")]:
+    assert s.count(a)==1,a[:50]; s=s.replace(a,b)
+open(d+'yofi-simple.html','w').write(s); print('coin theme ahead ok')
