@@ -916,6 +916,9 @@ html.yg .ms{color:#fff}html.yg .ms-sum>div,html.yg .ms-c,html.yg .ms-next{backgr
 .pf-type{margin:12px 0 0;font-size:.9rem;text-align:left}.pf-test{margin:14px 0 4px;font-size:.7rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.6;text-align:left}.ms-fr{margin:0 0 8px!important}
 html:not(.yg) .fr-go{background:#2F6B3F!important;color:#fff!important}html.yg .fr-go{background:#2EE59D!important;color:#14092B!important}html:not(.yg) .ms-fr{background:#F3ECDF!important;color:#2B2320!important;box-shadow:inset 0 0 0 1.5px #E6D9C4!important}html.yg .ms-fr{background:#2A1A52!important;color:#fff!important}
 .gt-own{margin:-2px 0 10px;font-size:.8rem;opacity:.9}
+.er-l{text-align:left;margin:4px 0 8px}.er-r{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;padding:7px 0;border-top:1px solid rgba(127,127,127,.18)}.er-r img{width:44px;height:44px;object-fit:cover;border-radius:10px}.er-i{font-size:1.5rem;text-align:center}.er-r b{display:block;font-size:.88rem}.er-r small{font-size:.72rem;opacity:.8}.er-r em{font-style:normal;font-weight:900;color:#2EA36B}.er-none{font-size:.84rem;opacity:.85}
+.ms-earn{border-radius:16px;padding:10px 12px 6px;margin:0 0 12px;text-align:left}.ms-eh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:2px}.ms-eh b{font-size:1rem}.ms-eh span{font-size:.8rem;opacity:.85}.ms-all{display:block;margin:4px auto 2px;font-weight:800}
+html:not(.yg) .ms-earn{background:#E8F3EA;color:#2B2320;box-shadow:inset 0 0 0 1.5px #2F6B3F}html.yg .ms-earn{background:#10301F;color:#fff;box-shadow:inset 0 0 0 1.5px #21C77A}
 </style>
 </head>
 <body>
@@ -5119,7 +5122,7 @@ function raceEnter() { stableOpen(); }
 function rcHeat() { const ids = (S.photos || []).filter(p => rcRec(p.id).st === 'heats').map(p => p.id); if (!ids.length) return;
   const id = ids.sort((a, b) => (rcRec(a).ha || 0) - (rcRec(b).ha || 0))[0], p = S.photos.find(x => x.id === id), r = rcRec(id), q = cpRng(Date.now() % 1e6);
   const me = rcStr(p) + (q() - .5) * .5, pl = 1 + [0, 1, 2, 3].filter(() => .3 + q() * .6 + (q() - .5) * .5 > me).length; r.ha = Date.now(); r.f.push({ k: 'h', pl }); r.f = r.f.slice(-12);
-  let share = 0; if (pl === 1) { S.gems = (S.gems || 0) + HEAT_WIN; share = +((30 + Math.floor(q() * 50)) * GATE_FEE * OWNER_SHARE).toFixed(2); S.cash = +((S.cash || 0) + share).toFixed(2); S.showWon = +((S.showWon || 0) + share).toFixed(2); r.shareWon = +((r.shareWon || 0) + share).toFixed(2); setTimeout(() => { paintGems(); paintWallet(); }, 100); }
+  let share = 0; if (pl === 1) { S.gems = (S.gems || 0) + HEAT_WIN; share = +((30 + Math.floor(q() * 50)) * GATE_FEE * OWNER_SHARE).toFixed(2); S.cash = +((S.cash || 0) + share).toFixed(2); S.showWon = +((S.showWon || 0) + share).toFixed(2); r.shareWon = +((r.shareWon || 0) + share).toFixed(2); { const sl0 = rcSlotFor(p); earnAdd({ kind: 'q', pid: id, t: rcName(p), amt: share, sl: sl0, k: ppGame(sl0).k }); } setTimeout(() => { paintGems(); paintWallet(); }, 100); }
   if (pl <= 2) { const sl = rcSlotFor(p); S.races = S.races || {}; S.races[sl] = { pid: id, at: Date.now() }; r.st = 'q'; r.sl = sl; S.rcPop = { k: 'q', pid: id, pl, sl, share }; }
   else toast(`🎀 ${rcName(p)} finished ${ppOrd(pl)} in its qualifier. Next qualifier in ${HEAT_EVERY} votes.`);
   save(); }
@@ -5131,7 +5134,7 @@ function rcQualPop(x) { const p = (S.photos || []).find(z => z.id === x.pid); if
   $('#qpOk').onclick = () => popClose(); $('#qpSt').onclick = () => stableOpen(); }
 function raceOwnResult(sl) { const x = S.races[sl], g = ppGame(sl), i = g.ph.findIndex(p => p.mine), cash = true, y = isYoungW();
   const pl = i < 0 ? RACE_N : g.ord.indexOf(i) + 1, pz = pl <= 3 ? RACE_OWN[cash ? 'cash' : 'gems'][pl - 1] : 0, amt = cash ? money(pz) : `${pz.toLocaleString()} 🟡`;
-  const ph = i >= 0 ? g.ph[i] : { src: '', t: 'Your photo' }, r = rcRec(x.pid); r.f.push({ k: 'r', pl }); r.f = r.f.slice(-12); r.st = null; r.sl = null; r.last = { sl, pl, pz, cash: cash ? 1 : 0 }; S.showWon = +((S.showWon || 0) + pz).toFixed(2); x.done = 1; x.place = pl; x.prize = pz;
+  const ph = i >= 0 ? g.ph[i] : { src: '', t: 'Your photo' }, r = rcRec(x.pid); r.f.push({ k: 'r', pl }); r.f = r.f.slice(-12); r.st = null; r.sl = null; r.last = { sl, pl, pz, cash: cash ? 1 : 0 }; S.showWon = +((S.showWon || 0) + pz).toFixed(2); if (pz) earnAdd({ kind: 's', pid: x.pid, t: ph.t, amt: pz, place: pl, sl, k: g.k }); x.done = 1; x.place = pl; x.prize = pz;
   if (pz) { if (cash) { S.cash = +((S.cash || 0) + pz).toFixed(2); paintWallet(); } else { S.gems += pz; paintGems(); } } save();
   popOpen(`<div class="pp"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🎀 The ${raceName(sl)} Best in Show · ${esc(showName(g.k))} · result</p>
     <div class="re-ok">${ph.src ? `<img src="${ph.src}" alt="">` : ''}${pl <= 3 ? `<i>${PP_MED[pl - 1]}</i>` : ''}</div>
@@ -5251,13 +5254,13 @@ function myShow() { if ($('#sheet').classList.contains('on')) closeSheet(); popC
 function renderMyShow() { const g = $('#gallery'); if (!g) return; $('#ptitle').textContent = 'My show'; const y = isYoungW(), P = (S.photos || []).slice().sort((a, b) => b.s.total - a.s.total), cur = ppSlot(), nx = ppGame(cur);
   const inG = P.filter(p => rcRec(p.id).st === 'heats').length, thr = P.filter(p => rcRec(p.id).st === 'q').length, free = !S.showFreeUsed;
   const card = p => { const r = rcRec(p.id), k0 = photoShow(p), x0 = rcStatus(p), x = !k0 ? { cls: 'n', ic: '📷', t: 'Not a show category', s: 'Only Pets, Nature, Garden and Food photos can enter' } : x0.cls === 'n' ? { cls: 'n', ic: '📷', t: 'Not entered yet', s: `Enter it: the top 2 in each qualifier go through, and Best in Show 🥇🥈🥉 win $10 · $5 · $2` } : x0, f = r.f.map(z => z.pl), k = photoShow(p), SH = SHOWS.find(z => z.k === k), can = !r.st && SH && !SH.soon && p.s.total >= FR_MIN;
-    return `<div class="ms-c ${x.cls}"><img src="${p.src}" alt=""><div class="ms-t"><b>${esc(rcName(p))} <em>${p.s.total}</em></b>${SH ? `<span class="ms-k">${SH.n}${SH.soon ? ' · shows open soon' : ''}</span>` : ''}<span>${x.ic} ${x.t}</span><small>${x.s}</small>${f.length ? `<span class="rf">${formHTML(f)}</span>` : ''}${r.last && r.last.pz ? `<span class="ms-w">Won ${money(r.last.pz)}</span>` : ''}</div>
+    return `<div class="ms-c ${x.cls}"><img src="${p.src}" alt=""><div class="ms-t"><b>${esc(rcName(p))} <em>${p.s.total}</em></b>${SH ? `<span class="ms-k">${SH.n}${SH.soon ? ' · shows open soon' : ''}</span>` : ''}<span>${x.ic} ${x.t}</span><small>${x.s}</small>${f.length ? `<span class="rf">${formHTML(f)}</span>` : ''}${earnOf(p.id) ? `<span class="ms-w">Earned ${money(earnOf(p.id))}</span>` : ''}</div>
       ${can ? `<button class="btn ms-go" data-msen="${p.id}">Enter<small>${free ? 'first one free' : `${SHOW_ENTRY} 🟡`}</small></button>` : r.st === 'q' ? `<button class="btn ms-go ms-w2" data-msw="${r.sl}">${r.sl === cur ? '🔴 Watch' : 'Catalogue'}</button>` : !SH ? '' : p.s.total < FR_MIN && !r.st ? `<button class="btn ms-go ms-up" data-msup="${p.id}">${y ? 'Enhance' : 'Touch up'}<small>to ${FR_MIN}+</small></button>` : ''}</div>`; };
   g.innerHTML = `<div class="ms"><h1 class="ms-h">🎀 My show</h1><p class="ms-sub">Your photos in the qualifiers and the hourly Best in Show · <b>${playerType()}</b></p>
     <div class="ms-sum"><div><b>${money(S.showWon || 0)}</b><small>won</small></div><div><b>${inG}</b><small>in the qualifiers</small></div><div><b>${thr}</b><small>through to Best in Show</small></div></div>
     <button class="ms-next" id="msCat"><span>🎀 Now: the ${raceName(cur)} Best in Show · ${esc(showName(nx.k))}</span><b>Catalogue ›</b></button>
     <button class="btn block ms-fr" id="msFriends">👥 Challenge a friend · ${isCash() ? `from $${FR_ST[0]}` : `${FR_GEM} 🟡`}</button><button class="btn block ms-add" id="msAdd">📷 Enter a new photo to compete · ${free ? 'first one free' : `${SHOW_ENTRY} 🟡`}</button>
-    <div class="ms-l">${P.length ? P.map(card).join('') : '<p class="ms-none">No photos yet. Upload one to start showing.</p>'}</div>
+    <div class="ms-earn"><div class="ms-eh"><b>💰 Earnings</b><span>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))} total · ${money(earnWeek())} this week</span></div>${(S.earn || []).length ? (S.earn || []).slice(-3).reverse().map(earnRowHTML).join('') : '<p class="er-none">Your winnings will show here: qualifier wins and Best in Show places.</p>'}<button class="link ms-all" id="msEarn">See all earnings ›</button></div><div class="ms-l">${P.length ? P.map(card).join('') : '<p class="ms-none">No photos yet. Upload one to start showing.</p>'}</div>
     <p class="ms-r">Categories: Pets · Nature & landscapes · Garden & flowers · Food (soon). Top 2 in each qualifier go through. Best in Show 🥇🥈🥉 win <b>$10 · $5 · $2</b> real cash. Win a qualifier and you get <b>10% of its real entries</b>.</p></div>`;
   g.querySelectorAll('[data-msen]').forEach(b => b.onclick = () => showEnter(b.dataset.msen));
   g.querySelectorAll('[data-msw]').forEach(b => b.onclick = () => +b.dataset.msw === cur ? ppOpen() : raceCard());
@@ -5287,6 +5290,18 @@ document.addEventListener('click', e => { const t = e.target.closest('#pfToCoin,
   S.cashMode = t.id === 'pfToReal' ? Date.now() : 0; save(); try { closeSheet(); } catch (x) {} try { paintWallet(); paintGems(); } catch (x) {} if ($('#panes').dataset.at === 'gallery') renderMyShow(); else if ($('#panes').dataset.at === 'judge') renderJudge(); toast(isCash() ? 'You’re now a real money player (test)' : 'You’re now a coin player (test)'); }, true);
 var OWNER_SHARE = .1;
 const gateEntries = (ns, gi) => 30 + ((ns * 7 + gi * 13) % 50);
+function earnAdd(e) { S.earn = (S.earn || []).concat(Object.assign({ at: Date.now() }, e)).slice(-200); }
+const earnOf = pid => (S.earn || []).filter(e => e.pid === pid).reduce((a, e) => a + e.amt, 0);
+const earnWeek = () => { const t = Date.now() - 7 * 864e5; return (S.earn || []).filter(e => e.at >= t).reduce((a, e) => a + e.amt, 0); };
+function earnRowHTML(e) { const p = (S.photos || []).find(x => x.id === e.pid), nm = p ? rcName(p) : (e.t || 'Your photo'), show = `${raceName(e.sl)} ${esc(showName(e.k))}`, dt = new Date(e.at), when = dt.toDateString() === new Date().toDateString() ? frTime(e.at) : dt.toLocaleDateString([], { day: 'numeric', month: 'short' });
+  return `<div class="er-r">${p ? `<img src="${p.src}" alt="">` : '<span class="er-i">📷</span>'}<div><b>${e.kind === 'q' ? '🥇 Won its qualifier' : `${PP_MED[e.place - 1] || ''} ${ppOrd(e.place)} in Best in Show`}</b><small>${esc(nm)} · ${show} · ${when}</small></div><em>+${money(e.amt)}</em></div>`; }
+function earningsOpen() { const L = (S.earn || []).slice().reverse(), tot = L.reduce((a, e) => a + e.amt, 0);
+  popOpen(`<div class="pp er"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">💰 Your earnings</p><h2 class="pp-h">${money(tot)} won</h2>
+    <p class="pp-m">${money(earnWeek())} this week · ${(n => `${n} qualifier win${n === 1 ? '' : 's'}`)(L.filter(e => e.kind === 'q').length)} · ${(n => `${n} Best in Show place${n === 1 ? '' : 's'}`)(L.filter(e => e.kind === 's').length)}</p>
+    <div class="er-l">${L.length ? L.map(earnRowHTML).join('') : '<p class="er-none">No winnings yet. Enter a photo: the 1st place photo in a qualifier earns 10% of its real entries, and Best in Show 🥇🥈🥉 win $10 · $5 · $2.</p>'}</div>
+    <div style="text-align:center"><button class="link pc-later" id="erNo">Close</button></div></div>`);
+  $('#erNo').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
+document.addEventListener('click', e => { if (e.target.closest('#msEarn')) { e.preventDefault(); e.stopPropagation(); earningsOpen(); } }, true);
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
