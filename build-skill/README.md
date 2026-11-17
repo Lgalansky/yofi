@@ -92,6 +92,7 @@ Then `rmv24.py`: "Enter your photo" / "Add a photo" / Gallery "Enter a new photo
 Then `rmv25.py`: no free-pick bar on the Vote screen; coins menu row reads "Free Final pick" (no $1).
 Then `rmv26.py`: qualifier "Coming up" item and pops say "Upcoming qualifier" (no time) with a ⚖️ scales icon.
 Then `rmv27.py`: coins menu adds Quick Sprint (100 coins, win 160) next to Coin challenge and drops "Enter a photo"; a photo never goes straight into the Final: once the first photo improves it enters the qualifiers for its category's next Final.
+Then `rmv28.py`: new players' judging has no qualifiers; Coming up shows "Free Final pick · in 15 votes" and the free pick opens after 15 votes; qualifiers start once it's used.
 
 ```bash
 python3 rmv6.py
@@ -116,6 +117,7 @@ python3 rmv24.py
 python3 rmv25.py
 python3 rmv26.py
 python3 rmv27.py
+python3 rmv28.py
 ```
 
 ## Skill only
