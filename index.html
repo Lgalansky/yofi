@@ -5049,7 +5049,7 @@ function upNext() { if (!S || !S.user || S.geoBlock) return null; const L = lgS(
     if (R && R.due - Date.now() < 3600e3) { const p = (S.photos || []).find(z => z.id === R.x.pid); if (p) return { ic: '🎀', t: `<b>${esc(rcName(p))}</b> · ${R.sl === ppSlot() ? 'in the ring now' : `the ${raceName(R.sl)} race`}`, k: 'r', need: 0, per: 1, em: R.sl === ppSlot() ? '🔴 Live' : `result in ${Math.max(1, Math.ceil((R.due - Date.now()) / 60000))} min` }; } }
   if (S.rc && S.photos) { const hp = S.photos.find(p => rcRec(p.id).st === 'heats'); if (hp) it.push({ ic: '📷', t: `<b>${esc(rcName(hp))}</b> · next qualifier`, k: 'h', need: Math.max(1, HEAT_EVERY - (S.hN || 0)), per: HEAT_EVERY }); }
   { const g = ppGame(), m = Math.ceil((g.end - Date.now()) / 60000); if (isCash() && S.potSeen && !(S.pp || {})[g.sl] && m <= 20) return { ic: '🎀', t: `<b>The ${raceName(g.sl)} Final · ${esc(showName(g.k))}</b> · pick the top 3`, k: 'p', need: 0, per: 1, mins: m }; }
-  it.push({ ic: '🎀', t: `<b>Qualifiers · ${raceName(ppSlot() + 1)} ${esc(showName(ppGame(ppSlot() + 1).k))}</b> · pick 3 of 5 · free`, k: 'g', need: Math.max(1, (S.tut === 1 ? 5 : GATE_EVERY) - (S.gtN || 0)), per: S.tut === 1 ? 5 : GATE_EVERY });
+  it.push({ ic: '⚖️', t: `<b>Upcoming qualifier · ${esc(showName(ppGame(ppSlot() + 1).k))}</b> · pick 3 of 5 · free`, k: 'g', need: Math.max(1, (S.tut === 1 ? 5 : GATE_EVERY) - (S.gtN || 0)), per: S.tut === 1 ? 5 : GATE_EVERY });
   return it.sort((p, q) => p.need - q.need)[0] || null; }
 function upNow() { const x = upNext(); if (!x) return; if (x.k === 'g') { S.gtN = 0; save(); gateOpen(false); return; } if (x.k === 'p') { ppOpen(); return; } if (x.k === 'r' || x.k === 'h') { stableOpen(); return; } if (x.k === 'q') { S.cpN = 0; S.qsPopAt = Date.now(); window.__qsGame = 'qs'; S.qgAlt = false; save(); sprEnter(); return; } S.since = 0; save(); openBattle(); }
 const qsChipHTML = () => { const x = upNext(); if (!x) return ''; const pct = Math.round(100 * (1 - x.need / x.per)), soon = x.need <= 1;
@@ -5402,7 +5402,7 @@ function gtUpsell() { const g = ppGame(), nm = raceName(g.sl);
 const GQ_ORD = ['1st', '2nd', '3rd'];
 function gateOpen() { const G = gateGame(), y = isYoungW(), keep = y ? 'Keep judging' : 'Keep voting', fin = raceName(G.ns); let picks = [];
   const draw = () => { const n = picks.length;
-    popOpen(`<div class="pp gq"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🎀 Qualifiers · ${fin} ${esc(showName(ppGame(G.ns).k))}</p>
+    popOpen(`<div class="pp gq"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">⚖️ Upcoming qualifier · ${esc(showName(ppGame(G.ns).k))}</p>
       <h2 class="pp-h">Predict the top 3</h2><span class="gq-g">Group ${G.gi + 1} of 3</span>
       <p class="gq-m">Match the ${y ? 'judges’' : 'crowd’s'} ranking to win coins.</p>
       <div class="gq-pz"><span>3 correct · <b>${GATE_COINS[3]} 🟡</b></span><span>2 correct · <b>${GATE_COINS[2]} 🟡</b></span></div><p class="gq-n">Only exact positions count.</p>
@@ -5420,7 +5420,7 @@ function gateOpen() { const G = gateGame(), y = isYoungW(), keep = y ? 'Keep jud
 function gateResult(G, picks) { const y = isYoungW(), top = G.ord.slice(0, 3), right = picks.filter((p, i) => top[i] === p).length, pay = GATE_COINS[right], fin = raceName(G.ns);
   S.gateI = (S.gateI || 0) + 1; S.gateN = (S.gateN || 0) + 1; if (pay) { S.gems = (S.gems || 0) + pay; setTimeout(paintGems, 300); } save();
   const nm = j => `“${esc(G.ph[j].t || 'Untitled')}”`, tag = (p, i) => top[i] === p ? '<em class="ok">✓ Exact</em>' : top.includes(p) ? `<em class="mid">Placed ${GQ_ORD[top.indexOf(p)]}</em>` : '<em>Not in top 3</em>';
-  popOpen(`<div class="pp gq"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🎀 Group ${G.gi + 1} of 3 · results</p>
+  popOpen(`<div class="pp gq"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">⚖️ Group ${G.gi + 1} of 3 · results</p>
     <h2 class="pp-h">${right === 3 ? 'Perfect! 3 exact matches' : right === 2 ? '2 exact matches!' : right === 1 ? '1 exact match' : 'No exact matches'}</h2>
     <p class="gq-m">${right} of 3 in the correct position${pay ? ` · <b>+${pay} 🟡</b>` : ''}</p>
     <div class="gq-cmp"><span></span>${GQ_ORD.map(o => `<b class="gq-o">${o}</b>`).join('')}
