@@ -75,6 +75,7 @@ Then `rmv7.py`: names. The 3-of-5 voting rounds are Qualifiers, the hourly 6-pho
 Then `rmv8.py`: photo entries are free (3 photos in play, 3 qualifier tries each, an extra spot for every 20 votes, bank up to 3), and the free $1 Final entry costs 250 coins with a progress bar on the Vote screen for coin players.
 Then `rmv9.py`: entering a photo costs 100 coins (first one free), and 250 coins buys a free $1 qualifier (pick 3 of 5, cash prizes), max 2 per hour. This replaces the free $1 Final entry.
 Then `rmv10.py`: coin players asked to add a category photo see coin challenges, not the cash blue ribbon pot.
+Then `rmv11.py`: no "Touch up a photo" row in the coins menu, and the coin challenge costs 100 coins (win 200).
 
 ```bash
 python3 rmv6.py
@@ -82,6 +83,7 @@ python3 rmv7.py
 python3 rmv8.py
 python3 rmv9.py
 python3 rmv10.py
+python3 rmv11.py
 ```
 
 ## Skill only
