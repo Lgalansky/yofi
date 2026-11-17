@@ -110,6 +110,18 @@ RA("Practice · no blue ribbons at stake.", "Coins only.")
 s=s.replace("function fcNotify() {","function aN(w) { return /^[aeiou]/i.test(String(w || '')) ? 'an' : 'a'; }\nfunction fcNotify() {",1)
 for pat in [" a ${tn.toLowerCase()}", " a <b>${tn.toLowerCase()}</b>", " a ${esc(tn.toLowerCase())}", " a ${esc(cn.toLowerCase())}", " a ${cn.toLowerCase()}"]:
     s=s.replace(pat, pat.replace(" a ", " ${aN(" + ("tn" if "tn" in pat else "cn") + ")} ", 1))
+# real-money upsell on every coin game result: "Play for real · $2" opens a $2 cash challenge in that category
+s=s.replace("function fcNotify() {","function fcRealCh(k) { k = CATS8.includes(k) && lgMine(k) ? k : (CATS8.find(x => lgMine(x)) || 'any'); const iHold = lgHold(k).h === 'you', o2 = iHold ? (lgRank(k).find(r => !r.me) || {}).h : lgHold(k).h; payCash(LG_FEE, 'A challenge', () => lgFight(k, o2, !iHold)); }\nfunction fcNotify() {",1)
+RA('<button class="btn block kg2-go" id="gbAgain">Play again · Free</button><div style="text-align:center">',
+   '<button class="btn block kg2-go" id="gbAgain">Play again · Free</button>${!isCash() ? `<button class="btn block pc-real kg2-real" id="gbReal">💵 Play for real · $${LG_FEE}</button>` : \'\'}<div style="text-align:center">')
+RA("if (nx) $('#gbNext').onclick = () => { closeSheet(); nx.go(); };", "if (nx) $('#gbNext').onclick = () => { closeSheet(); nx.go(); }; if ($('#gbReal')) $('#gbReal').onclick = () => { closeSheet(); fcRealCh(cat); };")
+# friend (club) challenge played for coins: coin result instead of blue ribbon / club pot, plus the upsell
+RA("${esc(c.name)} · ${cn} blue ribbon${rev ? ' · 🔥 rematch bonus +25' : ''}", "${esc(c.name)} · ${coin ? `winner gets ${FR_GEM * 2} 🟡` : `${cn} blue ribbon`}${rev ? ' · 🔥 rematch bonus +25' : ''}")
+RA("${msg ? `<p class=\"fb-crown ${won ? 'w' : 'l'}\">${msg}</p>` : ''}", "${msg && !coin ? `<p class=\"fb-crown ${won ? 'w' : 'l'}\">${msg}</p>` : ''}")
+RA("<div class=\"kg2-next ${won ? 'win' : 'lose'}\"><small>${cn} club pot</small>", "${coin ? `<div class=\"kg2-next ${won ? 'gemw' : 'lose'}\"><small>${won ? 'You won' : 'You lost'}</small><b>🟡 ${won ? FR_GEM * 2 : FR_GEM}</b><span>${won ? 'Added to your coins' : 'Rematch to win it back'}</span></div>` : ''}<div class=\"kg2-next ${won ? 'win' : 'lose'}\" ${coin ? 'hidden' : ''}><small>${cn} club pot</small>")
+RA("<button class=\"btn block kg2-go\" id=\"cbAgain\">${won ? 'Play again' : `Rematch on @${esc(h)}`}</button>", "<button class=\"btn block kg2-go\" id=\"cbAgain\">${won ? 'Play again' : `Rematch on @${esc(h)}`}</button>${coin ? `<button class=\"btn block pc-real kg2-real\" id=\"cbReal\">💵 Play for real · $${LG_FEE}</button>` : ''}")
+RA("$('#cbAgain').onclick = () => won ? crewCat(c, k) : revengePrep(c, k, h, me.id);", "$('#cbAgain').onclick = () => won ? crewCat(c, k) : revengePrep(c, k, h, me.id); if ($('#cbReal')) $('#cbReal').onclick = () => { closeSheet(); fcRealCh(k); };")
+s=s.replace('</style>','.kg2-real{margin-top:8px!important}.kg2-next[hidden]{display:none!important}\n</style>',1)
 # every Freeroll door now opens the free cash challenge
 RA("function swapTicket() {","function swapTicket() { freeCh(); return;")
 RA("function frEnter(f) {","function frEnter(f) { freeCh(); return;")
