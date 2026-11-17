@@ -9,3 +9,13 @@ The Skill app is generated from `skill-base.html` (the older single-look Skill a
 5. `simplify.py` – simpler Vote page, energy and loot boxes, coin swap for a Freeroll ticket (1 an hour), Freerolls in the tournament schedule, new-category bonus
 
 The scripts use absolute paths from the session they were written in: update `d=` at the top of each before re-running. The output of step 5 (`yofi-simple.html`) is the Skill preview; for live, copy it to `index.html` with the title "Yofi - Skill".
+
+## Real Money build
+
+The horse-racing features (Podium Pick, the instant 1 v 1 Podium Pick, hourly races, heats, My stable) live in `racing.py` and are only for Real Money. `simplify.py` runs them when the build is started with `YOFI_BUILD=real`:
+
+```bash
+YOFI_BUILD=real python3 simplify.py
+```
+
+The Skill build (no `YOFI_BUILD`) leaves them out.
