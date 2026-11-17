@@ -27,7 +27,8 @@ function freeCh() { if ($('#sheet').classList.contains('on')) closeSheet(); cons
     S.gems -= FC_COINS; S.fcDay = frHourKey(); save(); paintGems(); popClose(); window.__fcFree = 1; window.__fcAt = Date.now(); lgFight(k, opp, false, false, me.id); };
   $('#fcNo').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
 setInterval(() => { if (window.__fcFree && Date.now() - (window.__fcAt || 0) > 4000 && !$('#sheet').classList.contains('on') && !$('#coach').classList.contains('on')) { window.__fcFree = 0; try { paintWallet(); paintGems(); } catch (e) {} } }, 1000);
-document.addEventListener('click', e => { if (e.target.closest('#fcRow, #tshTix, #ugSwap, [data-frrow]')) { e.preventDefault(); e.stopPropagation(); freeCh(); } }, true);
+const fcShopHTML = () => { const r = fcReady(), ok = r && (S.gems || 0) >= FC_COINS, y = isYoungW(); return `<button class="ug-r ug-swap fc-shop" id="fcShop"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free $1 cash ${y ? 'battle' : 'challenge'}</b><small>${r ? `No cash needed · 1 an hour` : `Used · next one in ${frMinsLeft()} min`}</small></span><em class="${ok ? '' : 'need'}">${FC_COINS} 🟡</em></button>`; };
+document.addEventListener('click', e => { if (e.target.closest('#fcRow, #fcShop, #tshTix, #ugSwap, [data-frrow]')) { e.preventDefault(); e.stopPropagation(); freeCh(); } }, true);
 function fcNotify() {""",1)
 # during a free challenge the player plays for real
 RA("const isCash = () => !!(S && S.cashMode),","const isCash = () => !!(S && (S.cashMode || window.__fcFree)),")
@@ -45,10 +46,13 @@ RA("['fr', '🎟️ Freerolls'], ","")
 a=s.index('<button class="tsh-tix tsh-fr" id="tshTix">'); b=s.index('</button>',a)
 s=s[:a]+'<button class="tsh-tix tsh-fr" id="tshTix">${fcReady() ? `🎟️ Free cash challenge · <b>${FC_COINS} 🟡</b>` : `🎟️ Next free cash challenge in ${frMinsLeft()} min`}'+s[b:]
 a=s.index('<b>Enter a Freeroll</b><small>'); b=s.index('</button>`;',a)
-s=s[:a]+'<b>Free cash challenge</b><small>${fcReady() ? `A real $1 challenge · 1 an hour` : `Next one in ${frMinsLeft()} min`}</small></span><em class="${(S.gems || 0) < FC_COINS || !fcReady() ? \'need\' : \'\'}">${FC_COINS} 🟡</em>'+s[b:]
+s=s[:a]+'<b>Free $1 cash challenge</b><small>${fcReady() ? `No cash needed · 1 an hour` : `Next one in ${frMinsLeft()} min`}</small></span><em class="${(S.gems || 0) < FC_COINS || !fcReady() ? \'need\' : \'\'}">${FC_COINS} 🟡</em>'+s[b:]
 # photo reaches 80: point at the free cash challenge
 a=s.index("title: 'Freeroll ready!'"); b=s.index("later: 'Later' })",a)
 s=s[:a]+"title: 'Ready to play for real!', text: `Your photo reached <b>${tot}</b>. Use <b>${FC_COINS} coins</b> for a <b>free $1 cash challenge</b>, once an hour.`, cta: '🎟️ Free cash challenge', onCta: () => { closeFlow(); freeCh(); }, "+s[b:]
+# cash balance (shop): free $1 challenge at the top
+RA('const body = `<h3 class="sp-h">${head[0]}</h3><p class="sp-s">${head[1]}</p><div class="sp-list">`','const body = `<h3 class="sp-h">${head[0]}</h3><p class="sp-s">${head[1]}</p>${T === \'cash\' || T === \'gems\' ? fcShopHTML() : \'\'}<div class="sp-list">`')
+s=s.replace('</style>','.fc-shop{margin:0 0 12px!important;width:100%}\n</style>',1)
 # how it works + small texts
 a=s.index("${T('t-fr'"); b=s.index("${T('t-ko'",a)
 s=s[:a]+"${T('t-fr', '🎟️', 'Free cash challenge', 'Every hour · top row', '🎟️ Free', [`Use <b>${FC_COINS} coins</b>, once an hour. Coins are earned by ${isYoungW() ? 'judging' : 'voting'}.`, 'A <b>real $1 challenge</b>: your photo against a rival, decided live by member votes.', `Win <b>+1 ⭐</b> in that day’s cash pot. <b>${LG_SHARE} ⭐</b> by midnight share the pot.`, 'A win makes you a cash player.'])}\n    "+s[b:]
