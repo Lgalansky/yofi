@@ -57,6 +57,12 @@ function freeCh() { if ($('#sheet').classList.contains('on')) closeSheet(); cons
 const fcShopHTML = () => { const r = fcReady(), ok = r && (S.gems || 0) >= FC_COINS, y = isYoungW(); return `<button class="ug-r ug-swap fc-shop" id="fcShop"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free $1 cash ${y ? 'battle' : 'challenge'}</b><small>${r ? `No cash needed · 1 an hour` : `Used · next one in ${frMinsLeft()} min`}</small></span><em class="${ok ? '' : 'need'}">${FC_COINS} 🟡</em></button>`; };
 document.addEventListener('click', e => { if (e.target.closest('#fcRow, #fcShop, #tshTix, #ugSwap, [data-frrow]')) { e.preventDefault(); e.stopPropagation(); freeCh(); } }, true);
 function fcNotify() {""",1)
+# coin players: no star/pot challenges (no coin pot screen anywhere). Their challenge pops alternate:
+# instant coin challenge (25 in, win 50) and the free cash challenge when it's ready.
+RA("function openBattle() {", "function openBattle() { if (!isCash() && !S.potSeen) { S.potSeen = 1; save(); }")
+RA("S.btAlt = !S.btAlt; save();", "S.btAlt = !S.btAlt; if (!isCash()) { if (S.btAlt && fcReady() && (S.gems || 0) >= FC_COINS && fighters().length) { save(); freeCh(); return; } S.btAlt = false; } save();")
+RA("if (!S.potSeen) { const pp = fighters()[0]", "if (!S.potSeen && isCash()) { const pp = fighters()[0]")
+RA("else if (S.btAlt) { if (!S.nextBth", "else if (S.btAlt || !isCash()) { if (!S.nextBth")
 # every Freeroll door now opens the free cash challenge
 RA("function swapTicket() {","function swapTicket() { freeCh(); return;")
 RA("function frEnter(f) {","function frEnter(f) { freeCh(); return;")

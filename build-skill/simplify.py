@@ -1986,5 +1986,13 @@ s=s.replace("function fcNotify() {","document.addEventListener('click', e => { i
 RA('.tsl2[data-tfl="gem"]>:not(.gemt){display:none!important}','.tsl2[data-tfl="gem"]>:not(.gemt):not(.pprow){display:none!important}')
 open(d+'yofi-simple.html','w').write(s); print('tfil ok')
 
+# ---------- Prize pops: full size inside the Claude app on iPhone (about 750pt tall); compact only on short screens ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+RA('@media (max-height:860px){#coach .ppop','@media (max-height:680px){#coach .ppop',2)
+s=s.replace('</style>','@media (max-height:800px){#coach .ppop .pc-k{margin-top:0!important}#coach .ppop .pc2-how{margin:2px 0 6px!important}#coach .ppop .pc2-me{margin-bottom:2px!important}#coach .ppop .pc2-pool{margin-bottom:6px!important}}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('pop size ok')
+
 # ---------- Skill only: free cash challenge (300 coins, once a day) replaces the Freeroll ----------
 if os.environ.get('YOFI_BUILD') != 'real': exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'freech.py')).read())
