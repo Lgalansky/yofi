@@ -94,6 +94,8 @@ RA("function stableOpen() {", "function stableOpen() { myShow(); return;")
 RA("$('#segGallery').onclick = () => openBattleTab();", "$('#segGallery').onclick = () => myShow();")
 RA('</svg><span>Compete</span><i class="fr-dot" id="frDot" hidden></i></button>', '</svg><span>My show</span><i class="fr-dot" id="frDot" hidden></i></button>')
 RA("${raceBetRowHTML()}", "${showRowHTML()}${raceBetRowHTML()}")
+# the "Best in Show closing soon" Coming up item is for cash players only
+RA("if (S.potSeen && !(S.pp || {})[g.sl] && m <= 20)", "if (isCash() && S.potSeen && !(S.pp || {})[g.sl] && m <= 20)")
 # My show is the first tab (the menu bar is rebuilt after load, so keep it first)
 s = s.replace("function fcNotify() {", "function msFirst() { const n = document.querySelector('nav.seg'), g = document.getElementById('segGallery'); if (n && g && n.firstElementChild !== g) n.insertBefore(g, n.firstElementChild); }\n[0, 300, 1500].forEach(t => setTimeout(msFirst, t)); setInterval(msFirst, 2000);\nfunction fcNotify() {", 1)
 
