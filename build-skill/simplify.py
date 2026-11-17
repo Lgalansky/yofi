@@ -2043,6 +2043,13 @@ RA("b.textContent = isCash() ? '💵 Cash play' : '';","b.textContent = isCash()
 RA("b.textContent = isCash() ? 'Cash play' : ''; b.hidden = !isCash(); }","b.textContent = isCash() ? 'Cash play' : ''; b.hidden = !isCash(); if (isCash()) { const w = $('#wCash'), pl = w && w.querySelector('.gplus'), nm = $('#cashNum'); if (w && pl && nm) { b.hidden = false; const fits = nm.getBoundingClientRect().right + b.offsetWidth + pl.offsetWidth + 14 <= w.getBoundingClientRect().right - 8; b.hidden = !fits; } } }")
 open(d+'yofi-simple.html','w').write(s); print('plus moved ok')
 
+# ---------- "Vote to earn" on the not-enough-coins pop closes any open screen and goes to Vote ----------
+s=open(d+'yofi-simple.html').read()
+a="buy: () => { c.classList.remove('on', 'cr'); if ($('#flow').classList.contains('on')) closeFlow(); go('judge'); renderJudge(); },"
+assert s.count(a)==1
+s=s.replace(a,"buy: () => { c.classList.remove('on', 'cr'); if ($('#sheet').classList.contains('on')) closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); go('judge'); renderJudge(); },")
+open(d+'yofi-simple.html','w').write(s); print('vote to earn ok')
+
 # ---------- Skill only: free cash challenge (300 coins, once a day) replaces the Freeroll ----------
 if os.environ.get('YOFI_BUILD') != 'real': exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'freech.py')).read())
 
