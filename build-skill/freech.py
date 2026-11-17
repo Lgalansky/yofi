@@ -79,6 +79,11 @@ RA("Win <b>50 🟡</b> in 30 seconds.`, cost: 25, src: f.src, go: () => { closeS
 RA('const body = `<h3 class="sp-h">${head[0]}</h3><p class="sp-s">${head[1]}</p><div class="sp-list">`',
    'const body = `<h3 class="sp-h">${head[0]}</h3><p class="sp-s">${head[1]}</p>${T === \'cash\' && S.cashMode ? \'<div style="text-align:center;margin:-4px 0 10px"><button class="link fc-test" id="toCoin">↺ Back to coin play (testing)</button></div>\' : \'\'}<div class="sp-list">`')
 s=s.replace("function fcNotify() {","document.addEventListener('click', e => { if (e.target.closest('#toCoin')) { e.preventDefault(); e.stopPropagation(); S.cashMode = 0; save(); try { closeSheet(); } catch (x) {} try { paintWallet(); paintGems(); paintMode(); } catch (x) {} if ($('#panes').dataset.at === 'judge') renderJudge(); toast('Back to coin play (test)'); } }, true);\nfunction fcNotify() {",1)
+# testing tools in the account menu too
+RA('<button class="link" id="mR" style="margin-top:6px">Reset prototype</button></div>`);',
+   '<p class="pf-test">Testing</p>${S.cashMode ? \'<button class="btn quiet block" id="toCoin">↺ Back to coin play</button>\' : \'\'}<button class="btn quiet block" id="fcRst">↺ Reset free cash challenge</button>\n    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button></div>`);')
+s=s.replace("function fcNotify() {","document.addEventListener('click', e => { if (e.target.closest('#fcRst')) { e.preventDefault(); e.stopPropagation(); S.fcDay = null; if ((S.gems || 0) < FC_COINS) S.gems = FC_COINS; save(); try { closeSheet(); } catch (x) {} paintGems(); toast('Free cash challenge reset (test)'); } }, true);\nfunction fcNotify() {",1)
+s=s.replace('</style>','.pf-test{margin:14px 0 4px;font-size:.7rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.6;text-align:left}\n</style>',1)
 # every Freeroll door now opens the free cash challenge
 RA("function swapTicket() {","function swapTicket() { freeCh(); return;")
 RA("function frEnter(f) {","function frEnter(f) { freeCh(); return;")
