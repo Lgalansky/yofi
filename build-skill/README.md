@@ -19,3 +19,17 @@ YOFI_BUILD=real python3 simplify.py
 ```
 
 The Skill build (no `YOFI_BUILD`) leaves them out.
+
+Then `realmoney.py` turns that output into Yofi - Real Money (`yofi-real.html`): its own saved data (`yofi.real.v1`), the "Real money" badge, mystery tournaments (a spin sets the winner's prize) and shared prizes on big spins. Copy `yofi-real.html` to `index.html` on the `real-money` branch.
+
+```bash
+python3 combine.py
+```
+
+```bash
+YOFI_BUILD=real python3 simplify.py
+```
+
+```bash
+python3 realmoney.py
+```
