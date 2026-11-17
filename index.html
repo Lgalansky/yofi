@@ -989,6 +989,8 @@ html body #landing .ca-top .wm{font-size:1.55rem!important}html #landing .ca-top
 #finPick .fp-c i{font-style:normal;font-size:1.6rem;color:#9A2F4E;padding-right:6px}#finPick .fp-n{font-size:.78rem;opacity:.75;text-align:center;margin:4px 0 0}
 .rs-pool{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0 6px}.rs-pool div{border-radius:12px;padding:8px 4px;text-align:center;background:rgba(127,127,127,.1)}.rs-pool b{display:block;font-size:1.05rem;font-weight:900;color:#2F6B3F}.rs-pool small{display:block;font-size:.7rem;line-height:1.2;opacity:.85}
 html.yg .rs-pool b{color:#21C77A}.rs-gap{margin:4px 0 8px;font-size:.92rem}
+.rs-tiers{margin:4px 0 6px;text-align:left}.rs-tiers div{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:baseline;padding:6px 10px;border-radius:10px}.rs-tiers div+div{margin-top:3px}.rs-tiers b{font-size:.88rem}.rs-tiers span{font-size:.78rem;opacity:.8}.rs-tiers em{font-style:normal;font-weight:900;color:#2F6B3F}
+.rs-tiers div.me{background:#E6F0DF;box-shadow:inset 0 0 0 1.5px #2F6B3F}html.yg .rs-tiers div.me{background:#10301F;box-shadow:inset 0 0 0 1.5px #21C77A}html.yg .rs-tiers em{color:#21C77A}
 </style>
 </head>
 <body>
@@ -5144,13 +5146,13 @@ function ppOpen() { const g = ppGame(), e = (S.pp || {})[g.sl], own = g.ph.some(
   const draw = () => { const n3 = picks.length === 3;
     popOpen(`<div class="pp">${head}<h2 class="pp-h">Pick the top 3 of 6</h2>
       <p class="pp-m"><b>${ppPool(g.players)}</b> pool · ${g.players} players · closes ${frTime(g.end)}</p>
-      <p class="rc-jp">🎀 Perfect rosettes bonus · <b>$${jp.toLocaleString()}</b></p>
+      <p class="rc-jp">🎯 Score 15+ to win cash · an exact 1-2-3 pays <b>6×</b></p>
       <p class="pp-leg">🔥 Popularity: % of players picking it to win</p><div class="pp-g g6">${g.ph.map((p, i) => { const n = picks.indexOf(i); return `<button class="pp-t ${n >= 0 ? 'on' : ''}" data-pp="${i}"><span class="pp-im"><img src="${p.src}" alt="">${n >= 0 ? `<i class="pp-b">${PP_MED[n]}</i>` : ''}</span><span class="pp-nm"><b>${esc(p.t)}</b><small>@${esc(p.h)}</small></span><span class="pp-cap"><span class="rf">${formHTML(p.form)}</span><b class="pop" title="Popularity: share of players picking it to win">🔥 ${bk[i]}%</b></span></button>`; }).join('')}</div>
       <p class="pp-i">${n3 ? 'Your podium is set. Tap a photo to change it.' : `Tap your <b>${['1st', '2nd', '3rd'][picks.length]}</b> place photo`}</p>
       ${cash ? `<div class="rc-st" role="group" aria-label="Entry">${RACE_ST.map(v => `<button data-rst="${v}" aria-pressed="${v === stake}">$${v}</button>`).join('')}</div>
         <button class="btn block pc-go" id="ppGo" ${n3 ? '' : 'disabled'}>🎀 Pick for ${money(stake)}</button>`
       : `<button class="btn block pc-go" id="ppFree" ${n3 && freeOk ? '' : 'disabled'}>${S.tut === 2 ? '🎟️ Your first Final pick · free' : `🎟️ Free pick · ${FREE_BET_COINS} 🟡`}</button>${S.tut === 2 ? '<p class="pp-r">Your first pick is on us. Top scores share the prize pool in real cash.</p>' : !fqLeft() ? `<p class="pp-r">Both free picks used this hour · next in ${frMinsLeft()} min</p>` : (S.gems || 0) < FREE_BET_COINS ? `<p class="pp-r">${FREE_BET_COINS - Math.floor(S.gems || 0)} more 🟡 for a free pick. ${y ? 'Judge' : 'Vote'} to earn them.</p>` : `<p class="pp-r">${fqLeft()} of ${FQ_MAX} free picks left this hour</p>`}`}
-      <p class="pp-r">10 pts for each photo in the right place · 5 if it made the top 3 in a different place. Top 10% share 78% of the pool by pick size · 10% to the finalists’ creators · 12% PhotoPicks. ${y ? 'Judges' : 'Voters'} decide.</p>
+      <p class="pp-r">10 pts for each photo in the right place · 5 if it made the top 3 in a different place. Score 15+ to win: the pickers’ 78% is shared by everyone on 15+, by pick size, and 20 points pays 2× and an exact 1-2-3 pays 6× what 15 points pays per $ · 10% to the finalists’ creators · 12% PhotoPicks. ${y ? 'Judges' : 'Voters'} decide.</p>
       <div style="text-align:center"><button class="link pc-later" id="ppCard">🎀 Finalists</button> · <button class="link pc-later" id="ppLater">${keep}</button></div></div>`);
     document.querySelectorAll('#coach [data-pp]').forEach(b => b.onclick = () => { const i = +b.dataset.pp, n = picks.indexOf(i); if (n >= 0) picks.splice(n, 1); else if (picks.length < 3) picks.push(i); draw(); });
     document.querySelectorAll('#coach [data-rst]').forEach(b => b.onclick = () => { stake = +b.dataset.rst; S.raceSt = stake; save(); draw(); });
@@ -5166,7 +5168,7 @@ function raceCard() { const cur = ppSlot(), cash = isCash(), y = isYoungW(), g =
   popOpen(`<div class="pp rc"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🎀 The ${raceName(cur)} Final</p><h2 class="pp-h">${esc(showName(g.k))}</h2>
     <div class="rc-pool"><b>${ppPool(g.players)}</b><span>Prize pool</span></div><p class="rc-meta">${g.players} players · <b class="rc-tl">${tLeft(g.end)}</b> left</p><p class="rc-ex">Explore the finalists</p>
     <div class="rc-g">${g.ph.map((p, i) => `<div class="rc-c ${p.mine ? 'me' : ''}"><img src="${p.src}" alt=""><b>${esc(p.t)}</b><small>@${esc(p.h)}${p.mine ? ' · you' : ''}</small><div class="rc-cf"><span class="rf">${formHTML(p.form)}</span><em>🔥 ${bk[i]}%</em></div></div>`).join('')}</div>
-    <p class="rc-jp">🎀 Perfect rosettes bonus · <b>$${raceJP(cur).toLocaleString()}</b></p><button class="btn block pc-go" id="rcGo">${e ? '🔴 Watch live' : own ? '🔴 Watch your photo run' : `🎀 Pick the top 3 · ${cash ? 'pick from $2' : 'free pick'}`}</button>
+    <p class="rc-jp">🎯 Score 15+ to win cash · an exact 1-2-3 pays <b>6×</b></p><button class="btn block pc-go" id="rcGo">${e ? '🔴 Watch live' : own ? '🔴 Watch your photo run' : `🎀 Pick the top 3 · ${cash ? 'pick from $2' : 'free pick'}`}</button>
     <p class="rc-sec">Next Finals</p>${next}
     <div class="rc-own"><b>📷 Show your photos, free</b><span>Top 2 in each qualifier go through. Finalists’ creators share <b>10% of the prize pool</b><br>Photos need ${SHOW_MIN}+ · entry is free</span>${(() => { const P = (S.photos || []), h = P.filter(p => rcRec(p.id).st === 'heats').length, q = P.filter(p => rcRec(p.id).st === 'q').length; return h || q ? `<p class="rc-mine">${q ? `✅ <b>${q}</b> qualified` : ''}${q && h ? ' · ' : ''}${h ? `🎀 <b>${h}</b> in the qualifiers` : ''}</p>` : ''; })()}${mine}<button class="btn block pc-real" id="rcEnter">🖼️ Your gallery</button></div>
     <div style="text-align:center"><button class="link pc-later" id="rcLater">${$('#panes').dataset.at === 'judge' ? (y ? 'Keep judging' : 'Keep voting') : 'Close'}</button></div></div>`);
@@ -5227,16 +5229,16 @@ setInterval(() => { if (!S || !S.races || $('#coach').classList.contains('on') |
   const k = Object.keys(S.races).find(sl => !S.races[sl].done && now >= Math.min((+sl + 1) * PP_MS, S.races[sl].at + PP_DEMO * 1.5)); if (k) raceOwnResult(+k); }, 3000);
 function ppResult(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc = ppScore(e.picks, g.ord), n = e.players || g.players, st = e.stake || 1, jp = raceJP(e.sl); let better = 0;
   for (let i = 0; i < n - 1; i++) { const a = ppShuffle([...Array(RACE_N).keys()], r); if (r() < .45) { const w = a.indexOf(g.ord[0]); [a[0], a[w]] = [a[w], a[0]]; } if (ppScore(a.slice(0, 3), g.ord) > sc) better++; }
-  const rank = better + 1, paid = Math.max(3, Math.ceil(n * .1)), win = rank <= paid, net = n * RACE_AVG * .78, perfect = sc === 30;
-  let prize = win ? +(net * st / ((paid - 1) * RACE_AVG + st)).toFixed(2) : 0; const jpWin = perfect ? +(jp / (1 + (e.sl % 2))).toFixed(2) : 0; prize = +(prize + jpWin).toFixed(2);
+  const rank = better + 1, TR = ppTiers(e, g), net = TR.net, prize = TR.prize, jpWin = 0;
   const amt = money(prize), cashP = isCash(), y = isYoungW();
   Object.assign(e, { done: 1, score: sc, rank, prize }); if (prize) { S.cash = +((S.cash || 0) + prize).toFixed(2); paintWallet(); } save();
   const top = g.ord.slice(0, 3), mk = (p, i) => top[i] === p ? '✅' : top.includes(p) ? '↕️' : '❌';
   popOpen(`<div class="pp"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
     <p class="pp-k">🎀 The ${raceName(g.sl)} Final · ${esc(showName(g.k))} · results</p><p class="pp-win">🏆 Won by <b>“${esc(g.ph[g.ord[0]].t)}”</b> · @${esc(g.ph[g.ord[0]].h)}</p><h2 class="pp-h">${prize ? `You won ${amt}!` : 'No cash this time'}</h2>
-    <p class="pp-m"><b>${sc} points</b> · ${ppOrd(rank)} of ${n} · ${e.free ? 'free pick' : `${money(st)} pick`}</p>
-    <div class="rs-pool"><div><b>${money(n * RACE_AVG)}</b><small>prize pool</small></div><div><b>${money(net)}</b><small>shared by the top ${paid} pickers</small></div><div><b>${money(n * RACE_AVG * .1)}</b><small>to the 6 photo creators</small></div></div>
-    <p class="rs-gap">${prize ? `You finished in the top ${paid}, so your share is <b>${amt}</b>.` : `Cash goes to the top ${paid}. You were <b>${rank - paid} place${rank - paid === 1 ? '' : 's'} off</b>.`}</p>${jpWin ? `<p class="rc-jp">🎀 Perfect rosettes! Bonus share <b>${money(jpWin)}</b></p>` : ''}
+    <p class="pp-m"><b>${sc} points</b> · ${e.free ? 'free pick' : `${money(st)} pick`}</p>
+    <div class="rs-pool"><div><b>${money(n * RACE_AVG)}</b><small>prize pool</small></div><div><b>${TR.winners}</b><small>of ${n} pickers won cash</small></div><div><b>${money(n * RACE_AVG * .1)}</b><small>to the 6 photo creators</small></div></div>
+    <div class="rs-tiers">${TR.T.map(t => `<div class="${TR.mine === t ? 'me' : ''}"><b>${t.lab}</b><span>${t.n} player${t.n === 1 ? '' : 's'} shared</span><em>${money(t.amt)}</em></div>`).join('')}</div>
+    <p class="rs-gap">${prize ? `You scored ${sc}: <b>${TR.mine.n} players</b> in your group shared ${money(TR.mine.amt)} by pick size and score, so you won <b>${amt}</b> (${(prize / st).toFixed(1)}× your pick).` : `15 points or more wins cash. You scored <b>${sc}</b>${sc === 10 ? ': one more photo in the top 3 would have paid' : ''}.`}</p>${jpWin ? `<p class="rc-jp">🎀 Perfect rosettes! Bonus share <b>${money(jpWin)}</b></p>` : ''}
     <div class="pp-cmp"><small>Crowd’s top 3</small><div>${top.map((p, i) => `<figure><img src="${g.ph[p].src}" alt=""><i>${PP_MED[i]}</i></figure>`).join('')}</div>
       <small>Your picks</small><div>${e.picks.map((p, i) => `<figure><img src="${g.ph[p].src}" alt=""><i>${mk(p, i)}</i></figure>`).join('')}</div></div>
     <p class="pp-r">✅ right place · ↕️ in the top 3, different place · ❌ not in the top 3</p>
@@ -5510,6 +5512,14 @@ const ffreeFirst = () => !S.firstEntry && !S.ffDone && !Object.values(S.rc || {}
 window.finPick = finPick;
 setInterval(() => { try { if (!S || !S.fpPend || S.tut !== 2 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on') || $('#panes').dataset.at !== 'judge') return; S.fpPend = 0; save();
   celebrate({ src: (ppGame().ph[0] || {}).src || '', score: '🎟️', title: 'Your free Final pick is ready', text: `You’ve judged ${15} photos. Pick the top 3 of 6 in the <b>${raceName(ppGame().sl)} ${esc(showName(ppGame().k))} Final</b>, free. Top scores share the <b>${ppPool(ppGame().players)}</b> prize pool in real cash.`, cta: '🎟️ Make my free pick', onCta: () => { closeFlow(); ppOpen(); }, later: 'Later' }); } catch (e) {} }, 1200);
+const PP_TIERS = [{ pts: 30, w: 6, lab: 'Exact 1-2-3' }, { pts: 20, w: 2, lab: '20 points' }, { pts: 15, w: 1, lab: '15 points' }];
+function ppTiers(e, g) { const r = cpRng(e.sl * 31 + 5), sc = ppScore(e.picks, g.ord), n = e.players || g.players, st = e.stake || 2, net = n * RACE_AVG * .78;
+  const T = PP_TIERS.map(t => ({ ...t, n: 0, stake: 0 }));
+  for (let i = 0; i < n - 1; i++) { const a = ppShuffle([...Array(RACE_N).keys()], r); if (r() < .45) { const w = a.indexOf(g.ord[0]); [a[0], a[w]] = [a[w], a[0]]; } const x = ppScore(a.slice(0, 3), g.ord), t = T.find(z => z.pts === x); if (t) { t.n++; t.stake += RACE_AVG; } }
+  const mine = T.find(z => z.pts === sc); if (mine) { mine.n++; mine.stake += st; }
+  const shares = T.reduce((a, t) => a + t.stake * t.w, 0) || 1; T.forEach(t => { t.amt = net * t.stake * t.w / shares; });
+  const prize = mine ? +(net * st * mine.w / shares).toFixed(2) : 0;
+  return { T, sc, n, st, net, prize, mine, winners: T.reduce((a, t) => a + t.n, 0) }; }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
