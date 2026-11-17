@@ -44,6 +44,13 @@ RA("const fill = ppShuffle(SEED.filter(x => x.src && !used.has(x.src)), rr).slic
 # group judging prize table on the pick screen
 RA("<p class=\"pp-m\">${real ? `Real entry · <b>$${GATE_FEE}</b> · perfect 1-2-3 wins <b>$${GATE_CASH[3]}</b>` : `Free · perfect 1-2-3 wins <b>${GATE_COINS[3]} 🟡</b> · 2 right <b>${GATE_COINS[2]} 🟡</b>`}</p>",
    "<div class=\"gt-tab\"><div class=\"${real ? '' : 'on'}\"><b>Free</b><span>3 right <em>${GATE_COINS[3]} 🟡</em></span><span>2 right <em>${GATE_COINS[2]} 🟡</em></span></div><div class=\"${real ? 'on' : ''}\"><b>For real · $${GATE_FEE}</b><span>3 right <em>$${GATE_CASH[3]}</em></span><span>2 right <em>$${GATE_CASH[2].toFixed(2)}</em></span></div></div><p class=\"gt-tab-n\">“Right” = the right photo in the right place</p>")
+# each player sees one side only: coin players the free group (with the real upsell on the result), cash players the real $1 group
+RA("<div class=\"gt-tab\"><div class=\"${real ? '' : 'on'}\"><b>Free</b><span>3 right <em>${GATE_COINS[3]} 🟡</em></span><span>2 right <em>${GATE_COINS[2]} 🟡</em></span></div><div class=\"${real ? 'on' : ''}\"><b>For real · $${GATE_FEE}</b><span>3 right <em>$${GATE_CASH[3]}</em></span><span>2 right <em>$${GATE_CASH[2].toFixed(2)}</em></span></div></div>",
+   "<div class=\"gt-tab one\">${real ? `<div class=\"on\"><b>Entry $${GATE_FEE}</b><span>3 right <em>$${GATE_CASH[3]}</em></span><span>2 right <em>$${GATE_CASH[2].toFixed(2)}</em></span></div>` : `<div class=\"on\"><b>Free</b><span>3 right <em>${GATE_COINS[3]} 🟡</em></span><span>2 right <em>${GATE_COINS[2]} 🟡</em></span></div>`}</div>")
+RA("S.gatePend = 0; save(); gateOpen(false); }, 1200);", "S.gatePend = 0; save(); gateOpen(isCash()); }, 1200);")
+RA("if (x.k === 'g') { S.gtN = 0; save(); gateOpen(false); return; }", "if (x.k === 'g') { S.gtN = 0; save(); gateOpen(isCash()); return; }")
+RA("<b>Group judging</b> · pick 3 of 5 · free`", "<b>Group judging</b> · pick 3 of 5 · ${isCash() ? `$${GATE_FEE} · win $${GATE_CASH[3]}` : 'free'}`")
+s = s.replace('</style>', '.gt-tab.one{grid-template-columns:1fr!important;max-width:260px;margin-left:auto!important;margin-right:auto!important}\n</style>', 1)
 # 6-finalist pick grid: 2 across, big photos
 s = s.replace('class="pp-g g9"', 'class="pp-g g6"')
 RA("Pick the top 3 of 9", "Pick the top 3 of 6")
