@@ -102,6 +102,7 @@ Then `rmv34.py`: Final picks without points: 3 correct / 2 correct / 1 correct /
 Then `rmv35.py`: a guest's Final picks are kept through sign-up, and the free pick is placed straight after.
 Then `rmv36.py`: "You have unused coins" pop opens the coins menu (Open my coins); new players' free ticket waits there as "Free ticket earned · Use" and opens the Final picker; the 250-coin nudge does the same.
 Then `rmv37.py`: Final pick screen from the mock-up: "Win a share of $X · Cash prize pool" header, "Pick your 1st, 2nd & 3rd", pool reminder above a green button that reads "Choose your top 3" until 3 are picked.
+Then `rmv38.py`: new players don't see Quick Sprint or the coin challenge until their first free Final pick is used.
 
 ```bash
 python3 rmv6.py
@@ -136,6 +137,7 @@ python3 rmv34.py
 python3 rmv35.py
 python3 rmv36.py
 python3 rmv37.py
+python3 rmv38.py
 ```
 
 ## Skill only
