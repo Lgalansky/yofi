@@ -2314,3 +2314,11 @@ html:not(.yg) .st-l,html:not(.yg) .st-t{color:#2B2320}html:not(.yg) .st-go{backg
 html.yg .st-l,html.yg .st-t{color:#E9E2FF}html.yg .st-go{background:#2EE59D!important;color:#14092B!important}html.yg .st-go.st-w{background:#C13CFF!important;color:#fff!important}html.yg .sd-rc{background:#2A1A52;color:#fff;box-shadow:inset 0 0 0 1.5px #3A2766}html.yg .sd-rc.q{box-shadow:inset 0 0 0 1.5px #2EE59D}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('heats ok')
+
+# ---------- Tournaments tab always opens on All (Freeroll filter no longer sticks); hourly race shows under Coins and Cash ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+s=s.replace("function fcNotify() {","document.addEventListener('click', e => { if (e.target.closest('#segCompete')) window.__tFil = 'all'; }, true);\nfunction fcNotify() {",1)
+RA('.tsl2[data-tfl="gem"]>:not(.gemt){display:none!important}','.tsl2[data-tfl="gem"]>:not(.gemt):not(.pprow){display:none!important}')
+open(d+'yofi-simple.html','w').write(s); print('tfil ok')
