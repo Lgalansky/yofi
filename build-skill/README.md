@@ -79,6 +79,7 @@ Then `rmv11.py`: no "Touch up a photo" row in the coins menu, and the coin chall
 Then `rmv12.py`: the agreed loop. Qualifiers are free-only (no paid fixed-payout version); photos enter free at 70+ (touch up with coins); 250 coins buys a free $1 Final pick, 2 an hour; the Final pool splits 78% top pickers, 10% finalists' creators, 12% Yofi; fixed $25 perfect bonus; coin players see coin games, depositors cash games; "Final pick" wording.
 Then `rmv13.py`: design pass from the mock-ups: qualifier pick (Predict the top 3, prize chips, 1st/2nd/3rd slots), qualifier result (crowd's top 3 vs your picks with labels), Finalists card (big prize pool, countdown, Explore the finalists).
 Then `rmv14.py`: newbie flow shows the core loop: when a photo reaches 70+, "Ready to compete!" enters it in the qualifiers (free) instead of offering a free first coin challenge.
+Then `rmv15.py`: vote-first tutorial. Landing leads with "Start voting · free"; new players open on Vote; first qualifier after 5 votes (qualifiers no longer need a photo); first Final pick free; the first Final result offers "Get your own photo in a Final"; a player's first photo enters a qualifier free without needing 70+.
 
 ```bash
 python3 rmv6.py
@@ -90,6 +91,7 @@ python3 rmv11.py
 python3 rmv12.py
 python3 rmv13.py
 python3 rmv14.py
+python3 rmv15.py
 ```
 
 ## Skill only
