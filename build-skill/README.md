@@ -109,6 +109,7 @@ Then `rmv41.py`: qualifier pick and result screens from the mock-ups (Pick the t
 Then `rmv42.py`: while a Final pick is running, Coming up shows "Your pick is live" with your 1st pick's place and minutes to results (tap opens the live board), and judging shows a toast when one of your picks moves up.
 Then `rmv43.py`: after a player's first Final pick, the Vote screen shows the last Final's creator earnings ("@luna_loves earned $37.92 with ...") and, if they have no photo in play, "Got a pet photo? The 1am Pets Final pays creators 10% of a $840 pool · Enter it" (✕ hides it for 20 votes).
 Then `rmv44.py`: flow is judge -> pick -> create: the creator prompts come off the Vote screen; the Final result's "Enter your own photo" card now opens with the winning creator's earnings.
+Then `rmv45.py`: qualifier groups use only the Final's own category; Final result screen from the mock-ups (headline, position chip, cash won, winner, crowd's top 3 vs your picks with Picked/Finished tags, rule, pool and winners stats, creators line, View payouts table, View next Final, Judge photos).
 
 ```bash
 python3 rmv6.py
@@ -150,6 +151,7 @@ python3 rmv41.py
 python3 rmv42.py
 python3 rmv43.py
 python3 rmv44.py
+python3 rmv45.py
 ```
 
 ## Skill only
