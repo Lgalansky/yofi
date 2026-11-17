@@ -2359,6 +2359,7 @@ function showCompReady(p, goal) {
   const rb = document.querySelector('#flowBody #rsComp'); if (rb) rb.hidden = false;
   const c = $('#coach'), fits = CX.filter(x => x.k !== 'gem' && cxFits(x, p)), first = goal || fits[0];
   const dc = CX.find(x => x.id === 'daily'), freeCup = false;
+  if (p && p.s.total >= SHOW_MIN && photoShow(p) && !rcRec(p.id).st && inPlay() < SLOT_BASE) { rmReady(p); return; }
   if (p && p.s.total >= CFG.QUALIFY && S.gbDone) { celebrate({ src: p.src, score: p.s.total, title: 'Ready to compete!', text: (S.votes || 0) < 10 ? `Your photo hit <b>${p.s.total}</b>. Vote a few photos to earn coins, then take it into a challenge.` : `Your photo hit <b>${p.s.total}</b>. Take it into a challenge: challenge a friend for coins, or play for real cash in Tournaments.`, cta: (S.votes || 0) < 10 ? '🟡 Earn coins by judging' : `${VS_IC}Challenge a friend`, onCta: () => { closeFlow(); if ((S.votes || 0) < 10) { go('judge'); renderJudge(); } else { openFriends(); crownPick(); } }, later: 'Play for cash', onLater: () => { closeFlow(); openComps(); } }); return; }
   if (!S.gbDone && p && p.s.total >= CFG.QUALIFY) {
     const cupNext = () => ({ label: '🟡 Next: vote and earn coins', go: () => { const nx = () => { closeFlow(); S.cpN = 0; save(); go('judge'); renderJudge(); $('#judge').scrollTop = 0; }; if (S.user && S.user.guest) { openSignup(nx, { locked: false, win: 1 }); return; } nx(); } });
@@ -5375,6 +5376,9 @@ function gateResult(G, picks) { const y = isYoungW(), top = G.ord.slice(0, 3), r
   if (pay) setTimeout(() => gemExplosion(pay, { label: 'Qualifier win' }), 400);
   if ($('#gtFin')) $('#gtFin').onclick = () => { popClose(); setTimeout(ppOpen, 250); };
   $('#gtNo').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
+function rmReady(p) { const g = ppGame(), y = isYoungW();
+  celebrate({ src: p.src, score: p.s.total, title: 'Ready to compete!', text: `Your photo hit <b>${p.s.total}</b>. Enter it in the <b>${esc(showName(photoShow(p)))}</b> qualifiers, free. ${y ? 'Judges' : 'Voters'} send the top 2 to the hourly <b>Final</b>, where every finalist’s creator shares <b>10% of the prize pool</b> (the ${raceName(g.sl)} Final’s is <b>${ppPool(g.players)}</b>).`,
+    cta: '🎀 Enter the qualifiers · free', onCta: () => { closeFlow(); showEnter(p.id); setTimeout(() => { go('judge'); renderJudge(); toast(`🎀 ${rcName(p)} is in! ${y ? 'Judge' : 'Vote'} to see its first qualifier.`); }, 1400); }, later: 'Later' }); }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
