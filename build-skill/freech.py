@@ -97,6 +97,9 @@ RA('${FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${!coin && x === st}
    '${isCash() ? FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${x === st}">$${x}</button>`).join(\'\') : `<button data-frs="gem" aria-pressed="true">${FR_GEM} ${G}</button>`}')
 RA('${FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${!frGem() && x === frSt()}">$${x}</button>`).join(\'\')}<button data-frs="gem" aria-pressed="${frGem()}">${FR_GEM} ${gemIcon(\'\')}</button>',
    '${isCash() ? FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${x === frSt()}">$${x}</button>`).join(\'\') : `<button data-frs="gem" aria-pressed="true">${FR_GEM} ${gemIcon(\'\')}</button>`}')
+# Challenge a friend costs 100 coins (winner gets 200) and sits in the coins menu for coin players
+RA("const FR_GEM = 50,", "const FR_GEM = 100,")
+RA("  return I;\n}\n// one clear screen for adding a photo", "  if (!isCash() && f) I.push({ ic: '👥', t: 'Challenge a friend', d: `Your photo vs a friend’s. Winner takes <b>${FR_GEM * 2} 🟡</b>.`, cost: FR_GEM, src: f.src, go: () => { closeSheet(); frDare(); } });\n  return I;\n}\n// one clear screen for adding a photo")
 # every Freeroll door now opens the free cash challenge
 RA("function swapTicket() {","function swapTicket() { freeCh(); return;")
 RA("function frEnter(f) {","function frEnter(f) { freeCh(); return;")
