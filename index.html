@@ -979,6 +979,14 @@ html #landing .lp2 h1.lp2-brand,html #landing .lp2 .lp2-sub{color:#7A1638!import
 html #landing .ca-top .wm{visibility:visible!important}.wm{white-space:nowrap}html header.top .wm{font-size:1.15rem!important;letter-spacing:-.01em}
 html:not(.yg) body .wm,html.yg body .wm{font-family:Pacifico,'Brush Script MT',cursive!important;font-weight:400!important;letter-spacing:0!important;line-height:1.25!important;color:#A0263A!important;-webkit-text-fill-color:#A0263A!important;background:none!important}
 html body #landing .ca-top .wm{font-size:1.55rem!important}html #landing .ca-top{align-items:center!important}html body header.top .wm{font-size:1.2rem!important}
+#finPick{position:fixed;inset:0;z-index:2147483000;background:rgba(43,35,32,.55);display:none;align-items:flex-end;justify-content:center}#finPick.on{display:flex}
+#finPick .fp-in{background:#FBF3EA;color:#2B2320;width:100%;max-width:520px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:18px 16px 22px;position:relative;box-sizing:border-box}
+#finPick .fp-x{position:absolute;right:12px;top:10px;border:0;background:none;font-size:1.4rem;color:#7A1638;cursor:pointer}#finPick .fp-k{margin:0;font-size:.74rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#9A2F4E}
+#finPick h2{font:800 1.7rem/1.1 Fraunces,Georgia,serif;color:#7A1638;margin:4px 0 6px}#finPick .fp-s{margin:0 0 12px;font-size:.92rem}
+#finPick .fp-c{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:#FFFFFF;border-radius:16px;padding:8px;margin:0 0 10px;box-shadow:inset 0 0 0 1px #EADCC6;cursor:pointer;font:inherit;color:inherit}
+#finPick .fp-c img{width:84px;height:84px;object-fit:cover;border-radius:12px;flex:none}#finPick .fp-e{width:84px;height:84px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;flex:none}
+#finPick .fp-t{flex:1;display:flex;flex-direction:column;gap:2px}#finPick .fp-t>b{font:800 1.12rem Fraunces,Georgia,serif;color:#7A1638}#finPick .fp-t small{font-size:.86rem}#finPick .fp-t em{font-style:normal;font-weight:900;color:#2F6B3F}
+#finPick .fp-c i{font-style:normal;font-size:1.6rem;color:#9A2F4E;padding-right:6px}#finPick .fp-n{font-size:.78rem;opacity:.75;text-align:center;margin:4px 0 0}
 </style>
 </head>
 <body>
@@ -5228,7 +5236,7 @@ function ppResult(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc = pp
     <button class="btn block ${cashP ? 'pc-go' : 'pc-real'}" id="ppNext">🎀 ${cashP ? 'Enter the next Final' : 'Enter the next Final for real'}</button>
     <div style="text-align:center"><button class="link pc-later" id="ppOk">${y ? 'Keep judging' : 'Keep voting'}</button></div></div>`);
   if (prize) setTimeout(() => cashExplosion && cashExplosion(prize, { label: 'Final' }), 500);
-  if (S.tut === 3) { S.tut = 4; save(); } if ($('#ppUp')) $('#ppUp').onclick = () => { popClose(); S.frameHint = showHint(finNext(1)[0].k); save(); pickPhoto(true); }; $('#ppNext').onclick = () => { popClose(); raceCard(); }; $('#ppOk').onclick = () => { popClose(); go('judge'); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
+  if (S.tut === 3) { S.tut = 4; save(); } if ($('#ppUp')) $('#ppUp').onclick = () => { popClose(); finPick(); }; $('#ppNext').onclick = () => { popClose(); raceCard(); }; $('#ppOk').onclick = () => { popClose(); go('judge'); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
 setInterval(() => { if (!S || !S.pp || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return; const now = Date.now();
   const e = Object.values(S.pp).find(x => !x.done && now >= ppDue(x)); if (e) ppResult(e); }, 3000);
 const ppRowHTML = () => { if (!S || S.geoBlock) return ''; const g = ppGame(), e = (S.pp || {})[g.sl], cash = e ? e.cur === 'cash' : isCash();
@@ -5331,7 +5339,7 @@ function renderMyShow() { const g = $('#gallery'); if (!g) return; $('#ptitle').
   g.querySelectorAll('[data-msen]').forEach(b => b.onclick = () => showEnter(b.dataset.msen));
   g.querySelectorAll('[data-msw]').forEach(b => b.onclick = () => +b.dataset.msw === cur ? ppOpen() : raceCard());
   g.querySelectorAll('[data-msup]').forEach(b => b.onclick = () => { S.cur = b.dataset.msup; save(); go('studio'); renderStudio(); });
-  $('#msCat').onclick = () => raceCard(); $('#msAdd').onclick = () => { S.frameHint = { cats: ['pets'], lab: 'Pets', frame: 'Pets' }; save(); pickPhoto(true); }; }
+  $('#msCat').onclick = () => raceCard(); $('#msAdd').onclick = () => finPick(); }
 function showRowHTML() { const free = !S.showFreeUsed, ok = free || (S.gems || 0) >= SHOW_ENTRY;
   return `<button class="ug-r ug-swap" id="msRow"><span class="ug-i">📷</span><span class="ug-t"><b>Enter a photo to compete</b><small>Qualifiers, then the hourly Final · top 3 win $10 · $5 · $2</small></span><em>Free</em></button>`; }
 document.addEventListener('click', e => { if (e.target.closest('#msRow')) { e.preventDefault(); e.stopPropagation(); myShow(); } }, true);
@@ -5448,7 +5456,7 @@ function caFinHTML() { const img = c => { const t = document.querySelector(`#lan
     return `<button class="ca-t caf-t" data-caf="${c}">${src ? `<img src="${src}" alt="">` : ''}<span><b>${SHOW_IC[x.k] || ''} ${esc(showName(x.k))}</b><small>Final at <b>${raceName(x.sl)}</b></small><em>${ppPool(ppGame(x.sl).players)} pool</em></span></button>`; }).join('')}</div>`; }
 setInterval(() => { try { const el = document.getElementById('caFin'); if (!el || !S || $('#landing').style.display === 'none') return; const h = caFinHTML(); if (el.dataset.h !== h) { el.dataset.h = h; el.innerHTML = h; } } catch (e) {} }, 1000);
 document.addEventListener('click', e => { const t = e.target.closest('[data-caf]'); if (!t) return; e.preventDefault(); window.__preCat = t.dataset.caf; yWL(); }, true);
-function rmEnterOwn() { window.__preCat = null; yWL(); }
+function rmEnterOwn() { finPick(); }
 function rmWatch() { if (!S.user) S.user = { h: 'guest' + Math.floor(1000 + Math.random() * 9000), guest: 1 }; tutInit(); save(); openApp(); setTimeout(() => { go('judge'); renderJudge(); raceCard(); }, 80); }
 window.rmEnterOwn = rmEnterOwn; window.rmWatch = rmWatch;
 const FF_GIFT = 150;
@@ -5481,6 +5489,17 @@ window.rmPickNow = rmPickNow;
 setInterval(() => { try { if (!S || $('#landing').style.display === 'none') return; const p = document.getElementById('lpPod');
   if (p && !p.dataset.ok && lpImg('pets')) { p.dataset.ok = 1; p.innerHTML = [['pets', '1st', 'g'], ['nature', '2nd', 's'], ['garden', '3rd', 'b']].map(([k, t, c]) => `<div><img src="${lpImg(k)}" alt=""><span class="lp-ros ${c}">${t}</span></div>`).join(''); }
   const c = document.getElementById('lpCont'); if (c) { const h = lpContHTML(); if (c.dataset.h !== h) { c.dataset.h = h; c.innerHTML = h; } } } catch (e) {} }, 1000);
+function finPick() { let o = document.getElementById('finPick'); if (!o) { o = document.createElement('div'); o.id = 'finPick'; document.body.appendChild(o); }
+  const first = ffreeFirst(), L = SHOW_ROT.map(x => ({ k: x.k, sl: finFor(x.k) })).sort((a, b) => a.sl - b.sl);
+  o.innerHTML = `<div class="fp-in"><button class="fp-x" aria-label="Close">✕</button><p class="fp-k">📷 Enter your photo</p><h2>Choose your Final</h2>
+    <p class="fp-s">Pick the category your photo is for. ${first ? 'Your first photo goes <b>straight into that Final</b> once you improve it.' : 'Photos at 70+ enter its qualifiers free; the top 2 go through to the Final.'}</p>
+    ${L.map(x => { const g = ppGame(x.sl); return `<button class="fp-c" data-fpk="${x.k}">${lpImg(x.k) ? `<img src="${lpImg(x.k)}" alt="">` : `<span class="fp-e">${SHOW_IC[x.k] || '🎀'}</span>`}<span class="fp-t"><b>${SHOW_IC[x.k] || ''} ${esc(showName(x.k))}</b><small>Next Final <b>${lpWhen(x.sl)}</b></small><em>${ppPool(g.players)} prize pool</em></span><i aria-hidden="true">›</i></button>`; }).join('')}
+    <p class="fp-n">Finals every hour: Pets, Nature &amp; landscapes, Garden &amp; flowers.</p></div>`;
+  o.className = 'on'; o.querySelector('.fp-x').onclick = () => { o.className = ''; };
+  o.querySelectorAll('[data-fpk]').forEach(b => b.onclick = () => { const k = b.dataset.fpk; o.className = ''; window.__preCat = showHint(k).cats[0];
+    if ($('#landing').style.display !== 'none' || !$('#app').classList.contains('on')) yWL(); else pickPhoto(true); }); }
+const ffreeFirst = () => !S.firstEntry && !S.ffDone && !Object.values(S.rc || {}).some(r => r.st || (r.f && r.f.length));
+window.finPick = finPick;
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
