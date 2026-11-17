@@ -52,6 +52,12 @@ Then `rmv2.py`: Best in Show with 6 finalists (3 groups, top 2 go through) and b
 python3 rmv2.py
 ```
 
+Then `rmv3.py`: shows whether you are a coin or real money player (account menu and My show) with a testing switch, a Friends pop to challenge friends (coins for coin players, real money for cash players), and friend challenges paid straight away with no club pot or blue ribbon.
+
+```bash
+python3 rmv3.py
+```
+
 ## Skill only
 
 `freech.py` replaces the Freeroll with a free cash challenge (300 coins, once an hour: a quick 1 v 1 photo battle, free, that pays $1.60 real cash on a win). `simplify.py` runs it for Skill and skips it when `YOFI_BUILD=real`, so Real Money keeps its Freeroll.
