@@ -91,11 +91,12 @@ RA("to challenge for the ${esc(cn)} blue ribbon${L ? ` and today’s <b>${('$' +
 # coin nudge: names the game; suggests the free cash challenge first when it's ready and affordable
 RA("const x = I.find(i => S.gems >= i.cost) || I[0];\n  celebrate({ src: x.src, score: '🟡', title: `You’ve got ${Math.floor(S.gems).toLocaleString()} coins!`, text: `${x.d}<br>Use <b>${x.cost} 🟡</b> on it now.`, cta: '🟡 Use my coins', onCta: useGems, later: 'Later' });",
    "const x = I.find(i => S.gems >= i.cost) || I[0];\n  celebrate({ src: x.src, score: '🟡', title: `You’ve got ${Math.floor(S.gems).toLocaleString()} coins!`, text: `<b>${x.t}</b> · ${x.d}<br>Use <b>${x.cost} 🟡</b> on it now.`, cta: '🟡 Use my coins', onCta: useGems, later: 'Later' });")
-# Challenge a friend: coin players start on coins (coin option first); a $ pick is their choice to play for real
-RA("frGem = () => S.frSt === 'gem'", "frGem = () => S.frSt === 'gem' || (!isCash() && !S.frStPick)")
-RA("S.frSt = b.dataset.frs === 'gem' ? 'gem' : +b.dataset.frs; save();", "S.frSt = b.dataset.frs === 'gem' ? 'gem' : +b.dataset.frs; S.frStPick = 1; save();", 2)
+# Challenge a friend: cash players see only cash entries, coin players only coins
+RA("frGem = () => S.frSt === 'gem'", "frGem = () => !isCash()")
 RA('${FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${!coin && x === st}">$${x}</button>`).join(\'\')}<button data-frs="gem" aria-pressed="${coin}">${FR_GEM} ${G}</button>',
-   '${isCash() ? \'\' : `<button data-frs="gem" aria-pressed="${coin}">${FR_GEM} ${G}</button>`}${FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${!coin && x === st}">$${x}</button>`).join(\'\')}${isCash() ? `<button data-frs="gem" aria-pressed="${coin}">${FR_GEM} ${G}</button>` : \'\'}')
+   '${isCash() ? FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${x === st}">$${x}</button>`).join(\'\') : `<button data-frs="gem" aria-pressed="true">${FR_GEM} ${G}</button>`}')
+RA('${FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${!frGem() && x === frSt()}">$${x}</button>`).join(\'\')}<button data-frs="gem" aria-pressed="${frGem()}">${FR_GEM} ${gemIcon(\'\')}</button>',
+   '${isCash() ? FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${x === frSt()}">$${x}</button>`).join(\'\') : `<button data-frs="gem" aria-pressed="true">${FR_GEM} ${gemIcon(\'\')}</button>`}')
 # every Freeroll door now opens the free cash challenge
 RA("function swapTicket() {","function swapTicket() { freeCh(); return;")
 RA("function frEnter(f) {","function frEnter(f) { freeCh(); return;")
