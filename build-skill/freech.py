@@ -84,6 +84,9 @@ RA('<button class="link" id="mR" style="margin-top:6px">Reset prototype</button>
    '<p class="pf-test">Testing</p>${S.cashMode ? \'<button class="btn quiet block" id="toCoin">↺ Back to coin play</button>\' : \'\'}<button class="btn quiet block" id="fcRst">↺ Reset free cash challenge</button>\n    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button></div>`);')
 s=s.replace("function fcNotify() {","document.addEventListener('click', e => { if (e.target.closest('#fcRst')) { e.preventDefault(); e.stopPropagation(); S.fcDay = null; if ((S.gems || 0) < FC_COINS) S.gems = FC_COINS; save(); try { closeSheet(); } catch (x) {} paintGems(); toast('Free cash challenge reset (test)'); } }, true);\nfunction fcNotify() {",1)
 s=s.replace('</style>','.pf-test{margin:14px 0 4px;font-size:.7rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.6;text-align:left}\n</style>',1)
+# coin players: the add-a-photo screen talks about the coin challenge, not the blue ribbon or the cash pot
+RA("to challenge for the ${esc(cn)} blue ribbon${L ? ` and today’s <b>${('$' + Math.round(L.jp[k]).toLocaleString())}</b> pot` : ''}.</p>",
+   "to ${isCash() ? `challenge for the ${esc(cn)} blue ribbon${L ? ` and today’s <b>${('$' + Math.round(L.jp[k]).toLocaleString())}</b> pot` : ''}` : `play the ${esc(cn.toLowerCase())} coin ${isYoungW() ? 'battle' : 'challenge'} and win <b>${CC_COIN * 2} 🟡</b>`}.</p>")
 # every Freeroll door now opens the free cash challenge
 RA("function swapTicket() {","function swapTicket() { freeCh(); return;")
 RA("function frEnter(f) {","function frEnter(f) { freeCh(); return;")
