@@ -63,6 +63,18 @@ RA("function openBattle() {", "function openBattle() { if (!isCash() && !S.potSe
 RA("S.btAlt = !S.btAlt; save();", "S.btAlt = !S.btAlt; if (!isCash()) { if (S.btAlt && fcReady() && (S.gems || 0) >= FC_COINS && fighters().length) { save(); freeCh(); return; } S.btAlt = false; } save();")
 RA("if (!S.potSeen) { const pp = fighters()[0]", "if (!S.potSeen && isCash()) { const pp = fighters()[0]")
 RA("else if (S.btAlt) { if (!S.nextBth", "else if (S.btAlt || !isCash()) { if (!S.nextBth")
+# coin prices (Skill): coin challenge 100 in / win 200, Quick Sprint 250 in / win 400, free cash challenge 500
+RA("const FC_COINS = 300;", "const FC_COINS = 500, CC_COIN = 100;")
+RA("const QS_COIN = 100, QS_COIN_PAY = [160];", "const QS_COIN = 250, QS_COIN_PAY = [400];")
+RA("openGemBattle(25)", "openGemBattle(CC_COIN)", 3)
+RA("openGemBattle(25, null, { theme: bth })", "openGemBattle(CC_COIN, null, { theme: bth })")
+RA("Stake <b>25 🟡</b>, win <b>50 🟡</b>", "Stake <b>${CC_COIN} 🟡</b>, win <b>${CC_COIN * 2} 🟡</b>")
+RA("Free challenge · 25 🟡", "Free challenge · ${CC_COIN} 🟡")
+RA("'Free challenge · ${CC_COIN} 🟡'", "`Free challenge · ${CC_COIN} 🟡`")
+RA("for <b>50 🟡</b>", "for <b>${CC_COIN * 2} 🟡</b>")
+RA("win 50 🟡`, k: 'b' }", "win ${CC_COIN * 2} 🟡`, k: 'b' }")
+RA("Win <b>50 🟡</b> in 30 seconds.`, cost: 25, src: f.src, go: () => { closeSheet(); openGemBattle(CC_COIN); } });",
+   "Win <b>${CC_COIN * 2} 🟡</b> in 30 seconds.`, cost: CC_COIN, src: f.src, go: () => { closeSheet(); openGemBattle(CC_COIN); } });\n  I.unshift({ ic: '🎯', t: 'Quick Sprint', d: `1 v 1: pick the crowd’s choice in 10 photo pairs. Win <b>${QS_COIN_PAY[0]} 🟡</b>.`, cost: QS_COIN, src: '', go: () => { closeSheet(); sprPractice(); } });")
 # every Freeroll door now opens the free cash challenge
 RA("function swapTicket() {","function swapTicket() { freeCh(); return;")
 RA("function frEnter(f) {","function frEnter(f) { freeCh(); return;")
