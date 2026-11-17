@@ -80,6 +80,7 @@ Then `rmv12.py`: the agreed loop. Qualifiers are free-only (no paid fixed-payout
 Then `rmv13.py`: design pass from the mock-ups: qualifier pick (Predict the top 3, prize chips, 1st/2nd/3rd slots), qualifier result (crowd's top 3 vs your picks with labels), Finalists card (big prize pool, countdown, Explore the finalists).
 Then `rmv14.py`: newbie flow shows the core loop: when a photo reaches 70+, "Ready to compete!" enters it in the qualifiers (free) instead of offering a free first coin challenge.
 Then `rmv15.py`: vote-first tutorial. Landing leads with "Start voting · free"; new players open on Vote; first qualifier after 5 votes (qualifiers no longer need a photo); first Final pick free; the first Final result offers "Get your own photo in a Final"; a player's first photo enters a qualifier free without needing 70+.
+Then `rmv16.py`: "Next Finals" strip (time and category of the next 3 Finals) on the landing page, the end-of-tutorial card and Gallery; the first-photo pop names the Final it's going for; "Add a photo" opens the next Final's category.
 
 ```bash
 python3 rmv6.py
@@ -92,6 +93,7 @@ python3 rmv12.py
 python3 rmv13.py
 python3 rmv14.py
 python3 rmv15.py
+python3 rmv16.py
 ```
 
 ## Skill only
