@@ -103,6 +103,14 @@ RA("  return I;\n}\n// one clear screen for adding a photo", "  if (!isCash() &&
 # Quick Sprint invite for coin players: coins only
 RA("Your first one is for coins: <b>${QS_COIN}</b> in, win <b>${QS_COIN_PAY[0]}</b>. Then play for cash: <b>$2</b> wins <b>$3.20</b>, up to <b>$20</b> wins <b>$32</b>.`",
    "Play for <b>${QS_COIN} ${gemIcon('')}</b>, win <b>${QS_COIN_PAY[0]} ${gemIcon('')}</b>. About 30 seconds.`")
+# coin players: Quick Sprint result has no cash upsell; coin challenge pop doesn't mention blue ribbons
+RA("const up = pr ? `", "const up = pr && !isCash() ? '' : pr ? `")
+RA('${pr ? `<button class="btn block qs3-real"', '${pr && isCash() ? `<button class="btn block qs3-real"')
+RA("Practice · no blue ribbons at stake.", "Coins only.")
+# a / an before a category name ("an outfit photo")
+s=s.replace("function fcNotify() {","function aN(w) { return /^[aeiou]/i.test(String(w || '')) ? 'an' : 'a'; }\nfunction fcNotify() {",1)
+for pat in [" a ${tn.toLowerCase()}", " a <b>${tn.toLowerCase()}</b>", " a ${esc(tn.toLowerCase())}", " a ${esc(cn.toLowerCase())}", " a ${cn.toLowerCase()}"]:
+    s=s.replace(pat, pat.replace(" a ", " ${aN(" + ("tn" if "tn" in pat else "cn") + ")} ", 1))
 # every Freeroll door now opens the free cash challenge
 RA("function swapTicket() {","function swapTicket() { freeCh(); return;")
 RA("function frEnter(f) {","function frEnter(f) { freeCh(); return;")
