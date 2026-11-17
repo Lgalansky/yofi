@@ -12,7 +12,11 @@ const fcRowHTML = () => { if (!S || S.geoBlock) return ''; const r = fcReady(), 
   return `<button class="tsr2 fcrow ${ok ? 'can' : 'need'}" id="fcRow"><span class="tsr2-t"><span class="fr-tag fc-tag">FREE CASH CHALLENGE</span><b>${r ? 'Ready' : frMinsLeft() + 'm'}</b></span><span class="tsr2-p">$1</span><span class="tsr2-n"><small>${r ? '1 an hour' : 'Used'}</small></span><span class="tsr2-e">${ok ? `${FC_COINS} 🟡` : `🔒 ${FC_COINS} 🟡`}</span></button>`; };
 const FC_PRIZE = 1.6, FC_N = 15;
 function freeCh() { if ($('#sheet').classList.contains('on')) closeSheet(); const y = isYoungW(), keep = $('#panes').dataset.at === 'judge' ? (y ? 'Keep judging' : 'Keep voting') : 'Not now';
-  if (!fcReady()) { toast(`You’ve had this hour’s free cash challenge. Next one in ${frMinsLeft()} min.`); return; }
+  if (!fcReady()) { popOpen(`<div class="pc pc2 fc2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pc-k"><span>🎟️ Free cash ${y ? 'battle' : 'challenge'}</span></p><h2 class="pc-h">Next one in ${frMinsLeft()} min</h2>
+      <p class="fch-m">You’ve had this hour’s free cash ${y ? 'battle' : 'challenge'}. A new one opens every hour.</p>
+      <button class="btn block pc-go" id="fcOk">${keep}</button><div style="text-align:center"><button class="link pc-later fc-test" id="fcReset">↺ Reset for testing</button></div></div>`);
+    $('#fcOk').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose());
+    $('#fcReset').onclick = () => { S.fcDay = null; if ((S.gems || 0) < FC_COINS) S.gems = FC_COINS; save(); paintGems(); toast('Free cash challenge reset (test)'); freeCh(); }; return; }
   const ks = CATS8.filter(k => lgMine(k)).sort((a, b) => (a === 'any') - (b === 'any'));
   if (!ks.length) { toast(`Get a photo to ${CFG.QUALIFY}+ first, then play free.`); pickPhoto(true); return; }
   const k = ks[0], me = lgMine(k), L = lgS(), P = L.pl.filter(p => p.sc && p.sc[k]), O = P[Math.floor(Math.random() * P.length)] || L.pl[0], opp = O.h, their = (O.sc && O.sc[k]) || 80, osrc = lgPhoto(opp, k);
