@@ -912,6 +912,9 @@ html:not(.yg) .gt-tab>div{background:#F3ECDF;color:#2B2320}html.yg .gt-tab>div{b
 html:not(.yg) .ms{color:#2B2320}html:not(.yg) .ms-sum>div,html:not(.yg) .ms-c,html:not(.yg) .ms-next{background:#F3ECDF;color:#2B2320}html:not(.yg) .ms-c.q{box-shadow:inset 0 0 0 2px #2F6B3F}html:not(.yg) .ms-go{background:#2F6B3F!important;color:#fff!important}html:not(.yg) .ms-w2{background:#2D4E86!important}html:not(.yg) .ms-up{background:#8B6A2A!important}
 html.yg .ms{color:#fff}html.yg .ms-sum>div,html.yg .ms-c,html.yg .ms-next{background:#2A1A52;color:#fff}html.yg .ms-c.q{box-shadow:inset 0 0 0 2px #2EE59D}html.yg .ms-go{background:#2EE59D!important;color:#14092B!important}html.yg .ms-w2{background:#C13CFF!important;color:#fff!important}
 .seg #segGallery .ms-ic{display:block;font-size:1.45rem;line-height:1.1}
+.fr-l{text-align:left;margin:4px 0 10px}.fr-r{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;padding:6px 0;border-top:1px solid rgba(127,127,127,.18)}.fr-r>b{font-size:.92rem}.fr-go{margin:0!important;padding:8px 12px!important;font-size:.82rem!important;width:auto!important;min-height:0!important;text-transform:none!important}.fr-none{font-size:.88rem;opacity:.85}
+.pf-type{margin:12px 0 0;font-size:.9rem;text-align:left}.pf-test{margin:14px 0 4px;font-size:.7rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.6;text-align:left}.ms-fr{margin:0 0 8px!important}
+html:not(.yg) .fr-go{background:#2F6B3F!important;color:#fff!important}html.yg .fr-go{background:#2EE59D!important;color:#14092B!important}html:not(.yg) .ms-fr{background:#F3ECDF!important;color:#2B2320!important;box-shadow:inset 0 0 0 1.5px #E6D9C4!important}html.yg .ms-fr{background:#2A1A52!important;color:#fff!important}
 </style>
 </head>
 <body>
@@ -3092,6 +3095,7 @@ function openMenu() {
   openSheet(`<div class="pf-top">${S.user ? `<button class="pf-av" id="pfAv" aria-label="Change profile photo">${avatarInner()}<span class="pf-cam">${CAMSVG}</span></button>` : ''}<div><h2>${S.user ? '@' + esc(S.user.h) : 'Your profile'}</h2><p class="sub">${S.user ? esc(S.user.em) : 'Not signed up yet.'}</p>${S.user ? `<button class="link pf-chg" id="pfChg">${S.user.pic ? 'Change profile photo' : 'Add a profile photo'}</button>` : ''}</div></div>
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${S.bw}–${S.bl}</b><span>Wins–losses</span></div><div><b>${qn}</b><span>Qualified photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">Competitions</button><button class="btn quiet block" id="mS">Coin store</button>
+    <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
     <button class="link" id="mR" style="margin-top:6px">Reset prototype</button></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => openComps(null); $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
@@ -4401,8 +4405,8 @@ function frDare(k0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPi
       <h3 class="fcn-h">Your photo</h3><div id="fcPick"></div>
       <div class="f2-tag bf-cat" id="fcTag"></div><div class="fcn-chips f2-cat" id="fcCats" hidden></div>
       <h3 class="fcn-h">Entry per player</h3>
-      <div class="riv-st fr-st bf-st" role="group" aria-label="Entry">${FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${!coin && x === st}">$${x}</button>`).join('')}<button data-frs="gem" aria-pressed="${coin}">${FR_GEM} ${G}</button></div>
-      <div class="bf-win"><span class="tr">${coin ? '🏆' : CRW}</span><span class="sep"></span><div id="bfWin"></div></div>
+      <div class="riv-st fr-st bf-st" role="group" aria-label="Entry">${isCash() ? FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${x === st}">$${x}</button>`).join('') : `<button data-frs="gem" aria-pressed="true">${FR_GEM} ${G}</button>`}</div>
+      <div class="bf-win"><span class="tr">🏆</span><span class="sep"></span><div id="bfWin"></div></div>
       <a class="btn block fcn-go bf-go" id="bfGo" href="#" target="_blank" rel="noopener"><span class="fcs-wa">${WA_ICON}</span>Invite on WhatsApp</a>
       <p class="bf-cap">They join your club free${coin ? ` and you both get <b>50 ${G}</b>` : ''}. The challenge starts when they accept.</p></div>`, { full: true, cover: true });
     document.querySelectorAll('#sheetBody [data-frs]').forEach(b => b.onclick = () => { S.frSt = b.dataset.frs === 'gem' ? 'gem' : +b.dataset.frs; save(); sel = po.sel; paint(); });
@@ -4413,7 +4417,7 @@ function frDare(k0, keep) { if (!(S.user && (S.user.pic || S.picSkip))) { needPi
         cats.querySelectorAll('[data-ft]').forEach(b => b.onclick = () => { thOv = b.dataset.ft; catOpen = false; sel = po.sel; paint(); }); }
       if ($('#fcChg')) $('#fcChg').onclick = () => { catOpen = !catOpen; setCat(); };
       $('#bfWin').innerHTML = frGem() ? `<small>Winner takes all</small><b>${FR_GEM * 2} ${G}</b><span>${FR_GEM} each</span>`
-        : `<small>Winner takes the ${esc(cn)} blue ribbon</small><b>${money(.85 * frSt() * 2)}</b><span>$${frSt()} each into the club pot · pays Sunday</span>`;
+        : `<small>Winner takes</small><b>${money(.85 * frSt() * 2)}</b><span>$${frSt()} each · paid straight away</span>`;
       const link = `https://yofi.app/crew/${(crewCur() || { id: 'new000' }).id.slice(0, 6)}`, msg = `🏅 Can you beat my ${cn} photo?${p ? ` My score: ${p.s.total}.` : ''} Challenge me on Yofi for ${frLab()}: ${link}`;
       $('#bfGo').href = 'https://wa.me/?text=' + encodeURIComponent(msg); };
     $('#fcPick').innerHTML = pickerHTML(po); const getSel = bindPicker(po); setCat();
@@ -4496,7 +4500,7 @@ function crewCat(c, k, opp) {
     <div class="lgs-hd"><span class="lgs-hc">${CRW}</span><div><small>Club blue ribbon</small><b>${h ? crewWho(h) : 'Up for grabs'}</b><span>${h ? `Held ${heldFor(c.since[k] || Date.now())} · ${c.def[k] || 0} defence${(c.def[k] || 0) === 1 ? '' : 's'}` : 'Win any challenge here to take it'}</span></div></div>
     ${others.length > 1 ? `<div class="cw-opp">${others.map(x => `<button data-cwo="${x}" aria-pressed="${x === o}">${lgAv(x, 26)}@${esc(x)}${c.hold[k] === x ? ' 🏅' : ''}</button>`).join('')}</div>` : ''}
     <div class="lgv"><div class="lgv-p"><img src="${lgPhoto(o, k)}" alt=""><b>@${esc(o)}${c.hold[k] === o ? ' 🏅' : ''}</b></div><span class="lgv-x">VS</span><div class="lgv-p me"><img src="${mine.src}" alt=""><b>You · ${mine.s.total}</b></div></div>
-<div class="riv-st fr-st" role="group" aria-label="Stake">${FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${!frGem() && x === frSt()}">$${x}</button>`).join('')}<button data-frs="gem" aria-pressed="${frGem()}">${FR_GEM} ${gemIcon('')}</button></div>
+<div class="riv-st fr-st" role="group" aria-label="Stake">${isCash() ? FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${x === frSt()}">$${x}</button>`).join('') : `<button data-frs="gem" aria-pressed="true">${FR_GEM} ${gemIcon('')}</button>`}</div>
     <button class="btn block lgs-go" id="cwFight">${c.rev[k] === o && c.hold[k] === o ? 'Rematch' : me ? `${VS_IC}Keep your top spot` : c.hold[k] === o ? `${VS_IC}Today’s photo challenges` : `${VS_IC}Compete @${esc(o)}`} · ${frLab()}</button>
     <p class="lgs-ent">${me ? 'Win to keep your blue ribbon' : 'Win to take the blue ribbon'} · ${frGem() ? `winner gets ${FR_GEM * 2} ${gemIcon('')} · no cash in the pot` : `${frSt() === 1 ? '80¢' : money(.8 * frSt())} goes into the club pot`}</p></div>`, { full: true, cover: true });
   document.querySelectorAll('#sheetBody [data-frs]').forEach(b => b.onclick = () => { S.frSt = b.dataset.frs === 'gem' ? 'gem' : +b.dataset.frs; save(); crewCat(c, k, o); });
@@ -4527,14 +4531,14 @@ function revengePrep(c, k, h, pid) {
   $('#rvGo').onclick = () => c ? frPay(() => crewFight(c, k, h, p.id, true)) : lgPay(() => lgFight(k, h, lgHold(k).h === h, true, p.id));
 }
 const FR_ST = [1, 2, 5, 10]; const frSt = () => FR_ST.includes(S.frSt) ? S.frSt : 1;
-const FR_GEM = 50, frGem = () => S.frSt === 'gem', frLab = () => frGem() ? `${FR_GEM} 🟡` : `$${frSt()}`;
+const FR_GEM = 50, frGem = () => !isCash(), frLab = () => frGem() ? `${FR_GEM} 🟡` : `$${frSt()}`;
 const frPay = then => { if (!frGem()) return payCash(frSt(), 'A friends challenge', then);
   if (S.gems < FR_GEM) { closeSheet(); runOut('gems', `You need ${FR_GEM - S.gems} more`, null, FR_GEM - S.gems); return; }
   S.gems -= FR_GEM; save(); paintGems(); then(); };
 function crewFight(c, k, h, pid, rev) { const coin = frGem(), st = coin ? 0 : frSt();
   const me = S.photos.find(x => x.id === pid) || lgMine(k), N = 15, their = 72 + (hsh(h + k) % 16), won = Math.random() < Math.max(.2, Math.min(.8, .5 + (me.s.total - their) / 30));
   const mv = won ? 8 + Math.floor(Math.random() * 3) : 4 + Math.floor(Math.random() * 4), tv = N - mv, src = lgPhoto(h, k), cn = esc(crownName(k)), H = c.hold[k] || null; let msg = '';
-  if (st) c.pot[k] = +((c.pot[k] || 0) + LG_CUT * st).toFixed(2);
+  const fWin = st ? +(st * 2 * .85).toFixed(2) : 0; if (won && st) { S.cash = +((S.cash || 0) + fWin).toFixed(2); setTimeout(() => { paintWallet(); try { cashExplosion(fWin, { label: 'Friend challenge won' }); } catch (e) {} }, 9000); }
   if (won && coin) { S.gems += FR_GEM * 2; setTimeout(() => { paintGems(); gemExplosion(FR_GEM * 2, { label: '🟡 Coin challenge won' }); }, 9000); }
   if (won) { const L = lgS(); L.wins = (L.wins || 0) + 1; L.fwins = (L.fwins || 0) + 1; delete c.rev[k]; if (rev) { S.gems += 25; setTimeout(() => { paintGems(); gemExplosion(25, { label: '🔥 Rematch bonus' }); }, 9500); }
     if (H !== 'you') { c.hold[k] = 'you'; c.since[k] = Date.now(); c.def[k] = 0; msg = `🏅 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} blue ribbon!`; crewLog(c, `🏅 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} blue ribbon`); }
@@ -4546,7 +4550,7 @@ function crewFight(c, k, h, pid, rev) { const coin = frGem(), st = coin ? 0 : fr
     const vs = (a, b, done) => `<div class="kg2-vs du"><div class="kg2-ph king ${done && !won ? 'won' : ''}"><img src="${src}" alt="">${done && !won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div><b class="kg2-x">VS</b><div class="kg2-ph me ${done && won ? 'won' : ''}"><img src="${me.src}" alt="">${done && won ? '<span class="kg2-w">🏆 WINNER</span>' : ''}</div></div>
       <div class="kg2-who du"><div class="king"><small>@${esc(h)}</small><b>${esc(c.name)}</b><strong id="cbT">${a}</strong><span>votes</span></div><div class="me"><small>You</small><b>Score ${me.s.total}</b><strong id="cbM">${b}</strong><span>votes</span></div></div>`;
     const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>Club challenge</b><span></span></div><span class="kg2-cat">${gi(k)}${cn.toUpperCase()}</span>`;
-    openSheet(`<div class="kg2" id="cb">${head}<h2 class="kg2-h">You vs @${esc(h)}</h2><p class="kg2-sub">${esc(c.name)} · ${cn} blue ribbon${rev ? ' · 🔥 rematch bonus +25' : ''}</p><span class="kg2-live"><i></i>Live voting</span>${vs(0, 0, false)}<div class="kg2-bar"><i id="cbTb" style="width:50%"></i><i id="cbMb" style="width:50%"></i></div><p class="kg2-n" id="cbV">0 of ${N} votes</p></div>`, { full: true, cover: true });
+    openSheet(`<div class="kg2" id="cb">${head}<h2 class="kg2-h">You vs @${esc(h)}</h2><p class="kg2-sub">${esc(c.name)} · ${coin ? `winner gets ${FR_GEM * 2} 🟡` : `winner takes ${money(.85 * st * 2)}`}${rev ? ' · 🔥 rematch bonus +25' : ''}</p><span class="kg2-live"><i></i>Live voting</span>${vs(0, 0, false)}<div class="kg2-bar"><i id="cbTb" style="width:50%"></i><i id="cbMb" style="width:50%"></i></div><p class="kg2-n" id="cbV">0 of ${N} votes</p></div>`, { full: true, cover: true });
     let v = 0, m = 0; const seq = [...Array(N)].map((_, i) => i < mv); for (let i = N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [seq[i], seq[j]] = [seq[j], seq[i]]; }
     const iv = setInterval(() => {
       if (!$('#cbV')) { clearInterval(iv); return; }
@@ -4554,11 +4558,11 @@ function crewFight(c, k, h, pid, rev) { const coin = frGem(), st = coin ? 0 : fr
       if (v < N) return; clearInterval(iv); const pct = Math.round(mv / N * 100);
       $('#cb').innerHTML = `${head}<p class="kg2-fin">Final result</p><h2 class="kg2-h">${won ? `You beat @${esc(h)}!` : `@${esc(h)} wins this one`}</h2><p class="kg2-score">Final vote · ${Math.max(mv, tv)}–${Math.min(mv, tv)}</p>${vs(tv, mv, true)}
         <div class="kg2-bar res"><i style="width:${100 - pct}%">${100 - pct}%</i><i style="width:${pct}%">${pct}%</i></div>
-        ${msg ? `<p class="fb-crown ${won ? 'w' : 'l'}">${msg}</p>` : ''}
-        <div class="kg2-next ${won ? 'win' : 'lose'}"><small>${cn} club pot</small><b>${money(c.pot[k])}</b><span>${c.hold[k] === 'you' ? 'Yours if you hold the blue ribbon at Sunday midnight' : `@${esc(c.hold[k])} takes it if they still hold the blue ribbon on Sunday`}</span></div>
+        
+        <div class="kg2-next ${won ? 'gemw' : 'lose'}"><small>${won ? 'You won' : 'You lost'}</small><b>${coin ? `🟡 ${won ? FR_GEM * 2 : FR_GEM}` : money(won ? fWin : st)}</b><span>${won ? (coin ? 'Added to your coins' : 'Added to your cash') : 'Rematch to win it back'}</span></div>${coin ? `<button class="btn block pc-real kg2-real" id="cbReal">💵 Play for real · $${LG_FEE}</button>` : ''}
         <button class="btn block kg2-go" id="cbAgain">${won ? 'Play again' : `Rematch on @${esc(h)}`}</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to ${esc(c.name)}</button></div>`;
       paintWallet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'friends') renderGallery();
-      $('#cbAgain').onclick = () => won ? crewCat(c, k) : revengePrep(c, k, h, me.id);
+      $('#cbAgain').onclick = () => { closeSheet(); friendsPop(); }; if ($('#cbReal')) $('#cbReal').onclick = () => { closeSheet(); payCash(LG_FEE, 'A friend challenge', () => { setTimeout(friendsPop, 300); }); };
       document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if ($('#panes').dataset.at === 'gallery' && GV.tab === 'friends') renderGallery(); });
     }, 200);
   };
@@ -5249,10 +5253,10 @@ function renderMyShow() { const g = $('#gallery'); if (!g) return; $('#ptitle').
   const card = p => { const r = rcRec(p.id), k0 = photoShow(p), x0 = rcStatus(p), x = !k0 ? { cls: 'n', ic: '📷', t: 'Not a show category', s: 'Only Pets, Nature, Garden and Food photos can enter' } : x0.cls === 'n' ? { cls: 'n', ic: '📷', t: 'Not entered yet', s: `Enter it: the top 2 in a group go through, and Best in Show 🥇🥈🥉 win $10 · $5 · $2` } : x0, f = r.f.map(z => z.pl), k = photoShow(p), SH = SHOWS.find(z => z.k === k), can = !r.st && SH && !SH.soon && p.s.total >= FR_MIN;
     return `<div class="ms-c ${x.cls}"><img src="${p.src}" alt=""><div class="ms-t"><b>${esc(rcName(p))} <em>${p.s.total}</em></b>${SH ? `<span class="ms-k">${SH.n}${SH.soon ? ' · shows open soon' : ''}</span>` : ''}<span>${x.ic} ${x.t}</span><small>${x.s}</small>${f.length ? `<span class="rf">${formHTML(f)}</span>` : ''}${r.last && r.last.pz ? `<span class="ms-w">Won ${money(r.last.pz)}</span>` : ''}</div>
       ${can ? `<button class="btn ms-go" data-msen="${p.id}">Enter<small>${free ? 'first one free' : `${SHOW_ENTRY} 🟡`}</small></button>` : r.st === 'q' ? `<button class="btn ms-go ms-w2" data-msw="${r.sl}">${r.sl === cur ? '🔴 Watch' : 'Catalogue'}</button>` : !SH ? '' : p.s.total < FR_MIN && !r.st ? `<button class="btn ms-go ms-up" data-msup="${p.id}">${y ? 'Enhance' : 'Touch up'}<small>to ${FR_MIN}+</small></button>` : ''}</div>`; };
-  g.innerHTML = `<div class="ms"><h1 class="ms-h">🎀 My show</h1><p class="ms-sub">Your photos in group judging and the hourly Best in Show</p>
+  g.innerHTML = `<div class="ms"><h1 class="ms-h">🎀 My show</h1><p class="ms-sub">Your photos in group judging and the hourly Best in Show · <b>${playerType()}</b></p>
     <div class="ms-sum"><div><b>${money(S.showWon || 0)}</b><small>won</small></div><div><b>${inG}</b><small>in group judging</small></div><div><b>${thr}</b><small>through to Best in Show</small></div></div>
     <button class="ms-next" id="msCat"><span>🎀 Now: the ${raceName(cur)} Best in Show · ${esc(showName(nx.k))}</span><b>Catalogue ›</b></button>
-    <button class="btn block ms-add" id="msAdd">📷 Enter a new photo to compete · ${free ? 'first one free' : `${SHOW_ENTRY} 🟡`}</button>
+    <button class="btn block ms-fr" id="msFriends">👥 Challenge a friend · ${isCash() ? `from $${FR_ST[0]}` : `${FR_GEM} 🟡`}</button><button class="btn block ms-add" id="msAdd">📷 Enter a new photo to compete · ${free ? 'first one free' : `${SHOW_ENTRY} 🟡`}</button>
     <div class="ms-l">${P.length ? P.map(card).join('') : '<p class="ms-none">No photos yet. Upload one to start showing.</p>'}</div>
     <p class="ms-r">Categories: Pets · Nature & landscapes · Garden & flowers · Food (soon). Top 2 in a group go through. Best in Show 🥇🥈🥉 win <b>$10 · $5 · $2</b> real cash.</p></div>`;
   g.querySelectorAll('[data-msen]').forEach(b => b.onclick = () => showEnter(b.dataset.msen));
@@ -5264,6 +5268,23 @@ function showRowHTML() { const free = !S.showFreeUsed, ok = free || (S.gems || 0
 document.addEventListener('click', e => { if (e.target.closest('#msRow')) { e.preventDefault(); e.stopPropagation(); myShow(); } }, true);
 function msFirst() { const n = document.querySelector('nav.seg'), g = document.getElementById('segGallery'); if (n && g && n.firstElementChild !== g) n.insertBefore(g, n.firstElementChild); }
 [0, 300, 1500].forEach(t => setTimeout(msFirst, t)); setInterval(msFirst, 2000);
+function friendsPop() { if ($('#sheet').classList.contains('on')) closeSheet(); const cash = isCash(), y = isYoungW(), C = crewsS(), c = C[0], F = c ? (c.members || []).filter(h => h !== 'you') : [], me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
+  const stake = cash ? `$${frSt()} each · winner takes ${money(.85 * frSt() * 2)}` : `${FR_GEM} 🟡 each · winner takes ${FR_GEM * 2} 🟡`;
+  popOpen(`<div class="pp fr-p"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">👥 Friends</p><h2 class="pp-h">Challenge a friend</h2>
+    <p class="pp-m">Your photo vs theirs · members vote · <b>${stake}</b></p>
+    ${cash ? `<div class="rc-st" role="group" aria-label="Entry">${FR_ST.map(v => `<button data-fst="${v}" aria-pressed="${v === frSt()}">$${v}</button>`).join('')}</div>` : ''}
+    <div class="fr-l">${F.length ? F.map(h => `<div class="fr-r">${fav(h, 40)}<b>@${esc(h)}</b><button class="btn fr-go" data-frh="${esc(h)}">${cash ? `Challenge · $${frSt()}` : `Challenge · ${FR_GEM} 🟡`}</button></div>`).join('') : `<p class="fr-none">No friends on Yofi yet. Invite one and challenge them as soon as they join.</p>`}</div>
+    <button class="btn block ${F.length ? 'pc-later-b' : 'pc-go'}" id="frInv">📲 Invite a friend on WhatsApp</button>
+    ${cash ? '' : `<button class="btn block pc-real" id="frReal">💵 Challenge for real money · from $1</button>`}
+    <div style="text-align:center"><button class="link pc-later" id="frNo">${y ? 'Keep judging' : 'Keep voting'}</button></div></div>`);
+  document.querySelectorAll('#coach [data-fst]').forEach(b => b.onclick = () => { S.frSt = +b.dataset.fst; save(); friendsPop(); });
+  document.querySelectorAll('#coach [data-frh]').forEach(b => b.onclick = () => { if (!me) { popClose(); toast(`Get a photo to ${CFG.QUALIFY}+ first.`); return; } const h = b.dataset.frh, k = CATS8.includes(me.cat) ? me.cat : 'any'; popClose(); frPay(() => crewFight(c, k, h, me.id)); });
+  $('#frInv').onclick = () => { popClose(); frDare(); }; if ($('#frReal')) $('#frReal').onclick = () => { popClose(); payCash(5, 'Cash to challenge friends', () => setTimeout(friendsPop, 300)); };
+  $('#frNo').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
+const playerType = () => isCash() ? '💵 Real money player' : '🟡 Coin player';
+document.addEventListener('click', e => { const t = e.target.closest('#pfToCoin, #pfToReal, #pfFriends, #msFriends'); if (!t) return; e.preventDefault(); e.stopPropagation();
+  if (t.id === 'pfFriends' || t.id === 'msFriends') { try { closeSheet(); } catch (x) {} friendsPop(); return; }
+  S.cashMode = t.id === 'pfToReal' ? Date.now() : 0; save(); try { closeSheet(); } catch (x) {} try { paintWallet(); paintGems(); } catch (x) {} if ($('#panes').dataset.at === 'gallery') renderMyShow(); else if ($('#panes').dataset.at === 'judge') renderJudge(); toast(isCash() ? 'You’re now a real money player (test)' : 'You’re now a coin player (test)'); }, true);
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
