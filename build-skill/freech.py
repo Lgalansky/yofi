@@ -73,7 +73,7 @@ RA("['fr', '🎟️ Freerolls'], ","")
 a=s.index('<button class="tsh-tix tsh-fr" id="tshTix">'); b=s.index('</button>',a)
 s=s[:a]+'<button class="tsh-tix tsh-fr" id="tshTix">${fcReady() ? `🎟️ Free cash challenge · <b>${FC_COINS} 🟡</b>` : `🎟️ Next free cash challenge in ${frMinsLeft()} min`}'+s[b:]
 a=s.index('<b>Enter a Freeroll</b><small>'); b=s.index('</button>`;',a)
-s=s[:a]+'<b>Free $1 cash challenge</b><small>${fcReady() ? `No cash needed · 1 an hour` : `Next one in ${frMinsLeft()} min`}</small></span><em class="${(S.gems || 0) < FC_COINS || !fcReady() ? \'need\' : \'\'}">${FC_COINS} 🟡</em>'+s[b:]
+s=s[:a]+'<b>Free $1 cash challenge</b><small>${fcReady() ? `${(S.gems || 0) >= FC_COINS ? \'No cash needed · 1 an hour\' : `${(FC_COINS - Math.floor(S.gems || 0)).toLocaleString()} more 🟡 needed · ${isYoungW() ? \'judge\' : \'vote\'} to earn them`}` : `Next one in ${frMinsLeft()} min`}</small></span><em class="${(S.gems || 0) < FC_COINS || !fcReady() ? \'need\' : \'\'}">${FC_COINS} 🟡</em>'+s[b:]
 # photo reaches 80: point at the free cash challenge
 a=s.index("title: 'Freeroll ready!'"); b=s.index("later: 'Later' })",a)
 s=s[:a]+"title: 'Ready to play for real!', text: `Your photo reached <b>${tot}</b>. Use <b>${FC_COINS} coins</b> for a <b>free $1 cash challenge</b>, once an hour. Win <b>$1.60 real cash</b>.`, cta: '🎟️ Free cash challenge', onCta: () => { closeFlow(); freeCh(); }, "+s[b:]
