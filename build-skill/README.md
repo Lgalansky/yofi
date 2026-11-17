@@ -90,6 +90,7 @@ Then `rmv22.py`: Real Money is branded PhotoPicks everywhere players see it (log
 Then `rmv23.py`: PhotoPicks logo in a handwritten script (Pacifico), maroon, smaller, top left on the landing page and in the app header.
 Then `rmv24.py`: "Enter your photo" / "Add a photo" / Gallery "Enter a new photo" first open a "Choose your Final" page (categories with next Final time and prize pool); tapping one opens the photo picker for that category.
 Then `rmv25.py`: no free-pick bar on the Vote screen; coins menu row reads "Free Final pick" (no $1).
+Then `rmv26.py`: qualifier "Coming up" item and pops say "Upcoming qualifier" (no time) with a ⚖️ scales icon.
 
 ```bash
 python3 rmv6.py
@@ -112,6 +113,7 @@ python3 rmv22.py
 python3 rmv23.py
 python3 rmv24.py
 python3 rmv25.py
+python3 rmv26.py
 ```
 
 ## Skill only
