@@ -2229,3 +2229,88 @@ html:not(.yg) .rb,html:not(.yg) .rc-own{background:#F3ECDF}html:not(.yg) .re-t{b
 html.yg .rb,html.yg .rc-own{background:#2A1A52}html.yg .re-t{background:#2A1A52;color:#fff}html.yg .rc-l,html.yg .rc-nx,html.yg .pp-leg,html.yg .pp-win,html.yg .rc-sec,html.yg .rc-own,html.yg .rb,html.yg .pp-cap{color:#E9E2FF}html.yg .pp-win b{color:#2EE59D}html.yg .rb-r.me .rb-t b{color:#2EE59D}
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('race ok')
+
+# ---------- Heats: photos earn form in voter-decided heats, top 3 qualifies for an hourly race; My stable; status on Touch-ups; Coming up; notifications ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+# race runner form comes from the photo's own record
+RA("form: (S.raceHist || []).slice(-4), mine: 1 };","form: rcRec(mp.id).f.map(x => x.pl).slice(-4), mine: 1 };")
+# replace direct race entry + owner result with the heats flow
+a=s.index("function raceEnter() {"); b=s.index("setInterval(() => { if (!S || !S.races || $('#coach').classList.contains('on')")
+s=s[:a]+r"""var HEAT_EVERY = 6, HEAT_WIN = 10;
+function rcRec(id) { S.rc = S.rc || {}; return S.rc[id] = S.rc[id] || { st: null, f: [] }; }
+function rcName(p) { return p.title || `${crownName(p.cat || 'any')} photo`; }
+const rcStr = p => Math.min(.95, Math.max(.3, ((p.s && p.s.total) || 80) / 100 * 1.6 - .64));
+const rcSlotFor = p => { const cur = ppSlot(), R = S.races || {}, ks = CATS8.filter(k => k !== 'any'); for (let sl = cur + 1; sl <= cur + ks.length; sl++) if (!R[sl] && fitsTheme(p, ks[sl % ks.length])) return sl; for (let sl = cur + 1; ; sl++) if (!R[sl]) return sl; };
+function rcStatus(p) { const r = rcRec(p.id), last = r.last, hs = r.f.filter(x => x.k === 'h').slice(-3).map(x => ppOrd(x.pl)).join(' · '), y = isYoungW();
+  if (r.st === 'q') { const x = (S.races || {})[r.sl]; return { cls: 'q', ic: '✅', t: `Qualified · runs in the <b>${raceName(r.sl)}</b> race`, s: x && r.sl === ppSlot() ? 'Racing now' : `Result ${x ? frTime(Math.min((r.sl + 1) * PP_MS, x.at + PP_DEMO * 1.5)) : ''} <small>(demo)</small>` }; }
+  if (r.st === 'heats') return { cls: 'h', ic: '🏇', t: hs ? `Heats: ${hs}` : 'In the heats', s: `Next heat in <b>${Math.max(1, HEAT_EVERY - (S.hN || 0))}</b> ${y ? 'judge' : 'vote'}s · top 3 qualifies` };
+  if (p.s.total < FR_MIN) return { cls: 'low', ic: '🔒', t: `Needs ${FR_MIN}+ to race`, s: `${y ? 'Enhance' : 'Touch up'} +${FR_MIN - p.s.total} to enter the heats` };
+  if (last) return { cls: 'w', ic: last.pl <= 3 ? PP_MED[last.pl - 1] : '🏁', t: last.pz ? `Won <b>${last.cash ? money(last.pz) : last.pz + ' 🟡'}</b> in the ${raceName(last.sl)} race` : `${ppOrd(last.pl)} in the ${raceName(last.sl)} race`, s: 'Enter the heats again to race' };
+  return { cls: 'n', ic: '📷', t: 'Not racing yet', s: `Enter the heats free · top 3 win ${isCash() ? 'cash' : 'coins'}` }; }
+function stableOpen() { const P = (S.photos || []).slice().sort((a, b) => b.s.total - a.s.total), y = isYoungW(), cash = isCash();
+  if (!P.length) { popClose(); toast('Add a photo first, then race it.'); pickPhoto(true); return; }
+  popOpen(`<div class="pp st"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🏇 My stable</p><h2 class="pp-h">Your photos</h2>
+    <p class="pp-m">Heats are free. Top 3 in a heat qualifies for an hourly race. Race top 3 win <b>${ownTxt(cash)}</b>.</p>
+    <div class="st-l">${P.map(p => { const r = rcRec(p.id), x = rcStatus(p), f = r.f.map(z => z.pl), can = !r.st && p.s.total >= FR_MIN;
+      return `<div class="st-r ${x.cls}"><img src="${p.src}" alt=""><div class="st-t"><b>${esc(rcName(p))} <em>${p.s.total}</em></b><span>${x.ic} ${x.t}</span><small>${x.s}</small>${f.length ? `<span class="rf">${formHTML(f)}</span>` : ''}</div>
+        ${can ? `<button class="btn st-go" data-heat="${p.id}">Enter heats<small>free</small></button>` : r.st === 'q' ? `<button class="btn st-go st-w" data-rcw="${r.sl}">${r.sl === ppSlot() ? '🔴 Watch' : 'Race card'}</button>` : ''}</div>`; }).join('')}</div>
+    <p class="pp-r">${y ? 'Judges' : 'Voters'} decide every heat and race. Heat winners get ${HEAT_WIN} 🟡. You can’t pick in a race your own photo is in.</p>
+    <div style="text-align:center"><button class="link pc-later" id="stCard">🏇 Race card</button> · <button class="link pc-later" id="stUp">＋ Add a photo</button></div></div>`);
+  document.querySelectorAll('#coach [data-heat]').forEach(b => b.onclick = () => { const r = rcRec(b.dataset.heat); r.st = 'heats'; S.hN = Math.max(S.hN || 0, HEAT_EVERY - 2); save(); toast(`🏇 In the heats! First heat in ${HEAT_EVERY - S.hN} ${y ? 'judge' : 'vote'}s.`); stableOpen(); });
+  document.querySelectorAll('#coach [data-rcw]').forEach(b => b.onclick = () => +b.dataset.rcw === ppSlot() ? ppOpen() : raceCard());
+  $('#stCard').onclick = () => raceCard(); $('#stUp').onclick = () => { popClose(); pickPhoto(true); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
+function raceEnter() { stableOpen(); }
+function rcHeat() { const ids = (S.photos || []).filter(p => rcRec(p.id).st === 'heats').map(p => p.id); if (!ids.length) return;
+  const id = ids.sort((a, b) => (rcRec(a).ha || 0) - (rcRec(b).ha || 0))[0], p = S.photos.find(x => x.id === id), r = rcRec(id), q = cpRng(Date.now() % 1e6);
+  const me = rcStr(p) + (q() - .5) * .5, pl = 1 + [0, 1, 2, 3].filter(() => .3 + q() * .6 + (q() - .5) * .5 > me).length; r.ha = Date.now(); r.f.push({ k: 'h', pl }); r.f = r.f.slice(-12);
+  if (pl === 1) { S.gems = (S.gems || 0) + HEAT_WIN; setTimeout(paintGems, 100); }
+  if (pl <= 3) { const sl = rcSlotFor(p); S.races = S.races || {}; S.races[sl] = { pid: id, at: Date.now() }; r.st = 'q'; r.sl = sl; S.rcPop = { k: 'q', pid: id, pl, sl }; }
+  else toast(`🏇 ${rcName(p)} finished ${ppOrd(pl)} in a heat. Next heat in ${HEAT_EVERY} votes.`);
+  save(); }
+function rcQualPop(x) { const p = (S.photos || []).find(z => z.id === x.pid); if (!p) return; const cash = isCash(), y = isYoungW(), g = ppGame(x.sl);
+  popOpen(`<div class="pp"><p class="pp-k">🏇 Heat result</p><div class="re-ok"><img src="${p.src}" alt=""><i>${PP_MED[x.pl - 1]}</i></div><h2 class="pp-h">Qualified!</h2>
+    <p class="pp-m"><b>${esc(rcName(p))}</b> finished ${ppOrd(x.pl)} in its heat${x.pl === 1 ? ` · +${HEAT_WIN} 🟡` : ''}</p>
+    <p class="pp-i">It runs in the <b>${raceName(x.sl)} ${esc(crownName(g.k))} race</b>. Top 3 win <b>${ownTxt(cash)}</b>.<br><small>(demo: result in about 3 min)</small></p>
+    <button class="btn block pc-go" id="qpOk">${y ? 'Keep judging' : 'Keep voting'}</button><div style="text-align:center"><button class="link pc-later" id="qpSt">🏇 My stable</button></div></div>`);
+  $('#qpOk').onclick = () => popClose(); $('#qpSt').onclick = () => stableOpen(); }
+function raceOwnResult(sl) { const x = S.races[sl], g = ppGame(sl), i = g.ph.findIndex(p => p.mine), cash = isCash(), y = isYoungW();
+  const pl = i < 0 ? 5 : g.ord.indexOf(i) + 1, pz = pl <= 3 ? RACE_OWN[cash ? 'cash' : 'gems'][pl - 1] : 0, amt = cash ? money(pz) : `${pz.toLocaleString()} 🟡`;
+  const ph = i >= 0 ? g.ph[i] : { src: '', t: 'Your photo' }, r = rcRec(x.pid); r.f.push({ k: 'r', pl }); r.f = r.f.slice(-12); r.st = null; r.sl = null; r.last = { sl, pl, pz, cash: cash ? 1 : 0 }; x.done = 1; x.place = pl; x.prize = pz;
+  if (pz) { if (cash) { S.cash = +((S.cash || 0) + pz).toFixed(2); paintWallet(); } else { S.gems += pz; paintGems(); } } save();
+  popOpen(`<div class="pp"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🏇 The ${raceName(sl)} race · ${esc(crownName(g.k))} · result</p>
+    <div class="re-ok">${ph.src ? `<img src="${ph.src}" alt="">` : ''}${pl <= 3 ? `<i>${PP_MED[pl - 1]}</i>` : ''}</div>
+    <h2 class="pp-h">${esc(ph.t)} finished ${ppOrd(pl)}${pl <= 3 ? '!' : ''}</h2>
+    <p class="pp-m">${pz ? `You won <b>${amt}</b>` : 'Top 3 win prizes.'} · form <span class="rf">${formHTML(r.f.map(z => z.pl))}</span></p>
+    <div class="rc-fin">${g.ord.map((j, n) => `<span class="${g.ph[j].mine ? 'me' : ''}"><img src="${g.ph[j].src}" alt=""><b>${n < 3 ? PP_MED[n] : ppOrd(n + 1)}</b></span>`).join('')}</div>
+    <button class="btn block pc-go" id="roAgain">🏇 Back to the heats · free</button><div style="text-align:center"><button class="link pc-later" id="roBack">${y ? 'Keep judging' : 'Keep voting'}</button></div></div>`);
+  if (pz) setTimeout(() => cash ? cashExplosion && cashExplosion(pz, { label: 'Race prize' }) : gemExplosion(pz, { label: 'Race prize' }), 500);
+  $('#roAgain').onclick = () => { r.st = 'heats'; save(); toast('🏇 Back in the heats!'); stableOpen(); }; $('#roBack').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
+setInterval(() => { if (!S || !S.rcPop || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return; const x = S.rcPop; S.rcPop = null; save(); rcQualPop(x); }, 1500);
+setInterval(() => { if (!S || !S.races) return; const cur = ppSlot(); Object.entries(S.races).forEach(([sl, x]) => { if (+sl === cur && !x.done && !x.on) { x.on = 1; save(); toast('🔴 Your photo is racing now! Watch it live.'); } }); }, 5000);
+"""+s[b:]
+# heats run as people vote
+RA("S.votes++; S.cpN = (S.cpN || 0) + 1;","S.votes++; S.cpN = (S.cpN || 0) + 1; if (S.rc && Object.values(S.rc).some(r => r.st === 'heats')) { S.hN = (S.hN || 0) + 1; if (S.hN >= HEAT_EVERY) { S.hN = 0; setTimeout(rcHeat, 0); } }")
+# race card: owner section becomes the stable
+a=s.index('<div class="rc-own"><b>📷 Race your photo, free</b>'); b=s.index('</div>', s.index('id="rcEnter"', a))+6
+s=s[:a]+r"""<div class="rc-own"><b>📷 Race your photos, free</b><span>Top 3 in a heat qualifies. Race top 3 win <b>${ownTxt(cash)}</b><br>Photos need ${FR_MIN}+ · entry is free</span>${(() => { const P = (S.photos || []), h = P.filter(p => rcRec(p.id).st === 'heats').length, q = P.filter(p => rcRec(p.id).st === 'q').length; return h || q ? `<p class="rc-mine">${q ? `✅ <b>${q}</b> qualified` : ''}${q && h ? ' · ' : ''}${h ? `🏇 <b>${h}</b> in the heats` : ''}</p>` : ''; })()}${mine}<button class="btn block pc-real" id="rcEnter">🏇 My stable</button></div>"""+s[b:]
+# Coming up: your race result soon, or your next heat (counts down in votes)
+RA("{ const g = ppGame(), m = Math.ceil((g.end - Date.now()) / 60000); if (S.potSeen",
+   "{ const R = Object.entries(S.races || {}).filter(([sl, x]) => !x.done).map(([sl, x]) => ({ sl: +sl, x, due: Math.min((+sl + 1) * PP_MS, x.at + PP_DEMO * 1.5) })).sort((a, b) => a.due - b.due)[0];\n    if (R && R.due - Date.now() < 3600e3) { const p = (S.photos || []).find(z => z.id === R.x.pid); if (p) return { ic: '🏇', t: `<b>${esc(rcName(p))}</b> · ${R.sl === ppSlot() ? 'racing now' : `the ${raceName(R.sl)} race`}`, k: 'r', need: 0, per: 1, em: R.sl === ppSlot() ? '🔴 Live' : `result in ${Math.max(1, Math.ceil((R.due - Date.now()) / 60000))} min` }; } }\n  if (S.rc && S.photos) { const hp = S.photos.find(p => rcRec(p.id).st === 'heats'); if (hp) it.push({ ic: '📷', t: `<b>${esc(rcName(hp))}</b> · next heat`, k: 'h', need: Math.max(1, HEAT_EVERY - (S.hN || 0)), per: HEAT_EVERY }); }\n  { const g = ppGame(), m = Math.ceil((g.end - Date.now()) / 60000); if (S.potSeen")
+RA("if (x.k === 'p') { ppOpen(); return; }","if (x.k === 'p') { ppOpen(); return; } if (x.k === 'r' || x.k === 'h') { stableOpen(); return; }")
+RA("<em>${x.k === 'p' ?","<em>${x.em ? x.em : x.k === 'p' ?")
+# Quick Pick is a qualifying heat
+RA("<p class=\"pp-k\">🏅 Podium Pick${pool.length >= 5 ? ` · ${esc(crownName(k))}` : ''} · vs @${esc(opp)}</p>","<p class=\"pp-k\">🏅 Podium Pick · qualifying heat${pool.length >= 5 ? ` · ${esc(crownName(k))}` : ''} · vs @${esc(opp)}</p>")
+RA("<p class=\"pp-r\">The crowd has already judged these photos. Higher score wins · tie goes to the faster player.</p>","<p class=\"pp-r\">${isYoungW() ? 'Judges' : 'Voters'} already ranked this heat. Its top 3 qualify for an hourly race. Higher score wins · tie goes to the faster player.</p>")
+# Touch-ups: racing status under the photo
+RA("if (window.__sdWhy) h.insertAdjacentHTML('beforeend', `<p class=\"sd-why\">${window.__sdWhy}</p>`);",
+   "if (window.__sdWhy) h.insertAdjacentHTML('beforeend', `<p class=\"sd-why\">${window.__sdWhy}</p>`); { const p = cur(), x = p && rcStatus(p); if (x) { h.insertAdjacentHTML('beforeend', `<button class=\"sd-rc ${x.cls}\" id=\"sdRc\"><span>${x.ic}</span><span><b>${x.t}</b><small>${x.s}</small></span><i>›</i></button>`); $('#sdRc').onclick = () => stableOpen(); } }")
+s=s.replace('</style>',""".st-l{text-align:left;margin:0 0 8px}.st-r{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid rgba(127,127,127,.18)}.st-r>img{width:56px;height:56px;object-fit:cover;border-radius:12px}
+.st-t{min-width:0;display:flex;flex-direction:column;gap:1px}.st-t>b{font-size:.92rem}.st-t>b em{font-style:normal;font-size:.72rem;font-weight:900;padding:1px 6px;border-radius:6px;background:rgba(127,127,127,.18);margin-left:4px}.st-t>span{font-size:.82rem}.st-t>small{font-size:.72rem;opacity:.8}.st-t .rf{margin-top:3px}
+.st-go{margin:0!important;padding:8px 10px!important;font-size:.8rem!important;line-height:1.1!important;min-height:0!important;width:auto!important;text-transform:none!important;display:flex!important;flex-direction:column;align-items:center}.st-go small{font-size:.66rem;opacity:.85}.st-r.q{background:rgba(46,163,107,.1);border-radius:12px}
+.sd-rc{display:flex;align-items:center;gap:10px;width:100%;margin:8px 0 0;padding:9px 12px;border:0;border-radius:14px;text-align:left;cursor:pointer;font:inherit}.sd-rc>span:first-child{font-size:1.3rem}.sd-rc>span:nth-child(2){flex:1;display:flex;flex-direction:column;font-size:.85rem;line-height:1.25}.sd-rc small{font-size:.74rem;opacity:.8}.sd-rc i{font-style:normal;font-size:1.3rem;opacity:.6}
+html:not(.yg) .st-l,html:not(.yg) .st-t{color:#2B2320}html:not(.yg) .st-go{background:#2F6B3F!important;color:#fff!important}html:not(.yg) .st-go.st-w{background:#2D4E86!important}html:not(.yg) .sd-rc{background:#F3ECDF;color:#2B2320;box-shadow:inset 0 0 0 1.5px #E6D9C4}html:not(.yg) .sd-rc.q{background:#E5F2E8;box-shadow:inset 0 0 0 1.5px #2F6B3F}
+html.yg .st-l,html.yg .st-t{color:#E9E2FF}html.yg .st-go{background:#2EE59D!important;color:#14092B!important}html.yg .st-go.st-w{background:#C13CFF!important;color:#fff!important}html.yg .sd-rc{background:#2A1A52;color:#fff;box-shadow:inset 0 0 0 1.5px #3A2766}html.yg .sd-rc.q{box-shadow:inset 0 0 0 1.5px #2EE59D}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('heats ok')
