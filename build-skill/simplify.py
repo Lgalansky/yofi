@@ -2029,5 +2029,19 @@ s=s.replace(a,"b.textContent = isCash() ? '💵 Cash play' : ''; b.hidden = !isC
 s=s.replace('</style>','#modeTag[hidden]{display:none!important}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('no coin tag ok')
 
+# ---------- The "+" moves from the coin balance to the cash balance (coins can't be bought) ----------
+s=open(d+'yofi-simple.html').read()
+def RA(a,b,n=1):
+    global s; assert s.count(a)==n,(a[:80],s.count(a),n); s=s.replace(a,b)
+PLUS='<span class="gplus" aria-hidden="true"><svg viewBox="0 0 12 12" width="12" height="12"><path d="M6 1.5v9M1.5 6h9" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span>'
+RA('<b id="gemNum">0</b></span>'+PLUS+'</button>','<b id="gemNum">0</b></span></button>')
+RA('<b id="cashNum">$0.00</b></span></button>','<b id="cashNum">$0.00</b></span>'+PLUS+'</button>')
+RA('id="wCash" aria-label="Cash balance"','id="wCash" aria-label="Cash balance. Add cash"')
+s=s.replace('#gemPill .gplus','#wCash .gplus')
+s=s.replace('</style>','html:not(.yg) #wCash .gplus{background:#2F6B3F!important}html.yg #wCash .gplus{background:#21C77A!important}#shell > .wallet #wCash{gap:6px!important;padding-left:10px!important;padding-right:10px!important}#wCash #modeTag{margin:0!important;padding:2px 6px!important}\n</style>',1)
+RA("b.textContent = isCash() ? '💵 Cash play' : '';","b.textContent = isCash() ? 'Cash play' : '';")
+RA("b.textContent = isCash() ? 'Cash play' : ''; b.hidden = !isCash(); }","b.textContent = isCash() ? 'Cash play' : ''; b.hidden = !isCash(); if (isCash()) { const w = $('#wCash'), pl = w && w.querySelector('.gplus'), nm = $('#cashNum'); if (w && pl && nm) { b.hidden = false; const fits = nm.getBoundingClientRect().right + b.offsetWidth + pl.offsetWidth + 14 <= w.getBoundingClientRect().right - 8; b.hidden = !fits; } } }")
+open(d+'yofi-simple.html','w').write(s); print('plus moved ok')
+
 # ---------- Skill only: free cash challenge (300 coins, once a day) replaces the Freeroll ----------
 if os.environ.get('YOFI_BUILD') != 'real': exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'freech.py')).read())
