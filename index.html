@@ -5262,6 +5262,8 @@ function renderMyShow() { const g = $('#gallery'); if (!g) return; $('#ptitle').
 function showRowHTML() { const free = !S.showFreeUsed, ok = free || (S.gems || 0) >= SHOW_ENTRY;
   return `<button class="ug-r ug-swap" id="msRow"><span class="ug-i">📷</span><span class="ug-t"><b>Enter a photo to compete</b><small>Group judging, then the hourly Best in Show · top 3 win $10 · $5 · $2</small></span><em class="${ok ? '' : 'need'}">${free ? 'Free' : `${SHOW_ENTRY} 🟡`}</em></button>`; }
 document.addEventListener('click', e => { if (e.target.closest('#msRow')) { e.preventDefault(); e.stopPropagation(); myShow(); } }, true);
+function msFirst() { const n = document.querySelector('nav.seg'), g = document.getElementById('segGallery'); if (n && g && n.firstElementChild !== g) n.insertBefore(g, n.firstElementChild); }
+[0, 300, 1500].forEach(t => setTimeout(msFirst, t)); setInterval(msFirst, 2000);
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
