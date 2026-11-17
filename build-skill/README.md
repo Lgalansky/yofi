@@ -58,6 +58,12 @@ Then `rmv3.py`: shows whether you are a coin or real money player (account menu 
 python3 rmv3.py
 ```
 
+Then `rmv4.py`: group judging is called Qualifiers ("Qualifiers · 3pm Pets"), the Lock in button is always active, and qualifier results no longer offer "Enter the Best in Show".
+
+```bash
+python3 rmv4.py
+```
+
 ## Skill only
 
 `freech.py` replaces the Freeroll with a free cash challenge (300 coins, once an hour: a quick 1 v 1 photo battle, free, that pays $1.60 real cash on a win). `simplify.py` runs it for Skill and skips it when `YOFI_BUILD=real`, so Real Money keeps its Freeroll.
