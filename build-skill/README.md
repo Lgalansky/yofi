@@ -36,4 +36,4 @@ python3 realmoney.py
 
 ## Skill only
 
-`freech.py` replaces the Freeroll with a free cash challenge (300 coins, once a day, a real $2 photo challenge played free). `simplify.py` runs it for Skill and skips it when `YOFI_BUILD=real`, so Real Money keeps its Freeroll.
+`freech.py` replaces the Freeroll with a free cash challenge (300 coins, once an hour, a real $1 photo challenge played free). `simplify.py` runs it for Skill and skips it when `YOFI_BUILD=real`, so Real Money keeps its Freeroll.
