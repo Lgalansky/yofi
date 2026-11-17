@@ -2045,3 +2045,8 @@ open(d+'yofi-simple.html','w').write(s); print('plus moved ok')
 
 # ---------- Skill only: free cash challenge (300 coins, once a day) replaces the Freeroll ----------
 if os.environ.get('YOFI_BUILD') != 'real': exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'freech.py')).read())
+
+# ---------- No Cash play / Coin play tags at all ----------
+s=open(d+'yofi-simple.html').read()
+s=s.replace('</style>','#modeTag{display:none!important}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('no mode tags ok')
