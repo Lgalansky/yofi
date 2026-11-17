@@ -2539,7 +2539,7 @@ function addCatPhoto(k) {
   if ($('#sheet').classList.contains('on')) closeSheet(); if ($('#flow').classList.contains('on')) closeFlow();
   const cn = crownName(k), L = (typeof lgS === 'function') ? lgS() : null;
   openSheet(`<div class="acp"><span class="acp-i">${gi(k)}</span><h2>Add a ${esc(cn.toLowerCase())} photo</h2>
-    <p>Upload a ${esc(cn.toLowerCase())} photo, get your score, then enhance it to <b>${CFG.QUALIFY}+</b> to challenge for the ${esc(cn)} blue ribbon${L ? ` and today’s <b>${('$' + Math.round(L.jp[k]).toLocaleString())}</b> pot` : ''}.</p>
+    <p>${isCash() ? `Upload a ${esc(cn.toLowerCase())} photo, get your score, then enhance it to <b>${CFG.QUALIFY}+</b> to challenge for the ${esc(cn)} blue ribbon${L ? ` and today’s <b>${('$' + Math.round(L.jp[k]).toLocaleString())}</b> pot` : ''}.` : `Upload a ${esc(cn.toLowerCase())} photo, get your score, then enhance it to <b>${CFG.QUALIFY}+</b> to play ${esc(cn.toLowerCase())} coin challenges. Stake <b>25 🟡</b>, win <b>50 🟡</b>.`}</p>
     <button class="btn block acp-go" id="acpGo">📷 Choose a photo</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`);
   $('#acpGo').onclick = () => { S.frameHint = { cats: [k], lab: catNm(k), frame: catNm(k) }; save(); closeSheet(); pickPhoto(true); };
 }
