@@ -2612,8 +2612,8 @@ function gemIdeas() {
   try { let best = null; Object.entries(crownsS()).forEach(([k, c]) => { if (c.h === 'you' || !c.h) return; const ph = S.photos.filter(p => k === 'any' ? !p.cat || p.cat === 'any' : p.cat === k).sort((a, b) => b.s.total - a.s.total)[0]; if (!ph) return; const gap = c.sc - ph.s.total; if (!best || gap < best.gap) best = { k, c, ph, gap }; });
     if (false && best) I.push({ ic: '🏅', t: 'Take a blue ribbon', d: `@${esc(best.c.h)} holds the <b>${esc(crownName(best.k))}</b> blue ribbon with ${best.c.sc}. Your photo: <b>${best.ph.s.total}</b>.`, cost: FC_STAKES[1].amt, src: best.ph.src, go: () => { closeSheet(); openFriends(); fcNew(best.c.h, { f: best.c.h, th: best.k, st: 1, sel: best.ph.id }); } }); } catch (e) {}
   const f = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
-  if (f && !isCash()) I.push({ ic: '🏅', t: 'Coin challenge', d: `Put your <b>${f.s.total}</b> photo up against a rival. Win <b>200 🟡</b> in 30 seconds.`, cost: 100, src: f.src, go: () => { closeSheet(); openGemBattle(100); } });
-  if (!isCash()) I.push({ ic: '⚡', t: 'Quick Sprint', d: `1 v 1: pick the photo the crowd chose in 10 pairs. Win <b>${QS_COIN_PAY[0]} 🟡</b>.`, cost: QS_COIN, src: (fighters()[0] || SEED.find(z => z.src) || {}).src || '', go: () => { closeSheet(); window.__qsGame = 'qs'; sprPractice(); } });
+  if (f && !isCash() && !newbie()) I.push({ ic: '🏅', t: 'Coin challenge', d: `Put your <b>${f.s.total}</b> photo up against a rival. Win <b>200 🟡</b> in 30 seconds.`, cost: 100, src: f.src, go: () => { closeSheet(); openGemBattle(100); } });
+  if (!isCash() && !newbie()) I.push({ ic: '⚡', t: 'Quick Sprint', d: `1 v 1: pick the photo the crowd chose in 10 pairs. Win <b>${QS_COIN_PAY[0]} 🟡</b>.`, cost: QS_COIN, src: (fighters()[0] || SEED.find(z => z.src) || {}).src || '', go: () => { closeSheet(); window.__qsGame = 'qs'; sprPractice(); } });
   return I;
 }
 // one clear screen for adding a photo in a category, before the phone's upload menu opens
@@ -5063,7 +5063,7 @@ function upNext() { if (!S || !S.user || S.geoBlock) return null;
     else { const ks = CATS8.filter(c => lgMine(c)), miss = CATS8.filter(c => c !== 'any' && !lgMine(c)).sort((p, q) => (L.jp[q] || 0) - (L.jp[p] || 0)), up = miss.length && (!ks.length || !S.puAlt);
       x = up ? { ic: '📷', t: `<b>${esc(crownName(miss[0]))} prize pool</b> · ${poolTxt(miss[0])}`, k: 'b' } : ks.length ? { ic: '🏆', t: `<b>${esc(crownName(ks[0]))} challenge</b> · ${poolTxt(ks[0])} pool`, k: 'b' } : null; }
     if (x) it.push(Object.assign(x, { need, per })); }
-  if (S.potSeen) { const per = S.qsTried ? 50 : 20, need = Math.max(0, per - (S.cpN || 0), 15 - (S.votes || 0)); it.push(false ? { ic: '🏅', t: `<b>Podium Pick</b> · pick the top 3 · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per } : { ic: '🎯', t: `<b>Quick Sprint</b> · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per }); }
+  if (S.potSeen && !newbie()) { const per = S.qsTried ? 50 : 20, need = Math.max(0, per - (S.cpN || 0), 15 - (S.votes || 0)); it.push(false ? { ic: '🏅', t: `<b>Podium Pick</b> · pick the top 3 · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per } : { ic: '🎯', t: `<b>Quick Sprint</b> · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per }); }
   { const R = Object.entries(S.races || {}).filter(([sl, x]) => !x.done).map(([sl, x]) => ({ sl: +sl, x, due: Math.min((+sl + 1) * PP_MS, x.at + PP_DEMO * 1.5) })).sort((a, b) => a.due - b.due)[0];
     if (R && R.due - Date.now() < 3600e3) { const p = (S.photos || []).find(z => z.id === R.x.pid); if (p) return { ic: '🎀', t: `<b>${esc(rcName(p))}</b> · ${R.sl === ppSlot() ? 'in the ring now' : `the ${raceName(R.sl)} race`}`, k: 'r', need: 0, per: 1, em: R.sl === ppSlot() ? '🔴 Live' : `result in ${Math.max(1, Math.ceil((R.due - Date.now()) / 60000))} min` }; } }
   if (S.rc && S.photos) { const hp = S.photos.find(p => rcRec(p.id).st === 'heats'); if (hp) it.push({ ic: '📷', t: `<b>${esc(rcName(hp))}</b> · next qualifier`, k: 'h', need: Math.max(1, HEAT_EVERY - (S.hN || 0)), per: HEAT_EVERY }); }
@@ -5539,6 +5539,7 @@ function ppPaysHTML(g) { const n = g.players, T = ppField(g, g.sl, n + 1), share
   return `<div class="pp-pays"><b class="pp-pays-h">What pays</b>${T.map(t => `<div><span>${t.lab}</span><em>pays about ${(net * t.w / shares).toFixed(1)}×</em></div>`).join('')}<small>“Correct” = the right photo in the right place. Pays come from the prize pool, so they move a little as players join.</small></div>`; }
 setInterval(() => { try { const el = document.getElementById('lpLive'); if (!el || !S || $('#landing').style.display === 'none') return; const g = ppGame();
   const h = `<span class="lv">● Live now</span><b>${raceName(g.sl)} ${esc(showName(g.k))} Final</b><span>${ppPool(g.players)} pool · ${g.players} players · closes in <b>${tLeft(g.end)}</b></span>`; if (el.innerHTML !== h) el.innerHTML = h; } catch (e) {} }, 1000);
+const newbie = () => S && (S.tut || 9) < 3;
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
