@@ -100,6 +100,7 @@ Then `rmv32.py`: Final picks pay by score, not rank: everyone on 15+ points shar
 Then `rmv33.py`: landing photo step 3 is "Win a share of the prize" (creators share 10% of the pool); new "Pick the winners every hour" section with the live Final, pool, closing time and "Pick the Final · from $2".
 Then `rmv34.py`: Final picks without points: 3 correct / 2 correct / 1 correct / all 3 in the top 3 in another order ("correct" = right photo, right place), weighted 10 / 2.5 / 1 / 1.2; the pick screen shows "pays about N×" for each, worked out from that Final.
 Then `rmv35.py`: a guest's Final picks are kept through sign-up, and the free pick is placed straight after.
+Then `rmv36.py`: "You have unused coins" pop opens the coins menu (Open my coins); new players' free ticket waits there as "Free ticket earned · Use" and opens the Final picker; the 250-coin nudge does the same.
 
 ```bash
 python3 rmv6.py
@@ -132,6 +133,7 @@ python3 rmv32.py
 python3 rmv33.py
 python3 rmv34.py
 python3 rmv35.py
+python3 rmv36.py
 ```
 
 ## Skill only
