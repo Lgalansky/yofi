@@ -2021,5 +2021,13 @@ assert s.count("money(L.jp[k])")==3
 s=s.replace("money(L.jp[k])","('$' + Math.round(L.jp[k]).toLocaleString())")
 open(d+'yofi-simple.html','w').write(s); print('pot format ok')
 
+# ---------- No "Coin play" sign on the cash balance (only cash players see "Cash play") ----------
+s=open(d+'yofi-simple.html').read()
+a="b.textContent = isCash() ? '💵 Cash play' : '🟡 Coin play'; }"
+assert s.count(a)==1
+s=s.replace(a,"b.textContent = isCash() ? '💵 Cash play' : ''; b.hidden = !isCash(); }")
+s=s.replace('</style>','#modeTag[hidden]{display:none!important}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('no coin tag ok')
+
 # ---------- Skill only: free cash challenge (300 coins, once a day) replaces the Freeroll ----------
 if os.environ.get('YOFI_BUILD') != 'real': exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'freech.py')).read())
