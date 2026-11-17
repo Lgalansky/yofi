@@ -2598,7 +2598,7 @@ function gemIdeas() {
     if (false && best) I.push({ ic: '🏅', t: 'Take a blue ribbon', d: `@${esc(best.c.h)} holds the <b>${esc(crownName(best.k))}</b> blue ribbon with ${best.c.sc}. Your photo: <b>${best.ph.s.total}</b>.`, cost: FC_STAKES[1].amt, src: best.ph.src, go: () => { closeSheet(); openFriends(); fcNew(best.c.h, { f: best.c.h, th: best.k, st: 1, sel: best.ph.id }); } }); } catch (e) {}
   const f = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
   if (f && !isCash()) I.push({ ic: '🏅', t: 'Coin challenge', d: `Put your <b>${f.s.total}</b> photo up against a rival. Win <b>200 🟡</b> in 30 seconds.`, cost: 100, src: f.src, go: () => { closeSheet(); openGemBattle(100); } });
-  if (!isCash()) I.push({ ic: '⚡', t: 'Quick Sprint', d: `1 v 1: pick the photo the crowd chose in 10 pairs. Win <b>${QS_COIN_PAY[0]} 🟡</b>.`, cost: QS_COIN, go: () => { closeSheet(); window.__qsGame = 'qs'; sprPractice(); } });
+  if (!isCash()) I.push({ ic: '⚡', t: 'Quick Sprint', d: `1 v 1: pick the photo the crowd chose in 10 pairs. Win <b>${QS_COIN_PAY[0]} 🟡</b>.`, cost: QS_COIN, src: (fighters()[0] || SEED.find(z => z.src) || {}).src || '', go: () => { closeSheet(); window.__qsGame = 'qs'; sprPractice(); } });
   return I;
 }
 // one clear screen for adding a photo in a category, before the phone's upload menu opens
@@ -2634,7 +2634,9 @@ function gemNudge(force) {
   if (false) { S.tixUnlock = 1; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow();
     celebrate({ src: (fighters()[0] || {}).src || '', score: '🎟️', title: 'Free cash entry unlocked!', text: `Swap <b>${TIX_GEMS} 🟡</b> for a free <b>$1</b> tournament or cash challenge. <b>Win real money</b> without spending a cent.`, cta: '🎟️ Get my free entry', onCta: buyTicket, later: 'Save my coins', onLater: () => toast(`Tap your coins anytime to get a free entry`) });
     return true; }
-  const I = gemIdeas(); if (!I.length) return false; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow(); const x = I.find(i => S.gems >= i.cost) || I[0];
+  if (!isCash() && (S.tut || 9) >= 3 && fqLeft() && (S.gems || 0) >= FREE_BET_COINS) { S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow(); const g = ppGame();
+    celebrate({ src: (g.ph[0] || {}).src || '', score: '🎟️', title: `You’ve got ${Math.floor(S.gems).toLocaleString()} coins!`, text: `Use <b>${FREE_BET_COINS} 🟡</b> for a free pick in the <b>${raceName(g.sl)} ${esc(showName(g.k))} Final</b>. Top scores share the <b>${ppPool(g.players)}</b> prize pool in real cash.`, cta: '🎟️ Make a free Final pick', onCta: () => { closeFlow(); ppOpen(); }, later: 'Later' }); return true; }
+  const I = gemIdeas(); if (!I.length) return false; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow(); const x = I.find(i => S.gems >= i.cost && i.src) || I.find(i => i.src) || I[0];
   celebrate({ src: x.src, score: '🟡', title: `You’ve got ${Math.floor(S.gems).toLocaleString()} coins!`, text: `${x.d}<br>Use <b>${x.cost} 🟡</b> on it now.`, cta: '🟡 Use my coins', onCta: useGems, later: 'Later' });
   return true;
 }
