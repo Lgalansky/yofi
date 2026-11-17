@@ -40,6 +40,12 @@ Then `rmrace.py` adds the horse-racing game to `yofi-real.html`: 9-runner hourly
 python3 rmrace.py
 ```
 
+Finally `rmshow.py` swaps racing and betting words for dog-show words (Best in Show, group judging, entries, rosettes, exhibitors, show catalogue, my show entries).
+
+```bash
+python3 rmshow.py
+```
+
 ## Skill only
 
 `freech.py` replaces the Freeroll with a free cash challenge (300 coins, once an hour: a quick 1 v 1 photo battle, free, that pays $1.60 real cash on a win). `simplify.py` runs it for Skill and skips it when `YOFI_BUILD=real`, so Real Money keeps its Freeroll.

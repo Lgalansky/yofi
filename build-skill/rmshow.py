@@ -1,0 +1,96 @@
+# Real Money build, step 4 (after rmrace.py): dog-show words instead of racing/betting words.
+# Hourly race -> Best in Show; qualification gate -> Group judging; bet -> entry; jackpot -> perfect rosettes bonus;
+# race card -> show catalogue; stable -> my show entries; photo owners -> exhibitors; 🏇/🚦 -> 🎀.
+import os
+d = os.environ.get('YOFI_DIR', os.path.dirname(os.path.abspath(__file__)) + '/')
+s = open(d + 'yofi-real.html').read()
+def R(a, b):
+    global s
+    assert s.count(a) >= 1, ('missing', a[:90]); s = s.replace(a, b)
+P = [
+ # the hourly show
+ ("🏇 The ${raceName(g.sl)} race", "🎀 The ${raceName(g.sl)} Best in Show"),
+ ("🏇 The ${raceName(sl)} race", "🎀 The ${raceName(sl)} Best in Show"),
+ ("The ${raceName(g.sl)} race · ", "The ${raceName(g.sl)} Best in Show · "),
+ ("The ${raceName(cur)} race · ", "The ${raceName(cur)} Best in Show · "),
+ ("runs in the <b>${raceName(+sl)}</b> race", "is in the <b>${raceName(+sl)}</b> Best in Show"),
+ ("Qualified · runs in the <b>${raceName(r.sl)}</b> race", "Through · in the <b>${raceName(r.sl)}</b> Best in Show"),
+ ("in the ${raceName(last.sl)} race", "in the ${raceName(last.sl)} Best in Show"),
+ ("It runs in the <b>${raceName(x.sl)} ${esc(crownName(g.k))} race</b>", "It’s in the <b>${raceName(x.sl)} ${esc(crownName(g.k))} Best in Show</b>"),
+ ("qualify for the ${raceName(G.ns)} race.", "go through to the ${raceName(G.ns)} Best in Show."),
+ ("These 3 run in the <b>${raceName(G.ns)} race</b>", "These 3 go through to the <b>${raceName(G.ns)} Best in Show</b>"),
+ ("🏇 Bet on the ${raceName(G.ns)} race", "🎀 Enter the ${raceName(G.ns)} Best in Show"),
+ ("'racing now'", "'in the ring now'"),
+ ("'🔴 Your photo is racing now! Watch it live.'", "'🔴 Your photo is in the ring now! Watch it live.'"),
+ ("Needs ${FR_MIN}+ to race", "Needs ${FR_MIN}+ to show"),
+ ("'Add a photo first, then race it.'", "'Add a photo first, then show it.'"),
+ ("'Ready to race!'", "'Ready for the show!'"),
+ ("Enter it in the <b>qualification gates</b>, free. Top 3 in a gate run in the hourly race, and the top 3 photos win", "Enter it in <b>group judging</b>, free. Top 3 in a group go through to the hourly <b>Best in Show</b>, and its top 3 photos win"),
+ ("🏇 My stable", "🎀 My show entries"),
+ ("· next heat`", "· next group judging`"),
+ ("<b>Qualification gate</b> · pick 3 of 5 · free", "<b>Group judging</b> · pick 3 of 5 · free"),
+ ("🏇 Race card", "🎀 Show catalogue"),
+ ("'🏇 $5 more on your picks'", "'🎀 $5 more on your picks'"),
+ ("'Your free $1 bet is in!'", "'Your free $1 entry is in!'"),
+ ("`Your ${money(e.stake || 1)} bet is in!`", "`Your ${money(e.stake || 1)} entry is in!`"),
+ ("'Your photo is running!'", "'Your photo is in the ring!'"),
+ ("Owners can’t pick in their own race.", "Exhibitors can’t pick in their own show."),
+ ("💵 Bet more on this race · from $1", "💵 Add to your entry · from $1"),
+ ("'A race bet'", "'A Best in Show entry'"),
+ ("🏇 Bet ${money(stake)} on my 1-2-3", "🎀 Enter ${money(stake)} on my 1-2-3"),
+ ("🎟️ Free $1 bet · ${FREE_BET_COINS} 🟡", "🎟️ Free $1 entry · ${FREE_BET_COINS} 🟡"),
+ ("💵 Bet for real · from $1", "💵 Enter for real · from $1"),
+ ("for the free bet.", "for the free entry."),
+ ("Top 10% share the pool by stake.", "Top 10% share the pool by entry size."),
+ ("'🎟️ Free $1 bet placed! Watch it live.'", "'🎟️ Free $1 entry in! Watch it live.'"),
+ ("`🏇 ${money(st)} bet placed! Watch it live.`", "`🎀 ${money(st)} entry in! Watch it live.`"),
+ ("🎯 Perfect 1-2-3 jackpot", "🎀 Perfect rosettes bonus"),
+ ("🎯 Perfect 1-2-3! Jackpot share", "🎀 Perfect rosettes! Bonus share"),
+ ("<span>Runner</span><span>Form</span><span>Backing</span>", "<span>Finalist</span><span>Placings</span><span>Favourite</span>"),
+ ("🏇 Pick the top 3 · ${cash ? 'bet from $1' : 'free $1 bet'}", "🎀 Pick the top 3 · ${cash ? 'enter from $1' : 'free $1 entry'}"),
+ (">Next races<", ">Next shows<"),
+ ("📷 Race your photos, free", "📷 Show your photos, free"),
+ ("Top 3 in a gate qualify. Race top 3 win", "Top 3 in a group go through. Best in Show top 3 win"),
+ ("e.free ? 'free $1 bet' : `${money(st)} bet`", "e.free ? 'free $1 entry' : `${money(st)} entry`"),
+ ("🏇 ${cashP ? 'Bet on the next race' : 'Bet for real on the next race'}", "🎀 ${cashP ? 'Enter the next Best in Show' : 'Enter the next Best in Show for real'}"),
+ ("'🏇 RACE'", "'🎀 SHOW'"),
+ ("${raceName(g.sl)} race</small>", "${raceName(g.sl)} show</small>"),
+ ("<b>Free $1 race bet</b>", "<b>Free $1 Best in Show entry</b>"),
+ ("`You’re in the ${raceName(g.sl)} race`", "`You’re in the ${raceName(g.sl)} Best in Show`"),
+ ("Photo owners won", "Exhibitors won"),
+ # group judging (was gates)
+ ("🚦 Qualification gate ${G.gi + 1} of 3 · the ${raceName(G.ns)} race", "🎀 Group ${G.gi + 1} of 3 · the ${raceName(G.ns)} Best in Show"),
+ ("already ranked this gate. Its top 3 photos", "already judged this group. Its top 3 photos"),
+ ("Real gate · <b>$", "Real entry · <b>$"),
+ ("'🚦 Lock in · free'", "'🎀 Lock in · free'"),
+ ("🚦 Play for real · $", "🎀 Play for real · $"),
+ ("🚦 Gate ${G.gi + 1} of 3 · result", "🎀 Group ${G.gi + 1} of 3 · result"),
+ ("💵 Real gate · $", "💵 Play for real · $"),
+ ("🚦 Next gate for real", "🎀 Next group for real"),
+ ("'A real gate'", "'A group entry'"),
+ # creators (My show entries)
+ ("`Gates: ${hs}` : 'In the gates'", "`Groups: ${hs}` : 'In group judging'"),
+ ("`Next gate in <b>", "`Next group in <b>"),
+ ("· top 3 qualifies`", "· top 3 go through`"),
+ ("to enter the gates`", "to enter group judging`"),
+ ("'Enter the gates again to race'", "'Enter group judging again'"),
+ ("`Enter the gates free · top 3 win", "`Enter group judging free · top 3 win"),
+ ("Gates are free. Top 3 in a gate qualify for the hourly race. Race top 3 win", "Group judging is free. Top 3 in a group go through to the hourly Best in Show. Its top 3 win"),
+ ("Enter gates<small>free</small>", "Enter<small>free</small>"),
+ ("decide every gate and race. Gate winners get", "decide every group and Best in Show. Group winners get"),
+ ("You can’t pick in a race your own photo is in.", "You can’t pick in a show your own photo is in."),
+ ("`🏇 In the gates! First gate in", "`🎀 In group judging! First group in"),
+ ("in a gate. Next gate in", "in its group. Next group in"),
+ ("🚦 Gate result", "🎀 Group result"),
+ ("in its gate", "in its group"),
+ ("🚦 Back to the gates · free", "🎀 Back to group judging · free"),
+ ("'🚦 Back in the gates!'", "'🎀 Back in group judging!'"),
+ (">Qualified!<", ">Through to Best in Show!<"),
+ ("'Not racing yet'", "'Not in a show yet'"),
+]
+P += [("'Racing now'", "'In the ring now'"), ("'Race card'", "'Show catalogue'"), ("'Race prize'", "'Best in Show prize'"), ("'Hourly race'", "'Best in Show'"),
+       ("'Gate win'", "'Group win'"), ('aria-label="Bet"', 'aria-label="Entry"'), ("Every bet on ${esc(crownName(k))}", "Every entry on ${esc(crownName(k))}"),
+       ("×${T.mult} JACKPOT TOURNAMENT!", "×${T.mult} BIG PRIZE TOURNAMENT!")]
+for a, b in P: R(a, b)
+s = s.replace('🏇', '🎀').replace('🚦', '🎀')
+open(d + 'yofi-real.html', 'w').write(s); print('dog show words ok')
