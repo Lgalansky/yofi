@@ -94,6 +94,7 @@ Then `rmv26.py`: qualifier "Coming up" item and pops say "Upcoming qualifier" (n
 Then `rmv27.py`: coins menu adds Quick Sprint (100 coins, win 160) next to Coin challenge and drops "Enter a photo"; a photo never goes straight into the Final: once the first photo improves it enters the qualifiers for its category's next Final.
 Then `rmv28.py`: new players' judging has no qualifiers; Coming up shows "Free Final pick · in 15 votes" and the free pick opens after 15 votes; qualifiers start once it's used.
 Then `rmv29.py`: "You've got N coins!" nudge offers the free Final pick first (250+ coins, pick left this hour); Quick Sprint idea has a photo.
+Then `rmv30.py`: after every Final result (when you have no photo in play) an "Enter your own photo" card to qualify for an upcoming Final; Final picks cost $2 / $5 / $10 / $20 / $50, and the free pick is a free $2 pick.
 
 ```bash
 python3 rmv6.py
@@ -120,6 +121,7 @@ python3 rmv26.py
 python3 rmv27.py
 python3 rmv28.py
 python3 rmv29.py
+python3 rmv30.py
 ```
 
 ## Skill only
