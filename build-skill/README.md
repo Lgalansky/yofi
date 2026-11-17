@@ -64,6 +64,12 @@ Then `rmv4.py`: group judging is called Qualifiers ("Qualifiers · 3pm Pets"), t
 python3 rmv4.py
 ```
 
+Then `rmv5.py`: a free qualifier for cash players too (with the $1 real upsell), and the owner of the 1st place photo in a qualifier gets 10% of its real entries.
+
+```bash
+python3 rmv5.py
+```
+
 ## Skill only
 
 `freech.py` replaces the Freeroll with a free cash challenge (300 coins, once an hour: a quick 1 v 1 photo battle, free, that pays $1.60 real cash on a win). `simplify.py` runs it for Skill and skips it when `YOFI_BUILD=real`, so Real Money keeps its Freeroll.
