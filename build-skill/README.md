@@ -96,6 +96,7 @@ Then `rmv28.py`: new players' judging has no qualifiers; Coming up shows "Free F
 Then `rmv29.py`: "You've got N coins!" nudge offers the free Final pick first (250+ coins, pick left this hour); Quick Sprint idea has a photo.
 Then `rmv30.py`: after every Final result (when you have no photo in play) an "Enter your own photo" card to qualify for an upcoming Final; Final picks cost $2 / $5 / $10 / $20 / $50, and the free pick is a free $2 pick.
 Then `rmv31.py`: all Final prize money comes from the pool (no fixed $10/$5/$2; creators share 10% by place); the Final result shows the pool, what the top pickers shared, the creators' 10%, and how far you were from cash.
+Then `rmv32.py`: Final picks pay by score, not rank: everyone on 15+ points shares the pickers' 78%, by pick size x score weight (15 pts x1, 20 pts x2, exact 1-2-3 x6), so about 40% of pickers win and a higher score always pays more; result screen shows each score group.
 
 ```bash
 python3 rmv6.py
@@ -124,6 +125,7 @@ python3 rmv28.py
 python3 rmv29.py
 python3 rmv30.py
 python3 rmv31.py
+python3 rmv32.py
 ```
 
 ## Skill only
