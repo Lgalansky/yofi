@@ -60,7 +60,7 @@ function fcNotify() {""",1)
 # coin players: no star/pot challenges (no coin pot screen anywhere). Their challenge pops alternate:
 # instant coin challenge (25 in, win 50) and the free cash challenge when it's ready.
 RA("function openBattle() {", "function openBattle() { if (!isCash() && !S.potSeen) { S.potSeen = 1; save(); }")
-RA("S.btAlt = !S.btAlt; save();", "S.btAlt = !S.btAlt; if (!isCash()) { if (S.btAlt && fcReady() && (S.gems || 0) >= FC_COINS && fighters().length) { save(); freeCh(); return; } S.btAlt = false; } save();")
+RA("S.btAlt = !S.btAlt; save();", "S.btAlt = !S.btAlt; if (!isCash()) { S.btAlt = false; } save();")
 RA("if (!S.potSeen) { const pp = fighters()[0]", "if (!S.potSeen && isCash()) { const pp = fighters()[0]")
 RA("else if (S.btAlt) { if (!S.nextBth", "else if (S.btAlt || !isCash()) { if (!S.nextBth")
 # coin prices (Skill): coin challenge 100 in / win 200, Quick Sprint 250 in / win 400, free cash challenge 500
@@ -83,34 +83,35 @@ s=s.replace("function fcNotify() {","document.addEventListener('click', e => { i
 RA('<button class="link" id="mR" style="margin-top:6px">Reset prototype</button></div>`);',
    '<p class="pf-test">Testing</p>${S.cashMode ? \'<button class="btn quiet block" id="toCoin">↺ Back to coin play</button>\' : \'\'}<button class="btn quiet block" id="fcRst">↺ Reset free cash challenge</button>\n    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button></div>`);')
 s=s.replace("function fcNotify() {","document.addEventListener('click', e => { if (e.target.closest('#fcRst')) { e.preventDefault(); e.stopPropagation(); S.fcDay = null; if ((S.gems || 0) < FC_COINS) S.gems = FC_COINS; save(); try { closeSheet(); } catch (x) {} paintGems(); toast('Free cash challenge reset (test)'); } }, true);\nfunction fcNotify() {",1)
+s=s.replace('</style>','#tshTix[hidden]{display:none!important}\n</style>',1)
 s=s.replace('</style>','.pf-test{margin:14px 0 4px;font-size:.7rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.6;text-align:left}\n</style>',1)
 # coin players: the add-a-photo screen talks about the coin challenge, not the blue ribbon or the cash pot
 RA("to challenge for the ${esc(cn)} blue ribbon${L ? ` and today’s <b>${('$' + Math.round(L.jp[k]).toLocaleString())}</b> pot` : ''}.</p>",
    "to ${isCash() ? `challenge for the ${esc(cn)} blue ribbon${L ? ` and today’s <b>${('$' + Math.round(L.jp[k]).toLocaleString())}</b> pot` : ''}` : `play the ${esc(cn.toLowerCase())} coin ${isYoungW() ? 'battle' : 'challenge'} and win <b>${CC_COIN * 2} 🟡</b>`}.</p>")
 # coin nudge: names the game; suggests the free cash challenge first when it's ready and affordable
 RA("const x = I.find(i => S.gems >= i.cost) || I[0];\n  celebrate({ src: x.src, score: '🟡', title: `You’ve got ${Math.floor(S.gems).toLocaleString()} coins!`, text: `${x.d}<br>Use <b>${x.cost} 🟡</b> on it now.`, cta: '🟡 Use my coins', onCta: useGems, later: 'Later' });",
-   "const x = I.find(i => S.gems >= i.cost) || I[0];\n  if (!isCash() && fcReady() && S.gems >= FC_COINS && fighters().length) { celebrate({ src: (fighters()[0] || {}).src, score: '🎟️', title: `You’ve got ${Math.floor(S.gems).toLocaleString()} coins!`, text: `Use <b>${FC_COINS} 🟡</b> on a <b>free $1 cash ${isYoungW() ? 'battle' : 'challenge'}</b>. Win <b>${money(FC_PRIZE)} real cash</b>.`, cta: `🎟️ Free cash ${isYoungW() ? 'battle' : 'challenge'}`, onCta: freeCh, later: 'Later' }); return true; }\n  celebrate({ src: x.src, score: '🟡', title: `You’ve got ${Math.floor(S.gems).toLocaleString()} coins!`, text: `<b>${x.t}</b> · ${x.d}<br>Use <b>${x.cost} 🟡</b> on it now.`, cta: '🟡 Use my coins', onCta: useGems, later: 'Later' });")
+   "const x = I.find(i => S.gems >= i.cost) || I[0];\n  celebrate({ src: x.src, score: '🟡', title: `You’ve got ${Math.floor(S.gems).toLocaleString()} coins!`, text: `<b>${x.t}</b> · ${x.d}<br>Use <b>${x.cost} 🟡</b> on it now.`, cta: '🟡 Use my coins', onCta: useGems, later: 'Later' });")
 # every Freeroll door now opens the free cash challenge
 RA("function swapTicket() {","function swapTicket() { freeCh(); return;")
 RA("function frEnter(f) {","function frEnter(f) { freeCh(); return;")
 # Tournaments: free cash challenge row instead of Freeroll rows; no Freerolls filter
-RA('<div class="tsl2" data-tfl="${TF}">${chRowHTML()}${frRows}${rows}</div>','<div class="tsl2" data-tfl="${TF}">${fcRowHTML()}${chRowHTML()}${rows}</div>')
+RA('<div class="tsl2" data-tfl="${TF}">${chRowHTML()}${frRows}${rows}</div>','<div class="tsl2" data-tfl="${TF}">${chRowHTML()}${rows}</div>')
 RA("const TF = window.__tFil || 'all',","const TF = (window.__tFil === 'fr' ? 'all' : window.__tFil) || 'all',")
 RA("['fr', '🎟️ Freerolls'], ","")
 a=s.index('<button class="tsh-tix tsh-fr" id="tshTix">'); b=s.index('</button>',a)
-s=s[:a]+'<button class="tsh-tix tsh-fr" id="tshTix">${fcReady() ? `🎟️ Free cash challenge · <b>${FC_COINS} 🟡</b>` : `🎟️ Next free cash challenge in ${frMinsLeft()} min`}'+s[b:]
+s=s[:a]+'<button class="tsh-tix tsh-fr" id="tshTix" hidden>'+s[b:]
 a=s.index('<b>Enter a Freeroll</b><small>'); b=s.index('</button>`;',a)
 s=s[:a]+'<b>Free $1 cash challenge</b><small>${fcReady() ? `${(S.gems || 0) >= FC_COINS ? \'No cash needed · 1 an hour\' : `${(FC_COINS - Math.floor(S.gems || 0)).toLocaleString()} more 🟡 needed · ${isYoungW() ? \'judge\' : \'vote\'} to earn them`}` : `Next one in ${frMinsLeft()} min`}</small></span><em class="${(S.gems || 0) < FC_COINS || !fcReady() ? \'need\' : \'\'}">${FC_COINS} 🟡</em>'+s[b:]
 # photo reaches 80: point at the free cash challenge
 a=s.index("title: 'Freeroll ready!'"); b=s.index("later: 'Later' })",a)
-s=s[:a]+"title: 'Ready to play for real!', text: `Your photo reached <b>${tot}</b>. Use <b>${FC_COINS} coins</b> for a <b>free $1 cash challenge</b>, once an hour. Win <b>$1.60 real cash</b>.`, cta: '🎟️ Free cash challenge', onCta: () => { closeFlow(); freeCh(); }, "+s[b:]
+s=s[:a]+"title: 'Ready to play for real!', text: `Your photo reached <b>${tot}</b>. Tap your <b>coin balance</b> to use <b>${FC_COINS} coins</b> on a <b>free $1 cash challenge</b>, once an hour. Win <b>$1.60 real cash</b>.`, cta: '🟡 Open my coins', onCta: () => { closeFlow(); useGems(); }, "+s[b:]
 # how it works + small texts
 a=s.index("${T('t-fr'"); b=s.index("${T('t-ko'",a)
-s=s[:a]+"${T('t-fr', '🎟️', 'Free cash challenge', 'Every hour · top row', '🎟️ Free', [`Use <b>${FC_COINS} coins</b>, once an hour. Coins are earned by ${isYoungW() ? 'judging' : 'voting'}.`, 'A <b>real $1 challenge</b>: your photo against a rival, decided live by member votes.', 'Win and <b>$1.60 real cash</b> goes straight into your wallet.', 'You stay a coin player until you add cash.'])}\n    "+s[b:]
+s=s[:a]+"${T('t-fr', '🎟️', 'Free cash challenge', 'From your coin balance', '🎟️ Free', [`Use <b>${FC_COINS} coins</b>, once an hour. Coins are earned by ${isYoungW() ? 'judging' : 'voting'}.`, 'A <b>real $1 challenge</b>: your photo against a rival, decided live by member votes.', 'Win and <b>$1.60 real cash</b> goes straight into your wallet.', 'You stay a coin player until you add cash.'])}\n    "+s[b:]
 RA("Win coins to touch up photos and enter cash Freerolls.<br>","Win coins to touch up photos and play a free cash challenge.<br>")
 # Coming up: tell coin players when a free cash challenge is ready
 RA("return it.sort((p, q) => p.need - q.need)[0] || null; }",
-   "if (!isCash() && fcReady() && (S.gems || 0) >= FC_COINS && fighters().length) it.push({ ic: '🎟️', t: '<b>Free cash challenge</b> · win $1.60 real cash', k: 'f', need: 0, per: 1 });\n  return it.sort((p, q) => p.need - q.need)[0] || null; }")
+   "return it.sort((p, q) => p.need - q.need)[0] || null; }")
 RA("function upNow() { const x = upNext(); if (!x) return;","function upNow() { const x = upNext(); if (!x) return; if (x.k === 'f') { freeCh(); return; }")
 s=s.replace('</style>',""".fch-vs{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin:4px 0 10px}.fch-vs figure{margin:0;display:flex;flex-direction:column;gap:3px;align-items:center}.fch-vs img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px}.fch-vs small{font-size:.76rem;font-weight:800}.fch-vs>b{font-weight:900}
 .fch-m{margin:0 0 10px;font-size:.92rem;line-height:1.4}.fch-r{margin:8px 0 2px;font-size:.78rem;opacity:.85}.fc-tag{background:#2F6B3F!important;color:#fff!important}html.yg .fc-tag{background:#21C77A!important;color:#0B1A12!important}
