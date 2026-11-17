@@ -106,6 +106,7 @@ Then `rmv38.py`: new players don't see Quick Sprint or the coin challenge until 
 Then `rmv39.py`: third new-player journey: landing "Pick the Final · from $2" opens the live Final's picker with cash amounts even for a guest; they choose, then sign up and add cash before paying; the pick is kept and "Your pick is in" shows after payment.
 Then `rmv40.py`: live Final board highlights your picks (green row, medal on photo, "Your 1st pick"), bigger photos; no "Add a free $2" for players who haven't deposited.
 Then `rmv41.py`: qualifier pick and result screens from the mock-ups (Pick the top 3, 3 exact / 2 exact prizes, medal slots; N of 3 matched, Finalist / Finished 2nd / Exact match tags, Through to the Final box, Pick the Final winner).
+Then `rmv42.py`: while a Final pick is running, Coming up shows "Your pick is live" with your 1st pick's place and minutes to results (tap opens the live board), and judging shows a toast when one of your picks moves up.
 
 ```bash
 python3 rmv6.py
@@ -144,6 +145,7 @@ python3 rmv38.py
 python3 rmv39.py
 python3 rmv40.py
 python3 rmv41.py
+python3 rmv42.py
 ```
 
 ## Skill only
