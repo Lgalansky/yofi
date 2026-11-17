@@ -71,9 +71,11 @@ python3 rmv5.py
 ```
 
 Then `rmv6.py`: a creator earnings ledger (every qualifier win and Best in Show place, with photo, show, time and amount) on My show, in an earnings pop, and per photo.
+Then `rmv7.py`: names. The 3-of-5 voting rounds are Qualifiers, the hourly 6-photo show is the Final (the knockout tournament keeps "Best in Show" for its last round), and My show is now Gallery.
 
 ```bash
 python3 rmv6.py
+python3 rmv7.py
 ```
 
 ## Skill only
