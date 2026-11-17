@@ -98,6 +98,7 @@ Then `rmv30.py`: after every Final result (when you have no photo in play) an "E
 Then `rmv31.py`: all Final prize money comes from the pool (no fixed $10/$5/$2; creators share 10% by place); the Final result shows the pool, what the top pickers shared, the creators' 10%, and how far you were from cash.
 Then `rmv32.py`: Final picks pay by score, not rank: everyone on 15+ points shares the pickers' 78%, by pick size x score weight (15 pts x1, 20 pts x2, exact 1-2-3 x6), so about 40% of pickers win and a higher score always pays more; result screen shows each score group.
 Then `rmv33.py`: landing photo step 3 is "Win a share of the prize" (creators share 10% of the pool); new "Pick the winners every hour" section with the live Final, pool, closing time and "Pick the Final · from $2".
+Then `rmv34.py`: Final picks without points: 3 correct / 2 correct / 1 correct / all 3 in the top 3 in another order ("correct" = right photo, right place), weighted 10 / 2.5 / 1 / 1.2; the pick screen shows "pays about N×" for each, worked out from that Final.
 
 ```bash
 python3 rmv6.py
@@ -128,6 +129,7 @@ python3 rmv30.py
 python3 rmv31.py
 python3 rmv32.py
 python3 rmv33.py
+python3 rmv34.py
 ```
 
 ## Skill only
