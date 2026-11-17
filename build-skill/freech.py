@@ -75,6 +75,10 @@ RA("for <b>50 🟡</b>", "for <b>${CC_COIN * 2} 🟡</b>")
 RA("win 50 🟡`, k: 'b' }", "win ${CC_COIN * 2} 🟡`, k: 'b' }")
 RA("Win <b>50 🟡</b> in 30 seconds.`, cost: 25, src: f.src, go: () => { closeSheet(); openGemBattle(CC_COIN); } });",
    "Win <b>${CC_COIN * 2} 🟡</b> in 30 seconds.`, cost: CC_COIN, src: f.src, go: () => { closeSheet(); openGemBattle(CC_COIN); } });\n  I.unshift({ ic: '🎯', t: 'Quick Sprint', d: `1 v 1: pick the crowd’s choice in 10 photo pairs. Win <b>${QS_COIN_PAY[0]} 🟡</b>.`, cost: QS_COIN, src: '', go: () => { closeSheet(); sprPractice(); } });")
+# testing only: a cash player can switch back to coin play from the cash menu
+RA('const body = `<h3 class="sp-h">${head[0]}</h3><p class="sp-s">${head[1]}</p><div class="sp-list">`',
+   'const body = `<h3 class="sp-h">${head[0]}</h3><p class="sp-s">${head[1]}</p>${T === \'cash\' && S.cashMode ? \'<div style="text-align:center;margin:-4px 0 10px"><button class="link fc-test" id="toCoin">↺ Back to coin play (testing)</button></div>\' : \'\'}<div class="sp-list">`')
+s=s.replace("function fcNotify() {","document.addEventListener('click', e => { if (e.target.closest('#toCoin')) { e.preventDefault(); e.stopPropagation(); S.cashMode = 0; save(); try { closeSheet(); } catch (x) {} try { paintWallet(); paintGems(); paintMode(); } catch (x) {} if ($('#panes').dataset.at === 'judge') renderJudge(); toast('Back to coin play (test)'); } }, true);\nfunction fcNotify() {",1)
 # every Freeroll door now opens the free cash challenge
 RA("function swapTicket() {","function swapTicket() { freeCh(); return;")
 RA("function frEnter(f) {","function frEnter(f) { freeCh(); return;")
