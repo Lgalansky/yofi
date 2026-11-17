@@ -37,14 +37,14 @@ function freeCh() { if ($('#sheet').classList.contains('on')) closeSheet(); cons
     S.gems -= FC_COINS; S.fcDay = frHourKey(); save(); paintGems();
     const pWin = Math.max(.25, Math.min(.75, .5 + (me.s.total - their) / 30)), won = Math.random() < pWin, mv = won ? 8 + Math.floor(Math.random() * 3) : 4 + Math.floor(Math.random() * 4);
     const seq = [...Array(FC_N)].map((_, i) => i < mv); for (let i = FC_N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [seq[i], seq[j]] = [seq[j], seq[i]]; }
-    if (won) { S.cash = +((S.cash || 0) + FC_PRIZE).toFixed(2); goCash(); } S.fcLog = (S.fcLog || []).concat({ at: Date.now(), k, won: won ? 1 : 0 }).slice(-20); save();
+    if (won) { S.cash = +((S.cash || 0) + FC_PRIZE).toFixed(2); } S.fcLog = (S.fcLog || []).concat({ at: Date.now(), k, won: won ? 1 : 0 }).slice(-20); save();
     popOpen(`<div class="pc pc2 fc2"><p class="pc-k">${gi(k)}<span>Free cash ${CH} · ${cn}</span></p><h2 class="pc-h" id="fcH">Live voting…</h2>${vs(0, 0)}
       <div class="kg2-bar fc-bar"><i id="fcAb" style="width:50%"></i><i id="fcBb" style="width:50%"></i></div><p class="fch-r" id="fcV">0 of ${FC_N} votes</p></div>`);
     const result = () => { const d = Math.abs(mv - (FC_N - mv)), iHold = lgHold(k).h === 'you';
       popOpen(`<div class="pc pc2 fc2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pc-k">${gi(k)}<span>Free cash ${CH} · ${cn}</span></p>
         <h2 class="pc-h">${won ? `You won ${money(FC_PRIZE)}!` : `Lost by ${d} vote${d === 1 ? '' : 's'}`}</h2>
         ${vs(mv, FC_N - mv, true, won)}
-        ${won ? `<div class="pc2-pool fc-won"><b>+${money(FC_PRIZE)}</b><span>real cash, in your wallet now<em>You’re a cash player now</em></span></div>` : `<p class="fch-m">Next free ${CH} in <b>${frMinsLeft()} min</b>. Or play a real one now.</p>`}
+        ${won ? `<div class="pc2-pool fc-won"><b>+${money(FC_PRIZE)}</b><span>real cash, in your wallet now<em>Yours to keep. Add cash any time to play for more</em></span></div>` : `<p class="fch-m">Next free ${CH} in <b>${frMinsLeft()} min</b>. Or play a real one now.</p>`}
         <button class="btn block pc-real" id="fcReal">💵 ${won ? `Play a $${LG_FEE} cash ${CH}` : `Play for real · $${LG_FEE}`}</button>
         <div style="text-align:center"><button class="link pc-later" id="fcNo">${y ? 'Keep judging' : 'Keep voting'}</button></div></div>`);
       if (won) setTimeout(() => { try { cashExplosion(FC_PRIZE, { label: 'Free cash ' + CH }); } catch (e) {} paintWallet(); }, 400);
@@ -79,7 +79,7 @@ a=s.index("title: 'Freeroll ready!'"); b=s.index("later: 'Later' })",a)
 s=s[:a]+"title: 'Ready to play for real!', text: `Your photo reached <b>${tot}</b>. Use <b>${FC_COINS} coins</b> for a <b>free $1 cash challenge</b>, once an hour. Win <b>$1.60 real cash</b>.`, cta: '🎟️ Free cash challenge', onCta: () => { closeFlow(); freeCh(); }, "+s[b:]
 # how it works + small texts
 a=s.index("${T('t-fr'"); b=s.index("${T('t-ko'",a)
-s=s[:a]+"${T('t-fr', '🎟️', 'Free cash challenge', 'Every hour · top row', '🎟️ Free', [`Use <b>${FC_COINS} coins</b>, once an hour. Coins are earned by ${isYoungW() ? 'judging' : 'voting'}.`, 'A <b>real $1 challenge</b>: your photo against a rival, decided live by member votes.', 'Win and <b>$1.60 real cash</b> goes straight into your wallet.', 'A win makes you a cash player.'])}\n    "+s[b:]
+s=s[:a]+"${T('t-fr', '🎟️', 'Free cash challenge', 'Every hour · top row', '🎟️ Free', [`Use <b>${FC_COINS} coins</b>, once an hour. Coins are earned by ${isYoungW() ? 'judging' : 'voting'}.`, 'A <b>real $1 challenge</b>: your photo against a rival, decided live by member votes.', 'Win and <b>$1.60 real cash</b> goes straight into your wallet.', 'You stay a coin player until you add cash.'])}\n    "+s[b:]
 RA("Win coins to touch up photos and enter cash Freerolls.<br>","Win coins to touch up photos and play a free cash challenge.<br>")
 # Coming up: tell coin players when a free cash challenge is ready
 RA("return it.sort((p, q) => p.need - q.need)[0] || null; }",
