@@ -87,6 +87,7 @@ Then `rmv19.py`: landing page redesign from the mock-up (headline, 1st/2nd/3rd p
 Then `rmv20.py`: new-photo flow fixes: Enter your photo asks the Final category instead of guessing; name and first-photo prompts can show over the touch-up screen; the 150 coins are the sign-up welcome bonus (no double gift); first photo's status says "Touch up to go straight to the Final"; no Skill "first challenge free" pop for it; landing "How it works" (upload, improve to qualify, pick the top 3 of 6).
 Then `rmv21.py`: landing page = the "PhotoPicks" mock-up (title, podium, Judge photos section, Your photo could win the Final with 3 coloured step cards, Enter your photo, Meet the contenders).
 Then `rmv22.py`: Real Money is branded PhotoPicks everywhere players see it (logo, page title, text, invite links); landing heading "Pick the winning photos. Win real cash."; smaller header logo so the header fits.
+Then `rmv23.py`: PhotoPicks logo in a handwritten script (Pacifico), maroon, smaller, top left on the landing page and in the app header.
 
 ```bash
 python3 rmv6.py
@@ -106,6 +107,7 @@ python3 rmv19.py
 python3 rmv20.py
 python3 rmv21.py
 python3 rmv22.py
+python3 rmv23.py
 ```
 
 ## Skill only
