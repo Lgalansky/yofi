@@ -1003,6 +1003,11 @@ html:not(.yg) .ug-r.ug-tk{background:#E6F0DF!important;box-shadow:inset 0 0 0 2p
 html .pk .btn.pk-go{background:linear-gradient(#3B7A4C,#24563A)!important;color:#fff!important;font:800 1.35rem Fraunces,Georgia,serif!important}html .pk .btn.pk-go:disabled{opacity:1!important;filter:none!important}
 html.yg .pk .pk-amt,html.yg .pk .pk-lab,html.yg .pk .pk-rem b{color:#21C77A}
 .pk .pk-note{font-size:.84rem;opacity:.85;margin:-2px 0 8px}
+html .rb-r{grid-template-columns:18px 64px 1fr auto!important;gap:10px!important;padding:6px 8px!important;border-radius:14px;margin:0 -8px}
+html .rb-im{position:relative;width:64px;height:64px;display:block}html .rb-r .rb-im img{width:64px!important;height:64px!important;border-radius:12px!important;display:block}
+html .rb-im i{position:absolute;right:-6px;bottom:-6px;font-style:normal;font-size:1.5rem;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+html .rb-r.pk{background:#E6F0DF;box-shadow:inset 0 0 0 2px #2F6B3F}html.yg .rb-r.pk{background:#10301F;box-shadow:inset 0 0 0 2px #21C77A}
+html .rb-t u{display:block;text-decoration:none;font-size:.68rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#2F6B3F}html.yg .rb-t u{color:#21C77A}
 </style>
 </head>
 <body>
@@ -5139,7 +5144,7 @@ function ppLive(g, prog) { const q = cpRng(g.sl * 7 + Math.floor(Date.now() / 40
   return g.ph.map((p, i) => ({ i, v: Math.round(tot * ((1 - wt) * ns[i] / T + wt * RACE_FIN[g.ord.indexOf(i)])) })).sort((a, b) => b.v - a.v || g.ord.indexOf(a.i) - g.ord.indexOf(b.i)); }
 function ppBoard(g, e) { const now = Date.now(), cp = 1 - (g.end - now) / PP_MS, prog = Math.min(1, Math.max(.04, e ? Math.max(cp, (now - e.at) / PP_DEMO) : cp)), L = ppLive(g, prog), mx = Math.max(1, ...L.map(x => x.v));
   return `<div class="rb" id="rbLive"><p class="rb-h"><span class="rb-live">● LIVE</span>${L.reduce((a, x) => a + x.v, 0).toLocaleString()} votes so far</p>${L.map((x, n) => { const p = g.ph[x.i], pk = e ? e.picks.indexOf(x.i) : -1;
-    return `<div class="rb-r ${p.mine ? 'me' : ''}"><b class="rb-n">${n + 1}</b><img src="${p.src}" alt=""><span class="rb-t"><b>${esc(p.t)}</b><small>@${esc(p.h)}${p.mine ? ' · your photo' : ''}${pk >= 0 ? ` · your ${PP_MED[pk]}` : ''}</small><i style="width:${Math.round(100 * x.v / mx)}%"></i></span><em>${x.v.toLocaleString()}</em></div>`; }).join('')}</div>`; }
+    return `<div class="rb-r ${p.mine ? 'me' : ''} ${pk >= 0 ? 'pk' : ''}"><b class="rb-n">${n + 1}</b><span class="rb-im"><img src="${p.src}" alt="">${pk >= 0 ? `<i>${PP_MED[pk]}</i>` : ''}</span><span class="rb-t">${pk >= 0 ? `<u>Your ${['1st', '2nd', '3rd'][pk]} pick</u>` : ''}<b>${esc(p.t)}</b><small>@${esc(p.h)}${p.mine ? ' · your photo' : ''}</small><i style="width:${Math.round(100 * x.v / mx)}%"></i></span><em>${x.v.toLocaleString()}</em></div>`; }).join('')}</div>`; }
 setInterval(() => { const el = document.getElementById('rbLive'); if (!el || window.__rbSl == null || !S) return; const g = ppGame(window.__rbSl); el.outerHTML = ppBoard(g, (S.pp || {})[g.sl]); }, 2500);
 const ppScore = (p, ord) => { const t = ord.slice(0, 3); return p.reduce((a, x, i) => a + (t[i] === x ? 10 : t.includes(x) ? 5 : 0), 0); };
 const ppPool = (n, cur) => `$${Math.round(n * RACE_AVG).toLocaleString()}`;
@@ -5149,7 +5154,7 @@ function ppOpen() { const pc = window.__ppCash; window.__ppCash = 0; const g = p
   const bind = () => { if ($('#ppLater')) $('#ppLater').onclick = () => popClose(); if ($('#ppCard')) $('#ppCard').onclick = () => raceCard(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); };
   if (e || own) { popOpen(`<div class="pp">${head}<h2 class="pp-h">${e ? (e.free ? `Your free ${money(e.stake || 1)} pick is in!` : `Your ${money(e.stake || 1)} pick is in!`) : 'Your photo is in the ring!'}</h2><p class="pp-m"><b>${ppPool(g.players)}</b> pool · ${g.players} players · ends ${frTime(g.end)}</p>
       ${ppBoard(g, e)}<p class="pp-i">${e ? `Results at ${frTime(ppDue(e))} <small>(demo: about 2 min)</small>` : `Finalists’ creators share <b>10% of the prize pool</b>. Creators can’t pick in a Final their own photo is in.`}</p>
-      ${e && !cash && fqLeft() && (S.gems || 0) >= FREE_BET_COINS ? `<button class="btn block pc-go" id="ppAdd">🎟️ Add a free $2 · ${FREE_BET_COINS} 🟡</button>` : ''}
+      ${e && !cash && S.paidCash && fqLeft() && (S.gems || 0) >= FREE_BET_COINS ? `<button class="btn block pc-go" id="ppAdd">🎟️ Add a free $2 · ${FREE_BET_COINS} 🟡</button>` : ''}
       <button class="btn block pc-go" id="ppLater">${keep}</button><div style="text-align:center"><button class="link pc-later" id="ppCard">🎀 Finalists</button></div></div>`); bind();
     if ($('#ppAdd')) $('#ppAdd').onclick = () => { if (!fqLeft()) return; fqClaim(); S.pp[g.sl].stake = (S.pp[g.sl].stake || 2) + 2; save(); toast('🎟️ Free $2 added to your pick'); popClose(); setTimeout(ppOpen, 300); };
     if ($('#ppMore')) $('#ppMore').onclick = () => { popClose(); payCash(5, 'A Final pick', () => { S.pp[g.sl].stake = (S.pp[g.sl].stake || 1) + 5; S.pp[g.sl].free = 0; save(); toast('🎀 $5 more on your picks'); setTimeout(ppOpen, 300); }); };
