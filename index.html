@@ -2526,12 +2526,12 @@ function gemIdeas() {
   if (0) I.push({ ic: '🎟️', t: 'Free cash entry', d: `Play a <b>$1</b> tournament or cash challenge for free. Win <b>real cash</b>.${(S.cashTix || 0) ? ` You have ${S.cashTix}.` : ''}`, cost: TIX_GEMS, src: (fighters()[0] || {}).src, go: buyTicket });
   const u70 = S.photos.filter(p => p.s.total < CFG.QUALIFY && can(p)).sort((a, b) => b.s.total - a.s.total)[0];
   const up = u70 || S.photos.filter(p => can(p) && nextLvl(p.s.total)).sort((a, b) => (nextLvl(a.s.total).at - a.s.total) - (nextLvl(b.s.total).at - b.s.total))[0];
-  if (up) { const L = up.s.total < CFG.QUALIFY ? null : nextLvl(up.s.total), gap = (L ? L.at : CFG.QUALIFY) - up.s.total;
+  if (0 && up) { const L = up.s.total < CFG.QUALIFY ? null : nextLvl(up.s.total), gap = (L ? L.at : CFG.QUALIFY) - up.s.total;
     I.push({ ic: '✨', t: 'Touch up a photo', d: `Your ${esc(cn(up))}photo is <b>${up.s.total}</b>. ${gap} more to ${L ? `<b>${L.n}</b>` : `<b>${CFG.QUALIFY}</b> and it’s ready to play`}.`, cost: fixCost(up), src: up.src, go: () => { closeSheet(); startEnhance(up, lowestOpen(up)); } }); }
   try { let best = null; Object.entries(crownsS()).forEach(([k, c]) => { if (c.h === 'you' || !c.h) return; const ph = S.photos.filter(p => k === 'any' ? !p.cat || p.cat === 'any' : p.cat === k).sort((a, b) => b.s.total - a.s.total)[0]; if (!ph) return; const gap = c.sc - ph.s.total; if (!best || gap < best.gap) best = { k, c, ph, gap }; });
     if (false && best) I.push({ ic: '🏅', t: 'Take a blue ribbon', d: `@${esc(best.c.h)} holds the <b>${esc(crownName(best.k))}</b> blue ribbon with ${best.c.sc}. Your photo: <b>${best.ph.s.total}</b>.`, cost: FC_STAKES[1].amt, src: best.ph.src, go: () => { closeSheet(); openFriends(); fcNew(best.c.h, { f: best.c.h, th: best.k, st: 1, sel: best.ph.id }); } }); } catch (e) {}
   const f = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
-  if (f) I.push({ ic: '🏅', t: 'Coin challenge', d: `Put your <b>${f.s.total}</b> photo up against a rival. Win <b>50 🟡</b> in 30 seconds.`, cost: 25, src: f.src, go: () => { closeSheet(); openGemBattle(25); } });
+  if (f) I.push({ ic: '🏅', t: 'Coin challenge', d: `Put your <b>${f.s.total}</b> photo up against a rival. Win <b>200 🟡</b> in 30 seconds.`, cost: 100, src: f.src, go: () => { closeSheet(); openGemBattle(100); } });
   return I;
 }
 // one clear screen for adding a photo in a category, before the phone's upload menu opens
@@ -2539,7 +2539,7 @@ function addCatPhoto(k) {
   if ($('#sheet').classList.contains('on')) closeSheet(); if ($('#flow').classList.contains('on')) closeFlow();
   const cn = crownName(k), L = (typeof lgS === 'function') ? lgS() : null;
   openSheet(`<div class="acp"><span class="acp-i">${gi(k)}</span><h2>Add a ${esc(cn.toLowerCase())} photo</h2>
-    <p>${isCash() ? `Upload a ${esc(cn.toLowerCase())} photo, get your score, then enhance it to <b>${CFG.QUALIFY}+</b> to challenge for the ${esc(cn)} blue ribbon${L ? ` and today’s <b>${('$' + Math.round(L.jp[k]).toLocaleString())}</b> pot` : ''}.` : `Upload a ${esc(cn.toLowerCase())} photo, get your score, then enhance it to <b>${CFG.QUALIFY}+</b> to play ${esc(cn.toLowerCase())} coin challenges. Stake <b>25 🟡</b>, win <b>50 🟡</b>.`}</p>
+    <p>${isCash() ? `Upload a ${esc(cn.toLowerCase())} photo, get your score, then enhance it to <b>${CFG.QUALIFY}+</b> to challenge for the ${esc(cn)} blue ribbon${L ? ` and today’s <b>${('$' + Math.round(L.jp[k]).toLocaleString())}</b> pot` : ''}.` : `Upload a ${esc(cn.toLowerCase())} photo, get your score, then enhance it to <b>${CFG.QUALIFY}+</b> to play ${esc(cn.toLowerCase())} coin challenges. Stake <b>100 🟡</b>, win <b>200 🟡</b>.`}</p>
     <button class="btn block acp-go" id="acpGo">📷 Choose a photo</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`);
   $('#acpGo').onclick = () => { S.frameHint = { cats: [k], lab: catNm(k), frame: catNm(k) }; save(); closeSheet(); pickPhoto(true); };
 }
@@ -4974,7 +4974,7 @@ document.addEventListener('click', e => { if (e.target.closest('#chRow')) { e.pr
 function upNext() { if (!S || !S.user || S.geoBlock) return null; const L = lgS(), it = [];
   if (fighters().length && tUnlocked()) { const need = Math.max(0, CFG.BATTLE_EVERY - (S.since || 0), 12 - (S.votes || 0)), per = CFG.BATTLE_EVERY; let x;
     if (false) { const pp = fighters()[0], k = (pp && CATS8.find(c => fitsTheme(pp, c))) || 'any'; x = { ic: '🏆', t: `<b>Your first prize challenge</b> · ${esc(crownName(k))}`, k: 'b' }; }
-    else if (true) { if (!S.nextBth || !B_THEMES.includes(S.nextBth)) { S.nextBth = pickBattleTheme(); save(); } const th = S.nextBth, tn = esc(thName(th)); x = fitFor(th).length ? { ic: '🟡', t: `<b>${tn} coin ${isYoungW() ? 'battle' : 'challenge'}</b> · win 50 🟡`, k: 'b' } : { ic: '📷', t: `<b>Got a ${tn.toLowerCase()} photo?</b> · coin ${isYoungW() ? 'battle' : 'challenge'}`, k: 'b' }; }
+    else if (true) { if (!S.nextBth || !B_THEMES.includes(S.nextBth)) { S.nextBth = pickBattleTheme(); save(); } const th = S.nextBth, tn = esc(thName(th)); x = fitFor(th).length ? { ic: '🟡', t: `<b>${tn} coin ${isYoungW() ? 'battle' : 'challenge'}</b> · win 200 🟡`, k: 'b' } : { ic: '📷', t: `<b>Got a ${tn.toLowerCase()} photo?</b> · coin ${isYoungW() ? 'battle' : 'challenge'}`, k: 'b' }; }
     else { const ks = CATS8.filter(c => lgMine(c)), miss = CATS8.filter(c => c !== 'any' && !lgMine(c)).sort((p, q) => (L.jp[q] || 0) - (L.jp[p] || 0)), up = miss.length && (!ks.length || !S.puAlt);
       x = up ? { ic: '📷', t: `<b>${esc(crownName(miss[0]))} prize pool</b> · ${poolTxt(miss[0])}`, k: 'b' } : ks.length ? { ic: '🏆', t: `<b>${esc(crownName(ks[0]))} challenge</b> · ${poolTxt(ks[0])} pool`, k: 'b' } : null; }
     if (x) it.push(Object.assign(x, { need, per })); }
@@ -5938,7 +5938,7 @@ function potCard(k) { const L = lgS(), H = lgHold(k), iHold = H.h === 'you', y =
 function openGemBattle(stake, after, opt = {}) {
   if (opt.theme && !opt.photo) { const F0 = fitFor(opt.theme); if (!F0.length) { themeGate(opt.theme, 'This coin challenge', p => openGemBattle(stake, after, { ...opt, photo: p })); return; } opt = { ...opt, photo: F0[0] }; }
   const F = fighters(); if (!F.length && !opt.photo) { toast(`Get a photo to ${CFG.QUALIFY}+ to challenge.`); return; }
-  const free = opt.free != null ? opt.free : !S.gbDone; stake = free ? 0 : (stake || 25);
+  const free = opt.free != null ? opt.free : !S.gbDone; stake = free ? 0 : (stake || 100);
   const mine = opt.photo || F[0], cat = mine.cat || 'any', o = opt.rival || OPP[Math.floor(Math.random() * OPP.length)], rv = opt.rival ? { src: opt.rival.src } : battleRival(cat), N = 15;
   const win = () => free ? GB_FREE_WIN : stake * 2;
   const head = `<div class="kg2-top"><button class="kg2-ic" data-shclose aria-label="Back"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b>Coin challenge</b><button class="kg2-ic" data-shclose aria-label="Close"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -6678,7 +6678,7 @@ function openBattle() { if (!S.potSeen) { S.potSeen = 1; save(); }
   if (!S.potSeen && !openBattle.skipCash && !S.minor && !S.geoBlock) { const pp = S.photos.filter(q => q.s && q.s.total >= CFG.QUALIFY).sort((a, b) => b.s.total - a.s.total)[0]; if (pp) { S.potSeen = 1; S.cpN = 0; save(); potIntro(pp); return; } }
   S.btAlt = false; save(); if (!fighters().length) return;
   const bth = (!S.btAlt && S.nextBth) || pickBattleTheme(), bme = fitFor(bth)[0], tn = thName(bth); if (!S.btAlt) S.nextBth = null;
-  if (!S.btAlt && !openBattle.skipCash) { const me0 = bme || fighters()[0]; if (me0) { celebrate({ src: bme ? bme.src : lgPhoto(lgHold(bth).h, bth), score: '🟡', title: bme ? `${tn} coin challenge!` : `Got a ${tn.toLowerCase()} photo?`, text: bme ? `<b>Coins only.</b> A rival wants a <b>${tn.toLowerCase()}</b> challenge with your ${bme.s.total} photo. Stake <b>25 🟡</b>, win <b>50 🟡</b>. Result in 30 seconds.` : `A rival wants a <b>${tn.toLowerCase()}</b> challenge for <b>50 🟡</b>. You don’t have a ${tn.toLowerCase()} photo yet. Add one and play!`, cta: bme ? 'Free challenge · 25 🟡' : `📷 Add a ${tn.toLowerCase()} photo`, onCta: () => bme ? openGemBattle(25, null, { theme: bth }) : addCatPhoto(bth), later: 'Not now' }); return; } }
+  if (!S.btAlt && !openBattle.skipCash) { const me0 = bme || fighters()[0]; if (me0) { celebrate({ src: bme ? bme.src : lgPhoto(lgHold(bth).h, bth), score: '🟡', title: bme ? `${tn} coin challenge!` : `Got a ${tn.toLowerCase()} photo?`, text: bme ? `<b>Coins only.</b> A rival wants a <b>${tn.toLowerCase()}</b> challenge with your ${bme.s.total} photo. Stake <b>100 🟡</b>, win <b>200 🟡</b>. Result in 30 seconds.` : `A rival wants a <b>${tn.toLowerCase()}</b> challenge for <b>200 🟡</b>. You don’t have a ${tn.toLowerCase()} photo yet. Add one and play!`, cta: bme ? 'Play · 100 🟡' : `📷 Add a ${tn.toLowerCase()} photo`, onCta: () => bme ? openGemBattle(100, null, { theme: bth }) : addCatPhoto(bth), later: 'Not now' }); return; } }
   if (!openBattle.skipCash && !S.minor) { // cash challenges from judging are blue ribbon challenges
     const L = lgS(), ks = CATS8.filter(k => lgMine(k)), miss = CATS8.filter(k => k !== 'any' && !lgMine(k)).sort((a, b) => (L.jp[b] || 0) - (L.jp[a] || 0));
     S.puAlt = !S.puAlt; save(); if (miss.length && S.potSeen && (!ks.length || S.puAlt)) { potUp(miss[0]); return; }
