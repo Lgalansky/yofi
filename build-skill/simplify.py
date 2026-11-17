@@ -1985,3 +1985,6 @@ def RA(a,b,n=1):
 s=s.replace("function fcNotify() {","document.addEventListener('click', e => { if (e.target.closest('#segCompete')) window.__tFil = 'all'; }, true);\nfunction fcNotify() {",1)
 RA('.tsl2[data-tfl="gem"]>:not(.gemt){display:none!important}','.tsl2[data-tfl="gem"]>:not(.gemt):not(.pprow){display:none!important}')
 open(d+'yofi-simple.html','w').write(s); print('tfil ok')
+
+# ---------- Skill only: free cash challenge (300 coins, once a day) replaces the Freeroll ----------
+if os.environ.get('YOFI_BUILD') != 'real': exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'freech.py')).read())
