@@ -2050,6 +2050,11 @@ assert s.count(a)==1
 s=s.replace(a,"buy: () => { c.classList.remove('on', 'cr'); if ($('#sheet').classList.contains('on')) closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); go('judge'); renderJudge(); },")
 open(d+'yofi-simple.html','w').write(s); print('vote to earn ok')
 
+# ---------- All centred pops use the full phone width (8px side gap) ----------
+s=open(d+'yofi-simple.html').read()
+s=s.replace('</style>','#coach.on{padding-left:8px!important;padding-right:8px!important}#coach .cpr{max-width:460px!important;width:100%!important}#coach .qs2-run button>img{aspect-ratio:4/5!important;height:auto!important}@media (max-height:700px){#coach .qs2-run button>img{aspect-ratio:1/1!important}}\n</style>',1)
+open(d+'yofi-simple.html','w').write(s); print('wide pops ok')
+
 # ---------- Skill only: free cash challenge (300 coins, once a day) replaces the Freeroll ----------
 if os.environ.get('YOFI_BUILD') != 'real': exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'freech.py')).read())
 
