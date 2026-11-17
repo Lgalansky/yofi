@@ -84,6 +84,7 @@ Then `rmv16.py`: "Next Finals" strip (time and category of the next 3 Finals) on
 Then `rmv17.py`: landing page category tiles are the Final categories (Pets, Nature & landscapes, Garden & flowers), each with its next Final time and prize pool, in time order.
 Then `rmv18.py`: landing (no "Free to start"; Start voting / Enter with your own photo and win the prize / Watch the hourly Final live; next 6 Finals in a sideways row); no interest picker; category picker shows only Final categories; every upload is asked for a name; vote cards show photo names; first photo gets 150 coins and, once improved, goes straight into the next Final in its category; Final pick shows photo name, @username and 🔥 popularity; no real-money button for coin players on the pick screen.
 Then `rmv19.py`: landing page redesign from the mock-up (headline, 1st/2nd/3rd podium, Earn a free pick, Enter your photo, Meet the contenders cards with prize pools and times, Watch the hourly Final).
+Then `rmv20.py`: new-photo flow fixes: Enter your photo asks the Final category instead of guessing; name and first-photo prompts can show over the touch-up screen; the 150 coins are the sign-up welcome bonus (no double gift); first photo's status says "Touch up to go straight to the Final"; no Skill "first challenge free" pop for it; landing "How it works" (upload, improve to qualify, pick the top 3 of 6).
 
 ```bash
 python3 rmv6.py
@@ -100,6 +101,7 @@ python3 rmv16.py
 python3 rmv17.py
 python3 rmv18.py
 python3 rmv19.py
+python3 rmv20.py
 ```
 
 ## Skill only
