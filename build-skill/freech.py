@@ -24,7 +24,7 @@ function freeCh() { if ($('#sheet').classList.contains('on')) closeSheet(); cons
   const vs = (a, b, done, won) => `<div class="pc-vs pc2-vs fc-vs"><figure class="${done && won ? 'won' : ''}"><img src="${me.src}" alt=""><figcaption>You</figcaption><small>Score ${me.s.total}</small>${a != null ? `<strong class="fc-n" id="fcA">${a}</strong>` : ''}</figure><span class="pc-x2">VS</span>
     <figure class="${done && !won ? 'won' : ''}"><img src="${osrc}" alt=""><figcaption>@${esc(opp)}</figcaption><small>Score ${their}</small>${b != null ? `<strong class="fc-n" id="fcB">${b}</strong>` : ''}</figure></div>`;
   popOpen(`<div class="pc pc2 fc2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
-    <p class="pc-k">${gi(k)}<span>🎟️ Free cash ${CH} · ${cn}</span></p><h2 class="pc-h">Win ${money(FC_PRIZE)} real cash</h2>
+    <p class="pc-k">${gi(k)}<span>Free cash ${CH} · ${cn}</span></p><h2 class="pc-h">Win ${money(FC_PRIZE)} real cash</h2>
     <div class="pc2-pool"><b>${money(FC_PRIZE)}</b><span>winner gets, paid straight away<em>A real $1 ${CH}, free with ${FC_COINS} 🟡</em></span></div>
     ${vs()}
     <div class="pc2-stake"><div class="w"><b>Win</b><span>${money(FC_PRIZE)} cash in your wallet now</span></div><div class="l"><b>Lose</b><span>nothing lost · next free one in an hour</span></div></div>
@@ -38,10 +38,10 @@ function freeCh() { if ($('#sheet').classList.contains('on')) closeSheet(); cons
     const pWin = Math.max(.25, Math.min(.75, .5 + (me.s.total - their) / 30)), won = Math.random() < pWin, mv = won ? 8 + Math.floor(Math.random() * 3) : 4 + Math.floor(Math.random() * 4);
     const seq = [...Array(FC_N)].map((_, i) => i < mv); for (let i = FC_N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [seq[i], seq[j]] = [seq[j], seq[i]]; }
     if (won) { S.cash = +((S.cash || 0) + FC_PRIZE).toFixed(2); goCash(); } S.fcLog = (S.fcLog || []).concat({ at: Date.now(), k, won: won ? 1 : 0 }).slice(-20); save();
-    popOpen(`<div class="pc pc2 fc2"><p class="pc-k">${gi(k)}<span>🎟️ Free cash ${CH} · ${cn}</span></p><h2 class="pc-h" id="fcH">Live voting…</h2>${vs(0, 0)}
+    popOpen(`<div class="pc pc2 fc2"><p class="pc-k">${gi(k)}<span>Free cash ${CH} · ${cn}</span></p><h2 class="pc-h" id="fcH">Live voting…</h2>${vs(0, 0)}
       <div class="kg2-bar fc-bar"><i id="fcAb" style="width:50%"></i><i id="fcBb" style="width:50%"></i></div><p class="fch-r" id="fcV">0 of ${FC_N} votes</p></div>`);
     const result = () => { const d = Math.abs(mv - (FC_N - mv)), iHold = lgHold(k).h === 'you';
-      popOpen(`<div class="pc pc2 fc2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pc-k">${gi(k)}<span>🎟️ Free cash ${CH} · ${cn}</span></p>
+      popOpen(`<div class="pc pc2 fc2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pc-k">${gi(k)}<span>Free cash ${CH} · ${cn}</span></p>
         <h2 class="pc-h">${won ? `You won ${money(FC_PRIZE)}!` : `Lost by ${d} vote${d === 1 ? '' : 's'}`}</h2>
         ${vs(mv, FC_N - mv, true, won)}
         ${won ? `<div class="pc2-pool fc-won"><b>+${money(FC_PRIZE)}</b><span>real cash, in your wallet now<em>You’re a cash player now</em></span></div>` : `<p class="fch-m">Next free ${CH} in <b>${frMinsLeft()} min</b>. Or play a real one now.</p>`}

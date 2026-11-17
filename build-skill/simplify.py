@@ -1994,5 +1994,26 @@ RA('@media (max-height:860px){#coach .ppop','@media (max-height:680px){#coach .p
 s=s.replace('</style>','@media (max-height:800px){#coach .ppop .pc-k{margin-top:0!important}#coach .ppop .pc2-how{margin:2px 0 6px!important}#coach .ppop .pc2-me{margin-bottom:2px!important}#coach .ppop .pc2-pool{margin-bottom:6px!important}}\n</style>',1)
 open(d+'yofi-simple.html','w').write(s); print('pop size ok')
 
+# ---------- Prize pops bigger: one frame (no inner card), small side gap, larger text and photos ----------
+s=open(d+'yofi-simple.html').read()
+s=s.replace('</style>',"""#coach:has(.ppop){padding-left:8px!important;padding-right:8px!important}
+#coach .ppop{max-width:460px!important;width:100%!important;padding:14px 14px 12px!important}
+#coach .ppop .pc.pc2{box-shadow:none!important;background:transparent!important;padding:0!important;border:0!important}
+#coach .ppop .pc-k{margin:4px 34px 6px!important;font-size:.74rem!important;white-space:normal!important;line-height:1.4!important;display:block!important}#coach .ppop .pc-k svg{vertical-align:-2px;margin-right:4px}
+#coach .ppop .pc-h{font-size:1.75rem!important;line-height:1.15!important;margin:0 0 8px!important}
+#coach .ppop .pc2-pool>b{font-size:2.7rem!important}#coach .ppop .pc2-pool span{font-size:1.02rem!important}#coach .ppop .pc2-pool em{font-size:.92rem!important}
+#coach .ppop .pc2-vs figcaption{font-size:1.12rem!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}#coach .ppop .pc2-vs figure{min-width:0}#coach .ppop .pc2-vs small{font-size:.9rem!important}
+#coach .ppop .pc2-stake b{font-size:.8rem!important}#coach .ppop .pc2-stake span{font-size:.98rem!important;line-height:1.35!important}
+#coach .ppop .pc2-me p,#coach .ppop .pc2-how,#coach .ppop .fch-r,#coach .ppop .fch-m{font-size:.95rem!important}
+#coach .ppop .pc-go,#coach .ppop .pc-real{font-size:1.15rem!important;padding-top:15px!important;padding-bottom:15px!important}
+#coach .ppop .pc-later{font-size:1.1rem!important}
+#coach .ppop .fc-n{font-size:2.2rem!important}
+@media (max-height:800px){#coach .ppop .pc2-vs{margin:0 4px!important}#coach .ppop .pc2-pool>b{font-size:2.4rem!important}#coach .ppop .pc-h{font-size:1.6rem!important}#coach .ppop .pc-go,#coach .ppop .pc-real{padding-top:13px!important;padding-bottom:13px!important}#coach .ppop .pc2-stake{margin:6px 0!important}}
+@media (max-height:900px){#coach .ppop .pc2-how{display:none!important}#coach .ppop .pc2-st{font-size:1.1rem!important}}
+@media (max-height:800px){#coach .ppop .pnf-vs{margin:0 56px 6px!important}#coach .ppop .pc2-me{margin:2px 0 4px!important}#coach .ppop .pc2-pool>b{font-size:2.2rem!important}#coach .ppop .pc2-pool{margin-bottom:4px!important}#coach .ppop .pc-h{margin:0 0 4px!important}#coach .ppop .pnf-t{font-size:1.7rem!important}#coach .ppop .pnf-pool b{font-size:2.3rem!important}#coach .ppop .pc2-stake span{font-size:.9rem!important}}
+@media (max-height:700px){#coach .ppop .pc2-vs{margin:0 30px!important}}
+</style>""",1)
+open(d+'yofi-simple.html','w').write(s); print('pop big ok')
+
 # ---------- Skill only: free cash challenge (300 coins, once a day) replaces the Freeroll ----------
 if os.environ.get('YOFI_BUILD') != 'real': exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'freech.py')).read())
