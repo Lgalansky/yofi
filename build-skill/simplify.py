@@ -2015,5 +2015,11 @@ s=s.replace('</style>',"""#coach:has(.ppop){padding-left:8px!important;padding-r
 </style>""",1)
 open(d+'yofi-simple.html','w').write(s); print('pop big ok')
 
+# ---------- Pot amounts in whole dollars everywhere ($2,185, not $2185.00) ----------
+s=open(d+'yofi-simple.html').read()
+assert s.count("money(L.jp[k])")==3
+s=s.replace("money(L.jp[k])","('$' + Math.round(L.jp[k]).toLocaleString())")
+open(d+'yofi-simple.html','w').write(s); print('pot format ok')
+
 # ---------- Skill only: free cash challenge (300 coins, once a day) replaces the Freeroll ----------
 if os.environ.get('YOFI_BUILD') != 'real': exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'freech.py')).read())
