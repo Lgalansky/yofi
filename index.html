@@ -1002,6 +1002,7 @@ html:not(.yg) .ug-r.ug-tk{background:#E6F0DF!important;box-shadow:inset 0 0 0 2p
 .pk .pk-rem{border-top:1.5px solid #D9B65A;padding-top:10px;margin:10px 0 8px;font-size:1.05rem}.pk .pk-rem b{font:900 1.6rem Fraunces,Georgia,serif;color:#2F6B3F}
 html .pk .btn.pk-go{background:linear-gradient(#3B7A4C,#24563A)!important;color:#fff!important;font:800 1.35rem Fraunces,Georgia,serif!important}html .pk .btn.pk-go:disabled{opacity:1!important;filter:none!important}
 html.yg .pk .pk-amt,html.yg .pk .pk-lab,html.yg .pk .pk-rem b{color:#21C77A}
+.pk .pk-note{font-size:.84rem;opacity:.85;margin:-2px 0 8px}
 </style>
 </head>
 <body>
@@ -5143,7 +5144,7 @@ setInterval(() => { const el = document.getElementById('rbLive'); if (!el || win
 const ppScore = (p, ord) => { const t = ord.slice(0, 3); return p.reduce((a, x, i) => a + (t[i] === x ? 10 : t.includes(x) ? 5 : 0), 0); };
 const ppPool = (n, cur) => `$${Math.round(n * RACE_AVG).toLocaleString()}`;
 const ppDue = e => Math.min((e.sl + 1) * PP_MS, e.at + PP_DEMO);
-function ppOpen() { const g = ppGame(), e = (S.pp || {})[g.sl], own = g.ph.some(p => p.mine), cash = isCash(), y = isYoungW(), cn = esc(showName(g.k)), bk = ppBack(g), jp = raceJP(g.sl); const kp = !e && window.__ppKeep && window.__ppKeep.sl === g.sl ? window.__ppKeep : null; let picks = e ? e.picks.slice() : kp ? kp.picks.slice() : [], stake = RACE_ST.includes(S.raceSt) ? S.raceSt : 2; window.__rbSl = g.sl;
+function ppOpen() { const pc = window.__ppCash; window.__ppCash = 0; const g = ppGame(), e = (S.pp || {})[g.sl], own = g.ph.some(p => p.mine), cash = isCash() || !!pc, y = isYoungW(), cn = esc(showName(g.k)), bk = ppBack(g), jp = raceJP(g.sl); const kp = !e && window.__ppKeep && window.__ppKeep.sl === g.sl ? window.__ppKeep : null; let picks = e ? e.picks.slice() : kp ? kp.picks.slice() : [], stake = RACE_ST.includes(S.raceSt) ? S.raceSt : 2; window.__rbSl = g.sl;
   const head = `<button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🎀 The ${raceName(g.sl)} Final · ${cn}</p>`, keep = $('#panes').dataset.at === 'judge' ? (y ? 'Keep judging' : 'Keep voting') : 'Close';
   const bind = () => { if ($('#ppLater')) $('#ppLater').onclick = () => popClose(); if ($('#ppCard')) $('#ppCard').onclick = () => raceCard(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); };
   if (e || own) { popOpen(`<div class="pp">${head}<h2 class="pp-h">${e ? (e.free ? `Your free ${money(e.stake || 1)} pick is in!` : `Your ${money(e.stake || 1)} pick is in!`) : 'Your photo is in the ring!'}</h2><p class="pp-m"><b>${ppPool(g.players)}</b> pool · ${g.players} players · ends ${frTime(g.end)}</p>
@@ -5161,7 +5162,7 @@ function ppOpen() { const g = ppGame(), e = (S.pp || {})[g.sl], own = g.ph.some(
       <h3 class="pk-h3">Pick your 1st, 2nd &amp; 3rd</h3><p class="pk-sub">Choose from the 6 photos below</p>
       <p class="pp-leg">🔥 Popularity: picked to win</p><div class="pp-g g6">${g.ph.map((p, i) => { const n = picks.indexOf(i); return `<button class="pp-t ${n >= 0 ? 'on' : ''}" data-pp="${i}"><span class="pp-im"><img src="${p.src}" alt="">${n >= 0 ? `<i class="pp-b">${PP_MED[n]}</i>` : ''}</span><span class="pp-nm"><b>${esc(p.t)}</b><small>@${esc(p.h)}</small></span><span class="pp-cap"><span class="rf">${formHTML(p.form)}</span><b class="pop" title="Popularity: share of players picking it to win">🔥 ${bk[i]}%</b></span></button>`; }).join('')}</div>
       <p class="pp-i">${n3 ? 'Your top 3 is set. Tap a photo to change it.' : `Tap your <b>${['1st', '2nd', '3rd'][picks.length]}</b> place photo`}</p>
-      <p class="pk-rem"><b>${ppPool(g.players)}</b> cash prize pool</p>
+      <p class="pk-rem"><b>${ppPool(g.players)}</b> cash prize pool</p>${pc && S.user && S.user.guest ? '<p class="pk-note">Choose your picks and amount. You’ll create your account and add cash before you pay.</p>' : ''}
       ${cash ? `<div class="rc-st" role="group" aria-label="Entry">${RACE_ST.map(v => `<button data-rst="${v}" aria-pressed="${v === stake}">$${v}</button>`).join('')}</div>
         <button class="btn block pc-go pk-go" id="ppGo" ${n3 ? '' : 'disabled'}>${n3 ? `Pick for ${money(stake)}` : 'Choose your top 3'}</button>`
       : `<button class="btn block pc-go pk-go" id="ppFree" ${n3 && freeOk ? '' : 'disabled'}>${!n3 ? 'Choose your top 3' : S.tut === 2 ? '🎟️ Your first Final pick · free' : `🎟️ Free pick · ${FREE_BET_COINS} 🟡`}</button>${S.tut === 2 ? '<p class="pp-r">Your first pick is on us. Top scores share the prize pool in real cash.</p>' : !fqLeft() ? `<p class="pp-r">Both free picks used this hour · next in ${frMinsLeft()} min</p>` : (S.gems || 0) < FREE_BET_COINS ? `<p class="pp-r">${FREE_BET_COINS - Math.floor(S.gems || 0)} more 🟡 for a free pick. ${y ? 'Judge' : 'Vote'} to earn them.</p>` : `<p class="pp-r">${fqLeft()} of ${FQ_MAX} free picks left this hour</p>`}`}
@@ -5169,7 +5170,7 @@ function ppOpen() { const g = ppGame(), e = (S.pp || {})[g.sl], own = g.ph.some(
       <div style="text-align:center"><button class="link pc-later" id="ppCard">🎀 Finalists</button> · <button class="link pc-later" id="ppLater">${keep}</button></div></div>`);
     document.querySelectorAll('#coach [data-pp]').forEach(b => b.onclick = () => { const i = +b.dataset.pp, n = picks.indexOf(i); if (n >= 0) picks.splice(n, 1); else if (picks.length < 3) picks.push(i); draw(); });
     document.querySelectorAll('#coach [data-rst]').forEach(b => b.onclick = () => { stake = +b.dataset.rst; S.raceSt = stake; save(); draw(); });
-    const rec = (st, free) => { S.pp = S.pp || {}; S.pp[g.sl] = { sl: g.sl, picks: picks.slice(), cur: 'cash', stake: st, free: free ? 1 : 0, at: Date.now(), players: g.players }; save(); toast(free ? '🎟️ Free pick in! Watch it live.' : `🎀 ${money(st)} entry in! Watch it live.`); setTimeout(ppOpen, 300); };
+    const rec = (st, free) => { S.pp = S.pp || {}; S.pp[g.sl] = { sl: g.sl, picks: picks.slice(), cur: 'cash', stake: st, free: free ? 1 : 0, at: Date.now(), players: g.players }; save(); toast(free ? '🎟️ Free pick in! Watch it live.' : `🎀 ${money(st)} pick in! Watch it live.`); if (!free && (S.tut || 9) < 9) { S.tut = 9; save(); } (function sh(t) { setTimeout(() => { if (($('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || document.querySelector('.cashx, .gemx')) && t < 12) sh(t + 1); else ppOpen(); }, t ? 700 : 300); })(0); };
     if ($('#ppGo')) $('#ppGo').onclick = () => { if (picks.length < 3) return; popClose(); payCash(stake, 'A Final pick', () => rec(stake)); };
     if ($('#ppFree')) $('#ppFree').onclick = () => { if (picks.length < 3 || ((S.gems || 0) < FREE_BET_COINS && S.tut !== 2)) return; if (S.user && S.user.guest) { window.__ppKeep = { sl: g.sl, picks: picks.slice(), auto: 1 }; popClose(); openSignup(() => setTimeout(ppOpen, 200), { locked: false }); return; } if (S.tut === 2) { S.tut = 3; save(); rec(2, true); return; } if (!fqLeft()) return; fqClaim(); rec(2, true); };
     if ($('#ppReal')) $('#ppReal').onclick = () => { if (picks.length < 3) return; popClose(); payCash(2, 'A Final pick', () => rec(2)); };
@@ -5507,7 +5508,7 @@ function lpContHTML() { const cur = ppSlot(), L = [{ sl: cur, live: 1 }].concat(
   return L.map(x => { const g = ppGame(x.sl), k = g.k;
     return `<div class="lp-cc">${lpImg(k) ? `<img src="${lpImg(k)}" alt="">` : ''}${x.live ? '<i class="lp-live">● Live now</i>' : ''}<b class="lp-cn">${esc(showName(k).split(' & ')[0])}</b><b class="lp-pz">${ppPool(g.players)}</b><small>Final prize pool</small><small>${x.live ? `Ends ${raceName(x.sl)}` : lpWhen(x.sl)}</small>
       ${x.live ? '<button class="lp-lnk" onclick="rmPickNow()">Pick a winner →</button>' : `<button class="lp-lnk" data-caf="${showHint(k).cats[0]}">Enter a photo →</button>`}</div>`; }).join(''); }
-function rmPickNow() { rmWatch(); setTimeout(() => { try { popClose(); } catch (e) {} ppOpen(); }, 300); }
+function rmPickNow() { rmWatch(); setTimeout(() => { try { popClose(); } catch (e) {} window.__ppCash = 1; ppOpen(); }, 300); }
 window.rmPickNow = rmPickNow;
 setInterval(() => { try { if (!S || $('#landing').style.display === 'none') return; const p = document.getElementById('lpPod');
   if (p && !p.dataset.ok && lpImg('pets')) { p.dataset.ok = 1; p.innerHTML = [['pets', '1st', 'g'], ['nature', '2nd', 's'], ['garden', '3rd', 'b']].map(([k, t, c]) => `<div><img src="${lpImg(k)}" alt=""><span class="lp-ros ${c}">${t}</span></div>`).join(''); }
