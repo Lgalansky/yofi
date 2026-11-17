@@ -2598,6 +2598,7 @@ function gemIdeas() {
     if (false && best) I.push({ ic: '🏅', t: 'Take a blue ribbon', d: `@${esc(best.c.h)} holds the <b>${esc(crownName(best.k))}</b> blue ribbon with ${best.c.sc}. Your photo: <b>${best.ph.s.total}</b>.`, cost: FC_STAKES[1].amt, src: best.ph.src, go: () => { closeSheet(); openFriends(); fcNew(best.c.h, { f: best.c.h, th: best.k, st: 1, sel: best.ph.id }); } }); } catch (e) {}
   const f = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
   if (f && !isCash()) I.push({ ic: '🏅', t: 'Coin challenge', d: `Put your <b>${f.s.total}</b> photo up against a rival. Win <b>200 🟡</b> in 30 seconds.`, cost: 100, src: f.src, go: () => { closeSheet(); openGemBattle(100); } });
+  if (!isCash()) I.push({ ic: '⚡', t: 'Quick Sprint', d: `1 v 1: pick the photo the crowd chose in 10 pairs. Win <b>${QS_COIN_PAY[0]} 🟡</b>.`, cost: QS_COIN, go: () => { closeSheet(); window.__qsGame = 'qs'; sprPractice(); } });
   return I;
 }
 // one clear screen for adding a photo in a category, before the phone's upload menu opens
@@ -2613,7 +2614,7 @@ function useGems() {
   const I = gemIdeas();
   openSheet(`<div class="ug"><h2>Use your coins</h2><p class="sub">You have <b>${Math.floor(S.gems).toLocaleString()} 🟡</b>. Here’s what they can do for you right now.</p>
     ${false ? `<button class="ug-r ug-tix" id="ugTix"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free cash entr${S.cashTix === 1 ? 'y' : 'ies'}${S.cashTix > 1 ? ` · ${S.cashTix}` : ''}</b><small>Play a $1 challenge or tournament free. Win real cash.</small></span><em class="claim">Claim</em></button>` : ''}
-    ${showRowHTML()}${raceBetRowHTML()}${I.length ? I.map((x, i) => `<button class="ug-r" data-ug="${i}"><span class="ug-i">${x.ic}</span><span class="ug-t"><b>${x.t}</b><small>${x.d}</small></span><em class="${S.gems < x.cost ? 'need' : ''}">${x.cost} 🟡</em></button>`).join('') : `<p class="ug-none">Upload a photo in Studio and your coins can start working for you.</p>`}
+    ${raceBetRowHTML()}${I.length ? I.map((x, i) => `<button class="ug-r" data-ug="${i}"><span class="ug-i">${x.ic}</span><span class="ug-t"><b>${x.t}</b><small>${x.d}</small></span><em class="${S.gems < x.cost ? 'need' : ''}">${x.cost} 🟡</em></button>`).join('') : `<p class="ug-none">Upload a photo in Studio and your coins can start working for you.</p>`}
     <button class="link ug-buy" id="ugBuy">Get more coins</button></div>`);
   document.querySelectorAll('#sheetBody [data-ugc]').forEach(b => b.onclick = () => { const k = b.dataset.ugc; closeSheet(); addCatPhoto(k); });
   document.querySelectorAll('#sheetBody [data-ug]').forEach(b => b.onclick = () => { const x = I[+b.dataset.ug]; if (S.gems < x.cost) { closeSheet(); runOut('gems', `You need ${x.cost - S.gems} more coins`, null, x.cost - S.gems); return; } x.go(); });
@@ -5173,7 +5174,7 @@ const rcSlotFor = p => { const cur = ppSlot(), R = S.races || {}, k = photoShow(
 function rcStatus(p) { const r = rcRec(p.id), last = r.last, hs = r.f.filter(x => x.k === 'h').slice(-3).map(x => ppOrd(x.pl)).join(' · '), y = isYoungW();
   if (r.st === 'q') { const x = (S.races || {})[r.sl]; return { cls: 'q', ic: '✅', t: `Through · in the <b>${raceName(r.sl)}</b> Final`, s: x && r.sl === ppSlot() ? 'In the ring now' : `Result ${x ? frTime(Math.min((r.sl + 1) * PP_MS, x.at + PP_DEMO * 1.5)) : ''} <small>(demo)</small>` }; }
   if (r.st === 'heats') return { cls: 'h', ic: '🎀', t: hs && r.runs ? `Qualifiers: ${hs} · ${HEAT_RUNS - r.runs} ${HEAT_RUNS - r.runs === 1 ? 'try' : 'tries'} left` : `In the qualifiers · ${HEAT_RUNS} tries`, s: `Next qualifier in <b>${Math.max(1, HEAT_EVERY - (S.hN || 0))}</b> ${y ? 'judge' : 'vote'}s · top 2 go through` };
-  if (p.id === S.ffPid && !S.ffDone && photoShow(p)) return { cls: 'low', ic: '✨', t: 'Touch up to go straight to the Final', s: `Any improvement sends it to the <b>${raceName(rcSlotFor(p))} ${esc(showName(photoShow(p)))} Final</b>` };
+  if (p.id === S.ffPid && !S.ffDone && photoShow(p)) return { cls: 'low', ic: '✨', t: 'Touch up to enter the qualifiers', s: `Any improvement enters it for the <b>${raceName(rcSlotFor(p))} ${esc(showName(photoShow(p)))} Final</b>` };
   if (p.s.total < SHOW_MIN) return { cls: 'low', ic: '🔒', t: `Needs ${SHOW_MIN}+ to show`, s: `${y ? 'Enhance' : 'Touch up'} +${SHOW_MIN - p.s.total} to enter the qualifiers` };
   if (last) return { cls: 'w', ic: last.pl <= 3 ? PP_MED[last.pl - 1] : '🏁', t: last.pz ? `Won <b>${last.cash ? money(last.pz) : last.pz + ' 🟡'}</b> in the ${raceName(last.sl)} Final` : `${ppOrd(last.pl)} in the ${raceName(last.sl)} Final`, s: 'Enter the qualifiers again' };
   return { cls: 'n', ic: '📷', t: 'Not entered yet', s: `Enter the qualifiers free · top 3 win ${isCash() ? 'cash' : 'coins'}` }; }
@@ -5232,7 +5233,7 @@ function ppResult(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc = pp
     <div class="pp-cmp"><small>Crowd’s top 3</small><div>${top.map((p, i) => `<figure><img src="${g.ph[p].src}" alt=""><i>${PP_MED[i]}</i></figure>`).join('')}</div>
       <small>Your picks</small><div>${e.picks.map((p, i) => `<figure><img src="${g.ph[p].src}" alt=""><i>${mk(p, i)}</i></figure>`).join('')}</div></div>
     <p class="pp-r">✅ right place · ↕️ in the top 3, different place · ❌ not in the top 3</p>
-    ${S.tut === 3 ? `<div class="tut-up"><b>📷 Get your own photo in a Final</b><span>Every finalist’s creator gets paid. We’ll give you 150 coins to improve your first photo, then it goes straight into a Final.</span>${finSchedHTML(3)}<button class="btn block pc-go" id="ppUp">📷 Add a ${esc(showName(finNext(1)[0].k).toLowerCase())} photo</button></div>` : ''}
+    ${S.tut === 3 ? `<div class="tut-up"><b>📷 Get your own photo in a Final</b><span>Every finalist’s creator gets paid. We’ll give you 150 coins to improve your first photo, then it enters the qualifiers.</span>${finSchedHTML(3)}<button class="btn block pc-go" id="ppUp">📷 Add a ${esc(showName(finNext(1)[0].k).toLowerCase())} photo</button></div>` : ''}
     <button class="btn block ${cashP ? 'pc-go' : 'pc-real'}" id="ppNext">🎀 ${cashP ? 'Enter the next Final' : 'Enter the next Final for real'}</button>
     <div style="text-align:center"><button class="link pc-later" id="ppOk">${y ? 'Keep judging' : 'Keep voting'}</button></div></div>`);
   if (prize) setTimeout(() => cashExplosion && cashExplosion(prize, { label: 'Final' }), 500);
@@ -5471,12 +5472,12 @@ setInterval(() => { try {
   const y = isYoungW();
   if (!S.ffGift && !S.firstEntry && !Object.values(S.rc || {}).some(r => r.st || (r.f && r.f.length))) { const p = (S.photos || []).find(x => photoShow(x) && x.title && !rcRec(x.id).st); if (p) { const sl = rcSlotFor(p);
     S.ffGift = 1; S.ffPid = p.id; S.ffBase = p.s.total; save();
-    celebrate({ src: p.src, score: p.s.total, title: 'Improve it, then straight to the Final', text: `${S.user && S.user.guest ? `Create your free account and get <b>${FF_GIFT} coins</b> to improve <b>${esc(p.title)}</b>.` : `Use your coins to ${y ? 'enhance' : 'touch up'} <b>${esc(p.title)}</b>.`} Once it improves it goes <b>straight into the ${raceName(sl)} ${esc(showName(photoShow(p)))} Final</b>, no qualifiers. Every finalist’s creator shares <b>10% of the prize pool</b>, and the top 3 win <b>$10 · $5 · $2</b>.`,
+    celebrate({ src: p.src, score: p.s.total, title: 'Improve it to enter the qualifiers', text: `${S.user && S.user.guest ? `Create your free account and get <b>${FF_GIFT} coins</b> to improve <b>${esc(p.title)}</b>.` : `Use your coins to ${y ? 'enhance' : 'touch up'} <b>${esc(p.title)}</b>.`} Once it improves it enters the <b>qualifiers for the ${raceName(sl)} ${esc(showName(photoShow(p)))} Final</b>: the top 2 in each qualifier go through. Every finalist’s creator shares <b>10% of the prize pool</b>, and the top 3 win <b>$10 · $5 · $2</b>.`,
       cta: `✨ ${y ? 'Enhance' : 'Improve'} my photo`, onCta: () => { closeFlow(); S.cur = p.id; save(); go('studio'); renderStudio(); }, later: 'Later' }); return; } }
   if (S.ffPid && !S.ffDone) { const p = (S.photos || []).find(x => x.id === S.ffPid); if (!p) { S.ffDone = 1; save(); return; }
-    if (p.s.total > S.ffBase && !rcRec(p.id).st && photoShow(p)) { S.ffDone = 1; S.firstEntry = 1; S.tut = 9; const sl = rcSlotFor(p); S.races = S.races || {}; S.races[sl] = { pid: p.id, at: Date.now() }; const r = rcRec(p.id); r.st = 'q'; r.sl = sl; save();
-      celebrate({ src: p.src, score: p.s.total, title: 'Through to the Final!', text: `<b>${esc(p.title)}</b> improved to <b>${p.s.total}</b> and goes straight into the <b>${raceName(sl)} ${esc(showName(photoShow(p)))} Final</b>. Watch it live, and pick the top 3 in the Final that’s on now.`,
-        cta: '🎀 See the Finalists', onCta: () => { closeFlow(); raceCard(); }, later: y ? 'Keep judging' : 'Keep voting', onLater: () => { closeFlow(); go('judge'); renderJudge(); } }); } }
+    if (p.s.total > S.ffBase && !rcRec(p.id).st && photoShow(p)) { S.ffDone = 1; S.firstEntry = 1; S.tut = 9; const sl = rcSlotFor(p); const r = rcRec(p.id); r.st = 'heats'; r.runs = 0; S.hN = Math.max(S.hN || 0, HEAT_EVERY - 2); save();
+      celebrate({ src: p.src, score: p.s.total, title: 'In the qualifiers!', text: `<b>${esc(p.title)}</b> improved to <b>${p.s.total}</b> and is in the qualifiers for the <b>${raceName(sl)} ${esc(showName(photoShow(p)))} Final</b>. ${y ? 'Judges' : 'Voters'} rank it in a group of 5: the top 2 go through to the Final.`,
+        cta: `⚖️ ${y ? 'Judge' : 'Vote'} to see its qualifier`, onCta: () => { closeFlow(); go('judge'); renderJudge(); }, later: y ? 'Keep judging' : 'Keep voting', onLater: () => { closeFlow(); go('judge'); renderJudge(); } }); } }
 } catch (e) {} }, 1500);
 function lpImg(k) { const c = k === 'pets' ? 'pets' : k === 'garden' ? 'fitness' : 'night', t = document.querySelector(`#landing .ca-grid .ca-t[onclick*="'${c}'"] img`); return t ? t.src : ''; }
 function lpWhen(sl) { const t = new Date((sl + 1) * PP_MS), n = new Date(), tm = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1); return `${t.toDateString() === n.toDateString() ? 'Today' : t.toDateString() === tm.toDateString() ? 'Tomorrow' : t.toLocaleDateString([], { weekday: 'short' })} · ${raceName(sl)}`; }
@@ -5492,7 +5493,7 @@ setInterval(() => { try { if (!S || $('#landing').style.display === 'none') retu
 function finPick() { let o = document.getElementById('finPick'); if (!o) { o = document.createElement('div'); o.id = 'finPick'; document.body.appendChild(o); }
   const first = ffreeFirst(), L = SHOW_ROT.map(x => ({ k: x.k, sl: finFor(x.k) })).sort((a, b) => a.sl - b.sl);
   o.innerHTML = `<div class="fp-in"><button class="fp-x" aria-label="Close">✕</button><p class="fp-k">📷 Enter your photo</p><h2>Choose your Final</h2>
-    <p class="fp-s">Pick the category your photo is for. ${first ? 'Your first photo goes <b>straight into that Final</b> once you improve it.' : 'Photos at 70+ enter its qualifiers free; the top 2 go through to the Final.'}</p>
+    <p class="fp-s">Pick the category your photo is for. ${first ? 'Improve your photo and it enters that Final’s <b>qualifiers</b>: the top 2 in each go through.' : 'Photos at 70+ enter its qualifiers free; the top 2 go through to the Final.'}</p>
     ${L.map(x => { const g = ppGame(x.sl); return `<button class="fp-c" data-fpk="${x.k}">${lpImg(x.k) ? `<img src="${lpImg(x.k)}" alt="">` : `<span class="fp-e">${SHOW_IC[x.k] || '🎀'}</span>`}<span class="fp-t"><b>${SHOW_IC[x.k] || ''} ${esc(showName(x.k))}</b><small>Next Final <b>${lpWhen(x.sl)}</b></small><em>${ppPool(g.players)} prize pool</em></span><i aria-hidden="true">›</i></button>`; }).join('')}
     <p class="fp-n">Finals every hour: Pets, Nature &amp; landscapes, Garden &amp; flowers.</p></div>`;
   o.className = 'on'; o.querySelector('.fp-x').onclick = () => { o.className = ''; };
