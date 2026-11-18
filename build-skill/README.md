@@ -222,6 +222,8 @@ Then `rmv106.py`: Coin Pick screen drops the 'Win up to · 50 coins' headline; t
 
 Then `rmv107.py`: your photo's journey: track Framed → Qualifiers (3 tries with places) → Finalist → Final → Paid with the framed thumbnail on its stage; slim row under the streak bar on the Vote screen with a bar filling to the next qualifier; moving-forward moment (glow, sparkle, '3rd in its qualifier · 1 try left' / 'Through to the Final!'); full track on Gallery cards; your own photo's lane marked in the live race.
 
+Then `rmv108.py`: Coming-up strip while a pick is live just says 'Your pick is live' (results-in button stays).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -325,6 +327,7 @@ python3 rmv104.py
 python3 rmv105.py
 python3 rmv106.py
 python3 rmv107.py
+python3 rmv108.py
 ```
 
 ## Skill only
