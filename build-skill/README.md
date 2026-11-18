@@ -120,6 +120,7 @@ Then `rmv52.py`: one navy-blue style for every pop (navy headings, kickers, butt
 Then `rmv53.py`: invite friends to judge: coins menu row and pop (WhatsApp / copy link, invite list Sent -> Joined -> +100); you get 100 coins when a friend judges 15 photos (friend starts with 50, up to 10 paid invites); "Friend bonus +100 coins" pop. Prototype simulates the friend joining and judging.
 Then `rmv54.py`: qualifiers pay for every exact match (1 exact 10, 2 exact 25, 3 exact 50 coins); the result screen leads with "+10 coins · 195 → 205 coins", the photo comparison folds under "See the full result".
 Then `rmv55.py`: green "play for real" upsells, picker first then deposit: free pick win shows "A $10 pick would have won $X" ($2/$5/$10 tiles, at most every 30 min) and a green button; free pick loss gets a quiet green outline button; Quick Sprint coin win says "Same game for real: $2 wins $3.20"; every real-money button is green.
+Then `rmv56.py`: "2 in the top 3" (any order) now wins a small Final share; rule is "1+ in its exact spot, or 2+ in the top 3"; the reveal ends with the same summary and win amount as the result screen.
 
 ```bash
 python3 rmv6.py
@@ -172,6 +173,7 @@ python3 rmv52.py
 python3 rmv53.py
 python3 rmv54.py
 python3 rmv55.py
+python3 rmv56.py
 ```
 
 ## Skill only
