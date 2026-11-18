@@ -206,6 +206,8 @@ Then `rmv98.py`: 'Call the crowd' voting: after each vote both photos fill to th
 
 Then `rmv99.py`: the pick-3-of-5 coin game is renamed Coin Pick (chip, strip, reveal, result, win label); Call the crowd shows percentages only, no shading or fading on the photos; 'The crowd went the other way' without the ✕.
 
+Then `rmv100.py`: back to 'Qualifier' for the coin game (Qualifier · Round 1 of 3); Call the crowd shows no percentages on the photo tiles, the banner carries the result ('62% agreed · +5 coins · 2 in a row').
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -301,6 +303,7 @@ python3 rmv96.py
 python3 rmv97.py
 python3 rmv98.py
 python3 rmv99.py
+python3 rmv100.py
 ```
 
 ## Skill only
