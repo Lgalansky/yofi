@@ -232,6 +232,8 @@ Then `rmv111.py`: Coming-up strip no longer shows your photo (next qualifier / i
 
 Then `rmv112.py`: coins menu shows coin games to every player incl. after a deposit (Free Final pick, new Coin Pick row, Quick Sprint); unused-coins pop fires when the balance crosses 250 and at session start after the 3rd vote if 250+, max once per 15 votes, old milestone nudge off.
 
+Then `rmv113.py`: 'Pick the winner' pool next to the Top 3: Top 3 | Winner tabs on the pick screen, live odds and share of winner picks on each photo, cash from $2 or free pick (250 coins), confirmation with pool, countdown and race, reveal and payout at closing odds.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -340,6 +342,7 @@ python3 rmv109.py
 python3 rmv110.py
 python3 rmv111.py
 python3 rmv112.py
+python3 rmv113.py
 ```
 
 ## Skill only
