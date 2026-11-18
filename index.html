@@ -5749,7 +5749,7 @@ const GQ_MED = ['🥇', '🥈', '🥉'];
 function gateOpen() { const G = gateGame(), y = isYoungW(), keep = y ? 'Keep judging' : 'Keep voting', fin = raceName(G.ns), cw = y ? 'judges’' : 'crowd’s'; let picks = [], first = true; const t0 = Date.now();
   const draw = () => { const n = picks.length;
     popOpen(`<div class="pp gq2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">${esc(showName(ppGame(G.ns).k))}</p><span class="g2-chip">Coin Pick · Round ${G.gi + 1} of 3</span>
-      <div class="qz3-win"><span class="qz3-pill">Win up to</span><b class="qz3-big"><i class="qz3-coin" aria-hidden="true"></i>${GATE_COINS[3]} coins</b></div><h2 class="g2-h">Pick the top 3</h2><p class="g2-s">Match the ${cw} order.</p>
+      <h2 class="g2-h">Pick the top 3</h2><p class="g2-s">Match the ${cw} order.</p>
       <div class="qz3-pz">${[3, 2, 1].map((k, n) => `<div><span class="qz3-amt"><i class="qz3-coin" aria-hidden="true"></i><span class="qz3-n"><b>${GATE_COINS[k]}</b><small>coins</small></span></span><p>${k} exact match${k === 1 ? '' : 'es'}</p></div>`).join('')}</div>
       <div class="g2-ph">${G.ph.map((p, i) => { const k = picks.indexOf(i); return `<button class="g2-t ${k >= 0 ? 'on' : ''}" data-pp="${i}" aria-label="Photo ${i + 1}"><img src="${p.src}" alt="">${k >= 0 ? `<i>${GQ_MED[k]}</i>` : ''}</button>`; }).join('')}</div>
       <p class="g2-hint ${n === 3 ? 'big' : ''}">${n < 3 ? `Choose your ${GQ_ORD[n]} place photo` : '<b>Your top 3 is ready</b><small>Tap a photo to change your picks.</small>'}</p>
