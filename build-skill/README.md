@@ -200,6 +200,8 @@ Then `rmv95.py`: every new player gets the free-pick journey once: framing a pho
 
 Then `rmv96.py`: Quick Sprint costs 25 coins and wins 40 (was 100/160) so it appears in the rotation for low-coin players; rotation slot 3 is the 'You have unused coins' pop leading to the guided coins menu with the free Final pick highlighted.
 
+Then `rmv97.py`: the live Final is a race: six lanes with finalists' photos running to a chequered finish line as votes come in, your picks ringed gold/silver/bronze, current place on each runner, commentary line (lead changes, your picks climbing or dropping), photo-finish pulse in the last 20 seconds; replaces the standings list.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -292,6 +294,7 @@ python3 rmv93.py
 python3 rmv94.py
 python3 rmv95.py
 python3 rmv96.py
+python3 rmv97.py
 ```
 
 ## Skill only
