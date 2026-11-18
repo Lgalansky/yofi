@@ -1191,6 +1191,7 @@ html body .ug-buy{color:#2F6B3F!important;-webkit-text-fill-color:#2F6B3F}
 .lk-pz{background:#E6F0DF;box-shadow:inset 0 0 0 2px #2F6B3F}html body .ppop .lk-pz small,html body .ppop .lk-pz b{color:#2F6B3F!important;-webkit-text-fill-color:#2F6B3F}.lk-pz b{display:block;font:900 2.2rem/1.05 Fraunces,Georgia,serif}
 .lk-cd{background:#1E3A6E}html body .ppop .lk-cd small,html body .ppop .lk-cd span{color:#DCE5F4!important;-webkit-text-fill-color:#DCE5F4}html body .ppop .lk-cd b{display:block;font:900 2.2rem/1.05 Fraunces,Georgia,serif;color:#F3D98B!important;-webkit-text-fill-color:#F3D98B;font-variant-numeric:tabular-nums}
 .fr2:has(.cw2) .fr2-win{display:none}
+html body .ppop .gq-cw .cw2-h{font-size:1.7rem!important}.gq-cw{margin-top:12px!important}
 </style>
 </head>
 <body>
@@ -5635,7 +5636,7 @@ function gateOpen() { const G = gateGame(), y = isYoungW(), keep = y ? 'Keep jud
       <div class="qz3-pz">${[3, 2, 1].map((k, n) => `<div><span class="qz3-amt"><i class="qz3-coin" aria-hidden="true"></i><span class="qz3-n"><b>${GATE_COINS[k]}</b><small>coins</small></span></span><p>${k} exact match${k === 1 ? '' : 'es'}</p></div>`).join('')}</div>
       <div class="g2-ph">${G.ph.map((p, i) => { const k = picks.indexOf(i); return `<button class="g2-t ${k >= 0 ? 'on' : ''}" data-pp="${i}" aria-label="Photo ${i + 1}"><img src="${p.src}" alt="">${k >= 0 ? `<i>${GQ_MED[k]}</i>` : ''}</button>`; }).join('')}</div>
       <p class="g2-hint ${n === 3 ? 'big' : ''}">${n < 3 ? `Choose your ${GQ_ORD[n]} place photo` : '<b>Your top 3 is ready</b><small>Tap a photo to change your picks.</small>'}</p>
-      <div class="g2-sl">${[0, 1, 2].map(k => `<button class="${k === n ? 'cur' : ''} ${picks[k] != null ? 'set' : ''}" data-gsl="${k}">${picks[k] != null ? `<img src="${G.ph[picks[k]].src}" alt="">` : ''}<span>${GQ_MED[k]} ${GQ_ORD[k]}</span></button>`).join('')}</div>
+      
       <button class="btn block g2-go ${n < 3 ? 'off' : ''}" id="gtGo">${n < 3 ? 'Select 3 photos to continue' : 'Lock in my top 3'}</button>
       <p class="g2-foot">Free to play · Top 2 reach the ${fin} Final</p>
       <div style="text-align:center"><button class="link g2-link" id="gtNo">⚖️ Judge photos</button></div></div>`);
@@ -5655,13 +5656,11 @@ function gateResultShow(G, picks) { const y = isYoungW(), top = G.ord.slice(0, 3
   popOpen(`<div class="pp gq2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">Group ${G.gi + 1} of 3 · results</p>
     <h2 class="g2-h gq-h">${pay ? 'Spot on!' : 'Not this time'}</h2><p class="rv-sub2">${right} of 3 in the exact spot</p>${pay ? `<div class="rv-won"><span>You won</span><b>+${pay} coins</b></div>` : ''}
     <span class="g2-earn ${pay ? 'won' : ''}">${pay ? `Your coins: ${Math.floor(S.gems - pay)} → <b>${Math.floor(S.gems)}</b>` : `No coins this time · 1 exact spot pays ${GATE_COINS[1]} coins`}</span>
-        <p class="rv-lab rv-rule"><span>${cw} top 3</span></p>
-    <div class="gq-pod">${top.map((p, i) => `<figure class="${picks[i] === p ? 'hit' : ''}"><img src="${G.ph[p].src}" alt="">${picks.includes(p) ? `<i class="rv-you ${picks[i] === p ? 'ok' : ''}">Your ${GQ_ORD[picks.indexOf(p)]} pick</i>` : ''}<b>${GQ_MED[i]} ${GQ_ORD[i]}</b></figure>`).join('')}</div>
-    <div class="gq-sub">${top.map((p, i) => `<span>${picks[i] === p ? '<em class="ok">✓ Exact match</em>' : ''}${i < 2 ? '<em class="fin">→ Finalist</em>' : ''}</span>`).join('')}</div>
-    <p class="rv-yp-h rv-rule"><span>Your picks</span></p>
-    <span class="rv-yp">${picks.map((p, i) => `<span class="${top[i] === p ? 'ex' : ''}"><img src="${G.ph[p].src}" alt=""><b>Picked ${GQ_ORD[i]}</b>${top[i] === p ? '<em class="ok">✓ Exact match</em>' : `<em class="no">✗ ${top.includes(p) ? `Finished ${GQ_ORD[top.indexOf(p)]}` : 'Not in top 3'}</em>`}</span>`).join('')}</span>
-    <div class="g2-thru"><span>${top.slice(0, 2).map(p => `<img src="${G.ph[p].src}" alt="">`).join('')}</span><div><b>Through to the ${fin} Final</b><small>The ${cw.toLowerCase()} top 2 qualify · picks open at ${raceName(G.ns - 1)}</small></div></div>
-    ${g2Act(pay)}</div>`);
+        <div class="g2-thru"><span>${top.slice(0, 2).map(p => `<img src="${G.ph[p].src}" alt="">`).join('')}</span><div><b>Through to the ${fin} Final</b><small>The ${cw.toLowerCase()} top 2 qualify · picks open at ${raceName(G.ns - 1)}</small></div></div>
+    <div class="cw2 gq-cw"><h3 class="cw2-h">Your photo could win real cash</h3><p class="cw2-t"><span></span>Enter your photo. Reach the Final. Get paid.<span></span></p>
+      <div class="cw2-st"><div><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="15.5" cy="9.5" r="1.6"/><path d="M4 17l5-5 4 4 2.5-2.5L20 17"/></svg><p><b>Finish in the top 2</b>in your category’s qualifier, like these two.</p></div><div><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7M9.5 17h5"/></svg><p><b>Every finalist gets paid</b>Creators share 10% of the Final’s prize pool.</p></div></div>
+      <button class="btn block cw2-go" id="gqUp"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2.5L9 5h5"/><circle cx="11.5" cy="13" r="3.2"/><path d="M19 3v5M16.5 5.5h5"/></svg> ${frameFree() ? 'Enter your photo — free' : (S.photos || []).some(p => p.framed) ? 'Enter another photo' : 'Enter your photo'}</button><p class="cw2-f">${frameFree() ? 'Your first photo entry is free.' : `Framing a photo costs ${FRAME_COINS} coins.`}</p></div>
+    ${g2Act(pay)}</div>`); if ($('#gqUp')) $('#gqUp').onclick = () => { popClose(); finPick(); };
   if (pay) setTimeout(() => gemExplosion(pay, { label: 'Qualifier win' }), 400);
   if ($('#gtFin')) $('#gtFin').onclick = () => { popClose(); setTimeout(ppOpen, 250); }; if ($('#gtKeep')) $('#gtKeep').onclick = () => popClose(); if (!$('#gtNo')) { const z = document.createElement('i'); z.id = 'gtNo'; z.hidden = true; $('#coach').appendChild(z); }
   $('#gtNo').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
