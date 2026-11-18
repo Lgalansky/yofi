@@ -182,6 +182,8 @@ Then `rmv86.py`: streak bar names the boxes ('2 in a row · 1 more for a Bronze 
 
 Then `rmv87.py`: free pick unlock goes through a guided coins menu: 'Open my coins' → intro line on what coins are for, Free pick row first with gold highlight and pulse, others dimmed → tap → pick screen.
 
+Then `rmv88.py`: results reveal scrolls on shorter screens (card no longer clips its content) and Continue stays pinned to the bottom.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -265,6 +267,7 @@ python3 rmv84.py
 python3 rmv85.py
 python3 rmv86.py
 python3 rmv87.py
+python3 rmv88.py
 ```
 
 ## Skill only
