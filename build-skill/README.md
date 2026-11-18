@@ -244,6 +244,8 @@ Then `rmv117.py`: all your picks on one race: lanes show every tag (Your 1st pic
 
 Then `rmv118.py`: Finals named by category with no clock time ('The Pets Final'); times only as countdowns; upcoming Finals show 'Starts when 6 finalists are in · 3 of 6 in'; no 'every hour' / 'hourly' copy; coin players get one free pick per Final (Top 3 or Winner). Simulated: Finals still run on the hourly timer behind the scenes.
 
+Then `rmv119.py`: 'View next Final' opens an Up next card (finalists in x of 6, pool so far, vote / enter your photo) instead of reopening the finished race; results interrupt any open pop as soon as a Final ends (blocked only mid-pick, mid-upload or during a reveal); landing 'Enter your photo' opens the app Gallery before the photo picker.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -358,6 +360,7 @@ python3 rmv115.py
 python3 rmv116.py
 python3 rmv117.py
 python3 rmv118.py
+python3 rmv119.py
 ```
 
 ## Skill only
