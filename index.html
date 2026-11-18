@@ -1428,6 +1428,7 @@ html body .stk2{display:flex;align-items:center;gap:10px;margin:10px 2px 4px;pad
 .chx-lab{grid-area:1/1;align-self:end;margin-bottom:18%;padding:6px 14px;border-radius:999px;background:#14213D;color:#F3D98B;-webkit-text-fill-color:#F3D98B;font:900 1rem Nunito,system-ui,sans-serif;box-shadow:0 0 0 2px #D9AE4F;opacity:0;transform:translateY(10px)}
 .chx.open .chx-lab{transition:all .3s .1s;opacity:1;transform:none}
 html body .chx-lab{display:none!important}
+html body .rv-pod.rv-exs{display:none!important}
 </style>
 </head>
 <body>
@@ -3617,7 +3618,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v129</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v130</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -6029,7 +6030,7 @@ function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o;
   $('#rvSkip').onclick = fin; $('#rvGo').onclick = fin;
   [0, 1, 2].forEach((k, n) => at(1900 + n * 1300, () => { const el = document.querySelector(`#rvPod [data-k="${k}"]`); if (!el) return; const p = ph[ord[k]], hit = picks[k] === ord[k];
     if (n === 0) { $('#rvH').textContent = 'And the results are…'; document.querySelector('.rv-bars').classList.add('done'); }
-    const yi = picks.indexOf(ord[k]); el.innerHTML = `<img src="${p.src}" alt="">${hit ? `<i class="rv-rz">${rosette(o.win ? 'w' : k)}</i>` : ''}${yi >= 0 ? `<i class="rv-you ${yi === k ? 'ok' : ''}">${o.win ? 'Your winner pick' : `Your ${['1st', '2nd', '3rd'][yi]} pick`}</i>` : ''}<b>${RV_MED[k]} ${RV_ORD[k]}</b>`; el.classList.add('on', hit ? 'hit' : 'miss');
+    const yi = picks.indexOf(ord[k]); el.innerHTML = `<img src="${p.src}" alt="">${yi >= 0 ? `<i class="rv-you ${yi === k ? 'ok' : ''}">${o.win ? 'Your winner pick' : `Your ${['1st', '2nd', '3rd'][yi]} pick`}</i>` : ''}<b>${RV_MED[k]} ${RV_ORD[k]}</b>`; el.classList.add('on', hit ? 'hit' : 'miss');
     $('#rvMe').innerHTML = mine != null && ord[k] === mine ? `<b class="ok">📷 Your photo finished ${RV_ORD[k]}!</b>` : hit ? `<b class="ok">✓ Spot on!</b> Your ${RV_ORD[k]} pick` : picks[k] != null ? `You picked <b>“${esc(ph[picks[k]].t || 'another photo')}”</b> for ${RV_ORD[k]}` : '&nbsp;';
     if (hit || (mine != null && ord[k] === mine)) { el.classList.add('pop', 'hit'); rvConfetti(el, 14); } }));
   if (mine != null && mine >= 0 && !ord.slice(0, 3).includes(mine)) at(1900 + 3 * 1300 + 100, () => { $('#rvMe').innerHTML = `📷 Your photo finished ${ppOrd(ord.indexOf(mine) + 1)} · finalists still share the pool`; });
@@ -6042,7 +6043,7 @@ function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o;
     $('#rvS').style.display = 'none'; document.querySelector('.rv').classList.add(won ? 'rv-w' : 'rv-l'); if (won) rvConfetti($('#rvBox'), 40);
     const pod = $('#rvPod'); if (pod && !document.querySelector('.rv-exs')) pod.insertAdjacentHTML('afterend', `<div class="rv-pod rv-exs">${[0, 1, 2].map(k => `<span>${picks[k] === top[k] ? '<em>✓ Exact match</em>' : ''}</span>`).join('')}</div>`);
     const tg = (p, i) => top[i] === p ? '<em class="ok">✓ Exact match</em>' : o.qual ? `<em class="no">✗ ${top.includes(p) ? `Finished ${O[top.indexOf(p)]}` : 'Not in top 3'}</em>` : top.includes(p) ? `<em class="mid">Finished ${O[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
-    $('#rvMe').innerHTML = `<span class="rv-yp-h rv-rule"><span>Your picks</span></span><span class="rv-yp">${picks.filter(p => ph[p]).map((p, i) => `<span class="${top[i] === p ? 'ex' : ''}"><img src="${ph[p].src}" alt="">${top[i] === p ? `<i class="rv-rz sm">${rosette(i)}</i>` : ''}<b>Picked ${O[i]}</b>${tg(p, i)}</span>`).join('')}</span>`; });
+    $('#rvMe').innerHTML = `<span class="rv-yp-h rv-rule"><span>Your picks</span></span><span class="rv-yp">${picks.filter(p => ph[p]).map((p, i) => `<span class="${top[i] === p ? 'ex' : ''}"><img src="${ph[p].src}" alt=""><b>Picked ${O[i]}</b>${tg(p, i)}</span>`).join('')}</span>`; });
   at(1900 + 3 * 1300 + 400, () => { const g = $('#rvGo'), k = $('#rvSkip'); if (g) g.hidden = false; if (k) k.hidden = true; }); }
 function heroWin(big, sub, done, first) { const c = $('#coach');
   popOpen(`<div class="pp rvw ${first ? 'first' : ''}"><p class="rvw-k">${first ? '🏆 First win!' : '🎉 Winner!'}</p><b class="rvw-amt">${big}</b><p class="rvw-s">${sub}</p><button class="btn block rvw-go" id="rvwGo">See results</button></div>`);
