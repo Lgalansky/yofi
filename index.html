@@ -1172,6 +1172,13 @@ html body .ppop .rv-exs em,html body .ppop .rv-yp em.ok{color:#2F6B3F!important;
 .rv.rv-w{background:radial-gradient(circle at 10% 8%,rgba(233,185,73,.18),transparent 30%),radial-gradient(circle at 90% 8%,rgba(233,185,73,.18),transparent 30%)}
 html body .qz3-coin{position:relative;font-style:normal;background:radial-gradient(circle at 34% 28%,#FFF6C8 0 9%,#F7D35A 30%,#E7A928 62%,#C4861A 100%)!important;box-shadow:inset 0 0 0 .06em #A86E10,inset 0 0 0 .13em #F4CB55,inset 0 0 0 .16em #B97D16,0 .07em .14em rgba(110,70,10,.4)!important}
 html body .qz3-coin::after{content:'★';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.5em;line-height:1;font-style:normal;color:#B57A14;-webkit-text-fill-color:#B57A14;text-shadow:0 .04em 0 #FFF0B0,0 -.03em 0 rgba(120,70,0,.45)}
+html body .ppop .gq2 .rv-won b{font-size:2.7rem}html:not(.yg) body .ppop .gq2 .gq-h{font:800 2.3rem/1.02 Fraunces,Georgia,serif!important;color:#14213D!important;-webkit-text-fill-color:#14213D;margin:4px 0 0}
+.gq-pod{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.gq-pod figure{position:relative;margin:0;border-radius:14px;overflow:hidden;aspect-ratio:1/1.1;box-shadow:inset 0 0 0 1.5px #E2D3BC}
+.gq-pod figure.hit{box-shadow:0 0 0 3px #D9AE4F,0 0 16px rgba(217,174,79,.5)}.gq-pod img{width:100%;height:100%;object-fit:cover;display:block}
+.gq-pod b{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.93);border-radius:999px;padding:2px 10px;white-space:nowrap;font:800 .95rem Fraunces,Georgia,serif;color:#14213D}
+.gq-sub{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 4px}.gq-sub span{display:flex;flex-direction:column;align-items:center;gap:4px}
+.gq-sub em{font-style:normal;font-weight:800;font-size:.76rem;padding:2px 9px;border-radius:999px}html body .ppop .gq-sub em.ok{background:#E3F0DE;color:#2F6B3F!important;-webkit-text-fill-color:#2F6B3F}html body .ppop .gq-sub em.fin{background:#E3EAF5;color:#1E3A6E!important;-webkit-text-fill-color:#1E3A6E}
+.gq2 .rv-yp{margin-bottom:12px}.gq2 .rv-won{margin-top:8px}
 </style>
 </head>
 <body>
@@ -5613,7 +5620,7 @@ function gateOpen() { const G = gateGame(), y = isYoungW(), keep = y ? 'Keep jud
   const draw = () => { const n = picks.length;
     popOpen(`<div class="pp gq2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">${esc(showName(ppGame(G.ns).k))}</p><span class="g2-chip">Qualifier · Group ${G.gi + 1} of 3</span>
       <div class="qz3-win"><span class="qz3-pill">Win up to</span><b class="qz3-big"><i class="qz3-coin" aria-hidden="true"></i>${GATE_COINS[3]} coins</b></div><h2 class="g2-h">Pick the top 3</h2><p class="g2-s">Match the ${cw} order.</p>
-      <div class="qz3-pz">${[3, 2, 1].map((k, n) => `<div class="${n ? '' : 'top'}"><span class="qz3-amt"><i class="qz3-coin" aria-hidden="true"></i><span class="qz3-n"><b>${GATE_COINS[k]}</b><small>coins</small></span></span><p>${k} exact match${k === 1 ? '' : 'es'}</p></div>`).join('')}</div>
+      <div class="qz3-pz">${[3, 2, 1].map((k, n) => `<div><span class="qz3-amt"><i class="qz3-coin" aria-hidden="true"></i><span class="qz3-n"><b>${GATE_COINS[k]}</b><small>coins</small></span></span><p>${k} exact match${k === 1 ? '' : 'es'}</p></div>`).join('')}</div>
       <div class="g2-ph">${G.ph.map((p, i) => { const k = picks.indexOf(i); return `<button class="g2-t ${k >= 0 ? 'on' : ''}" data-pp="${i}" aria-label="Photo ${i + 1}"><img src="${p.src}" alt="">${k >= 0 ? `<i>${GQ_MED[k]}</i>` : ''}</button>`; }).join('')}</div>
       <p class="g2-hint ${n === 3 ? 'big' : ''}">${n < 3 ? `Choose your ${GQ_ORD[n]} place photo` : '<b>Your top 3 is ready</b><small>Tap a photo to change your picks.</small>'}</p>
       <div class="g2-sl">${[0, 1, 2].map(k => `<button class="${k === n ? 'cur' : ''} ${picks[k] != null ? 'set' : ''}" data-gsl="${k}">${picks[k] != null ? `<img src="${G.ph[picks[k]].src}" alt="">` : ''}<span>${GQ_MED[k]} ${GQ_ORD[k]}</span></button>`).join('')}</div>
@@ -5634,9 +5641,14 @@ function gateResultShow(G, picks) { const y = isYoungW(), top = G.ord.slice(0, 3
     sub = right === 3 ? 'All three spot on!' : right === 2 ? `Your ${hit[0].replace('-place', '')} and ${hit[1]} picks were spot on.` : right === 1 ? `Your ${hit[0]} pick was spot on.` : 'None of your picks were in the right place.';
   const tag = (p, i) => top[i] === p ? '<em class="ok">✓ Exact match</em>' : top.includes(p) ? `<em class="mid">Finished ${GQ_ORD[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
   popOpen(`<div class="pp gq2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">Group ${G.gi + 1} of 3 · results</p>
-    <h2 class="g2-h">${right} of 3 in the exact spot</h2>
-    <span class="g2-earn ${pay ? 'won' : ''}">${pay ? `<b>+${pay} coins</b> · ${Math.floor(S.gems - pay)} → ${Math.floor(S.gems)} coins` : `No coins this time · 1 exact spot pays ${GATE_COINS[1]} coins`}</span>
-        <div class="g2-thru"><span>${top.slice(0, 2).map(p => `<img src="${G.ph[p].src}" alt="">`).join('')}</span><div><b>Through to the ${fin} Final</b><small>The ${cw.toLowerCase()} top 2 qualify · picks open at ${raceName(G.ns - 1)}</small></div></div>
+    <h2 class="g2-h gq-h">${pay ? 'Spot on!' : 'Not this time'}</h2><p class="rv-sub2">${right} of 3 in the exact spot</p>${pay ? `<div class="rv-won"><span>You won</span><b>+${pay} coins</b></div>` : ''}
+    <span class="g2-earn ${pay ? 'won' : ''}">${pay ? `Your coins: ${Math.floor(S.gems - pay)} → <b>${Math.floor(S.gems)}</b>` : `No coins this time · 1 exact spot pays ${GATE_COINS[1]} coins`}</span>
+        <p class="rv-lab rv-rule"><span>${cw} top 3</span></p>
+    <div class="gq-pod">${top.map((p, i) => `<figure class="${picks[i] === p ? 'hit' : ''}"><img src="${G.ph[p].src}" alt="">${picks.includes(p) ? `<i class="rv-you ${picks[i] === p ? 'ok' : ''}">Your ${GQ_ORD[picks.indexOf(p)]} pick</i>` : ''}<b>${GQ_MED[i]} ${GQ_ORD[i]}</b></figure>`).join('')}</div>
+    <div class="gq-sub">${top.map((p, i) => `<span>${picks[i] === p ? '<em class="ok">✓ Exact match</em>' : ''}${i < 2 ? '<em class="fin">→ Finalist</em>' : ''}</span>`).join('')}</div>
+    <p class="rv-yp-h rv-rule"><span>Your picks</span></p>
+    <span class="rv-yp">${picks.map((p, i) => `<span class="${top[i] === p ? 'ex' : ''}"><img src="${G.ph[p].src}" alt=""><b>Picked ${GQ_ORD[i]}</b>${top[i] === p ? '<em class="ok">✓ Exact match</em>' : `<em class="no">✗ ${top.includes(p) ? `Finished ${GQ_ORD[top.indexOf(p)]}` : 'Not in top 3'}</em>`}</span>`).join('')}</span>
+    <div class="g2-thru"><span>${top.slice(0, 2).map(p => `<img src="${G.ph[p].src}" alt="">`).join('')}</span><div><b>Through to the ${fin} Final</b><small>The ${cw.toLowerCase()} top 2 qualify · picks open at ${raceName(G.ns - 1)}</small></div></div>
     ${g2Act(pay)}</div>`);
   if (pay) setTimeout(() => gemExplosion(pay, { label: 'Qualifier win' }), 400);
   if ($('#gtFin')) $('#gtFin').onclick = () => { popClose(); setTimeout(ppOpen, 250); }; if ($('#gtKeep')) $('#gtKeep').onclick = () => popClose(); if (!$('#gtNo')) { const z = document.createElement('i'); z.id = 'gtNo'; z.hidden = true; $('#coach').appendChild(z); }
@@ -5755,7 +5767,7 @@ function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o;
     <p class="rv-lab rv-rule"><span>${isYoungW() ? 'The judges’' : 'The crowd’s'} top 3</span></p><div class="rv-pod" id="rvPod">${[0, 1, 2].map(k => `<div class="rv-slot" data-k="${k}"><span class="rv-q">?</span><b>${RV_MED[k]} ${RV_ORD[k]}</b></div>`).join('')}</div>
     <p class="rv-me" id="rvMe">&nbsp;</p><button class="btn block rv-go" id="rvGo" hidden>Continue →</button><div style="text-align:center"><button class="link rv-skip" id="rvSkip">Skip ›</button></div></div>`);
   $('#rvSkip').onclick = fin; $('#rvGo').onclick = fin;
-  [2, 1, 0].forEach((k, n) => at(1900 + n * 1300, () => { const el = document.querySelector(`#rvPod [data-k="${k}"]`); if (!el) return; const p = ph[ord[k]], hit = picks[k] === ord[k];
+  [0, 1, 2].forEach((k, n) => at(1900 + n * 1300, () => { const el = document.querySelector(`#rvPod [data-k="${k}"]`); if (!el) return; const p = ph[ord[k]], hit = picks[k] === ord[k];
     if (n === 0) { $('#rvH').textContent = 'And the results are…'; document.querySelector('.rv-bars').classList.add('done'); }
     const yi = picks.indexOf(ord[k]); el.innerHTML = `<img src="${p.src}" alt="">${yi >= 0 ? `<i class="rv-you ${yi === k ? 'ok' : ''}">Your ${['1st', '2nd', '3rd'][yi]} pick</i>` : ''}<b>${RV_MED[k]} ${RV_ORD[k]}</b>`; el.classList.add('on', hit ? 'hit' : 'miss');
     $('#rvMe').innerHTML = mine != null && ord[k] === mine ? `<b class="ok">📷 Your photo finished ${RV_ORD[k]}!</b>` : hit ? `<b class="ok">✓ Spot on!</b> Your ${RV_ORD[k]} pick` : picks[k] != null ? `You picked <b>“${esc(ph[picks[k]].t || 'another photo')}”</b> for ${RV_ORD[k]}` : '&nbsp;';
