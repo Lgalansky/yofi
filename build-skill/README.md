@@ -134,6 +134,8 @@ Then `rmv62.py`: Gallery from the mock-up ("My gallery" hero with three tilted p
 
 Then `rmv63.py`: qualifier reveal and result use the same words ("X of 3 in the exact spot", "Top 2 go through to the Xpm Final", what 1 exact spot pays); the repeated "See the full result" fold is removed.
 
+Then `rmv64.py`: reveal podium reads 1st · 2nd · 3rd, lined up with Your picks; in qualifiers non-exact picks show a muted "✗ Finished 3rd" / "✗ Not in top 3".
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -193,6 +195,7 @@ python3 rmv60.py
 python3 rmv61.py
 python3 rmv62.py
 python3 rmv63.py
+python3 rmv64.py
 ```
 
 ## Skill only
