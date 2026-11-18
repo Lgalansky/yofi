@@ -214,6 +214,8 @@ Then `rmv102.py`: vote reveal: big percentages back on both photo tiles (no shad
 
 Then `rmv103.py`: vote reveal climbing fill back: each photo fills from the bottom to its crowd share (green for the crowd's pick, navy for the other) under the big percentage; no banner.
 
+Then `rmv104.py`: winning effect on every vote you call right: pulsing gold glow and sparkle burst on your photo, coin burst (+5) flying from the photo to the balance, and a streak chip on 2+ in a row; misses stay quiet.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -313,6 +315,7 @@ python3 rmv100.py
 python3 rmv101.py
 python3 rmv102.py
 python3 rmv103.py
+python3 rmv104.py
 ```
 
 ## Skill only
