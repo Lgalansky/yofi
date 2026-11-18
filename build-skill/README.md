@@ -238,6 +238,8 @@ Then `rmv114.py`: winner pick can always be placed: every player gets the stake 
 
 Then `rmv115.py`: coins can't be used on Final pick screens: Top 3 and Winner are cash-only when opened normally; the free ticket comes only from the coins menu's Free Final pick row (or a new player's ticket) and shows 'Use your free ticket'; Finals tab free-pick button removed.
 
+Then `rmv116.py`: one new-player journey: landing's main button is 'Start playing' (judge → free pick → result → add your photo); photo section's big button becomes a small 'Got a photo? Enter it now' link; green cash pick stays.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -349,6 +351,7 @@ python3 rmv112.py
 python3 rmv113.py
 python3 rmv114.py
 python3 rmv115.py
+python3 rmv116.py
 ```
 
 ## Skill only
