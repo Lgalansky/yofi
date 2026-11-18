@@ -1193,6 +1193,7 @@ html body .ug-buy{color:#2F6B3F!important;-webkit-text-fill-color:#2F6B3F}
 .fr2:has(.cw2) .fr2-win{display:none}
 html body .ppop .gq-cw .cw2-h{font-size:1.7rem!important}.gq-cw{margin-top:12px!important}
 .gq2:has(.gq-cw) .g2-prog{display:none!important}
+html body .iv2 .iv-c{width:.75em!important;height:.75em!important;font-size:1em;flex:none}html body .iv2 .iv-sub{font-size:1.35rem}
 </style>
 </head>
 <body>
@@ -2831,19 +2832,19 @@ function useGems() {
 // once a session, when judging has piled up 100+ coins, suggest the best way to spend them
 const popPaced = () => (S.votes || 0) - (S.lastPopV == null ? -99 : S.lastPopV) < 8;
 function gemNudge(force) { if (S && (S.tut || 9) < 4) return false;
-  if (!force && popPaced()) return false;
+  if (!force && (popPaced() || Date.now() - (window.__autoT || 0) < 90000)) return false;
   // pops each time judging takes you past a new 100 coins (at most every 15 votes), or on opening the app with 150+
   if (!S.user || S.gems < 100 || (S.votes || 0) < 12 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || document.querySelector('.fcd')) return false;
   const mark = Math.floor(S.gems / 100) * 100;
   const unlock = false;
   if (!force && !unlock && (mark <= (S.gnMark || 0) || (S.votes || 0) - (S.gnVote || 0) < 40)) return false;
   // first time you can afford a ticket: a dedicated unlock pop
-  if (false) { S.tixUnlock = 1; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow();
+  if (false) { S.tixUnlock = 1; S.gnMark = mark; S.gnVote = S.votes || 0; window.__autoT = Date.now(); save(); paintGemGlow();
     celebrate({ src: (fighters()[0] || {}).src || '', score: '🎟️', title: 'Free cash entry unlocked!', text: `Swap <b>${TIX_GEMS} 🟡</b> for a free <b>$1</b> tournament or cash challenge. <b>Win real money</b> without spending a cent.`, cta: '🎟️ Get my free entry', onCta: buyTicket, later: 'Save my coins', onLater: () => toast(`Tap your coins anytime to get a free entry`) });
     return true; }
-  if (!isCash() && (S.tut || 9) >= 3 && fqLeft() && (S.gems || 0) >= FREE_BET_COINS) { S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow(); const g = ppGame();
+  if (!isCash() && (S.tut || 9) >= 3 && fqLeft() && (S.gems || 0) >= FREE_BET_COINS) { S.gnMark = mark; S.gnVote = S.votes || 0; window.__autoT = Date.now(); save(); paintGemGlow(); const g = ppGame();
     celebrate({ src: (g.ph[0] || {}).src || '', score: '🎟️', title: 'You have unused coins', text: `You’ve got <b>${Math.floor(S.gems).toLocaleString()} 🟡</b>: enough for a free pick in the <b>${raceName(g.sl)} ${esc(showName(g.k))} Final</b>, with real cash prizes. Open your coins to use them.`, cta: '🟡 Open my coins', onCta: () => { closeFlow(); useGems(); }, later: 'Later' }); return true; }
-  const I = gemIdeas(); if (!I.length) return false; S.gnMark = mark; S.gnVote = S.votes || 0; save(); paintGemGlow(); const x = I.find(i => S.gems >= i.cost && i.src) || I.find(i => i.src) || I[0];
+  const I = gemIdeas(); if (!I.length) return false; S.gnMark = mark; S.gnVote = S.votes || 0; window.__autoT = Date.now(); save(); paintGemGlow(); const x = I.find(i => S.gems >= i.cost && i.src) || I.find(i => i.src) || I[0];
   celebrate({ src: x.src, score: '🟡', title: `You’ve got ${Math.floor(S.gems).toLocaleString()} coins!`, text: `${x.d}<br>Use <b>${x.cost} 🟡</b> on it now.`, cta: '🟡 Use my coins', onCta: useGems, later: 'Later' });
   return true;
 }
@@ -3376,7 +3377,7 @@ async function resetPrototype() {
 }
 function openMenu() {
   const qn = S.photos.filter(p => p.s.total >= CFG.QUALIFY).length;
-  openSheet(`<div class="pf-top">${S.user ? `<button class="pf-av" id="pfAv" aria-label="Change profile photo">${avatarInner()}<span class="pf-cam">${CAMSVG}</span></button>` : ''}<div><h2>${S.user ? '@' + esc(S.user.h) : 'Your profile'}</h2><p class="sub">${S.user ? esc(S.user.em) : 'Not signed up yet.'}</p>${S.user ? `<button class="link pf-chg" id="pfChg">${S.user.pic ? 'Change profile photo' : 'Add a profile photo'}</button>` : ''}</div></div>
+  openSheet(`<div class="pf-top">${S.user ? `<button class="pf-av" id="pfAv" aria-label="Change profile photo">${avatarInner()}<span class="pf-cam">${CAMSVG}</span></button>` : ''}<div><h2>${S.user ? '@' + esc(S.user.h) : 'Your profile'}</h2><p class="sub">${S.user ? (S.user.em ? esc(S.user.em) : S.user.guest ? 'Guest player' : 'PhotoPicks player') : 'Not signed up yet.'}</p>${S.user ? `<button class="link pf-chg" id="pfChg">${S.user.pic ? 'Change profile photo' : 'Add a profile photo'}</button>` : ''}</div></div>
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${S.bw}–${S.bl}</b><span>Wins–losses</span></div><div><b>${qn}</b><span>Qualified photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">Competitions</button><button class="btn quiet block" id="mS">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
@@ -5533,7 +5534,7 @@ function gateResultOld(G, picks, real, tk) { const y = isYoungW(), top = G.ord.s
   if (pay) setTimeout(() => real ? cashExplosion && cashExplosion(pay, { label: 'Qualifier win' }) : gemExplosion(pay, { label: 'Qualifier win' }), 400);
   if ($('#gtReal')) $('#gtReal').onclick = () => gateOpen(true); if ($('#gtFin')) $('#gtFin').onclick = () => { popClose(); setTimeout(ppOpen, 250); }; if ($('#gtAgain')) $('#gtAgain').onclick = () => gateOpen(true);
   $('#gtNo').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
-setInterval(() => { if (!S || !S.gatePend || busyUI() || $('#panes').dataset.at !== 'judge' || Object.values(S.pp || {}).some(x => !x.done && Date.now() >= ppDue(x))) return; S.gatePend = 0; save(); gateOpen(false); }, 1200);
+setInterval(() => { if (!S || !S.gatePend || busyUI() || Date.now() - (window.__autoT || 0) < 20000 || $('#panes').dataset.at !== 'judge' || Object.values(S.pp || {}).some(x => !x.done && Date.now() >= ppDue(x))) return; S.gatePend = 0; window.__autoT = Date.now(); save(); gateOpen(false); }, 1200);
 function raceBetRowHTML() { if (S.tut === 3) return `<button class="ug-r ug-swap ug-tk" id="rbLiveRow"><span class="ug-i">🔴</span><span class="ug-t"><b>Your free pick is live</b><small>Results soon · more ways to use your coins unlock after your first result</small></span><em>Watch ›</em></button>`; if (S.tut === 2) return `<button class="ug-r ug-swap ug-tk" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free ticket earned</b><small>Your first pick in the ${raceName(ppGame().sl)} Final · free · real cash prizes</small></span><em>Use ›</em></button>`; if (isCash()) return ''; const L = fqLeft(), ok = L && (S.gems || 0) >= FREE_BET_COINS;
   return `<button class="ug-r ug-swap" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free Final pick</b><small>The ${raceName(ppGame().sl)} Final · pick the top 3 of 6 · ${L ? `${L} of ${FQ_MAX} left this hour` : `next in ${frMinsLeft()} min`}</small></span><em class="${ok ? '' : 'need'}">${FREE_BET_COINS} 🟡</em></button>`; }
 function raceBetRowOld() { const g = ppGame(), e = (S.pp || {})[g.sl], ok = !e && (S.gems || 0) >= FREE_BET_COINS;
@@ -5597,7 +5598,7 @@ function earnAdd(e) { S.earn = (S.earn || []).concat(Object.assign({ at: Date.no
 const earnOf = pid => (S.earn || []).filter(e => e.pid === pid).reduce((a, e) => a + e.amt, 0);
 const earnWeek = () => { const t = Date.now() - 7 * 864e5; return (S.earn || []).filter(e => e.at >= t).reduce((a, e) => a + e.amt, 0); };
 function earnRowHTML(e) { const p = (S.photos || []).find(x => x.id === e.pid), nm = p ? rcName(p) : (e.t || 'Your photo'), show = `${raceName(e.sl)} ${esc(showName(e.k))}`, dt = new Date(e.at), when = dt.toDateString() === new Date().toDateString() ? frTime(e.at) : dt.toLocaleDateString([], { day: 'numeric', month: 'short' });
-  return `<div class="er-r">${p ? `<img src="${p.src}" alt="">` : '<span class="er-i">📷</span>'}<div><b>${e.kind === 'f' ? `🎀 Finalist · ${ppOrd(e.place)} · pool share` : e.kind === 'q' ? '🥇 Won its qualifier' : `${PP_MED[e.place - 1] || ''} ${ppOrd(e.place)} in the Final`}</b><small>${esc(nm)} · ${show} · ${when}</small></div><em>+${money(e.amt)}</em></div>`; }
+  return `<div class="er-r">${p ? `<img src="${p.src}" alt="">` : '<span class="er-i">📷</span>'}<div><b>${!e.place ? (e.t ? esc(e.t) : 'Prize') : e.kind === 'f' ? `🎀 Finalist · ${ppOrd(e.place)} · pool share` : e.kind === 'q' ? '🥇 Won its qualifier' : `${PP_MED[e.place - 1] || ''} ${ppOrd(e.place)} in the Final`}</b><small>${esc(nm)} · ${show} · ${when}</small></div><em>+${money(e.amt)}</em></div>`; }
 function earningsOpen() { const L = (S.earn || []).slice().reverse(), tot = L.reduce((a, e) => a + e.amt, 0);
   popOpen(`<div class="pp er"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">💰 Your earnings</p><h2 class="pp-h">${money(tot)} won</h2>
     <p class="pp-m">${money(earnWeek())} this week · ${(n => `${n} pool share${n === 1 ? '' : 's'}`)(L.filter(e => e.kind === 'f').length)} · ${(n => `${n} Final place${n === 1 ? '' : 's'}`)(L.filter(e => e.kind === 's').length)}</p>
@@ -5823,7 +5824,7 @@ function invLink() { const h = (S.user && S.user.h) || 'friend'; return `https:/
 function invOpen() { try { closeSheet(); } catch (e) {} const L = S.inv || [], p = invPaid(), left = INV_MAX - p;
   const st = x => x.st === 'paid' ? `<em class="ok">✓ <i class="qz3-coin"></i> +${INV_PAY}</em>` : x.st === 'joined' ? `<em class="mid">Judging ${Math.min(INV_VOTES - 1, x.v || 0)}/${INV_VOTES}</em>` : '<em>Invite sent</em>';
   popOpen(`<div class="pp inv iv2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k iv-k"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8.5" cy="8" r="3.2"/><circle cx="16" cy="8" r="3.2"/><path d="M2.5 19c.5-3.4 3-5.3 6-5.3s5.5 1.9 6 5.3M13 14c3.2-.6 7 .9 8.5 5"/></svg> Invite friends</p>
-    <p class="iv-e">Earn</p><b class="iv-big">${INV_PAY} coins<span class="iv-stack"><i class="qz3-coin"></i><i class="qz3-coin"></i><i class="qz3-coin"></i></span></b><p class="iv-sub">for every friend you invite</p><p class="iv-when">When they judge ${INV_VOTES} photos.</p>
+    <p class="iv-e">Earn</p><b class="iv-big">${INV_PAY} coins<i class="qz3-coin iv-c"></i></b><p class="iv-sub">for every friend you invite</p><p class="iv-when">When they judge ${INV_VOTES} photos.</p>
     <span class="iv-cap">Earn up to ${(INV_PAY * INV_MAX).toLocaleString()} coins · ${INV_MAX} friends</span>
     <div class="iv-steps"><div><i>1</i><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></svg><b>Share your link</b></div><span></span><div><i>2</i><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="15.5" cy="9" r="1.6"/><path d="M4 17l5-5 4 4 2.5-2.5L20 17"/></svg><b>They judge ${INV_VOTES} photos</b></div><span></span><div><i>3</i><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="9" cy="14" rx="6" ry="2.5"/><path d="M3 14v3c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-3"/><ellipse cx="15" cy="8" rx="6" ry="2.5"/><path d="M9 8v3c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V8"/></svg><b>You earn ${INV_PAY} coins</b></div></div>
     <p class="iv-gift"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="4" rx="1"/><path d="M5 13v7h14v-7M12 9v11M12 9c-2-3-6-3-6-1s4 1 6 1zm0 0c2-3 6-3 6-1s-4 1-6 1z"/></svg> Your friends start with ${INV_FRIEND} coins</p>
@@ -7608,11 +7609,9 @@ function streakPop() {
   $('#drHow').onclick = () => { $('#drHw').hidden = !$('#drHw').hidden; };
   c.onclick = e => { if (e.target === c) close(); };
 }
-function streakHello() {
+function streakHello() { if ((S.tut || 9) < 9 || Date.now() - (window.__autoT || 0) < 90000) return;
   const ds = dailyState(); if (ds.D.hello === ds.sk) return; ds.D.hello = ds.sk; save();
-  if (ds.doneToday) return;
-  streakPop();
-}
+  if (ds.doneToday) return; window.__autoT = Date.now(); streakPop(); }
 
 /* One slide transition for every tab change (the Touch up -> Vote push) */
 (() => {
