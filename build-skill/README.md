@@ -252,6 +252,8 @@ Then `rmv121.py`: No screen jump when the photo picker opens: Choose your Final 
 
 Then `rmv122.py`: Version number on the account page ('PhotoPicks v122' under Reset prototype); taken from the newest rmvN.py, so it moves on with every step.
 
+Then `rmv123.py`: Fix live pick page flashing back to voting: an interrupted result reveal no longer leaves the Final stuck half-way (which made the 1-second result check close every pop); interrupted results replay, stale marks cleared on load.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -370,6 +372,7 @@ python3 rmv119.py
 python3 rmv120.py
 python3 rmv121.py
 python3 rmv122.py
+python3 rmv123.py
 ```
 
 ## Skill only
