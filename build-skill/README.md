@@ -122,6 +122,7 @@ Then `rmv54.py`: qualifiers pay for every exact match (1 exact 10, 2 exact 25, 3
 Then `rmv55.py`: green "play for real" upsells, picker first then deposit: free pick win shows "A $10 pick would have won $X" ($2/$5/$10 tiles, at most every 30 min) and a green button; free pick loss gets a quiet green outline button; Quick Sprint coin win says "Same game for real: $2 wins $3.20"; every real-money button is green.
 Then `rmv56.py`: "2 in the top 3" (any order) now wins a small Final share; rule is "1+ in its exact spot, or 2+ in the top 3"; the reveal ends with the same summary and win amount as the result screen.
 Then `rmv57.py`: qualifier pick screen from the mock-up: "Win up to 50 coins" with a big gold coin and three prize cards (50 / 25 / 10 coins for 3 / 2 / 1 exact matches).
+Then `rmv58.py`: invite pop from the mock-up ("Earn 100 coins for every friend you invite", coin stack, "Earn up to 1,000 coins · 10 friends", icon steps, friends start with 50 coins, WhatsApp / Copy link buttons, invites list, rewards count).
 
 ```bash
 python3 rmv6.py
@@ -176,6 +177,7 @@ python3 rmv54.py
 python3 rmv55.py
 python3 rmv56.py
 python3 rmv57.py
+python3 rmv58.py
 ```
 
 ## Skill only
