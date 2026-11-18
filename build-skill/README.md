@@ -130,6 +130,8 @@ Then `rmv60.py`: the Final reveal matches the result screen (same stored player 
 
 Then `rmv61.py`: Final result creator card from the mock-up ("Your photo could win real cash", winner card with photo and earnings, creators shared line, two steps, "Enter your photo — free").
 
+Then `rmv62.py`: Gallery from the mock-up ("My gallery" hero with three tilted photos, Upcoming Finals rows with creators' share, How your photo wins, One frame callout, creator prize fold, Your photos, green Photo earnings box).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -187,6 +189,7 @@ python3 rmv58.py
 python3 rmv59.py
 python3 rmv60.py
 python3 rmv61.py
+python3 rmv62.py
 ```
 
 ## Skill only
