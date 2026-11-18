@@ -230,6 +230,8 @@ Then `rmv110.py`: 'Your photo could win real cash' card after every quick game: 
 
 Then `rmv111.py`: Coming-up strip no longer shows your photo (next qualifier / in the ring); the journey card under the streak bar covers it; strip shows the next game or your live pick.
 
+Then `rmv112.py`: coins menu shows coin games to every player incl. after a deposit (Free Final pick, new Coin Pick row, Quick Sprint); unused-coins pop fires when the balance crosses 250 and at session start after the 3rd vote if 250+, max once per 15 votes, old milestone nudge off.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -337,6 +339,7 @@ python3 rmv108.py
 python3 rmv109.py
 python3 rmv110.py
 python3 rmv111.py
+python3 rmv112.py
 ```
 
 ## Skill only
