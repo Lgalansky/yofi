@@ -248,6 +248,8 @@ Then `rmv119.py`: 'View next Final' opens an Up next card (finalists in x of 6, 
 
 Then `rmv120.py`: Photo picker always opens over your Gallery: pickPhoto moves you to the Gallery (closing pops and the Finals tab) from any entry point first. Finals 'How Finals work' no longer says 'Every hour'.
 
+Then `rmv121.py`: No screen jump when the photo picker opens: Choose your Final stays up with the chosen category highlighted ('Choose your photo…'); the screen changes only once a photo is chosen. Brand-new players from the landing page answer the age question before the list appears.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -364,6 +366,7 @@ python3 rmv117.py
 python3 rmv118.py
 python3 rmv119.py
 python3 rmv120.py
+python3 rmv121.py
 ```
 
 ## Skill only
