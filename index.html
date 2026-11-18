@@ -1157,6 +1157,7 @@ html body .g4 .g4-empty{display:flex;align-items:center;gap:14px;width:100%;back
 .g4-earn{background:#F1F6EC;border-radius:16px;box-shadow:inset 0 0 0 1.5px #3E7A4E;padding:12px 16px;margin:14px 0;text-align:left}.g4-eh{display:flex;align-items:center;gap:10px;margin:0;font:800 1.15rem Fraunces,Georgia,serif;color:#14213D}
 .g4-cash{display:inline-block;width:26px;height:16px;border-radius:3px;background:#3E9A55;box-shadow:inset 0 0 0 3px #57B86D}.g4-er{display:flex;align-items:center;margin:4px 0 8px}.g4-er>div{flex:1;border-right:1.5px solid #CFE0C8}.g4-er span{flex:1;text-align:center}
 html body .g4 .g4-er b{display:block;font:900 2rem/1.1 Fraunces,Georgia,serif;color:#2F6B3F!important;-webkit-text-fill-color:#2F6B3F}.g4-et{margin:0;padding-top:8px;border-top:1px solid #CFE0C8}
+html body .ppop .rv-yp em.no{background:#F1E4E1!important;color:#8A3B32!important;-webkit-text-fill-color:#8A3B32}html body .ppop .rv-yp>span:not(.ex) img{opacity:.75}.rv-yp em{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -5736,7 +5737,7 @@ function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o;
   const fin = () => { if (stop) return; stop = true; timers.forEach(clearTimeout); done(); }, at = (ms, f) => timers.push(setTimeout(() => { if (!stop) f(); }, ms));
   popOpen(`<div class="pp rv"><p class="pp-k">${kicker}</p><h2 class="rv-h" id="rvH">Counting the votes…</h2><p class="rv-s" id="rvS">${title}</p>
     <div class="rv-bars">${ph.map((p, i) => `<div class="rv-b"><img src="${p.src}" alt=""><span><i style="--w:${(30 + Math.random() * 60).toFixed(0)}%"></i></span>${picks.includes(i) ? `<em>${RV_MED[picks.indexOf(i)]}</em>` : mine === i ? '<em>📷</em>' : ''}</div>`).join('')}</div>
-    <div class="rv-pod" id="rvPod">${[2, 1, 0].map(k => `<div class="rv-slot" data-k="${k}"><span class="rv-q">?</span><b>${RV_MED[k]} ${RV_ORD[k]}</b></div>`).join('')}</div>
+    <div class="rv-pod" id="rvPod">${[0, 1, 2].map(k => `<div class="rv-slot" data-k="${k}"><span class="rv-q">?</span><b>${RV_MED[k]} ${RV_ORD[k]}</b></div>`).join('')}</div>
     <p class="rv-me" id="rvMe">&nbsp;</p><button class="btn block rv-go" id="rvGo" hidden>Continue →</button><div style="text-align:center"><button class="link rv-skip" id="rvSkip">Skip ›</button></div></div>`);
   $('#rvSkip').onclick = fin; $('#rvGo').onclick = fin;
   [2, 1, 0].forEach((k, n) => at(1900 + n * 1300, () => { const el = document.querySelector(`#rvPod [data-k="${k}"]`); if (!el) return; const p = ph[ord[k]], hit = picks[k] === ord[k];
@@ -5746,7 +5747,7 @@ function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o;
     if (hit || (mine != null && ord[k] === mine)) { el.classList.add('pop', 'hit'); rvConfetti(el, 14); } }));
   if (mine != null && mine >= 0 && !ord.slice(0, 3).includes(mine)) at(1900 + 3 * 1300 + 100, () => { $('#rvMe').innerHTML = `📷 Your photo finished ${ppOrd(ord.indexOf(mine) + 1)} · finalists still share the pool`; });
   at(1900 + 3 * 1300 + 300, () => { if (!picks.length) return; const top = ord.slice(0, 3), ex = picks.filter((p, i) => top[i] === p).length, inT = picks.filter(p => top.includes(p)).length;
-    const O = ['1st', '2nd', '3rd'], tg = (p, i) => top[i] === p ? '<em class="ok">✓ Exact</em>' : top.includes(p) ? `<em class="mid">Finished ${O[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
+    const O = ['1st', '2nd', '3rd'], tg = (p, i) => top[i] === p ? '<em class="ok">✓ Exact</em>' : o.qual ? `<em class="no">✗ ${top.includes(p) ? `Finished ${O[top.indexOf(p)]}` : 'Not in top 3'}</em>` : top.includes(p) ? `<em class="mid">Finished ${O[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
     $('#rvMe').innerHTML = `<b class="rv-sum">${o.qual ? `${ex} of 3 in the exact spot` : `${inT} of your photos in the top 3 · ${ex} in the exact spot`}</b>${o.res ? `<span class="rv-res ${o.res.won ? 'won' : ''}">${o.res.txt}</span>` : ''}
       <span class="rv-yp-h">Your picks</span><span class="rv-yp">${picks.filter(p => ph[p]).map((p, i) => `<span class="${top[i] === p ? 'ex' : ''}"><img src="${ph[p].src}" alt=""><b>Picked ${O[i]}</b>${tg(p, i)}</span>`).join('')}</span>`; });
   at(1900 + 3 * 1300 + 400, () => { const g = $('#rvGo'), k = $('#rvSkip'); if (g) g.hidden = false; if (k) k.hidden = true; }); }
