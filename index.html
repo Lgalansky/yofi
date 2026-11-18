@@ -1055,6 +1055,10 @@ html .fr2 .btn.fr2-next{background:#24563A!important;color:#fff!important;font:8
 .rvw{position:relative;overflow:hidden;text-align:center;padding:38px 16px 22px!important;background:radial-gradient(circle at 50% 30%,#FFF3C4,#FBF3EA 70%)}.rvw-k{font:800 1.3rem Fraunces,Georgia,serif;margin:0;color:#7A1638}
 .rvw-amt{display:block;font:900 3.4rem/1.05 Fraunces,Georgia,serif;color:#2F6B3F;margin:10px 0 6px;animation:rvPop .7s cubic-bezier(.2,1.6,.4,1)}@keyframes rvPop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}.rvw-s{margin:0 0 18px;font-size:1rem}
 html .rvw .btn.rvw-go{background:#24563A!important;color:#fff!important}
+.rvw.first{background:radial-gradient(circle at 50% 30%,#FFE58A,#FBF3EA 75%)}.rvw.first .rvw-amt{font-size:4.2rem}.rvw.first .rvw-k{font-size:1.6rem}
+.rb-st{border-radius:14px;padding:10px 12px;margin:0 0 8px;background:#FFF6DC;box-shadow:inset 0 0 0 1.5px #E8C46A;text-align:center}.rb-st b{display:block;font:800 1.15rem Fraunces,Georgia,serif}.rb-st small{font-size:.82rem}.rb-st.win{background:#E6F0DF;box-shadow:inset 0 0 0 2px #2F6B3F;animation:rbPulse 1.6s ease-in-out infinite}.rb-st.win b{color:#2F6B3F}
+@keyframes rbPulse{50%{box-shadow:inset 0 0 0 2px #2F6B3F,0 0 16px rgba(47,107,63,.45)}}.rb-cd{font-weight:900;font-variant-numeric:tabular-nums}
+.rb-n s{display:block;text-decoration:none;font-size:.62rem;line-height:1}.rb-n s.up{color:#2EA36B}.rb-n s.dn{color:#C8102E}.rb-lead{margin-left:auto;color:#C8102E;font-weight:900;animation:unGlow 1s 3}
 </style>
 </head>
 <body>
@@ -5191,8 +5195,9 @@ function ppLive(g, prog) { const q = cpRng(g.sl * 7 + Math.floor(Date.now() / 40
   const ns = g.ph.map(p => p.st + q() * .7), T = ns.reduce((a, b) => a + b, 0);
   return g.ph.map((p, i) => ({ i, v: Math.round(tot * ((1 - wt) * ns[i] / T + wt * RACE_FIN[g.ord.indexOf(i)])) })).sort((a, b) => b.v - a.v || g.ord.indexOf(a.i) - g.ord.indexOf(b.i)); }
 function ppBoard(g, e) { const now = Date.now(), cp = 1 - (g.end - now) / PP_MS, prog = Math.min(1, Math.max(.04, e ? Math.max(cp, (now - e.at) / PP_DEMO) : cp)), L = ppLive(g, prog), mx = Math.max(1, ...L.map(x => x.v));
-  return `<div class="rb" id="rbLive"><p class="rb-h"><span class="rb-live">● LIVE</span>${L.reduce((a, x) => a + x.v, 0).toLocaleString()} votes so far</p>${L.map((x, n) => { const p = g.ph[x.i], pk = e ? e.picks.indexOf(x.i) : -1;
-    return `<div class="rb-r ${p.mine ? 'me' : ''} ${pk >= 0 ? 'pk' : ''}"><b class="rb-n">${n + 1}</b><span class="rb-im"><img src="${p.src}" alt="">${pk >= 0 ? `<i>${PP_MED[pk]}</i>` : ''}</span><span class="rb-t">${pk >= 0 ? `<u>Your ${['1st', '2nd', '3rd'][pk]} pick</u>` : ''}<b>${esc(p.t)}</b><small>@${esc(p.h)}${p.mine ? ' · your photo' : ''}</small><i style="width:${Math.round(100 * x.v / mx)}%"></i></span><em>${x.v.toLocaleString()}</em></div>`; }).join('')}</div>`; }
+  const pv = (window.__rbPrev && window.__rbPrev.sl === g.sl) ? window.__rbPrev.r : null, lead = pv && pv[L[0].i] !== 1; window.__rbPrev = { sl: g.sl, r: Object.fromEntries(L.map((x, n) => [x.i, n + 1])) };
+  return `<div class="rb" id="rbLive">${rbStatus(g, e, L)}<p class="rb-h"><span class="rb-live">● LIVE</span>${L.reduce((a, x) => a + x.v, 0).toLocaleString()} votes so far${lead ? ' <span class="rb-lead">🔥 New leader!</span>' : ''}</p>${L.map((x, n) => { const p = g.ph[x.i], pk = e ? e.picks.indexOf(x.i) : -1, mv = pv ? pv[x.i] - (n + 1) : 0;
+    return `<div class="rb-r ${p.mine ? 'me' : ''} ${pk >= 0 ? 'pk' : ''}"><b class="rb-n">${n + 1}${mv > 0 ? '<s class="up">▲</s>' : mv < 0 ? '<s class="dn">▼</s>' : ''}</b><span class="rb-im"><img src="${p.src}" alt="">${pk >= 0 ? `<i>${PP_MED[pk]}</i>` : ''}</span><span class="rb-t">${pk >= 0 ? `<u>Your ${['1st', '2nd', '3rd'][pk]} pick</u>` : ''}<b>${esc(p.t)}</b><small>@${esc(p.h)}${p.mine ? ' · your photo' : ''}</small><i style="width:${Math.round(100 * x.v / mx)}%"></i></span><em>${x.v.toLocaleString()}</em></div>`; }).join('')}</div>`; }
 setInterval(() => { const el = document.getElementById('rbLive'); if (!el || window.__rbSl == null || !S) return; const g = ppGame(window.__rbSl); el.outerHTML = ppBoard(g, (S.pp || {})[g.sl]); }, 2500);
 const ppScore = (p, ord) => { const t = ord.slice(0, 3); return p.reduce((a, x, i) => a + (t[i] === x ? 10 : t.includes(x) ? 5 : 0), 0); };
 const ppPool = (n, cur) => `$${Math.round(n * RACE_AVG).toLocaleString()}`;
@@ -5278,7 +5283,7 @@ function rcQualPop(x) { const p = (S.photos || []).find(z => z.id === x.pid); if
     <p class="pp-i">It’s in the <b>${raceName(x.sl)} ${esc(showName(g.k))} Final</b>. Finalists’ creators share <b>10% of the prize pool</b>.<br><small>(demo: result in about 3 min)</small></p>
     <button class="btn block pc-go" id="qpOk">${y ? 'Keep judging' : 'Keep voting'}</button><div style="text-align:center"><button class="link pc-later" id="qpSt">🖼️ Your gallery</button></div></div>`);
   $('#qpOk').onclick = () => popClose(); $('#qpSt').onclick = () => stableOpen(); }
-function raceOwnResult(sl) { const x = S.races[sl], g = ppGame(sl), i = g.ph.findIndex(p => p.mine), cash = true, y = isYoungW();
+function raceOwnResultShow(sl) { const x = S.races[sl], g = ppGame(sl), i = g.ph.findIndex(p => p.mine), cash = true, y = isYoungW();
   const pl = i < 0 ? RACE_N : g.ord.indexOf(i) + 1, pz = pl <= 3 ? RACE_OWN[cash ? 'cash' : 'gems'][pl - 1] : 0, amt = cash ? money(pz) : `${pz.toLocaleString()} 🟡`;
   const ph = i >= 0 ? g.ph[i] : { src: '', t: 'Your photo' }, r = rcRec(x.pid); r.f.push({ k: 'r', pl }); r.f = r.f.slice(-12); r.st = null; r.sl = null; r.last = { sl, pl, pz, cash: cash ? 1 : 0 }; S.showWon = +((S.showWon || 0) + pz).toFixed(2); if (pz) earnAdd({ kind: 's', pid: x.pid, t: ph.t, amt: pz, place: pl, sl, k: g.k }); const fsh = pl <= RACE_N ? finShare(sl, pl) : 0; if (fsh) { S.cash = +((S.cash || 0) + fsh).toFixed(2); S.showWon = +((S.showWon || 0) + fsh).toFixed(2); earnAdd({ kind: 'f', pid: x.pid, t: ph.t, amt: fsh, place: pl, sl, k: g.k }); setTimeout(paintWallet, 200); } x.done = 1; x.place = pl; x.prize = pz; x.share = fsh;
   if (pz) { if (cash) { S.cash = +((S.cash || 0) + pz).toFixed(2); paintWallet(); } else { S.gems += pz; paintGems(); } } save();
@@ -5302,7 +5307,8 @@ function ppResultShow(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc 
   const top = g.ord.slice(0, 3), mk = (p, i) => top[i] === p ? '✅' : top.includes(p) ? '↕️' : '❌';
   const ex = e.picks.filter((p, i) => top[i] === p).length, inT = e.picks.filter(p => top.includes(p)).length, ORD = ['1st', '2nd', '3rd'];
   const head = prize ? `You won ${amt}!` : inT ? `${inT} photo${inT === 1 ? '' : 's'} in the top 3` : 'No photos in the top 3';
-  const chip = ex ? `${ex} in the correct position` : inT === 3 ? 'All 3 in the top 3 · other order' : inT === 2 ? 'Neither in the correct position' : inT === 1 ? 'Not in the correct position' : 'Better luck next hour';
+  const nearAmt = (() => { const t = TR.T.find(z => z.k === 1); return t && t.stake ? t.amt * st / (t.stake + st) : 0; })();
+  const chip = !prize && inT ? `So close! One photo in its exact spot would have paid about ${money(nearAmt)}` : ex ? `${ex} in the correct position` : inT === 3 ? 'All 3 in the top 3 · other order' : inT === 2 ? 'Neither in the correct position' : inT === 1 ? 'Not in the correct position' : 'Better luck next hour';
   const ptag = (p, i) => top[i] === p ? '<em class="ok">✓ Exact</em>' : top.includes(p) ? `<em class="mid">Finished ${ORD[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
   popOpen(`<div class="pp fr2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
     <p class="pp-k">${esc(showName(g.k))}</p><p class="fr2-sub">${raceName(g.sl)} Final · Results</p>
@@ -5625,28 +5631,36 @@ function g2Act(pay) { const y = isYoungW(), g = ppGame(), nm = `${raceName(g.sl)
   return `<div class="g2-prog"><p>${pay ? `<b>+${pay} coins</b> · ` : ''}${gm} / ${FREE_BET_COINS} toward a free Final pick</p><i><i style="width:${pct}%"></i></i>${!fqLeft() ? `<small>Both free picks used this hour · next in ${frMinsLeft()} min</small>` : ''}</div><button class="btn block g2-fin" id="gtKeep">⚖️ ${keep}</button>`; }
 const RV_ORD = ['1st', '2nd', '3rd'], RV_MED = ['🥇', '🥈', '🥉'];
 function rvConfetti(el, n) { for (let i = 0; i < (n || 40); i++) { const c = document.createElement('i'); c.className = 'rv-cf'; c.style.left = Math.random() * 100 + '%'; c.style.background = ['#F2B21E', '#2F6B3F', '#E0457B', '#2D4E86', '#F7C9A0'][i % 5]; c.style.animationDelay = (Math.random() * .6).toFixed(2) + 's'; c.style.transform = `rotate(${Math.random() * 360}deg)`; el.appendChild(c); } }
-function revealSeq(o, done) { const { ph, ord, picks, kicker, title } = o; let stop = false, timers = [];
+function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o; let stop = false, timers = [];
   const fin = () => { if (stop) return; stop = true; timers.forEach(clearTimeout); done(); }, at = (ms, f) => timers.push(setTimeout(() => { if (!stop) f(); }, ms));
   popOpen(`<div class="pp rv"><p class="pp-k">${kicker}</p><h2 class="rv-h" id="rvH">Counting the votes…</h2><p class="rv-s" id="rvS">${title}</p>
-    <div class="rv-bars">${ph.map((p, i) => `<div class="rv-b"><img src="${p.src}" alt=""><span><i style="--w:${(30 + Math.random() * 60).toFixed(0)}%"></i></span>${picks.includes(i) ? `<em>${RV_MED[picks.indexOf(i)]}</em>` : ''}</div>`).join('')}</div>
+    <div class="rv-bars">${ph.map((p, i) => `<div class="rv-b"><img src="${p.src}" alt=""><span><i style="--w:${(30 + Math.random() * 60).toFixed(0)}%"></i></span>${picks.includes(i) ? `<em>${RV_MED[picks.indexOf(i)]}</em>` : mine === i ? '<em>📷</em>' : ''}</div>`).join('')}</div>
     <div class="rv-pod" id="rvPod">${[2, 1, 0].map(k => `<div class="rv-slot" data-k="${k}"><span class="rv-q">?</span><b>${RV_MED[k]} ${RV_ORD[k]}</b></div>`).join('')}</div>
     <p class="rv-me" id="rvMe">&nbsp;</p><div style="text-align:center"><button class="link rv-skip" id="rvSkip">Skip ›</button></div></div>`);
   $('#rvSkip').onclick = fin;
   [2, 1, 0].forEach((k, n) => at(1900 + n * 1300, () => { const el = document.querySelector(`#rvPod [data-k="${k}"]`); if (!el) return; const p = ph[ord[k]], hit = picks[k] === ord[k];
     if (n === 0) { $('#rvH').textContent = 'And the results are…'; document.querySelector('.rv-bars').classList.add('done'); }
     el.innerHTML = `<img src="${p.src}" alt=""><b>${RV_MED[k]} ${RV_ORD[k]}</b>`; el.classList.add('on', hit ? 'hit' : 'miss');
-    $('#rvMe').innerHTML = hit ? `<b class="ok">✓ Spot on!</b> Your ${RV_ORD[k]} pick` : picks[k] != null ? `You picked <b>“${esc(ph[picks[k]].t || 'another photo')}”</b> for ${RV_ORD[k]}` : '&nbsp;';
-    if (hit) { el.classList.add('pop'); rvConfetti(el, 14); } }));
+    $('#rvMe').innerHTML = mine != null && ord[k] === mine ? `<b class="ok">📷 Your photo finished ${RV_ORD[k]}!</b>` : hit ? `<b class="ok">✓ Spot on!</b> Your ${RV_ORD[k]} pick` : picks[k] != null ? `You picked <b>“${esc(ph[picks[k]].t || 'another photo')}”</b> for ${RV_ORD[k]}` : '&nbsp;';
+    if (hit || (mine != null && ord[k] === mine)) { el.classList.add('pop', 'hit'); rvConfetti(el, 14); } }));
+  if (mine != null && mine >= 0 && !ord.slice(0, 3).includes(mine)) at(1900 + 3 * 1300 + 100, () => { $('#rvMe').innerHTML = `📷 Your photo finished ${ppOrd(ord.indexOf(mine) + 1)} · finalists still share the pool`; });
   at(1900 + 3 * 1300 + 700, fin); }
-function heroWin(big, sub, done) { const c = $('#coach');
-  popOpen(`<div class="pp rvw"><p class="rvw-k">🎉 Winner!</p><b class="rvw-amt">${big}</b><p class="rvw-s">${sub}</p><button class="btn block rvw-go" id="rvwGo">See results</button></div>`);
-  rvConfetti(document.querySelector('.rvw'), 70); let gone = false; const go = () => { if (gone) return; gone = true; done(); }; $('#rvwGo').onclick = go; setTimeout(go, 3600); }
+function heroWin(big, sub, done, first) { const c = $('#coach');
+  popOpen(`<div class="pp rvw ${first ? 'first' : ''}"><p class="rvw-k">${first ? '🏆 First win!' : '🎉 Winner!'}</p><b class="rvw-amt">${big}</b><p class="rvw-s">${sub}</p><button class="btn block rvw-go" id="rvwGo">See results</button></div>`);
+  rvConfetti(document.querySelector('.rvw'), first ? 140 : 70); if (first) setTimeout(() => rvConfetti(document.querySelector('.rvw'), 90), 900); let gone = false; const go = () => { if (gone) return; gone = true; done(); }; $('#rvwGo').onclick = go; setTimeout(go, first ? 5200 : 3600); }
 function gateResult(G, picks) { const top = G.ord.slice(0, 3), right = picks.filter((p, i) => top[i] === p).length, pay = GATE_COINS[right];
   revealSeq({ ph: G.ph, ord: G.ord, picks, kicker: `Group ${G.gi + 1} of 3 · qualifier`, title: `${isYoungW() ? 'Judges' : 'The crowd'} decide who goes through` },
     () => pay ? heroWin(`+${pay} coins`, `${right} of 3 in the exact spot`, () => gateResultShow(G, picks)) : gateResultShow(G, picks)); }
 function ppResult(e) { if (e.__rv) return; e.__rv = 1; const g = ppGame(e.sl), TR = ppTiers(e, g), prize = TR.prize;
   revealSeq({ ph: g.ph, ord: g.ord, picks: e.picks, kicker: `${raceName(g.sl)} Final · ${esc(showName(g.k))}`, title: `${ppPool(g.players)} prize pool · ${g.players} players` },
-    () => prize ? heroWin(`You won ${money(prize)}`, `${TR.mine.lab} · real cash`, () => ppResultShow(e)) : ppResultShow(e)); }
+    () => prize ? (S.firstCash ? heroWin(`You won ${money(prize)}`, `${TR.mine.lab} · real cash`, () => ppResultShow(e)) : (S.firstCash = 1, save(), heroWin(`${money(prize)}`, `<b>Your first real cash win!</b><br>${TR.mine.lab} · it’s in your wallet now`, () => ppResultShow(e), 1))) : ppResultShow(e)); }
+function raceOwnResult(sl) { const x = S.races[sl]; if (!x || x.__rv) return; x.__rv = 1; const g = ppGame(sl), i = g.ph.findIndex(p => p.mine), pl = i < 0 ? RACE_N : g.ord.indexOf(i) + 1, earn = pl <= RACE_N ? finShare(sl, pl) : 0, ph = i >= 0 ? g.ph[i] : null;
+  revealSeq({ ph: g.ph, ord: g.ord, picks: [], mine: i, kicker: `${raceName(sl)} Final · ${esc(showName(g.k))}`, title: ph ? `📷 Your photo “${esc(ph.t)}” is in this Final` : '' },
+    () => earn ? heroWin(`You earned ${money(earn)}`, `📷 “${esc(ph.t)}” finished ${ppOrd(pl)} · your creator share`, () => raceOwnResultShow(sl), !S.firstCash && (S.firstCash = 1, save(), 1)) : raceOwnResultShow(sl)); }
+function rbStatus(g, e, L) { if (!e) return ''; const gl = Object.assign({}, g, { ord: L.map(x => x.i) }), T = ppTiers(e, gl), pos = e.picks.map(i => L.findIndex(x => x.i === i) + 1);
+  const ex = e.picks.filter((p, k) => pos[k] === k + 1).length;
+  return `<div class="rb-st ${T.prize ? 'win' : ''}"><b>${T.prize ? `If it ended now: you’d win ~${money(T.prize)}` : 'If it ended now: no cash yet'}</b><small>${ex ? `${ex} of your picks in the exact spot` : 'Needs 1 pick in its exact spot'} · results in <span class="rb-cd" data-due="${ppDue(e)}">${(() => { const r = Math.max(0, ppDue(e) - Date.now()); return `${Math.floor(r / 60000)}:${String(Math.floor(r / 1000) % 60).padStart(2, '0')}`; })()}</span></small></div>`; }
+setInterval(() => { document.querySelectorAll('.rb-cd').forEach(el => { const r = Math.max(0, +el.dataset.due - Date.now()); el.textContent = `${Math.floor(r / 60000)}:${String(Math.floor(r / 1000) % 60).padStart(2, '0')}`; }); }, 1000);
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
