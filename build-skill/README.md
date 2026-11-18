@@ -158,6 +158,8 @@ Then `rmv74.py`: photo card message is "Qualify for the Final" + "Earn a share o
 
 Then `rmv75.py`: qualifier result trimmed to headline + photo card + Keep voting (exact-spot line, YOU WON box, coin line, Through to the Final and the free-pick note removed; the reveal already shows what was won).
 
+Then `rmv76.py`: review fixes part 1: invite headline no longer clipped (single coin), no 'undefined' in earnings or account, unsolicited pops kept 90 s apart and daily rewards wait until the new-player journey ends.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -229,6 +231,7 @@ python3 rmv72.py
 python3 rmv73.py
 python3 rmv74.py
 python3 rmv75.py
+python3 rmv76.py
 ```
 
 ## Skill only
