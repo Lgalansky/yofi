@@ -228,6 +228,8 @@ Then `rmv109.py`: Final result: prize pool, players who won cash and View payout
 
 Then `rmv110.py`: 'Your photo could win real cash' card after every quick game: added to Quick Sprint results (Coin Pick and Final results already had it); Sprint result pop scrolls when taller than the screen.
 
+Then `rmv111.py`: Coming-up strip no longer shows your photo (next qualifier / in the ring); the journey card under the streak bar covers it; strip shows the next game or your live pick.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -334,6 +336,7 @@ python3 rmv107.py
 python3 rmv108.py
 python3 rmv109.py
 python3 rmv110.py
+python3 rmv111.py
 ```
 
 ## Skill only
