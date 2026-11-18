@@ -150,6 +150,8 @@ Then `rmv70.py`: live pick page: ticket-style "Free pick confirmed" card with yo
 
 Then `rmv71.py`: Final result no longer repeats the reveal (crowd's top 3, your picks and rule line removed; winner line hidden when the creator card shows the winner).
 
+Then `rmv72.py`: the "Your photo could win real cash" card shows on every Final result (it hid once you had a photo racing); button says "Enter another photo" when you already have a framed photo.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -217,6 +219,7 @@ python3 rmv68.py
 python3 rmv69.py
 python3 rmv70.py
 python3 rmv71.py
+python3 rmv72.py
 ```
 
 ## Skill only
