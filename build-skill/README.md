@@ -194,6 +194,8 @@ Then `rmv92.py`: games rotate after the first Final (qualifier, then Quick Sprin
 
 Then `rmv93.py`: uploading never shows the old improve flow: short 'Preparing your photo…' then straight to the Gallery and Frame your photo (old score result / touch-up screen skipped); coin nudges never open over an upload or any open screen; sign-up text has no photo scores.
 
+Then `rmv94.py`: three-game rotation every 15 votes (qualifier → Quick Sprint → free Final pick), unaffordable games skipped, never two qualifiers in a row (short of coins: qualifier alternates with a quiet slot); strip names the next game or shows progress to a free pick.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -283,6 +285,7 @@ python3 rmv90.py
 python3 rmv91.py
 python3 rmv92.py
 python3 rmv93.py
+python3 rmv94.py
 ```
 
 ## Skill only
