@@ -190,6 +190,8 @@ Then `rmv90.py`: first-pick guarantee removed; on every Final result the 'Your p
 
 Then `rmv91.py`: Gallery becomes a creator page once you have a framed photo: record strip, each framed photo (gold frame + plaque) with record and live status (qualifier tries, next qualifier in N votes, its Final, Vote to move it along / Watch / Enter again), ready to frame, earnings, compact Add another photo, upcoming Finals, prize-share fold. No framed photo: intro page as before.
 
+Then `rmv92.py`: games rotate after the first Final (qualifier, then Quick Sprint, every 10 votes; strip names the next one; old Sprint nudge and the score-based coin battle switched off); streak boxes pay coins with a burst, no pop; no toasts per qualifier try or 'in the ring now' for your photo.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -277,6 +279,7 @@ python3 rmv88.py
 python3 rmv89.py
 python3 rmv90.py
 python3 rmv91.py
+python3 rmv92.py
 ```
 
 ## Skill only
