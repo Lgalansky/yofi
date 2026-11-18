@@ -268,6 +268,8 @@ Then `rmv129.py`: Slim one-line streak strip (flame count, track with three draw
 
 Then `rmv130.py`: Pick result reveal: one signal per fact. Rosettes removed from picks (place label + 'Your 2nd pick' + gold border on the podium; 'Exact match' once, under Your picks). Rosettes stay for your own photos only.
 
+Then `rmv131.py`: Result bugs: one reveal settles Top 3 + Winner picks on the same Final (total won with a line per pick; Winner pick waits for the Top 3 result so the result page isn't closed). Coin Pick page after the reveal no longer repeats 'Spot on!' ('+10 coins in your balance'). 'of your photos in the top 3' → 'of your picks'. Final result page states the Winner pick outcome.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -394,6 +396,7 @@ python3 rmv127.py
 python3 rmv128.py
 python3 rmv129.py
 python3 rmv130.py
+python3 rmv131.py
 ```
 
 ## Skill only
