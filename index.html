@@ -2269,6 +2269,7 @@ function portraitOnly() {
   $('#poGo').onclick = () => { closeSheet(); $('#file').value = ''; yWL(); };
 }
 function pickPhoto(fromStudio) {
+  if (fromStudio && $('#app').classList.contains('on')) { try { if (typeof popClose === 'function' && document.querySelector('#coach.on')) popClose(); if ($('#flow').classList.contains('on')) closeFlow(); if ($('#panes').dataset.at !== 'gallery') go('gallery'); renderMyShow(); } catch (e) {} }
   if (S.photos.length >= CFG.MAX_PHOTOS) { makeRoom(fromStudio); return; }
   intakeFromStudio = !!fromStudio; $('#file').value = ''; yWL();
 }
@@ -6099,7 +6100,7 @@ function finalsTab() { const cur = ppSlot(), g = ppGame(cur), e = (S.pp || {})[c
     <h2 class="fn-h2">Coming up</h2><div class="g4-fin fn-up">${[1, 2, 3].map(k => { const sl = cur + k, G = ppGame(sl); return `<button data-fnk="${G.k}"><img src="${(G.ph[0] || {}).src}" alt=""><span><b>${esc(showName(G.k))} Final</b><small>${finReady(sl)}</small></span><span class="g4-amt"><b>${pool(sl)}</b><small>Enter a photo ›</small></span></button>`; }).join('')}</div>
     ${mine.length ? `<h2 class="fn-h2">Your picks</h2><div class="fn-my">${mine.map(x => { const G = ppGame(x.sl); return `<div><span class="fn-th">${x.picks.slice(0, 3).map(p => `<img src="${(G.ph[p] || {}).src}" alt="">`).join('')}</span><span class="fn-t"><b>${raceName(x.sl)}</b><small>${x.free ? 'Free pick' : money(x.stake || 2) + ' pick'}</small></span>${res(x)}</div>`; }).join('')}</div>` : ''}
     <h2 class="fn-h2">Recent results</h2><div class="fn-my">${[1, 2, 3].map(k => { const sl = cur - k, G = ppGame(sl), w = G.ph[G.ord[0]], x = (S.pp || {})[sl]; return `<div><img class="fn-w1" src="${w.src}" alt=""><span class="fn-t"><b>${raceName(sl)}</b><small>🏆 “${esc(w.t)}” · ${ppPool(G.players)} pool</small></span>${x ? res(x) : '<em>—</em>'}</div>`; }).join('')}</div>
-    <details class="g4-how2 fn-how"><summary>How Finals work</summary><p>Every hour, 6 photos that came through the qualifiers race in a Final. ${y ? 'Judges' : 'Voters'} decide the order. Pick the top 3: win with 2 photos in the top 3, at least 1 in its exact spot. Every win pays more than your pick. Pickers share 78% of the pool, the finalists’ creators share 10%.</p></details></div>`, false);
+    <details class="g4-how2 fn-how"><summary>How Finals work</summary><p>A Final starts as soon as 6 photos come through the qualifiers, and they race. ${y ? 'Judges' : 'Voters'} decide the order. Pick the top 3: win with 2 photos in the top 3, at least 1 in its exact spot. Every win pays more than your pick. Pickers share 78% of the pool, the finalists’ creators share 10%.</p></details></div>`, false);
   $('#flow').classList.add('astab'); ['segJudge', 'segStudio', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segCompete').setAttribute('aria-pressed', 'true'); setTimeout(() => { $('#ptitle').textContent = 'Finals'; }, 0);
   const B = $('#flowBody'), on = (id, f) => { const b = B.querySelector('#' + id); if (b) b.onclick = f; };
   on('fnMine', () => ppOpen()); on('fnCash', () => { window.__ppCash = 1; ppOpen(); }); on('fnFree', () => fqStart()); on('fnCard', () => raceCard());
