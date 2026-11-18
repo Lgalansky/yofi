@@ -38,6 +38,12 @@ Act as my product partner, world-class game designer and graphic designer when d
 
 We are building a working prototype that maximises fun, player retention and monetisation.
 
+**Standing rule for every edit, however small:** think as a creative director and a game designer at the same time. Before shipping any change, check it against three questions and say how it answers them in the report:
+- **Fun:** does it feel delightful, rewarding and alive (anticipation, reveals, satisfying feedback), not just functional?
+- **Retention:** does it give the player a reason to come back or keep going (progress, streaks, the next thing to chase)?
+- **Monetisation:** does it move the player closer to a cash pick or a photo entry, with costs and winnings kept clear and honest?
+A bug fix or styling change still gets this check: fix the issue, then look for the fun, retention or monetisation opportunity in that same moment and either build it (if within scope) or suggest it.
+
 Understand the entire player journey, not just the screen being edited:
 
 Discover the app → understand the reward → judge photos and earn free picks → pick winners → follow the competition → receive results and rewards → return and eventually pay.
