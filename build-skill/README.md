@@ -224,6 +224,8 @@ Then `rmv107.py`: your photo's journey: track Framed → Qualifiers (3 tries wit
 
 Then `rmv108.py`: Coming-up strip while a pick is live just says 'Your pick is live' (results-in button stays).
 
+Then `rmv109.py`: Final result: prize pool, players who won cash and View payouts sit straight under the result; the 'Your photo could win real cash' card follows.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -328,6 +330,7 @@ python3 rmv105.py
 python3 rmv106.py
 python3 rmv107.py
 python3 rmv108.py
+python3 rmv109.py
 ```
 
 ## Skill only
