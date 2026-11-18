@@ -184,6 +184,8 @@ Then `rmv87.py`: free pick unlock goes through a guided coins menu: 'Open my coi
 
 Then `rmv88.py`: results reveal scrolls on shorter screens (card no longer clips its content) and Continue stays pinned to the bottom.
 
+Then `rmv89.py`: touch-up card removed from the Vote screen; Gallery tab always renders the new Gallery (no old 'photo challenges'); framing is a big reveal (photo fades in, thick gold frame closes round it, brass plaque with name, category and date slides up, shine and confetti, 'See your photo framed').
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -268,6 +270,7 @@ python3 rmv85.py
 python3 rmv86.py
 python3 rmv87.py
 python3 rmv88.py
+python3 rmv89.py
 ```
 
 ## Skill only
