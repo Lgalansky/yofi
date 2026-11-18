@@ -1179,6 +1179,10 @@ html body .ppop .gq2 .rv-won b{font-size:2.7rem}html:not(.yg) body .ppop .gq2 .g
 .gq-sub{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 4px}.gq-sub span{display:flex;flex-direction:column;align-items:center;gap:4px}
 .gq-sub em{font-style:normal;font-weight:800;font-size:.76rem;padding:2px 9px;border-radius:999px}html body .ppop .gq-sub em.ok{background:#E3F0DE;color:#2F6B3F!important;-webkit-text-fill-color:#2F6B3F}html body .ppop .gq-sub em.fin{background:#E3EAF5;color:#1E3A6E!important;-webkit-text-fill-color:#1E3A6E}
 .gq2 .rv-yp{margin-bottom:12px}.gq2 .rv-won{margin-top:8px}
+html body .ob .btn.block{background:#1E3A6E!important;background-image:none!important;color:#fff!important;-webkit-text-fill-color:#fff;box-shadow:none!important}html body .ob .btn.block:disabled{opacity:.4}
+html body .ob h1{color:#14213D!important;-webkit-text-fill-color:#14213D}html body .ob .ob-ages button[aria-pressed="true"]{box-shadow:inset 0 0 0 2px #1E3A6E!important;background:#E3EAF5!important;color:#1E3A6E!important}
+html body .ug-buy{color:#2F6B3F!important;-webkit-text-fill-color:#2F6B3F}
+.rf-l{font-size:.68rem;font-weight:800;margin-right:3px;opacity:.75;text-transform:uppercase;letter-spacing:.04em}
 </style>
 </head>
 <body>
@@ -2522,7 +2526,7 @@ function openSheet(html, { locked = false, after = null, full = false, cover = f
   document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet()); $('#sheet').scrollTop = 0;
   if (!full) $('#scrim').classList.add('on'); $('#sheet').classList.add('on'); sheetLocked = locked; sheetAfter = after;
 }
-function closeSheet() {
+function closeSheet() { window.__uiT = Date.now();
   $('#scrim').classList.remove('on'); $('#sheet').classList.remove('on');
   const f = sheetAfter; sheetAfter = null; sheetLocked = false; if (f) f();
 }
@@ -2756,7 +2760,7 @@ function openStore(reason, onBuy, tab) {
   const tile = (ic, v, lab, cls) => `<div class="sp-t ${cls}"><span class="sp-ic">${ic}</span><b>${v}</b><small>${lab}</small></div>`;
   const GEM = `<span class="sp-gem">${gemIcon('')}</span>`;
   const card = (tag, tiles, btn, attr, cls = '') => `<div class="sp-card ${cls}">${tag ? `<span class="sp-tag">${tag}</span>` : ''}<div class="sp-row">${tiles}</div><button class="sp-go" ${attr}>${btn}</button></div>`;
-  const head = { energy: ['Get energy', `Vote with bigger bets to earn coins faster. Refills +5 an hour free. You have <b>${energy()} ⚡</b>`], gems: ['Get coins', `Touch up photos, play coin challenges and win back your 🏅 medal. You have <b>${S.gems.toLocaleString()} 🟡</b>`], cash: ['Add cash', 'Play blue ribbon challenges, friends and tournaments. Coins can’t be bought: earn them by voting.'] }[T];
+  const head = { energy: ['Get energy', `Vote with bigger bets to earn coins faster. Refills +5 an hour free. You have <b>${energy()} ⚡</b>`], gems: ['Get coins', `Touch up photos, play coin challenges and win back your 🏅 medal. You have <b>${S.gems.toLocaleString()} 🟡</b>`], cash: ['Add cash', 'Pick the hourly Finals with real cash, from $2. Coins can’t be bought: earn them by voting.'] }[T];
   const body = `<h3 class="sp-h">${head[0]}</h3><p class="sp-s">${head[1]}</p><div class="sp-list">` + (T === 'energy'
     ? EN_PACKS.slice(0, EN_SHOW).map((k, i) => card(k.tag, tile('⚡', k.en.toLocaleString(), 'Energy', 'en') + tile('⚖️', '~' + Math.round(k.en / 2), 'votes at ×2', 'mut'), `Pay $${k.usd} cash`, `data-enusd="${i}"`)).join('')
     : T === 'gems'
@@ -2808,7 +2812,7 @@ function useGems() {
   openSheet(`<div class="ug"><h2>Use your coins</h2><p class="sub">You have <b>${Math.floor(S.gems).toLocaleString()} 🟡</b>. Here’s what they can do for you right now.</p>
     ${false ? `<button class="ug-r ug-tix" id="ugTix"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free cash entr${S.cashTix === 1 ? 'y' : 'ies'}${S.cashTix > 1 ? ` · ${S.cashTix}` : ''}</b><small>Play a $1 challenge or tournament free. Win real cash.</small></span><em class="claim">Claim</em></button>` : ''}
     ${raceBetRowHTML()}${invRowHTML()}${I.length ? I.map((x, i) => `<button class="ug-r" data-ug="${i}"><span class="ug-i">${x.ic}</span><span class="ug-t"><b>${x.t}</b><small>${x.d}</small></span><em class="${S.gems < x.cost ? 'need' : ''}">${x.cost} 🟡</em></button>`).join('') : `<p class="ug-none">Upload a photo in Studio and your coins can start working for you.</p>`}
-    <button class="link ug-buy" id="ugBuy">Get more coins</button></div>`);
+    <button class="link ug-buy" id="ugBuy">💵 Add cash</button></div>`);
   document.querySelectorAll('#sheetBody [data-ugc]').forEach(b => b.onclick = () => { const k = b.dataset.ugc; closeSheet(); addCatPhoto(k); });
   document.querySelectorAll('#sheetBody [data-ug]').forEach(b => b.onclick = () => { const x = I[+b.dataset.ug]; if (S.gems < x.cost) { closeSheet(); runOut('gems', `You need ${x.cost - S.gems} more coins`, null, x.cost - S.gems); return; } x.go(); });
   $('#ugBuy').onclick = () => { closeSheet(); openStore(); };
@@ -4867,7 +4871,7 @@ function obRank() { const r = {}; (S.likes || []).forEach(n => { const x = OB_IN
 function obSort() { if (!S.likes) return; const r = obRank(), o = ['selfie', 'style', 'fitness', 'pets', 'food', 'travel', 'night', 'any'];
   CATS8.sort((a, b) => (a === 'any') - (b === 'any') || (r[b] || 0) - (r[a] || 0) || o.indexOf(a) - o.indexOf(b)); }
 function obAge(g) { const prog = n => '';
-  g.innerHTML = `<div class="ag-in ob">${prog(1)}<h1>Which age group are you in?</h1><p>We use this to suggest challenges you’ll enjoy. We never show it to other members.</p>
+  g.innerHTML = `<div class="ag-in ob">${prog(1)}<h1>Which age group are you in?</h1><p>PhotoPicks is for adults 18+. We use this to tailor what you see, and never show it to other members.</p>
     <div class="ob-ages">${OB_AGES.map(a => `<button type="button" data-oa="${a}" aria-pressed="${a === S.ageBr}">${a}</button>`).join('')}</div><button class="btn block" id="obGo1" ${S.ageBr ? '' : 'disabled'}>Continue</button></div>`;
   g.querySelectorAll('[data-oa]').forEach(b => b.onclick = () => { S.ageBr = b.dataset.oa; S.likes0 = null; save(); setLook(); obAge(g); });
   g.querySelector('#obGo1').onclick = () => { S.crews = []; S.crewCur = null; S.age18 = 1; S.adult = 1; S.obDone = 1; save(); setLook(); if (!isYoungW() && window.__ywDone) { location.reload(); return; } youngPass(); g.className = ''; setTimeout(() => g.remove(), 300); if (typeof renderGallery === 'function') renderGallery(); paintTop(); }; }
@@ -5340,7 +5344,7 @@ function ppOpen() { const pc = window.__ppCash; window.__ppCash = 0; const g = p
       <p class="pk-meta">${g.players} players · Closes ${frTime(g.end)}</p>
       <p class="rc-jp">🎯 Win with 1 photo in its exact spot, or 2 in the top 3</p>
       <h3 class="pk-h3">Pick your 1st, 2nd &amp; 3rd</h3><p class="pk-sub">Choose from the 6 photos below</p>
-      <p class="pp-leg">🔥 Popularity: picked to win</p><div class="pp-g g6">${g.ph.map((p, i) => { const n = picks.indexOf(i); return `<button class="pp-t ${n >= 0 ? 'on' : ''}" data-pp="${i}"><span class="pp-im"><img src="${p.src}" alt="">${n >= 0 ? `<i class="pp-b">${PP_MED[n]}</i>` : ''}</span><span class="pp-nm"><b>${esc(p.t)}</b><small>@${esc(p.h)}</small></span><span class="pp-cap"><span class="rf">${formHTML(p.form)}</span><b class="pop" title="Popularity: share of players picking it to win">🔥 ${bk[i]}%</b></span></button>`; }).join('')}</div>
+      <p class="pp-leg">🔥 Form = last 4 finishes · 🔥 = share picking it to win</p><div class="pp-g g6">${g.ph.map((p, i) => { const n = picks.indexOf(i); return `<button class="pp-t ${n >= 0 ? 'on' : ''}" data-pp="${i}"><span class="pp-im"><img src="${p.src}" alt="">${n >= 0 ? `<i class="pp-b">${PP_MED[n]}</i>` : ''}</span><span class="pp-nm"><b>${esc(p.t)}</b><small>@${esc(p.h)}</small></span><span class="pp-cap"><span class="rf"><small class="rf-l">Form</small>${formHTML(p.form)}</span><b class="pop" title="Popularity: share of players picking it to win">🔥 ${bk[i]}%</b></span></button>`; }).join('')}</div>
       <p class="pp-i">${n3 ? 'Your top 3 is set. Tap a photo to change it.' : `Tap your <b>${['1st', '2nd', '3rd'][picks.length]}</b> place photo`}</p>
       <p class="pk-rem"><b>${ppPool(g.players)}</b> cash prize pool</p>${pc && S.user && S.user.guest ? '<p class="pk-note">Choose your picks and amount. You’ll create your account and add cash before you pay.</p>' : ''}
       ${cash ? `<div class="rc-st" role="group" aria-label="Entry">${RACE_ST.map(v => `<button data-rst="${v}" aria-pressed="${v === stake}">$${v}</button>`).join('')}</div>
@@ -5420,7 +5424,7 @@ function raceOwnResultShow(sl) { const x = S.races[sl], g = ppGame(sl), i = g.ph
   $('#roAgain').onclick = () => { popClose(); showEnter(x.pid); }; $('#roBack').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
 setInterval(() => { if (!S || !S.rcPop || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return; const x = S.rcPop; S.rcPop = null; save(); rcQualPop(x); }, 1500);
 setInterval(() => { if (!S || !S.races) return; const cur = ppSlot(); Object.entries(S.races).forEach(([sl, x]) => { if (+sl === cur && !x.done && !x.on) { x.on = 1; save(); toast('🔴 Your photo is in the ring now! Watch it live.'); } }); }, 5000);
-setInterval(() => { if (!S || !S.races || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return; const now = Date.now();
+setInterval(() => { if (!S || !S.races || busyUI()) return; const now = Date.now();
   const k = Object.keys(S.races).find(sl => !S.races[sl].done && now >= Math.min((+sl + 1) * PP_MS, S.races[sl].at + PP_DEMO * 1.5)); if (k) raceOwnResult(+k); }, 3000);
 function ppResultShow(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc = ppScore(e.picks, g.ord), n = e.players || g.players, st = e.stake || 1, jp = raceJP(e.sl); let better = 0;
   for (let i = 0; i < n - 1; i++) { const a = ppShuffle([...Array(RACE_N).keys()], r); if (r() < .45) { const w = a.indexOf(g.ord[0]); [a[0], a[w]] = [a[w], a[0]]; } if (ppScore(a.slice(0, 3), g.ord) > sc) better++; }
@@ -5452,7 +5456,7 @@ function ppResultShow(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc 
     <div style="text-align:center"><button class="link fr2-j" id="ppOk">⚖️ ${y ? 'Judge photos' : 'Judge photos'}</button></div></div>`);
   if (prize) setTimeout(() => cashExplosion && cashExplosion(prize, { label: 'Final' }), 500);
   if (S.tut === 3) { S.tut = 4; S.unlk = 1; save(); } if ($('#ppUp')) $('#ppUp').onclick = () => { popClose(); finPick(); }; $('#ppNext').onclick = () => { popClose(); raceCard(); }; document.querySelectorAll('#ppReal1, #ppReal2').forEach(b => b.onclick = () => { popClose(); setTimeout(() => { window.__ppCash = 1; ppOpen(); }, 250); }); $('#ppOk').onclick = () => { popClose(); go('judge'); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
-setInterval(() => { if (!S || !S.pp || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return; const now = Date.now();
+setInterval(() => { if (!S || !S.pp || busyUI()) return; const now = Date.now();
   const e = Object.values(S.pp).find(x => !x.done && now >= ppDue(x)); if (e) ppResult(e); }, 3000);
 const ppRowHTML = () => { if (!S || S.geoBlock) return ''; const g = ppGame(), e = (S.pp || {})[g.sl], cash = e ? e.cur === 'cash' : isCash();
   return `<button class="tsr2 pprow ${e ? 'in' : ''}" id="ppRow"><span class="tsr2-t"><span class="fr-tag pp-tag">${e ? 'IN ✓' : '🎀 SHOW'}</span><b>${tLeft(g.end)}</b></span><span class="tsr2-p">${ppPool(g.players)}</span><span class="tsr2-n"><small>${raceName(g.sl)} Final</small></span><span class="tsr2-e">${e ? 'View' : cash ? 'Bet' : 'Free $1'}</span></button>`; };
@@ -5519,7 +5523,7 @@ function gateResultOld(G, picks, real, tk) { const y = isYoungW(), top = G.ord.s
   if (pay) setTimeout(() => real ? cashExplosion && cashExplosion(pay, { label: 'Qualifier win' }) : gemExplosion(pay, { label: 'Qualifier win' }), 400);
   if ($('#gtReal')) $('#gtReal').onclick = () => gateOpen(true); if ($('#gtFin')) $('#gtFin').onclick = () => { popClose(); setTimeout(ppOpen, 250); }; if ($('#gtAgain')) $('#gtAgain').onclick = () => gateOpen(true);
   $('#gtNo').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
-setInterval(() => { if (!S || !S.gatePend || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on') || $('#panes').dataset.at !== 'judge') return; S.gatePend = 0; save(); gateOpen(false); }, 1200);
+setInterval(() => { if (!S || !S.gatePend || busyUI() || $('#panes').dataset.at !== 'judge' || Object.values(S.pp || {}).some(x => !x.done && Date.now() >= ppDue(x))) return; S.gatePend = 0; save(); gateOpen(false); }, 1200);
 function raceBetRowHTML() { if (S.tut === 3) return `<button class="ug-r ug-swap ug-tk" id="rbLiveRow"><span class="ug-i">🔴</span><span class="ug-t"><b>Your free pick is live</b><small>Results soon · more ways to use your coins unlock after your first result</small></span><em>Watch ›</em></button>`; if (S.tut === 2) return `<button class="ug-r ug-swap ug-tk" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free ticket earned</b><small>Your first pick in the ${raceName(ppGame().sl)} Final · free · real cash prizes</small></span><em>Use ›</em></button>`; if (isCash()) return ''; const L = fqLeft(), ok = L && (S.gems || 0) >= FREE_BET_COINS;
   return `<button class="ug-r ug-swap" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free Final pick</b><small>The ${raceName(ppGame().sl)} Final · pick the top 3 of 6 · ${L ? `${L} of ${FQ_MAX} left this hour` : `next in ${frMinsLeft()} min`}</small></span><em class="${ok ? '' : 'need'}">${FREE_BET_COINS} 🟡</em></button>`; }
 function raceBetRowOld() { const g = ppGame(), e = (S.pp || {})[g.sl], ok = !e && (S.gems || 0) >= FREE_BET_COINS;
@@ -5716,8 +5720,8 @@ function finPick() { let o = document.getElementById('finPick'); if (!o) { o = d
     <p class="fp-s">Pick the category your photo is for. ${first ? 'Your first frame is free: frame your photo and it enters that Final’s <b>qualifiers</b>.' : 'Frame your photo for 200 coins and it enters that Final’s qualifiers; the top 2 go through.'}</p>
     ${L.map(x => { const g = ppGame(x.sl); return `<button class="fp-c" data-fpk="${x.k}">${lpImg(x.k) ? `<img src="${lpImg(x.k)}" alt="">` : `<span class="fp-e">${SHOW_IC[x.k] || '🎀'}</span>`}<span class="fp-t"><b>${SHOW_IC[x.k] || ''} ${esc(showName(x.k))}</b><small>Next Final <b>${lpWhen(x.sl)}</b></small><em>${ppPool(g.players)} prize pool</em></span><i aria-hidden="true">›</i></button>`; }).join('')}
     <p class="fp-n">Finals every hour: Pets, Nature &amp; landscapes, Garden &amp; flowers.</p></div>`;
-  o.className = 'on'; o.querySelector('.fp-x').onclick = () => { o.className = ''; };
-  o.querySelectorAll('[data-fpk]').forEach(b => b.onclick = () => { const k = b.dataset.fpk; o.className = ''; window.__preCat = showHint(k).cats[0];
+  o.className = 'on'; o.querySelector('.fp-x').onclick = () => { o.className = ''; window.__uiT = Date.now(); };
+  o.querySelectorAll('[data-fpk]').forEach(b => b.onclick = () => { const k = b.dataset.fpk; o.className = ''; window.__uiT = Date.now(); window.__preCat = showHint(k).cats[0];
     if ($('#landing').style.display !== 'none' || !$('#app').classList.contains('on')) yWL(); else pickPhoto(true); }); }
 const ffreeFirst = () => !S.firstEntry && !S.ffDone && !Object.values(S.rc || {}).some(r => r.st || (r.f && r.f.length));
 window.finPick = finPick;
@@ -5755,7 +5759,7 @@ document.addEventListener('click', e => { const g = e.target.closest('[data-crk]
   if (e.target.closest('.cr-x')) { e.preventDefault(); e.stopPropagation(); S.crHide = (S.votes || 0) + 20; save(); const a = document.querySelector('.cr-ask'); if (a) a.remove(); } }, true);
 function g2Act(pay) { const y = isYoungW(), g = ppGame(), nm = `${raceName(g.sl)} ${esc(showName(g.k))} Final`, keep = y ? 'Keep judging' : 'Keep voting', link = `<div style="text-align:center"><button class="link g2-link" id="gtNo">⚖️ Judge photos</button></div>`;
   if (isCash()) return `<button class="btn block g2-fin cashb" id="gtFin">🎀 Pick the ${nm} · from $2</button>${link}`;
-  if (fqLeft() && (S.gems || 0) >= FREE_BET_COINS) return `<div class="g2-prog ready"><p>🎟️ You have enough for a free Final pick · it’s in your coins</p></div><button class="btn block g2-fin" id="gtKeep">⚖️ ${keep}</button>`;
+  if (fqLeft() && (S.gems || 0) >= FREE_BET_COINS) return `<div class="g2-prog ready"><p>🎟️ You have <b>${Math.floor(S.gems)} coins</b>: enough for a free Final pick. Tap your coins at the top to use it.</p></div><button class="btn block g2-fin" id="gtKeep">⚖️ ${keep}</button>`;
   const gm = Math.floor(S.gems || 0), pct = Math.min(100, Math.round(100 * gm / FREE_BET_COINS));
   return `<div class="g2-prog"><p>${gm} / ${FREE_BET_COINS} toward a free Final pick</p><i><i style="width:${pct}%"></i></i>${!fqLeft() ? `<small>Both free picks used this hour · next in ${frMinsLeft()} min</small>` : ''}</div><button class="btn block g2-fin" id="gtKeep">⚖️ ${keep}</button>`; }
 const RV_ORD = ['1st', '2nd', '3rd'], RV_MED = ['🥇', '🥈', '🥉'];
@@ -5788,10 +5792,10 @@ function heroWin(big, sub, done, first) { const c = $('#coach');
   rvConfetti(document.querySelector('.rvw'), first ? 140 : 70); if (first) setTimeout(() => rvConfetti(document.querySelector('.rvw'), 90), 900); let gone = false; const go = () => { if (gone) return; gone = true; done(); }; $('#rvwGo').onclick = go; setTimeout(go, first ? 5200 : 3600); }
 function gateResult(G, picks) { const top = G.ord.slice(0, 3), right = picks.filter((p, i) => top[i] === p).length, pay = GATE_COINS[right];
   revealSeq({ ph: G.ph, ord: G.ord, picks, qual: 1, res: { won: !!pay, amt: `+${pay} coins`, txt: pay ? `+${pay} coins` : `No coins · 1 exact spot pays ${GATE_COINS[1]} coins` }, kicker: `Group ${G.gi + 1} of 3 · qualifier`, title: `Top 2 go through to the ${raceName(G.ns)} Final` },
-    () => pay ? heroWin(`+${pay} coins`, `${right} of 3 in the exact spot`, () => gateResultShow(G, picks)) : gateResultShow(G, picks)); }
+    () => gateResultShow(G, picks)); }
 function ppResult(e) { if (e.__rv) return; e.__rv = 1; const g = ppGame(e.sl), TR = ppTiers(e, g), prize = TR.prize;
   revealSeq({ ph: g.ph, ord: g.ord, picks: e.picks, res: { won: !!prize, amt: money(prize), txt: prize ? `You won ${money(prize)}` : 'No cash this time' }, kicker: `${raceName(g.sl)} Final · ${esc(showName(g.k))}`, title: `${ppPool(e.players || g.players)} prize pool · ${e.players || g.players} players` },
-    () => prize ? (S.firstCash ? heroWin(`You won ${money(prize)}`, `${TR.mine.lab} · real cash`, () => ppResultShow(e)) : (S.firstCash = 1, save(), heroWin(`${money(prize)}`, `<b>Your first real cash win!</b><br>${TR.mine.lab} · it’s in your wallet now`, () => ppResultShow(e), 1))) : ppResultShow(e)); }
+    () => prize ? (S.firstCash ? ppResultShow(e) : (S.firstCash = 1, save(), heroWin(`${money(prize)}`, `<b>Your first real cash win!</b><br>${TR.mine.lab} · it’s in your wallet now`, () => ppResultShow(e), 1))) : ppResultShow(e)); }
 function raceOwnResult(sl) { const x = S.races[sl]; if (!x || x.__rv) return; x.__rv = 1; const g = ppGame(sl), i = g.ph.findIndex(p => p.mine), pl = i < 0 ? RACE_N : g.ord.indexOf(i) + 1, earn = pl <= RACE_N ? finShare(sl, pl) : 0, ph = i >= 0 ? g.ph[i] : null;
   revealSeq({ ph: g.ph, ord: g.ord, picks: [], mine: i, kicker: `${raceName(sl)} Final · ${esc(showName(g.k))}`, title: ph ? `📷 Your photo “${esc(ph.t)}” is in this Final` : '' },
     () => earn ? heroWin(`You earned ${money(earn)}`, `📷 “${esc(ph.t)}” finished ${ppOrd(pl)} · your creator share`, () => raceOwnResultShow(sl), !S.firstCash && (S.firstCash = 1, save(), 1)) : raceOwnResultShow(sl)); }
@@ -6478,7 +6482,8 @@ function themeGate(th, what, go, sel) {
     closeSheet(); go(p); };
 }
 function popOpen(html) { if ($('#sheet').classList.contains('on')) closeSheet(); const c = $('#coach'); c.innerHTML = `<div class="cpr ppop" role="dialog" aria-modal="true">${html}</div>`; c.classList.add('on', 'cr'); c.onclick = e => { if (e.target === c) popClose(); }; }
-function popClose() { const c = $('#coach'); c.classList.remove('on', 'cr'); }
+function busyUI() { const fp = document.getElementById('finPick'); return $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on') || (fp && fp.classList.contains('on')) || Date.now() - (window.__uiT || 0) < 2500; }
+function popClose() { window.__uiT = Date.now(); const c = $('#coach'); c.classList.remove('on', 'cr'); }
 function potIntro(p) { const k = (p && CATS8.find(x => fitsTheme(p, x))) || CATS8[0], L = lgS(), H = lgHold(k), mine = lgMine(k);
   if (!mine || H.h === 'you') { potCard(k); return; }
   const opp = H.h, onVote = $('#panes').dataset.at === 'judge', cn = esc(crownName(k)), y = isYoungW(), CH = y ? 'Battle' : 'Challenge', ST = y ? 'points' : 'stars';
