@@ -186,6 +186,8 @@ Then `rmv88.py`: results reveal scrolls on shorter screens (card no longer clips
 
 Then `rmv89.py`: touch-up card removed from the Vote screen; Gallery tab always renders the new Gallery (no old 'photo challenges'); framing is a big reveal (photo fades in, thick gold frame closes round it, brass plaque with name, category and date slides up, shine and confetti, 'See your photo framed').
 
+Then `rmv90.py`: first-pick guarantee removed; on every Final result the 'Your photo could win real cash' card sits straight under the result, with the prize split (pool, players who won, payouts) below it.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -271,6 +273,7 @@ python3 rmv86.py
 python3 rmv87.py
 python3 rmv88.py
 python3 rmv89.py
+python3 rmv90.py
 ```
 
 ## Skill only
