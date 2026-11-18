@@ -1192,6 +1192,7 @@ html body .ug-buy{color:#2F6B3F!important;-webkit-text-fill-color:#2F6B3F}
 .lk-cd{background:#1E3A6E}html body .ppop .lk-cd small,html body .ppop .lk-cd span{color:#DCE5F4!important;-webkit-text-fill-color:#DCE5F4}html body .ppop .lk-cd b{display:block;font:900 2.2rem/1.05 Fraunces,Georgia,serif;color:#F3D98B!important;-webkit-text-fill-color:#F3D98B;font-variant-numeric:tabular-nums}
 .fr2:has(.cw2) .fr2-win{display:none}
 html body .ppop .gq-cw .cw2-h{font-size:1.7rem!important}.gq-cw{margin-top:12px!important}
+.gq2:has(.gq-cw) .g2-prog{display:none!important}
 </style>
 </head>
 <body>
@@ -5654,9 +5655,9 @@ function gateResultShow(G, picks) { const y = isYoungW(), top = G.ord.slice(0, 3
     sub = right === 3 ? 'All three spot on!' : right === 2 ? `Your ${hit[0].replace('-place', '')} and ${hit[1]} picks were spot on.` : right === 1 ? `Your ${hit[0]} pick was spot on.` : 'None of your picks were in the right place.';
   const tag = (p, i) => top[i] === p ? '<em class="ok">✓ Exact match</em>' : top.includes(p) ? `<em class="mid">Finished ${GQ_ORD[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
   popOpen(`<div class="pp gq2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">Group ${G.gi + 1} of 3 · results</p>
-    <h2 class="g2-h gq-h">${pay ? 'Spot on!' : 'Not this time'}</h2><p class="rv-sub2">${right} of 3 in the exact spot</p>${pay ? `<div class="rv-won"><span>You won</span><b>+${pay} coins</b></div>` : ''}
-    <span class="g2-earn ${pay ? 'won' : ''}">${pay ? `Your coins: ${Math.floor(S.gems - pay)} → <b>${Math.floor(S.gems)}</b>` : `No coins this time · 1 exact spot pays ${GATE_COINS[1]} coins`}</span>
-        <div class="g2-thru"><span>${top.slice(0, 2).map(p => `<img src="${G.ph[p].src}" alt="">`).join('')}</span><div><b>Through to the ${fin} Final</b><small>The ${cw.toLowerCase()} top 2 qualify · picks open at ${raceName(G.ns - 1)}</small></div></div>
+    <h2 class="g2-h gq-h">${pay ? 'Spot on!' : 'Not this time'}</h2>
+    
+        
     <div class="cw2 gq-cw"><h3 class="cw2-h">Your photo could win real cash</h3><p class="cw2-t"><span></span>Qualify for the Final. Earn a share of the prize.<span></span></p>
       <div class="cw2-st"><div><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="15.5" cy="9.5" r="1.6"/><path d="M4 17l5-5 4 4 2.5-2.5L20 17"/></svg><p><b>Qualify for the Final</b>Your photo races the qualifiers to reach the hourly Final.</p></div><div><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7M9.5 17h5"/></svg><p><b>Earn a share of 10%</b>Every finalist’s creator shares 10% of the Final’s prize pool.</p></div></div>
       <button class="btn block cw2-go" id="gqUp"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2.5L9 5h5"/><circle cx="11.5" cy="13" r="3.2"/><path d="M19 3v5M16.5 5.5h5"/></svg> ${frameFree() ? 'Enter your photo — free' : (S.photos || []).some(p => p.framed) ? 'Enter another photo' : 'Enter your photo'}</button><p class="cw2-f">${frameFree() ? 'Your first photo entry is free.' : `Framing a photo costs ${FRAME_COINS} coins.`}</p></div>
