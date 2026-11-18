@@ -202,6 +202,8 @@ Then `rmv96.py`: Quick Sprint costs 25 coins and wins 40 (was 100/160) so it app
 
 Then `rmv97.py`: the live Final is a race: six lanes with finalists' photos running to a chequered finish line as votes come in, your picks ringed gold/silver/bronze, current place on each runner, commentary line (lead changes, your picks climbing or dropping), photo-finish pulse in the last 20 seconds; replaces the standings list.
 
+Then `rmv98.py`: 'Call the crowd' voting: after each vote both photos fill to the crowd's share with big percentages, and a banner lands ('You called it! +5 coins · 2 in a row' in green, or 'The crowd went the other way' in navy with a shake); streak line updates at once; old chips hidden; old 'Invite a friend… blue ribbons' pop off.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -295,6 +297,7 @@ python3 rmv94.py
 python3 rmv95.py
 python3 rmv96.py
 python3 rmv97.py
+python3 rmv98.py
 ```
 
 ## Skill only
