@@ -166,6 +166,8 @@ Then `rmv78.py`: landing clean-up: navy free buttons and green 'Pick the Final Â
 
 Then `rmv79.py`: align screens: voting uses only Final-category photos and names the category; coins menu drops the score-based Coin challenge; Finalists page uses the framing message; account shows Prize money and Framed photos, Finals button, no Coin store.
 
+Then `rmv80.py`: payouts rebalanced: win with 2 photos in the top 3, at least 1 in its exact spot (~46% of pickers); 3 correct ~5x, 2 correct ~2x, 1 correct + another in the top 3 at least 1.1x (floor); rule text, payout table, near-miss chip and loss reveal updated.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -241,6 +243,7 @@ python3 rmv76.py
 python3 rmv77.py
 python3 rmv78.py
 python3 rmv79.py
+python3 rmv80.py
 ```
 
 ## Skill only
