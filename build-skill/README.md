@@ -164,6 +164,8 @@ Then `rmv77.py`: the Tournaments tab becomes a Finals tab (live Final with pool,
 
 Then `rmv78.py`: landing clean-up: navy free buttons and green 'Pick the Final · from $2'; navy headings and links; 'From camera roll to cash' removed; realistic recent picker wins; testimonials and FAQ rewritten for Finals, picks and framing.
 
+Then `rmv79.py`: align screens: voting uses only Final-category photos and names the category; coins menu drops the score-based Coin challenge; Finalists page uses the framing message; account shows Prize money and Framed photos, Finals button, no Coin store.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -238,6 +240,7 @@ python3 rmv75.py
 python3 rmv76.py
 python3 rmv77.py
 python3 rmv78.py
+python3 rmv79.py
 ```
 
 ## Skill only
