@@ -262,6 +262,8 @@ Then `rmv126.py`: County-fair prize rosettes for picks (gold/silver/bronze, gold
 
 Then `rmv127.py`: Picks get navy ticket tags ('My pick 1st'), rosettes are earned only in the result reveal when a pick lands in its exact spot (pinned onto the podium photo with a burst). No badges on race avatars; small 'Pick 1st' tags on the live ticket and picks panel, one pick per line.
 
+Then `rmv128.py`: Rosettes for your own photos: navy Finalist rosette when a photo qualifies, gold/silver/bronze when it finishes top 3 in a Final; pinned onto the photo in the result pop, hung on its frame in the Gallery with a plaque record ('2 gold · 1 finalist').
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -385,6 +387,7 @@ python3 rmv124.py
 python3 rmv125.py
 python3 rmv126.py
 python3 rmv127.py
+python3 rmv128.py
 ```
 
 ## Skill only
