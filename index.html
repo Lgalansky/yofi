@@ -5372,7 +5372,7 @@ const chRowHTML = () => { const cur = chId(), E = S.ch || {}, live = E[cur] && E
   return `<button class="tsr2 chrow" id="chRow"><span class="tsr2-t"><em class="sp-tag ch-tag">CROWD CHAMPIONSHIP</em>${lab}</span><span class="tsr2-p">$${chPool(n)}<small class="sp-up">↑</small></span><span class="tsr2-n">${n}</span><span class="tsr2-e">${S.geoBlock ? '🚫' : live ? '▶ Play' : booked ? '🔔 ✓' : `$${CH_ENTRY}`}</span></button>`; };
 document.addEventListener('click', e => { if (e.target.closest('#chRow')) { e.preventDefault(); chBuy(); } else if (e.target.closest('#qsChip')) { e.preventDefault(); upNow(); } });
 function upNext() { if (!S || !S.user || S.geoBlock) return null;
-  { const m = myLive(); if (m) return { ic: '🔴', t: `<b>Your pick is live · ${raceName(m.g.sl)} ${esc(showName(m.g.k))} Final</b> · your 1st pick is running ${ppOrd(m.pos[0])}`, k: 'live', need: 0, per: 1, em: `results in ${m.mins} min` }; }
+  { const m = myLive(); if (m) return { ic: '🔴', t: `<b>Your pick is live</b>`, k: 'live', need: 0, per: 1, em: `results in ${m.mins} min` }; }
   if (S.tut === 3) return null;
   if (S.tut === 1 || S.tut === 2) { const nd = S.tut === 2 ? 0 : Math.max(1, FP_VOTES - (S.gtN || 0)); return { ic: '🎟️', t: S.tut === 2 ? `<b>Free ticket earned</b> · open your coins to use it` : `<b>Free Final pick</b> · pick the top 3 of 6 · real cash prizes`, k: 'fp', need: nd, per: FP_VOTES, em: nd ? `in ${nd} vote${nd === 1 ? '' : 's'}` : 'Open coins', t2: 1 };  } const L = lgS(), it = [];
   if (fighters().length && tUnlocked()) { const need = Math.max(0, CFG.BATTLE_EVERY - (S.since || 0), 12 - (S.votes || 0)), per = CFG.BATTLE_EVERY; let x;
