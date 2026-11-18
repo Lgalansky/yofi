@@ -160,6 +160,8 @@ Then `rmv75.py`: qualifier result trimmed to headline + photo card + Keep voting
 
 Then `rmv76.py`: review fixes part 1: invite headline no longer clipped (single coin), no 'undefined' in earnings or account, unsolicited pops kept 90 s apart and daily rewards wait until the new-player journey ends.
 
+Then `rmv77.py`: the Tournaments tab becomes a Finals tab (live Final with pool, countdown, finalists, green cash pick and navy free pick; coming-up Finals by category; your picks; recent results; how Finals work). Gallery tab title fixed (was 'Friends').
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -232,6 +234,7 @@ python3 rmv73.py
 python3 rmv74.py
 python3 rmv75.py
 python3 rmv76.py
+python3 rmv77.py
 ```
 
 ## Skill only
