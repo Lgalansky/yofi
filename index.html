@@ -1336,6 +1336,8 @@ html body .ppop .nfx-h{font:800 1.8rem/1.1 Fraunces,Georgia,serif!important;colo
 .nfx-bar{height:9px;border-radius:5px;background:#EEE6D8;overflow:hidden;margin:0 0 10px}.nfx-bar i{display:block;height:100%;background:linear-gradient(90deg,#E9B949,#C9962E)}
 .nfx-ph{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:0 0 8px}.nfx-ph img,.nfx-ph span{width:100%;aspect-ratio:1;border-radius:8px;object-fit:cover}.nfx-ph span{display:grid;place-items:center;background:#E3EAF5;color:#1E3A6E;font-weight:900}
 html body .ppop .btn.nfx-v{background:#1E3A6E!important;color:#fff!important}
+#finPick .fp-sel{display:none;text-decoration:none;font-weight:900;color:#1E3A6E;font-size:.85rem;margin-top:2px}
+#finPick .fp-c.sel{box-shadow:inset 0 0 0 2.5px #1E3A6E;background:#E3EAF5}#finPick .fp-c.sel .fp-sel{display:block}
 </style>
 </head>
 <body>
@@ -2269,7 +2271,6 @@ function portraitOnly() {
   $('#poGo').onclick = () => { closeSheet(); $('#file').value = ''; yWL(); };
 }
 function pickPhoto(fromStudio) {
-  if (fromStudio && $('#app').classList.contains('on')) { try { if (typeof popClose === 'function' && document.querySelector('#coach.on')) popClose(); if ($('#flow').classList.contains('on')) closeFlow(); if ($('#panes').dataset.at !== 'gallery') go('gallery'); renderMyShow(); } catch (e) {} }
   if (S.photos.length >= CFG.MAX_PHOTOS) { makeRoom(fromStudio); return; }
   intakeFromStudio = !!fromStudio; $('#file').value = ''; yWL();
 }
@@ -2285,6 +2286,7 @@ $('#file').addEventListener('change', async e => {
   const url = smp || URL.createObjectURL(f);
   let img;
   try { img = await loadImg(url); } catch (err) { toast('This photo couldn’t be opened. Try a JPG or PNG.'); return; }
+  { const fp = document.getElementById('finPick'); if (fp) fp.className = ''; if (document.querySelector('#coach.on')) try { popClose(); } catch (x) {} }
   img = await fitCrop(img); if (!img) { URL.revokeObjectURL(url); return; }
   $('#landing').style.display = 'none'; $('#app').classList.add('on'); paintGems(false);
   const id = toID(img, 960); URL.revokeObjectURL(url);
@@ -5841,7 +5843,7 @@ function caFinHTML() { const img = c => { const t = document.querySelector(`#lan
     return `<button class="ca-t caf-t" data-caf="${c}">${src ? `<img src="${src}" alt="">` : ''}<span><b>${SHOW_IC[x.k] || ''} ${esc(showName(x.k))}</b><small>Final at <b>${raceName(x.sl)}</b></small><em>${ppPool(ppGame(x.sl).players)} pool</em></span></button>`; }).join('')}</div>`; }
 setInterval(() => { try { const el = document.getElementById('caFin'); if (!el || !S || $('#landing').style.display === 'none') return; const h = caFinHTML(); if (el.dataset.h !== h) { el.dataset.h = h; el.innerHTML = h; } } catch (e) {} }, 1000);
 document.addEventListener('click', e => { const t = e.target.closest('[data-caf]'); if (!t) return; e.preventDefault(); window.__preCat = t.dataset.caf; yWL(); }, true);
-function rmEnterOwn() { finPick(); }
+function rmEnterOwn() { if ($('#landing').style.display !== 'none' || !$('#app').classList.contains('on')) { if (!S.user) { S.user = { h: 'guest' + Math.floor(1000 + Math.random() * 9000), guest: 1 }; tutInit(); save(); } openApp(); go('gallery'); try { renderMyShow(); } catch (e) {} } const ag = () => document.querySelector('#ageGate.on'); if (!ag()) { finPick(); return; } const w = setInterval(() => { if (!ag()) { clearInterval(w); finPick(); } }, 250); }
 function rmWatch() { if (!S.user) S.user = { h: 'guest' + Math.floor(1000 + Math.random() * 9000), guest: 1 }; tutInit(); save(); openApp(); setTimeout(() => { go('judge'); renderJudge(); raceCard(); }, 80); }
 window.rmEnterOwn = rmEnterOwn; window.rmWatch = rmWatch;
 const FF_GIFT = 150;
@@ -5878,10 +5880,10 @@ function finPick() { let o = document.getElementById('finPick'); if (!o) { o = d
   const first = ffreeFirst(), L = SHOW_ROT.map(x => ({ k: x.k, sl: finFor(x.k) })).sort((a, b) => a.sl - b.sl);
   o.innerHTML = `<div class="fp-in"><button class="fp-x" aria-label="Close">✕</button><p class="fp-k">📷 Enter your photo</p><h2>Choose your Final</h2>
     <p class="fp-s">Pick the category your photo is for. ${first ? 'Your first frame is free: frame your photo and it enters that Final’s <b>qualifiers</b>.' : 'Frame your photo for 200 coins and it enters that Final’s qualifiers; the top 2 go through.'}</p>
-    ${L.map(x => { const g = ppGame(x.sl); return `<button class="fp-c" data-fpk="${x.k}">${lpImg(x.k) ? `<img src="${lpImg(x.k)}" alt="">` : `<span class="fp-e">${SHOW_IC[x.k] || '🎀'}</span>`}<span class="fp-t"><b>${SHOW_IC[x.k] || ''} ${esc(showName(x.k))}</b><small>Next Final · <b>${finReady(x.sl)}</b></small><em>${ppPool(g.players)} prize pool</em></span><i aria-hidden="true">›</i></button>`; }).join('')}
+    ${L.map(x => { const g = ppGame(x.sl); return `<button class="fp-c" data-fpk="${x.k}">${lpImg(x.k) ? `<img src="${lpImg(x.k)}" alt="">` : `<span class="fp-e">${SHOW_IC[x.k] || '🎀'}</span>`}<span class="fp-t"><b>${SHOW_IC[x.k] || ''} ${esc(showName(x.k))}</b><small>Next Final · <b>${finReady(x.sl)}</b></small><em>${ppPool(g.players)} prize pool</em><u class="fp-sel">📷 Choose your photo…</u></span><i aria-hidden="true">›</i></button>`; }).join('')}
     <p class="fp-n">Finals for Pets, Nature &amp; landscapes, Garden &amp; flowers.</p></div>`;
   o.className = 'on'; o.querySelector('.fp-x').onclick = () => { o.className = ''; window.__uiT = Date.now(); };
-  o.querySelectorAll('[data-fpk]').forEach(b => b.onclick = () => { const k = b.dataset.fpk; o.className = ''; window.__uiT = Date.now(); window.__preCat = showHint(k).cats[0];
+  o.querySelectorAll('[data-fpk]').forEach(b => b.onclick = () => { const k = b.dataset.fpk; o.querySelectorAll('.fp-c').forEach(x => x.classList.toggle('sel', x === b)); window.__uiT = Date.now(); window.__preCat = showHint(k).cats[0];
     if ($('#landing').style.display !== 'none' || !$('#app').classList.contains('on')) { if (!S.user) { S.user = { h: 'guest' + Math.floor(1000 + Math.random() * 9000), guest: 1 }; tutInit(); save(); } openApp(); go('gallery'); try { renderMyShow(); } catch (e) {} } pickPhoto(true); }); }
 const ffreeFirst = () => !S.firstEntry && !S.ffDone && !Object.values(S.rc || {}).some(r => r.st || (r.f && r.f.length));
 window.finPick = finPick;
