@@ -180,6 +180,8 @@ Then `rmv85.py`: streak boxes return as a fixed-value reveal: Bronze 20 / Silver
 
 Then `rmv86.py`: streak bar names the boxes ('2 in a row · 1 more for a Bronze box') with bronze/silver/gold markers and shows for new players too; photo names on voting cards readable (white on navy).
 
+Then `rmv87.py`: free pick unlock goes through a guided coins menu: 'Open my coins' → intro line on what coins are for, Free pick row first with gold highlight and pulse, others dimmed → tap → pick screen.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -262,6 +264,7 @@ python3 rmv83.py
 python3 rmv84.py
 python3 rmv85.py
 python3 rmv86.py
+python3 rmv87.py
 ```
 
 ## Skill only
