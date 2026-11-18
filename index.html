@@ -1400,6 +1400,34 @@ html body .re-ok i.re-rz{position:absolute;right:-16px;top:-16px;left:auto;botto
 html body .re-ok i.re-rz svg{width:100%;height:100%;display:block}
 html body .re-rzl{margin:2px 0 8px;font:900 .9rem/1.35 Nunito,system-ui,sans-serif;color:#7A5410;-webkit-text-fill-color:#7A5410;text-align:center}
 html body .re-ok i.re-rz{top:14px!important;right:-26px!important}
+html body .jfoot.jf2{background:none!important;box-shadow:none!important;border:0!important;padding:0!important;margin:6px 0 0!important;min-height:0!important}
+html body .stk2{display:flex;align-items:center;gap:10px;margin:10px 2px 4px;padding:8px 12px;border-radius:14px;background:#FBF7F0;box-shadow:inset 0 0 0 1.5px #EADCC6}
+.stk2.bump{animation:stkBump .4s ease-out}@keyframes stkBump{40%{transform:scale(1.03)}}
+.stk2-f{flex:none;display:inline-flex;align-items:center;gap:2px;font-size:1.05rem;opacity:.5;filter:grayscale(.8)}.stk2-f.on{opacity:1;filter:none}
+.stk2-f b{font:900 1.1rem Nunito,system-ui,sans-serif;color:#14213D;-webkit-text-fill-color:#14213D}
+.stk2-tr{position:relative;flex:1;height:30px;min-width:90px}
+.stk2-bar{position:absolute;left:0;right:0;top:13px;height:6px;border-radius:3px;background:#EADCC6;overflow:hidden}.stk2-bar i{display:block;height:100%;background:linear-gradient(90deg,#F2B544,#E07B24);border-radius:3px;transition:width .4s}
+.stk2-bx{position:absolute;top:0;width:30px;height:26px;transform:translateX(-85%);text-decoration:none;filter:grayscale(.5) opacity(.75)}
+.stk2-bx svg{width:100%;height:100%;display:block}
+.stk2-bx.got{filter:none}.stk2-bx.near{filter:none;animation:bxNear 1s ease-in-out infinite}
+@keyframes bxNear{0%,100%{transform:translateX(-85%) rotate(0)}25%{transform:translateX(-85%) rotate(-9deg) scale(1.12)}75%{transform:translateX(-85%) rotate(9deg) scale(1.12)}}
+.stk2-l{flex:none;max-width:42%;font:700 .78rem/1.2 Nunito,system-ui,sans-serif;color:#5B4A3F;text-align:right}.stk2-l b{color:#14213D;font-weight:900}
+.chx{position:absolute;inset:0;z-index:30;display:grid;place-items:center;pointer-events:none;background:rgba(20,33,61,.28);border-radius:inherit;animation:chxIn .25s ease-out both}
+.chx.fx{position:fixed}
+.chx.out{animation:chxOut .4s ease-in both}@keyframes chxIn{from{opacity:0}}@keyframes chxOut{to{opacity:0}}
+.chx-box{grid-area:1/1;width:150px;height:126px;animation:chDrop .45s cubic-bezier(.3,1.5,.5,1) both,chShake .4s ease-in-out .42s 1;filter:drop-shadow(0 10px 16px rgba(0,0,0,.4))}
+.chx-box svg{width:100%;height:100%;display:block;overflow:visible}
+.chx .ch-lid{transform-box:fill-box;transform-origin:0% 100%;transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.chx.open .ch-lid{transform:rotate(-38deg) translate(-6px,-14px)}
+.chx.open .chx-box{animation:chPop .4s ease-out both}
+@keyframes chDrop{from{transform:translateY(-120px) scale(.6);opacity:0}}
+@keyframes chShake{20%{transform:rotate(-7deg)}40%{transform:rotate(7deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(4deg)}}
+@keyframes chPop{40%{transform:scale(1.12)}}
+.chx-rays{grid-area:1/1;width:300px;height:300px;border-radius:50%;opacity:0;background:repeating-conic-gradient(from 0deg,rgba(255,236,170,.75) 0 10deg,rgba(255,236,170,0) 10deg 24deg);-webkit-mask:radial-gradient(circle,#000 20%,transparent 68%);mask:radial-gradient(circle,#000 20%,transparent 68%)}
+.chx.open .chx-rays{animation:rays 1.2s ease-out both}@keyframes rays{0%{opacity:0;transform:scale(.4) rotate(0)}30%{opacity:1}100%{opacity:0;transform:scale(1.2) rotate(40deg)}}
+.chx-lab{grid-area:1/1;align-self:end;margin-bottom:18%;padding:6px 14px;border-radius:999px;background:#14213D;color:#F3D98B;-webkit-text-fill-color:#F3D98B;font:900 1rem Nunito,system-ui,sans-serif;box-shadow:0 0 0 2px #D9AE4F;opacity:0;transform:translateY(10px)}
+.chx.open .chx-lab{transition:all .3s .1s;opacity:1;transform:none}
+html body .chx-lab{display:none!important}
 </style>
 </head>
 <body>
@@ -3589,7 +3617,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v128</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v129</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -6176,7 +6204,7 @@ var FP_VOTES = 10;
 const fgSl = () => (S.pp || {})[ppSlot()] ? ppSlot() + 1 : ppSlot();
 const BOX_T = { 3: { k: 3, n: 20, t: 'Bronze', c: '#B87333' }, 5: { k: 6, n: 40, t: 'Silver', c: '#9AA4B2' }, 10: { k: 10, n: 80, t: 'Gold', c: '#D9AE4F' } };
 function miniDrop(kind) { const B = BOX_T[kind] || BOX_T[3]; S.gems = (S.gems || 0) + B.n; save();
-  { gemExplosion(B.n, { label: `🔥 ${B.k} in a row · ${B.t} box` }); return; }
+  { chestBurst(B); return; }
   popOpen(`<div class="pp bx2"><p class="pp-k">🔥 ${B.k} right in a row</p><h2 class="bx2-h">${B.t} box</h2>
     <div class="bx2-box" style="--bc:${B.c}"><span class="bx2-lid">🎁</span></div>
     <p class="bx2-p">Inside: <b><i class="qz3-coin"></i> ${B.n} coins</b></p>
@@ -6255,7 +6283,7 @@ function callFx(pick, pct, agree, earn, combo, prev, mine) { const cards = docum
   jc.insertAdjacentHTML('beforeend', `<div class="cfx-b ${agree ? 'ok' : 'no'}"><b>${agree ? '✓ You called it!' : 'The crowd went the other way'}</b><small>${agree ? `${mine}% agreed · ${earn ? `+${earn} coins · ` : ''}🔥 ${combo} in a row` : prev >= 2 ? `${prev}-in-a-row streak reset` : `${100 - mine}% picked the other photo`}</small></div>`);
   try { if (agree && navigator.vibrate) navigator.vibrate(18); } catch (e) {}
   if (agree) { const mc = cards[pick]; mc.classList.add('cfx-win'); mc.insertAdjacentHTML('beforeend', `<span class="cfx-sp">${[...Array(14)].map((_, k) => `<i style="--a:${k * 26}deg;--d:${(k % 3) * .06}s"></i>`).join('')}</span>${combo >= 2 ? `<span class="cfx-plus"><small>🔥 ${combo} in a row</small></span>` : ''}`); }
-  const nx = document.querySelector('#judge .stk-nx'); if (nx) { const c = Math.min(combo, 10), n = [3, 6, 10].find(k => k > c), nm = { 3: 'Bronze', 6: 'Silver', 10: 'Gold' }; nx.innerHTML = n ? `🔥 <b>${c} in a row</b> · ${n - c} more for a <b class="t${n}">${nm[n]} box</b>` : '🔥 <b>10 in a row!</b> Gold box earned'; nx.classList.remove('bump'); void nx.offsetWidth; nx.classList.add('bump'); } }
+  const sk = document.getElementById('stk2'); if (sk) { sk.innerHTML = stkHTML(combo); sk.classList.remove('bump'); void sk.offsetWidth; sk.classList.add('bump'); } }
 function jStage(p) { const r = rcRec(p.id), cur = ppSlot(); if (r.st === 'heats') return 1; if (r.st === 'q') return r.sl === cur ? 3 : 2; return (r.f || []).some(z => z.k === 'r') ? 4 : 1; }
 function jDots(p) { const f = rcRec(p.id).f || []; let i = f.length; while (i > 0 && f[i - 1].k === 'h') i--; const run = f.slice(i).map(z => z.pl);
   return [0, 1, 2].map(k => run[k] ? `<i class="jd ${run[k] <= 2 ? 'ok' : 'x'}">${run[k] <= 2 ? '✓' : ppOrd(run[k])}</i>` : '<i class="jd"></i>').join(''); }
@@ -6356,6 +6384,20 @@ function rzList(p) { const r = p.rz || [0, 0, 0, 0], L = []; [0, 1, 2, 3].forEac
 function rzHang(p) { const L = rzList(p); if (!L.length) return ''; const show = L.slice(0, 4), more = L.length - show.length;
   return `<div class="rz-hang">${show.map((k, i) => `<i style="transform:rotate(${[-8, 5, -3, 9][i]}deg)">${rosette(k)}</i>`).join('')}${more > 0 ? `<em>+${more}</em>` : ''}</div>`; }
 function rzLine(p) { const r = p.rz || [0, 0, 0, 0], t = [[r[0], 'gold'], [r[1], 'silver'], [r[2], 'bronze'], [r[3], 'finalist']].filter(x => x[0]).map(x => `${x[0]} ${x[1]}`); return t.length ? `<p class="rz-rec">🎀 ${t.join(' · ')}</p>` : ''; }
+const STK_T = [[3, 'Bronze', 0], [6, 'Silver', 1], [10, 'Gold', 2]], CH_C = [['#B87333', '#7A4A1E', '#E2A877'], ['#9AA4B2', '#5F6773', '#E6E9EE'], ['#D9AE4F', '#9A6B12', '#F6DF97']];
+function chestSVG(t, open) { const C = CH_C[t];
+  return `<svg viewBox="0 0 100 84" aria-hidden="true"><rect x="10" y="38" width="80" height="40" rx="7" fill="${C[0]}" stroke="${C[1]}" stroke-width="3"/><rect x="10" y="52" width="80" height="7" fill="${C[1]}"/><rect x="24" y="38" width="7" height="40" fill="${C[1]}" opacity=".5"/><rect x="69" y="38" width="7" height="40" fill="${C[1]}" opacity=".5"/>
+    <g class="ch-lid" ${open ? 'transform="rotate(-28 10 40) translate(-4 -6)"' : ''}><path d="M10 40 Q10 12 50 12 Q90 12 90 40 Z" fill="${C[2]}" stroke="${C[1]}" stroke-width="3"/><path d="M24 40 Q24 18 31 15" stroke="${C[1]}" stroke-width="5" fill="none" opacity=".5"/><path d="M76 40 Q76 18 69 15" stroke="${C[1]}" stroke-width="5" fill="none" opacity=".5"/></g>
+    <rect x="43" y="44" width="14" height="16" rx="3" fill="#F3D98B" stroke="${C[1]}" stroke-width="2"/><circle cx="50" cy="51" r="2.4" fill="${C[1]}"/></svg>`; }
+function stkHTML(combo) { const c = Math.min(combo || 0, 10), nx = STK_T.find(x => x[0] > c);
+  const lab = c >= 10 ? '<b>Gold box!</b> Keep it going' : !c ? 'Call it right to start a streak' : `<b>${nx[0] - c} more</b> → ${nx[1]} box`;
+  return `<span class="stk2-f ${c ? 'on' : ''}">🔥<b>${c}</b></span><span class="stk2-tr"><span class="stk2-bar"><i style="width:${c * 10}%"></i></span>${STK_T.map(([k, n, t]) => `<u class="stk2-bx ${c >= k ? 'got' : ''} ${nx && nx[0] === k && k - c === 1 ? 'near' : ''}" style="left:${k * 10}%" title="${n} box">${chestSVG(t, c >= k)}</u>`).join('')}</span><span class="stk2-l">${lab}</span>`; }
+function chestBurst(B) { const t = B.t === 'Gold' ? 2 : B.t === 'Silver' ? 1 : 0, host = document.getElementById('jcard') || document.body, o = document.createElement('div');
+  o.className = 'chx t' + t + (host === document.body ? ' fx' : ''); o.innerHTML = `<span class="chx-rays"></span><span class="chx-box">${chestSVG(t, false)}</span><b class="chx-lab">${B.t} box · +${B.n} coins</b>`; host.appendChild(o);
+  try { navigator.vibrate && navigator.vibrate([10, 60, 10, 60, 30]); } catch (e) {}
+  setTimeout(() => o.classList.add('open'), 800);
+  setTimeout(() => { try { gemExplosion(B.n, { label: `🔥 ${B.k} in a row · ${B.t} box` }); } catch (e) {} }, 950);
+  setTimeout(() => o.classList.add('out'), 2000); setTimeout(() => o.remove(), 2400); }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -6584,7 +6626,7 @@ function renderJudge() {
     <div class="jfoot jf2">
       ${energy() < 1 ? `<div class="jf-en en-out"><span class="en-ic">⚡</span><span class="eo-t"><b>Out of energy</b><small class="en-nx">+5 ⚡ in ${enNext()}</small><small class="en-full">Full again at ${enFullAt()}</small></span><button id="enBuy">Refill</button></div>` : `<div class="jf-en ${energy() > 10 ? 'en-hide' : 'en-low'}"><div class="en-top"><span class="en-ic">⚡</span><span class="en-bar"><i style="width:${Math.min(100, energy() / EN_MAX * 100)}%"></i></span><span class="en-n">${energy() > EN_MAX ? `${EN_MAX}<small> +${energy() - EN_MAX}</small>` : `${energy()}/${EN_MAX}`}</span><button class="en-plus" id="enPlus" aria-label="Buy energy">+</button></div>
       </div>`}
-      <div class="stk"><p class="stk-nx">${(() => { const c = Math.min(combo, 10), nx = [3, 6, 10].find(k => k > c), nm = { 3: 'Bronze', 6: 'Silver', 10: 'Gold' }; return nx ? `🔥 <b>${c} in a row</b> · ${nx - c} more for a <b class="t${nx}">${nm[nx]} box</b>` : '🔥 <b>10 in a row!</b> Gold box earned'; })()}</p><div class="stk-row"><div class="lkp-steps jf-combo stk-steps">${[...Array(10)].map((_, i) => `<i class="${i < Math.min(combo, 10) ? 'on' : ''} ${[2, 5, 9].includes(i) ? 'm m' + (i === 2 ? 3 : 5) : ''}" >${i === 2 ? '<u class="bxt b3">🎁</u>' : i === 5 ? '<u class="bxt b6">🎁</u>' : i === 9 ? '<u class="bxt b10">🎁</u>' : ''}</i>`).join('')}</div></div></div>
+      <div class="stk2" id="stk2">${stkHTML(combo)}</div>
     </div>
     ${(S.eyeN || 0) >= 10 ? `<p class="eye">👁️ <b>Your eye: ${Math.round((S.eyeOk || 0) / S.eyeN * 100)}%</b> agree with the crowd${S.potSeen && !S.geoBlock ? ' · that’s your Quick Sprint edge' : ''}</p>` : `<p class="eye">👁️ Vote ${10 - (S.eyeN || 0)} more to see how often you agree with the crowd</p>`}<div class="vh" id="jRes" aria-live="polite"></div>
 `;
