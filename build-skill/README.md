@@ -204,6 +204,8 @@ Then `rmv97.py`: the live Final is a race: six lanes with finalists' photos runn
 
 Then `rmv98.py`: 'Call the crowd' voting: after each vote both photos fill to the crowd's share with big percentages, and a banner lands ('You called it! +5 coins · 2 in a row' in green, or 'The crowd went the other way' in navy with a shake); streak line updates at once; old chips hidden; old 'Invite a friend… blue ribbons' pop off.
 
+Then `rmv99.py`: the pick-3-of-5 coin game is renamed Coin Pick (chip, strip, reveal, result, win label); Call the crowd shows percentages only, no shading or fading on the photos; 'The crowd went the other way' without the ✕.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -298,6 +300,7 @@ python3 rmv95.py
 python3 rmv96.py
 python3 rmv97.py
 python3 rmv98.py
+python3 rmv99.py
 ```
 
 ## Skill only
