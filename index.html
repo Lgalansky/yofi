@@ -1431,6 +1431,7 @@ html body .chx-lab{display:none!important}
 html body .rv-pod.rv-exs{display:none!important}
 .rv-wx{margin:8px 0 2px;display:grid;gap:5px}.rv-wx p{margin:0;display:flex;justify-content:space-between;gap:8px;padding:7px 11px;border-radius:10px;background:#fff;box-shadow:inset 0 0 0 1.5px #EADCC6;font-size:.86rem;text-align:left}
 .rv-wx p b{white-space:nowrap;color:#5B4A3F}.rv-wx p.ok{box-shadow:inset 0 0 0 2px #2F6B3F;background:#F1F6EC}.rv-wx p.ok b{color:#2F6B3F}
+html body .ppop .wp-lock{display:inline-block;margin-top:3px;font-weight:800;color:#2F6B3F}
 </style>
 </head>
 <body>
@@ -3620,7 +3621,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v131</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v132</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -6317,11 +6318,11 @@ function winOpen(cash) { const g = ppGame(), w = (S.pw || {})[g.sl]; if (w) { wi
       <div class="wt-tabs"><button id="wtTop">Top 3</button><button class="on">🏆 Winner</button></div>
       <h2 class="pk-h">Pick the winner</h2><p class="pk-sub">Which photo will the crowd vote 1st? Long shots pay more.</p>
       <div class="pp-g g6 wp-g">${g.ph.map((p, i) => `<button class="pp-t ${pick === i ? 'on rk0' : ''}" data-wp="${i}"><span class="pp-im"><img src="${p.src}" alt="">${pick === i ? `<i class="pp-rz ptw ${window.__rzNew === 'w' ? 'new' : ''}">${pickTag('w')}</i><span class="pp-strip">🏆 Your winner</span>` : ''}</span><span class="pp-nm"><span class="pp-tl"><b>${esc(p.t)}</b><em class="wp-od2">${od[i]}×</em></span><small>${bk[i]}% of winner picks</small></span></button>`).join('')}</div>
-      <p class="pp-i">${pick == null ? 'Tap the photo you think will win' : `<b>${esc(g.ph[pick].t)}</b> at <b>${od[pick]}×</b>: a ${money(stake)} pick returns about <b>${money(stake * od[pick])}</b>`}</p>
+      <p class="pp-i">${pick == null ? 'Tap the photo you think will win' : `<b>${esc(g.ph[pick].t)}</b> at <b>${od[pick]}×</b>: a ${money(stake)} pick pays <b>${money(stake * od[pick])}</b> if it wins<br><small class="wp-lock">🔒 Odds locked when you pick</small>`}</p>
       ${freeOk && !cash ? `<button class="btn block pc-go pk-go" id="wpFree" ${pick != null ? '' : 'disabled'}>${pick == null ? 'Choose your winner' : '🎟️ Use your free ticket'}</button><p class="pp-r">A free pick counts as a $2 pick · or pick with cash:</p>` : ''}
-      <div class="rc-st" role="group" aria-label="Entry">${RACE_ST.map(v => `<button data-wst="${v}" aria-pressed="${v === stake}">$${v}</button>`).join('')}</div><button class="btn block pc-go pk-go cashb" id="wpGo" ${pick == null ? 'disabled' : ''}>${pick == null ? 'Choose your winner' : `💵 Pick to win · ${money(stake)}<small class="pk-win">Pays about ${money(stake * od[pick])} if it wins</small>`}</button>
+      <div class="rc-st" role="group" aria-label="Entry">${RACE_ST.map(v => `<button data-wst="${v}" aria-pressed="${v === stake}">$${v}</button>`).join('')}</div><button class="btn block pc-go pk-go cashb" id="wpGo" ${pick == null ? 'disabled' : ''}>${pick == null ? 'Choose your winner' : `💵 Pick to win · ${money(stake)}<small class="pk-win">Pays ${money(stake * od[pick])} if it wins</small>`}</button>
       
-      <p class="pp-r">Winner pickers share 78% of the winner pool, in proportion to their pick. Odds move as picks come in and are fixed when picks close. ${y ? 'Judges' : 'Voters'} decide the result.</p>
+      <p class="pp-r">Your odds are locked when you pick: if your photo wins, you're paid exactly what's shown. Odds on the board keep moving for new picks. ${y ? 'Judges' : 'Voters'} decide the result.</p>
       <div style="text-align:center"><button class="link pc-later" id="wpLater">${y ? 'Keep judging' : 'Keep voting'}</button></div></div>`);
     document.querySelectorAll('#coach [data-wp]').forEach(b => b.onclick = () => { const was = pick; pick = +b.dataset.wp; window.__rzNew = was === pick ? -1 : 'w'; window.__keepScroll = 1; draw(); window.__rzNew = -1; if (was !== pick) rzFx('wp', pick, true); });
     document.querySelectorAll('#coach [data-wst]').forEach(b => b.onclick = () => { stake = +b.dataset.wst; S.raceSt = stake; save(); window.__keepScroll = 1; draw(); });
@@ -6330,14 +6331,14 @@ function winOpen(cash) { const g = ppGame(), w = (S.pw || {})[g.sl]; if (w) { wi
     if ($('#wpFree')) $('#wpFree').onclick = () => { if (pick == null) return; if (S.user && S.user.guest) { popClose(); openSignup(() => setTimeout(() => winOpen(cash), 200), { locked: false, pick: 1 }); return; } if (!fqLeft() || (S.gems || 0) < FREE_BET_COINS) return; fqClaim(); rec(2, true); };
     $('#wtTop').onclick = () => { popClose(); window.__ppCash = cash ? 1 : 0; setTimeout(ppOpen, 120); }; $('#wpLater').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); };
   draw(); }
-function winLive(w) { const g = ppGame(w.sl), od = winOdds(g)[w.pick], mm = r => `${Math.floor(r / 60000)}:${String(Math.floor(r / 1000) % 60).padStart(2, '0')}`;
+function winLive(w) { const g = ppGame(w.sl), od = w.odds || winOdds(g)[w.pick], mm = r => `${Math.floor(r / 60000)}:${String(Math.floor(r / 1000) % 60).padStart(2, '0')}`;
   popOpen(`<div class="pp wlv"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🎀 The ${raceName(g.sl)} Final</p>
-    <div class="lk-tk"><span class="lk-k">🏆 Winner pick confirmed</span><b class="lk-h">${esc(g.ph[w.pick].t)} to win</b><span class="lk-ph"><i><img src="${g.ph[w.pick].src}" alt=""><em>${w.free ? 'Free pick' : money(w.stake)} · now ${od}×</em></i></span></div>
+    <div class="lk-tk"><span class="lk-k">🏆 Winner pick confirmed</span><b class="lk-h">${esc(g.ph[w.pick].t)} to win</b><span class="lk-ph"><i><img src="${g.ph[w.pick].src}" alt=""><em>${w.free ? 'Free pick' : money(w.stake)} · locked at ${od}× · pays ${money((w.stake || 2) * od)}</em></i></span></div>
     <div class="lk-row"><div class="lk-pz"><small>Cash prize pool</small><b>${ppPool(w.players || g.players)}</b><span>${w.players || g.players} players</span></div><div class="lk-cd"><small>Results in</small><b class="rb-cd" data-due="${ppDue(w)}">${mm(Math.max(0, ppDue(w) - Date.now()))}</b><span>${raceName(g.sl)} Final</span></div></div>
     ${raceTrackHTML(g, { picks: [w.pick], win: 1 })}<div class="myp" id="myPk"></div><p class="pp-i"><small>Demo: results arrive about 2 minutes after you pick.</small></p>
     <button class="btn block pc-go" id="wlOk">${isYoungW() ? 'Keep judging' : 'Keep voting'}</button></div>`);
   $('#wlOk').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
-function winResult(w) { if (rvBusy(w)) return; w.__rv = Date.now(); const g = ppGame(w.sl), od = winOdds(g, (w.sl + 1) * PP_MS - 1)[w.pick], won = g.ord[0] === w.pick, st = w.stake || 2, prize = won ? +(st * od).toFixed(2) : 0;
+function winResult(w) { if (rvBusy(w)) return; w.__rv = Date.now(); const g = ppGame(w.sl), od = w.odds || winOdds(g, (w.sl + 1) * PP_MS - 1)[w.pick], won = g.ord[0] === w.pick, st = w.stake || 2, prize = won ? +(st * od).toFixed(2) : 0;
   w.done = 1; w.prize = prize; w.odds = od; if (prize) { S.cash = +((S.cash || 0) + prize).toFixed(2); paintWallet(); } save();
   revealSeq({ ph: g.ph, ord: g.ord, picks: [w.pick], win: { odds: od }, res: { won, amt: money(prize), txt: won ? `You won ${money(prize)}` : 'No cash this time' }, kicker: `${raceName(g.sl)} Final · Winner pick`, title: `${ppPool(w.players || g.players)} prize pool · ${w.players || g.players} players` },
     () => { popClose(); if (prize) setTimeout(() => cashExplosion && cashExplosion(prize, { label: 'Winner pick' }), 300); }); }
@@ -6349,8 +6350,8 @@ function myPicksPaint(g, L) { const el = document.getElementById('myPk'); if (!e
   const own = g.ph.findIndex(p => p.mine), rows = [];
   if (T) { const gl = Object.assign({}, g, { ord: L.map(x => x.i) }), TR = ppTiers(T, gl), pos = T.picks.map(i => rank[i]), ex = T.picks.filter((p, k) => pos[k] === k + 1).length, inT = pos.filter(x => x <= 3).length;
     rows.push(`<div class="myp-r ${TR.prize ? 'w' : ''}"><span class="myp-i">🎯</span><span class="myp-t"><b>Top 3 · ${T.free ? 'free pick' : money(T.stake || 2)}</b><small>${T.picks.map((i, k) => `<span class="myp-l">${pickTag(k, 1)} ${esc(g.ph[i].t)} <em>· now ${RT_ORD[rank[i] - 1]}</em></span>`).join('')}</small></span><em class="myp-s">${TR.prize ? `~${money(TR.prize)}` : `${inT}/3 top · ${ex} exact`}</em></div>`); }
-  if (W) { const r = rank[W.pick], od = winOdds(g)[W.pick];
-    rows.push(`<div class="myp-r ${r === 1 ? 'w' : ''}"><span class="myp-i">🏆</span><span class="myp-t"><b>Winner · ${esc(g.ph[W.pick].t)}</b><small>${W.free ? 'Free pick' : money(W.stake || 2)} · ${od}× now</small></span><em class="myp-s">${r === 1 ? `Leading · ~${money((W.stake || 2) * od)}` : `Running ${RT_ORD[r - 1]}`}</em></div>`); }
+  if (W) { const r = rank[W.pick], od = W.odds || winOdds(g)[W.pick];
+    rows.push(`<div class="myp-r ${r === 1 ? 'w' : ''}"><span class="myp-i">🏆</span><span class="myp-t"><b>Winner · ${esc(g.ph[W.pick].t)}</b><small>${W.free ? 'Free pick' : money(W.stake || 2)} · locked at ${od}× · pays ${money((W.stake || 2) * od)}</small></span><em class="myp-s">${r === 1 ? `Leading · ~${money((W.stake || 2) * od)}` : `Running ${RT_ORD[r - 1]}`}</em></div>`); }
   if (own >= 0) rows.push(`<div class="myp-r ${rank[own] <= 3 ? 'w' : ''}"><span class="myp-i">📷</span><span class="myp-t"><b>Your photo · ${esc(g.ph[own].t)}</b><small>Finalists’ creators share 10% of the pool</small></span><em class="myp-s">Running ${RT_ORD[rank[own] - 1]}</em></div>`);
   const add = !W ? '<button class="btn block myp-add" data-myw>🏆 Add a winner pick</button>' : !T && own < 0 ? '<button class="btn block myp-add" data-myt>🎯 Add a Top 3 pick</button>' : '';
   const h = rows.length ? `<p class="myp-h">Your picks in this Final</p>${rows.join('')}${add}` : '';
@@ -6401,7 +6402,7 @@ function chestBurst(B) { const t = B.t === 'Gold' ? 2 : B.t === 'Silver' ? 1 : 0
   setTimeout(() => o.classList.add('open'), 800);
   setTimeout(() => { try { gemExplosion(B.n, { label: `🔥 ${B.k} in a row · ${B.t} box` }); } catch (e) {} }, 950);
   setTimeout(() => o.classList.add('out'), 2000); setTimeout(() => o.remove(), 2400); }
-function winSettle(w) { const g = ppGame(w.sl), od = winOdds(g, (w.sl + 1) * PP_MS - 1)[w.pick], st = w.stake || 2, prize = g.ord[0] === w.pick ? +(st * od).toFixed(2) : 0;
+function winSettle(w) { const g = ppGame(w.sl), od = w.odds || winOdds(g, (w.sl + 1) * PP_MS - 1)[w.pick], st = w.stake || 2, prize = g.ord[0] === w.pick ? +(st * od).toFixed(2) : 0;
   w.__rv = Date.now(); w.done = 1; w.prize = prize; w.odds = od; if (prize) { S.cash = +((S.cash || 0) + prize).toFixed(2); paintWallet(); } save();
   return { prize, od, t: g.ph[w.pick].t, pl: g.ord.indexOf(w.pick) + 1 }; }
 function fcNotify() {
