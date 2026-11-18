@@ -1339,6 +1339,13 @@ html body .ppop .btn.nfx-v{background:#1E3A6E!important;color:#fff!important}
 #finPick .fp-sel{display:none;text-decoration:none;font-weight:900;color:#1E3A6E;font-size:.85rem;margin-top:2px}
 #finPick .fp-c.sel{box-shadow:inset 0 0 0 2.5px #1E3A6E;background:#E3EAF5}#finPick .fp-c.sel .fp-sel{display:block}
 .pf-ver{text-align:center;font-size:.72rem;opacity:.55;margin:6px 0 0;letter-spacing:.04em}
+html body .pp-g .pp-b{font-size:3.4rem!important;width:76px;height:76px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 4px 14px rgba(20,33,61,.35)}
+html body .pp-g.g9 .pp-b{font-size:2.6rem!important;width:58px;height:58px}
+html body .rf b{min-width:21px!important;height:21px!important;font-size:.8rem!important;border-radius:5px!important}
+html body .rf .rf-l{font-size:.72rem}
+html body .pp-g [data-pp]{position:relative}
+html body .pp-g [data-pp] .pp-cap .pop{position:absolute!important;right:6px;top:6px;margin:0!important;display:inline-flex!important;align-items:center;gap:2px;white-space:nowrap;font-style:normal;font-weight:900;font-size:.85rem!important;padding:3px 8px;border-radius:999px;background:#14213D!important;color:#F3D98B!important;-webkit-text-fill-color:#F3D98B;box-shadow:0 0 0 1.5px #D9AE4F}
+html body .pp-cap .rf{gap:4px!important;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -3528,7 +3535,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v123</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v124</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -5514,8 +5521,8 @@ function ppOpen() { const pc = window.__ppCash; window.__ppCash = 0; const fsl =
       : `<button class="btn block pc-go pk-go" id="ppFree" ${n3 && freeOk ? '' : 'disabled'}>${!n3 ? 'Choose your top 3' : S.tut === 2 ? '🎟️ Your first Final pick · free' : `🎟️ Free pick · ${FREE_BET_COINS} 🟡`}</button>${S.tut === 2 ? '<p class="pp-r">Your first pick is on us. Top scores share the prize pool in real cash.</p>' : !fqLeft() ? `<p class="pp-r">You’ve used your free pick for this Final · next Final soon</p>` : (S.gems || 0) < FREE_BET_COINS ? `<p class="pp-r">${FREE_BET_COINS - Math.floor(S.gems || 0)} more 🟡 for a free pick. ${y ? 'Judge' : 'Vote'} to earn them.</p>` : `<p class="pp-r">1 free pick per Final</p>`}`}
       ${ppPaysHTML(g)}<p class="pp-r">10% of the pool goes to the finalists’ creators · 12% to PhotoPicks. ${y ? 'Judges' : 'Voters'} decide the result.</p>
       <div style="text-align:center"><button class="link pc-later" id="ppCard">🎀 Finalists</button> · <button class="link pc-later" id="ppLater">${keep}</button></div></div>`);
-    document.querySelectorAll('#coach [data-pp]').forEach(b => b.onclick = () => { const i = +b.dataset.pp, n = picks.indexOf(i); if (n >= 0) picks.splice(n, 1); else if (picks.length < 3) picks.push(i); draw(); });
-    document.querySelectorAll('#coach [data-rst]').forEach(b => b.onclick = () => { stake = +b.dataset.rst; S.raceSt = stake; save(); draw(); }); if ($('#wtWin')) $('#wtWin').onclick = () => winOpen(cash);
+    document.querySelectorAll('#coach [data-pp]').forEach(b => b.onclick = () => { const i = +b.dataset.pp, n = picks.indexOf(i); if (n >= 0) picks.splice(n, 1); else if (picks.length < 3) picks.push(i); window.__keepScroll = 1; draw(); });
+    document.querySelectorAll('#coach [data-rst]').forEach(b => b.onclick = () => { stake = +b.dataset.rst; S.raceSt = stake; save(); window.__keepScroll = 1; draw(); }); if ($('#wtWin')) $('#wtWin').onclick = () => winOpen(cash);
     const rec = (st, free) => { if (free) window.__tk = 0; S.pp = S.pp || {}; S.pp[g.sl] = { sl: g.sl, picks: picks.slice(), cur: 'cash', stake: st, free: free ? 1 : 0, at: Date.now(), players: g.players }; save(); toast(free ? '🎟️ Free pick in! Watch it live.' : `🎀 ${money(st)} pick in! Watch it live.`);  if (document.querySelector('#coach.on #ppFree, #coach.on #ppGo, #coach.on #ppReal')) { setTimeout(ppOpen, 120); return; } (function sh(t) { setTimeout(() => { if (($('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || document.querySelector('.cashx, .gemx')) && t < 12) sh(t + 1); else ppOpen(); }, t ? 700 : 300); })(0); };
     if ($('#ppGo')) $('#ppGo').onclick = () => { if (picks.length < 3) return; popClose(); payCash(stake, 'A Final pick', () => rec(stake)); };
     if ($('#ppFree')) $('#ppFree').onclick = () => { if (picks.length < 3 || ((S.gems || 0) < FREE_BET_COINS && S.tut !== 2)) return; if (S.user && S.user.guest) { window.__ppKeep = { sl: g.sl, picks: picks.slice(), auto: 1 }; popClose(); openSignup(() => setTimeout(ppOpen, 200), { locked: false, pick: 1 }); return; } if (S.tut === 2) { S.tut = 3; save(); rec(2, true); return; } if (!fqLeft()) return; fqClaim(); rec(2, true); };
@@ -5637,7 +5644,7 @@ function ppqRun() { window.__qsGame = 'qs'; const pr = window.__qsPractice, st =
     <p class="pp-i">${picks.length < 3 ? `Tap your <b>${['1st', '2nd', '3rd'][picks.length]}</b> place photo` : 'Your podium is set. Tap a photo to change it.'}</p>
     <button class="btn block pc-go" id="ppqGo" ${picks.length < 3 ? 'disabled' : ''}>🏅 Lock in my podium</button>
     <p class="pp-r">${isYoungW() ? 'Judges' : 'Voters'} already ranked this heat. Its top 3 qualify for an hourly race. Higher score wins · tie goes to the faster player.</p></div>`);
-    document.querySelectorAll('#coach [data-pp]').forEach(b => b.onclick = () => { const i = +b.dataset.pp, n = picks.indexOf(i); if (n >= 0) picks.splice(n, 1); else if (picks.length < 3) picks.push(i); draw(); });
+    document.querySelectorAll('#coach [data-pp]').forEach(b => b.onclick = () => { const i = +b.dataset.pp, n = picks.indexOf(i); if (n >= 0) picks.splice(n, 1); else if (picks.length < 3) picks.push(i); window.__keepScroll = 1; draw(); });
     $('#ppqGo').onclick = () => { if (picks.length === 3) ppqDone(); }; };
   const ppqDone = () => { const ms = Date.now() - t0, sc = ppScore(picks, ord), won = sc > os || (sc === os && ms <= oms), pay = pr ? QS_COIN_PAY[0] : qsPay(st)[0];
     if (pr) { S.qsTried = 1; if (won) { S.gems = (S.gems || 0) + pay; setTimeout(paintGems, 200); } } else if (won) { S.cash = +((S.cash || 0) + pay).toFixed(2); setTimeout(paintWallet, 200); } save();
@@ -5671,7 +5678,7 @@ function gateOpenOld(real, tk) { const G = gateGame(), y = isYoungW(), keep = y 
       <button class="btn block pc-go" id="gtGo">${tk ? `🎟️ Lock in · ${FREE_BET_COINS} 🟡` : real ? `🎀 Play for real · $${GATE_FEE}` : '🎀 Lock in · free'}</button>
       <p class="pp-r">${y ? 'Judges' : 'Voters'} already judged this qualifier. Its top 2 photos go through to the ${raceName(G.ns)} Final.</p>
       <div style="text-align:center"><button class="link pc-later" id="gtNo">${keep}</button></div></div>`);
-    document.querySelectorAll('#coach [data-pp]').forEach(b => b.onclick = () => { const i = +b.dataset.pp, n = picks.indexOf(i); if (n >= 0) picks.splice(n, 1); else if (picks.length < 3) picks.push(i); draw(); });
+    document.querySelectorAll('#coach [data-pp]').forEach(b => b.onclick = () => { const i = +b.dataset.pp, n = picks.indexOf(i); if (n >= 0) picks.splice(n, 1); else if (picks.length < 3) picks.push(i); window.__keepScroll = 1; draw(); });
     $('#gtNo').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose());
     $('#gtGo').onclick = () => { if (picks.length < 3) { toast(`Pick your top 3 first · ${3 - picks.length} to go`); return; } if (tk) { if (!fqLeft() || (S.gems || 0) < FREE_BET_COINS) { popClose(); fqStart(); return; } fqClaim(); gateResult(G, picks, true, true); } else if (real) { popClose(); payCash(GATE_FEE, 'A qualifier entry', () => gateResult(G, picks, true)); } else gateResult(G, picks, false); }; };
   draw(); }
@@ -6231,8 +6238,8 @@ function winOpen(cash) { const g = ppGame(), w = (S.pw || {})[g.sl]; if (w) { wi
       
       <p class="pp-r">Winner pickers share 78% of the winner pool, in proportion to their pick. Odds move as picks come in and are fixed when picks close. ${y ? 'Judges' : 'Voters'} decide the result.</p>
       <div style="text-align:center"><button class="link pc-later" id="wpLater">${y ? 'Keep judging' : 'Keep voting'}</button></div></div>`);
-    document.querySelectorAll('#coach [data-wp]').forEach(b => b.onclick = () => { pick = +b.dataset.wp; draw(); });
-    document.querySelectorAll('#coach [data-wst]').forEach(b => b.onclick = () => { stake = +b.dataset.wst; S.raceSt = stake; save(); draw(); });
+    document.querySelectorAll('#coach [data-wp]').forEach(b => b.onclick = () => { pick = +b.dataset.wp; window.__keepScroll = 1; draw(); });
+    document.querySelectorAll('#coach [data-wst]').forEach(b => b.onclick = () => { stake = +b.dataset.wst; S.raceSt = stake; save(); window.__keepScroll = 1; draw(); });
     const rec = (st, free) => { if (free) window.__tk = 0; S.pw = S.pw || {}; S.pw[g.sl] = { sl: g.sl, pick, stake: st, free: free ? 1 : 0, at: Date.now(), players: g.players, odds: winOdds(g)[pick] }; save(); setTimeout(() => winLive(S.pw[g.sl]), 150); };
     if ($('#wpGo')) $('#wpGo').onclick = () => { if (pick == null) return; popClose(); payCash(stake, 'A winner pick', () => rec(stake)); };
     if ($('#wpFree')) $('#wpFree').onclick = () => { if (pick == null) return; if (S.user && S.user.guest) { popClose(); openSignup(() => setTimeout(() => winOpen(cash), 200), { locked: false, pick: 1 }); return; } if (!fqLeft() || (S.gems || 0) < FREE_BET_COINS) return; fqClaim(); rec(2, true); };
@@ -6838,7 +6845,7 @@ function themeGate(th, what, go, sel) {
     if (p.s.total < CFG.QUALIFY) { if (canEnh(p)) { window.__pickRet = { need: CFG.QUALIFY, label: 'Play the challenge', go: q => { if (q.s.total >= CFG.QUALIFY) go(q); else po.reopen(q.id); } }; closeSheet(); startEnhance(p, lowestOpen(p)); } else toast(`This photo scores ${p.s.total}. Pick a ${CFG.QUALIFY}+ photo or add a new one.`); return; }
     closeSheet(); go(p); };
 }
-function popOpen(html) { if ($('#sheet').classList.contains('on')) closeSheet(); const c = $('#coach'); c.innerHTML = `<div class="cpr ppop" role="dialog" aria-modal="true">${html}</div>`; c.classList.add('on', 'cr'); c.onclick = e => { if (e.target === c) popClose(); }; }
+function popOpen(html) { if ($('#sheet').classList.contains('on')) closeSheet(); const c = $('#coach'), keep = window.__keepScroll && c.classList.contains('on'); window.__keepScroll = 0; const sy = keep ? [c.scrollTop, (c.querySelector('.ppop') || {}).scrollTop || 0] : null; c.innerHTML = `<div class="cpr ppop" role="dialog" aria-modal="true">${html}</div>`; c.classList.add('on', 'cr'); c.onclick = e => { if (e.target === c) popClose(); }; if (sy) { c.scrollTop = sy[0]; const pp = c.querySelector('.ppop'); if (pp) pp.scrollTop = sy[1]; } }
 function busyUI() { const fp = document.getElementById('finPick'); return $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on') || (fp && fp.classList.contains('on')) || Date.now() - (window.__uiT || 0) < 2500; }
 function popClose() { window.__uiT = Date.now(); const c = $('#coach'); c.classList.remove('on', 'cr'); }
 function potIntro(p) { const k = (p && CATS8.find(x => fitsTheme(p, x))) || CATS8[0], L = lgS(), H = lgHold(k), mine = lgMine(k);
