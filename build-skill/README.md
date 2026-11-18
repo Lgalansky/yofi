@@ -168,6 +168,8 @@ Then `rmv79.py`: align screens: voting uses only Final-category photos and names
 
 Then `rmv80.py`: payouts rebalanced: win with 2 photos in the top 3, at least 1 in its exact spot (~46% of pickers); 3 correct ~5x, 2 correct ~2x, 1 correct + another in the top 3 at least 1.1x (floor); rule text, payout table, near-miss chip and loss reveal updated.
 
+Then `rmv81.py`: new-player fixes 1-4: cash pick lands ~1.6 s after paying with a toast, green 'Add $10' deposit; touch-up screen never shows and a new photo goes straight to one name+frame step; shared celebration pops in navy with no scores; 'Free pick unlocked!' opens the pick screen directly.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -244,6 +246,7 @@ python3 rmv77.py
 python3 rmv78.py
 python3 rmv79.py
 python3 rmv80.py
+python3 rmv81.py
 ```
 
 ## Skill only
