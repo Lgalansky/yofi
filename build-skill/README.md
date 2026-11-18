@@ -148,6 +148,8 @@ Then `rmv69.py`: run-through fixes. "Add cash" (green) replaces "Get more coins"
 
 Then `rmv70.py`: live pick page: ticket-style "Free pick confirmed" card with your 1st/2nd/3rd, big green prize pool and navy "Results in m:ss" countdown; results open from this page at 0 (they used to wait for the pop to close); stale "Results at" line removed.
 
+Then `rmv71.py`: Final result no longer repeats the reveal (crowd's top 3, your picks and rule line removed; winner line hidden when the creator card shows the winner).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -214,6 +216,7 @@ python3 rmv67.py
 python3 rmv68.py
 python3 rmv69.py
 python3 rmv70.py
+python3 rmv71.py
 ```
 
 ## Skill only
