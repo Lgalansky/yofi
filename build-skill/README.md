@@ -272,6 +272,8 @@ Then `rmv131.py`: Result bugs: one reveal settles Top 3 + Winner picks on the sa
 
 Then `rmv132.py`: Winner odds locked when you pick: pick screen 'pays $X if it wins · 🔒 Odds locked when you pick', live page and picks panel 'locked at N× · pays $X', settlement uses the locked odds (fallback to closing odds for older picks); rules line updated.
 
+Then `rmv133.py`: Every screen stays inside one category: Garden & flowers parked as 'coming soon' (no garden photos in the library), Nature & landscapes without the tiger, Finals never fill from other categories, voting pairs share one category and its label, Coin Pick uses 5 photos from the category with the crowd deciding the order (no 'top 2 reach the Final'); copy and entry checks list live categories.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -400,6 +402,7 @@ python3 rmv129.py
 python3 rmv130.py
 python3 rmv131.py
 python3 rmv132.py
+python3 rmv133.py
 ```
 
 ## Skill only
