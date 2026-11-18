@@ -208,6 +208,8 @@ Then `rmv99.py`: the pick-3-of-5 coin game is renamed Coin Pick (chip, strip, re
 
 Then `rmv100.py`: back to 'Qualifier' for the coin game (Qualifier · Round 1 of 3); Call the crowd shows no percentages on the photo tiles, the banner carries the result ('62% agreed · +5 coins · 2 in a row').
 
+Then `rmv101.py`: coin game named Coin Pick again (strip, round chip, reveal, result, win label); photo side keeps 'qualifiers'; vote tiles stay clean.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -304,6 +306,7 @@ python3 rmv97.py
 python3 rmv98.py
 python3 rmv99.py
 python3 rmv100.py
+python3 rmv101.py
 ```
 
 ## Skill only
