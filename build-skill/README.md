@@ -250,6 +250,8 @@ Then `rmv120.py`: Photo picker always opens over your Gallery: pickPhoto moves y
 
 Then `rmv121.py`: No screen jump when the photo picker opens: Choose your Final stays up with the chosen category highlighted ('Choose your photo…'); the screen changes only once a photo is chosen. Brand-new players from the landing page answer the age question before the list appears.
 
+Then `rmv122.py`: Version number on the account page ('PhotoPicks v122' under Reset prototype); taken from the newest rmvN.py, so it moves on with every step.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -367,6 +369,7 @@ python3 rmv118.py
 python3 rmv119.py
 python3 rmv120.py
 python3 rmv121.py
+python3 rmv122.py
 ```
 
 ## Skill only
