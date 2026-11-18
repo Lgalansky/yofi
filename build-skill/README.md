@@ -258,6 +258,8 @@ Then `rmv124.py`: Pick screens keep their scroll position when you tap a photo o
 
 Then `rmv125.py`: Pick medals without the white disc (it covered the photo); big size kept with a drop shadow.
 
+Then `rmv126.py`: County-fair prize rosettes for picks (gold/silver/bronze, gold star for Winner) in the photo's top-left corner, coloured border and 'Your 1st pick' strip, others fade once 3 are picked; chips off the photos (🔥% on the handle line, odds next to the name); pin bounce + sparkle, bigger burst on the 3rd pick; glide to the pick button which shows what a full win pays; same rosettes on live race lanes, race card, live ticket and picks panel.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -379,6 +381,7 @@ python3 rmv122.py
 python3 rmv123.py
 python3 rmv124.py
 python3 rmv125.py
+python3 rmv126.py
 ```
 
 ## Skill only
