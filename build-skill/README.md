@@ -144,6 +144,8 @@ Then `rmv67.py`: qualifier pick screen ignores taps for 900 ms after it opens (s
 
 Then `rmv68.py`: reveal drops 1st, 2nd, then 3rd; the 50-coin prize card is no longer highlighted; qualifier result is a full page (Spot on! / Not this time, YOU WON box, crowd's top 3 with Finalist and your-pick tags, Your picks, Through to the Final, coins balance).
 
+Then `rmv69.py`: run-through fixes. "Add cash" (green) replaces "Get more coins" and the shop copy talks about Finals; pops wait until nothing is open and 2.5 s after a close, and a due Final result goes before a waiting qualifier; the extra "Winner!" pop is gone (kept for the first cash win); PhotoPicks 18+ age screen with navy button; clearer free-pick line; "Form" label and legend on Final pick tiles.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -208,6 +210,7 @@ python3 rmv65.py
 python3 rmv66.py
 python3 rmv67.py
 python3 rmv68.py
+python3 rmv69.py
 ```
 
 ## Skill only
