@@ -128,6 +128,8 @@ Then `rmv59.py`: framing replaces touch-ups. Name and frame a photo (200 coins, 
 
 Then `rmv60.py`: the Final reveal matches the result screen (same stored player count and prize pool, same "X of your photos in the top 3 · Y in the exact spot" line, and a "Your picks" row with Exact / Finished / Outside top 3).
 
+Then `rmv61.py`: Final result creator card from the mock-up ("Your photo could win real cash", winner card with photo and earnings, creators shared line, two steps, "Enter your photo — free").
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -184,6 +186,7 @@ python3 rmv57.py
 python3 rmv58.py
 python3 rmv59.py
 python3 rmv60.py
+python3 rmv61.py
 ```
 
 ## Skill only
