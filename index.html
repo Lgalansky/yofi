@@ -1274,6 +1274,20 @@ html body .ppop .rtk-tick{color:#F3D98B!important;-webkit-text-fill-color:#F3D98
 .rtk.fin{animation:rtkFin 1s ease-in-out infinite}@keyframes rtkFin{50%{box-shadow:0 0 0 3px #F3D98B,0 0 22px rgba(243,217,139,.6)}}
 html body #coach .rtk ~ .rb .rb-r{display:none}
 @media (prefers-reduced-motion:reduce){.rtk-run{transition:none}.rtk.fin,.rtk-lane.lead .rtk-run img{animation:none}}
+html:not(.yg) #judge .tot-c .tot-v,html:not(.yg) #judge .tot-c .tot-miss,html:not(.yg) #judge .tot-c .tot-x,html:not(.yg) #judge .tot-c .tot-r{display:none!important}
+html:not(.yg) #judge #jcard{position:relative}
+.cfx-fill{position:absolute!important;inset:0!important;width:auto!important;height:auto!important;border-radius:inherit;overflow:hidden;pointer-events:none;z-index:3}.cfx-fill i{position:absolute;left:0;right:0;bottom:0;height:0;background:rgba(20,33,61,.55);animation:cfxUp .7s cubic-bezier(.2,.9,.3,1) forwards}
+.cfx-fill.w i{background:linear-gradient(0deg,rgba(47,107,63,.85),rgba(47,107,63,.45))}@keyframes cfxUp{to{height:var(--h)}}
+.cfx-fill b{position:absolute;left:0;right:0;top:16%;text-align:center;font:900 2.4rem/1 Fraunces,Georgia,serif;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.45);opacity:0;animation:cfxIn .3s .35s forwards}
+@keyframes cfxIn{to{opacity:1}}
+html body #judge .tot-c .cfx-fill b{position:absolute!important;left:0!important;right:0!important;top:16%!important;bottom:auto!important;width:auto!important;height:auto!important;min-width:0!important;padding:0!important;margin:0!important;background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;display:block!important;text-align:center!important;font:900 2.4rem/1 Fraunces,Georgia,serif!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+html body #judge .tot-c .cfx-fill i{display:block!important;width:auto!important;border-radius:0!important;box-shadow:none!important;top:auto!important;inset:auto 0 0 0!important}
+.cfx-b{position:absolute;left:50%;top:50%;z-index:6;transform:translate(-50%,-50%) scale(.6);opacity:0;min-width:78%;padding:12px 18px;border-radius:18px;text-align:center;box-shadow:0 14px 30px -10px rgba(0,0,0,.55);animation:cfxPop .45s .25s cubic-bezier(.2,1.5,.4,1) forwards}
+.cfx-b.ok{background:#2F6B3F;box-shadow:0 0 0 3px #F3D98B,0 14px 30px -10px rgba(0,0,0,.55)}.cfx-b.no{background:#14213D;animation:cfxPop .45s .25s cubic-bezier(.2,1.5,.4,1) forwards,cfxShake .4s .7s ease}
+.cfx-b b{display:block;font:800 1.35rem/1.15 Fraunces,Georgia,serif;color:#fff}.cfx-b small{display:block;margin-top:3px;font-weight:800;font-size:.9rem;color:#F3D98B}
+@keyframes cfxPop{to{transform:translate(-50%,-50%) scale(1);opacity:1}}@keyframes cfxShake{25%{margin-left:-6px}75%{margin-left:6px}}
+#judge .stk-nx.bump{animation:rtkPop .5s ease}
+@media (prefers-reduced-motion:reduce){.cfx-fill i,.cfx-b,.cfx-fill b{animation-duration:.01s!important;animation-delay:0s!important}}
 </style>
 </head>
 <body>
@@ -6121,6 +6135,11 @@ function raceTick() { const el = document.getElementById('rtk'); if (!el || !el.
   if (say) { window.__rtSay = Date.now(); if (t.textContent !== say) { t.textContent = say; t.classList.remove('pop'); void t.offsetWidth; t.classList.add('pop'); } }
   else if (!window.__rtSay || Date.now() - window.__rtSay > 4000) { const tot = L.reduce((a, x) => a + x.v, 0), msgs = [`🗳️ ${tot.toLocaleString()} votes in · ${g.ph[L[0].i].t} leads`, `${g.ph[L[0].i].t} and ${g.ph[L[1].i].t} neck and neck`, `👀 ${g.players} players watching`]; t.textContent = msgs[Math.floor(now / 4000) % msgs.length]; t.classList.remove('pop'); } }
 setInterval(raceTick, 1200);
+function callFx(pick, pct, agree, earn, combo, prev, mine) { const cards = document.querySelectorAll('#judge .tot-c'), jc = document.getElementById('jcard'); if (!jc) return;
+  cards.forEach((c, i) => { c.insertAdjacentHTML('beforeend', `<span class="cfx-fill ${pct[i] >= 50 ? 'w' : ''} ${i === pick ? 'cfx-mine' : ''}"><i style="--h:${pct[i]}%"></i><b>${pct[i]}%</b></span>`); });
+  jc.insertAdjacentHTML('beforeend', `<div class="cfx-b ${agree ? 'ok' : 'no'}"><b>${agree ? '✓ You called it!' : '✕ The crowd went the other way'}</b><small>${agree ? `${earn ? `+${earn} coins · ` : ''}🔥 ${combo} in a row` : prev >= 2 ? `${prev}-in-a-row streak reset` : `${100 - mine}% picked the other photo`}</small></div>`);
+  try { if (agree && navigator.vibrate) navigator.vibrate(18); } catch (e) {}
+  const nx = document.querySelector('#judge .stk-nx'); if (nx) { const c = Math.min(combo, 10), n = [3, 6, 10].find(k => k > c), nm = { 3: 'Bronze', 6: 'Silver', 10: 'Gold' }; nx.innerHTML = n ? `🔥 <b>${c} in a row</b> · ${n - c} more for a <b class="t${n}">${nm[n]} box</b>` : '🔥 <b>10 in a row!</b> Gold box earned'; nx.classList.remove('bump'); void nx.offsetWidth; nx.classList.add('bump'); } }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -6419,7 +6438,7 @@ async function vote(pick) {
   const near = !agree && mine >= 42;
   const mc = document.querySelectorAll('#judge .tot-c')[pick], word = mine >= 75 ? 'Spot on!' : agree ? 'Good eye!' : near ? 'So close!' : mine >= 35 ? 'Close call' : 'Missed it';
   mc.querySelector('.tot-r').insertAdjacentHTML('afterbegin', `<span class="tot-v ${agree ? 'hit' : 'miss'}">${agree ? '✓' : '✕'} ${word}</span>`);
-  $('#jRes').textContent = `${word} ${mine}% of members picked this one.${earn ? ` Plus ${earn} coins.` : ''}`;
+  $('#jRes').textContent = `${word} ${mine}% of members picked this one.${earn ? ` Plus ${earn} coins.` : ''}`; callFx(pick, pct, agree, earn, S.combo, prevCombo, mine);
   if (!agree) mc.insertAdjacentHTML('beforeend', `<span class="tot-miss"><b>${near ? 'So close!' : 'Missed it'}</b><small>${100 - mine}% picked the other one${prevCombo >= 2 ? ' · streak back to ×1' : ''}</small></span>`);
 
   const tr = mc.querySelector('.tot-r');
@@ -6429,11 +6448,11 @@ async function vote(pick) {
   if (near) tr.insertAdjacentHTML('beforeend', `<span class="tot-x nm">Crowd split ${mine}/${100 - mine}</span>`);
   if (enBack) tr.insertAdjacentHTML('beforeend', `<span class="tot-x en">⚡ +${enBack} energy back</span>`);
   if (false && [1, 3, 5].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">1 more for ×${streakX(S.combo + 1)}${S.combo === 5 ? ' + 🧰' : S.combo === 3 ? ' + 🎁' : ''}</span>`);
-  if (earn) setTimeout(() => gemExplosion(earn, { mid: true, from: mc }), tier > 1 ? 900 : 0);
-  await sleep(tier === 20 ? 2800 : tier > 1 ? 1800 : 1100);
+  if (earn) setTimeout(() => paintGems(), 500);
+  await sleep(tier === 20 ? 2800 : tier > 1 ? 1800 : 1400);
   if (false && window.__meterHit) { window.__meterHit = 0; renderJudge(); judging = false; if (typeof paintTixTag === 'function') paintTixTag(); ticketPop(); return; }
   if (false && !comboHit && tDue()) { renderJudge(); $('#judge').scrollTop = 0; judging = false; if (tPrompt()) { if (S.since >= CFG.BATTLE_EVERY - 1) S.since = Math.max(0, CFG.BATTLE_EVERY - 3); save(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; } }
-  if (!comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.lgPlayed && !popPaced() && S.user && fighters().length) { S.frIntro = 1; S.since = 0; save(); renderJudge(); judging = false;
+  if (false && !comboHit && S.votes >= 10 && !S.frIntro && S.gbDone && S.lgPlayed && !popPaced() && S.user && fighters().length) { S.frIntro = 1; S.since = 0; save(); renderJudge(); judging = false;
     const me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
     celebrate({ src: me.src, score: VS_IC, title: 'Invite a friend!', text: `You’ve got the eye. Now start a club, invite your mates on WhatsApp and challenge them for the <b>blue ribbons</b> and <b>weekly pots</b>.`, cta: `${VS_IC}Compete with friends`, onCta: () => challengeWith(me), later: 'Keep judging' });
     return; }
