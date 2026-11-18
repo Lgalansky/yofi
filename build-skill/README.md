@@ -240,6 +240,8 @@ Then `rmv115.py`: coins can't be used on Final pick screens: Top 3 and Winner ar
 
 Then `rmv116.py`: one new-player journey: landing's main button is 'Start playing' (judge → free pick → result → add your photo); photo section's big button becomes a small 'Got a photo? Enter it now' link; green cash pick stays.
 
+Then `rmv117.py`: all your picks on one race: lanes show every tag (Your 1st pick · Your winner · Your photo); 'Your picks in this Final' panel under the race updates live (Top 3 status/estimate, Winner odds/position, your photo's position); add-the-other-pick button when you have only one.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -352,6 +354,7 @@ python3 rmv113.py
 python3 rmv114.py
 python3 rmv115.py
 python3 rmv116.py
+python3 rmv117.py
 ```
 
 ## Skill only
