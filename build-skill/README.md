@@ -254,6 +254,8 @@ Then `rmv122.py`: Version number on the account page ('PhotoPicks v122' under Re
 
 Then `rmv123.py`: Fix live pick page flashing back to voting: an interrupted result reveal no longer leaves the Final stuck half-way (which made the 1-second result check close every pop); interrupted results replay, stale marks cleared on load.
 
+Then `rmv124.py`: Pick screens keep their scroll position when you tap a photo or stake (Top 3 and Winner). Bigger pick medals on a white disc; bigger Form chips; popularity % moved onto the photo as a chip like the Winner odds.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -373,6 +375,7 @@ python3 rmv120.py
 python3 rmv121.py
 python3 rmv122.py
 python3 rmv123.py
+python3 rmv124.py
 ```
 
 ## Skill only
