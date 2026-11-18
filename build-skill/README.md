@@ -140,6 +140,8 @@ Then `rmv65.py`: reveal podium labelled "The crowd’s top 3"; photos you picked
 
 Then `rmv66.py`: reveal end state from the mock-up (story headline such as "You picked the winner!", navy "YOU WON $X" box with gold amount, pool line, gold-ruled labels, "✓ Exact match" chips, gold border on matched photos).
 
+Then `rmv67.py`: qualifier pick screen ignores taps for 900 ms after it opens (stray voting taps were picking a top 3) and opens scrolled to the top; coin icon redrawn as a minted coin with rim and star.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -202,6 +204,7 @@ python3 rmv63.py
 python3 rmv64.py
 python3 rmv65.py
 python3 rmv66.py
+python3 rmv67.py
 ```
 
 ## Skill only
