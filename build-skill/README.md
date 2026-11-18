@@ -274,6 +274,8 @@ Then `rmv132.py`: Winner odds locked when you pick: pick screen 'pays $X if it w
 
 Then `rmv133.py`: Every screen stays inside one category: Garden & flowers parked as 'coming soon' (no garden photos in the library), Nature & landscapes without the tiger, Finals never fill from other categories, voting pairs share one category and its label, Coin Pick uses 5 photos from the category with the crowd deciding the order (no 'top 2 reach the Final'); copy and entry checks list live categories.
 
+Then `rmv134.py`: Quick Sprint pairs: both photos from the same live category; crowd share follows hidden photo appeal plus noise (stronger photo wins ~72%), replacing the 50/50 coin flip; nothing from the Finals feeds Sprint results.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -403,6 +405,7 @@ python3 rmv130.py
 python3 rmv131.py
 python3 rmv132.py
 python3 rmv133.py
+python3 rmv134.py
 ```
 
 ## Skill only
