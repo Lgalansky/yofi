@@ -114,6 +114,7 @@ Then `rmv46.py`: qualifier result for returning players: coin players without a 
 Then `rmv47.py`: suspense and hero moments: "Counting the votes…" with live bars, 3rd/2nd/1st revealed one by one with your pick for each ("✓ Spot on!"), skip; wins get a confetti hero screen ("+50 coins" / "You won $6.45") before the results.
 Then `rmv48.py`: first-ever cash win gets a bigger one-off celebration; your own photo in a Final gets a reveal and a creator-earnings hero; near-miss chip on Final results; live Final board shows "If it ended now" winnings, a ticking countdown, ▲/▼ moves and a new-leader flash.
 Then `rmv49.py`: the new-player flow ends when the first free pick's result is seen; until then no qualifiers, side games, 250-coin pick row or coin nudges (coins menu shows "Your free pick is live"); after it, the coins menu shows every option and a one-time "Unlocked" note points to the coins.
+Then `rmv50.py`: coin players' qualifier result never offers the Final; with 250+ coins it says "You have enough for a free Final pick · it's in your coins" and the button is Keep judging.
 
 ```bash
 python3 rmv6.py
@@ -160,6 +161,7 @@ python3 rmv46.py
 python3 rmv47.py
 python3 rmv48.py
 python3 rmv49.py
+python3 rmv50.py
 ```
 
 ## Skill only
