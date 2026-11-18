@@ -126,6 +126,8 @@ Then `rmv58.py`: invite pop from the mock-up ("Earn 100 coins for every friend y
 
 Then `rmv59.py`: framing replaces touch-ups. Name and frame a photo (200 coins, first frame free) to enter its category qualifiers; framed photos race again free. Gallery rebuilt: upcoming Finals by category, the framed wall (gold frame, name plate, prize money, Finals, best finish, qualifiers, form), "Ready to frame" photos, earnings. Touch-ups tab hidden.
 
+Then `rmv60.py`: the Final reveal matches the result screen (same stored player count and prize pool, same "X of your photos in the top 3 · Y in the exact spot" line, and a "Your picks" row with Exact / Finished / Outside top 3).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -181,6 +183,7 @@ python3 rmv56.py
 python3 rmv57.py
 python3 rmv58.py
 python3 rmv59.py
+python3 rmv60.py
 ```
 
 ## Skill only
