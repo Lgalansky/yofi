@@ -172,6 +172,8 @@ Then `rmv81.py`: new-player fixes 1-4: cash pick lands ~1.6 s after paying with 
 
 Then `rmv82.py`: new-player improvements 5-9: upload success pop (save photo / vote to watch it race); lucky boxes replaced by fixed streak rewards (+20/+40/+80); free pick after 10 votes with other counters hidden for new players; sign-up names the pick; first-pick guarantee (one more free pick in the next Final if the first loses).
 
+Then `rmv83.py`: new player's first Final result pushes photo entry: 'Your turn: add a photo' card moves up under the result with the next Final and pool; cash upsell held back on that screen; guarantee pick stays on top on a loss; confetti null guard.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -250,6 +252,7 @@ python3 rmv79.py
 python3 rmv80.py
 python3 rmv81.py
 python3 rmv82.py
+python3 rmv83.py
 ```
 
 ## Skill only
