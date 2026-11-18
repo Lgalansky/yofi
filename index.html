@@ -1389,6 +1389,17 @@ html body .pp-g .pp-rz.ptw{width:auto;height:auto;left:6px;top:6px;filter:drop-s
 .rv-yp > span{position:relative}
 html body .rv-pod .rv-rz{left:auto;right:-8px;top:34%;width:44px;height:58px}
 html body .myp-l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}html body .myp-l em{font-style:normal;font-weight:800;color:#1E3A6E}
+html body .gx-pic{position:relative}
+.rz-hang{position:absolute;right:-12px;top:10px;z-index:5;display:flex;flex-direction:column;align-items:center}
+.rz-hang i{display:block;width:38px;height:50px;margin-top:-16px;filter:drop-shadow(0 3px 4px rgba(20,33,61,.4))}.rz-hang i:first-child{margin-top:0}
+.rz-hang svg{width:100%;height:100%;display:block}
+.rz-hang em{font-style:normal;font:900 .72rem Nunito,system-ui,sans-serif;background:#14213D;color:#F3D98B;-webkit-text-fill-color:#F3D98B;border-radius:999px;padding:1px 7px;margin-top:2px}
+html body .rz-rec{margin:4px 0 0;font:900 .76rem/1.3 Nunito,system-ui,sans-serif;color:#7A5410;-webkit-text-fill-color:#7A5410}
+html body .re-ok{position:relative}
+html body .re-ok i.re-rz{position:absolute;right:-16px;top:-16px;left:auto;bottom:auto;width:60px;height:80px;font-size:0;background:none;box-shadow:none;border:0;padding:0;transform:none;filter:drop-shadow(0 4px 7px rgba(20,33,61,.45));animation:rzPin .7s cubic-bezier(.3,1.6,.5,1) .2s both}
+html body .re-ok i.re-rz svg{width:100%;height:100%;display:block}
+html body .re-rzl{margin:2px 0 8px;font:900 .9rem/1.35 Nunito,system-ui,sans-serif;color:#7A5410;-webkit-text-fill-color:#7A5410;text-align:center}
+html body .re-ok i.re-rz{top:14px!important;right:-26px!important}
 </style>
 </head>
 <body>
@@ -3578,7 +3589,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v127</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v128</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -5613,22 +5624,22 @@ function rcHeat() { const ids = (S.photos || []).filter(p => rcRec(p.id).st === 
   const id = ids.sort((a, b) => (rcRec(a).ha || 0) - (rcRec(b).ha || 0))[0], p = S.photos.find(x => x.id === id), r = rcRec(id), q = cpRng(Date.now() % 1e6);
   const me = rcStr(p) + (q() - .5) * .5, pl = 1 + [0, 1, 2, 3].filter(() => .3 + q() * .6 + (q() - .5) * .5 > me).length; r.ha = Date.now(); r.f.push({ k: 'h', pl }); S.jMove = { pid: id, pl, at: Date.now() }; r.f = r.f.slice(-12);
   let share = 0; if (pl === 1) { S.gems = (S.gems || 0) + HEAT_WIN; setTimeout(paintGems, 100); }
-  if (pl <= 2) { const sl = rcSlotFor(p); S.races = S.races || {}; S.races[sl] = { pid: id, at: Date.now() }; r.st = 'q'; r.sl = sl; S.rcPop = { k: 'q', pid: id, pl, sl, share }; }
+  if (pl <= 2) { rzAdd(p, 3); const sl = rcSlotFor(p); S.races = S.races || {}; S.races[sl] = { pid: id, at: Date.now() }; r.st = 'q'; r.sl = sl; S.rcPop = { k: 'q', pid: id, pl, sl, share }; }
   else { r.runs = (r.runs || 0) + 1; if (r.runs >= HEAT_RUNS) { r.st = null;  }  }
   save(); }
 function rcQualPop(x) { const p = (S.photos || []).find(z => z.id === x.pid); if (!p) return; const cash = isCash(), y = isYoungW(), g = ppGame(x.sl);
-  popOpen(`<div class="pp"><p class="pp-k">🎀 Qualifier result</p><div class="re-ok"><img src="${p.src}" alt=""><i>${PP_MED[x.pl - 1]}</i></div><h2 class="pp-h">Through to the Final!</h2>
+  popOpen(`<div class="pp"><p class="pp-k">🎀 Qualifier result</p><div class="re-ok"><img src="${p.src}" alt=""><i class="re-rz">${rosette('f')}</i></div><h2 class="pp-h">Through to the Final!</h2><p class="re-rzl">🎀 Finalist rosette won · it hangs on its frame in your Gallery</p>
     <p class="pp-m"><b>${esc(rcName(p))}</b> finished ${ppOrd(x.pl)} in its qualifier${x.pl === 1 ? ` · +${HEAT_WIN} 🟡${x.share ? ` · <b>+${money(x.share)}</b> owner’s share` : ''}` : ''}</p>
     <p class="pp-i">It’s in the <b>${raceName(x.sl)} Final</b>. Finalists’ creators share <b>10% of the prize pool</b>.<br><small>(demo: result in about 3 min)</small></p>
     <button class="btn block pc-go" id="qpOk">${y ? 'Keep judging' : 'Keep voting'}</button><div style="text-align:center"><button class="link pc-later" id="qpSt">🖼️ Your gallery</button></div></div>`);
   $('#qpOk').onclick = () => popClose(); $('#qpSt').onclick = () => stableOpen(); }
 function raceOwnResultShow(sl) { const x = S.races[sl], g = ppGame(sl), i = g.ph.findIndex(p => p.mine), cash = true, y = isYoungW();
   const pl = i < 0 ? RACE_N : g.ord.indexOf(i) + 1, pz = pl <= 3 ? RACE_OWN[cash ? 'cash' : 'gems'][pl - 1] : 0, amt = cash ? money(pz) : `${pz.toLocaleString()} 🟡`;
-  const ph = i >= 0 ? g.ph[i] : { src: '', t: 'Your photo' }, r = rcRec(x.pid); r.f.push({ k: 'r', pl }); r.f = r.f.slice(-12); r.st = null; r.sl = null; r.last = { sl, pl, pz, cash: cash ? 1 : 0 }; S.showWon = +((S.showWon || 0) + pz).toFixed(2); if (pz) earnAdd({ kind: 's', pid: x.pid, t: ph.t, amt: pz, place: pl, sl, k: g.k }); const fsh = pl <= RACE_N ? finShare(sl, pl) : 0; if (fsh) { S.cash = +((S.cash || 0) + fsh).toFixed(2); S.showWon = +((S.showWon || 0) + fsh).toFixed(2); earnAdd({ kind: 'f', pid: x.pid, t: ph.t, amt: fsh, place: pl, sl, k: g.k }); setTimeout(paintWallet, 200); } x.done = 1; x.place = pl; x.prize = pz; x.share = fsh;
+  const ph = i >= 0 ? g.ph[i] : { src: '', t: 'Your photo' }, r = rcRec(x.pid); r.f.push({ k: 'r', pl }); r.f = r.f.slice(-12); r.st = null; r.sl = null; r.last = { sl, pl, pz, cash: cash ? 1 : 0 }; S.showWon = +((S.showWon || 0) + pz).toFixed(2); if (pz) earnAdd({ kind: 's', pid: x.pid, t: ph.t, amt: pz, place: pl, sl, k: g.k }); const fsh = pl <= RACE_N ? finShare(sl, pl) : 0; if (fsh) { S.cash = +((S.cash || 0) + fsh).toFixed(2); S.showWon = +((S.showWon || 0) + fsh).toFixed(2); earnAdd({ kind: 'f', pid: x.pid, t: ph.t, amt: fsh, place: pl, sl, k: g.k }); setTimeout(paintWallet, 200); } x.done = 1; x.place = pl; x.prize = pz; x.share = fsh; if (pl <= 3) rzAdd((S.photos || []).find(z => z.id === x.pid), pl - 1);
   if (pz) { if (cash) { S.cash = +((S.cash || 0) + pz).toFixed(2); paintWallet(); } else { S.gems += pz; paintGems(); } } save();
   popOpen(`<div class="pp"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🎀 The ${raceName(sl)} Final · result</p>
-    <div class="re-ok">${ph.src ? `<img src="${ph.src}" alt="">` : ''}${pl <= 3 ? `<i>${PP_MED[pl - 1]}</i>` : ''}</div>
-    <h2 class="pp-h">${esc(ph.t)} finished ${ppOrd(pl)}${pl <= 3 ? '!' : ''}</h2>
+    <div class="re-ok">${ph.src ? `<img src="${ph.src}" alt="">` : ''}${pl <= 3 ? `<i class="re-rz">${rosette(pl - 1)}</i>` : ''}</div>
+    <h2 class="pp-h">${esc(ph.t)} finished ${ppOrd(pl)}${pl <= 3 ? '!' : ''}</h2>${pl <= 3 ? `<p class="re-rzl">🎀 ${['Gold', 'Silver', 'Bronze'][pl - 1]} rosette won · it hangs on its frame in your Gallery</p>` : ''}
     <p class="pp-m">You earned <b>${money(pz + (x.share || 0))}</b>: ${money(x.share || 0)} share of the Final pool${pz ? ` + ${amt} prize` : ''} · form <span class="rf">${formHTML(r.f.map(z => z.pl))}</span></p>
     <div class="rc-fin">${g.ord.map((j, n) => `<span class="${g.ph[j].mine ? 'me' : ''}"><img src="${g.ph[j].src}" alt=""><b>${n < 3 ? PP_MED[n] : ppOrd(n + 1)}</b></span>`).join('')}</div>
     <button class="btn block pc-go" id="roAgain">🎀 Back to the qualifiers · free</button><div style="text-align:center"><button class="link pc-later" id="roBack">${y ? 'Keep judging' : 'Keep voting'}</button></div></div>`);
@@ -6196,7 +6207,7 @@ function renderMyShow() { const g = $('#gallery'); if (!g) return; const P = (S.
     const st = r.st === 'q' ? `<div class="gx-st live"><b>🎀 Finalist · ${raceName(r.sl)} Final</b><small>${r.sl === cur ? 'Racing now · pickers are backing it' : `Races at ${raceName(r.sl)} · finalists’ creators share 10% of the pool`}</small><button class="btn block gx-go" data-glw="${r.sl}">${r.sl === cur ? '🔴 Watch it race' : '🎀 See the finalists'}</button></div>`
       : r.st === 'heats' ? `<div class="gx-st"><b>⚖️ In the qualifiers · ${Math.max(0, HEAT_RUNS - (r.runs || 0))} of ${HEAT_RUNS} tries left</b><small>Next qualifier in <b>${Math.max(1, HEAT_EVERY - (S.hN || 0))} ${vw.toLowerCase()}s</b> · top 2 go through to the <b>${raceName(nsl)} Final</b></small><div class="gx-bar"><i style="width:${Math.min(100, 100 * (S.hN || 0) / HEAT_EVERY)}%"></i></div><button class="btn block gx-go" data-gvote>⚖️ ${vw} to move it along</button></div>`
       : `<div class="gx-st rest"><b>Resting · ready to race again</b><small>Its next Final: <b>${raceName(nsl)}</b></small><button class="btn block gx-go" data-glen="${p.id}">🎀 Enter again · free</button></div>`;
-    return `<div class="gx-card"><div class="gx-top"><div class="gx-pic"><div class="gx-frame"><div class="gx-mat"><img src="${p.src}" alt=""></div></div><div class="gx-plq"><b>${esc(p.title || rcName(p))}</b><small>${SH ? esc(SH.n) : ''} · framed ${new Date(p.framed).toLocaleDateString([], { day: 'numeric', month: 'short' })}</small></div></div>
+    return `<div class="gx-card"><div class="gx-top"><div class="gx-pic">${rzHang(p)}<div class="gx-frame"><div class="gx-mat"><img src="${p.src}" alt=""></div></div><div class="gx-plq"><b>${esc(p.title || rcName(p))}</b><small>${SH ? esc(SH.n) : ''} · framed ${new Date(p.framed).toLocaleDateString([], { day: 'numeric', month: 'short' })}</small>${rzLine(p)}</div></div>
       <div class="gx-side"><div class="gx-rec"><div><b>${money(rec.won)}</b><small>won</small></div><div><b>${rec.finals}</b><small>Final${rec.finals === 1 ? '' : 's'}</small></div><div><b>${rec.best ? ppOrd(rec.best) : '–'}</b><small>best</small></div><div><b>${rec.races}</b><small>qualifiers</small></div></div>${rec.form.length ? `<p class="gl-form">Form <span class="rf">${formHTML(rec.form)}</span></p>` : ''}</div></div>${journeyHTML(p)}${st}</div>`; };
   const L = SHOW_ROT.map(x => { const sl = finFor(x.k), G = ppGame(sl); return { k: x.k, sl, src: (G.ph[0] || {}).src, pool: G.players * RACE_AVG }; }).sort((a, b) => a.sl - b.sl);
   g.innerHTML = `<div class="ms gl g4 gx"><h1 class="g4-h"><span class="g4-hi">🖼️</span> My gallery</h1><p class="g4-sub">Your framed photos and their prize record.</p>
@@ -6327,7 +6338,7 @@ function nextFinalPop() { const nx = ppSlot() + 1, G = ppGame(nx), cur = ppSlot(
 // a result counts as "in progress" only while something is on screen for it (or for 20 s after it starts)
 function rvBusy(x) { return !!(x && x.__rv && (Date.now() - x.__rv < 20000 || document.querySelector('#coach.on, #heroWin.on, .hw.on'))); }
 try { ['pp', 'pw', 'races'].forEach(k => Object.values(S[k] || {}).forEach(x => { if (x && !x.done) delete x.__rv; })); } catch (e) {}
-function rosette(k) { const C = [['#A97A22', '#F8E6A8', '#E2B243'], ['#56606D', '#EEF1F4', '#A3ACB8'], ['#86501F', '#F3CFA6', '#C9874B']][k === 'w' ? 0 : k];
+function rosette(k) { if (k === 'f') return rosetteF(); const C = [['#A97A22', '#F8E6A8', '#E2B243'], ['#56606D', '#EEF1F4', '#A3ACB8'], ['#86501F', '#F3CFA6', '#C9874B']][k === 'w' ? 0 : k];
   const pet = Array.from({ length: 16 }, (_, j) => { const a = j * Math.PI / 8; return `<circle cx="${(30 + 21 * Math.cos(a)).toFixed(1)}" cy="${(30 + 21 * Math.sin(a)).toFixed(1)}" r="7.5" fill="${C[2]}" stroke="${C[0]}" stroke-width=".8"/>`; }).join('');
   return `<svg viewBox="0 0 60 80" aria-hidden="true"><path d="M20 40 L10 78 L19 72 L26 79 L32 44Z" fill="${C[0]}"/><path d="M40 40 L50 78 L41 72 L34 79 L28 44Z" fill="${C[2]}" stroke="${C[0]}" stroke-width=".8"/>${pet}<circle cx="30" cy="30" r="21" fill="${C[2]}"/><circle cx="30" cy="30" r="16.5" fill="${C[1]}" stroke="${C[0]}" stroke-width="1.6"/><circle cx="30" cy="30" r="13.5" fill="none" stroke="${C[0]}" stroke-width=".6" stroke-dasharray="1.5 2"/><text x="30" y="${k === 'w' ? 36 : 37}" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="900" font-size="${k === 'w' ? 18 : 20}" fill="#14213D">${k === 'w' ? '★' : k + 1}</text></svg>`; }
 function ppTopX(g) { try { const n = g.players, T = ppField(g, g.sl, n + 1); ppUnits(T, n * RACE_AVG * .78); return (T.find(t => t.k === 3) || { x: 5.3 }).x; } catch (e) { return 5.3; } }
@@ -6338,6 +6349,13 @@ function rzFx(kind, i, big) { const t = document.querySelector(`#coach [data-${k
   if (big) setTimeout(() => { const go = document.querySelector('#coach #ppGo:not([disabled]), #coach #ppFree:not([disabled]), #coach #wpGo:not([disabled]), #coach #wpFree:not([disabled])'); if (!go) return; go.scrollIntoView({ behavior: 'smooth', block: 'center' }); go.classList.remove('pk-pulse'); void go.offsetWidth; go.classList.add('pk-pulse'); }, 550); }
 function pickTag(k, mini) { const r = k === 'w' ? 'Winner' : ['1st', '2nd', '3rd'][k], c = k === 'w' || k === 0 ? 'g' : k === 1 ? 's' : 'b';
   return mini ? `<span class="ptin ${c}">Pick ${r}</span>` : `<span class="ptk ${c}"><small>My pick</small><b>${r}</b></span>`; }
+function rosetteF() { const C = ['#0F1A33', '#E3EAF5', '#1E3A6E'], pet = Array.from({ length: 16 }, (_, j) => { const a = j * Math.PI / 8; return `<circle cx="${(30 + 21 * Math.cos(a)).toFixed(1)}" cy="${(30 + 21 * Math.sin(a)).toFixed(1)}" r="7.5" fill="${C[2]}" stroke="${C[0]}" stroke-width=".8"/>`; }).join('');
+  return `<svg viewBox="0 0 60 80" aria-hidden="true"><path d="M20 40 L10 78 L19 72 L26 79 L32 44Z" fill="#D9AE4F"/><path d="M40 40 L50 78 L41 72 L34 79 L28 44Z" fill="${C[2]}" stroke="${C[0]}" stroke-width=".8"/>${pet}<circle cx="30" cy="30" r="21" fill="${C[2]}"/><circle cx="30" cy="30" r="16.5" fill="${C[1]}" stroke="#D9AE4F" stroke-width="1.6"/><text x="30" y="35" text-anchor="middle" font-family="Nunito,system-ui,sans-serif" font-weight="900" font-size="9" letter-spacing=".5" fill="#14213D">FINAL</text></svg>`; }
+function rzAdd(p, k) { if (!p) return; p.rz = p.rz || [0, 0, 0, 0]; p.rz[k] = (p.rz[k] || 0) + 1; }
+function rzList(p) { const r = p.rz || [0, 0, 0, 0], L = []; [0, 1, 2, 3].forEach(k => { for (let n = 0; n < (r[k] || 0); n++) L.push(k === 3 ? 'f' : k); }); return L; }
+function rzHang(p) { const L = rzList(p); if (!L.length) return ''; const show = L.slice(0, 4), more = L.length - show.length;
+  return `<div class="rz-hang">${show.map((k, i) => `<i style="transform:rotate(${[-8, 5, -3, 9][i]}deg)">${rosette(k)}</i>`).join('')}${more > 0 ? `<em>+${more}</em>` : ''}</div>`; }
+function rzLine(p) { const r = p.rz || [0, 0, 0, 0], t = [[r[0], 'gold'], [r[1], 'silver'], [r[2], 'bronze'], [r[3], 'finalist']].filter(x => x[0]).map(x => `${x[0]} ${x[1]}`); return t.length ? `<p class="rz-rec">🎀 ${t.join(' · ')}</p>` : ''; }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
