@@ -112,6 +112,7 @@ Then `rmv44.py`: flow is judge -> pick -> create: the creator prompts come off t
 Then `rmv45.py`: qualifier groups use only the Final's own category; Final result screen from the mock-ups (headline, position chip, cash won, winner, crowd's top 3 vs your picks with Picked/Finished tags, rule, pool and winners stats, creators line, View payouts table, View next Final, Judge photos).
 Then `rmv46.py`: qualifier result for returning players: coin players without a free pick see coin progress and Keep judging; with a free pick ready, "Use your free pick" for the live Final; depositors get "Pick the <live> Final · from $2"; "picks open at" time for the Final the qualifier feeds.
 Then `rmv47.py`: suspense and hero moments: "Counting the votes…" with live bars, 3rd/2nd/1st revealed one by one with your pick for each ("✓ Spot on!"), skip; wins get a confetti hero screen ("+50 coins" / "You won $6.45") before the results.
+Then `rmv48.py`: first-ever cash win gets a bigger one-off celebration; your own photo in a Final gets a reveal and a creator-earnings hero; near-miss chip on Final results; live Final board shows "If it ended now" winnings, a ticking countdown, ▲/▼ moves and a new-leader flash.
 
 ```bash
 python3 rmv6.py
@@ -156,6 +157,7 @@ python3 rmv44.py
 python3 rmv45.py
 python3 rmv46.py
 python3 rmv47.py
+python3 rmv48.py
 ```
 
 ## Skill only
