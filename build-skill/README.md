@@ -264,6 +264,8 @@ Then `rmv127.py`: Picks get navy ticket tags ('My pick 1st'), rosettes are earne
 
 Then `rmv128.py`: Rosettes for your own photos: navy Finalist rosette when a photo qualifies, gold/silver/bronze when it finishes top 3 in a Final; pinned onto the photo in the result pop, hung on its frame in the Gallery with a plaque record ('2 gold · 1 finalist').
 
+Then `rmv129.py`: Slim one-line streak strip (flame count, track with three drawn chests, '1 more → Bronze box'; next chest wiggles when one away). Hitting a box plays a drawn chest opening over the photos with light rays and coins flying to the balance; fixed values kept (Bronze 20, Silver 40, Gold 80). Renamed to chestBurst so it never triggers the old random 'Big chest' pop.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -388,6 +390,7 @@ python3 rmv125.py
 python3 rmv126.py
 python3 rmv127.py
 python3 rmv128.py
+python3 rmv129.py
 ```
 
 ## Skill only
