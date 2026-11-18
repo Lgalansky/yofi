@@ -162,6 +162,8 @@ Then `rmv76.py`: review fixes part 1: invite headline no longer clipped (single 
 
 Then `rmv77.py`: the Tournaments tab becomes a Finals tab (live Final with pool, countdown, finalists, green cash pick and navy free pick; coming-up Finals by category; your picks; recent results; how Finals work). Gallery tab title fixed (was 'Friends').
 
+Then `rmv78.py`: landing clean-up: navy free buttons and green 'Pick the Final · from $2'; navy headings and links; 'From camera roll to cash' removed; realistic recent picker wins; testimonials and FAQ rewritten for Finals, picks and framing.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -235,6 +237,7 @@ python3 rmv74.py
 python3 rmv75.py
 python3 rmv76.py
 python3 rmv77.py
+python3 rmv78.py
 ```
 
 ## Skill only
