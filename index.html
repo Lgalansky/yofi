@@ -1332,6 +1332,10 @@ html body #landing .lp-up{display:block;margin:12px auto 0;font:800 1rem Nunito,
 .myp-i{font-size:1.3rem;flex:none}.myp-t{flex:1;min-width:0;display:flex;flex-direction:column}html body #coach .myp-t b{font:800 .95rem Nunito,system-ui,sans-serif!important;color:#14213D!important;-webkit-text-fill-color:#14213D}.myp-t small{font-size:.74rem;line-height:1.35}.myp-t small em{font-style:normal;font-weight:800;color:#1E3A6E}
 .myp-s{font-style:normal;font-weight:900;font-size:.82rem;color:#14213D;white-space:nowrap}.myp-r.w .myp-s{color:#2F6B3F}
 html body .ppop .btn.myp-add{background:#2F6B3F!important;color:#fff!important;margin-top:4px}
+html body .ppop .nfx-h{font:800 1.8rem/1.1 Fraunces,Georgia,serif!important;color:#14213D!important;-webkit-text-fill-color:#14213D;margin:2px 0 10px}
+.nfx-bar{height:9px;border-radius:5px;background:#EEE6D8;overflow:hidden;margin:0 0 10px}.nfx-bar i{display:block;height:100%;background:linear-gradient(90deg,#E9B949,#C9962E)}
+.nfx-ph{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:0 0 8px}.nfx-ph img,.nfx-ph span{width:100%;aspect-ratio:1;border-radius:8px;object-fit:cover}.nfx-ph span{display:grid;place-items:center;background:#E3EAF5;color:#1E3A6E;font-weight:900}
+html body .ppop .btn.nfx-v{background:#1E3A6E!important;color:#fff!important}
 </style>
 </head>
 <body>
@@ -5578,7 +5582,7 @@ function raceOwnResultShow(sl) { const x = S.races[sl], g = ppGame(sl), i = g.ph
   $('#roAgain').onclick = () => { popClose(); showEnter(x.pid); }; $('#roBack').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
 setInterval(() => { if (!S || !S.rcPop || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return; const x = S.rcPop; S.rcPop = null; save(); rcQualPop(x); }, 1500);
 setInterval(() => { if (!S || !S.races) return; const cur = ppSlot(); Object.entries(S.races).forEach(([sl, x]) => { if (+sl === cur && !x.done && !x.on) { x.on = 1; save();  } }); }, 5000);
-setInterval(() => { if (!S || !S.races || busyUI()) return; const now = Date.now();
+setInterval(() => { if (!S || !S.races || resBlocked()) return; const now = Date.now();
   const k = Object.keys(S.races).find(sl => !S.races[sl].done && now >= Math.min((+sl + 1) * PP_MS, S.races[sl].at + PP_DEMO * 1.5)); if (k) raceOwnResult(+k); }, 3000);
 function ppResultShow(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc = ppScore(e.picks, g.ord), n = e.players || g.players, st = e.stake || 1, jp = raceJP(e.sl); let better = 0;
   for (let i = 0; i < n - 1; i++) { const a = ppShuffle([...Array(RACE_N).keys()], r); if (r() < .45) { const w = a.indexOf(g.ord[0]); [a[0], a[w]] = [a[w], a[0]]; } if (ppScore(a.slice(0, 3), g.ord) > sc) better++; }
@@ -5612,9 +5616,9 @@ function ppResultShow(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc 
       cw.querySelector('.cw2-go').insertAdjacentHTML('beforebegin', `<p class="cw2-nx">Next Final for your photo: <b>${raceName(nx)}</b> · <b class="g">${ppPool(G.players)} pool</b></p>`); }
     document.querySelectorAll('#coach .up-box, #coach #ppReal1, #coach #ppReal2').forEach(x => x.remove()); }
   if (false) { S.fg = 1; S.tut = 2; save(); const cb = document.querySelector('#coach .fr2-cash'); if (cb) { cb.insertAdjacentHTML('afterend', `<div class="fg2"><b>🎟️ Not this time. Your next free pick is on us.</b><small>New players get a second free pick in the ${raceName(fgSl())} Final.</small><button class="btn block" id="fgGo">🎟️ Make my free pick</button></div>`); $('#fgGo').onclick = () => { popClose(); window.__ppSl = fgSl(); setTimeout(ppOpen, 250); }; } }
-  if (S.tut === 3) { S.tut = 4; S.unlk = 1; save(); } if ($('#ppUp')) $('#ppUp').onclick = () => { popClose(); finPick(); }; $('#ppNext').onclick = () => { popClose(); raceCard(); }; document.querySelectorAll('#ppReal1, #ppReal2').forEach(b => b.onclick = () => { popClose(); setTimeout(() => { window.__ppCash = 1; ppOpen(); }, 250); }); $('#ppOk').onclick = () => { popClose(); go('judge'); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
-setInterval(() => { if (!S || !S.pp || busyUI()) return; const now = Date.now();
-  const e = Object.values(S.pp).find(x => !x.done && now >= ppDue(x)); if (e) ppResult(e); }, 3000);
+  if (S.tut === 3) { S.tut = 4; S.unlk = 1; save(); } if ($('#ppUp')) $('#ppUp').onclick = () => { popClose(); finPick(); }; $('#ppNext').onclick = () => { popClose(); setTimeout(nextFinalPop, 150); }; document.querySelectorAll('#ppReal1, #ppReal2').forEach(b => b.onclick = () => { popClose(); setTimeout(() => { window.__ppCash = 1; ppOpen(); }, 250); }); $('#ppOk').onclick = () => { popClose(); go('judge'); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
+setInterval(() => { if (!S || !S.pp || resBlocked()) return; const now = Date.now();
+  const e = Object.values(S.pp).find(x => !x.done && now >= ppDue(x)); if (e) { popClose(); try { closeSheet(); } catch (x) {} window.__uiT = 0; ppResult(e); } }, 1000);
 const ppRowHTML = () => { if (!S || S.geoBlock) return ''; const g = ppGame(), e = (S.pp || {})[g.sl], cash = e ? e.cur === 'cash' : isCash();
   return `<button class="tsr2 pprow ${e ? 'in' : ''}" id="ppRow"><span class="tsr2-t"><span class="fr-tag pp-tag">${e ? 'IN ✓' : '🎀 SHOW'}</span><b>${tLeft(g.end)}</b></span><span class="tsr2-p">${ppPool(g.players)}</span><span class="tsr2-n"><small>${raceName(g.sl)} Final</small></span><span class="tsr2-e">${e ? 'View' : cash ? 'Bet' : 'Free $1'}</span></button>`; };
 document.addEventListener('click', e => { if (e.target.closest('#ppRow')) { e.preventDefault(); e.stopPropagation(); raceCard(); } }, true);
@@ -5877,7 +5881,7 @@ function finPick() { let o = document.getElementById('finPick'); if (!o) { o = d
     <p class="fp-n">Finals for Pets, Nature &amp; landscapes, Garden &amp; flowers.</p></div>`;
   o.className = 'on'; o.querySelector('.fp-x').onclick = () => { o.className = ''; window.__uiT = Date.now(); };
   o.querySelectorAll('[data-fpk]').forEach(b => b.onclick = () => { const k = b.dataset.fpk; o.className = ''; window.__uiT = Date.now(); window.__preCat = showHint(k).cats[0];
-    if ($('#landing').style.display !== 'none' || !$('#app').classList.contains('on')) yWL(); else pickPhoto(true); }); }
+    if ($('#landing').style.display !== 'none' || !$('#app').classList.contains('on')) { if (!S.user) { S.user = { h: 'guest' + Math.floor(1000 + Math.random() * 9000), guest: 1 }; tutInit(); save(); } openApp(); go('gallery'); try { renderMyShow(); } catch (e) {} } pickPhoto(true); }); }
 const ffreeFirst = () => !S.firstEntry && !S.ffDone && !Object.values(S.rc || {}).some(r => r.st || (r.f && r.f.length));
 window.finPick = finPick;
 setInterval(() => { try { if (!S || !S.fpPend || S.tut !== 2 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on') || $('#panes').dataset.at !== 'judge') return; S.fpPend = 0; save();
@@ -6241,7 +6245,7 @@ function winResult(w) { if (w.__rv) return; w.__rv = 1; const g = ppGame(w.sl), 
   w.done = 1; w.prize = prize; w.odds = od; if (prize) { S.cash = +((S.cash || 0) + prize).toFixed(2); paintWallet(); } save();
   revealSeq({ ph: g.ph, ord: g.ord, picks: [w.pick], win: { odds: od }, res: { won, amt: money(prize), txt: won ? `You won ${money(prize)}` : 'No cash this time' }, kicker: `${raceName(g.sl)} Final · Winner pick`, title: `${ppPool(w.players || g.players)} prize pool · ${w.players || g.players} players` },
     () => { popClose(); if (prize) setTimeout(() => cashExplosion && cashExplosion(prize, { label: 'Winner pick' }), 300); }); }
-setInterval(() => { try { if (!S || !S.pw) return; const e = Object.values(S.pw).find(x => !x.done && Date.now() >= ppDue(x)); if (!e) return; if (busyUI() && !document.querySelector('#coach.on .wlv')) return; popClose(); window.__uiT = 0; setTimeout(() => winResult(e), 300); } catch (x) {} }, 1500);
+setInterval(() => { try { if (!S || !S.pw) return; const e = Object.values(S.pw).find(x => !x.done && Date.now() >= ppDue(x)); if (!e) return; if (resBlocked()) return; popClose(); window.__uiT = 0; setTimeout(() => winResult(e), 300); } catch (x) {} }, 1500);
 function laneTags(sl, i, p) { const T = (S.pp || {})[sl], W = (S.pw || {})[sl], k = T ? T.picks.indexOf(i) : -1, t = [];
   if (p.mine) t.push('📷 Your photo'); if (k >= 0) t.push(`Your ${RT_ORD[k]} pick`); if (W && W.pick === i) t.push('🏆 Your winner');
   return t.length ? `<u>${t.join(' · ')}</u> ` : ''; }
@@ -6257,6 +6261,15 @@ function myPicksPaint(g, L) { const el = document.getElementById('myPk'); if (!e
   if (el.__h !== h) { el.__h = h; el.innerHTML = h; const bw = el.querySelector('[data-myw]'), bt = el.querySelector('[data-myt]'); if (bw) bw.onclick = () => winOpen(true); if (bt) bt.onclick = () => { popClose(); window.__ppCash = 1; setTimeout(ppOpen, 150); }; } }
 function finReady(sl) { const cur = ppSlot(), k = sl - cur; if (k <= 0) return 'Racing now'; const p = (Date.now() - cur * PP_MS) / PP_MS, n = Math.max(0, Math.min(6, Math.floor((k === 1 ? 2 + 4 * p : k === 2 ? 4 * p : 2 * p))));
   return n >= 6 ? 'All 6 finalists in · starting soon' : `Starts when 6 finalists are in · ${n} of 6 in`; }
+function resBlocked() { return !!document.querySelector('#coach.on #ppGo, #coach.on #ppFree, #coach.on #wpGo, #coach.on #wpFree, #coach.on #gtGo, #coach.on .rv, #coach.on .frv, #coach.on .qs2, #flow.on, #finPick.on, #sheet.on input') || (typeof judging !== 'undefined' && judging); }
+function nextFinalPop() { const nx = ppSlot() + 1, G = ppGame(nx), cur = ppSlot(), p = (Date.now() - cur * PP_MS) / PP_MS, n = Math.max(0, Math.min(6, Math.floor(2 + 4 * p)));
+  popOpen(`<div class="pp nfx"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🎀 Up next</p><h2 class="nfx-h">The ${esc(showName(G.k))} Final</h2>
+    <div class="lk-row"><div class="lk-pz"><small>Prize pool so far</small><b>${ppPool(G.players)}</b><span>${G.players} players</span></div><div class="lk-cd"><small>Finalists in</small><b>${n} of 6</b><span>${n >= 6 ? 'starting soon' : 'starts at 6'}</span></div></div>
+    <div class="nfx-bar"><i style="width:${Math.round(100 * n / 6)}%"></i></div>
+    <div class="nfx-ph">${G.ph.map((ph, i) => i < n ? `<img src="${ph.src}" alt="">` : '<span>?</span>').join('')}</div>
+    <p class="pp-i">It starts as soon as 6 photos win their qualifiers. Picks open then.</p>
+    <button class="btn block nfx-v" id="nfVote">⚖️ Vote to choose the finalists</button><div style="text-align:center"><button class="link pc-later" id="nfUp">📷 Enter your photo</button></div></div>`);
+  $('#nfVote').onclick = () => { popClose(); go('judge'); renderJudge(); }; $('#nfUp').onclick = () => { popClose(); finPick(); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
