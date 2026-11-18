@@ -246,6 +246,8 @@ Then `rmv118.py`: Finals named by category with no clock time ('The Pets Final')
 
 Then `rmv119.py`: 'View next Final' opens an Up next card (finalists in x of 6, pool so far, vote / enter your photo) instead of reopening the finished race; results interrupt any open pop as soon as a Final ends (blocked only mid-pick, mid-upload or during a reveal); landing 'Enter your photo' opens the app Gallery before the photo picker.
 
+Then `rmv120.py`: Photo picker always opens over your Gallery: pickPhoto moves you to the Gallery (closing pops and the Finals tab) from any entry point first. Finals 'How Finals work' no longer says 'Every hour'.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -361,6 +363,7 @@ python3 rmv116.py
 python3 rmv117.py
 python3 rmv118.py
 python3 rmv119.py
+python3 rmv120.py
 ```
 
 ## Skill only
