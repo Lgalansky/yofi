@@ -270,6 +270,8 @@ Then `rmv130.py`: Pick result reveal: one signal per fact. Rosettes removed from
 
 Then `rmv131.py`: Result bugs: one reveal settles Top 3 + Winner picks on the same Final (total won with a line per pick; Winner pick waits for the Top 3 result so the result page isn't closed). Coin Pick page after the reveal no longer repeats 'Spot on!' ('+10 coins in your balance'). 'of your photos in the top 3' → 'of your picks'. Final result page states the Winner pick outcome.
 
+Then `rmv132.py`: Winner odds locked when you pick: pick screen 'pays $X if it wins · 🔒 Odds locked when you pick', live page and picks panel 'locked at N× · pays $X', settlement uses the locked odds (fallback to closing odds for older picks); rules line updated.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -397,6 +399,7 @@ python3 rmv128.py
 python3 rmv129.py
 python3 rmv130.py
 python3 rmv131.py
+python3 rmv132.py
 ```
 
 ## Skill only
