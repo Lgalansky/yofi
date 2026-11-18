@@ -192,6 +192,8 @@ Then `rmv91.py`: Gallery becomes a creator page once you have a framed photo: re
 
 Then `rmv92.py`: games rotate after the first Final (qualifier, then Quick Sprint, every 10 votes; strip names the next one; old Sprint nudge and the score-based coin battle switched off); streak boxes pay coins with a burst, no pop; no toasts per qualifier try or 'in the ring now' for your photo.
 
+Then `rmv93.py`: uploading never shows the old improve flow: short 'Preparing your photo…' then straight to the Gallery and Frame your photo (old score result / touch-up screen skipped); coin nudges never open over an upload or any open screen; sign-up text has no photo scores.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -280,6 +282,7 @@ python3 rmv89.py
 python3 rmv90.py
 python3 rmv91.py
 python3 rmv92.py
+python3 rmv93.py
 ```
 
 ## Skill only
