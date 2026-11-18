@@ -3528,7 +3528,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v122</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v123</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -5587,7 +5587,7 @@ function raceOwnResultShow(sl) { const x = S.races[sl], g = ppGame(sl), i = g.ph
 setInterval(() => { if (!S || !S.rcPop || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return; const x = S.rcPop; S.rcPop = null; save(); rcQualPop(x); }, 1500);
 setInterval(() => { if (!S || !S.races) return; const cur = ppSlot(); Object.entries(S.races).forEach(([sl, x]) => { if (+sl === cur && !x.done && !x.on) { x.on = 1; save();  } }); }, 5000);
 setInterval(() => { if (!S || !S.races || resBlocked()) return; const now = Date.now();
-  const k = Object.keys(S.races).find(sl => !S.races[sl].done && now >= Math.min((+sl + 1) * PP_MS, S.races[sl].at + PP_DEMO * 1.5)); if (k) raceOwnResult(+k); }, 3000);
+  const k = Object.keys(S.races).find(sl => !S.races[sl].done && !rvBusy(S.races[sl]) && now >= Math.min((+sl + 1) * PP_MS, S.races[sl].at + PP_DEMO * 1.5)); if (k) raceOwnResult(+k); }, 3000);
 function ppResultShow(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc = ppScore(e.picks, g.ord), n = e.players || g.players, st = e.stake || 1, jp = raceJP(e.sl); let better = 0;
   for (let i = 0; i < n - 1; i++) { const a = ppShuffle([...Array(RACE_N).keys()], r); if (r() < .45) { const w = a.indexOf(g.ord[0]); [a[0], a[w]] = [a[w], a[0]]; } if (ppScore(a.slice(0, 3), g.ord) > sc) better++; }
   const rank = better + 1, TR = ppTiers(e, g), net = TR.net, prize = TR.prize, jpWin = 0;
@@ -5622,7 +5622,7 @@ function ppResultShow(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc 
   if (false) { S.fg = 1; S.tut = 2; save(); const cb = document.querySelector('#coach .fr2-cash'); if (cb) { cb.insertAdjacentHTML('afterend', `<div class="fg2"><b>🎟️ Not this time. Your next free pick is on us.</b><small>New players get a second free pick in the ${raceName(fgSl())} Final.</small><button class="btn block" id="fgGo">🎟️ Make my free pick</button></div>`); $('#fgGo').onclick = () => { popClose(); window.__ppSl = fgSl(); setTimeout(ppOpen, 250); }; } }
   if (S.tut === 3) { S.tut = 4; S.unlk = 1; save(); } if ($('#ppUp')) $('#ppUp').onclick = () => { popClose(); finPick(); }; $('#ppNext').onclick = () => { popClose(); setTimeout(nextFinalPop, 150); }; document.querySelectorAll('#ppReal1, #ppReal2').forEach(b => b.onclick = () => { popClose(); setTimeout(() => { window.__ppCash = 1; ppOpen(); }, 250); }); $('#ppOk').onclick = () => { popClose(); go('judge'); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
 setInterval(() => { if (!S || !S.pp || resBlocked()) return; const now = Date.now();
-  const e = Object.values(S.pp).find(x => !x.done && now >= ppDue(x)); if (e) { popClose(); try { closeSheet(); } catch (x) {} window.__uiT = 0; ppResult(e); } }, 1000);
+  const e = Object.values(S.pp).find(x => !x.done && now >= ppDue(x) && !rvBusy(x)); if (e) { popClose(); try { closeSheet(); } catch (x) {} window.__uiT = 0; ppResult(e); } }, 1000);
 const ppRowHTML = () => { if (!S || S.geoBlock) return ''; const g = ppGame(), e = (S.pp || {})[g.sl], cash = e ? e.cur === 'cash' : isCash();
   return `<button class="tsr2 pprow ${e ? 'in' : ''}" id="ppRow"><span class="tsr2-t"><span class="fr-tag pp-tag">${e ? 'IN ✓' : '🎀 SHOW'}</span><b>${tLeft(g.end)}</b></span><span class="tsr2-p">${ppPool(g.players)}</span><span class="tsr2-n"><small>${raceName(g.sl)} Final</small></span><span class="tsr2-e">${e ? 'View' : cash ? 'Bet' : 'Free $1'}</span></button>`; };
 document.addEventListener('click', e => { if (e.target.closest('#ppRow')) { e.preventDefault(); e.stopPropagation(); raceCard(); } }, true);
@@ -5961,10 +5961,10 @@ function heroWin(big, sub, done, first) { const c = $('#coach');
 function gateResult(G, picks) { const top = G.ord.slice(0, 3), right = picks.filter((p, i) => top[i] === p).length, pay = GATE_COINS[right];
   revealSeq({ ph: G.ph, ord: G.ord, picks, qual: 1, res: { won: !!pay, amt: `+${pay} coins`, txt: pay ? `+${pay} coins` : `No coins · 1 exact spot pays ${GATE_COINS[1]} coins` }, kicker: `Coin Pick · Round ${G.gi + 1} of 3`, title: `Top 2 go through to the ${raceName(G.ns)} Final` },
     () => gateResultShow(G, picks)); }
-function ppResult(e) { if (e.__rv) return; e.__rv = 1; const g = ppGame(e.sl), TR = ppTiers(e, g), prize = TR.prize;
+function ppResult(e) { if (rvBusy(e)) return; e.__rv = Date.now(); const g = ppGame(e.sl), TR = ppTiers(e, g), prize = TR.prize;
   revealSeq({ ph: g.ph, ord: g.ord, picks: e.picks, res: { won: !!prize, amt: money(prize), txt: prize ? `You won ${money(prize)}` : 'No cash · you need 2 in the top 3, 1 exact' }, kicker: `${raceName(g.sl)} Final`, title: `${ppPool(e.players || g.players)} prize pool · ${e.players || g.players} players` },
     () => prize ? (S.firstCash ? ppResultShow(e) : (S.firstCash = 1, save(), heroWin(`${money(prize)}`, `<b>Your first real cash win!</b><br>${TR.mine.lab} · it’s in your wallet now`, () => ppResultShow(e), 1))) : ppResultShow(e)); }
-function raceOwnResult(sl) { const x = S.races[sl]; if (!x || x.__rv) return; x.__rv = 1; const g = ppGame(sl), i = g.ph.findIndex(p => p.mine), pl = i < 0 ? RACE_N : g.ord.indexOf(i) + 1, earn = pl <= RACE_N ? finShare(sl, pl) : 0, ph = i >= 0 ? g.ph[i] : null;
+function raceOwnResult(sl) { const x = S.races[sl]; if (!x || rvBusy(x)) return; x.__rv = Date.now(); const g = ppGame(sl), i = g.ph.findIndex(p => p.mine), pl = i < 0 ? RACE_N : g.ord.indexOf(i) + 1, earn = pl <= RACE_N ? finShare(sl, pl) : 0, ph = i >= 0 ? g.ph[i] : null;
   revealSeq({ ph: g.ph, ord: g.ord, picks: [], mine: i, kicker: `${raceName(sl)} Final`, title: ph ? `📷 Your photo “${esc(ph.t)}” is in this Final` : '' },
     () => earn ? heroWin(`You earned ${money(earn)}`, `📷 “${esc(ph.t)}” finished ${ppOrd(pl)} · your creator share`, () => raceOwnResultShow(sl), !S.firstCash && (S.firstCash = 1, save(), 1)) : raceOwnResultShow(sl)); }
 function rbStatus(g, e, L) { if (!e) return ''; const gl = Object.assign({}, g, { ord: L.map(x => x.i) }), T = ppTiers(e, gl), pos = e.picks.map(i => L.findIndex(x => x.i === i) + 1);
@@ -5972,7 +5972,7 @@ function rbStatus(g, e, L) { if (!e) return ''; const gl = Object.assign({}, g, 
   const inT = pos.filter(x => x >= 1 && x <= 3).length, nd = []; if (inT < 2) nd.push(`${2 - inT} more in the top 3`); if (ex < 1) nd.push('1 in its exact spot');
   return `<div class="rb-st ${T.prize ? 'win' : ''}"><b>${T.prize ? `Right now you’d win ~${money(T.prize)}` : 'Right now: no cash yet'}</b><small>${inT} of your picks in the top 3 · ${ex} in the exact spot${!T.prize && nd.length ? `<br><b class="rb-need">Needs ${nd.join(' and ')}</b>` : ''}</small></div>`; }
 setInterval(() => { document.querySelectorAll('.rb-cd').forEach(el => { const r = Math.max(0, +el.dataset.due - Date.now()); el.textContent = r ? `${Math.floor(r / 60000)}:${String(Math.floor(r / 1000) % 60).padStart(2, '0')}` : 'Now!';
-    if (!r && el.dataset.sl && el.closest('#coach.on')) { const e = (S.pp || {})[el.dataset.sl]; if (e && !e.done && !e.__rv) { el.removeAttribute('data-sl'); setTimeout(() => { popClose(); window.__uiT = 0; setTimeout(() => ppResult(e), 300); }, 900); } } }); }, 1000);
+    if (!r && el.dataset.sl && el.closest('#coach.on')) { const e = (S.pp || {})[el.dataset.sl]; if (e && !e.done && !rvBusy(e)) { el.removeAttribute('data-sl'); setTimeout(() => { popClose(); window.__uiT = 0; setTimeout(() => ppResult(e), 300); }, 900); } } }); }, 1000);
 document.addEventListener('click', e => { if (e.target.closest('#rbLiveRow')) { e.preventDefault(); e.stopPropagation(); try { closeSheet(); } catch (x) {} ppOpen(); } }, true);
 setInterval(() => { try { if (!S || !S.unlk || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on')) return; S.unlk = 0; save();
   toast('🟡 Unlocked: free Final picks, Quick Sprint and coin challenges · tap your coins'); const p = document.querySelector('#gemPill, .gempill, #wCoins'); if (p) { p.classList.add('unl'); setTimeout(() => p.classList.remove('unl'), 6000); } } catch (e) {} }, 1500);
@@ -6245,11 +6245,11 @@ function winLive(w) { const g = ppGame(w.sl), od = winOdds(g)[w.pick], mm = r =>
     ${raceTrackHTML(g, { picks: [w.pick], win: 1 })}<div class="myp" id="myPk"></div><p class="pp-i"><small>Demo: results arrive about 2 minutes after you pick.</small></p>
     <button class="btn block pc-go" id="wlOk">${isYoungW() ? 'Keep judging' : 'Keep voting'}</button></div>`);
   $('#wlOk').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
-function winResult(w) { if (w.__rv) return; w.__rv = 1; const g = ppGame(w.sl), od = winOdds(g, (w.sl + 1) * PP_MS - 1)[w.pick], won = g.ord[0] === w.pick, st = w.stake || 2, prize = won ? +(st * od).toFixed(2) : 0;
+function winResult(w) { if (rvBusy(w)) return; w.__rv = Date.now(); const g = ppGame(w.sl), od = winOdds(g, (w.sl + 1) * PP_MS - 1)[w.pick], won = g.ord[0] === w.pick, st = w.stake || 2, prize = won ? +(st * od).toFixed(2) : 0;
   w.done = 1; w.prize = prize; w.odds = od; if (prize) { S.cash = +((S.cash || 0) + prize).toFixed(2); paintWallet(); } save();
   revealSeq({ ph: g.ph, ord: g.ord, picks: [w.pick], win: { odds: od }, res: { won, amt: money(prize), txt: won ? `You won ${money(prize)}` : 'No cash this time' }, kicker: `${raceName(g.sl)} Final · Winner pick`, title: `${ppPool(w.players || g.players)} prize pool · ${w.players || g.players} players` },
     () => { popClose(); if (prize) setTimeout(() => cashExplosion && cashExplosion(prize, { label: 'Winner pick' }), 300); }); }
-setInterval(() => { try { if (!S || !S.pw) return; const e = Object.values(S.pw).find(x => !x.done && Date.now() >= ppDue(x)); if (!e) return; if (resBlocked()) return; popClose(); window.__uiT = 0; setTimeout(() => winResult(e), 300); } catch (x) {} }, 1500);
+setInterval(() => { try { if (!S || !S.pw) return; const e = Object.values(S.pw).find(x => !x.done && Date.now() >= ppDue(x) && !rvBusy(x)); if (!e) return; if (resBlocked()) return; popClose(); window.__uiT = 0; setTimeout(() => winResult(e), 300); } catch (x) {} }, 1500);
 function laneTags(sl, i, p) { const T = (S.pp || {})[sl], W = (S.pw || {})[sl], k = T ? T.picks.indexOf(i) : -1, t = [];
   if (p.mine) t.push('📷 Your photo'); if (k >= 0) t.push(`Your ${RT_ORD[k]} pick`); if (W && W.pick === i) t.push('🏆 Your winner');
   return t.length ? `<u>${t.join(' · ')}</u> ` : ''; }
@@ -6274,6 +6274,9 @@ function nextFinalPop() { const nx = ppSlot() + 1, G = ppGame(nx), cur = ppSlot(
     <p class="pp-i">It starts as soon as 6 photos win their qualifiers. Picks open then.</p>
     <button class="btn block nfx-v" id="nfVote">⚖️ Vote to choose the finalists</button><div style="text-align:center"><button class="link pc-later" id="nfUp">📷 Enter your photo</button></div></div>`);
   $('#nfVote').onclick = () => { popClose(); go('judge'); renderJudge(); }; $('#nfUp').onclick = () => { popClose(); finPick(); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
+// a result counts as "in progress" only while something is on screen for it (or for 20 s after it starts)
+function rvBusy(x) { return !!(x && x.__rv && (Date.now() - x.__rv < 20000 || document.querySelector('#coach.on, #heroWin.on, .hw.on'))); }
+try { ['pp', 'pw', 'races'].forEach(k => Object.values(S[k] || {}).forEach(x => { if (x && !x.done) delete x.__rv; })); } catch (e) {}
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
