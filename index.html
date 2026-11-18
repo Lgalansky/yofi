@@ -5589,8 +5589,8 @@ function ppResultShow(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc 
     ${frUpsell(e, prize, st)}<button class="btn block fr2-next" id="ppNext">View next Final →</button>${e.free && !prize && !isCash() ? '<button class="btn block up-ghost" id="ppReal2">Pick the next Final · from $2</button>' : ''}
     <div style="text-align:center"><button class="link fr2-j" id="ppOk">⚖️ ${y ? 'Judge photos' : 'Judge photos'}</button></div></div>`);
   if (prize) setTimeout(() => cashExplosion && cashExplosion(prize, { label: 'Final' }), 500);
-  { const cw0 = document.querySelector('#coach .cw2'), cb0 = document.querySelector('#coach .fr2-cash'); if (cw0 && cb0) cb0.insertAdjacentElement('afterend', cw0); }
-  if (S.tut === 3) { const cw = document.querySelector('#coach .cw2'), cb = document.querySelector('#coach .fr2-cash'); if (cw && cb) { cb.insertAdjacentElement('afterend', cw); cw.classList.add('cw2-first'); const nx = ppSlot() + 1, G = ppGame(nx);
+  { const cw0 = document.querySelector('#coach .cw2'), cb0 = document.querySelector('#coach .fr2-pay') || document.querySelector('#coach .fr2-cash'); if (cw0 && cb0) cb0.insertAdjacentElement('afterend', cw0); }
+  if (S.tut === 3) { const cw = document.querySelector('#coach .cw2'), cb = document.querySelector('#coach .fr2-pay') || document.querySelector('#coach .fr2-cash'); if (cw && cb) { cb.insertAdjacentElement('afterend', cw); cw.classList.add('cw2-first'); const nx = ppSlot() + 1, G = ppGame(nx);
       cw.querySelector('.cw2-h').insertAdjacentHTML('beforebegin', `<span class="cw2-pill">📷 Your turn: add a photo</span>`);
       cw.querySelector('.cw2-go').insertAdjacentHTML('beforebegin', `<p class="cw2-nx">Next Final for your photo: <b>${raceName(nx)} ${esc(showName(G.k))}</b> · <b class="g">${ppPool(G.players)} pool</b></p>`); }
     document.querySelectorAll('#coach .up-box, #coach #ppReal1, #coach #ppReal2').forEach(x => x.remove()); }
