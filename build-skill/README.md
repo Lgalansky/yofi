@@ -266,6 +266,8 @@ Then `rmv128.py`: Rosettes for your own photos: navy Finalist rosette when a pho
 
 Then `rmv129.py`: Slim one-line streak strip (flame count, track with three drawn chests, '1 more → Bronze box'; next chest wiggles when one away). Hitting a box plays a drawn chest opening over the photos with light rays and coins flying to the balance; fixed values kept (Bronze 20, Silver 40, Gold 80). Renamed to chestBurst so it never triggers the old random 'Big chest' pop.
 
+Then `rmv130.py`: Pick result reveal: one signal per fact. Rosettes removed from picks (place label + 'Your 2nd pick' + gold border on the podium; 'Exact match' once, under Your picks). Rosettes stay for your own photos only.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -391,6 +393,7 @@ python3 rmv126.py
 python3 rmv127.py
 python3 rmv128.py
 python3 rmv129.py
+python3 rmv130.py
 ```
 
 ## Skill only
