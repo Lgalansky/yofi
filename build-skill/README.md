@@ -196,6 +196,8 @@ Then `rmv93.py`: uploading never shows the old improve flow: short 'Preparing yo
 
 Then `rmv94.py`: three-game rotation every 15 votes (qualifier → Quick Sprint → free Final pick), unaffordable games skipped, never two qualifiers in a row (short of coins: qualifier alternates with a quiet slot); strip names the next game or shows progress to a free pick.
 
+Then `rmv95.py`: every new player gets the free-pick journey once: framing a photo or placing a paid pick no longer ends it; it ends with the first free-pick result.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -286,6 +288,7 @@ python3 rmv91.py
 python3 rmv92.py
 python3 rmv93.py
 python3 rmv94.py
+python3 rmv95.py
 ```
 
 ## Skill only
