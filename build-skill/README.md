@@ -174,6 +174,8 @@ Then `rmv82.py`: new-player improvements 5-9: upload success pop (save photo / v
 
 Then `rmv83.py`: new player's first Final result pushes photo entry: 'Your turn: add a photo' card moves up under the result with the next Final and pool; cash upsell held back on that screen; guarantee pick stays on top on a loss; confetti null guard.
 
+Then `rmv84.py`: free pick opens the live page at once (was ~9 s waiting for the pick screen to close); live status explains the rule from your picks (in top 3, exact, what is still needed) and each highlighted row shows where that pick needs to finish.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -253,6 +255,7 @@ python3 rmv80.py
 python3 rmv81.py
 python3 rmv82.py
 python3 rmv83.py
+python3 rmv84.py
 ```
 
 ## Skill only
