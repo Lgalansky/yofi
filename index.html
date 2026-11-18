@@ -1061,6 +1061,7 @@ html .rvw .btn.rvw-go{background:#24563A!important;color:#fff!important}
 .rb-n s{display:block;text-decoration:none;font-size:.62rem;line-height:1}.rb-n s.up{color:#2EA36B}.rb-n s.dn{color:#C8102E}.rb-lead{margin-left:auto;color:#C8102E;font-weight:900;animation:unGlow 1s 3}
 .unl{animation:unlGlow 1s ease-in-out 6}@keyframes unlGlow{50%{box-shadow:0 0 0 3px #E2A21C,0 0 18px rgba(226,162,28,.7)}}
 .g2-prog.ready{background:#E6F0DF;box-shadow:inset 0 0 0 1.5px #2F6B3F}.g2-prog.ready p+p{margin:0;font-weight:700;color:#2F6B3F}
+html body .rv .btn.rv-go{background:#24563A!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font:800 1.2rem Fraunces,Georgia,serif;margin-top:6px;animation:rvPop .5s cubic-bezier(.2,1.6,.4,1)}.rv{min-height:0!important}
 </style>
 </head>
 <body>
@@ -5639,15 +5640,15 @@ function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o;
   popOpen(`<div class="pp rv"><p class="pp-k">${kicker}</p><h2 class="rv-h" id="rvH">Counting the votes…</h2><p class="rv-s" id="rvS">${title}</p>
     <div class="rv-bars">${ph.map((p, i) => `<div class="rv-b"><img src="${p.src}" alt=""><span><i style="--w:${(30 + Math.random() * 60).toFixed(0)}%"></i></span>${picks.includes(i) ? `<em>${RV_MED[picks.indexOf(i)]}</em>` : mine === i ? '<em>📷</em>' : ''}</div>`).join('')}</div>
     <div class="rv-pod" id="rvPod">${[2, 1, 0].map(k => `<div class="rv-slot" data-k="${k}"><span class="rv-q">?</span><b>${RV_MED[k]} ${RV_ORD[k]}</b></div>`).join('')}</div>
-    <p class="rv-me" id="rvMe">&nbsp;</p><div style="text-align:center"><button class="link rv-skip" id="rvSkip">Skip ›</button></div></div>`);
-  $('#rvSkip').onclick = fin;
+    <p class="rv-me" id="rvMe">&nbsp;</p><button class="btn block rv-go" id="rvGo" hidden>Continue →</button><div style="text-align:center"><button class="link rv-skip" id="rvSkip">Skip ›</button></div></div>`);
+  $('#rvSkip').onclick = fin; $('#rvGo').onclick = fin;
   [2, 1, 0].forEach((k, n) => at(1900 + n * 1300, () => { const el = document.querySelector(`#rvPod [data-k="${k}"]`); if (!el) return; const p = ph[ord[k]], hit = picks[k] === ord[k];
     if (n === 0) { $('#rvH').textContent = 'And the results are…'; document.querySelector('.rv-bars').classList.add('done'); }
     el.innerHTML = `<img src="${p.src}" alt=""><b>${RV_MED[k]} ${RV_ORD[k]}</b>`; el.classList.add('on', hit ? 'hit' : 'miss');
     $('#rvMe').innerHTML = mine != null && ord[k] === mine ? `<b class="ok">📷 Your photo finished ${RV_ORD[k]}!</b>` : hit ? `<b class="ok">✓ Spot on!</b> Your ${RV_ORD[k]} pick` : picks[k] != null ? `You picked <b>“${esc(ph[picks[k]].t || 'another photo')}”</b> for ${RV_ORD[k]}` : '&nbsp;';
     if (hit || (mine != null && ord[k] === mine)) { el.classList.add('pop', 'hit'); rvConfetti(el, 14); } }));
   if (mine != null && mine >= 0 && !ord.slice(0, 3).includes(mine)) at(1900 + 3 * 1300 + 100, () => { $('#rvMe').innerHTML = `📷 Your photo finished ${ppOrd(ord.indexOf(mine) + 1)} · finalists still share the pool`; });
-  at(1900 + 3 * 1300 + 700, fin); }
+  at(1900 + 3 * 1300 + 400, () => { const g = $('#rvGo'), k = $('#rvSkip'); if (g) g.hidden = false; if (k) k.hidden = true; }); }
 function heroWin(big, sub, done, first) { const c = $('#coach');
   popOpen(`<div class="pp rvw ${first ? 'first' : ''}"><p class="rvw-k">${first ? '🏆 First win!' : '🎉 Winner!'}</p><b class="rvw-amt">${big}</b><p class="rvw-s">${sub}</p><button class="btn block rvw-go" id="rvwGo">See results</button></div>`);
   rvConfetti(document.querySelector('.rvw'), first ? 140 : 70); if (first) setTimeout(() => rvConfetti(document.querySelector('.rvw'), 90), 900); let gone = false; const go = () => { if (gone) return; gone = true; done(); }; $('#rvwGo').onclick = go; setTimeout(go, first ? 5200 : 3600); }
