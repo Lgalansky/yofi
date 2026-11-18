@@ -1302,6 +1302,20 @@ html body #judge .tot-c.cfx-win{box-shadow:0 0 0 4px #E9B949,0 0 26px 4px rgba(2
 .cfx-plus small{display:inline-block;padding:4px 12px;border-radius:999px;background:rgba(20,33,61,.75);font:800 1rem Nunito,system-ui,sans-serif;color:#fff;-webkit-text-fill-color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
 @keyframes cfxPlus{0%{opacity:0;transform:translateY(16px) scale(.6)}25%{opacity:1;transform:translateY(0) scale(1.15)}45%{transform:scale(1)}100%{opacity:0;transform:translateY(-38px)}}
 @media (prefers-reduced-motion:reduce){.cfx-sp{display:none}.cfx-plus,html body #judge .tot-c.cfx-win{animation:none}.cfx-plus{opacity:1}}
+.jy{margin:10px 0 4px;padding:10px 8px 8px;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1.5px #EADCC6}
+.jy-tr{display:flex;align-items:flex-start}.jy-ln{flex:1;height:3px;margin-top:15px;background:#E2D3BC;border-radius:2px}.jy-s.done+.jy-ln{background:#D9AE4F}
+.jy-s{position:relative;display:flex;flex-direction:column;align-items:center;width:44px;flex:none}.jy-s>b{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#F3EDE2;box-shadow:inset 0 0 0 2px #E2D3BC;color:#fff;font-size:.85rem}
+.jy-s.done>b{background:#D9AE4F;box-shadow:none}.jy-s img{width:34px;height:34px;object-fit:cover;border-radius:6px;margin-top:-2px;box-shadow:0 0 0 3px #C9962E,0 0 0 5px #F3D98B,0 4px 10px rgba(0,0,0,.3);animation:jyIn .6s cubic-bezier(.2,1.4,.4,1)}
+.jy-s.live img{box-shadow:0 0 0 3px #C8102E,0 0 14px rgba(200,16,46,.6);animation:jyLive 1s ease-in-out infinite}@keyframes jyLive{50%{transform:scale(1.08)}}@keyframes jyIn{from{transform:translateX(-30px) scale(.6);opacity:0}}
+.jy-s small{margin-top:4px;font-size:.62rem;font-weight:800;color:#6B5E55;text-align:center;line-height:1.1}.jy-s.now small{color:#14213D}
+.jy-dots{display:flex;gap:2px;margin-top:3px}.jd{width:13px;height:13px;border-radius:50%;background:#EEE6D8;font-style:normal;font-size:.48rem;font-weight:900;display:grid;place-items:center;color:#6B5E55}.jd.ok{background:#2F6B3F;color:#fff}.jd.x{background:#E2D3BC}
+.jy-sub{margin:8px 0 0;text-align:center;font-size:.86rem;color:#2B2320}.jy-sub b{color:#14213D}.jy-bar{height:7px;margin:6px 6px 0;border-radius:4px;background:#F3EDE2;overflow:hidden}.jy-bar i{display:block;height:100%;background:linear-gradient(90deg,#E9B949,#C9962E);border-radius:4px;transition:width .6s ease}
+html body #judge .jrow{position:relative;display:block;width:100%;margin:10px 0 0;padding:10px 10px 8px;border:0;border-radius:16px;background:#FBF6EE;box-shadow:inset 0 0 0 1.5px #E2C27A;font:inherit;text-align:left;cursor:pointer;overflow:visible}
+.jrow-h{display:flex;align-items:center;justify-content:space-between;gap:6px}.jrow-h b{font-size:.9rem;color:#14213D}.jrow .jy{margin:6px 0 0;box-shadow:none;background:transparent;padding:4px 0 0}
+.jrow-chip{font-style:normal;font-weight:800;font-size:.78rem;padding:3px 10px;border-radius:999px;background:#14213D;color:#F3D98B;white-space:nowrap;animation:rtkPop .6s ease}
+html body #judge .jrow.mv{animation:cfxGlow .9s ease-in-out 2}.jrow .cfx-sp{left:50%;top:55%}
+.rtk-lane.own{box-shadow:inset 0 0 0 2px #F3D98B}.rtk-lane.own .rtk-run img{box-shadow:0 0 0 3px #F3D98B,0 0 16px rgba(243,217,139,.9)}
+@media (prefers-reduced-motion:reduce){.jy-s img,.jy-s.live img{animation:none}}
 </style>
 </head>
 <body>
@@ -5455,7 +5469,7 @@ function ppOpen() { const pc = window.__ppCash; window.__ppCash = 0; const fsl =
         <span class="lk-ph">${e.picks.map((p, i) => `<i><img src="${g.ph[p].src}" alt=""><em>${PP_MED[i]} ${['1st', '2nd', '3rd'][i]}</em></i>`).join('')}</span></div>
         <div class="lk-row"><div class="lk-pz"><small>Cash prize pool</small><b>${ppPool(e.players || g.players)}</b><span>${e.players || g.players} players</span></div><div class="lk-cd"><small>Results in</small><b class="rb-cd" data-due="${ppDue(e)}" data-sl="${e.sl}">${(() => { const r = Math.max(0, ppDue(e) - Date.now()); return `${Math.floor(r / 60000)}:${String(Math.floor(r / 1000) % 60).padStart(2, '0')}`; })()}</b><span>${raceName(g.sl)} Final</span></div></div>`
         : `<h2 class="pp-h">Your photo is in the ring!</h2><p class="pp-m"><b>${ppPool(g.players)}</b> pool · ${g.players} players · ends ${frTime(g.end)}</p>`}
-      ${e ? raceTrackHTML(g, e) : ''}${ppBoard(g, e)}<p class="pp-i">${e ? `<small>Demo: results arrive about 2 minutes after you pick.</small>` : `Finalists’ creators share <b>10% of the prize pool</b>. Creators can’t pick in a Final their own photo is in.`}</p>
+      ${e || own ? raceTrackHTML(g, e) : ''}${ppBoard(g, e)}<p class="pp-i">${e ? `<small>Demo: results arrive about 2 minutes after you pick.</small>` : `Finalists’ creators share <b>10% of the prize pool</b>. Creators can’t pick in a Final their own photo is in.`}</p>
       ${e && !cash && S.paidCash && fqLeft() && (S.gems || 0) >= FREE_BET_COINS ? `<button class="btn block pc-go" id="ppAdd">🎟️ Add a free $2 · ${FREE_BET_COINS} 🟡</button>` : ''}
       <button class="btn block pc-go" id="ppLater">${keep}</button><div style="text-align:center"><button class="link pc-later" id="ppCard">🎀 Finalists</button></div></div>`); bind();
     if ($('#ppAdd')) $('#ppAdd').onclick = () => { if (!fqLeft()) return; fqClaim(); S.pp[g.sl].stake = (S.pp[g.sl].stake || 2) + 2; save(); toast('🎟️ Free $2 added to your pick'); popClose(); setTimeout(ppOpen, 300); };
@@ -5522,7 +5536,7 @@ function stableOpen() { myShow(); return; const P = (S.photos || []).slice().sor
 function raceEnter() { stableOpen(); }
 function rcHeat() { const ids = (S.photos || []).filter(p => rcRec(p.id).st === 'heats').map(p => p.id); if (!ids.length) return;
   const id = ids.sort((a, b) => (rcRec(a).ha || 0) - (rcRec(b).ha || 0))[0], p = S.photos.find(x => x.id === id), r = rcRec(id), q = cpRng(Date.now() % 1e6);
-  const me = rcStr(p) + (q() - .5) * .5, pl = 1 + [0, 1, 2, 3].filter(() => .3 + q() * .6 + (q() - .5) * .5 > me).length; r.ha = Date.now(); r.f.push({ k: 'h', pl }); r.f = r.f.slice(-12);
+  const me = rcStr(p) + (q() - .5) * .5, pl = 1 + [0, 1, 2, 3].filter(() => .3 + q() * .6 + (q() - .5) * .5 > me).length; r.ha = Date.now(); r.f.push({ k: 'h', pl }); S.jMove = { pid: id, pl, at: Date.now() }; r.f = r.f.slice(-12);
   let share = 0; if (pl === 1) { S.gems = (S.gems || 0) + HEAT_WIN; setTimeout(paintGems, 100); }
   if (pl <= 2) { const sl = rcSlotFor(p); S.races = S.races || {}; S.races[sl] = { pid: id, at: Date.now() }; r.st = 'q'; r.sl = sl; S.rcPop = { k: 'q', pid: id, pl, sl, share }; }
   else { r.runs = (r.runs || 0) + 1; if (r.runs >= HEAT_RUNS) { r.st = null;  }  }
@@ -6107,7 +6121,7 @@ function renderMyShow() { const g = $('#gallery'); if (!g) return; const P = (S.
       : r.st === 'heats' ? `<div class="gx-st"><b>⚖️ In the qualifiers · ${Math.max(0, HEAT_RUNS - (r.runs || 0))} of ${HEAT_RUNS} tries left</b><small>Next qualifier in <b>${Math.max(1, HEAT_EVERY - (S.hN || 0))} ${vw.toLowerCase()}s</b> · top 2 go through to the <b>${raceName(nsl)} Final</b></small><div class="gx-bar"><i style="width:${Math.min(100, 100 * (S.hN || 0) / HEAT_EVERY)}%"></i></div><button class="btn block gx-go" data-gvote>⚖️ ${vw} to move it along</button></div>`
       : `<div class="gx-st rest"><b>Resting · ready to race again</b><small>Its next Final: <b>${raceName(nsl)} ${SH ? esc(SH.n) : ''}</b></small><button class="btn block gx-go" data-glen="${p.id}">🎀 Enter again · free</button></div>`;
     return `<div class="gx-card"><div class="gx-top"><div class="gx-pic"><div class="gx-frame"><div class="gx-mat"><img src="${p.src}" alt=""></div></div><div class="gx-plq"><b>${esc(p.title || rcName(p))}</b><small>${SH ? esc(SH.n) : ''} · framed ${new Date(p.framed).toLocaleDateString([], { day: 'numeric', month: 'short' })}</small></div></div>
-      <div class="gx-side"><div class="gx-rec"><div><b>${money(rec.won)}</b><small>won</small></div><div><b>${rec.finals}</b><small>Final${rec.finals === 1 ? '' : 's'}</small></div><div><b>${rec.best ? ppOrd(rec.best) : '–'}</b><small>best</small></div><div><b>${rec.races}</b><small>qualifiers</small></div></div>${rec.form.length ? `<p class="gl-form">Form <span class="rf">${formHTML(rec.form)}</span></p>` : ''}</div></div>${st}</div>`; };
+      <div class="gx-side"><div class="gx-rec"><div><b>${money(rec.won)}</b><small>won</small></div><div><b>${rec.finals}</b><small>Final${rec.finals === 1 ? '' : 's'}</small></div><div><b>${rec.best ? ppOrd(rec.best) : '–'}</b><small>best</small></div><div><b>${rec.races}</b><small>qualifiers</small></div></div>${rec.form.length ? `<p class="gl-form">Form <span class="rf">${formHTML(rec.form)}</span></p>` : ''}</div></div>${journeyHTML(p)}${st}</div>`; };
   const L = SHOW_ROT.map(x => { const sl = finFor(x.k), G = ppGame(sl); return { k: x.k, sl, src: (G.ph[0] || {}).src, pool: G.players * RACE_AVG }; }).sort((a, b) => a.sl - b.sl);
   g.innerHTML = `<div class="ms gl g4 gx"><h1 class="g4-h"><span class="g4-hi">🖼️</span> My gallery</h1><p class="g4-sub">Your framed photos and their prize record.</p>
     <div class="gl-sum"><div><b>${money(tot)}</b><small>prize money</small></div><div><b>${F.length}</b><small>framed</small></div><div><b>${fin}</b><small>Finals</small></div><div><b>${qual}</b><small>qualifiers</small></div></div>
@@ -6135,13 +6149,13 @@ function freePickUp() { const g = ppGame(); celebrate({ src: (g.ph[0] || {}).src
   cta: '🟡 Open my coins', onCta: () => { closeFlow(); coinTour(); }, later: 'Later' }); }
 const RT_ORD = ['1st', '2nd', '3rd', '4th', '5th', '6th'];
 function raceTrackHTML(g, e) { window.__rtPrev = null; window.__rtSay = null;
-  return `<div class="rtk" id="rtk" data-sl="${g.sl}"><p class="rtk-tick" id="rtkTick">🏁 And they’re off!</p><div class="rtk-track">${g.ph.map((p, i) => { const pk = e.picks.indexOf(i);
-    return `<div class="rtk-lane ${pk >= 0 ? 'pk m' + pk : ''}" data-i="${i}"><span class="rtk-lab">${pk >= 0 ? `<u>Your ${RT_ORD[pk]} pick</u> ` : ''}${esc(p.t)}</span><span class="rtk-run" style="left:2%"><img src="${p.src}" alt="">${pk >= 0 ? `<i>${PP_MED[pk]}</i>` : ''}<b class="rtk-pos">–</b></span></div>`; }).join('')}<i class="rtk-fin"></i></div></div>`; }
-function raceTick() { const el = document.getElementById('rtk'); if (!el || !el.closest('#coach.on')) return; const sl = +el.dataset.sl, g = ppGame(sl), e = (S.pp || {})[sl]; if (!e) return;
+  return `<div class="rtk" id="rtk" data-sl="${g.sl}"><p class="rtk-tick" id="rtkTick">🏁 And they’re off!</p><div class="rtk-track">${g.ph.map((p, i) => { const pk = e ? e.picks.indexOf(i) : -1;
+    return `<div class="rtk-lane ${p.mine ? 'own ' : ''}${pk >= 0 ? 'pk m' + pk : ''}" data-i="${i}"><span class="rtk-lab">${p.mine ? '<u>📷 Your photo</u> ' : ''}${pk >= 0 ? `<u>Your ${RT_ORD[pk]} pick</u> ` : ''}${esc(p.t)}</span><span class="rtk-run" style="left:2%"><img src="${p.src}" alt="">${pk >= 0 ? `<i>${PP_MED[pk]}</i>` : ''}<b class="rtk-pos">–</b></span></div>`; }).join('')}<i class="rtk-fin"></i></div></div>`; }
+function raceTick() { const el = document.getElementById('rtk'); if (!el || !el.closest('#coach.on')) return; const sl = +el.dataset.sl, g = ppGame(sl), e = (S.pp || {})[sl] || { picks: [], at: Date.now() - PP_DEMO / 2, sl, nop: 1 };
   const now = Date.now(), cp = 1 - (g.end - now) / PP_MS, prog = Math.min(1, Math.max(.04, Math.max(cp, (now - e.at) / PP_DEMO))), L = ppLive(g, prog), fin = Math.max(1, ...ppLive(g, 1).map(x => x.v)) * 1.04;
   const rank = {}; L.forEach((x, n) => { rank[x.i] = n + 1; });
   el.querySelectorAll('.rtk-lane').forEach(ln => { const i = +ln.dataset.i, x = L.find(z => z.i === i), r = ln.querySelector('.rtk-run'); r.style.left = `${Math.min(84, 2 + 82 * x.v / fin).toFixed(1)}%`; const b = r.querySelector('.rtk-pos'); b.textContent = RT_ORD[rank[i] - 1]; b.className = 'rtk-pos' + (rank[i] <= 3 ? ' top' : ''); ln.classList.toggle('lead', rank[i] === 1); });
-  const pv = window.__rtPrev, rem = Math.max(0, ppDue(e) - now); let say = null;
+  const pv = window.__rtPrev, rem = Math.max(0, (e.nop ? g.end : ppDue(e)) - now); let say = null;
   if (pv) { const lead = L[0].i; if (pv[lead] !== 1) say = `🔥 ${g.ph[lead].t} takes the lead!`;
     e.picks.forEach((i, k) => { if (say) return; if (rank[i] < pv[i]) say = rank[i] === k + 1 ? `✓ Your ${RT_ORD[k]} pick hits its exact spot!` : `⬆ Your ${RT_ORD[k]} pick climbs to ${RT_ORD[rank[i] - 1]}!`; else if (rank[i] > pv[i] && pv[i] <= 3 && rank[i] > 3) say = `⬇ Your ${RT_ORD[k]} pick drops out of the top 3`; }); }
   if (rem < 20000) { el.classList.add('fin'); say = `🏁 Photo finish! ${Math.ceil(rem / 1000)}s to go`; }
@@ -6155,6 +6169,18 @@ function callFx(pick, pct, agree, earn, combo, prev, mine) { const cards = docum
   try { if (agree && navigator.vibrate) navigator.vibrate(18); } catch (e) {}
   if (agree) { const mc = cards[pick]; mc.classList.add('cfx-win'); mc.insertAdjacentHTML('beforeend', `<span class="cfx-sp">${[...Array(14)].map((_, k) => `<i style="--a:${k * 26}deg;--d:${(k % 3) * .06}s"></i>`).join('')}</span>${combo >= 2 ? `<span class="cfx-plus"><small>🔥 ${combo} in a row</small></span>` : ''}`); }
   const nx = document.querySelector('#judge .stk-nx'); if (nx) { const c = Math.min(combo, 10), n = [3, 6, 10].find(k => k > c), nm = { 3: 'Bronze', 6: 'Silver', 10: 'Gold' }; nx.innerHTML = n ? `🔥 <b>${c} in a row</b> · ${n - c} more for a <b class="t${n}">${nm[n]} box</b>` : '🔥 <b>10 in a row!</b> Gold box earned'; nx.classList.remove('bump'); void nx.offsetWidth; nx.classList.add('bump'); } }
+function jStage(p) { const r = rcRec(p.id), cur = ppSlot(); if (r.st === 'heats') return 1; if (r.st === 'q') return r.sl === cur ? 3 : 2; return (r.f || []).some(z => z.k === 'r') ? 4 : 1; }
+function jDots(p) { const f = rcRec(p.id).f || []; let i = f.length; while (i > 0 && f[i - 1].k === 'h') i--; const run = f.slice(i).map(z => z.pl);
+  return [0, 1, 2].map(k => run[k] ? `<i class="jd ${run[k] <= 2 ? 'ok' : 'x'}">${run[k] <= 2 ? '✓' : ppOrd(run[k])}</i>` : '<i class="jd"></i>').join(''); }
+function journeyHTML(p, compact) { const st = jStage(p), r = rcRec(p.id), last = r.last, labs = ['Framed', 'Qualifiers', 'Finalist', 'Final', 'Paid'];
+  const sub = st === 1 ? (r.st === 'heats' ? `Next qualifier in <b>${Math.max(1, HEAT_EVERY - (S.hN || 0))} votes</b>` : 'Ready to race again') : st === 2 ? `In the <b>${raceName(r.sl)} Final</b>` : st === 3 ? '<b>Racing now</b> · watch it live' : last ? `Finished <b>${ppOrd(last.pl)}</b> · earned <b>${money(finShare(last.sl, last.pl))}</b>` : 'Ready to race again';
+  return `<div class="jy ${compact ? 'jy-c' : ''}" data-pid="${p.id}"><div class="jy-tr">${labs.map((l, k) => `<span class="jy-s ${k < st ? 'done' : k === st ? 'now' : ''} ${k === 3 && st === 3 ? 'live' : ''}">${k === st ? `<img src="${p.src}" alt="">` : `<b>${k < st ? '✓' : ''}</b>`}<small>${l}</small>${k === 1 ? `<span class="jy-dots">${jDots(p)}</span>` : ''}</span>`).join('<em class="jy-ln"></em>')}</div>
+    <p class="jy-sub">${sub}</p>${st === 1 && r.st === 'heats' ? `<div class="jy-bar"><i style="width:${Math.min(100, 100 * (S.hN || 0) / HEAT_EVERY)}%"></i></div>` : ''}</div>`; }
+function jRowHTML() { const P = (S.photos || []).filter(p => p.framed && ['heats', 'q'].includes(rcRec(p.id).st)); if (!P.length) return '';
+  const mv = S.jMove && Date.now() - S.jMove.at < 9000 ? S.jMove : null, p = (mv && P.find(x => x.id === mv.pid)) || P[0], r = rcRec(p.id);
+  let chip = ''; if (mv && mv.pid === p.id) { chip = mv.pl <= 2 ? `🎀 Through to the ${raceName(r.sl)} Final!` : `${ppOrd(mv.pl)} in its qualifier · ${Math.max(0, HEAT_RUNS - (r.runs || 0))} ${HEAT_RUNS - (r.runs || 0) === 1 ? 'try' : 'tries'} left`; S.jMove = null; save(); }
+  return `<button class="jrow ${chip ? 'mv' : ''}" id="jRow"><span class="jrow-h"><b>📷 ${esc(rcName(p))}</b>${chip ? `<em class="jrow-chip">${chip}</em>` : ''}</span>${journeyHTML(p, true)}${chip ? `<span class="cfx-sp">${[...Array(12)].map((_, k) => `<i style="--a:${k * 30}deg;--d:${(k % 3) * .06}s"></i>`).join('')}</span>` : ''}</button>`; }
+try { const _rj0 = renderJudge; renderJudge = function () { const out = _rj0.apply(this, arguments); try { const st = document.querySelector('#judge .stk'); const old = document.getElementById('jRow'); if (old) old.remove(); if (st) { st.insertAdjacentHTML('afterend', jRowHTML()); const b = document.getElementById('jRow'); if (b) b.onclick = () => myShow(); } } catch (e) {} return out; }; } catch (e) {}
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
