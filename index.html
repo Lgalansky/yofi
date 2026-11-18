@@ -1060,6 +1060,7 @@ html .rvw .btn.rvw-go{background:#24563A!important;color:#fff!important}
 @keyframes rbPulse{50%{box-shadow:inset 0 0 0 2px #2F6B3F,0 0 16px rgba(47,107,63,.45)}}.rb-cd{font-weight:900;font-variant-numeric:tabular-nums}
 .rb-n s{display:block;text-decoration:none;font-size:.62rem;line-height:1}.rb-n s.up{color:#2EA36B}.rb-n s.dn{color:#C8102E}.rb-lead{margin-left:auto;color:#C8102E;font-weight:900;animation:unGlow 1s 3}
 .unl{animation:unlGlow 1s ease-in-out 6}@keyframes unlGlow{50%{box-shadow:0 0 0 3px #E2A21C,0 0 18px rgba(226,162,28,.7)}}
+.g2-prog.ready{background:#E6F0DF;box-shadow:inset 0 0 0 1.5px #2F6B3F}.g2-prog.ready p+p{margin:0;font-weight:700;color:#2F6B3F}
 </style>
 </head>
 <body>
@@ -5628,7 +5629,7 @@ document.addEventListener('click', e => { const g = e.target.closest('[data-crk]
   if (e.target.closest('.cr-x')) { e.preventDefault(); e.stopPropagation(); S.crHide = (S.votes || 0) + 20; save(); const a = document.querySelector('.cr-ask'); if (a) a.remove(); } }, true);
 function g2Act(pay) { const y = isYoungW(), g = ppGame(), nm = `${raceName(g.sl)} ${esc(showName(g.k))} Final`, keep = y ? 'Keep judging' : 'Keep voting', link = `<div style="text-align:center"><button class="link g2-link" id="gtNo">${keep}</button></div>`;
   if (isCash()) return `<button class="btn block g2-fin" id="gtFin">🎀 Pick the ${nm} · from $2</button>${link}`;
-  if (fqLeft() && (S.gems || 0) >= FREE_BET_COINS) return `<button class="btn block g2-fin" id="gtFin">🎟️ Use your free pick</button><p class="g2-foot">${nm} · live now · ${FREE_BET_COINS} coins</p>${link}`;
+  if (fqLeft() && (S.gems || 0) >= FREE_BET_COINS) return `<div class="g2-prog ready"><p>${pay ? `<b>+${pay} coins</b> · ` : ''}${Math.floor(S.gems)} coins</p><p>🎟️ You have enough for a free Final pick · it’s in your coins</p></div><button class="btn block g2-fin" id="gtKeep">⚖️ ${keep}</button>`;
   const gm = Math.floor(S.gems || 0), pct = Math.min(100, Math.round(100 * gm / FREE_BET_COINS));
   return `<div class="g2-prog"><p>${pay ? `<b>+${pay} coins</b> · ` : ''}${gm} / ${FREE_BET_COINS} toward a free Final pick</p><i><i style="width:${pct}%"></i></i>${!fqLeft() ? `<small>Both free picks used this hour · next in ${frMinsLeft()} min</small>` : ''}</div><button class="btn block g2-fin" id="gtKeep">⚖️ ${keep}</button>`; }
 const RV_ORD = ['1st', '2nd', '3rd'], RV_MED = ['🥇', '🥈', '🥉'];
