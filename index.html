@@ -5324,13 +5324,13 @@ function upNext() { if (!S || !S.user || S.geoBlock) return null;
     else { const ks = CATS8.filter(c => lgMine(c)), miss = CATS8.filter(c => c !== 'any' && !lgMine(c)).sort((p, q) => (L.jp[q] || 0) - (L.jp[p] || 0)), up = miss.length && (!ks.length || !S.puAlt);
       x = up ? { ic: '📷', t: `<b>${esc(crownName(miss[0]))} prize pool</b> · ${poolTxt(miss[0])}`, k: 'b' } : ks.length ? { ic: '🏆', t: `<b>${esc(crownName(ks[0]))} challenge</b> · ${poolTxt(ks[0])} pool`, k: 'b' } : null; }
     if (x) it.push(Object.assign(x, { need, per })); }
-  if (S.potSeen && !newbie()) { const per = S.qsTried ? 50 : 20, need = Math.max(0, per - (S.cpN || 0), 15 - (S.votes || 0)); it.push(false ? { ic: '🏅', t: `<b>Podium Pick</b> · pick the top 3 · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per } : { ic: '🎯', t: `<b>Quick Sprint</b> · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per }); }
+  if (false && S.potSeen && !newbie()) { const per = S.qsTried ? 50 : 20, need = Math.max(0, per - (S.cpN || 0), 15 - (S.votes || 0)); it.push(false ? { ic: '🏅', t: `<b>Podium Pick</b> · pick the top 3 · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per } : { ic: '🎯', t: `<b>Quick Sprint</b> · ${isCash() ? 'win up to $32' : `win ${QS_COIN_PAY[0]} 🟡`}`, k: 'q', need, per }); }
   { const R = Object.entries(S.races || {}).filter(([sl, x]) => !x.done).map(([sl, x]) => ({ sl: +sl, x, due: Math.min((+sl + 1) * PP_MS, x.at + PP_DEMO * 1.5) })).sort((a, b) => a.due - b.due)[0];
     if (R && R.due - Date.now() < 3600e3) { const p = (S.photos || []).find(z => z.id === R.x.pid); if (p) return { ic: '🎀', t: `<b>${esc(rcName(p))}</b> · ${R.sl === ppSlot() ? 'in the ring now' : `the ${raceName(R.sl)} race`}`, k: 'r', need: 0, per: 1, em: R.sl === ppSlot() ? '🔴 Live' : `result in ${Math.max(1, Math.ceil((R.due - Date.now()) / 60000))} min` }; } }
   if (S.rc && S.photos) { const hp = S.photos.find(p => rcRec(p.id).st === 'heats'); if (hp) it.push({ ic: '📷', t: `<b>${esc(rcName(hp))}</b> · next qualifier`, k: 'h', need: Math.max(1, HEAT_EVERY - (S.hN || 0)), per: HEAT_EVERY }); }
   { const g = ppGame(), m = Math.ceil((g.end - Date.now()) / 60000); if (isCash() && S.potSeen && !(S.pp || {})[g.sl] && m <= 20) return { ic: '🎀', t: `<b>The ${raceName(g.sl)} Final · ${esc(showName(g.k))}</b> · pick the top 3`, k: 'p', need: 0, per: 1, mins: m }; }
-  it.push({ ic: '⚖️', t: `<b>Upcoming qualifier · ${esc(showName(ppGame(ppSlot() + 1).k))}</b> · pick 3 of 5 · free`, k: 'g', need: Math.max(1, (S.tut === 1 ? 5 : GATE_EVERY) - (S.gtN || 0)), per: S.tut === 1 ? 5 : GATE_EVERY });
-  return it.sort((p, q) => p.need - q.need)[0] || null; }
+  it.push(sprNext() ? { ic: '🎯', t: `<b>Quick Sprint</b> · 1 v 1 · win ${QS_COIN_PAY[0]} coins`, k: 'g', need: Math.max(1, GATE_EVERY - (S.gtN || 0)), per: GATE_EVERY } : { ic: '⚖️', t: `<b>Upcoming qualifier · ${esc(showName(ppGame(ppSlot() + 1).k))}</b> · pick 3 of 5 · free`, k: 'g', need: Math.max(1, (S.tut === 1 ? 5 : GATE_EVERY) - (S.gtN || 0)), per: S.tut === 1 ? 5 : GATE_EVERY });
+  return it.filter(z => z.k !== 'b').sort((p, q) => p.need - q.need)[0] || null; }
 function upNow() { const x = upNext(); if (!x) return; if (x.k === 'live') { ppOpen(); return; } if (x.k === 'fp') { if (S.tut === 2) useGems(); else toast(`${isYoungW() ? 'Judge' : 'Vote'} ${x.need} more to unlock your free Final pick`); return; } if (x.k === 'g') { S.gtN = 0; save(); gateOpen(false); return; } if (x.k === 'p') { ppOpen(); return; } if (x.k === 'r' || x.k === 'h') { stableOpen(); return; } if (x.k === 'q') { S.cpN = 0; S.qsPopAt = Date.now(); window.__qsGame = 'qs'; S.qgAlt = false; save(); sprEnter(); return; } S.since = 0; save(); openBattle(); }
 const qsChipHTML = () => { const x = upNext(); if (!x) return ''; const pct = Math.round(100 * (1 - x.need / x.per)), soon = x.need <= 1;
   return `<button class="qs-chip upn ${soon ? 'soon' : ''}" id="qsChip"><span class="un-ic">${x.ic}</span><span class="un-t"><small>Coming up</small>${x.t}</span><em>${x.em ? x.em : x.k === 'p' ? `${x.mins} min left` : x.need ? `in ${x.need} vote${x.need === 1 ? '' : 's'}` : 'Now'}</em><i class="un-bar" style="width:${pct}%"></i></button>`; };
@@ -5482,7 +5482,7 @@ function rcHeat() { const ids = (S.photos || []).filter(p => rcRec(p.id).st === 
   const me = rcStr(p) + (q() - .5) * .5, pl = 1 + [0, 1, 2, 3].filter(() => .3 + q() * .6 + (q() - .5) * .5 > me).length; r.ha = Date.now(); r.f.push({ k: 'h', pl }); r.f = r.f.slice(-12);
   let share = 0; if (pl === 1) { S.gems = (S.gems || 0) + HEAT_WIN; setTimeout(paintGems, 100); }
   if (pl <= 2) { const sl = rcSlotFor(p); S.races = S.races || {}; S.races[sl] = { pid: id, at: Date.now() }; r.st = 'q'; r.sl = sl; S.rcPop = { k: 'q', pid: id, pl, sl, share }; }
-  else { r.runs = (r.runs || 0) + 1; if (r.runs >= HEAT_RUNS) { r.st = null; toast(`🎀 ${rcName(p)} finished ${ppOrd(pl)} · that was its last qualifier try. Its spot is free for a new photo.`); } else toast(`🎀 ${rcName(p)} finished ${ppOrd(pl)} in its qualifier · ${HEAT_RUNS - r.runs} ${HEAT_RUNS - r.runs === 1 ? 'try' : 'tries'} left.`); }
+  else { r.runs = (r.runs || 0) + 1; if (r.runs >= HEAT_RUNS) { r.st = null;  }  }
   save(); }
 function rcQualPop(x) { const p = (S.photos || []).find(z => z.id === x.pid); if (!p) return; const cash = isCash(), y = isYoungW(), g = ppGame(x.sl);
   popOpen(`<div class="pp"><p class="pp-k">🎀 Qualifier result</p><div class="re-ok"><img src="${p.src}" alt=""><i>${PP_MED[x.pl - 1]}</i></div><h2 class="pp-h">Through to the Final!</h2>
@@ -5503,7 +5503,7 @@ function raceOwnResultShow(sl) { const x = S.races[sl], g = ppGame(sl), i = g.ph
   if (pz) setTimeout(() => cash ? cashExplosion && cashExplosion(pz, { label: 'Final prize' }) : gemExplosion(pz, { label: 'Final prize' }), 500);
   $('#roAgain').onclick = () => { popClose(); showEnter(x.pid); }; $('#roBack').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
 setInterval(() => { if (!S || !S.rcPop || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return; const x = S.rcPop; S.rcPop = null; save(); rcQualPop(x); }, 1500);
-setInterval(() => { if (!S || !S.races) return; const cur = ppSlot(); Object.entries(S.races).forEach(([sl, x]) => { if (+sl === cur && !x.done && !x.on) { x.on = 1; save(); toast('🔴 Your photo is in the ring now! Watch it live.'); } }); }, 5000);
+setInterval(() => { if (!S || !S.races) return; const cur = ppSlot(); Object.entries(S.races).forEach(([sl, x]) => { if (+sl === cur && !x.done && !x.on) { x.on = 1; save();  } }); }, 5000);
 setInterval(() => { if (!S || !S.races || busyUI()) return; const now = Date.now();
   const k = Object.keys(S.races).find(sl => !S.races[sl].done && now >= Math.min((+sl + 1) * PP_MS, S.races[sl].at + PP_DEMO * 1.5)); if (k) raceOwnResult(+k); }, 3000);
 function ppResultShow(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc = ppScore(e.picks, g.ord), n = e.players || g.players, st = e.stake || 1, jp = raceJP(e.sl); let better = 0;
@@ -5606,7 +5606,7 @@ function gateResultOld(G, picks, real, tk) { const y = isYoungW(), top = G.ord.s
   if (pay) setTimeout(() => real ? cashExplosion && cashExplosion(pay, { label: 'Qualifier win' }) : gemExplosion(pay, { label: 'Qualifier win' }), 400);
   if ($('#gtReal')) $('#gtReal').onclick = () => gateOpen(true); if ($('#gtFin')) $('#gtFin').onclick = () => { popClose(); setTimeout(ppOpen, 250); }; if ($('#gtAgain')) $('#gtAgain').onclick = () => gateOpen(true);
   $('#gtNo').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
-setInterval(() => { if (!S || !S.gatePend || busyUI() || Date.now() - (window.__autoT || 0) < 20000 || $('#panes').dataset.at !== 'judge' || Object.values(S.pp || {}).some(x => !x.done && Date.now() >= ppDue(x))) return; S.gatePend = 0; window.__autoT = Date.now(); save(); gateOpen(false); }, 1200);
+setInterval(() => { if (!S || !S.gatePend || busyUI() || Date.now() - (window.__autoT || 0) < 20000 || $('#panes').dataset.at !== 'judge' || Object.values(S.pp || {}).some(x => !x.done && Date.now() >= ppDue(x))) return; S.gatePend = 0; window.__autoT = Date.now(); S.rotN = (S.rotN || 0) + 1; save(); if (S.rotN % 2 === 0 && (S.gems || 0) >= QS_COIN) sprintUp(); else gateOpen(false); }, 1200);
 function raceBetRowHTML() { if (S.tut === 3) return `<button class="ug-r ug-swap ug-tk" id="rbLiveRow"><span class="ug-i">🔴</span><span class="ug-t"><b>Your free pick is live</b><small>Results soon · more ways to use your coins unlock after your first result</small></span><em>Watch ›</em></button>`; if (S.tut === 2) return `<button class="ug-r ug-swap ug-tk" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free ticket earned</b><small>Your first pick in the ${raceName(ppGame().sl)} Final · free · real cash prizes</small></span><em>Use ›</em></button>`; if (isCash()) return ''; const L = fqLeft(), ok = L && (S.gems || 0) >= FREE_BET_COINS;
   return `<button class="ug-r ug-swap" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free Final pick</b><small>The ${raceName(ppGame().sl)} Final · pick the top 3 of 6 · ${L ? `${L} of ${FQ_MAX} left this hour` : `next in ${frMinsLeft()} min`}</small></span><em class="${ok ? '' : 'need'}">${FREE_BET_COINS} 🟡</em></button>`; }
 function raceBetRowOld() { const g = ppGame(), e = (S.pp || {})[g.sl], ok = !e && (S.gems || 0) >= FREE_BET_COINS;
@@ -6032,7 +6032,7 @@ var FP_VOTES = 10;
 const fgSl = () => (S.pp || {})[ppSlot()] ? ppSlot() + 1 : ppSlot();
 const BOX_T = { 3: { k: 3, n: 20, t: 'Bronze', c: '#B87333' }, 5: { k: 6, n: 40, t: 'Silver', c: '#9AA4B2' }, 10: { k: 10, n: 80, t: 'Gold', c: '#D9AE4F' } };
 function miniDrop(kind) { const B = BOX_T[kind] || BOX_T[3]; S.gems = (S.gems || 0) + B.n; save();
-  if ((S.tut || 9) < 4) { gemExplosion(B.n, { label: `🔥 ${B.k} right in a row` }); return; }
+  { gemExplosion(B.n, { label: `🔥 ${B.k} in a row · ${B.t} box` }); return; }
   popOpen(`<div class="pp bx2"><p class="pp-k">🔥 ${B.k} right in a row</p><h2 class="bx2-h">${B.t} box</h2>
     <div class="bx2-box" style="--bc:${B.c}"><span class="bx2-lid">🎁</span></div>
     <p class="bx2-p">Inside: <b><i class="qz3-coin"></i> ${B.n} coins</b></p>
@@ -6081,6 +6081,9 @@ function renderMyShow() { const g = $('#gallery'); if (!g) return; const P = (S.
   g.querySelectorAll('[data-glw]').forEach(b => b.onclick = () => +b.dataset.glw === cur ? ppOpen() : raceCard());
   g.querySelectorAll('[data-gvote]').forEach(b => b.onclick = () => { go('judge'); renderJudge(); });
   g.querySelectorAll('[data-g4go]').forEach(b => b.onclick = () => finPick()); }
+function sprNext() { return (S.tut || 9) >= 4 && ((S.rotN || 0) + 1) % 2 === 0 && (S.gems || 0) >= QS_COIN; }
+function sprintUp() { celebrate({ src: (SEED[6] || {}).src, score: '🎯', title: 'Quick Sprint is up', text: `1 v 1 against a real player: pick the photo the crowd chose in <b>10 pairs</b>. <b>${QS_COIN} coins</b> in, win <b>${QS_COIN_PAY[0]} coins</b>.`,
+  cta: `🎯 Play · ${QS_COIN} coins`, onCta: () => { closeFlow(); window.__qsGame = 'qs'; sprPractice(); }, later: 'Keep voting' }); }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -6397,8 +6400,8 @@ async function vote(pick) {
     const me = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
     celebrate({ src: me.src, score: VS_IC, title: 'Invite a friend!', text: `You’ve got the eye. Now start a club, invite your mates on WhatsApp and challenge them for the <b>blue ribbons</b> and <b>weekly pots</b>.`, cta: `${VS_IC}Compete with friends`, onCta: () => challengeWith(me), later: 'Keep judging' });
     return; }
-  if (!comboHit && !S.geoBlock && S.potSeen && S.votes >= 15 && (S.cpN || 0) >= (S.qsTried ? 50 : 20) && Date.now() - (S.qsPopAt || 0) > 15 * 60000) { S.cpN = 0; S.qsPopAt = Date.now(); save(); renderJudge(); judging = false; qgPop(); return; }
-  if (!comboHit && S.votes >= 12 && fighters().length && tUnlocked() && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; }
+  if (false && !comboHit && !S.geoBlock && S.potSeen && S.votes >= 15 && (S.cpN || 0) >= (S.qsTried ? 50 : 20) && Date.now() - (S.qsPopAt || 0) > 15 * 60000) { S.cpN = 0; S.qsPopAt = Date.now(); save(); renderJudge(); judging = false; qgPop(); return; }
+  if (false && !comboHit && S.votes >= 12 && fighters().length && tUnlocked() && S.since >= CFG.BATTLE_EVERY) { S.since = 0; save(); renderJudge(); $('#judge').scrollTop = 0; judging = false; openBattle(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; }
   $('#jcard').classList.add('out'); await sleep(220);
   renderJudge(); $('#judge').scrollTop = 0; judging = false;
   if (streakHit) { const rw = STREAK_GEMS; gemExplosion(rw, { label: `🔥 ${ds.D.streak}-day streak` }); if (comboHit === 5) { luckyDrop(); return; } if (comboHit) { miniDrop(comboHit); return; } return; }
