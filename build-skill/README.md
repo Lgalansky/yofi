@@ -216,6 +216,8 @@ Then `rmv103.py`: vote reveal climbing fill back: each photo fills from the bott
 
 Then `rmv104.py`: winning effect on every vote you call right: pulsing gold glow and sparkle burst on your photo, coin burst (+5) flying from the photo to the balance, and a streak chip on 2+ in a row; misses stay quiet.
 
+Then `rmv105.py`: Coming-up strip reads 'Coin Pick · pick 3 of 5 · free' with no category name.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -316,6 +318,7 @@ python3 rmv101.py
 python3 rmv102.py
 python3 rmv103.py
 python3 rmv104.py
+python3 rmv105.py
 ```
 
 ## Skill only
