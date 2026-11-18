@@ -124,6 +124,8 @@ Then `rmv56.py`: "2 in the top 3" (any order) now wins a small Final share; rule
 Then `rmv57.py`: qualifier pick screen from the mock-up: "Win up to 50 coins" with a big gold coin and three prize cards (50 / 25 / 10 coins for 3 / 2 / 1 exact matches).
 Then `rmv58.py`: invite pop from the mock-up ("Earn 100 coins for every friend you invite", coin stack, "Earn up to 1,000 coins · 10 friends", icon steps, friends start with 50 coins, WhatsApp / Copy link buttons, invites list, rewards count).
 
+Then `rmv59.py`: framing replaces touch-ups. Name and frame a photo (200 coins, first frame free) to enter its category qualifiers; framed photos race again free. Gallery rebuilt: upcoming Finals by category, the framed wall (gold frame, name plate, prize money, Finals, best finish, qualifiers, form), "Ready to frame" photos, earnings. Touch-ups tab hidden.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -178,6 +180,7 @@ python3 rmv55.py
 python3 rmv56.py
 python3 rmv57.py
 python3 rmv58.py
+python3 rmv59.py
 ```
 
 ## Skill only
