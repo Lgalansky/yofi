@@ -1293,6 +1293,15 @@ html body #judge .tot-c .cfx-fill{display:none!important}
 html body #judge .tot-c .cfx-fill{display:block!important}html body #judge .cfx-b{display:none!important}
 html body #judge .tot-c .cfx-fill i{display:block!important;position:absolute!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;height:0;background:rgba(20,33,61,.5)!important;animation:cfxUp .8s cubic-bezier(.2,.9,.3,1) forwards!important}
 html body #judge .tot-c .cfx-fill.w i{background:linear-gradient(0deg,rgba(47,107,63,.8),rgba(47,107,63,.35))!important}html body #judge .tot-c .cfx-fill b{z-index:1}
+html body #judge .tot-c.cfx-win{box-shadow:0 0 0 4px #E9B949,0 0 26px 4px rgba(233,185,73,.75)!important;animation:cfxGlow .9s ease-in-out 2}
+@keyframes cfxGlow{50%{box-shadow:0 0 0 5px #F3D98B,0 0 40px 10px rgba(243,217,139,.85)}}
+.cfx-sp{position:absolute;left:50%;top:45%;width:0;height:0;z-index:7;pointer-events:none}.cfx-sp i{position:absolute;width:9px;height:9px;margin:-4px;border-radius:2px;background:#F3D98B;box-shadow:0 0 8px #FFE9A8;transform:rotate(var(--a)) translateY(0) scale(.4);opacity:0;animation:cfxSp .8s var(--d) ease-out forwards}
+.cfx-sp i:nth-child(3n){background:#fff;width:6px;height:6px}.cfx-sp i:nth-child(4n){background:#E9B949;border-radius:50%}
+@keyframes cfxSp{15%{opacity:1}100%{transform:rotate(var(--a)) translateY(-95px) scale(1);opacity:0}}
+.cfx-plus{position:absolute;left:0;right:0;top:74%;z-index:8;text-align:center;pointer-events:none;font:900 2.6rem/1 Fraunces,Georgia,serif;color:#F3D98B;-webkit-text-fill-color:#F3D98B;text-shadow:0 2px 0 #8A5E16,0 4px 14px rgba(0,0,0,.55);opacity:0;animation:cfxPlus 1.3s .15s ease-out forwards}
+.cfx-plus small{display:inline-block;padding:4px 12px;border-radius:999px;background:rgba(20,33,61,.75);font:800 1rem Nunito,system-ui,sans-serif;color:#fff;-webkit-text-fill-color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+@keyframes cfxPlus{0%{opacity:0;transform:translateY(16px) scale(.6)}25%{opacity:1;transform:translateY(0) scale(1.15)}45%{transform:scale(1)}100%{opacity:0;transform:translateY(-38px)}}
+@media (prefers-reduced-motion:reduce){.cfx-sp{display:none}.cfx-plus,html body #judge .tot-c.cfx-win{animation:none}.cfx-plus{opacity:1}}
 </style>
 </head>
 <body>
@@ -6144,6 +6153,7 @@ function callFx(pick, pct, agree, earn, combo, prev, mine) { const cards = docum
   cards.forEach((c, i) => { c.insertAdjacentHTML('beforeend', `<span class="cfx-fill ${pct[i] >= 50 ? 'w' : ''} ${i === pick ? 'cfx-mine' : ''}"><i style="--h:${pct[i]}%"></i><b>${pct[i]}%</b></span>`); });
   jc.insertAdjacentHTML('beforeend', `<div class="cfx-b ${agree ? 'ok' : 'no'}"><b>${agree ? '✓ You called it!' : 'The crowd went the other way'}</b><small>${agree ? `${mine}% agreed · ${earn ? `+${earn} coins · ` : ''}🔥 ${combo} in a row` : prev >= 2 ? `${prev}-in-a-row streak reset` : `${100 - mine}% picked the other photo`}</small></div>`);
   try { if (agree && navigator.vibrate) navigator.vibrate(18); } catch (e) {}
+  if (agree) { const mc = cards[pick]; mc.classList.add('cfx-win'); mc.insertAdjacentHTML('beforeend', `<span class="cfx-sp">${[...Array(14)].map((_, k) => `<i style="--a:${k * 26}deg;--d:${(k % 3) * .06}s"></i>`).join('')}</span>${combo >= 2 ? `<span class="cfx-plus"><small>🔥 ${combo} in a row</small></span>` : ''}`); }
   const nx = document.querySelector('#judge .stk-nx'); if (nx) { const c = Math.min(combo, 10), n = [3, 6, 10].find(k => k > c), nm = { 3: 'Bronze', 6: 'Silver', 10: 'Gold' }; nx.innerHTML = n ? `🔥 <b>${c} in a row</b> · ${n - c} more for a <b class="t${n}">${nm[n]} box</b>` : '🔥 <b>10 in a row!</b> Gold box earned'; nx.classList.remove('bump'); void nx.offsetWidth; nx.classList.add('bump'); } }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
@@ -6453,7 +6463,7 @@ async function vote(pick) {
   if (near) tr.insertAdjacentHTML('beforeend', `<span class="tot-x nm">Crowd split ${mine}/${100 - mine}</span>`);
   if (enBack) tr.insertAdjacentHTML('beforeend', `<span class="tot-x en">⚡ +${enBack} energy back</span>`);
   if (false && [1, 3, 5].includes(S.combo)) tr.insertAdjacentHTML('beforeend', `<span class="tot-x lk">1 more for ×${streakX(S.combo + 1)}${S.combo === 5 ? ' + 🧰' : S.combo === 3 ? ' + 🎁' : ''}</span>`);
-  if (earn) setTimeout(() => paintGems(), 500);
+  if (earn) setTimeout(() => gemExplosion(earn, { mid: true, from: mc }), 450);
   await sleep(tier === 20 ? 2800 : tier > 1 ? 1800 : 1400);
   if (false && window.__meterHit) { window.__meterHit = 0; renderJudge(); judging = false; if (typeof paintTixTag === 'function') paintTixTag(); ticketPop(); return; }
   if (false && !comboHit && tDue()) { renderJudge(); $('#judge').scrollTop = 0; judging = false; if (tPrompt()) { if (S.since >= CFG.BATTLE_EVERY - 1) S.since = Math.max(0, CFG.BATTLE_EVERY - 3); save(); const nx = document.querySelector('#judge .nxu'); if (nx) nx.outerHTML = nextUpHTML(); return; } }
