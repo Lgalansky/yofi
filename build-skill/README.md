@@ -138,6 +138,8 @@ Then `rmv64.py`: reveal podium reads 1st · 2nd · 3rd, lined up with Your picks
 
 Then `rmv65.py`: reveal podium labelled "The crowd’s top 3"; photos you picked carry a "Your 1st pick" tag (navy when in the exact spot).
 
+Then `rmv66.py`: reveal end state from the mock-up (story headline such as "You picked the winner!", navy "YOU WON $X" box with gold amount, pool line, gold-ruled labels, "✓ Exact match" chips, gold border on matched photos).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -199,6 +201,7 @@ python3 rmv62.py
 python3 rmv63.py
 python3 rmv64.py
 python3 rmv65.py
+python3 rmv66.py
 ```
 
 ## Skill only
