@@ -2211,12 +2211,12 @@ $('#file').addEventListener('change', async e => {
   $('#landing').style.display = 'none'; $('#app').classList.add('on'); paintGems(false);
   const id = toID(img, 960); URL.revokeObjectURL(url);
   const src = toURL(id);
-  openFlow(`<div class="scan"><img src="${src}" alt="Your photo"></div><p class="scanmsg" id="scanMsg">Checking lighting…</p>`, false);
-  const msgs = ['Checking lighting…', 'Reading composition…', 'Measuring colour…', 'Finding your subject…', 'Testing sharpness…'];
+  openFlow(`<div class="scan"><img src="${src}" alt="Your photo"></div><p class="scanmsg" id="scanMsg">Preparing your photo…</p>`, false);
+  const msgs = ['Preparing your photo…'];
   let k = 0; const iv = setInterval(() => { const m = $('#scanMsg'); if (m) m.textContent = msgs[++k % msgs.length]; }, 420);
   await sleep(60);
   const s = capUpload(Engine.score(Engine.analyze(id)));
-  await sleep(2000); clearInterval(iv);
+  await sleep(700); clearInterval(iv);
   if (false) await new Promise(res => { window.__obAfter = res; let g1 = document.getElementById('ageGate'); if (!g1) { g1 = document.createElement('div'); g1.id = 'ageGate'; document.body.appendChild(g1); } g1.className = 'on'; obLikes(g1); });
   const p = { id: uid(), src, orig: src, s, start: s.total, enh: 0, q: s.total >= CFG.QUALIFY, at: Date.now() }; if (window.__preCat) { p.cat = window.__preCat; window.__preCat = null; }
   if (!S.user) { S.user = { h: 'guest' + Math.floor(1000 + Math.random() * 9000), guest: 1 }; } S.photos.unshift(p); S.cur = p.id; WALL = false;
@@ -2226,9 +2226,9 @@ $('#file').addEventListener('change', async e => {
   const gc = S.goal && !S.goal.pid && CX.find(c => c.id === S.goal.cid);
   if (gc) { S.goal.pid = p.id; save(); }
   const fh = !gc && S.frameHint; S.frameHint = null; save();
-  if (gc && gc.cats) { p.cat = gc.cats.find(k => PICKCATS.includes(k)) || gc.cats[0]; save(); showResult(p, { win, first, fresh: true }); return; }
-  if (p.cat) { save(); showResult(p, { win, first, fresh: true }); return; }
-  askCategory(p, () => showResult(p, { win, first, fresh: true }), false, gc && gc.cats ? gc : fh ? { cats: fh.cats, lab: fh.lab, t: `the ${fh.frame} frame`, frame: true } : null);
+  if (gc && gc.cats) { p.cat = gc.cats.find(k => PICKCATS.includes(k)) || gc.cats[0]; save(); upReady(p); return; }
+  if (p.cat) { save(); upReady(p); return; }
+  askCategory(p, () => upReady(p), false, gc && gc.cats ? gc : fh ? { cats: fh.cats, lab: fh.lab, t: `the ${fh.frame} frame`, frame: true } : null);
 });
 
 /* ---------- Flow overlay ---------- */
@@ -2612,7 +2612,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#sheet'
 function openSignup(then, opts = {}) {
   const p = cur();
   openSheet(`<h2>${opts.bonus ? 'Claim your welcome bonus' : opts.win ? 'Save your win' : opts.pick ? 'Create your account to place your pick' : opts.photo ? 'Save your photo' : 'Save your photo and coins'}</h2>${opts.bonus || !S.giftEn ? `<div class="wbx"><span>🎁 Welcome bonus</span><b>${gemIcon('')}${(CFG.FIRST_WIN + CFG.SIGNUP).toLocaleString()} coins</b><small>Free when you create your account</small></div>` : ''}
-    <p class="sub">${opts.bonus ? 'Create your free account to touch up your photo and get it ready to compete. ' : ''}${opts.win ? `Nice! Keep your coins and your ${p ? p.s.total : ''} photo. ` : ''}${opts.win || opts.bonus ? '' : p ? `Your photo is at ${p.s.total}${p.s.total < CFG.QUALIFY ? ` and ${CFG.QUALIFY - p.s.total} points from qualifying` : ' and qualified'}. ` : ''}Create your account so nothing gets lost.</p>
+    <p class="sub">${opts.pick ? 'Your picks and any winnings are saved to your account. ' : opts.photo ? 'Keep your framed photo and its prize record safe. ' : opts.win ? 'Keep your coins and your win. ' : ''}Create your account so nothing gets lost.</p>
     <label class="field">Username<input id="suH" autocomplete="username" placeholder="e.g. goldenhourgreg" maxlength="24"></label>
     <label class="field">Email<input id="suE" type="email" autocomplete="email" placeholder="you@example.com"></label>
     <p class="err" id="suErr"></p>
@@ -2899,7 +2899,7 @@ const popPaced = () => (S.votes || 0) - (S.lastPopV == null ? -99 : S.lastPopV) 
 function gemNudge(force) { if (S && (S.tut || 9) < 4) return false;
   if (!force && (popPaced() || Date.now() - (window.__autoT || 0) < 90000)) return false;
   // pops each time judging takes you past a new 100 coins (at most every 15 votes), or on opening the app with 150+
-  if (!S.user || S.gems < 100 || (S.votes || 0) < 12 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || document.querySelector('.fcd')) return false;
+  if (!S.user || S.gems < 100 || (S.votes || 0) < 12 || busyUI() || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || document.querySelector('.fcd')) return false;
   const mark = Math.floor(S.gems / 100) * 100;
   const unlock = false;
   if (!force && !unlock && (mark <= (S.gnMark || 0) || (S.votes || 0) - (S.gnVote || 0) < 40)) return false;
@@ -6084,6 +6084,8 @@ function renderMyShow() { const g = $('#gallery'); if (!g) return; const P = (S.
 function sprNext() { return (S.tut || 9) >= 4 && ((S.rotN || 0) + 1) % 2 === 0 && (S.gems || 0) >= QS_COIN; }
 function sprintUp() { celebrate({ src: (SEED[6] || {}).src, score: '🎯', title: 'Quick Sprint is up', text: `1 v 1 against a real player: pick the photo the crowd chose in <b>10 pairs</b>. <b>${QS_COIN} coins</b> in, win <b>${QS_COIN_PAY[0]} coins</b>.`,
   cta: `🎯 Play · ${QS_COIN} coins`, onCta: () => { closeFlow(); window.__qsGame = 'qs'; sprPractice(); }, later: 'Keep voting' }); }
+function upReady(p) { p.nmAsk = 1; save(); try { closeFlow(); } catch (e) {} const fp = document.getElementById('finPick'); if (fp) fp.className = '';
+  myShow(); if (photoShow(p)) setTimeout(() => frameOpen(p), 300); else toast('Only Pets, Nature & landscapes and Garden & flowers photos can race in a Final.'); }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
