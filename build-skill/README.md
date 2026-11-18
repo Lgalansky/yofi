@@ -234,6 +234,8 @@ Then `rmv112.py`: coins menu shows coin games to every player incl. after a depo
 
 Then `rmv113.py`: 'Pick the winner' pool next to the Top 3: Top 3 | Winner tabs on the pick screen, live odds and share of winner picks on each photo, cash from $2 or free pick (250 coins), confirmation with pool, countdown and race, reveal and payout at closing odds.
 
+Then `rmv114.py`: winner pick can always be placed: every player gets the stake row and green 'Pick to win' cash button, plus the free-pick button when they have 250 coins (otherwise a line says how many more coins).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -343,6 +345,7 @@ python3 rmv110.py
 python3 rmv111.py
 python3 rmv112.py
 python3 rmv113.py
+python3 rmv114.py
 ```
 
 ## Skill only
