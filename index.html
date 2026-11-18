@@ -1373,6 +1373,22 @@ html body i.rz-mini{position:absolute!important;left:-6px!important;top:-8px!imp
 html body i.rz-mini svg,.rz-in svg{width:100%;height:100%;display:block}
 .rz-in{display:inline-block;width:15px;height:20px;vertical-align:-5px;margin-right:2px}
 html body .ppop .pk-go{flex-wrap:wrap!important;row-gap:0!important}html body .ppop .pk-go .pk-win{flex-basis:100%;text-align:center}
+html body .pp-g .pp-rz.ptw{width:auto;height:auto;left:6px;top:6px;filter:drop-shadow(0 3px 5px rgba(20,33,61,.4))}
+.ptk{display:inline-flex;flex-direction:column;align-items:center;min-width:54px;padding:4px 9px 5px;border-radius:7px;background:#14213D;color:#F3D98B;-webkit-text-fill-color:#F3D98B;font-style:normal;line-height:1;position:relative;border-left:5px solid #E2B243;
+  -webkit-mask:radial-gradient(circle 5px at 100% 50%,transparent 98%,#000) ;mask:radial-gradient(circle 5px at 100% 50%,transparent 98%,#000)}
+.ptk small{font:900 .56rem/1 Nunito,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;opacity:.85;margin-bottom:2px}
+.ptk b{font:900 1.05rem/1 Fraunces,Georgia,serif}
+.ptk.s{border-left-color:#A3ACB8}.ptk.b{border-left-color:#C9874B}
+.ptin{display:inline-block;padding:1px 7px;border-radius:5px;background:#14213D;color:#F3D98B;-webkit-text-fill-color:#F3D98B;font:900 .68rem/1.5 Nunito,system-ui,sans-serif;letter-spacing:.03em;border-left:4px solid #E2B243;vertical-align:1px;font-style:normal;white-space:nowrap}
+.ptin.s{border-left-color:#A3ACB8}.ptin.b{border-left-color:#C9874B}
+.myp-l{display:block;margin-top:3px}
+.rv-slot{position:relative}
+.rv-rz{position:absolute;left:-8px;top:-10px;width:40px;height:53px;z-index:4;font-style:normal;filter:drop-shadow(0 3px 5px rgba(20,33,61,.45));animation:rzPin .6s cubic-bezier(.3,1.6,.5,1) .15s both}
+.rv-rz svg{width:100%;height:100%;display:block}
+.rv-rz.sm{width:24px;height:32px;left:-6px;top:-8px}
+.rv-yp > span{position:relative}
+html body .rv-pod .rv-rz{left:auto;right:-8px;top:34%;width:44px;height:58px}
+html body .myp-l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}html body .myp-l em{font-style:normal;font-weight:800;color:#1E3A6E}
 </style>
 </head>
 <body>
@@ -3562,7 +3578,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v126</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v127</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -5516,7 +5532,7 @@ function ppLive(g, prog) { const q = cpRng(g.sl * 7 + Math.floor(Date.now() / 40
 function ppBoard(g, e) { const now = Date.now(), cp = 1 - (g.end - now) / PP_MS, prog = Math.min(1, Math.max(.04, e ? Math.max(cp, (now - e.at) / PP_DEMO) : cp)), L = ppLive(g, prog), mx = Math.max(1, ...L.map(x => x.v));
   const pv = (window.__rbPrev && window.__rbPrev.sl === g.sl) ? window.__rbPrev.r : null, lead = pv && pv[L[0].i] !== 1; window.__rbPrev = { sl: g.sl, r: Object.fromEntries(L.map((x, n) => [x.i, n + 1])) };
   return `<div class="rb" id="rbLive">${rbStatus(g, e, L)}<p class="rb-h"><span class="rb-live">● LIVE</span>${L.reduce((a, x) => a + x.v, 0).toLocaleString()} votes so far${lead ? ' <span class="rb-lead">🔥 New leader!</span>' : ''}</p>${L.map((x, n) => { const p = g.ph[x.i], pk = e ? e.picks.indexOf(x.i) : -1, mv = pv ? pv[x.i] - (n + 1) : 0;
-    return `<div class="rb-r ${p.mine ? 'me' : ''} ${pk >= 0 ? 'pk' : ''}"><b class="rb-n">${n + 1}${mv > 0 ? '<s class="up">▲</s>' : mv < 0 ? '<s class="dn">▼</s>' : ''}</b><span class="rb-im"><img src="${p.src}" alt="">${pk >= 0 ? `<i class="rz-mini">${rosette(pk)}</i>` : ''}</span><span class="rb-t">${pk >= 0 ? `<u>Your ${['1st', '2nd', '3rd'][pk]} pick${n === pk ? ' · ✓ exact' : ` · needs ${['1st', '2nd', '3rd'][pk]}`}</u>` : ''}<b>${esc(p.t)}</b><small>@${esc(p.h)}${p.mine ? ' · your photo' : ''}</small><i style="width:${Math.round(100 * x.v / mx)}%"></i></span><em>${x.v.toLocaleString()}</em></div>`; }).join('')}</div>`; }
+    return `<div class="rb-r ${p.mine ? 'me' : ''} ${pk >= 0 ? 'pk' : ''}"><b class="rb-n">${n + 1}${mv > 0 ? '<s class="up">▲</s>' : mv < 0 ? '<s class="dn">▼</s>' : ''}</b><span class="rb-im"><img src="${p.src}" alt=""></span><span class="rb-t">${pk >= 0 ? `<u>Your ${['1st', '2nd', '3rd'][pk]} pick${n === pk ? ' · ✓ exact' : ` · needs ${['1st', '2nd', '3rd'][pk]}`}</u>` : ''}<b>${esc(p.t)}</b><small>@${esc(p.h)}${p.mine ? ' · your photo' : ''}</small><i style="width:${Math.round(100 * x.v / mx)}%"></i></span><em>${x.v.toLocaleString()}</em></div>`; }).join('')}</div>`; }
 setInterval(() => { const el = document.getElementById('rbLive'); if (!el || window.__rbSl == null || !S) return; const g = ppGame(window.__rbSl); el.outerHTML = ppBoard(g, (S.pp || {})[g.sl]); }, 2500);
 const ppScore = (p, ord) => { const t = ord.slice(0, 3); return p.reduce((a, x, i) => a + (t[i] === x ? 10 : t.includes(x) ? 5 : 0), 0); };
 const ppPool = (n, cur) => `$${Math.round(n * RACE_AVG).toLocaleString()}`;
@@ -5525,7 +5541,7 @@ function ppOpen() { const pc = window.__ppCash; window.__ppCash = 0; const fsl =
   const head = `<button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🎀 The ${raceName(g.sl)} Final</p>`, keep = $('#panes').dataset.at === 'judge' ? (y ? 'Keep judging' : 'Keep voting') : 'Close';
   const bind = () => { if ($('#ppLater')) $('#ppLater').onclick = () => popClose(); if ($('#ppCard')) $('#ppCard').onclick = () => raceCard(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); };
   if (e || own) { popOpen(`<div class="pp">${head}${e ? `<div class="lk-tk"><span class="lk-k">🎟️ ${e.free ? 'Free pick confirmed' : 'Pick confirmed'}</span><b class="lk-h">${e.free ? `Your free ${money(e.stake || 2)} pick is in!` : `Your ${money(e.stake || 2)} pick is in!`}</b>
-        <span class="lk-ph">${e.picks.map((p, i) => `<i><img src="${g.ph[p].src}" alt=""><em><span class="rz-in">${rosette(i)}</span> ${['1st', '2nd', '3rd'][i]}</em></i>`).join('')}</span></div>
+        <span class="lk-ph">${e.picks.map((p, i) => `<i><img src="${g.ph[p].src}" alt=""><em>${pickTag(i, 1)}</em></i>`).join('')}</span></div>
         <div class="lk-row"><div class="lk-pz"><small>Cash prize pool</small><b>${ppPool(e.players || g.players)}</b><span>${e.players || g.players} players</span></div><div class="lk-cd"><small>Results in</small><b class="rb-cd" data-due="${ppDue(e)}" data-sl="${e.sl}">${(() => { const r = Math.max(0, ppDue(e) - Date.now()); return `${Math.floor(r / 60000)}:${String(Math.floor(r / 1000) % 60).padStart(2, '0')}`; })()}</b><span>${raceName(g.sl)} Final</span></div></div>`
         : `<h2 class="pp-h">Your photo is in the ring!</h2><p class="pp-m"><b>${ppPool(g.players)}</b> pool · ${g.players} players · closes in ${Math.max(1, Math.ceil((g.end - Date.now()) / 60000))} min</p>`}
       ${e || own ? raceTrackHTML(g, e) + '<div class="myp" id="myPk"></div>' : ''}${ppBoard(g, e)}<p class="pp-i">${e ? `<small>Demo: results arrive about 2 minutes after you pick.</small>` : `Finalists’ creators share <b>10% of the prize pool</b>. Creators can’t pick in a Final their own photo is in.`}</p>
@@ -5540,7 +5556,7 @@ function ppOpen() { const pc = window.__ppCash; window.__ppCash = 0; const fsl =
       <p class="pk-meta">${g.players} players · Closes in ${Math.max(1, Math.ceil((g.end - Date.now()) / 60000))} min</p>
       <p class="rc-jp">🎯 Win with 2 photos in the top 3, at least 1 in its exact spot</p>
       <h3 class="pk-h3">Pick your 1st, 2nd &amp; 3rd</h3><p class="pk-sub">Choose from the 6 photos below</p>
-      <p class="pp-leg">🔥 Form = last 4 finishes · 🔥 = share picking it to win</p><div class="pp-g g6 ${picks.length === 3 ? 'full' : ''}">${g.ph.map((p, i) => { const n = picks.indexOf(i); return `<button class="pp-t ${n >= 0 ? 'on rk' + n : ''}" data-pp="${i}"><span class="pp-im"><img src="${p.src}" alt="">${n >= 0 ? `<i class="pp-rz ${n === window.__rzNew ? 'new' : ''}">${rosette(n)}</i><span class="pp-strip">Your ${['1st', '2nd', '3rd'][n]} pick</span>` : ''}</span><span class="pp-nm"><b>${esc(p.t)}</b><small class="pp-hd"><span>@${esc(p.h)}</span><em class="pp-pc" title="Share of players picking it to win">🔥 ${bk[i]}%</em></small></span><span class="pp-cap"><span class="rf"><small class="rf-l">Form</small>${formHTML(p.form)}</span></span></button>`; }).join('')}</div>
+      <p class="pp-leg">🔥 Form = last 4 finishes · 🔥 = share picking it to win</p><div class="pp-g g6 ${picks.length === 3 ? 'full' : ''}">${g.ph.map((p, i) => { const n = picks.indexOf(i); return `<button class="pp-t ${n >= 0 ? 'on rk' + n : ''}" data-pp="${i}"><span class="pp-im"><img src="${p.src}" alt="">${n >= 0 ? `<i class="pp-rz ptw ${n === window.__rzNew ? 'new' : ''}">${pickTag(n)}</i><span class="pp-strip">Your ${['1st', '2nd', '3rd'][n]} pick</span>` : ''}</span><span class="pp-nm"><b>${esc(p.t)}</b><small class="pp-hd"><span>@${esc(p.h)}</span><em class="pp-pc" title="Share of players picking it to win">🔥 ${bk[i]}%</em></small></span><span class="pp-cap"><span class="rf"><small class="rf-l">Form</small>${formHTML(p.form)}</span></span></button>`; }).join('')}</div>
       <p class="pp-i">${n3 ? 'Your top 3 is set. Tap a photo to change it.' : `Tap your <b>${['1st', '2nd', '3rd'][picks.length]}</b> place photo`}</p>
       <p class="pk-rem"><b>${ppPool(g.players)}</b> cash prize pool</p>${pc && S.user && S.user.guest ? '<p class="pk-note">Choose your picks and amount. You’ll create your account and add cash before you pay.</p>' : ''}
       ${cash ? `<div class="rc-st" role="group" aria-label="Entry">${RACE_ST.map(v => `<button data-rst="${v}" aria-pressed="${v === stake}">$${v}</button>`).join('')}</div>
@@ -5974,7 +5990,7 @@ function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o;
   $('#rvSkip').onclick = fin; $('#rvGo').onclick = fin;
   [0, 1, 2].forEach((k, n) => at(1900 + n * 1300, () => { const el = document.querySelector(`#rvPod [data-k="${k}"]`); if (!el) return; const p = ph[ord[k]], hit = picks[k] === ord[k];
     if (n === 0) { $('#rvH').textContent = 'And the results are…'; document.querySelector('.rv-bars').classList.add('done'); }
-    const yi = picks.indexOf(ord[k]); el.innerHTML = `<img src="${p.src}" alt="">${yi >= 0 ? `<i class="rv-you ${yi === k ? 'ok' : ''}">${o.win ? 'Your winner pick' : `Your ${['1st', '2nd', '3rd'][yi]} pick`}</i>` : ''}<b>${RV_MED[k]} ${RV_ORD[k]}</b>`; el.classList.add('on', hit ? 'hit' : 'miss');
+    const yi = picks.indexOf(ord[k]); el.innerHTML = `<img src="${p.src}" alt="">${hit ? `<i class="rv-rz">${rosette(o.win ? 'w' : k)}</i>` : ''}${yi >= 0 ? `<i class="rv-you ${yi === k ? 'ok' : ''}">${o.win ? 'Your winner pick' : `Your ${['1st', '2nd', '3rd'][yi]} pick`}</i>` : ''}<b>${RV_MED[k]} ${RV_ORD[k]}</b>`; el.classList.add('on', hit ? 'hit' : 'miss');
     $('#rvMe').innerHTML = mine != null && ord[k] === mine ? `<b class="ok">📷 Your photo finished ${RV_ORD[k]}!</b>` : hit ? `<b class="ok">✓ Spot on!</b> Your ${RV_ORD[k]} pick` : picks[k] != null ? `You picked <b>“${esc(ph[picks[k]].t || 'another photo')}”</b> for ${RV_ORD[k]}` : '&nbsp;';
     if (hit || (mine != null && ord[k] === mine)) { el.classList.add('pop', 'hit'); rvConfetti(el, 14); } }));
   if (mine != null && mine >= 0 && !ord.slice(0, 3).includes(mine)) at(1900 + 3 * 1300 + 100, () => { $('#rvMe').innerHTML = `📷 Your photo finished ${ppOrd(ord.indexOf(mine) + 1)} · finalists still share the pool`; });
@@ -5987,7 +6003,7 @@ function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o;
     $('#rvS').style.display = 'none'; document.querySelector('.rv').classList.add(won ? 'rv-w' : 'rv-l'); if (won) rvConfetti($('#rvBox'), 40);
     const pod = $('#rvPod'); if (pod && !document.querySelector('.rv-exs')) pod.insertAdjacentHTML('afterend', `<div class="rv-pod rv-exs">${[0, 1, 2].map(k => `<span>${picks[k] === top[k] ? '<em>✓ Exact match</em>' : ''}</span>`).join('')}</div>`);
     const tg = (p, i) => top[i] === p ? '<em class="ok">✓ Exact match</em>' : o.qual ? `<em class="no">✗ ${top.includes(p) ? `Finished ${O[top.indexOf(p)]}` : 'Not in top 3'}</em>` : top.includes(p) ? `<em class="mid">Finished ${O[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
-    $('#rvMe').innerHTML = `<span class="rv-yp-h rv-rule"><span>Your picks</span></span><span class="rv-yp">${picks.filter(p => ph[p]).map((p, i) => `<span class="${top[i] === p ? 'ex' : ''}"><img src="${ph[p].src}" alt=""><b>Picked ${O[i]}</b>${tg(p, i)}</span>`).join('')}</span>`; });
+    $('#rvMe').innerHTML = `<span class="rv-yp-h rv-rule"><span>Your picks</span></span><span class="rv-yp">${picks.filter(p => ph[p]).map((p, i) => `<span class="${top[i] === p ? 'ex' : ''}"><img src="${ph[p].src}" alt="">${top[i] === p ? `<i class="rv-rz sm">${rosette(i)}</i>` : ''}<b>Picked ${O[i]}</b>${tg(p, i)}</span>`).join('')}</span>`; });
   at(1900 + 3 * 1300 + 400, () => { const g = $('#rvGo'), k = $('#rvSkip'); if (g) g.hidden = false; if (k) k.hidden = true; }); }
 function heroWin(big, sub, done, first) { const c = $('#coach');
   popOpen(`<div class="pp rvw ${first ? 'first' : ''}"><p class="rvw-k">${first ? '🏆 First win!' : '🎉 Winner!'}</p><b class="rvw-amt">${big}</b><p class="rvw-s">${sub}</p><button class="btn block rvw-go" id="rvwGo">See results</button></div>`);
@@ -6210,7 +6226,7 @@ function freePickUp() { S.ucV = S.votes || 0; save(); const g = ppGame(); celebr
 const RT_ORD = ['1st', '2nd', '3rd', '4th', '5th', '6th'];
 function raceTrackHTML(g, e) { window.__rtPrev = null; window.__rtSay = null;
   return `<div class="rtk" id="rtk" data-sl="${g.sl}"><p class="rtk-tick" id="rtkTick">🏁 And they’re off!</p><div class="rtk-track">${g.ph.map((p, i) => { const pk = e ? e.picks.indexOf(i) : -1;
-    return `<div class="rtk-lane ${p.mine ? 'own ' : ''}${pk >= 0 ? 'pk m' + pk : (S.pw || {})[g.sl] && S.pw[g.sl].pick === i ? 'pk m0' : ''}" data-i="${i}"><span class="rtk-lab">${laneTags(g.sl, i, p)}${esc(p.t)}</span><span class="rtk-run" style="left:2%"><img src="${p.src}" alt="">${pk >= 0 ? `<i class="rz-mini">${rosette(pk)}</i>` : ''}<b class="rtk-pos">–</b></span></div>`; }).join('')}<i class="rtk-fin"></i></div></div>`; }
+    return `<div class="rtk-lane ${p.mine ? 'own ' : ''}${pk >= 0 ? 'pk m' + pk : (S.pw || {})[g.sl] && S.pw[g.sl].pick === i ? 'pk m0' : ''}" data-i="${i}"><span class="rtk-lab">${laneTags(g.sl, i, p)}${esc(p.t)}</span><span class="rtk-run" style="left:2%"><img src="${p.src}" alt=""><b class="rtk-pos">–</b></span></div>`; }).join('')}<i class="rtk-fin"></i></div></div>`; }
 function raceTick() { const el = document.getElementById('rtk'); if (!el || !el.closest('#coach.on')) return; const sl = +el.dataset.sl, g = ppGame(sl), W0 = (S.pw || {})[sl], e = (S.pp || {})[sl] || (W0 ? { picks: [W0.pick], at: W0.at, sl, win: 1 } : { picks: [], at: Date.now() - PP_DEMO / 2, sl, nop: 1 });
   const now = Date.now(), cp = 1 - (g.end - now) / PP_MS, prog = Math.min(1, Math.max(.04, Math.max(cp, (now - e.at) / PP_DEMO))), L = ppLive(g, prog), fin = Math.max(1, ...ppLive(g, 1).map(x => x.v)) * 1.04;
   const rank = {}; L.forEach((x, n) => { rank[x.i] = n + 1; });
@@ -6258,7 +6274,7 @@ function winOpen(cash) { const g = ppGame(), w = (S.pw || {})[g.sl]; if (w) { wi
     popOpen(`<div class="pp pk wp"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🎀 The ${raceName(g.sl)} Final</p>
       <div class="wt-tabs"><button id="wtTop">Top 3</button><button class="on">🏆 Winner</button></div>
       <h2 class="pk-h">Pick the winner</h2><p class="pk-sub">Which photo will the crowd vote 1st? Long shots pay more.</p>
-      <div class="pp-g g6 wp-g">${g.ph.map((p, i) => `<button class="pp-t ${pick === i ? 'on rk0' : ''}" data-wp="${i}"><span class="pp-im"><img src="${p.src}" alt="">${pick === i ? `<i class="pp-rz ${window.__rzNew === 'w' ? 'new' : ''}">${rosette('w')}</i><span class="pp-strip">🏆 Your winner</span>` : ''}</span><span class="pp-nm"><span class="pp-tl"><b>${esc(p.t)}</b><em class="wp-od2">${od[i]}×</em></span><small>${bk[i]}% of winner picks</small></span></button>`).join('')}</div>
+      <div class="pp-g g6 wp-g">${g.ph.map((p, i) => `<button class="pp-t ${pick === i ? 'on rk0' : ''}" data-wp="${i}"><span class="pp-im"><img src="${p.src}" alt="">${pick === i ? `<i class="pp-rz ptw ${window.__rzNew === 'w' ? 'new' : ''}">${pickTag('w')}</i><span class="pp-strip">🏆 Your winner</span>` : ''}</span><span class="pp-nm"><span class="pp-tl"><b>${esc(p.t)}</b><em class="wp-od2">${od[i]}×</em></span><small>${bk[i]}% of winner picks</small></span></button>`).join('')}</div>
       <p class="pp-i">${pick == null ? 'Tap the photo you think will win' : `<b>${esc(g.ph[pick].t)}</b> at <b>${od[pick]}×</b>: a ${money(stake)} pick returns about <b>${money(stake * od[pick])}</b>`}</p>
       ${freeOk && !cash ? `<button class="btn block pc-go pk-go" id="wpFree" ${pick != null ? '' : 'disabled'}>${pick == null ? 'Choose your winner' : '🎟️ Use your free ticket'}</button><p class="pp-r">A free pick counts as a $2 pick · or pick with cash:</p>` : ''}
       <div class="rc-st" role="group" aria-label="Entry">${RACE_ST.map(v => `<button data-wst="${v}" aria-pressed="${v === stake}">$${v}</button>`).join('')}</div><button class="btn block pc-go pk-go cashb" id="wpGo" ${pick == null ? 'disabled' : ''}>${pick == null ? 'Choose your winner' : `💵 Pick to win · ${money(stake)}<small class="pk-win">Pays about ${money(stake * od[pick])} if it wins</small>`}</button>
@@ -6290,7 +6306,7 @@ function laneTags(sl, i, p) { const T = (S.pp || {})[sl], W = (S.pw || {})[sl], 
 function myPicksPaint(g, L) { const el = document.getElementById('myPk'); if (!el) return; const sl = g.sl, T = (S.pp || {})[sl], W = (S.pw || {})[sl], rank = {}; L.forEach((x, n) => { rank[x.i] = n + 1; });
   const own = g.ph.findIndex(p => p.mine), rows = [];
   if (T) { const gl = Object.assign({}, g, { ord: L.map(x => x.i) }), TR = ppTiers(T, gl), pos = T.picks.map(i => rank[i]), ex = T.picks.filter((p, k) => pos[k] === k + 1).length, inT = pos.filter(x => x <= 3).length;
-    rows.push(`<div class="myp-r ${TR.prize ? 'w' : ''}"><span class="myp-i">🎯</span><span class="myp-t"><b>Top 3 · ${T.free ? 'free pick' : money(T.stake || 2)}</b><small>${T.picks.map((i, k) => `<span class="rz-in">${rosette(k)}</span>${esc(g.ph[i].t)} <em>${RT_ORD[rank[i] - 1]}</em>`).join(' · ')}</small></span><em class="myp-s">${TR.prize ? `~${money(TR.prize)}` : `${inT}/3 top · ${ex} exact`}</em></div>`); }
+    rows.push(`<div class="myp-r ${TR.prize ? 'w' : ''}"><span class="myp-i">🎯</span><span class="myp-t"><b>Top 3 · ${T.free ? 'free pick' : money(T.stake || 2)}</b><small>${T.picks.map((i, k) => `<span class="myp-l">${pickTag(k, 1)} ${esc(g.ph[i].t)} <em>· now ${RT_ORD[rank[i] - 1]}</em></span>`).join('')}</small></span><em class="myp-s">${TR.prize ? `~${money(TR.prize)}` : `${inT}/3 top · ${ex} exact`}</em></div>`); }
   if (W) { const r = rank[W.pick], od = winOdds(g)[W.pick];
     rows.push(`<div class="myp-r ${r === 1 ? 'w' : ''}"><span class="myp-i">🏆</span><span class="myp-t"><b>Winner · ${esc(g.ph[W.pick].t)}</b><small>${W.free ? 'Free pick' : money(W.stake || 2)} · ${od}× now</small></span><em class="myp-s">${r === 1 ? `Leading · ~${money((W.stake || 2) * od)}` : `Running ${RT_ORD[r - 1]}`}</em></div>`); }
   if (own >= 0) rows.push(`<div class="myp-r ${rank[own] <= 3 ? 'w' : ''}"><span class="myp-i">📷</span><span class="myp-t"><b>Your photo · ${esc(g.ph[own].t)}</b><small>Finalists’ creators share 10% of the pool</small></span><em class="myp-s">Running ${RT_ORD[rank[own] - 1]}</em></div>`);
@@ -6320,6 +6336,8 @@ function rzFx(kind, i, big) { const t = document.querySelector(`#coach [data-${k
     sp.className = 'rz-sp'; sp.style.setProperty('--dx', Math.cos(a) * r + 'px'); sp.style.setProperty('--dy', Math.sin(a) * r + 'px'); sp.style.animationDelay = (Math.random() * .12) + 's'; im.appendChild(sp); setTimeout(() => sp.remove(), 1100); }
   try { navigator.vibrate && navigator.vibrate(big ? [12, 40, 18] : 10); } catch (e) {}
   if (big) setTimeout(() => { const go = document.querySelector('#coach #ppGo:not([disabled]), #coach #ppFree:not([disabled]), #coach #wpGo:not([disabled]), #coach #wpFree:not([disabled])'); if (!go) return; go.scrollIntoView({ behavior: 'smooth', block: 'center' }); go.classList.remove('pk-pulse'); void go.offsetWidth; go.classList.add('pk-pulse'); }, 550); }
+function pickTag(k, mini) { const r = k === 'w' ? 'Winner' : ['1st', '2nd', '3rd'][k], c = k === 'w' || k === 0 ? 'g' : k === 1 ? 's' : 'b';
+  return mini ? `<span class="ptin ${c}">Pick ${r}</span>` : `<span class="ptk ${c}"><small>My pick</small><b>${r}</b></span>`; }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
