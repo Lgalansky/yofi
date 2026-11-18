@@ -236,6 +236,8 @@ Then `rmv113.py`: 'Pick the winner' pool next to the Top 3: Top 3 | Winner tabs 
 
 Then `rmv114.py`: winner pick can always be placed: every player gets the stake row and green 'Pick to win' cash button, plus the free-pick button when they have 250 coins (otherwise a line says how many more coins).
 
+Then `rmv115.py`: coins can't be used on Final pick screens: Top 3 and Winner are cash-only when opened normally; the free ticket comes only from the coins menu's Free Final pick row (or a new player's ticket) and shows 'Use your free ticket'; Finals tab free-pick button removed.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -346,6 +348,7 @@ python3 rmv111.py
 python3 rmv112.py
 python3 rmv113.py
 python3 rmv114.py
+python3 rmv115.py
 ```
 
 ## Skill only
