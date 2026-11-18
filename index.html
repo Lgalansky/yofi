@@ -1127,6 +1127,9 @@ html body .gl .btn.gl-act{flex:none;width:auto!important;padding:8px 14px!import
 .fr3{text-align:center}.fr3-frame{padding:12px;background:linear-gradient(135deg,#E8C46A,#B8862E 45%,#F3D98B 55%,#A9771F);border-radius:6px;box-shadow:inset 0 0 0 3px #8A5E16;margin:8px auto 10px;max-width:220px}.fr3-frame img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;box-shadow:0 0 0 6px #F6EEDC}
 .fr3-name{width:100%;box-sizing:border-box;text-align:center;font:800 1.15rem Fraunces,Georgia,serif;padding:10px;border-radius:12px;border:1.5px solid #C9D6EA;background:#fff;color:#1E3A6E;margin:0 0 8px}.fr3-s{font-size:.9rem;margin:0 0 10px}
 html body .fr3 .btn.fr3-go{background:#1E3A6E!important;color:#fff!important}
+.rv-yp-h{display:block;margin:14px 0 6px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:.78rem;color:#1E3A6E}
+.rv-yp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.rv-yp>span{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;border-radius:12px}.rv-yp>span.ex{box-shadow:inset 0 0 0 2px #1E3A6E;background:#E3EAF5}
+.rv-yp img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:9px}.rv-yp b{font-size:.84rem;color:#1E3A6E}.rv-yp em{font-style:normal;font-size:.76rem;font-weight:700;padding:2px 8px;border-radius:999px;background:#EEE6D8}.rv-yp em.ok{background:none;color:#1E3A6E}.rv-yp em.mid{background:#FFF0C2}
 </style>
 </head>
 <body>
@@ -5379,7 +5382,7 @@ function ppResultShow(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc 
   const ex = e.picks.filter((p, i) => top[i] === p).length, inT = e.picks.filter(p => top.includes(p)).length, ORD = ['1st', '2nd', '3rd'];
   const head = prize ? `You won ${amt}!` : inT ? `${inT} photo${inT === 1 ? '' : 's'} in the top 3` : 'No photos in the top 3';
   const nearAmt = (() => { const t = TR.T.find(z => z.k === 1); return t && t.stake ? t.amt * st / (t.stake + st) : 0; })();
-  const chip = !prize && inT === 1 ? `So close! One more photo in the top 3 would have paid about ${money(nearAmt)}` : ex ? `${ex} in the correct position` : inT === 3 ? 'All 3 in the top 3 · other order' : inT === 2 ? 'Neither in the correct position' : inT === 1 ? 'Not in the correct position' : 'Better luck next hour';
+  const chip = !prize && inT === 1 ? `So close! One more photo in the top 3 would have paid about ${money(nearAmt)}` : inT ? `${inT} of your photos in the top 3 · ${ex} in the exact spot` : 'Better luck next hour';
   const ptag = (p, i) => top[i] === p ? '<em class="ok">✓ Exact</em>' : top.includes(p) ? `<em class="mid">Finished ${ORD[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
   popOpen(`<div class="pp fr2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button>
     <p class="pp-k">${esc(showName(g.k))}</p><p class="fr2-sub">${raceName(g.sl)} Final · Results</p>
@@ -5716,7 +5719,9 @@ function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o;
     if (hit || (mine != null && ord[k] === mine)) { el.classList.add('pop', 'hit'); rvConfetti(el, 14); } }));
   if (mine != null && mine >= 0 && !ord.slice(0, 3).includes(mine)) at(1900 + 3 * 1300 + 100, () => { $('#rvMe').innerHTML = `📷 Your photo finished ${ppOrd(ord.indexOf(mine) + 1)} · finalists still share the pool`; });
   at(1900 + 3 * 1300 + 300, () => { if (!picks.length) return; const top = ord.slice(0, 3), ex = picks.filter((p, i) => top[i] === p).length, inT = picks.filter(p => top.includes(p)).length;
-    $('#rvMe').innerHTML = `<b class="rv-sum">${inT} of your photos in the top 3 · ${ex} in the exact spot</b>${o.res ? `<span class="rv-res ${o.res.won ? 'won' : ''}">${o.res.txt}</span>` : ''}`; });
+    const O = ['1st', '2nd', '3rd'], tg = (p, i) => top[i] === p ? '<em class="ok">✓ Exact</em>' : top.includes(p) ? `<em class="mid">Finished ${O[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
+    $('#rvMe').innerHTML = `<b class="rv-sum">${inT} of your photos in the top 3 · ${ex} in the exact spot</b>${o.res ? `<span class="rv-res ${o.res.won ? 'won' : ''}">${o.res.txt}</span>` : ''}
+      <span class="rv-yp-h">Your picks</span><span class="rv-yp">${picks.filter(p => ph[p]).map((p, i) => `<span class="${top[i] === p ? 'ex' : ''}"><img src="${ph[p].src}" alt=""><b>Picked ${O[i]}</b>${tg(p, i)}</span>`).join('')}</span>`; });
   at(1900 + 3 * 1300 + 400, () => { const g = $('#rvGo'), k = $('#rvSkip'); if (g) g.hidden = false; if (k) k.hidden = true; }); }
 function heroWin(big, sub, done, first) { const c = $('#coach');
   popOpen(`<div class="pp rvw ${first ? 'first' : ''}"><p class="rvw-k">${first ? '🏆 First win!' : '🎉 Winner!'}</p><b class="rvw-amt">${big}</b><p class="rvw-s">${sub}</p><button class="btn block rvw-go" id="rvwGo">See results</button></div>`);
@@ -5725,7 +5730,7 @@ function gateResult(G, picks) { const top = G.ord.slice(0, 3), right = picks.fil
   revealSeq({ ph: G.ph, ord: G.ord, picks, res: { won: !!pay, txt: pay ? `+${pay} coins` : 'No coins this time' }, kicker: `Group ${G.gi + 1} of 3 · qualifier`, title: `${isYoungW() ? 'Judges' : 'The crowd'} decide who goes through` },
     () => pay ? heroWin(`+${pay} coins`, `${right} of 3 in the exact spot`, () => gateResultShow(G, picks)) : gateResultShow(G, picks)); }
 function ppResult(e) { if (e.__rv) return; e.__rv = 1; const g = ppGame(e.sl), TR = ppTiers(e, g), prize = TR.prize;
-  revealSeq({ ph: g.ph, ord: g.ord, picks: e.picks, res: { won: !!prize, txt: prize ? `You won ${money(prize)}` : 'No cash this time' }, kicker: `${raceName(g.sl)} Final · ${esc(showName(g.k))}`, title: `${ppPool(g.players)} prize pool · ${g.players} players` },
+  revealSeq({ ph: g.ph, ord: g.ord, picks: e.picks, res: { won: !!prize, txt: prize ? `You won ${money(prize)}` : 'No cash this time' }, kicker: `${raceName(g.sl)} Final · ${esc(showName(g.k))}`, title: `${ppPool(e.players || g.players)} prize pool · ${e.players || g.players} players` },
     () => prize ? (S.firstCash ? heroWin(`You won ${money(prize)}`, `${TR.mine.lab} · real cash`, () => ppResultShow(e)) : (S.firstCash = 1, save(), heroWin(`${money(prize)}`, `<b>Your first real cash win!</b><br>${TR.mine.lab} · it’s in your wallet now`, () => ppResultShow(e), 1))) : ppResultShow(e)); }
 function raceOwnResult(sl) { const x = S.races[sl]; if (!x || x.__rv) return; x.__rv = 1; const g = ppGame(sl), i = g.ph.findIndex(p => p.mine), pl = i < 0 ? RACE_N : g.ord.indexOf(i) + 1, earn = pl <= RACE_N ? finShare(sl, pl) : 0, ph = i >= 0 ? g.ph[i] : null;
   revealSeq({ ph: g.ph, ord: g.ord, picks: [], mine: i, kicker: `${raceName(sl)} Final · ${esc(showName(g.k))}`, title: ph ? `📷 Your photo “${esc(ph.t)}” is in this Final` : '' },
