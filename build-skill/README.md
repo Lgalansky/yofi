@@ -132,6 +132,8 @@ Then `rmv61.py`: Final result creator card from the mock-up ("Your photo could w
 
 Then `rmv62.py`: Gallery from the mock-up ("My gallery" hero with three tilted photos, Upcoming Finals rows with creators' share, How your photo wins, One frame callout, creator prize fold, Your photos, green Photo earnings box).
 
+Then `rmv63.py`: qualifier reveal and result use the same words ("X of 3 in the exact spot", "Top 2 go through to the Xpm Final", what 1 exact spot pays); the repeated "See the full result" fold is removed.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -190,6 +192,7 @@ python3 rmv59.py
 python3 rmv60.py
 python3 rmv61.py
 python3 rmv62.py
+python3 rmv63.py
 ```
 
 ## Skill only
