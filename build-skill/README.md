@@ -176,6 +176,8 @@ Then `rmv83.py`: new player's first Final result pushes photo entry: 'Your turn:
 
 Then `rmv84.py`: free pick opens the live page at once (was ~9 s waiting for the pick screen to close); live status explains the rule from your picks (in top 3, exact, what is still needed) and each highlighted row shows where that pick needs to finish.
 
+Then `rmv85.py`: streak boxes return as a fixed-value reveal: Bronze 20 / Silver 40 / Gold 80 for 3 / 6 / 10 right in a row, prize shown before opening, tap to open with shake and burst; new players get the coin burst only.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -256,6 +258,7 @@ python3 rmv81.py
 python3 rmv82.py
 python3 rmv83.py
 python3 rmv84.py
+python3 rmv85.py
 ```
 
 ## Skill only
