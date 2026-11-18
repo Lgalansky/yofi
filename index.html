@@ -5618,12 +5618,9 @@ function gateResultShow(G, picks) { const y = isYoungW(), top = G.ord.slice(0, 3
     sub = right === 3 ? 'All three spot on!' : right === 2 ? `Your ${hit[0].replace('-place', '')} and ${hit[1]} picks were spot on.` : right === 1 ? `Your ${hit[0]} pick was spot on.` : 'None of your picks were in the right place.';
   const tag = (p, i) => top[i] === p ? '<em class="ok">✓ Exact match</em>' : top.includes(p) ? `<em class="mid">Finished ${GQ_ORD[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
   popOpen(`<div class="pp gq2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">Group ${G.gi + 1} of 3 · results</p>
-    <h2 class="g2-h">${right} of 3 matched</h2><p class="g2-s">${sub}</p>
-    <span class="g2-earn ${pay ? 'won' : ''}">${pay ? `<b>+${pay} coins</b> · ${Math.floor(S.gems - pay)} → ${Math.floor(S.gems)} coins` : `0 coins · get 1 photo in its exact spot to win`}</span>
-    <details class="g2-more"><summary>See the full result</summary><div class="g2-cmp"><span></span>${GQ_ORD.map((o, i) => `<b class="g2-o">${GQ_MED[i]} ${o}</b>`).join('')}
-      <small class="g2-row">${cw} top 3</small>${top.map((p, i) => `<figure><img src="${G.ph[p].src}" alt="">${i < 2 ? '<em class="fin">Finalist</em>' : '<em class="no">&nbsp;</em>'}</figure>`).join('')}
-      <small class="g2-row">Your picks</small>${picks.map((p, i) => `<figure class="${top[i] === p ? 'ok' : ''}"><img src="${G.ph[p].src}" alt="">${tag(p, i)}</figure>`).join('')}</div></details>
-    <div class="g2-thru"><span>${top.slice(0, 2).map(p => `<img src="${G.ph[p].src}" alt="">`).join('')}</span><div><b>Through to the ${fin} Final</b><small>The ${cw.toLowerCase()} top 2 qualify · picks open at ${raceName(G.ns - 1)}</small></div></div>
+    <h2 class="g2-h">${right} of 3 in the exact spot</h2>
+    <span class="g2-earn ${pay ? 'won' : ''}">${pay ? `<b>+${pay} coins</b> · ${Math.floor(S.gems - pay)} → ${Math.floor(S.gems)} coins` : `No coins this time · 1 exact spot pays ${GATE_COINS[1]} coins`}</span>
+        <div class="g2-thru"><span>${top.slice(0, 2).map(p => `<img src="${G.ph[p].src}" alt="">`).join('')}</span><div><b>Through to the ${fin} Final</b><small>The ${cw.toLowerCase()} top 2 qualify · picks open at ${raceName(G.ns - 1)}</small></div></div>
     ${g2Act(pay)}</div>`);
   if (pay) setTimeout(() => gemExplosion(pay, { label: 'Qualifier win' }), 400);
   if ($('#gtFin')) $('#gtFin').onclick = () => { popClose(); setTimeout(ppOpen, 250); }; if ($('#gtKeep')) $('#gtKeep').onclick = () => popClose(); if (!$('#gtNo')) { const z = document.createElement('i'); z.id = 'gtNo'; z.hidden = true; $('#coach').appendChild(z); }
@@ -5750,14 +5747,14 @@ function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o;
   if (mine != null && mine >= 0 && !ord.slice(0, 3).includes(mine)) at(1900 + 3 * 1300 + 100, () => { $('#rvMe').innerHTML = `📷 Your photo finished ${ppOrd(ord.indexOf(mine) + 1)} · finalists still share the pool`; });
   at(1900 + 3 * 1300 + 300, () => { if (!picks.length) return; const top = ord.slice(0, 3), ex = picks.filter((p, i) => top[i] === p).length, inT = picks.filter(p => top.includes(p)).length;
     const O = ['1st', '2nd', '3rd'], tg = (p, i) => top[i] === p ? '<em class="ok">✓ Exact</em>' : top.includes(p) ? `<em class="mid">Finished ${O[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
-    $('#rvMe').innerHTML = `<b class="rv-sum">${inT} of your photos in the top 3 · ${ex} in the exact spot</b>${o.res ? `<span class="rv-res ${o.res.won ? 'won' : ''}">${o.res.txt}</span>` : ''}
+    $('#rvMe').innerHTML = `<b class="rv-sum">${o.qual ? `${ex} of 3 in the exact spot` : `${inT} of your photos in the top 3 · ${ex} in the exact spot`}</b>${o.res ? `<span class="rv-res ${o.res.won ? 'won' : ''}">${o.res.txt}</span>` : ''}
       <span class="rv-yp-h">Your picks</span><span class="rv-yp">${picks.filter(p => ph[p]).map((p, i) => `<span class="${top[i] === p ? 'ex' : ''}"><img src="${ph[p].src}" alt=""><b>Picked ${O[i]}</b>${tg(p, i)}</span>`).join('')}</span>`; });
   at(1900 + 3 * 1300 + 400, () => { const g = $('#rvGo'), k = $('#rvSkip'); if (g) g.hidden = false; if (k) k.hidden = true; }); }
 function heroWin(big, sub, done, first) { const c = $('#coach');
   popOpen(`<div class="pp rvw ${first ? 'first' : ''}"><p class="rvw-k">${first ? '🏆 First win!' : '🎉 Winner!'}</p><b class="rvw-amt">${big}</b><p class="rvw-s">${sub}</p><button class="btn block rvw-go" id="rvwGo">See results</button></div>`);
   rvConfetti(document.querySelector('.rvw'), first ? 140 : 70); if (first) setTimeout(() => rvConfetti(document.querySelector('.rvw'), 90), 900); let gone = false; const go = () => { if (gone) return; gone = true; done(); }; $('#rvwGo').onclick = go; setTimeout(go, first ? 5200 : 3600); }
 function gateResult(G, picks) { const top = G.ord.slice(0, 3), right = picks.filter((p, i) => top[i] === p).length, pay = GATE_COINS[right];
-  revealSeq({ ph: G.ph, ord: G.ord, picks, res: { won: !!pay, txt: pay ? `+${pay} coins` : 'No coins this time' }, kicker: `Group ${G.gi + 1} of 3 · qualifier`, title: `${isYoungW() ? 'Judges' : 'The crowd'} decide who goes through` },
+  revealSeq({ ph: G.ph, ord: G.ord, picks, qual: 1, res: { won: !!pay, txt: pay ? `+${pay} coins` : `No coins · 1 exact spot pays ${GATE_COINS[1]} coins` }, kicker: `Group ${G.gi + 1} of 3 · qualifier`, title: `Top 2 go through to the ${raceName(G.ns)} Final` },
     () => pay ? heroWin(`+${pay} coins`, `${right} of 3 in the exact spot`, () => gateResultShow(G, picks)) : gateResultShow(G, picks)); }
 function ppResult(e) { if (e.__rv) return; e.__rv = 1; const g = ppGame(e.sl), TR = ppTiers(e, g), prize = TR.prize;
   revealSeq({ ph: g.ph, ord: g.ord, picks: e.picks, res: { won: !!prize, txt: prize ? `You won ${money(prize)}` : 'No cash this time' }, kicker: `${raceName(g.sl)} Final · ${esc(showName(g.k))}`, title: `${ppPool(e.players || g.players)} prize pool · ${e.players || g.players} players` },
