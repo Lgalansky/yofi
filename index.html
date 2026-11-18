@@ -2933,7 +2933,8 @@ function gemIdeas() {
     if (false && best) I.push({ ic: '🏅', t: 'Take a blue ribbon', d: `@${esc(best.c.h)} holds the <b>${esc(crownName(best.k))}</b> blue ribbon with ${best.c.sc}. Your photo: <b>${best.ph.s.total}</b>.`, cost: FC_STAKES[1].amt, src: best.ph.src, go: () => { closeSheet(); openFriends(); fcNew(best.c.h, { f: best.c.h, th: best.k, st: 1, sel: best.ph.id }); } }); } catch (e) {}
   const f = fighters().slice().sort((a, b) => b.s.total - a.s.total)[0];
   if (false && f) I.push({ ic: '🏅', t: 'Coin challenge', d: `Put your <b>${f.s.total}</b> photo up against a rival. Win <b>200 🟡</b> in 30 seconds.`, cost: 100, src: f.src, go: () => { closeSheet(); openGemBattle(100); } });
-  if (!isCash() && !newbie()) I.push({ ic: '⚡', t: 'Quick Sprint', d: `1 v 1: pick the photo the crowd chose in 10 pairs. Win <b>${QS_COIN_PAY[0]} 🟡</b>.`, cost: QS_COIN, src: (fighters()[0] || SEED.find(z => z.src) || {}).src || '', go: () => { closeSheet(); window.__qsGame = 'qs'; sprPractice(); } });
+  if (!newbie()) I.push({ ic: '🎯', t: 'Coin Pick', d: 'Pick the crowd’s top 3 of 5. Win up to <b>50 coins</b>.', cost: 0, src: (SEED.find(z => z.src) || {}).src || '', go: () => { closeSheet(); setTimeout(gateOpen, 250); } });
+  if (!newbie()) I.push({ ic: '⚡', t: 'Quick Sprint', d: `1 v 1: pick the photo the crowd chose in 10 pairs. Win <b>${QS_COIN_PAY[0]} 🟡</b>.`, cost: QS_COIN, src: (fighters()[0] || SEED.find(z => z.src) || {}).src || '', go: () => { closeSheet(); window.__qsGame = 'qs'; sprPractice(); } });
   return I;
 }
 // one clear screen for adding a photo in a category, before the phone's upload menu opens
@@ -2969,7 +2970,7 @@ function gemNudge(force) { if (S && (S.tut || 9) < 4) return false;
   if (false) { S.tixUnlock = 1; S.gnMark = mark; S.gnVote = S.votes || 0; window.__autoT = Date.now(); save(); paintGemGlow();
     celebrate({ src: (fighters()[0] || {}).src || '', score: '🎟️', title: 'Free cash entry unlocked!', text: `Swap <b>${TIX_GEMS} 🟡</b> for a free <b>$1</b> tournament or cash challenge. <b>Win real money</b> without spending a cent.`, cta: '🎟️ Get my free entry', onCta: buyTicket, later: 'Save my coins', onLater: () => toast(`Tap your coins anytime to get a free entry`) });
     return true; }
-  if (!isCash() && (S.tut || 9) >= 3 && fqLeft() && (S.gems || 0) >= FREE_BET_COINS) { S.gnMark = mark; S.gnVote = S.votes || 0; window.__autoT = Date.now(); save(); paintGemGlow(); const g = ppGame();
+  if (false && (S.tut || 9) >= 3 && fqLeft() && (S.gems || 0) >= FREE_BET_COINS) { S.gnMark = mark; S.gnVote = S.votes || 0; window.__autoT = Date.now(); save(); paintGemGlow(); const g = ppGame();
     celebrate({ src: (g.ph[0] || {}).src || '', score: '🎟️', title: 'You have unused coins', text: `You’ve got <b>${Math.floor(S.gems).toLocaleString()} 🟡</b>: enough for a free pick in the <b>${raceName(g.sl)} ${esc(showName(g.k))} Final</b>, with real cash prizes. Open your coins to use them.`, cta: '🟡 Open my coins', onCta: () => { closeFlow(); useGems(); }, later: 'Later' }); return true; }
   const I = gemIdeas(); if (!I.length) return false; S.gnMark = mark; S.gnVote = S.votes || 0; window.__autoT = Date.now(); save(); paintGemGlow(); const x = I.find(i => S.gems >= i.cost && i.src) || I.find(i => i.src) || I[0];
   celebrate({ src: x.src, score: '🟡', title: `You’ve got ${Math.floor(S.gems).toLocaleString()} coins!`, text: `${x.d}<br>Use <b>${x.cost} 🟡</b> on it now.`, cta: '🟡 Use my coins', onCta: useGems, later: 'Later' });
@@ -5669,7 +5670,7 @@ function gateResultOld(G, picks, real, tk) { const y = isYoungW(), top = G.ord.s
   if ($('#gtReal')) $('#gtReal').onclick = () => gateOpen(true); if ($('#gtFin')) $('#gtFin').onclick = () => { popClose(); setTimeout(ppOpen, 250); }; if ($('#gtAgain')) $('#gtAgain').onclick = () => gateOpen(true);
   $('#gtNo').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
 setInterval(() => { if (!S || !S.gatePend || busyUI() || Date.now() - (window.__autoT || 0) < 20000 || $('#panes').dataset.at !== 'judge' || Object.values(S.pp || {}).some(x => !x.done && Date.now() >= ppDue(x))) return; S.gatePend = 0; window.__autoT = Date.now(); const nx = rotPeek(); S.rotLast = nx || 'x'; save(); if (nx === 's') sprintUp(); else if (nx === 'p') freePickUp(); else if (nx === 'g') gateOpen(false); }, 1200);
-function raceBetRowHTML() { if (S.tut === 3) return `<button class="ug-r ug-swap ug-tk" id="rbLiveRow"><span class="ug-i">🔴</span><span class="ug-t"><b>Your free pick is live</b><small>Results soon · more ways to use your coins unlock after your first result</small></span><em>Watch ›</em></button>`; if (S.tut === 2) return `<button class="ug-r ug-swap ug-tk" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free ticket earned</b><small>Your first pick in the ${raceName(ppGame().sl)} Final · free · real cash prizes</small></span><em>Use ›</em></button>`; if (isCash()) return ''; const L = fqLeft(), ok = L && (S.gems || 0) >= FREE_BET_COINS;
+function raceBetRowHTML() { if (S.tut === 3) return `<button class="ug-r ug-swap ug-tk" id="rbLiveRow"><span class="ug-i">🔴</span><span class="ug-t"><b>Your free pick is live</b><small>Results soon · more ways to use your coins unlock after your first result</small></span><em>Watch ›</em></button>`; if (S.tut === 2) return `<button class="ug-r ug-swap ug-tk" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free ticket earned</b><small>Your first pick in the ${raceName(ppGame().sl)} Final · free · real cash prizes</small></span><em>Use ›</em></button>`; const L = fqLeft(), ok = L && (S.gems || 0) >= FREE_BET_COINS;
   return `<button class="ug-r ug-swap" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free Final pick</b><small>The ${raceName(ppGame().sl)} Final · pick the top 3 of 6 · ${L ? `${L} of ${FQ_MAX} left this hour` : `next in ${frMinsLeft()} min`}</small></span><em class="${ok ? '' : 'need'}">${FREE_BET_COINS} 🟡</em></button>`; }
 function raceBetRowOld() { const g = ppGame(), e = (S.pp || {})[g.sl], ok = !e && (S.gems || 0) >= FREE_BET_COINS;
   return `<button class="ug-r ug-swap" id="rbBet"><span class="ug-i">🎀</span><span class="ug-t"><b>Free $1 Final entry</b><small>${e ? `You’re in the ${raceName(g.sl)} Final` : `The ${raceName(g.sl)} Final · pick the top 3 of 6`}</small></span><em class="${ok ? '' : 'need'}">${FREE_BET_COINS} 🟡</em></button>`; }
@@ -6148,9 +6149,9 @@ function sprintUp() { celebrate({ src: (SEED[6] || {}).src, score: '🎯', title
   cta: `🎯 Play · ${QS_COIN} coins`, onCta: () => { closeFlow(); window.__qsGame = 'qs'; sprPractice(); }, later: 'Keep voting' }); }
 function upReady(p) { p.nmAsk = 1; save(); try { closeFlow(); } catch (e) {} const fp = document.getElementById('finPick'); if (fp) fp.className = '';
   myShow(); if (photoShow(p)) setTimeout(() => frameOpen(p), 300); else toast('Only Pets, Nature & landscapes and Garden & flowers photos can race in a Final.'); }
-function rotPeek() { if ((S.tut || 9) < 4) return 'g'; const ok = { g: S.rotLast !== 'g', s: (S.gems || 0) >= QS_COIN, p: !isCash() && fqLeft() && (S.gems || 0) >= FREE_BET_COINS }, O = ['g', 's', 'p'], i = O.indexOf(S.rotLast);
+function rotPeek() { if ((S.tut || 9) < 4) return 'g'; const ok = { g: S.rotLast !== 'g', s: (S.gems || 0) >= QS_COIN, p: fqLeft() && (S.gems || 0) >= FREE_BET_COINS }, O = ['g', 's', 'p'], i = O.indexOf(S.rotLast);
   for (let k = 1; k <= 3; k++) { const c = O[(i + k + 3) % 3]; if (ok[c]) return c; } return null; }
-function freePickUp() { const g = ppGame(); celebrate({ src: (g.ph[0] || {}).src || '', score: '🎟️', title: 'You have unused coins', text: `You’ve got <b>${Math.floor(S.gems).toLocaleString()} coins</b>: enough for a free pick in the <b>${raceName(g.sl)} ${esc(showName(g.k))} Final</b>, with real cash prizes. Open your coins to use them.`,
+function freePickUp() { S.ucV = S.votes || 0; save(); const g = ppGame(); celebrate({ src: (g.ph[0] || {}).src || '', score: '🎟️', title: 'You have unused coins', text: `You’ve got <b>${Math.floor(S.gems).toLocaleString()} coins</b>: enough for a free pick in the <b>${raceName(g.sl)} ${esc(showName(g.k))} Final</b>, with real cash prizes. Open your coins to use them.`,
   cta: '🟡 Open my coins', onCta: () => { closeFlow(); coinTour(); }, later: 'Later' }); }
 const RT_ORD = ['1st', '2nd', '3rd', '4th', '5th', '6th'];
 function raceTrackHTML(g, e) { window.__rtPrev = null; window.__rtSay = null;
@@ -6190,6 +6191,13 @@ function photoPushHTML(id) { const I = p => `<svg viewBox="0 0 24 24" width="40"
   return `<div class="cw2 cwq"><h3 class="cw2-h">Your photo could win real cash</h3><p class="cw2-t"><span></span>Qualify for the Final. Earn a share of the prize.<span></span></p>
     <div class="cw2-st"><div>${I('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="15.5" cy="9.5" r="1.6"/><path d="M4 17l5-5 4 4 2.5-2.5L20 17"/>')}<p><b>Qualify for the Final</b>Your photo races the qualifiers to reach the hourly Final.</p></div><div>${I('<path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7M9.5 17h5"/>')}<p><b>Earn a share of 10%</b>Every finalist’s creator shares 10% of the Final’s prize pool.</p></div></div>
     <button class="btn block cw2-go" id="${id}">📷 ${frameFree() ? 'Enter your photo — free' : (S.photos || []).some(p => p.framed) ? 'Enter another photo' : 'Enter your photo'}</button><p class="cw2-f">${frameFree() ? 'Your first photo entry is free.' : `Framing a photo costs ${FRAME_COINS} coins.`}</p></div>`; }
+(function () { let lastG = null, v0 = null;
+  setInterval(() => { try { if (!S || (S.tut || 9) < 4) return; const g = S.gems || 0, v = S.votes || 0; if (v0 == null) v0 = v;
+    if (lastG != null && lastG < FREE_BET_COINS && g >= FREE_BET_COINS) S.ucPend = 1;
+    if (!window.__ucSess && g >= FREE_BET_COINS && v - v0 >= 3) { window.__ucSess = 1; S.ucPend = 1; }
+    lastG = g;
+    if (S.ucPend && g >= FREE_BET_COINS && fqLeft() > 0 && v - (S.ucV == null ? -99 : S.ucV) >= 15 && !busyUI() && $('#panes').dataset.at === 'judge' && !(typeof judging !== 'undefined' && judging)) { S.ucPend = 0; window.__autoT = Date.now(); freePickUp(); }
+    else if (S.ucPend && (g < FREE_BET_COINS || !fqLeft())) S.ucPend = 0; } catch (e) {} }, 400); })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
