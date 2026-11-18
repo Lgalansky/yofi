@@ -142,6 +142,8 @@ Then `rmv66.py`: reveal end state from the mock-up (story headline such as "You 
 
 Then `rmv67.py`: qualifier pick screen ignores taps for 900 ms after it opens (stray voting taps were picking a top 3) and opens scrolled to the top; coin icon redrawn as a minted coin with rim and star.
 
+Then `rmv68.py`: reveal drops 1st, 2nd, then 3rd; the 50-coin prize card is no longer highlighted; qualifier result is a full page (Spot on! / Not this time, YOU WON box, crowd's top 3 with Finalist and your-pick tags, Your picks, Through to the Final, coins balance).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -205,6 +207,7 @@ python3 rmv64.py
 python3 rmv65.py
 python3 rmv66.py
 python3 rmv67.py
+python3 rmv68.py
 ```
 
 ## Skill only
