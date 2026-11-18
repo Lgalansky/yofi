@@ -218,6 +218,8 @@ Then `rmv104.py`: winning effect on every vote you call right: pulsing gold glow
 
 Then `rmv105.py`: Coming-up strip reads 'Coin Pick · pick 3 of 5 · free' with no category name.
 
+Then `rmv106.py`: Coin Pick screen drops the 'Win up to · 50 coins' headline; the prize cards show what you can win.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -319,6 +321,7 @@ python3 rmv102.py
 python3 rmv103.py
 python3 rmv104.py
 python3 rmv105.py
+python3 rmv106.py
 ```
 
 ## Skill only
