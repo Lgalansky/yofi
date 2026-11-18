@@ -118,6 +118,7 @@ Then `rmv50.py`: coin players' qualifier result never offers the Final; with 250
 Then `rmv51.py`: the results reveal ends on a "Continue →" button instead of jumping on automatically.
 Then `rmv52.py`: one navy-blue style for every pop (navy headings, kickers, buttons, selected borders, links; light-blue chips; gold prize strips and medals; cash amounts green); qualifier pick matches the mock-up ("Your top 3 is ready", photo slots, "Judge photos").
 Then `rmv53.py`: invite friends to judge: coins menu row and pop (WhatsApp / copy link, invite list Sent -> Joined -> +100); you get 100 coins when a friend judges 15 photos (friend starts with 50, up to 10 paid invites); "Friend bonus +100 coins" pop. Prototype simulates the friend joining and judging.
+Then `rmv54.py`: qualifiers pay for every exact match (1 exact 10, 2 exact 25, 3 exact 50 coins); the result screen leads with "+10 coins · 195 → 205 coins", the photo comparison folds under "See the full result".
 
 ```bash
 python3 rmv6.py
@@ -168,6 +169,7 @@ python3 rmv50.py
 python3 rmv51.py
 python3 rmv52.py
 python3 rmv53.py
+python3 rmv54.py
 ```
 
 ## Skill only
