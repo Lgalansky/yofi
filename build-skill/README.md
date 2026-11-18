@@ -154,6 +154,8 @@ Then `rmv72.py`: the "Your photo could win real cash" card shows on every Final 
 
 Then `rmv73.py`: qualifier result drops the repeated crowd's top 3 and your picks and gains the "Your photo could win real cash" card (Enter your photo → Choose your Final); qualifier pick screen loses the 1st/2nd/3rd slot row.
 
+Then `rmv74.py`: photo card message is "Qualify for the Final" + "Earn a share of 10%" (the top-2 qualifier step is not the headline because it pays nothing).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -223,6 +225,7 @@ python3 rmv70.py
 python3 rmv71.py
 python3 rmv72.py
 python3 rmv73.py
+python3 rmv74.py
 ```
 
 ## Skill only
