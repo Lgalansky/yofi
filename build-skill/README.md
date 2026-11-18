@@ -256,6 +256,8 @@ Then `rmv123.py`: Fix live pick page flashing back to voting: an interrupted res
 
 Then `rmv124.py`: Pick screens keep their scroll position when you tap a photo or stake (Top 3 and Winner). Bigger pick medals on a white disc; bigger Form chips; popularity % moved onto the photo as a chip like the Winner odds.
 
+Then `rmv125.py`: Pick medals without the white disc (it covered the photo); big size kept with a drop shadow.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -376,6 +378,7 @@ python3 rmv121.py
 python3 rmv122.py
 python3 rmv123.py
 python3 rmv124.py
+python3 rmv125.py
 ```
 
 ## Skill only
