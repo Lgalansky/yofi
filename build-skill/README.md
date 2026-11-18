@@ -146,6 +146,8 @@ Then `rmv68.py`: reveal drops 1st, 2nd, then 3rd; the 50-coin prize card is no l
 
 Then `rmv69.py`: run-through fixes. "Add cash" (green) replaces "Get more coins" and the shop copy talks about Finals; pops wait until nothing is open and 2.5 s after a close, and a due Final result goes before a waiting qualifier; the extra "Winner!" pop is gone (kept for the first cash win); PhotoPicks 18+ age screen with navy button; clearer free-pick line; "Form" label and legend on Final pick tiles.
 
+Then `rmv70.py`: live pick page: ticket-style "Free pick confirmed" card with your 1st/2nd/3rd, big green prize pool and navy "Results in m:ss" countdown; results open from this page at 0 (they used to wait for the pop to close); stale "Results at" line removed.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -211,6 +213,7 @@ python3 rmv66.py
 python3 rmv67.py
 python3 rmv68.py
 python3 rmv69.py
+python3 rmv70.py
 ```
 
 ## Skill only
