@@ -116,6 +116,7 @@ Then `rmv48.py`: first-ever cash win gets a bigger one-off celebration; your own
 Then `rmv49.py`: the new-player flow ends when the first free pick's result is seen; until then no qualifiers, side games, 250-coin pick row or coin nudges (coins menu shows "Your free pick is live"); after it, the coins menu shows every option and a one-time "Unlocked" note points to the coins.
 Then `rmv50.py`: coin players' qualifier result never offers the Final; with 250+ coins it says "You have enough for a free Final pick · it's in your coins" and the button is Keep judging.
 Then `rmv51.py`: the results reveal ends on a "Continue →" button instead of jumping on automatically.
+Then `rmv52.py`: one navy-blue style for every pop (navy headings, kickers, buttons, selected borders, links; light-blue chips; gold prize strips and medals; cash amounts green); qualifier pick matches the mock-up ("Your top 3 is ready", photo slots, "Judge photos").
 
 ```bash
 python3 rmv6.py
@@ -164,6 +165,7 @@ python3 rmv48.py
 python3 rmv49.py
 python3 rmv50.py
 python3 rmv51.py
+python3 rmv52.py
 ```
 
 ## Skill only
