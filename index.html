@@ -5188,7 +5188,7 @@ function cpEnd(right, mult) { const c = $('#coach'), won = CP_STAKE * (mult || 0
   if (won) setTimeout(() => { paintGems(); gemExplosion(won, { label: 'Crowd Picks' }); }, 300);
   $('#cpAgain').onclick = () => { c.classList.remove('on', 'cr'); cpStart(); }; $('#cpBack').onclick = () => c.classList.remove('on', 'cr');
   if ($('#cpUps')) $('#cpUps').onclick = () => { c.classList.remove('on', 'cr'); sprEnter(); }; }
-const QS_COIN = 100, QS_COIN_PAY = [160];
+const QS_COIN = 25, QS_COIN_PAY = [40];
 function sprPractice() { if ($('#sheet').classList.contains('on')) closeSheet(); if ((S.gems || 0) < QS_COIN) { toast(`You need ${QS_COIN} coins`); return; } S.gems -= QS_COIN; save(); paintGems(); window.__qsPractice = 1; window.__qsStake = 2; window.__qsSet = Math.floor(Math.random() * 900000) + 1000; (window.__qsGame === 'pp' ? ppqRun() : qsRun()); }
 function qsPop() { if (!isCash()) celebrate({ src: (SEED[6] || {}).src, score: '🎯', title: 'Try Quick Sprint', text: `1 v 1 against a real player. Pick the photo the crowd chose in <b>10 pairs</b>, best score wins. Your first one is for coins: <b>${QS_COIN}</b> in, win <b>${QS_COIN_PAY[0]}</b>. Then play for cash: <b>$2</b> wins <b>$3.20</b>, up to <b>$20</b> wins <b>$32</b>.`, cta: `🎯 Play · ${QS_COIN} ${gemIcon('')}`, onCta: sprPractice, later: 'Keep voting' });
   else celebrate({ src: (SEED[6] || {}).src, score: '🎯', title: 'Quick Sprint', text: `1 v 1 against a real player · 10 pairs · about 30 seconds. <b>$2</b> wins <b>$3.20</b>, up to <b>$20</b> wins <b>$32</b>.`, cta: '🎯 Play · from $2', onCta: () => { window.__qsGame = 'qs'; sprEnter(); }, later: 'Keep voting' }); }
@@ -6088,8 +6088,8 @@ function upReady(p) { p.nmAsk = 1; save(); try { closeFlow(); } catch (e) {} con
   myShow(); if (photoShow(p)) setTimeout(() => frameOpen(p), 300); else toast('Only Pets, Nature & landscapes and Garden & flowers photos can race in a Final.'); }
 function rotPeek() { if ((S.tut || 9) < 4) return 'g'; const ok = { g: S.rotLast !== 'g', s: (S.gems || 0) >= QS_COIN, p: !isCash() && fqLeft() && (S.gems || 0) >= FREE_BET_COINS }, O = ['g', 's', 'p'], i = O.indexOf(S.rotLast);
   for (let k = 1; k <= 3; k++) { const c = O[(i + k + 3) % 3]; if (ok[c]) return c; } return null; }
-function freePickUp() { const g = ppGame(); celebrate({ src: (g.ph[0] || {}).src || '', score: '🎟️', title: 'Free Final pick is up', text: `Use <b>${FREE_BET_COINS} coins</b> for a free pick in the <b>${raceName(g.sl)} ${esc(showName(g.k))} Final</b>: pick the top 3 for real cash prizes.`,
-  cta: '🎟️ Make my free pick', onCta: () => { closeFlow(); fqStart(); }, later: 'Keep voting' }); }
+function freePickUp() { const g = ppGame(); celebrate({ src: (g.ph[0] || {}).src || '', score: '🎟️', title: 'You have unused coins', text: `You’ve got <b>${Math.floor(S.gems).toLocaleString()} coins</b>: enough for a free pick in the <b>${raceName(g.sl)} ${esc(showName(g.k))} Final</b>, with real cash prizes. Open your coins to use them.`,
+  cta: '🟡 Open my coins', onCta: () => { closeFlow(); coinTour(); }, later: 'Later' }); }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
