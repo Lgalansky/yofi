@@ -1232,6 +1232,10 @@ html:not(.yg) #judge .stk-nx{margin:0 0 6px;text-align:center;font-size:.92rem;c
 #judge .stk-nx b.t3{color:#B87333!important}#judge .stk-nx b.t6{color:#7D8796!important}#judge .stk-nx b.t10{color:#B8862E!important}
 html:not(.yg) #judge .bxt{border-radius:8px;padding:1px 3px;text-decoration:none}html:not(.yg) #judge .bxt.b3{box-shadow:0 0 0 2px #B87333}html:not(.yg) #judge .bxt.b6{box-shadow:0 0 0 2px #9AA4B2}html:not(.yg) #judge .bxt.b10{box-shadow:0 0 0 2px #D9AE4F}
 html:not(.yg) body #judge .tot-c .tot-o{color:#fff!important;-webkit-text-fill-color:#fff;background:rgba(20,33,61,.62)!important;text-shadow:0 1px 2px rgba(0,0,0,.4)}html:not(.yg) body #judge .tot-c .tot-o *{color:#fff!important;-webkit-text-fill-color:#fff}
+.ug-tour{margin:4px 0 12px;padding:10px 12px;border-radius:14px;background:#E3EAF5;color:#1E3A6E;font-size:.92rem;line-height:1.35}.ug-tour b{color:#14213D}
+html body #sheetBody .ug-r.ug-hl{box-shadow:inset 0 0 0 2.5px #D9AE4F,0 8px 18px -10px rgba(217,174,79,.8)!important;background:#FFF8E6!important;animation:ugPulse 1.6s ease-in-out infinite}
+@keyframes ugPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}html body #sheetBody .ug-r.ug-dim{opacity:.45}
+@media (prefers-reduced-motion:reduce){html body #sheetBody .ug-r.ug-hl{animation:none}}
 </style>
 </head>
 <body>
@@ -5778,7 +5782,7 @@ function finPick() { let o = document.getElementById('finPick'); if (!o) { o = d
 const ffreeFirst = () => !S.firstEntry && !S.ffDone && !Object.values(S.rc || {}).some(r => r.st || (r.f && r.f.length));
 window.finPick = finPick;
 setInterval(() => { try { if (!S || !S.fpPend || S.tut !== 2 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on') || $('#panes').dataset.at !== 'judge') return; S.fpPend = 0; save();
-  celebrate({ src: (ppGame().ph[0] || {}).src || '', score: '🟡', title: '🎟️ Free pick unlocked!', text: `You judged ${FP_VOTES} photos. Your free pick in the <b>${raceName(ppGame().sl)} ${esc(showName(ppGame().k))} Final</b> is ready: pick the top 3 for real cash prizes.`, cta: '🎟️ Make my free pick', onCta: () => { closeFlow(); ppOpen(); }, later: 'Later' }); } catch (e) {} }, 1200);
+  celebrate({ src: (ppGame().ph[0] || {}).src || '', score: '🟡', title: '🎟️ Free pick unlocked!', text: `You judged ${FP_VOTES} photos. Your free pick in the <b>${raceName(ppGame().sl)} ${esc(showName(ppGame().k))} Final</b> is ready: pick the top 3 for real cash prizes.`, cta: '🟡 Open my coins', onCta: () => { closeFlow(); coinTour(); }, later: 'Later' }); } catch (e) {} }, 1200);
 const PP_TIERS = [{ k: 3, w: 5.3, lab: '3 correct' }, { k: 2, w: 1.8, lab: '2 correct' }, { k: 1, w: 1, lab: '1 correct + another in the top 3' }];
 const PP_FLOOR = 1.1;
 function ppUnits(T, net) { const W = T.reduce((a, t) => a + t.stake * t.w, 0) || 1; T.forEach(t => { t.x = net * t.w / W; });
@@ -6016,6 +6020,9 @@ function upDone(p) { const y = isYoungW(), r = rcRec(p.id), sl = rcSlotFor(p), g
   celebrate({ src: p.src, score: '🎀', title: `${esc(rcName(p))} is in the qualifiers!`, text: `It’s racing for a place in the <b>${raceName(sl)} ${esc(showName(photoShow(p)))} Final</b>. ${y ? 'Judges' : 'Voters'} decide: the top 2 in each qualifier go through, and every finalist’s creator shares <b>10% of the prize pool</b>.`,
     cta: guest ? '💾 Save your photo' : `⚖️ ${y ? 'Judge' : 'Vote'} to watch it race`, onCta: () => { closeFlow(); const g = () => { go('judge'); renderJudge(); }; if (guest) openSignup(() => setTimeout(g, 200), { locked: false, photo: 1 }); else g(); }, later: 'Later' }); }
 setInterval(() => { try { document.documentElement.classList.toggle('nbx', !!S && (S.tut || 9) < 4); } catch (e) {} }, 500);
+function coinTour() { useGems(); setTimeout(() => { const B = document.getElementById('sheetBody'); if (!B) return; const rows = [...B.querySelectorAll('.ug-r')], hl = rows.find(r => /Free (ticket|Final pick)/i.test(r.innerText));
+    const sub = B.querySelector('.ug .sub'); if (sub) sub.insertAdjacentHTML('afterend', '<p class="ug-tour">👋 This is your coins menu. Coins get you <b>free Final picks</b> and <b>frame your photos</b>. Tap your free pick to use it.</p>');
+    if (hl) { const box = hl.parentElement, first = box.querySelector('.ug-r'); if (first && first !== hl) box.insertBefore(hl, first); hl.classList.add('ug-hl'); rows.forEach(r => { if (r !== hl) r.classList.add('ug-dim'); }); } }, 60); }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
