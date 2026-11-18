@@ -1207,6 +1207,13 @@ html body .fnx .lk-pz small,html body .fnx .lk-pz b{color:#2F6B3F!important;-web
 html body #landing .lp2 button.lp-btn,html body #landing button.lp-btn{background:#1E3A6E!important;color:#fff!important}html body #landing .lp2 button.lp-btn.lp-cash,html body #landing button.lp-btn.lp-cash{background:#2F6B3F!important}
 html body #landing .lp-lnk,html body #landing .lp-watch,html body #landing .lp-watch svg{color:#1E3A6E!important}html body #landing .lp2 h2,html body #landing .lp-cth h2,html body #landing .lp2-row h2{color:#14213D!important;-webkit-text-fill-color:#14213D}html body #landing .lp2-ic,html body #landing .lp2-ic svg,html body #landing .lp-ct svg{color:#1E3A6E!important}
 html body #landing .lp.lp2,html body #landing .lp2 .lp2-live b,html body #landing .lp2 .lp2-steps b,html body #landing .lp2 .lp2-steps svg,html body #landing .lp2 .lp-cn,html body #landing .lp2 .lp-cc small,html body #landing .lp2 .lp-watch,html body #landing .lp2 .lp-watch span,html body #landing .lp2 .lp-lnk,html body #landing .lp2 .lp2-row svg{color:#14213D!important;-webkit-text-fill-color:currentColor}
+html:not(.yg) body #coach .crbox{background:#FBF7F0!important;box-shadow:0 0 0 2.5px #D9AE4F,0 20px 40px -18px rgba(20,33,61,.5)!important}
+html:not(.yg) body #coach .crbox h2{font:800 1.9rem/1.08 Fraunces,Georgia,serif!important;text-transform:none!important;letter-spacing:0!important;color:#14213D!important;-webkit-text-fill-color:#14213D!important;filter:none!important}
+html:not(.yg) body #coach .crbox p{color:#2B2320!important}html:not(.yg) body #coach .crbox p b{color:#14213D!important}
+html:not(.yg) body #coach .crbox .bt-cta,html:not(.yg) body #coach .crbox #crGo{min-height:56px;background:#1E3A6E!important;color:#fff!important;font:800 1.15rem Fraunces,Georgia,serif!important;text-transform:none!important;box-shadow:0 10px 22px -12px rgba(20,33,61,.6)!important;border-radius:999px}
+html:not(.yg) body #coach .crbox .bt-no,html:not(.yg) body #coach .crbox .ro-free,html:not(.yg) body #coach .crbox .ro-all{color:#1E3A6E!important;font-weight:800}
+html:not(.yg) body #coach .crbox .enh-go{background:#2F6B3F!important;color:#fff!important;text-transform:none!important;font:800 1.2rem Fraunces,Georgia,serif!important}
+html:not(.yg) body #coach .crbox .cr-crown{display:none}
 </style>
 </head>
 <body>
@@ -2591,7 +2598,7 @@ function celebrate({ src, score, title, text, cta, onCta, later, onLater }) {
   c.innerHTML = `<div class="crbox" role="dialog" aria-modal="true" aria-labelledby="crT">
     <div class="cr-rays" aria-hidden="true"></div>${[...Array(18)].map((_, i) => `<i class="cr-cf" style="left:${(i * 53) % 100}%;background:${['#FFC93C', '#FF4FB0', '#9B5CFF', '#2EE59D'][i % 4]};animation-delay:${(i * .13).toFixed(2)}s"></i>`).join('')}
     <svg class="cr-crown" viewBox="0 0 32 24" aria-hidden="true"><path d="M3 7l6.5 6L16 3l6.5 10L29 7l-2.6 13H5.6z" fill="#FFC93C"/><rect x="5.5" y="19.5" width="21" height="3" rx="1.2" fill="#E9A514"/><circle cx="3" cy="6.5" r="2" fill="#FFC93C"/><circle cx="16" cy="2.5" r="2" fill="#FFC93C"/><circle cx="29" cy="6.5" r="2" fill="#FFC93C"/></svg>
-    <div class="cr-photo"><img src="${src}" alt="Your photo"><span class="cr-score">${score}</span></div>
+    <div class="cr-photo"><img src="${src}" alt="Your photo">${score && isNaN(+score) ? `<span class="cr-score">${score}</span>` : ''}</div>
     <h2 id="crT">${title}</h2>
     <p>${text}</p>
     <button class="bt-cta" id="crGo">${cta}</button>
@@ -2729,7 +2736,7 @@ function applyOffer(cash, coins, label, after) {
   if ($('#sheet').classList.contains('on')) closeSheet();
   S.cash = +((S.cash || 0) + cash).toFixed(2); S.paidCash = true; goCash(); save(); cashExplosion(cash, { label });
   setTimeout(() => { addGems(coins, label); if ($('#panes').dataset.at === 'studio' && !$('#flow').classList.contains('on')) setTimeout(renderStudio, 1900); }, 2300);
-  if (after) setTimeout(after, 4300);
+  if (after) { setTimeout(() => toast('✓ Cash added · placing your pick'), 900); setTimeout(after, 1600); }
 }
 function firstDepositOffer(why) {
   if (S.paidCash || S.fdShown) return; S.fdShown = true; save();
@@ -5714,9 +5721,9 @@ function nameAsk(p) { const y = isYoungW();
 setInterval(() => { try {
   if (!S || !S.user || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || ($('#flow').classList.contains('on') && ($('#flow .scan') || $('#flow .pcats') || !$('#flow .scr2, #flow .ba, #flow [class*="ba-"]'))) || $('#landing').style.display !== 'none') return;
   const nc = (S.photos || []).find(p => !photoShow(p) && !p.catAsk && p.at && Date.now() - p.at < 864e5); if (nc) { nc.catAsk = 1; save(); askCategory(nc, () => { closeFlow(); save(); try { renderStudio(); } catch (e) {} }, true); return; }
-  const un = (S.photos || []).find(p => !p.title && !p.nmAsk && p.at && Date.now() - p.at < 864e5); if (un) { un.nmAsk = 1; save(); nameAsk(un); return; }
+  const un = (S.photos || []).find(p => !p.title && !p.nmAsk && p.at && Date.now() - p.at < 864e5); if (un) { un.nmAsk = 1; save(); if (photoShow(un) && !un.framed) { myShow(); setTimeout(() => frameOpen(un), 300); } else nameAsk(un); return; }
   const y = isYoungW();
-  if (!S.ffGift && !S.firstEntry && !Object.values(S.rc || {}).some(r => r.st || (r.f && r.f.length))) { const p = (S.photos || []).find(x => photoShow(x) && x.title && !rcRec(x.id).st); if (p) { const sl = rcSlotFor(p);
+  if (false && !S.ffGift && !S.firstEntry && !Object.values(S.rc || {}).some(r => r.st || (r.f && r.f.length))) { const p = (S.photos || []).find(x => photoShow(x) && x.title && !rcRec(x.id).st); if (p) { const sl = rcSlotFor(p);
     S.ffGift = 1; S.ffPid = p.id; S.ffBase = p.s.total; save();
     celebrate({ src: p.src, score: p.s.total, title: 'Frame it to enter the qualifiers', text: `Your first frame is free. Frame <b>${esc(p.title)}</b> and it enters the <b>qualifiers for the ${raceName(sl)} ${esc(showName(photoShow(p)))} Final</b>: the top 2 in each qualifier go through. Every finalist’s creator shares <b>10% of the prize pool</b>, and 1st place gets the biggest share.`,
       cta: '🖼️ Frame it · free', onCta: () => { closeFlow(); frameOpen(p); }, later: 'Later' }); return; } }
@@ -5748,7 +5755,7 @@ function finPick() { let o = document.getElementById('finPick'); if (!o) { o = d
 const ffreeFirst = () => !S.firstEntry && !S.ffDone && !Object.values(S.rc || {}).some(r => r.st || (r.f && r.f.length));
 window.finPick = finPick;
 setInterval(() => { try { if (!S || !S.fpPend || S.tut !== 2 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on') || $('#panes').dataset.at !== 'judge') return; S.fpPend = 0; save();
-  celebrate({ src: (ppGame().ph[0] || {}).src || '', score: '🟡', title: 'You have unused coins', text: `You’ve judged ${15} photos and earned a <b>free ticket</b>: a free pick in the <b>${raceName(ppGame().sl)} ${esc(showName(ppGame().k))} Final</b>, with real cash prizes. Open your coins to use it.`, cta: '🟡 Open my coins', onCta: () => { closeFlow(); useGems(); }, later: 'Later' }); } catch (e) {} }, 1200);
+  celebrate({ src: (ppGame().ph[0] || {}).src || '', score: '🟡', title: '🎟️ Free pick unlocked!', text: `You judged 15 photos. Your free pick in the <b>${raceName(ppGame().sl)} ${esc(showName(ppGame().k))} Final</b> is ready: pick the top 3 for real cash prizes.`, cta: '🎟️ Make my free pick', onCta: () => { closeFlow(); ppOpen(); }, later: 'Later' }); } catch (e) {} }, 1200);
 const PP_TIERS = [{ k: 3, w: 5.3, lab: '3 correct' }, { k: 2, w: 1.8, lab: '2 correct' }, { k: 1, w: 1, lab: '1 correct + another in the top 3' }];
 const PP_FLOOR = 1.1;
 function ppUnits(T, net) { const W = T.reduce((a, t) => a + t.stake * t.w, 0) || 1; T.forEach(t => { t.x = net * t.w / W; });
@@ -5967,6 +5974,7 @@ function finalsTab() { const cur = ppSlot(), g = ppGame(cur), e = (S.pp || {})[c
   B.querySelectorAll('[data-fnk]').forEach(b => b.onclick = () => { window.__preCat = showHint(b.dataset.fnk).cats[0]; pickPhoto(true); }); }
 function finCatOf(x) { const z = x && SHOW_ROT.find(z => (z.seed || []).includes(x.cat)); return z ? z.k : null; }
 try { if (S && S.order && S.order.some(i => !(i => !!finCatOf(SEED[i]))(i))) { const o = S.order.filter((i => !!finCatOf(SEED[i]))); if (o.length > 5) { S.order = o; S.jIdx = 0; save(); } } } catch (e) {}
+try { const _go0 = go; go = function (w, ...a) { return _go0.call(this, w === 'studio' ? 'gallery' : w, ...a); }; } catch (e) {}
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -6131,9 +6139,9 @@ function runOut(kind, title, onBuy, need) {
       buy: () => checkout(`$${cash} cash`, cash, () => applyOffer(cash + (w ? 5 : 0), 0, w ? 'Welcome offer · $5 free' : '$5 pack', onBuy)), free: 'Not now', freeFn: () => {} }; })();
   c.innerHTML = `<div class="crbox enx ro" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
     <div class="enx-ic">${cfg.ic}</div><h2 id="crT">${cfg.title}</h2>
-    <div class="enh">${kind === 'gems' ? '' : `<span class="enp-t">${cfg.tag || 'Most popular'}</span>`}<b>${cfg.big}</b><small>${cfg.sub}</small><button class="enh-go" id="roBuy">${kind === 'energy' ? `Pay $${cfg.usd} from cash` : kind === 'gems' ? (isYoungW() ? '⚖️ Judge to earn' : '⚖️ Vote to earn') : `Buy · $${(+cfg.usd).toFixed(2)}`}</button></div>
+    <div class="enh">${kind === 'gems' ? '' : `<span class="enp-t">${cfg.tag || 'Most popular'}</span>`}<b>${cfg.big}</b><small>${cfg.sub}</small><button class="enh-go" id="roBuy">${kind === 'energy' ? `Pay $${cfg.usd} from cash` : kind === 'gems' ? (isYoungW() ? '⚖️ Judge to earn' : '⚖️ Vote to earn') : `Add $${(+cfg.usd).toFixed(0)}`}</button></div>
     <button class="ro-free ${cfg.freeCls || ''}" id="roFree" ${kind === 'gems' ? 'hidden' : ''}>${cfg.free}</button>
-    ${kind === 'gems' ? '<p class="ro-note">Coins can’t be bought. Earn them by voting.</p>' : '<button class="ro-all" id="roAll">See all packs</button>'}</div>`;
+    ${kind === 'gems' ? '<p class="ro-note">Coins can’t be bought. Earn them by voting.</p>' : '<button class="ro-all" id="roAll">Other amounts</button>'}</div>`;
   c.classList.add('on', 'cr');
   const close = () => { c.classList.remove('on', 'cr'); clearInterval(window.__enx); };
   clearInterval(window.__enx); window.__enx = setInterval(() => { const x = c.querySelector('[data-enx]'); if (!x) { clearInterval(window.__enx); return; } x.textContent = enNext(); }, 1000);
