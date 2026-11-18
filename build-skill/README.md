@@ -136,6 +136,8 @@ Then `rmv63.py`: qualifier reveal and result use the same words ("X of 3 in the 
 
 Then `rmv64.py`: reveal podium reads 1st · 2nd · 3rd, lined up with Your picks; in qualifiers non-exact picks show a muted "✗ Finished 3rd" / "✗ Not in top 3".
 
+Then `rmv65.py`: reveal podium labelled "The crowd’s top 3"; photos you picked carry a "Your 1st pick" tag (navy when in the exact spot).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -196,6 +198,7 @@ python3 rmv61.py
 python3 rmv62.py
 python3 rmv63.py
 python3 rmv64.py
+python3 rmv65.py
 ```
 
 ## Skill only
