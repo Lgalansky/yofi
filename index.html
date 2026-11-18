@@ -1059,6 +1059,7 @@ html .rvw .btn.rvw-go{background:#24563A!important;color:#fff!important}
 .rb-st{border-radius:14px;padding:10px 12px;margin:0 0 8px;background:#FFF6DC;box-shadow:inset 0 0 0 1.5px #E8C46A;text-align:center}.rb-st b{display:block;font:800 1.15rem Fraunces,Georgia,serif}.rb-st small{font-size:.82rem}.rb-st.win{background:#E6F0DF;box-shadow:inset 0 0 0 2px #2F6B3F;animation:rbPulse 1.6s ease-in-out infinite}.rb-st.win b{color:#2F6B3F}
 @keyframes rbPulse{50%{box-shadow:inset 0 0 0 2px #2F6B3F,0 0 16px rgba(47,107,63,.45)}}.rb-cd{font-weight:900;font-variant-numeric:tabular-nums}
 .rb-n s{display:block;text-decoration:none;font-size:.62rem;line-height:1}.rb-n s.up{color:#2EA36B}.rb-n s.dn{color:#C8102E}.rb-lead{margin-left:auto;color:#C8102E;font-weight:900;animation:unGlow 1s 3}
+.unl{animation:unlGlow 1s ease-in-out 6}@keyframes unlGlow{50%{box-shadow:0 0 0 3px #E2A21C,0 0 18px rgba(226,162,28,.7)}}
 </style>
 </head>
 <body>
@@ -2695,7 +2696,7 @@ function useGems() {
 }
 // once a session, when judging has piled up 100+ coins, suggest the best way to spend them
 const popPaced = () => (S.votes || 0) - (S.lastPopV == null ? -99 : S.lastPopV) < 8;
-function gemNudge(force) {
+function gemNudge(force) { if (S && (S.tut || 9) < 4) return false;
   if (!force && popPaced()) return false;
   // pops each time judging takes you past a new 100 coins (at most every 15 votes), or on opening the app with 150+
   if (!S.user || S.gems < 100 || (S.votes || 0) < 12 || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || document.querySelector('.fcd')) return false;
@@ -5114,6 +5115,7 @@ const chRowHTML = () => { const cur = chId(), E = S.ch || {}, live = E[cur] && E
 document.addEventListener('click', e => { if (e.target.closest('#chRow')) { e.preventDefault(); chBuy(); } else if (e.target.closest('#qsChip')) { e.preventDefault(); upNow(); } });
 function upNext() { if (!S || !S.user || S.geoBlock) return null;
   { const m = myLive(); if (m) return { ic: '🔴', t: `<b>Your pick is live · ${raceName(m.g.sl)} ${esc(showName(m.g.k))} Final</b> · your 1st pick is running ${ppOrd(m.pos[0])}`, k: 'live', need: 0, per: 1, em: `results in ${m.mins} min` }; }
+  if (S.tut === 3) return null;
   if (S.tut === 1 || S.tut === 2) { const nd = S.tut === 2 ? 0 : Math.max(1, 15 - (S.gtN || 0)); return { ic: '🎟️', t: S.tut === 2 ? `<b>Free ticket earned</b> · open your coins to use it` : `<b>Free Final pick</b> · pick the top 3 of 6 · real cash prizes`, k: 'fp', need: nd, per: 15, em: nd ? `in ${nd} vote${nd === 1 ? '' : 's'}` : 'Open coins', t2: 1 };  } const L = lgS(), it = [];
   if (fighters().length && tUnlocked()) { const need = Math.max(0, CFG.BATTLE_EVERY - (S.since || 0), 12 - (S.votes || 0)), per = CFG.BATTLE_EVERY; let x;
     if (false) { const pp = fighters()[0], k = (pp && CATS8.find(c => fitsTheme(pp, c))) || 'any'; x = { ic: '🏆', t: `<b>Your first prize challenge</b> · ${esc(crownName(k))}`, k: 'b' }; }
@@ -5325,7 +5327,7 @@ function ppResultShow(e) { const g = ppGame(e.sl), r = cpRng(e.sl * 31 + 5), sc 
     <button class="btn block fr2-next" id="ppNext">View next Final →</button>
     <div style="text-align:center"><button class="link fr2-j" id="ppOk">⚖️ ${y ? 'Judge photos' : 'Judge photos'}</button></div></div>`);
   if (prize) setTimeout(() => cashExplosion && cashExplosion(prize, { label: 'Final' }), 500);
-  if (S.tut === 3) { S.tut = 4; save(); } if ($('#ppUp')) $('#ppUp').onclick = () => { popClose(); finPick(); }; $('#ppNext').onclick = () => { popClose(); raceCard(); }; $('#ppOk').onclick = () => { popClose(); go('judge'); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
+  if (S.tut === 3) { S.tut = 4; S.unlk = 1; save(); } if ($('#ppUp')) $('#ppUp').onclick = () => { popClose(); finPick(); }; $('#ppNext').onclick = () => { popClose(); raceCard(); }; $('#ppOk').onclick = () => { popClose(); go('judge'); }; document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
 setInterval(() => { if (!S || !S.pp || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return; const now = Date.now();
   const e = Object.values(S.pp).find(x => !x.done && now >= ppDue(x)); if (e) ppResult(e); }, 3000);
 const ppRowHTML = () => { if (!S || S.geoBlock) return ''; const g = ppGame(), e = (S.pp || {})[g.sl], cash = e ? e.cur === 'cash' : isCash();
@@ -5394,7 +5396,7 @@ function gateResultOld(G, picks, real, tk) { const y = isYoungW(), top = G.ord.s
   if ($('#gtReal')) $('#gtReal').onclick = () => gateOpen(true); if ($('#gtFin')) $('#gtFin').onclick = () => { popClose(); setTimeout(ppOpen, 250); }; if ($('#gtAgain')) $('#gtAgain').onclick = () => gateOpen(true);
   $('#gtNo').onclick = () => popClose(); document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
 setInterval(() => { if (!S || !S.gatePend || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on') || $('#panes').dataset.at !== 'judge') return; S.gatePend = 0; save(); gateOpen(false); }, 1200);
-function raceBetRowHTML() { if (S.tut === 2) return `<button class="ug-r ug-swap ug-tk" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free ticket earned</b><small>Your first pick in the ${raceName(ppGame().sl)} Final · free · real cash prizes</small></span><em>Use ›</em></button>`; if (isCash()) return ''; const L = fqLeft(), ok = L && (S.gems || 0) >= FREE_BET_COINS;
+function raceBetRowHTML() { if (S.tut === 3) return `<button class="ug-r ug-swap ug-tk" id="rbLiveRow"><span class="ug-i">🔴</span><span class="ug-t"><b>Your free pick is live</b><small>Results soon · more ways to use your coins unlock after your first result</small></span><em>Watch ›</em></button>`; if (S.tut === 2) return `<button class="ug-r ug-swap ug-tk" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free ticket earned</b><small>Your first pick in the ${raceName(ppGame().sl)} Final · free · real cash prizes</small></span><em>Use ›</em></button>`; if (isCash()) return ''; const L = fqLeft(), ok = L && (S.gems || 0) >= FREE_BET_COINS;
   return `<button class="ug-r ug-swap" id="rbBet"><span class="ug-i">🎟️</span><span class="ug-t"><b>Free Final pick</b><small>The ${raceName(ppGame().sl)} Final · pick the top 3 of 6 · ${L ? `${L} of ${FQ_MAX} left this hour` : `next in ${frMinsLeft()} min`}</small></span><em class="${ok ? '' : 'need'}">${FREE_BET_COINS} 🟡</em></button>`; }
 function raceBetRowOld() { const g = ppGame(), e = (S.pp || {})[g.sl], ok = !e && (S.gems || 0) >= FREE_BET_COINS;
   return `<button class="ug-r ug-swap" id="rbBet"><span class="ug-i">🎀</span><span class="ug-t"><b>Free $1 Final entry</b><small>${e ? `You’re in the ${raceName(g.sl)} Final` : `The ${raceName(g.sl)} Final · pick the top 3 of 6`}</small></span><em class="${ok ? '' : 'need'}">${FREE_BET_COINS} 🟡</em></button>`; }
@@ -5608,7 +5610,7 @@ function ppPaysHTML(g) { const n = g.players, T = ppField(g, g.sl, n + 1), share
   return `<div class="pp-pays"><b class="pp-pays-h">What pays</b>${T.map(t => `<div><span>${t.lab}</span><em>pays about ${(net * t.w / shares).toFixed(1)}×</em></div>`).join('')}<small>“Correct” = the right photo in the right place. Pays come from the prize pool, so they move a little as players join.</small></div>`; }
 setInterval(() => { try { const el = document.getElementById('lpLive'); if (!el || !S || $('#landing').style.display === 'none') return; const g = ppGame();
   const h = `<span class="lv">● Live now</span><b>${raceName(g.sl)} ${esc(showName(g.k))} Final</b><span>${ppPool(g.players)} pool · ${g.players} players · closes in <b>${tLeft(g.end)}</b></span>`; if (el.innerHTML !== h) el.innerHTML = h; } catch (e) {} }, 1000);
-const newbie = () => S && (S.tut || 9) < 3;
+const newbie = () => S && (S.tut || 9) < 4;
 function myLive() { const g = ppGame(), e = (S.pp || {})[g.sl]; if (!e || e.done) return null; const now = Date.now(), cp = 1 - (g.end - now) / PP_MS, prog = Math.min(1, Math.max(.04, Math.max(cp, (now - e.at) / PP_DEMO))), L = ppLive(g, prog);
   const pos = e.picks.map(i => L.findIndex(x => x.i === i) + 1); return { g, e, pos, mins: Math.max(1, Math.ceil((ppDue(e) - now) / 60000)) }; }
 setInterval(() => { try { if (!S || $('#panes').dataset.at !== 'judge' || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on')) return; const m = myLive(); if (!m) { window.__lvPos = null; return; }
@@ -5661,6 +5663,9 @@ function rbStatus(g, e, L) { if (!e) return ''; const gl = Object.assign({}, g, 
   const ex = e.picks.filter((p, k) => pos[k] === k + 1).length;
   return `<div class="rb-st ${T.prize ? 'win' : ''}"><b>${T.prize ? `If it ended now: you’d win ~${money(T.prize)}` : 'If it ended now: no cash yet'}</b><small>${ex ? `${ex} of your picks in the exact spot` : 'Needs 1 pick in its exact spot'} · results in <span class="rb-cd" data-due="${ppDue(e)}">${(() => { const r = Math.max(0, ppDue(e) - Date.now()); return `${Math.floor(r / 60000)}:${String(Math.floor(r / 1000) % 60).padStart(2, '0')}`; })()}</span></small></div>`; }
 setInterval(() => { document.querySelectorAll('.rb-cd').forEach(el => { const r = Math.max(0, +el.dataset.due - Date.now()); el.textContent = `${Math.floor(r / 60000)}:${String(Math.floor(r / 1000) % 60).padStart(2, '0')}`; }); }, 1000);
+document.addEventListener('click', e => { if (e.target.closest('#rbLiveRow')) { e.preventDefault(); e.stopPropagation(); try { closeSheet(); } catch (x) {} ppOpen(); } }, true);
+setInterval(() => { try { if (!S || !S.unlk || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on')) return; S.unlk = 0; save();
+  toast('🟡 Unlocked: free Final picks, Quick Sprint and coin challenges · tap your coins'); const p = document.querySelector('#gemPill, .gempill, #wCoins'); if (p) { p.classList.add('unl'); setTimeout(() => p.classList.remove('unl'), 6000); } } catch (e) {} }, 1500);
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -5947,7 +5952,7 @@ async function vote(pick) {
   const earn = !agree ? 0 : base + (live ? 5 : 0), enBack = 0;
   energy(); const cost = hasEn ? 1 : 0; S.en = Math.max(0, S.en - cost); if (S.en < EN_MAX && S.en + cost >= EN_MAX) S.enAt = Date.now(); S.lastMult = mult || 1; setTimeout(paintEnergy, 0); const justEmpty = cost > 0 && S.en < 1;
   if (nudgeFrom == null) nudgeFrom = S.gems;
-  S.votes++; S.cpN = (S.cpN || 0) + 1; S.gtN = (S.gtN || 0) + 1; if (S.tut === 1 || S.tut === 2) { if (S.tut === 1 && S.gtN >= 15) { S.gtN = 0; S.tut = 2; S.fpPend = 1; } } else if (S.gtN >= GATE_EVERY) { S.gtN = 0; S.gatePend = 1; } if (S.rc && Object.values(S.rc).some(r => r.st === 'heats')) { S.hN = (S.hN || 0) + 1; if (S.hN >= HEAT_EVERY) { S.hN = 0; setTimeout(rcHeat, 0); } } const hk = frHourKey(); if (S.tixDay !== hk) { S.tixDay = hk; S.tixToday = 0; } if (false) { S.tixV = (S.tixV || 0) + 1; if (S.tixV >= TIX_EVERY) { S.tixV = 0; S.tixToday = 1; S.cashTix = (S.cashTix || 0) + 1; setTimeout(frEarnPop, 1600); } } S.since++; S.tSince = (S.tSince || 0) + 1; S.jIdx += 2; if (S.boostN > 0) { S.boostN--; earn *= 2; } S.gems += earn; meterAdd(earn);
+  S.votes++; S.cpN = (S.cpN || 0) + 1; S.gtN = (S.gtN || 0) + 1; if ((S.tut || 9) < 4) { if (S.tut === 1 && S.gtN >= 15) { S.gtN = 0; S.tut = 2; S.fpPend = 1; } } else if (S.gtN >= GATE_EVERY) { S.gtN = 0; S.gatePend = 1; } if (S.rc && Object.values(S.rc).some(r => r.st === 'heats')) { S.hN = (S.hN || 0) + 1; if (S.hN >= HEAT_EVERY) { S.hN = 0; setTimeout(rcHeat, 0); } } const hk = frHourKey(); if (S.tixDay !== hk) { S.tixDay = hk; S.tixToday = 0; } if (false) { S.tixV = (S.tixV || 0) + 1; if (S.tixV >= TIX_EVERY) { S.tixV = 0; S.tixToday = 1; S.cashTix = (S.cashTix || 0) + 1; setTimeout(frEarnPop, 1600); } } S.since++; S.tSince = (S.tSince || 0) + 1; S.jIdx += 2; if (S.boostN > 0) { S.boostN--; earn *= 2; } S.gems += earn; meterAdd(earn);
   S.combo = agree ? (S.combo || 0) + 1 : 0; const shown = S.combo, comboHit = agree && STK.includes(S.combo) ? ({ 3: 3, 6: 5, 10: 10 })[S.combo] : 0;
   const drop = false; // no random surprise boxes: the streak boxes are enough
   const ds = dailyState(); ds.D.n++; ds.D.sn = (ds.D.sn || 0) + 1;
