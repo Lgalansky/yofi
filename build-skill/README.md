@@ -170,6 +170,8 @@ Then `rmv80.py`: payouts rebalanced: win with 2 photos in the top 3, at least 1 
 
 Then `rmv81.py`: new-player fixes 1-4: cash pick lands ~1.6 s after paying with a toast, green 'Add $10' deposit; touch-up screen never shows and a new photo goes straight to one name+frame step; shared celebration pops in navy with no scores; 'Free pick unlocked!' opens the pick screen directly.
 
+Then `rmv82.py`: new-player improvements 5-9: upload success pop (save photo / vote to watch it race); lucky boxes replaced by fixed streak rewards (+20/+40/+80); free pick after 10 votes with other counters hidden for new players; sign-up names the pick; first-pick guarantee (one more free pick in the next Final if the first loses).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -247,6 +249,7 @@ python3 rmv78.py
 python3 rmv79.py
 python3 rmv80.py
 python3 rmv81.py
+python3 rmv82.py
 ```
 
 ## Skill only
