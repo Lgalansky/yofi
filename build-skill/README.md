@@ -242,6 +242,8 @@ Then `rmv116.py`: one new-player journey: landing's main button is 'Start playin
 
 Then `rmv117.py`: all your picks on one race: lanes show every tag (Your 1st pick · Your winner · Your photo); 'Your picks in this Final' panel under the race updates live (Top 3 status/estimate, Winner odds/position, your photo's position); add-the-other-pick button when you have only one.
 
+Then `rmv118.py`: Finals named by category with no clock time ('The Pets Final'); times only as countdowns; upcoming Finals show 'Starts when 6 finalists are in · 3 of 6 in'; no 'every hour' / 'hourly' copy; coin players get one free pick per Final (Top 3 or Winner). Simulated: Finals still run on the hourly timer behind the scenes.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -355,6 +357,7 @@ python3 rmv114.py
 python3 rmv115.py
 python3 rmv116.py
 python3 rmv117.py
+python3 rmv118.py
 ```
 
 ## Skill only
