@@ -178,6 +178,8 @@ Then `rmv84.py`: free pick opens the live page at once (was ~9 s waiting for the
 
 Then `rmv85.py`: streak boxes return as a fixed-value reveal: Bronze 20 / Silver 40 / Gold 80 for 3 / 6 / 10 right in a row, prize shown before opening, tap to open with shake and burst; new players get the coin burst only.
 
+Then `rmv86.py`: streak bar names the boxes ('2 in a row · 1 more for a Bronze box') with bronze/silver/gold markers and shows for new players too; photo names on voting cards readable (white on navy).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -259,6 +261,7 @@ python3 rmv82.py
 python3 rmv83.py
 python3 rmv84.py
 python3 rmv85.py
+python3 rmv86.py
 ```
 
 ## Skill only
