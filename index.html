@@ -1085,6 +1085,8 @@ html:not(.yg) body #finPick .fp-c i{color:#1E3A6E}html:not(.yg) body #finPick .f
 .inv-how i{position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:20px;height:20px;border-radius:50%;background:#1E3A6E;color:#fff;font-style:normal;font-size:.72rem;font-weight:800;line-height:20px}.inv-how b{display:block;font-size:.84rem;color:#1E3A6E;line-height:1.2}.inv-how small{display:block;font-size:.72rem;opacity:.8;margin-top:2px}
 .inv-copy{display:block;margin:8px auto 10px;font-weight:800;color:#1E3A6E!important}.inv-l{text-align:left;margin:0 0 6px}.inv-r{display:flex;align-items:center;gap:10px;padding:6px 2px;border-bottom:1px solid #E2D3BC}.inv-r b{flex:1;font-size:.92rem}
 .inv-r em{font-style:normal;font-size:.78rem;padding:2px 9px;border-radius:999px;background:#EEE6D8}.inv-r em.mid{background:#FFF0C7}.inv-r em.ok{background:#E3EAF5;color:#1E3A6E;font-weight:800}
+.g2-pz span{font-size:.84rem!important}.g2-earn{font-size:1rem!important;padding:8px 16px!important}.g2-earn b{font-size:1.15rem}
+.g2-more{margin:0 0 10px}.g2-more summary{cursor:pointer;list-style:none;font-weight:800;color:#1E3A6E;padding:6px}.g2-more summary::after{content:' ⌄'}.g2-more[open] summary::after{content:' ⌃'}
 </style>
 </head>
 <body>
@@ -5389,7 +5391,7 @@ function ppqRun() { window.__qsGame = 'qs'; const pr = window.__qsPractice, st =
 function qgPop() { window.__qsGame = 'qs'; qsPop(); return; const pp = !!S.qgAlt; S.qgAlt = !S.qgAlt; save(); if (!pp) { window.__qsGame = 'qs'; qsPop(); return; }
   const c = isCash(); celebrate({ src: (SEED[3] || {}).src, score: '🏅', title: 'Podium Pick', text: `Pick the crowd’s <b>top 3 of 5 photos</b>, 1 v 1 against a real player. Highest score wins: ${c ? `up to <b>$32</b>` : `<b>${QS_COIN_PAY[0]} 🟡</b>`}.`, cta: c ? '🏅 Play · from $2' : `🏅 Play · ${QS_COIN} 🟡`, onCta: () => { window.__qsGame = 'pp'; sprEnter(); }, later: 'Keep voting' }); }
 document.addEventListener('click', e => { if (e.target.closest('#segCompete')) window.__tFil = 'all'; }, true);
-var GATE_EVERY = 10, GATE_COINS = [0, 0, 20, 50], GATE_CASH = [0, 0, 1.5, 5], GATE_FEE = 1;
+var GATE_EVERY = 10, GATE_COINS = [0, 10, 25, 50], GATE_CASH = [0, 0, 1.5, 5], GATE_FEE = 1;
 function gateGame() { const ns = ppSlot() + 1, R = ppGame(ns); let gi = (S.gateI || 0) % 3; for (let t = 0; t < 3 && [0, 1].some(j => R.ph[2 * gi + j] && R.ph[2 * gi + j].mine); t++) gi = (gi + 1) % 3;
   const q = [0, 1].map(j => R.ph[2 * gi + j]).sort((a, b) => b.st - a.st), used = new Set(R.ph.map(p => p.src)), rr = cpRng(ns * 17 + gi * 5 + (S.gateN || 0));
   const shSeed = (SHOWS.find(z => z.k === R.k) || { seed: [] }).seed, fill = ppShuffle(SEED.filter(x => x.src && !q.some(z => z && z.src === x.src) && shSeed.includes(x.cat)), rr).concat(ppShuffle(SEED.filter(x => x.src && !used.has(x.src) && !shSeed.includes(x.cat)), rr)).slice(0, 3).map((x, i) => ({ src: x.src, t: x.title || 'Untitled', h: QS_NAMES[(ns + i + 3) % QS_NAMES.length] }));
@@ -5521,7 +5523,7 @@ function gateOpen() { const G = gateGame(), y = isYoungW(), keep = y ? 'Keep jud
   const draw = () => { const n = picks.length;
     popOpen(`<div class="pp gq2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">${esc(showName(ppGame(G.ns).k))}</p><span class="g2-chip">Qualifier · Group ${G.gi + 1} of 3</span>
       <h2 class="g2-h">Pick the top 3</h2><p class="g2-s">Match the ${cw} order.</p>
-      <div class="g2-pz"><span>3 exact · <b>${GATE_COINS[3]} coins</b></span><span>2 exact · <b>${GATE_COINS[2]} coins</b></span></div><p class="g2-n">Only the correct positions count.</p>
+      <div class="g2-pz"><span>3 exact · <b>${GATE_COINS[3]}</b></span><span>2 exact · <b>${GATE_COINS[2]}</b></span><span>1 exact · <b>${GATE_COINS[1]}</b></span></div><p class="g2-n">Coins for every photo in its exact spot.</p>
       <div class="g2-ph">${G.ph.map((p, i) => { const k = picks.indexOf(i); return `<button class="g2-t ${k >= 0 ? 'on' : ''}" data-pp="${i}" aria-label="Photo ${i + 1}"><img src="${p.src}" alt="">${k >= 0 ? `<i>${GQ_MED[k]}</i>` : ''}</button>`; }).join('')}</div>
       <p class="g2-hint ${n === 3 ? 'big' : ''}">${n < 3 ? `Choose your ${GQ_ORD[n]} place photo` : '<b>Your top 3 is ready</b><small>Tap a photo to change your picks.</small>'}</p>
       <div class="g2-sl">${[0, 1, 2].map(k => `<button class="${k === n ? 'cur' : ''} ${picks[k] != null ? 'set' : ''}" data-gsl="${k}">${picks[k] != null ? `<img src="${G.ph[picks[k]].src}" alt="">` : ''}<span>${GQ_MED[k]} ${GQ_ORD[k]}</span></button>`).join('')}</div>
@@ -5542,10 +5544,10 @@ function gateResultShow(G, picks) { const y = isYoungW(), top = G.ord.slice(0, 3
   const tag = (p, i) => top[i] === p ? '<em class="ok">✓ Exact match</em>' : top.includes(p) ? `<em class="mid">Finished ${GQ_ORD[top.indexOf(p)]}</em>` : '<em>Outside top 3</em>';
   popOpen(`<div class="pp gq2"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">Group ${G.gi + 1} of 3 · results</p>
     <h2 class="g2-h">${right} of 3 matched</h2><p class="g2-s">${sub}</p>
-    <span class="g2-earn ${pay ? 'won' : ''}">${pay ? `+${pay} coins earned` : `0 coins earned · 2 matches needed`}</span>
-    <div class="g2-cmp"><span></span>${GQ_ORD.map((o, i) => `<b class="g2-o">${GQ_MED[i]} ${o}</b>`).join('')}
+    <span class="g2-earn ${pay ? 'won' : ''}">${pay ? `<b>+${pay} coins</b> · ${Math.floor(S.gems - pay)} → ${Math.floor(S.gems)} coins` : `0 coins · get 1 photo in its exact spot to win`}</span>
+    <details class="g2-more"><summary>See the full result</summary><div class="g2-cmp"><span></span>${GQ_ORD.map((o, i) => `<b class="g2-o">${GQ_MED[i]} ${o}</b>`).join('')}
       <small class="g2-row">${cw} top 3</small>${top.map((p, i) => `<figure><img src="${G.ph[p].src}" alt="">${i < 2 ? '<em class="fin">Finalist</em>' : '<em class="no">&nbsp;</em>'}</figure>`).join('')}
-      <small class="g2-row">Your picks</small>${picks.map((p, i) => `<figure class="${top[i] === p ? 'ok' : ''}"><img src="${G.ph[p].src}" alt="">${tag(p, i)}</figure>`).join('')}</div>
+      <small class="g2-row">Your picks</small>${picks.map((p, i) => `<figure class="${top[i] === p ? 'ok' : ''}"><img src="${G.ph[p].src}" alt="">${tag(p, i)}</figure>`).join('')}</div></details>
     <div class="g2-thru"><span>${top.slice(0, 2).map(p => `<img src="${G.ph[p].src}" alt="">`).join('')}</span><div><b>Through to the ${fin} Final</b><small>The ${cw.toLowerCase()} top 2 qualify · picks open at ${raceName(G.ns - 1)}</small></div></div>
     ${g2Act(pay)}</div>`);
   if (pay) setTimeout(() => gemExplosion(pay, { label: 'Qualifier win' }), 400);
@@ -5653,9 +5655,9 @@ document.addEventListener('click', e => { const g = e.target.closest('[data-crk]
   if (e.target.closest('.cr-x')) { e.preventDefault(); e.stopPropagation(); S.crHide = (S.votes || 0) + 20; save(); const a = document.querySelector('.cr-ask'); if (a) a.remove(); } }, true);
 function g2Act(pay) { const y = isYoungW(), g = ppGame(), nm = `${raceName(g.sl)} ${esc(showName(g.k))} Final`, keep = y ? 'Keep judging' : 'Keep voting', link = `<div style="text-align:center"><button class="link g2-link" id="gtNo">⚖️ Judge photos</button></div>`;
   if (isCash()) return `<button class="btn block g2-fin" id="gtFin">🎀 Pick the ${nm} · from $2</button>${link}`;
-  if (fqLeft() && (S.gems || 0) >= FREE_BET_COINS) return `<div class="g2-prog ready"><p>${pay ? `<b>+${pay} coins</b> · ` : ''}${Math.floor(S.gems)} coins</p><p>🎟️ You have enough for a free Final pick · it’s in your coins</p></div><button class="btn block g2-fin" id="gtKeep">⚖️ ${keep}</button>`;
+  if (fqLeft() && (S.gems || 0) >= FREE_BET_COINS) return `<div class="g2-prog ready"><p>🎟️ You have enough for a free Final pick · it’s in your coins</p></div><button class="btn block g2-fin" id="gtKeep">⚖️ ${keep}</button>`;
   const gm = Math.floor(S.gems || 0), pct = Math.min(100, Math.round(100 * gm / FREE_BET_COINS));
-  return `<div class="g2-prog"><p>${pay ? `<b>+${pay} coins</b> · ` : ''}${gm} / ${FREE_BET_COINS} toward a free Final pick</p><i><i style="width:${pct}%"></i></i>${!fqLeft() ? `<small>Both free picks used this hour · next in ${frMinsLeft()} min</small>` : ''}</div><button class="btn block g2-fin" id="gtKeep">⚖️ ${keep}</button>`; }
+  return `<div class="g2-prog"><p>${gm} / ${FREE_BET_COINS} toward a free Final pick</p><i><i style="width:${pct}%"></i></i>${!fqLeft() ? `<small>Both free picks used this hour · next in ${frMinsLeft()} min</small>` : ''}</div><button class="btn block g2-fin" id="gtKeep">⚖️ ${keep}</button>`; }
 const RV_ORD = ['1st', '2nd', '3rd'], RV_MED = ['🥇', '🥈', '🥉'];
 function rvConfetti(el, n) { for (let i = 0; i < (n || 40); i++) { const c = document.createElement('i'); c.className = 'rv-cf'; c.style.left = Math.random() * 100 + '%'; c.style.background = ['#F2B21E', '#2F6B3F', '#E0457B', '#2D4E86', '#F7C9A0'][i % 5]; c.style.animationDelay = (Math.random() * .6).toFixed(2) + 's'; c.style.transform = `rotate(${Math.random() * 360}deg)`; el.appendChild(c); } }
 function revealSeq(o, done) { const { ph, ord, picks, kicker, title, mine } = o; let stop = false, timers = [];
