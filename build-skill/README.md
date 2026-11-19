@@ -322,6 +322,8 @@ Then `rmv156.py`: free coin predictions on other players' live duels (+20 coins 
 
 Then `rmv157.py`: My Photos rebuilt as photo hero cards (rosette on the frame, one next-step button, last duel); old 6-photo Final leftovers removed.
 
+Then `rmv158.py`: the qualifier is 15 crowd votes (win 8), shown vote by vote; rounds 1-2 end with a banner, only the ticket round opens a popup.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -475,6 +477,7 @@ python3 rmv154.py
 python3 rmv155.py
 python3 rmv156.py
 python3 rmv157.py
+python3 rmv158.py
 ```
 
 ## Skill only
