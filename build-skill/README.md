@@ -284,6 +284,8 @@ Then `rmv137.py`: Stage 1 of 'your photos earn money': Final picks (cash and coi
 
 Then `rmv138.py`: Stage 2 real-play funnel: coin players see coin games only plus 'Your first real game is on us' (free $1 Match Race, switches to real play for good); real players see $0.50–$10 only; Bonus Cash spent first, then $1 tickets, then cash; 'Add $5, get $10 Bonus Cash' after the first real game and on the add-cash screen; out-of-money screen; coins buy a free $1 ticket (500, 1 a day); simulated winners feed; green real-money buttons.
 
+Then `rmv139.py`: Newbie run-through fixes: no age form on arrival (asked once, right before anything with cash); Fall Fair look when no age given; free real game account screen 'Your free $1 game is waiting · real-cash games are for adults 18+'; real-only switches on at the first deposit (non-depositors keep coin games, results offer 'Add cash to play again'); coin players' header shows coins and streak only.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -418,6 +420,7 @@ python3 rmv135.py
 python3 rmv136.py
 python3 rmv137.py
 python3 rmv138.py
+python3 rmv139.py
 ```
 
 ## Skill only
