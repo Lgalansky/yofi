@@ -300,6 +300,8 @@ Then `rmv145.py`: Four of the owner's own photos added to the library: Pets 'Mor
 
 Then `rmv146.py`: Newbie fixes: cash winnings ($0.50+) unlock real games without a deposit; starter photo scores 72%, joins the Play Pool and shows first plays within a minute; first-ever game against a newcomer (simulated 32%); earnings card shows how to start earning instead of zeros, and coins earned for a starter-only pool.
 
+Then `rmv147.py`: Creative-director fun pass: race countdown 3·2·1·GO, live race caller (lead changes, neck and neck, final stretch), bigger horses, PHOTO FINISH flash before results; verdict % counts up with a meter marking the 60% Play Pool line, then the result and confetti; My Photos drops zero boxes (Fresh entry only for photos with no plays) and shows views/plays/earnings in a side panel with a live dot; Play cards show live player counts (simulated).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -442,6 +444,7 @@ python3 rmv143.py
 python3 rmv144.py
 python3 rmv145.py
 python3 rmv146.py
+python3 rmv147.py
 ```
 
 ## Skill only
