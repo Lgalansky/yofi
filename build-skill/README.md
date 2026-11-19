@@ -310,6 +310,8 @@ Then `rmv150.py`: Judge 3 rounds to earn your photo entry: round bar shows 'Roun
 
 Then `rmv151.py`: Calmer voting: streak meter, streak chests and On-fire banners removed; rounds of 6 pairs (an entry costs 18 votes, not 30); round bar shows '🎟️ 2 rounds to your next photo entry' with 3 progress pips and '1 ready to use' when a ticket waits; bar repaints after each round.
 
+Then `rmv152.py`: The photo loop: newbies start by entering a photo; each photo plays a 15 head-to-head qualifier (8 wins = finalist, 8 losses = out) that advances as you judge, shown live under the pair; finalists get a rosette + 50 coins and 'Race it in a Final · $1' (cash only); 6-photo live race with photo finish, 1st $3.50 / 2nd $1.60, top-3 rosettes; first entry free, then judge 3 rounds per entry; My Photos shows photos in play and tickets; Play Pool, royalties, contest cards and newbie Match Race offers removed from the path.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -457,6 +459,7 @@ python3 rmv148.py
 python3 rmv149.py
 python3 rmv150.py
 python3 rmv151.py
+python3 rmv152.py
 ```
 
 ## Skill only
