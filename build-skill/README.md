@@ -334,6 +334,8 @@ Then `rmv162.py`: simple loop: 100-coin photo entries, swipeable photo cards on 
 
 Then `rmv163.py`: watch your photo qualify full screen: at 7 wins the deciding votes play out live, then Qualified! with rosette.
 
+Then `rmv164.py`: full-screen start line when a photo enters its qualifier (Sterling is in!).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -493,6 +495,7 @@ python3 rmv160.py
 python3 rmv161.py
 python3 rmv162.py
 python3 rmv163.py
+python3 rmv164.py
 ```
 
 ## Skill only
