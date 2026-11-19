@@ -3921,7 +3921,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v164</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v165</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -7205,8 +7205,8 @@ function qlDone(p) { const q = p.ql; q.shown = 1; window.__nudgeAt = Date.now();
     setTimeout(() => { try { paintGems(); gemExplosion(50, { label: 'Finalist!' }); rvConfetti(document.querySelector('#coach .pp'), 40); } catch (e) {} }, 300);
     $('#qfGo').onclick = () => qfStart(p); $('#qfL').onclick = () => popClose(); }
   else { save(); popOpen(`<div class="pp"><p class="pp-k">🎀 Qualifier · ${q.w} wins, ${q.l} losses</p><h2 class="db-h">${nm} is out this time</h2><div class="vd-ph"><img src="${p.src}" alt=""></div>
-      <p class="db-s">${QF_WIN - q.w <= 2 ? `So close: just <b>${QF_WIN - q.w} win${QF_WIN - q.w === 1 ? '' : 's'}</b> short.` : 'The crowd preferred others today.'} Try another shot: bright, close-up photos tend to win.</p>
-      <button class="btn block db-go" id="qoE">📷 Enter another photo</button><div style="text-align:center"><button class="link pc-later" id="qoJ">⚖️ Keep judging</button></div></div>`);
+      <p class="db-s">${QF_WIN - q.w <= 2 ? `So close: just <b>${QF_WIN - q.w} win${QF_WIN - q.w === 1 ? '' : 's'}</b> short.` : 'The crowd preferred others today.'} Your next entry is on us: try another shot. Bright, close-up photos tend to win.</p>
+      <button class="btn block db-go cashb" id="qoE">📷 Try another photo · free</button><div style="text-align:center"><button class="link pc-later" id="qoJ">⚖️ Keep judging</button></div></div>`);
     $('#qoE').onclick = () => { popClose(); setTimeout(finPick, 200); }; $('#qoJ').onclick = () => { popClose(); go('judge'); renderJudge(); }; } }
 (() => { const fp = finPick; finPick = function () { if (qlReal().length >= 1 && !((S.entT || 0) > 0)) { const left = 3 - (S.vrq || 0); try { popClose(); } catch (e) {}
       popOpen(`<div class="pp"><p class="pp-k">🎟️ Photo entry</p><h2 class="db-h">Judge to enter another photo</h2><p class="db-s">Judge <b>${left} more round${left === 1 ? '' : 's'}</b> (6 pairs each) to earn your next entry. Your judging gives other players’ photos their matchups.</p>
@@ -7430,7 +7430,7 @@ function vrQuiet(n, ok, pay) { const left = 3 - (S.vrq || 0); try { paintGems();
     setTimeout(() => { const e = document.getElementById('vrQ'); if (e) { e.classList.add('bye'); setTimeout(() => e.remove(), 400); } }, 4200); };
   setTimeout(put, 50); }
 function qlStep(p, n) { const q = p.ql; if (!q || q.done) return; n = n || 1;
-  for (let i = 0; i < n && !q.done; i++) { const pr = Math.max(.25, Math.min(.8, .5 + (qlStrength(p) - 62) / 60)), win = Math.random() < pr, o = qlOpp(p);
+  for (let i = 0; i < n && !q.done; i++) { const pr = p.bo ? .74 : Math.max(.45, Math.min(.8, .55 + (qlStrength(p) - 62) / 80)), win = Math.random() < pr, o = qlOpp(p);
     if (win) { q.w++; p.qc = (p.qc || 0) + 5; S.gems = (S.gems || 0) + 5; try { paintGems(); } catch (e) {} } else q.l++;
     q.v = (q.v || []).concat(win ? 1 : 0); q.last = { win, t: o.t, src: o.src }; q.fl = Date.now();
     if (q.w >= QF_WIN) q.done = 'q'; else if (q.l > QF_N - QF_WIN) q.done = 'x';
@@ -7487,12 +7487,12 @@ const ENTRY_COINS = 100, QF_FEES = [2, 5, 10, 20];
 function qlStart(p) { qlStrength(p); if (!p.starter && qlReal().filter(x => x !== p).length >= 1) { S.gems = Math.max(0, (S.gems || 0) - ENTRY_COINS); S.c100 = 0; try { paintGems(); toast(`📷 Photo entered · −${ENTRY_COINS} 🟡`); } catch (e) {} }
   S.entT = 0; p.ql = { w: 0, l: 0, at: Date.now() }; p.pool = 0; save(); }
 (() => { const fp = finPick; finPick = function () { const first = !qlReal().length;
-  if (!first && (S.gems || 0) < ENTRY_COINS) { const g = Math.floor(S.gems || 0); try { popClose(); } catch (e) {}
+  if (!first && !S.freeRe && (S.gems || 0) < ENTRY_COINS) { const g = Math.floor(S.gems || 0); try { popClose(); } catch (e) {}
     popOpen(`<div class="pp"><p class="pp-k">📷 Photo entry · ${ENTRY_COINS} 🟡</p><h2 class="db-h">Earn ${ENTRY_COINS - g} more coins</h2><p class="db-s">You have <b>${g} 🟡</b>. Every vote earns coins, and each round pays a bonus.</p>
       <div class="vr-cb vr-cb2"><i style="width:${Math.min(100, g)}%"></i></div><button class="btn block db-go" id="ceJ">⚖️ Vote to earn coins</button></div>`);
     $('#ceJ').onclick = () => { popClose(); go('judge'); renderJudge(); }; return; }
   S.entT = 1; return fp.apply(this, arguments); }; window.finPick = finPick; })();
-setInterval(() => { try { if (!S || !$('#app').classList.contains('on') || !freeScreen() || S.c100 || (S.gems || 0) < ENTRY_COINS || !qlReal().length || Date.now() - (window.__uiT || 0) < 2500) return;
+setInterval(() => { try { if (!S || !$('#app').classList.contains('on') || !freeScreen() || true || S.c100 || (S.gems || 0) < ENTRY_COINS || !qlReal().length || Date.now() - (window.__uiT || 0) < 2500) return;
   S.c100 = 1; save(); popOpen(`<div class="pp"><p class="pp-k">🟡 ${Math.floor(S.gems)} coins</p><h2 class="db-h">Enter another photo</h2><p class="db-s">You’ve earned enough for a new entry. More photos in play means more Finals to race.</p>
     <button class="btn block db-go cashb" id="c1E">📷 Enter a photo · ${ENTRY_COINS} 🟡</button><div style="text-align:center"><button class="link pc-later" id="c1L">Later</button></div></div>`);
   $('#c1E').onclick = () => { popClose(); setTimeout(finPick, 200); }; $('#c1L').onclick = () => popClose(); } catch (e) {} }, 1500);
@@ -7509,7 +7509,7 @@ function vrQuiet(n, ok, pay) { try { paintGems(); gemExplosion(pay, { label: `Ro
 // your vote drives your photos: one crowd vote per photo per vote you make; nothing moves in the background
 (() => { const cf = callFx; callFx = function () { window.__myVote = 1; try { return cf.apply(this, arguments); } finally { window.__myVote = 0; } }; })();
 function qlStep(p) { const q = p.ql; if (!q || q.done || !window.__myVote) return;
-  const pr = Math.max(.25, Math.min(.8, .5 + (qlStrength(p) - 62) / 60)), win = Math.random() < pr, o = qlOpp(p);
+  const pr = p.bo ? .74 : Math.max(.45, Math.min(.8, .55 + (qlStrength(p) - 62) / 80)), win = Math.random() < pr, o = qlOpp(p);
   if (win) { q.w++; p.qc = (p.qc || 0) + 5; S.gems = (S.gems || 0) + 5; try { paintGems(); } catch (e) {} } else q.l++;
   q.v = (q.v || []).concat(win ? 1 : 0); q.last = { win, t: o.t, src: o.src }; q.fl = Date.now();
   if (q.w >= QF_WIN) q.done = 'q'; else if (q.l > QF_N - QF_WIN) q.done = 'x';
@@ -7587,7 +7587,7 @@ function qlLive(p) { const q = p.ql; if (!q || q.done) return; window.__qlLive =
         try { paintGems(); gemExplosion(50, { label: 'Qualified!' }); rvConfetti(document.querySelector('.qlv'), 70); } catch (e) {}
         $('#qlvGo').onclick = () => qfStart(p); $('#qlvL').onclick = () => { popClose(); try { renderJudge(); } catch (e) {} }; }, 700); }
     else { save(); setTimeout(() => { h.textContent = 'So close'; document.querySelector('.qlv .pp-k').textContent = `🎀 Qualifier · ${q.w} wins, ${q.l} losses`; document.querySelector('.qlv-ph').classList.add('out');
-        B.innerHTML = `<p class="db-s">One win short. Bright, close-up shots tend to win.</p><button class="btn block db-go" id="qlvE">📷 Enter another photo</button><div style="text-align:center"><button class="link pc-later" id="qlvL">⚖️ Back to voting</button></div>`;
+        B.innerHTML = `<p class="db-s">One win short. Your next entry is on us: bright, close-up shots tend to win.</p><button class="btn block db-go cashb" id="qlvE">📷 Try another photo · free</button><div style="text-align:center"><button class="link pc-later" id="qlvL">⚖️ Back to voting</button></div>`;
         $('#qlvE').onclick = () => { popClose(); setTimeout(finPick, 200); }; $('#qlvL').onclick = () => { popClose(); try { renderJudge(); } catch (e) {} }; }, 700); } }, 1300); }
 function upDone(p) { qlStart(p); window.__nudgeAt = Date.now(); const nm = esc(rcName(p)), more = qlReal().filter(x => x !== p && x.ql && !x.ql.done).length;
   popOpen(`<div class="pp qfx qlv qls"><p class="pp-k">🎀 Qualifier · starting now</p><h2 class="db-h">${nm} is in!</h2>
@@ -7597,6 +7597,11 @@ function upDone(p) { qlStart(p); window.__nudgeAt = Date.now(); const nm = esc(r
     <button class="btn block db-go" id="qsJ">⚖️ Start voting</button><p class="db-sim">Prototype: the crowd’s votes are simulated</p></div>`);
   setTimeout(() => { const hz = document.getElementById('qlHz'); if (hz) hz.classList.add('qls-go'); }, 400);
   $('#qsJ').onclick = () => { popClose(); go('judge'); renderJudge(); }; }
+function qlStart(p) { qlStrength(p); const paid = !p.starter && qlReal().filter(x => x !== p).length >= 1;
+  if (paid && S.freeRe) { S.freeRe = 0; try { toast('📷 Free retry used'); } catch (e) {} }
+  else if (paid) { S.gems = Math.max(0, (S.gems || 0) - ENTRY_COINS); try { paintGems(); toast(`📷 Photo entered · −${ENTRY_COINS} 🟡`); } catch (e) {} }
+  S.nEnt = (S.nEnt || 0) + 1; p.bo = !p.starter && S.nEnt <= 2 ? 1 : 0; S.entT = 0; p.ql = { w: 0, l: 0, at: Date.now() }; p.pool = 0; save(); }
+(() => { const qs = qlStep; qlStep = function (p) { const was = p.ql && p.ql.done; const r = qs.apply(this, arguments); try { if (!was && p.ql && p.ql.done === 'x') { S.freeRe = 1; save(); } } catch (e) {} return r; }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
