@@ -336,6 +336,8 @@ Then `rmv163.py`: watch your photo qualify full screen: at 7 wins the deciding v
 
 Then `rmv164.py`: full-screen start line when a photo enters its qualifier (Sterling is in!).
 
+Then `rmv165.py`: no 100-coin pop; free retry when a photo goes out; first two entries strongly favoured to qualify.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -496,6 +498,7 @@ python3 rmv161.py
 python3 rmv162.py
 python3 rmv163.py
 python3 rmv164.py
+python3 rmv165.py
 ```
 
 ## Skill only
