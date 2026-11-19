@@ -294,6 +294,8 @@ Then `rmv142.py`: Stage 5 daily photo contests (no sponsors): per live category,
 
 Then `rmv143.py`: Hidden fair matching: daily contests split into groups of similar-strength photos (under 60% / 60–70% / 70%+) — entries, prizes and position are for your group; one line tells the player they're matched with photos like theirs. Free daily $6/$4/$2 per group. New ⚡ Quick contest: 10 photos, $1, top 3 paid $4/$2.50/$2, result within the hour (demo ~5 min). Better-mixed random draws for entry results.
 
+Then `rmv144.py`: First-session pacing: first game matched with newer (weaker simulated) players; free real game offer waits until after the photo verdict (or a skipped photo moment) and arrives as its own 'Now race for real cash' moment; starter photo auto-framed (3 screens to the verdict); daily reward only in the first 90 s of a later session; Play tab shows games only.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -433,6 +435,7 @@ python3 rmv140.py
 python3 rmv141.py
 python3 rmv142.py
 python3 rmv143.py
+python3 rmv144.py
 ```
 
 ## Skill only
