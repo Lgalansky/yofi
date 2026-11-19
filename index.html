@@ -1532,6 +1532,19 @@ html body .gmc .gmc-live{font-style:normal;font-size:.7rem;font-weight:800;color
 html body .gmc .gmc-live::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#5FD37A;margin-right:5px;animation:liveDot 1.4s ease-in-out infinite}
 html body .vd-meter{margin-top:24px}
 .vd-box{margin:0 0 8px;padding:10px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1.5px #EADCC6;text-align:left}.vd-box .vd-l{margin:2px 0;font-size:.8rem;line-height:1.35}
+#jcard{position:relative;transition:box-shadow .4s,border-radius .4s;border-radius:22px}
+#jcard.hs1{box-shadow:0 0 0 3px #F2B544,0 0 22px rgba(242,181,68,.55)}
+#jcard.hs2{box-shadow:0 0 0 3px #E07B24,0 0 30px rgba(224,123,36,.65);animation:hsPulse 1.6s ease-in-out infinite}
+#jcard.hs3{box-shadow:0 0 0 4px #D9AE4F,0 0 40px rgba(217,174,79,.9);animation:hsPulse 1.1s ease-in-out infinite}
+@keyframes hsPulse{50%{filter:brightness(1.06)}}
+#jcard.ccp{box-shadow:0 0 0 3px #7B4FC9,0 0 30px rgba(123,79,201,.55)!important}
+.cc-top{position:absolute;left:50%;top:-14px;transform:translateX(-50%);z-index:6;padding:5px 12px;border-radius:999px;background:#5B3A9E;color:#fff;font:800 .8rem Nunito,system-ui,sans-serif;white-space:nowrap;box-shadow:0 4px 12px rgba(91,58,158,.4);animation:cdPop .5s ease-out both}
+.hsb{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);z-index:40;padding:10px 18px;border-radius:999px;background:#14213D;color:#F3D98B;font:800 1.05rem Nunito,system-ui,sans-serif;white-space:nowrap;box-shadow:0 0 0 2px #D9AE4F,0 10px 26px rgba(0,0,0,.35);pointer-events:none;animation:hsb 1.7s ease-out both}
+.hsb b{color:#fff}.hsb.t2{background:#B5541A}.hsb.t3{background:linear-gradient(135deg,#9A6B12,#D9AE4F);color:#14213D}.hsb.t3 b{color:#14213D}
+.hsb.cc{background:#5B3A9E;color:#fff;box-shadow:0 0 0 2px #C9B3F2,0 10px 26px rgba(0,0,0,.35)}.hsb.cc.miss{background:#5B4A6E}
+@keyframes hsb{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}25%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-70%)}}
+html body .cc-top{max-width:92%;overflow:hidden;text-overflow:ellipsis}
+html body .cc-top{left:0!important;right:0;margin:0 auto;width:max-content;transform:none}
 </style>
 </head>
 <body>
@@ -3721,7 +3734,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v147</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v148</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -6899,7 +6912,7 @@ function raceGo(go) { const el = document.getElementById('dbCd'), com = document
   step(); }
 function raceCall(R, me, i, N) { const c = document.getElementById('dbCom'); if (!c) return; const o = R.slice().sort((a, b) => b.sc - a.sc || a.tm - b.tm), rk = o.indexOf(me) + 1, lead = o[0] === me ? o[1] : o[0], gap = Math.abs(me.sc - lead.sc), nm = x => x.me ? 'You' : '@' + esc(x.h);
   const prev = c.dataset.rk ? +c.dataset.rk : 0; c.dataset.rk = rk; let t;
-  if (i >= N) t = '📸 Across the line…'; else if (prev && rk < prev && rk === 1) t = '🔥 You take the lead!'; else if (rk === 1 && gap >= 25) t = `🏇 You’re clear by ${gap} points!`;
+  if (i >= N) t = rk === 1 ? '🏆 First past the post!' : prev === 1 ? '😱 Pipped at the post!' : `📸 Across the line in ${ppOrd(rk)}`; else if (prev && rk < prev && rk === 1) t = '🔥 You take the lead!'; else if (rk === 1 && gap >= 25) t = `🏇 You’re clear by ${gap} points!`;
   else if (gap <= 6) t = `⚡ Neck and neck with ${nm(lead)}!`; else if (prev && rk < prev) t = `▲ Up to ${ppOrd(rk)}!`; else if (prev && rk > prev) t = `▼ ${nm(o[rk - 2])} slips past you`;
   else if (i === N - 2) t = '🏁 Final stretch: 2 pairs to go!'; else t = rk === 1 ? '🏇 Holding the lead…' : `${nm(o[0])} leads · you’re ${ppOrd(rk)}, ${gap} behind`;
   c.innerHTML = t; c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); }
@@ -6912,6 +6925,20 @@ function gmLive(k) { const r = cpRng(ppHash(k + Math.floor(Date.now() / 90000)))
 (() => { const rm = renderMyShow; renderMyShow = function () { const out = rm.apply(this, arguments);
   try { document.querySelectorAll('#gallery .gx-rec').forEach(x => { const v = [...x.querySelectorAll('b')].map(b => b.textContent.trim()); if (v.every(t => ['$0.00', '0', '–', '-'].includes(t))) { const card = x.closest('.gx-card'); x.outerHTML = card && card.querySelector('.vd-e') ? '' : '<p class="gx-new">🆕 Fresh entry<br><small>Its record starts with its first contest</small></p>'; } }); document.querySelectorAll('#gallery .gx-card').forEach(card => { const side = card.querySelector('.gx-side'), L = card.querySelectorAll('.gx-plq .vd-l'); if (side && L.length) { const box = document.createElement('div'); box.className = 'vd-box'; L.forEach(l => box.appendChild(l)); side.prepend(box); } }); } catch (e) {}
   return out; }; })();
+(() => { const cf = callFx, rj = renderJudge; let sv = 0;
+  const tier = c => c >= 10 ? 3 : c >= 5 ? 2 : c >= 3 ? 1 : 0;
+  const banner = (cls, html) => { const jc = document.getElementById('jcard'); if (!jc) return; const b = document.createElement('div'); b.className = 'hsb ' + cls; b.innerHTML = html; jc.appendChild(b); setTimeout(() => b.remove(), 1700); };
+  callFx = function (pick, pct, agree, earn, combo, prev, mine) { const r = cf.apply(this, arguments); sv++;
+    try { const jc = document.getElementById('jcard');
+      if (window.__ccOn) { window.__ccOn = 0; if (agree) { const bonus = Math.max(4, (earn || 2) * 2); S.gems = (S.gems || 0) + bonus; save(); setTimeout(() => { try { paintGems(); gemExplosion(bonus, { label: '🔮 Crowd Call · 3×' }); } catch (e) {} }, 500); banner('cc', `🔮 <b>Crowd Call!</b> 3× coins`); }
+        else banner('cc miss', '🔮 Not this time · no coins lost'); }
+      else { const t = tier(combo); if (agree && t && t !== tier(combo - 1)) { banner('t' + t, ['', '🔥 <b>On fire!</b> 3 in a row', '🔥🔥 <b>Hot streak!</b> 5 in a row', '👑 <b>Crowd whisperer!</b> 10 in a row'][t]); try { navigator.vibrate && navigator.vibrate([10, 40, 10, 40, 20]); } catch (e) {} } }
+      if (sv % 20 === 14) window.__ccNext = 1; } catch (e) {}
+    return r; };
+  renderJudge = function () { const r = rj.apply(this, arguments);
+    try { const jc = document.getElementById('jcard'); if (jc) { const c = (S && S.combo) || 0; jc.classList.remove('hs1', 'hs2', 'hs3', 'ccp'); const t = tier(c); if (t) jc.classList.add('hs' + t);
+      if (window.__ccNext && (S.tut || 9) >= 4 && !window.__finPair) { window.__ccNext = 0; window.__ccOn = 1; jc.classList.add('ccp'); jc.insertAdjacentHTML('afterbegin', '<div class="cc-top">🔮 <b>Crowd Call</b> · 3× coins</div>'); } } } catch (e) {}
+    return r; }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
