@@ -1481,6 +1481,8 @@ html body .gmdep,html body .ppop .gmdep{background:#F1F6EC!important;box-shadow:
 .gmf div{text-align:left}
 html body .ppop .btn.db-go.cashb{background:#2F6B3F!important;color:#fff!important;-webkit-text-fill-color:#fff}
 html body .ppop .dbe .btn.db-up{background:#fff!important;color:#2F6B3F!important;-webkit-text-fill-color:#2F6B3F;box-shadow:inset 0 0 0 2px #2F6B3F!important}
+html.coinp #wCash,html.coinp .rm-pill{display:none!important}
+html.coinp .wallet{grid-template-columns:1fr!important}
 </style>
 </head>
 <body>
@@ -2834,8 +2836,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#sheet'
 
 function openSignup(then, opts = {}) {
   const p = cur();
-  openSheet(`<h2>${opts.bonus ? 'Claim your welcome bonus' : opts.win ? 'Save your win' : opts.pick ? 'Create your account to place your pick' : opts.photo ? 'Save your photo' : 'Save your photo and coins'}</h2>${opts.bonus || !S.giftEn ? `<div class="wbx"><span>🎁 Welcome bonus</span><b>${gemIcon('')}${(CFG.FIRST_WIN + CFG.SIGNUP).toLocaleString()} coins</b><small>Free when you create your account</small></div>` : ''}
-    <p class="sub">${opts.pick ? 'Your picks and any winnings are saved to your account. ' : opts.photo ? 'Keep your framed photo and its prize record safe. ' : opts.win ? 'Keep your coins and your win. ' : ''}Create your account so nothing gets lost.</p>
+  openSheet(`<h2>${opts.real ? ((S.cashTix || 0) > 0 ? 'Your free $1 game is waiting' : 'Create your account to play for cash') : opts.bonus ? 'Claim your welcome bonus' : opts.win ? 'Save your win' : opts.pick ? 'Create your account to place your pick' : opts.photo ? 'Save your photo' : 'Save your photo and coins'}</h2>${!opts.real && (opts.bonus || !S.giftEn) ? `<div class="wbx"><span>🎁 Welcome bonus</span><b>${gemIcon('')}${(CFG.FIRST_WIN + CFG.SIGNUP).toLocaleString()} coins</b><small>Free when you create your account</small></div>` : ''}
+    <p class="sub">${opts.real ? 'Real-cash games are for adults 18+. Your winnings are saved to your account. ' : opts.pick ? 'Your picks and any winnings are saved to your account. ' : opts.photo ? 'Keep your framed photo and its prize record safe. ' : opts.win ? 'Keep your coins and your win. ' : ''}${opts.real ? '' : 'Create your account so nothing gets lost.'}</p>
     <label class="field">Username<input id="suH" autocomplete="username" placeholder="e.g. goldenhourgreg" maxlength="24"></label>
     <label class="field">Email<input id="suE" type="email" autocomplete="email" placeholder="you@example.com"></label>
     <p class="err" id="suErr"></p>
@@ -3670,7 +3672,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v138</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v139</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -5213,7 +5215,7 @@ function ageGate() {
   if (S.likes) { try { obSort(); if ($('#panes').dataset.at === 'gallery') renderGallery(); } catch (e) {} }
   if (S.obDone && S.ageBr) return; let g0 = document.getElementById('ageGate'); if (!g0) { g0 = document.createElement('div'); g0.id = 'ageGate'; document.body.appendChild(g0); } g0.className = 'on'; obAge(g0);
 }
-setTimeout(ageGate, 0);
+
 
 // Age bracket 1 (25 to 34) sees the younger names: Battle, Crown, Points, Gems, Friends, Studio, Tournaments, Judge
 const CRW_Y = '<svg data-y="1" class="crw-ic" viewBox="0 0 64 48" aria-hidden="true"><defs><linearGradient id="crg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE27A"/><stop offset="1" stop-color="#E9A514"/></linearGradient></defs><path d="M6 40 L3 12 L19 24 L32 4 L45 24 L61 12 L58 40 Z" fill="url(#crg)" stroke="#8A5A00" stroke-width="2" stroke-linejoin="round"/><rect x="6" y="40" width="52" height="6" rx="2" fill="url(#crg)" stroke="#8A5A00" stroke-width="2"/><circle cx="3" cy="12" r="3" fill="#FFE27A"/><circle cx="32" cy="4" r="3" fill="#FFE27A"/><circle cx="61" cy="12" r="3" fill="#FFE27A"/></svg>';
@@ -5221,7 +5223,7 @@ const YOUNG_W = [[/Today’s photo challenges/g, 'Battle for the crown'], [/\bHe
   [/\bBlue ribbons\b/g, 'Crowns'], [/\bblue ribbons\b/g, 'crowns'], [/\bBlue ribbon\b/g, 'Crown'], [/\bblue ribbon\b/g, 'crown'], [/\bStars\b/g, 'Points'], [/\bstars\b/g, 'points'], [/\bstar\b/g, 'point'], [/\bCoins\b/g, 'Gems'], [/\bcoins\b/g, 'gems'], [/🪙/g, '💎'], [/🏅/g, '👑'], [/🟡/g, '💎'], [/\bChampion bounties\b/g, 'King bounties'], [/\bCategory champion\b/g, 'Category King'], [/\b(Beat|Challenge|beat|challenge) the Champion\b/g, '$1 the King'], [/\bThe Champion\b/g, 'The King'], [/\bA Champion challenge\b/g, 'A King challenge'], [/real members vote/g, 'real judges vote'], [/\breal members\b/g, 'real judges'], [/\bMembers vote\b/g, 'Judges vote'], [/\bmembers are voting\b/g, 'judges are voting'], [/\bVote to earn\b/g, 'Judge to earn'], [/\bVote on (\d+) photos\b/g, 'Judge $1 photos'], [/\bVote on photos\b/g, 'Judge photos'], [/\bCompete for cash\b/g, 'Battle for cash'], [/\bcoins\b/g, 'gems'], [/\bcoin\b/g, 'gem'], [/\bCoins\b/g, 'Gems'],
   [/\bClubs\b/g, 'Friends'], [/\bClub pot\b/g, 'Friends pot'], [/\bclub pot\b/g, 'friends pot'], [/\bClub\b/g, 'Friends group'], [/\bclub\b/g, 'friends group'], [/\bTouch-ups\b/g, 'Studio'], [/\bTouch up\b/g, 'Enhance'], [/\btouch up\b/g, 'enhance'],
   [/\bShows\b/g, 'Tournaments'], [/^Vote$/, 'Judge'], [/^Compete$/, 'Battle'], [/\bCHALLENGE\b/g, 'BATTLE'], [/\bChallenges\b/g, 'Battles'], [/\bchallenges\b/g, 'battles'], [/\bChallenge\b/g, 'Battle'], [/\bchallenge\b/g, 'battle'], [/^Enter · /, 'Battle · ']];
-const isYoung = () => S && (!S.ageBr || S.ageBr === '18 to 24');
+const isYoung = () => S && S.ageBr === '18 to 24';
 // category names follow the look: Skill names for under 25, Fall Fair names for 25+
 function applyNames() { const y = !!window.__young, A = applyNames; if (!A.o) A.o = { fc: FC_THEMES.map(t => t[1]), pc: PCATS.map(t => t[1]), ch: { ...CHAL }, ws: { ...WALL_SHORT } };
   const FY = { selfie: 'Best Selfie', style: 'Best Outfit', fitness: 'Best Gym', pets: 'Best Pet', food: 'Best Cooking', travel: 'Best Holiday', night: 'Best Night Out', any: 'Best Anything' };
@@ -6646,21 +6648,21 @@ function finalsTab() { const cur = ppSlot(), g = ppGame(cur), y = isYoungW();
   const B = $('#flowBody'); B.querySelector('#fnVote').onclick = () => { closeFlow(); go('judge'); renderJudge(); }; B.querySelector('#fnCard').onclick = () => raceCard(); }
 function raceBetRowHTML() { return ''; }
 const GM_C = [{ fee: 25, coins: 1 }], GM_R = [{ fee: .5 }, { fee: 1 }, { fee: 2 }, { fee: 5 }, { fee: 10 }];
-const gmTiers = () => isCash() ? GM_R : GM_C;
+const gmTiers = () => { const r = isCash() || window.__forceReal; window.__forceReal = 0; return r ? GM_R : GM_C; };
 const todayK = () => new Date().toDateString();
 function tixClaim(go2) { if (S.tixDay === todayK()) { toast('You’ve claimed today’s free ticket · back tomorrow'); return false; } if ((S.gems || 0) < 500) { toast(`${500 - Math.floor(S.gems || 0)} more 🟡 for a free ticket · vote to earn`); return false; }
   S.gems -= 500; S.cashTix = (S.cashTix || 0) + 1; S.tixDay = todayK(); save(); paintGems(); toast('🎟️ Free $1 game ticket added'); if (go2) setTimeout(gmHub, 300); return true; }
 function gmFeedHTML() { const r = cpRng(Math.floor(Date.now() / 90000)), G = ['Grand National', 'Photo Derby', 'Match Race', 'Hot Streak'], M = [15, 2.38, 1.7, 2.38], F = [1, 2, 5, 10, 2, 1];
   return `<div class="gmf"><p class="gmf-h">🏆 Recent winners <small>(simulated)</small></p>${[0, 1, 2].map(k => { const gi = Math.floor(r() * 4), f = F[Math.floor(r() * F.length)], nm = QS_NAMES[Math.floor(r() * QS_NAMES.length)];
     return `<div><b>@${esc(nm)}</b><span>won <em>${money(+(f * M[gi]).toFixed(2))}</em> in the ${G[gi]}</span><small>${1 + Math.floor(r() * 9)} min ago</small></div>`; }).join('')}</div>`; }
-function gmFreeRealHTML() { return !isCash() ? `<button class="gmfr" data-freereal><span>🎟️</span><b>Your first real game is on us</b><small>$1 Match Race · win $1.70 real cash</small></button>` : ''; }
+function gmFreeRealHTML() { return !isCash() && !S.frGiven ? `<button class="gmfr" data-freereal><span>🎟️</span><b>Your first real game is on us</b><small>$1 Match Race · win $1.70 real cash</small></button>` : ''; }
 function gmCardsHTML() { const real = isCash();
   return `<div class="gmr"><p class="gmr-h">Photo games · ${real ? 'real cash' : 'coin games'}</p>${real && (S.bonus || 0) > 0 ? `<p class="gmr-b">🎁 Bonus Cash <b>${money(S.bonus)}</b> · used first on entries</p>` : ''}${real && (S.cashTix || 0) > 0 ? `<p class="gmr-b">🎟️ ${S.cashTix} free $1 ticket${S.cashTix > 1 ? 's' : ''}</p>` : ''}${gmFreeRealHTML()}
     <div class="gmr-g">${Object.entries(GM).map(([k, g]) => `<button class="gmc" data-gm="${k}"><span class="gmc-ic">${g.ic}</span><b>${g.t}</b><small>${g.sub}</small></button>`).join('')}</div>${real ? gmFeedHTML() : ''}</div>`; }
 document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-freereal]'); if (b) { e.preventDefault(); freeRealStart(); } });
-function freeRealStart() { if (isCash()) { gmHub(); return; } try { popClose(); closeFlow(); } catch (e) {} S.cashTix = (S.cashTix || 0) + 1; S.frGiven = 1; S.cashMode = 1; save(); try { paintWallet(); } catch (e) {}
-  setTimeout(() => { gmOpen('match', 1); setTimeout(() => { const b = document.getElementById('dbGo'); b && b.click(); }, 80); }, 250); }
-function depositOffer() { try { popClose(); } catch (e) {} setTimeout(() => openStore('Add $5 cash · get $10 Bonus Cash', () => { if (!S.bonusGot) { S.bonusGot = 1; S.bonus = +((S.bonus || 0) + 10).toFixed(2); save(); toast('🎁 $10 Bonus Cash added · used first on entries'); } }), 200); }
+function freeRealStart() { if (isCash()) { gmHub(); return; } try { popClose(); closeFlow(); } catch (e) {} S.cashTix = (S.cashTix || 0) + 1; S.frGiven = 1; save(); try { paintWallet(); } catch (e) {}
+  setTimeout(() => { window.__forceReal = 1; gmOpen('match', 1); setTimeout(() => { const b = document.getElementById('dbGo'); b && b.click(); }, 80); }, 250); }
+function depositOffer() { try { popClose(); } catch (e) {} setTimeout(() => openStore('Add $5 cash · get $10 Bonus Cash', () => { S.cashMode = 1; if (!S.bonusGot) { S.bonusGot = 1; S.bonus = +((S.bonus || 0) + 10).toFixed(2); } save(); toast('🎁 $10 Bonus Cash added · used first on entries'); try { paintWallet(); } catch (e) {} }), 200); }
 function gmZero(t, mode) { const can = S.tixDay !== todayK(), g = Math.floor(S.gems || 0);
   popOpen(`<div class="pp dbx"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">💵 ${money(t.fee)} game</p><h2 class="db-h">Top up to play</h2>
     <p class="db-s">You have <b>${money(S.cash || 0)}</b>${(S.bonus || 0) ? ` + ${money(S.bonus)} Bonus Cash` : ''}.</p>
@@ -6697,7 +6699,7 @@ function gmEnd(mode, t, R, ok, nPicks) { const g = GM[mode], ord = R.slice().sor
   const ti = Math.min(T.length - 1, window.__gmTi == null ? 0 : window.__gmTi), up = Math.min(T.length - 1, ti + 1), paid = g.mult.length, unit = g.streak ? 'in a row' : 'pts';
   const show = ord.slice(0, Math.min(ord.length, g.n > 4 ? 5 : 4)); if (!show.includes(me)) show.push(me);
   const gap = pl > paid ? ord[paid - 1].sc - me.sc : 0;
-  const dep = firstReal && !S.bonusGot ? `<button class="gmdep" id="gmDep"><span>🎁</span><b>Add $5, get $10 Bonus Cash</b><small>Bonus Cash is spent on entries first · winnings are real cash</small></button>` : '';
+  const dep = firstReal && !S.bonusGot && isCash() ? `<button class="gmdep" id="gmDep"><span>🎁</span><b>Add $5, get $10 Bonus Cash</b><small>Bonus Cash is spent on entries first · winnings are real cash</small></button>` : '';
   const fr = t.coins && !isCash() ? gmFreeRealHTML() : '';
   if (firstReal) { S.depShown = 1; save(); }
   popOpen(`<div class="pp dbx dbe ${prize ? 'won' : ''}"><p class="pp-k">${g.ic} ${g.t} · ${gmAmt(t, t.fee)}</p><h2 class="db-h">${pl === 1 ? (g.n === 2 ? 'You won the match!' : `You won the ${g.t}!`) : prize ? `${ppOrd(pl)} place, paid!` : `You finished ${ppOrd(pl)}${g.n > 4 ? ` of ${g.n}` : ''}`}</h2>
@@ -6705,15 +6707,22 @@ function gmEnd(mode, t, R, ok, nPicks) { const g = GM[mode], ord = R.slice().sor
     ${dep}${fr}
     <div class="db-res">${show.map(x => { const k = ord.indexOf(x); return `<div class="${x.me ? 'me' : ''}"><em>${['🥇', '🥈', '🥉'][k] || ppOrd(k + 1)}</em><b>${x.me ? 'You' : '@' + esc(x.h)}</b><span>${x.sc} ${unit}</span><i>${gmPay(g, t, k) ? gmAmt(t, gmPay(g, t, k)) : ''}</i></div>`; }).join('')}</div>
     <p class="db-eye">You matched the crowd on <b>${ok} of ${nPicks}</b> · 👁️ Eye now ${Math.round(dbEye() * 100)}%</p>
-    <button class="btn block db-go ${t.coins ? '' : 'cashb'}" id="dbRe">🔁 Rematch · ${gmAmt(t, t.fee)}</button>${up !== ti ? `<button class="btn block quiet db-up" id="dbUp">Step up · ${gmAmt(T[up], T[up].fee)}</button>` : ''}
+    ${!t.coins && !isCash() ? `<button class="btn block db-go cashb" id="dbAdd">💵 Add cash to play again${S.bonusGot ? '' : ' · get $10 Bonus Cash'}</button><button class="btn block quiet db-up" id="dbBack">Back to coin games</button>` : `<button class="btn block db-go ${t.coins ? '' : 'cashb'}" id="dbRe">🔁 Rematch · ${gmAmt(t, t.fee)}</button>${up !== ti ? `<button class="btn block quiet db-up" id="dbUp">Step up · ${gmAmt(T[up], T[up].fee)}</button>` : ''}`}
     <div style="text-align:center"><button class="link pc-later" id="dbOther">Other games</button> · <button class="link pc-later" id="dbDone">Done</button></div><p class="db-sim">Prototype: opponents are simulated</p></div>`);
   if (prize) setTimeout(() => { try { t.coins ? (paintGems(), gemExplosion(prize, { label: g.t })) : (paintWallet(), cashExplosion(prize, { label: g.t })); } catch (e) {} }, 350); else { try { paintGems(); paintWallet(); } catch (e) {} }
   if (pl === 1) setTimeout(() => { try { rvConfetti(document.querySelector('.dbe'), g.n > 4 ? 90 : 50); } catch (e) {} }, 200);
   const sameMode = !!t.coins === !isCash();
-  $('#dbRe').onclick = () => { popClose(); setTimeout(() => { if (!sameMode) { gmHub(); return; } gmOpen(mode, ti); setTimeout(() => { const b = document.getElementById('dbGo'); b && b.click(); }, 60); }, 200); };
+  if ($('#dbAdd')) { $('#dbAdd').onclick = depositOffer; $('#dbBack').onclick = () => { popClose(); setTimeout(gmHub, 200); }; }
+  if ($('#dbRe')) $('#dbRe').onclick = () => { popClose(); setTimeout(() => { if (!sameMode) { gmHub(); return; } gmOpen(mode, ti); setTimeout(() => { const b = document.getElementById('dbGo'); b && b.click(); }, 60); }, 200); };
   if ($('#dbUp')) $('#dbUp').onclick = () => { popClose(); setTimeout(() => sameMode ? gmOpen(mode, up) : gmHub(), 200); };
   if ($('#gmDep')) $('#gmDep').onclick = depositOffer;
   $('#dbOther').onclick = () => { popClose(); setTimeout(gmHub, 200); }; $('#dbDone').onclick = () => popClose(); }
+function needAge(then) { if (S.obDone && S.ageBr) { then(); return; } try { popClose(); closeSheet(); } catch (e) {} ageGate(); const w = setInterval(() => { if (!document.querySelector('#ageGate.on')) { clearInterval(w); if (S.ageBr) setTimeout(then, 200); } }, 250); }
+(() => { const fr = freeRealStart, dep = depositOffer, pe = gmPayEntry;
+  freeRealStart = function () { needAge(fr); }; depositOffer = function () { needAge(dep); };
+  gmPayEntry = function (t, mode, go) { if (t.coins) return pe(t, mode, go); needAge(() => pe(t, mode, go)); }; })();
+document.addEventListener('click', e => { if (e.target.closest && e.target.closest('#wCash') && !(S.obDone && S.ageBr)) { e.preventDefault(); e.stopPropagation(); needAge(() => { try { openStore('Add cash to play'); } catch (x) {} }); } }, true);
+setInterval(() => { try { document.documentElement.classList.toggle('coinp', !!S && !isCash() && !((S.cash || 0) > 0)); } catch (e) {} }, 500);
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -6879,7 +6888,7 @@ function runOut(kind, title, onBuy, need) {
       free: (() => { const per = CFG.VOTE * (jMult() || 0), n = need && per ? Math.ceil(need / per) : 0;
         return `<span class="rj-ic">⚖️</span><span class="rj-t"><b>Earn free coins by judging</b><small>Get coins for every vote</small></span>`; })(), freeCls: 'rj', freeFn: () => { if ($('#flow').classList.contains('on')) closeFlow(); go('judge'); renderJudge(); } }
     : (() => { const w = !S.paidCash && !S.bonusGot, cash = w ? 5 : 10, coins = w ? 25 : 10; return { ic: '💵', title: title || 'Add cash to play', tag: w ? 'Welcome offer' : 'Most popular', big: w ? `$${cash} <small class="ro-plus">+ $10 Bonus Cash</small>` : `$${cash}`, sub: w ? 'cash to play · plus $10 Bonus Cash for entries' : 'cash to play', usd: cash,
-      buy: () => checkout(`$${cash} cash`, cash, () => applyOffer(cash, 0, w ? 'Welcome offer · $10 Bonus Cash' : '$10 pack', () => { if (w && !S.bonusGot) { S.bonusGot = 1; S.bonus = +((S.bonus || 0) + 10).toFixed(2); save(); toast('🎁 $10 Bonus Cash added · used first on entries'); } if (onBuy) onBuy(); })), free: 'Not now', freeFn: () => {} }; })();
+      buy: () => checkout(`$${cash} cash`, cash, () => applyOffer(cash, 0, w ? 'Welcome offer · $10 Bonus Cash' : '$10 pack', () => { S.cashMode = 1; save(); if (w && !S.bonusGot) { S.bonusGot = 1; S.bonus = +((S.bonus || 0) + 10).toFixed(2); save(); toast('🎁 $10 Bonus Cash added · used first on entries'); } if (onBuy) onBuy(); })), free: 'Not now', freeFn: () => {} }; })();
   c.innerHTML = `<div class="crbox enx ro" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
     <div class="enx-ic">${cfg.ic}</div><h2 id="crT">${cfg.title}</h2>
     <div class="enh">${kind === 'gems' ? '' : `<span class="enp-t">${cfg.tag || 'Most popular'}</span>`}<b>${cfg.big}</b><small>${cfg.sub}</small><button class="enh-go" id="roBuy">${kind === 'energy' ? `Pay $${cfg.usd} from cash` : kind === 'gems' ? (isYoungW() ? '⚖️ Judge to earn' : '⚖️ Vote to earn') : `Add $${(+cfg.usd).toFixed(0)}`}</button></div>
@@ -7552,7 +7561,7 @@ function buyTicket() {
   ticketPop();
 }
 function payCash(amt, what, then) {
-  if (S.user && S.user.guest) { openSignup(() => payCash(amt, what, then), { locked: false, pick: /pick/i.test(what) }); return false; }
+  if (S.user && S.user.guest) { openSignup(() => payCash(amt, what, then), { locked: false, real: 1 }); return false; }
   if (amt === 1 && (S.cashTix || 0) > 0) { S.cashTix--; save(); toast(`🎟️ Free entry used${S.cashTix ? ` · ${S.cashTix} left` : ''}`); then(); return true; }
   if ((S.cash || 0) < amt) { openStore(`${what} costs ${money(amt)} cash.`, () => { if ((S.cash || 0) >= amt) { S.cash = +((S.cash || 0) - amt).toFixed(2); goCash(); save(); paintWallet(); then(); } }); return false; }
   S.cash = +((S.cash || 0) - amt).toFixed(2); goCash(); save(); paintWallet(); then(); return true;
