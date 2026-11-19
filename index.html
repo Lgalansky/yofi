@@ -1490,6 +1490,13 @@ html.coinp .wallet{grid-template-columns:1fr!important}
 .cal-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0}.cal-row div{display:flex;flex-direction:column;align-items:center;padding:6px 0;border-radius:10px;background:#F3EEE5;opacity:.7}.cal-row small{font-size:.58rem;font-weight:800}.cal-row b{font-size:.85rem;color:#14213D}.cal-row i{font-style:normal;font-size:.7rem}
 .cal-row div.got{background:#E3EAF5;opacity:.9}.cal-row div.now{background:#FFF1C9;opacity:1;box-shadow:inset 0 0 0 2px #D9AE4F;transform:scale(1.06)}
 .vdc-bar i{width:0;animation:vdcFill 3s linear forwards}@keyframes vdcFill{to{width:100%}}
+.fin-tag{font-style:normal;font-weight:900;color:#B03A2E}
+.vd-pool{margin:6px 0;padding:8px 10px;border-radius:12px;background:#F3EEE5;font-size:.86rem;text-align:center}.vd-pool.ok{background:#F1F6EC;box-shadow:inset 0 0 0 2px #2F6B3F;color:#22502F}
+.vd-e{color:#2F6B3F}
+.ern{margin:6px 0 14px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,#F1F6EC,#FBF7F0);box-shadow:inset 0 0 0 2px #2F6B3F}
+.ern-k{margin:0 0 6px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;font-size:.74rem;color:#22502F}
+.ern-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center}.ern-row b{display:block;font:900 1.35rem Fraunces,Georgia,serif;color:#2F6B3F}.ern-row small{font-size:.72rem;color:#3D5A44}
+.ern-top{margin:8px 0 0;font-size:.86rem;color:#14213D;text-align:center}.ern-how{margin-top:6px;font-size:.8rem}.ern-how summary{cursor:pointer;font-weight:800;color:#1E3A6E}
 </style>
 </head>
 <body>
@@ -3679,7 +3686,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v140</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v141</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -6200,7 +6207,7 @@ function renderMyShow59() { const g = $('#gallery'); if (!g) return; $('#ptitle'
   g.innerHTML = `<div class="ms gl"><h1 class="ms-h">🖼️ Gallery</h1><p class="ms-sub">Your framed photos and their race record</p>
     ${galFinalsHTML()}
     <button class="btn block gl-add" id="glAdd">📷 Add a photo to frame · ${frameFree() ? 'first frame free' : `${FRAME_COINS} coins`}</button>
-    <div class="gl-sum"><div><b>${money(tot)}</b><small>prize money</small></div><div><b>${F.length}</b><small>framed</small></div><div><b>${finals}</b><small>Finals</small></div><div><b>${races}</b><small>qualifiers</small></div></div>
+    ${earnHeadHTML()}<div class="gl-sum"><div><b>${money(tot)}</b><small>prize money</small></div><div><b>${F.length}</b><small>framed</small></div><div><b>${finals}</b><small>Finals</small></div><div><b>${races}</b><small>qualifiers</small></div></div>
     <p class="gl-h">Your framed photos</p>${F.length ? `<div class="gl-wall">${F.map(frame).join('')}</div>` : '<p class="ms-none">No framed photos yet. Add a photo, name it and frame it to enter the qualifiers.</p>'}
     ${U.length ? `<p class="gl-h">Ready to frame</p><div class="gl-un">${U.map(p => `<div><img src="${p.src}" alt=""><b>${esc(p.title || rcName(p))}</b><button class="btn gl-act" data-glfr="${p.id}">🖼️ Frame · ${frameFree() ? 'free' : FRAME_COINS}</button></div>`).join('')}</div>` : ''}
     <div class="ms-earn"><div class="ms-eh"><b>💰 Earnings</b><span>${money(tot)} total · ${money(earnWeek())} this week</span></div>${(S.earn || []).length ? (S.earn || []).slice(-3).reverse().map(earnRowHTML).join('') : '<p class="er-none">Prize money from your framed photos shows here.</p>'}<button class="link ms-all" id="msEarn">See all earnings ›</button></div>
@@ -6305,7 +6312,7 @@ function renderMyShow() { const g = $('#gallery'); if (!g) return; const P = (S.
       <div class="gx-side"><div class="gx-rec"><div><b>${money(rec.won)}</b><small>won</small></div><div><b>${rec.finals}</b><small>Final${rec.finals === 1 ? '' : 's'}</small></div><div><b>${rec.best ? ppOrd(rec.best) : '–'}</b><small>best</small></div><div><b>${rec.races}</b><small>qualifiers</small></div></div>${rec.form.length ? `<p class="gl-form">Form <span class="rf">${formHTML(rec.form)}</span></p>` : ''}</div></div>${journeyHTML(p)}${st}</div>`; };
   const L = SHOW_ROT.map(x => { const sl = finFor(x.k), G = ppGame(sl); return { k: x.k, sl, src: (G.ph[0] || {}).src, pool: G.players * RACE_AVG }; }).sort((a, b) => a.sl - b.sl);
   g.innerHTML = `<div class="ms gl g4 gx"><h1 class="g4-h"><span class="g4-hi">🖼️</span> My photos</h1><p class="g4-sub">Your framed photos and their prize record.</p>
-    <div class="gl-sum"><div><b>${money(tot)}</b><small>prize money</small></div><div><b>${F.length}</b><small>framed</small></div><div><b>${fin}</b><small>Finals</small></div><div><b>${qual}</b><small>qualifiers</small></div></div>
+    ${earnHeadHTML()}<div class="gl-sum"><div><b>${money(tot)}</b><small>prize money</small></div><div><b>${F.length}</b><small>framed</small></div><div><b>${fin}</b><small>Finals</small></div><div><b>${qual}</b><small>qualifiers</small></div></div>
     <h2 class="g4-s">Your photos</h2><div class="gx-wall">${F.map(card).join('')}</div>
     ${U.length ? `<h2 class="g4-s">Ready to frame</h2><div class="gl-un">${U.map(p => `<div><img src="${p.src}" alt=""><b>${esc(p.title || rcName(p))}</b><button class="btn gl-act" data-glfr="${p.id}">🖼️ Frame · ${ff ? 'free' : FRAME_COINS}</button></div>`).join('')}</div>` : ''}
     <div class="g4-earn"><p class="g4-eh"><i class="g4-cash"></i> Photo earnings</p><div class="g4-er"><div><b>${money(tot)}</b><small>Total earned</small></div><span>${money(earnWeek())} this week</span></div>
@@ -6732,7 +6739,7 @@ document.addEventListener('click', e => { if (e.target.closest && e.target.close
 setInterval(() => { try { document.documentElement.classList.toggle('coinp', !!S && !isCash() && !((S.cash || 0) > 0)); } catch (e) {} }, 500);
 const freeScreen = () => !document.querySelector('#coach.on, #sheet.on, #flow.on, #finPick.on, #ageGate.on, .chx') && !(typeof judging !== 'undefined' && judging);
 const popGap = () => Date.now() - (window.__nudgeAt || 0) > 20000;
-function vdLine(p) { return `<p class="vd-l">👁️ <b>${p.views || 20}</b> views${p.vd ? ` · <b>${p.vd.pct}%</b> picked it` : ' · verdict coming'}${p.starter ? ' · <em>Starter photo · coins only</em>' : ''}</p>`; }
+function vdLine(p) { return `<p class="vd-l">👁️ <b>${p.views || 20}</b> views${p.vd ? ` · <b>${p.vd.pct}%</b> picked it` : ' · verdict coming'}${p.starter ? ' · <em>Starter photo · coins only</em>' : ''}</p>${p.pool ? `<p class="vd-l vd-e">▶️ In the Play Pool · <b>${p.plays || 0}</b> plays · earned <b>${p.starter ? `${p.earnC || 0} 🟡` : money(p.earn || 0)}</b></p>` : ''}`; }
 function photoMoment() { S.phAsked = 1; save(); window.__nudgeAt = Date.now();
   popOpen(`<div class="pp phm"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">📷 Your photos</p><h2 class="db-h">Now let’s see how your eye does as a photographer</h2>
     <p class="db-s">Enter a photo and get its <b>verdict in minutes</b>: how many voters pick it. Every vote you cast gives your photo more views, and winners race in the Finals for prizes.</p>
@@ -6741,10 +6748,10 @@ function photoMoment() { S.phAsked = 1; save(); window.__nudgeAt = Date.now();
   $('#phUp').onclick = () => { popClose(); setTimeout(finPick, 200); };
   $('#phStart').onclick = () => { popClose(); const x = SEED.find(z => z.src && z.cat === 'Pets' && z.id === 'shades') || SEED.find(z => z.src && z.cat === 'Pets'); window.__starter = 1; window.__starterT = x.title; window.__preCat = 'pets'; window.__sampleURL = x.src; window.__sample = 1; try { $('#file').dispatchEvent(new Event('change', { bubbles: true })); } catch (e) { window.__starter = 0; } }; }
 function verdictShow(p) { const r = cpRng(ppHash('vd:' + p.id)), pct = Math.round(52 + r() * 28), beat = Math.max(2, Math.min(9, Math.round((pct - 45) / 4))), cat = ({ pets: 'pet', nature: 'nature', garden: 'garden' })[photoShow(p) || 'pets'] || 'pet';
-  p.vd = { pct, beat, at: Date.now() }; p.views = Math.max(p.views || 20, 20); save(); window.__nudgeAt = Date.now();
+  p.vd = { pct, beat, at: Date.now() }; p.views = Math.max(p.views || 20, 20); p.pool = pct >= 60 ? Date.now() : 0; p.plAt = Date.now(); save(); window.__nudgeAt = Date.now();
   popOpen(`<div class="pp vdx"><p class="pp-k">📷 ${p.starter ? 'Your starter photo' : 'Your photo'}</p><h2 class="db-h">Its first 20 votes are in</h2>
     <div class="vd-ph"><img src="${p.src}" alt=""></div><div class="vd-big"><b>${pct}%</b><span>of voters picked it</span></div>
-    <p class="vd-beat">Better than <b>${beat} in 10</b> ${esc(cat)} photos</p>
+    <p class="vd-beat">Better than <b>${beat} in 10</b> ${esc(cat)} photos</p>${p.pool ? `<p class="vd-pool ok">🎉 It made the <b>Play Pool</b>: it now appears in real games and ${p.starter ? 'earns coins' : 'earns you cash'} every time it’s played.</p>` : `<p class="vd-pool">Just short of the <b>Play Pool</b> (60%+). Photos in the pool earn every time they’re played. Try a stronger shot?</p>`}
     <p class="db-s">It’s in the qualifiers now. <b>Every vote you cast = 1 more view</b> for it. Full result tomorrow.${p.starter ? '<br><small>Starter photos earn coins only. Upload your own to earn cash.</small>' : ''}</p>
     <button class="btn block db-go" id="vdVote">⚖️ Vote to move it up</button><div style="text-align:center"><button class="link pc-later" id="vdMore">📷 ${p.starter ? 'Upload one of yours' : 'Add another photo'}</button></div></div>`);
   setTimeout(() => { try { rvConfetti(document.querySelector('.vdx'), 30); } catch (e) {} }, 300);
@@ -6769,6 +6776,28 @@ setInterval(() => { try { if (!S || !S.user || !$('#app').classList.contains('on
 function upDone(p) { window.__nudgeAt = Date.now();
   popOpen(`<div class="pp vdc"><p class="pp-k">📷 ${esc(rcName(p))}</p><h2 class="db-h">Collecting its first votes…</h2><div class="vd-ph"><img src="${p.src}" alt=""></div><div class="nfx-bar vdc-bar"><i></i></div><p class="db-s">Voters are seeing it now.</p></div>`);
   setTimeout(() => { if (document.querySelector('#coach .vdc')) { popClose(); setTimeout(() => verdictShow(p), 150); } }, 3200); }
+const ROY = 0.007;
+function royAccrue(silent) { const now = Date.now(); let plays = 0, cash = 0, coins = 0;
+  (S.photos || []).forEach(p => { if (!p.pool) return; const last = p.plAt || p.pool, hrs = Math.min(48, (now - last) / 3600e3); const r = cpRng(ppHash('pl:' + p.id + Math.floor(now / 60000))), rate = 6 + ((p.vd && p.vd.pct) || 60) / 100 * 14;
+    const n = Math.floor(hrs * rate + r()); if (n < 1) return; p.plAt = now; p.plays = (p.plays || 0) + n; plays += n;
+    if (p.starter) { p.earnC = (p.earnC || 0) + n; coins += n; } else { const e = +(n * ROY).toFixed(2); p.earn = +((p.earn || 0) + e).toFixed(2); cash += e; }
+    p.wk = p.wk || {}; const wk = Math.floor(now / 6048e5); p.wk[wk] = +((p.wk[wk] || 0) + (p.starter ? 0 : n * ROY)).toFixed(3); });
+  if (!plays) return null; if (cash) { S.cash = +((S.cash || 0) + cash).toFixed(2); } if (coins) S.gems = (S.gems || 0) + coins; save(); try { paintWallet(); paintGems(); } catch (e) {}
+  return { plays, cash: +cash.toFixed(2), coins }; }
+function earnHeadHTML() { const P = (S.photos || []).filter(p => p.pool); if (!(S.photos || []).length) return '';
+  const wk = Math.floor(Date.now() / 6048e5), week = P.reduce((a, p) => a + ((p.wk || {})[wk] || 0), 0), plays = P.reduce((a, p) => a + (p.plays || 0), 0), top = P.slice().sort((a, b) => (b.earn || 0) - (a.earn || 0))[0], coins = P.reduce((a, p) => a + (p.earnC || 0), 0);
+  return `<div class="ern"><p class="ern-k">💵 Your photos’ earnings</p><div class="ern-row"><div><b>${money(+week.toFixed(2))}</b><small>this week</small></div><div><b>${plays}</b><small>plays</small></div><div><b>${P.length}</b><small>in the Play Pool</small></div></div>
+    ${top && (top.earn || 0) > 0 ? `<p class="ern-top">⭐ Top earner: <b>${esc(rcName(top))}</b> · ${money(top.earn)}</p>` : coins ? `<p class="ern-top">Starter photo earned <b>${coins} 🟡</b> so far</p>` : `<p class="ern-top">${P.length ? 'Plays start within the hour.' : 'Photos picked by 60%+ of voters join the Play Pool and start earning.'}</p>`}
+    <details class="ern-how"><summary>How earnings work</summary><p>Photos in the Play Pool appear in real Photo games. Each time yours is played, you earn a share of that game’s fee (30% of fees go to creators). Owners never see their own photos in games. Simulated in this prototype.</p></details></div>`; }
+setInterval(() => { try { if (!S || !S.user) return; const r = royAccrue(true); if (!r) return; const away = Date.now() - (S.lastAway || Date.now()) > 5 * 60e3;
+  if (away && $('#app').classList.contains('on') && freeScreen()) { window.__nudgeAt = Date.now();
+    popOpen(`<div class="pp"><p class="pp-k">📷 While you were away</p><h2 class="db-h">Your photos were played ${r.plays} times</h2><div class="rv-won"><span>Earned</span><b>${r.cash ? money(r.cash) : `${r.coins} 🟡`}</b></div><p class="db-s">Every time your photo appears in a real game, you earn. More photos in the Play Pool = more plays.</p>
+      <button class="btn block db-go" id="waSee">📷 See my photos</button><div style="text-align:center"><button class="link pc-later" id="waAdd">Add another photo</button></div></div>`);
+    $('#waSee').onclick = () => { popClose(); go('gallery'); try { renderMyShow(); } catch (e) {} }; $('#waAdd').onclick = () => { popClose(); setTimeout(finPick, 200); }; }
+  else if (r.cash >= 0.01) toast(`📷 Your photos earned ${money(r.cash)} · ${r.plays} plays`); S.lastAway = Date.now(); save(); } catch (e) {} }, 20000);
+document.addEventListener('visibilitychange', () => { try { if (document.visibilityState === 'hidden' && S) { S.lastAway = Date.now(); save(); } } catch (e) {} });
+(() => { const sp = seedPair; seedPair = function () { window.__finPair = false; try { if (S && (S.votes || 0) % 5 === 4) { const g = ppGame(ppSlot()), L = g.ph.map(x => SEED.find(z => z.src === x.src)).filter(Boolean);
+      if (L.length >= 2) { const r = cpRng((S.votes || 0) * 13 + ppSlot()), i = Math.floor(r() * L.length); let j = Math.floor(r() * L.length); if (j === i) j = (i + 1) % L.length; window.__finPair = true; return [L[i], L[j]]; } } } catch (e) {} return sp(); }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -6996,7 +7025,7 @@ function renderJudge() {
   const left = CFG.BATTLE_EVERY - S.since, ds = dailyState(), combo = S.combo || 0;
   const [pa, pb] = seedPair();
   const inTour = S.tour && !S.tour.seen;
-  $('#judge').innerHTML = `${false && inTour ? `<button class="tjs" id="tjStrip"><span class="tjs-h tk-w-in"></span></button>` : waitCardHTML()}<div class="vstrip"><button class="vs-en ${energy() <= 10 ? 'low' : ''}" id="vsEn" aria-label="Energy. Tap to buy more"><span>⚡</span><b>${energy()}</b><i>+</i></button><button class="vs-tk" id="vsTk" aria-label="Free tournament entries"><span>🎟️</span><b>${S.cashTix || 0}</b><small>${S.tixDay === frHourKey() && S.tixToday ? `next in ${frMinsLeft()}m` : `${S.tixV || 0}/${TIX_EVERY} votes`}</small></button></div>${qsChipHTML()}<div class="tot-h">${nextUpHTML()}<h2>Which is better?</h2><p><b>${esc(finCatOf(pa) ? showName(finCatOf(pa)) : (CHAL[pa.cat] || 'Photo'))}</b> · tap your pick</p></div>
+  $('#judge').innerHTML = `${false && inTour ? `<button class="tjs" id="tjStrip"><span class="tjs-h tk-w-in"></span></button>` : waitCardHTML()}<div class="vstrip"><button class="vs-en ${energy() <= 10 ? 'low' : ''}" id="vsEn" aria-label="Energy. Tap to buy more"><span>⚡</span><b>${energy()}</b><i>+</i></button><button class="vs-tk" id="vsTk" aria-label="Free tournament entries"><span>🎟️</span><b>${S.cashTix || 0}</b><small>${S.tixDay === frHourKey() && S.tixToday ? `next in ${frMinsLeft()}m` : `${S.tixV || 0}/${TIX_EVERY} votes`}</small></button></div>${qsChipHTML()}<div class="tot-h">${nextUpHTML()}<h2>Which is better?</h2><p><b>${esc(finCatOf(pa) ? showName(finCatOf(pa)) : (CHAL[pa.cat] || 'Photo'))}</b> · tap your pick${window.__finPair ? ' · <em class="fin-tag">🔴 Live Final · your vote counts</em>' : ''}</p></div>
     <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">${x.title ? `<b>${esc(x.title)}</b> · ` : ''}@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span><span class="jrep" role="button" tabindex="0" data-rep="${i}" aria-label="Report this photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
     <div class="jfoot jf2">
       ${energy() < 1 ? `<div class="jf-en en-out"><span class="en-ic">⚡</span><span class="eo-t"><b>Out of energy</b><small class="en-nx">+5 ⚡ in ${enNext()}</small><small class="en-full">Full again at ${enFullAt()}</small></span><button id="enBuy">Refill</button></div>` : `<div class="jf-en ${energy() > 10 ? 'en-hide' : 'en-low'}"><div class="en-top"><span class="en-ic">⚡</span><span class="en-bar"><i style="width:${Math.min(100, energy() / EN_MAX * 100)}%"></i></span><span class="en-n">${energy() > EN_MAX ? `${EN_MAX}<small> +${energy() - EN_MAX}</small>` : `${energy()}/${EN_MAX}`}</span><button class="en-plus" id="enPlus" aria-label="Buy energy">+</button></div>
