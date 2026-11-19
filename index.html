@@ -1582,6 +1582,22 @@ html body .vr-mine{display:none!important}
 .qf-res em{font-style:normal;font-weight:900}.qf-res img{width:34px;height:34px;border-radius:50%;object-fit:cover}.qf-res b{font-size:.84rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.qf-res i{font-style:normal;font-weight:900;color:#2F6B3F}
 html body .ql-btn{display:inline-block;width:auto;padding:4px 10px;margin:4px 0 0;font-size:.78rem}
 .vr-tk2{justify-content:center;margin:8px 0 12px}.vr-tk2 i{background:#EADCC6}
+html body .qv{margin:8px 2px 8px;padding:10px 12px;border-radius:16px;background:#fff;box-shadow:inset 0 0 0 2px #2F6B3F,0 4px 14px rgba(47,107,63,.12)}
+.qv-h{margin:0 0 6px;font:900 .74rem Nunito,system-ui;letter-spacing:.08em;text-transform:uppercase;color:#22502F;text-align:left}
+.qv-r{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid #E6EFE2}.qv-r:first-of-type{border-top:0;padding-top:2px}
+.qv-r img{width:54px;height:68px;border-radius:9px;object-fit:cover;flex:none;box-shadow:0 0 0 2px #EADCC6}.qv-r.fin img{box-shadow:0 0 0 3px #D9AE4F}.qv-r.out img{filter:grayscale(.6);opacity:.75}
+.qv-b{flex:1;min-width:0;text-align:left}.qv-t{display:flex;justify-content:space-between;align-items:center;gap:8px}.qv-t b{font:800 .98rem Fraunces,Georgia,serif;color:#14213D;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qv-t em{font-style:normal;font:900 .82rem Nunito,system-ui;color:#9A6B12;background:#FFF1C9;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.qv-st{display:flex;align-items:center;gap:4px;margin:4px 0 5px;font:800 .66rem Nunito,system-ui;text-transform:uppercase;letter-spacing:.04em}
+.qv-st span{padding:2px 7px;border-radius:999px;background:#EEE6D8;color:#8A7B6C}.qv-st span.on{background:#14213D;color:#F3D98B}.qv-st span.done{background:#2F6B3F;color:#fff}.qv-st span.out{background:#C0533F;color:#fff}.qv-st i{font-style:normal;color:#B9AE9C}
+.qv-bar{position:relative;height:14px;border-radius:7px;background:#E6EFE2;overflow:visible}.qv-bar i{display:block;height:100%;border-radius:7px;background:linear-gradient(90deg,#7FC48E,#2F6B3F);transition:width .5s}
+.qv-bar u{position:absolute;right:-6px;top:50%;transform:translateY(-50%);text-decoration:none;font-size:.95rem}
+.qv-n{display:flex;gap:10px;margin:4px 0 2px;font:800 .74rem Nunito,system-ui}.qv-n .w{color:#2F6B3F}.qv-n .l{color:#B0473A}.qv-n span:last-child{margin-left:auto;color:#14213D}
+.qv-b small{display:block;font:700 .76rem/1.4 Nunito,system-ui;color:#3D4A5C}.qv-b small b{color:#14213D}.qv-b small b.cash{color:#2F6B3F}.qv-b small.w{color:#2F6B3F}.qv-b small.l{color:#A6402F}
+html body .qv .ql-btn{margin-left:6px;padding:3px 10px;font-size:.76rem}
+html body .qv.cmp .qv-r{padding:5px 0}html body .qv.cmp .qv-r img{width:38px;height:46px}html body .qv.cmp .qv-st,html body .qv.cmp .qv-n,html body .qv.cmp small.w,html body .qv.cmp small.l{display:none}
+html body .qv.cmp .qv-t b{font-size:.86rem}html body .qv.cmp .qv-t em{font-size:.74rem;padding:1px 7px}html body .qv.cmp .qv-bar{height:9px;margin:3px 0 2px}html body .qv.cmp .qv-bar u{font-size:.75rem}
+html body .qv .btn.ql-btn{display:inline-block;width:auto!important;min-height:0!important;padding:2px 10px!important;margin:0 0 0 6px!important;font-size:.74rem!important;line-height:1.6!important;background:#2F6B3F!important;color:#fff!important;border-radius:999px!important;box-shadow:none!important;vertical-align:1px}
 </style>
 </head>
 <body>
@@ -3771,7 +3787,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v152</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v153</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -7030,7 +7046,7 @@ function qlStrength(p) { if (!p.vd) { const r = cpRng(ppHash('vd:' + p.id)); p.v
 function qlStart(p) { qlStrength(p); if (!p.starter && qlReal().filter(x => x !== p).length >= 1) S.entT = Math.max(0, (S.entT || 0) - 1); p.ql = { w: 0, l: 0, at: Date.now() }; p.pool = 0; save(); }
 function qlStep(p) { const q = p.ql; if (!q || q.done) return; const r = cpRng(ppHash(p.id + ':' + (q.w + q.l) + ':' + (S.votes || 0) + ':' + Date.now() % 997)), pr = Math.max(.2, Math.min(.82, .5 + (qlStrength(p) - 62) / 60));
   const win = r() < pr, pool = SEED.filter(x => x.src && finCatOf(x) === photoShow(p) && x.src !== p.src), opp = pool[Math.floor(r() * pool.length)] || { title: 'a rival' };
-  if (win) q.w++; else q.l++; q.last = { win, t: opp.title }; if (q.w >= QF_WIN) q.done = 'q'; else if (q.l > QF_N - QF_WIN) q.done = 'x'; save(); }
+  if (win) { q.w++; p.qc = (p.qc || 0) + 5; S.gems = (S.gems || 0) + 5; try { paintGems(); } catch (e) {} } else q.l++; q.last = { win, t: opp.title }; if (q.w >= QF_WIN) q.done = 'q'; else if (q.l > QF_N - QF_WIN) q.done = 'x'; save(); }
 const qlActive = () => (S.photos || []).filter(p => p.ql && (!p.ql.done || !p.ql.shown));
 function qlStripHTML() { const A = qlActive(); if (!A.length) return '<div id="qlS"></div>';
   return `<div class="ql-s" id="qlS">${A.slice(0, 2).map(p => { const q = p.ql, dots = Array.from({ length: QF_N }, (_, i) => `<i class="${i < q.w ? 'w' : i < q.w + q.l ? 'l' : ''}"></i>`).join('');
@@ -7047,7 +7063,7 @@ function upDone(p) { qlStart(p); window.__nudgeAt = Date.now();
     <button class="btn block db-go" id="qsJ">⚖️ Judge while you wait</button></div>`);
   $('#qsJ').onclick = () => { popClose(); go('judge'); renderJudge(); }; }
 function qlDone(p) { const q = p.ql; q.shown = 1; window.__nudgeAt = Date.now(); const nm = esc(rcName(p));
-  if (q.done === 'q') { rzAdd(p, 3); S.gems = (S.gems || 0) + 50; p.fin = 1; save();
+  if (q.done === 'q') { rzAdd(p, 3); S.gems = (S.gems || 0) + 50; p.qc = (p.qc || 0) + 50; p.fin = 1; save();
     popOpen(`<div class="pp"><p class="pp-k">🎀 Qualifier · ${q.w} wins, ${q.l} losses</p><h2 class="db-h">${nm} is a finalist!</h2><div class="re-ok"><img src="${p.src}" alt=""><i class="re-rz">${rosette('f')}</i></div>
       <p class="re-rzl">🎀 Finalist rosette · +50 🟡</p><div class="qf-box">🏁 <b>Race it in a Final</b><br>6 finalists · $1 each · 1st <b>$3.50</b> · 2nd <b>$1.60</b></div>
       <button class="btn block db-go cashb" id="qfGo">🏁 Race ${nm} · $1</button><div style="text-align:center"><button class="link pc-later" id="qfL">Later</button></div></div>`);
@@ -7097,6 +7113,22 @@ function vdLine(p) { const q = p.ql; let st = '';
 function earnHeadHTML() { if (!(S.photos || []).length) return ''; const left = 3 - (S.vrq || 0), t = S.entT || 0, A = qlReal();
   return `<div class="ern"><p class="ern-k">🎀 Your photos in play</p><p class="ern-top">${A.filter(p => p.ql && !p.ql.done).length} qualifying · ${A.filter(p => p.fin).length} ready to race · ${A.filter(p => p.raced).length} raced</p>
     <p class="ern-top">${t ? `🎟️ <b>${t} entry ticket${t > 1 ? 's' : ''}</b> ready` : `🎟️ Judge <b>${left} more round${left === 1 ? '' : 's'}</b> for your next entry`}</p><button class="btn block db-go" onclick="finPick()">📷 Enter a photo</button></div>`; }
+function qlStripHTML() { const now = Date.now(), P = (S.photos || []).filter(p => p.ql && (!p.ql.done || !p.ql.shown || p.fin || (p.raced && now - p.raced.at < 3 * 3600e3) || (p.ql.done === 'x' && now - (p.ql.at || 0) < 3600e3))).slice(0, 3);
+  if (!P.length) return '<div id="qlS"></div>';
+  return `<div class="qv ${P.length > 1 ? 'cmp' : ''}" id="qlS"><p class="qv-h">📷 Your photos in play</p>${P.map(p => { const q = p.ql, st = p.raced ? 3 : p.fin || q.done === 'q' ? 2 : 1, out = q.done === 'x';
+    const tag = (i, l) => `<span class="${st > i ? 'done' : st === i ? (out && i === 1 ? 'out' : 'on') : ''}">${l}</span>`;
+    let info;
+    if (p.raced) info = `🏁 Final: <b>${ppOrd(p.raced.rank)}</b>${p.raced.prize ? ` · won <b class="cash">${money(p.raced.prize)}</b>` : ' · rosette kept'}`;
+    else if (p.fin || q.done === 'q') info = `🎀 <b>Finalist!</b> Race it in a Final <button class="btn db-go cashb ql-btn" data-qfr="${p.id}">🏁 Race · $1</button>`;
+    else if (out) info = `Out at ${q.w}–${q.l} · <b>${QF_WIN - q.w}</b> win${QF_WIN - q.w === 1 ? '' : 's'} short`;
+    else info = `<b>${QF_WIN - q.w} more win${QF_WIN - q.w === 1 ? '' : 's'}</b> to the Final · ${QF_N - QF_WIN + 1 - q.l} loss${QF_N - QF_WIN + 1 - q.l === 1 ? '' : 'es'} to spare`;
+    return `<div class="qv-r ${out ? 'out' : ''} ${st >= 2 && !out ? 'fin' : ''}"><img src="${p.src}" alt=""><div class="qv-b">
+      <div class="qv-t"><b>${esc(rcName(p))}</b><em>🟡 +${p.qc || 0}</em></div>
+      <div class="qv-st">${tag(1, 'Qualifier')}<i>›</i>${tag(2, 'Final')}<i>›</i>${tag(3, 'Prize')}</div>
+      <div class="qv-bar"><i style="width:${Math.min(100, q.w / QF_WIN * 100)}%"></i><u>🏁</u></div>
+      <div class="qv-n"><span class="w">✓ ${q.w} won</span><span class="l">✕ ${q.l} lost</span><span>${q.w} / ${QF_WIN} wins</span></div>
+      <small>${info}</small>${!q.done && q.last ? `<small class="${q.last.win ? 'w' : 'l'}">${q.last.win ? '✓ just beat' : '✕ just lost to'} “${esc(q.last.t)}”${q.last.win ? ' · +5 🟡' : ''}</small>` : ''}</div></div>`; }).join('')}</div>`; }
+(() => { const rj = renderJudge; renderJudge = function () { const r = rj.apply(this, arguments); try { const e = document.getElementById('qlS'), top = document.getElementById('vrTop'); if (e && top) top.parentNode.insertBefore(e, top); } catch (x) {} return r; }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
