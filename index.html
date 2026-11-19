@@ -1511,6 +1511,27 @@ html body .ctc-g b{color:#F3D98B!important;-webkit-text-fill-color:#F3D98B;font-
 html body .ppop .ct-t .btn{width:auto;flex:none;padding:10px 14px;font-size:.9rem;margin:0}
 .ct-none{font-size:.88rem;margin:6px 0 10px}
 .ct-m{margin:-4px 0 8px;font-size:.82rem;color:#2F6B3F;font-weight:700}
+.db-trk{position:relative}
+html body .db-ln{height:38px!important}html body .db-hs{font-size:1.7rem!important}
+.db-cd{position:absolute;inset:0;display:grid;place-items:center;font:900 3.4rem/1 Fraunces,Georgia,serif;color:#F3D98B;-webkit-text-fill-color:#F3D98B;opacity:0;pointer-events:none;text-shadow:0 4px 16px rgba(0,0,0,.5)}
+.db-cd.on{animation:cdPop .5s ease-out both}.db-cd.go{color:#7FE08A;-webkit-text-fill-color:#7FE08A}
+@keyframes cdPop{0%{opacity:0;transform:scale(2.2)}30%{opacity:1;transform:scale(1)}100%{opacity:.9;transform:scale(.95)}}
+.db-com{margin:8px 0 0;text-align:center;font:900 .95rem Nunito,system-ui,sans-serif;color:#14213D;min-height:1.3em}.db-com.pop{animation:stkBump .35s ease-out}
+.pfx{position:fixed;inset:0;z-index:2147483600;display:grid;place-items:center;background:#fff;animation:pfx 1.4s ease-out both;pointer-events:none}
+.pfx b{font:900 2rem Fraunces,Georgia,serif;color:#14213D;letter-spacing:.04em;animation:pfxT 1.4s ease-out both}
+@keyframes pfx{0%{opacity:0}8%{opacity:1}40%{opacity:.92}100%{opacity:0}}@keyframes pfxT{0%{transform:scale(1.4);opacity:0}20%{transform:scale(1);opacity:1}80%{opacity:1}100%{opacity:0}}
+.vd-n.done{animation:stkBump .4s ease-out}
+.vd-meter{position:relative;height:12px;margin:8px 8% 6px;border-radius:6px;background:#EEE6D8;overflow:visible}.vd-meter i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:6px;background:linear-gradient(90deg,#E9B949,#2F6B3F);animation:vdM 1.2s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes vdM{to{width:var(--w)}}.vd-meter u{position:absolute;left:60%;top:-5px;bottom:-5px;width:3px;border-radius:2px;background:#14213D}
+.vd-meter u::after{content:'Play Pool';position:absolute;top:-17px;left:50%;transform:translateX(-50%);font:900 .62rem Nunito,system-ui,sans-serif;color:#14213D;white-space:nowrap;text-decoration:none}
+.vdx .vd-beat,.vdx .vd-pool{animation:vdIn .45s ease-out 1.3s both}@keyframes vdIn{from{opacity:0;transform:translateY(8px)}}
+.gx-new{margin:0;padding:12px;border-radius:12px;background:#FFF8E6;box-shadow:inset 0 0 0 1.5px #EADCC6;font-weight:900;color:#14213D;text-align:center}.gx-new small{font-weight:600;font-size:.76rem;color:#5B4A3F}
+.vd-e::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:#2F9E4F;margin-right:6px;vertical-align:1px;animation:liveDot 1.4s ease-in-out infinite}
+@keyframes liveDot{50%{opacity:.25;transform:scale(.7)}}
+html body .gmc .gmc-live{font-style:normal;font-size:.7rem;font-weight:800;color:#9FE3AE!important;-webkit-text-fill-color:#9FE3AE;margin-top:4px}
+html body .gmc .gmc-live::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#5FD37A;margin-right:5px;animation:liveDot 1.4s ease-in-out infinite}
+html body .vd-meter{margin-top:24px}
+.vd-box{margin:0 0 8px;padding:10px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1.5px #EADCC6;text-align:left}.vd-box .vd-l{margin:2px 0;font-size:.8rem;line-height:1.35}
 </style>
 </head>
 <body>
@@ -3700,7 +3721,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v146</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v147</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -6530,7 +6551,7 @@ function derbyRun(t, O, seed) { const r = cpRng(seed * 7 + 11), pairs = cpPairs(
       me.sc += pts; me.tm += tm; if (okk) me.ok++; O.forEach(o => { o.sc += o.res[i].pts; o.tm += o.res[i].tm; });
       document.querySelectorAll('#dbPair [data-dp]').forEach(x => { const a = x.dataset.dp === 'a', pc = a ? p.pa : 100 - p.pa; x.classList.add(pc >= 50 ? 'crowd' : 'not'); x.querySelector('.db-pc').textContent = pc + '%'; });
       b.classList.add(okk ? 'ok' : 'bad'); const F = $('#dbFb'); F.className = 'db-fb ' + (okk ? 'ok' : 'bad'); F.innerHTML = okk ? `✓ Crowd pick · <b>+${pts}</b>${pts > 10 ? ` (speed +${pts - 10})` : ''}` : '✕ The crowd picked the other photo';
-      try { navigator.vibrate && navigator.vibrate(okk ? 12 : [25, 30, 25]); } catch (e) {} paint(); i++;
+      try { navigator.vibrate && navigator.vibrate(okk ? 12 : [25, 30, 25]); } catch (e) {} paint(); i++; try { raceCall(R, me, i, DB_N); } catch (e) {}
       setTimeout(() => { if (i < DB_N) { F.className = 'db-fb'; F.textContent = 'Tap a photo · faster = more points'; show(); } else { clearInterval(clk); derbyEnd(t, R); } }, 1100); }); };
   show(); }
 function derbyEnd(t, R) { const ord = R.slice().sort((a, b) => b.sc - a.sc || a.tm - b.tm), pl = ord.findIndex(x => x.me) + 1, [p1, p2] = dbPrize(t), prize = pl === 1 ? p1 : pl === 2 ? p2 : 0, me = R[0];
@@ -6555,7 +6576,7 @@ const GM = {
 const GM_FEES = [{ fee: 25, coins: 1 }, { fee: 1 }, { fee: 2 }, { fee: 5 }, { fee: 10 }];
 const gmPay = (g, t, k) => { const m = g.mult[k]; if (!m) return 0; return t.coins ? Math.round(m * t.fee) : +(m * t.fee).toFixed(2); };
 const gmAmt = (t, v) => t.coins ? `${v} 🟡` : money(v);
-function gmCardsHTML() { return `<div class="gmr"><p class="gmr-h">Photo games · race real players</p><div class="gmr-g">${Object.entries(GM).map(([k, g]) => `<button class="gmc" data-gm="${k}"><span class="gmc-ic">${g.ic}</span><b>${g.t}</b><small>${g.sub}</small></button>`).join('')}</div></div>`; }
+function gmCardsHTML() { return `<div class="gmr"><p class="gmr-h">Photo games · race real players</p><div class="gmr-g">${Object.entries(GM).map(([k, g]) => `<button class="gmc" data-gm="${k}"><span class="gmc-ic">${g.ic}</span><b>${g.t}</b><small>${g.sub}</small><em class="gmc-live">${gmLive(k)} playing</em></button>`).join('')}</div></div>`; }
 document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-gm]'); if (b) { e.preventDefault(); popClose(); setTimeout(() => gmOpen(b.dataset.gm), 120); } });
 function gmHub() { popOpen(`<div class="pp gmx"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🎮 Photo games</p><h2 class="db-h">Race real players</h2><p class="db-s">Same photo pairs for everyone. Read the crowd better, win.</p>${gmCardsHTML()}<p class="db-sim">Prototype: opponents are simulated</p></div>`);
   document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose()); }
@@ -6591,7 +6612,7 @@ function gmRace(mode, t, O, seed) { const g = GM[mode], r = cpRng(seed * 7 + 11)
   const lanes = () => { const L = big ? (() => { const s2 = R.slice().sort((a, b) => b.sc - a.sc || a.tm - b.tm), top = s2.slice(0, 4); if (!top.includes(me)) top.push(me); return top.map(x => [x, s2.indexOf(x) + 1]); })() : R.map(x => [x, 0]);
     return L.map(([x, rk], k) => `<div class="db-ln ${x.me ? 'me' : ''}"><span class="db-nm">${rk ? `<em>${rk}</em> ` : ''}${x.me ? 'You' : '@' + esc(x.h)}</span><span class="db-rail"><i class="db-hs" id="dbH${big ? 'b' + k : R.indexOf(x)}" style="left:${Math.min(86, x.sc / MAX * 86 * 1.25)}%"><u style="background:${x.c}"></u>🏇</i></span><b class="db-sc">${x.sc}</b></div>`).join(''); };
   popOpen(`<div class="pp dbx dbr"><div class="db-top"><b id="dbQ">Pair 1 of ${DB_N}</b>${big ? `<span id="gmPos">— of ${g.n}</span>` : ''}<span id="dbClk">0.0s</span></div>
-    <div class="db-trk" id="dbTrk">${lanes()}<i class="db-fin"></i></div>
+    <div class="db-trk" id="dbTrk">${lanes()}<i class="db-fin"></i><b class="db-cd" id="dbCd"></b></div><p class="db-com" id="dbCom">🏁 Under starter’s orders…</p>
     <h3 class="db-qh">Which photo did the crowd pick?</h3><div class="db-pair" id="dbPair"></div><p class="db-fb" id="dbFb">Tap a photo · faster = more points</p></div>`);
   let i = 0, tq = 0, lock = false; const clk = setInterval(() => { const c = document.getElementById('dbClk'); if (!c) { clearInterval(clk); return; } c.textContent = `${((Date.now() - tq) / 1000).toFixed(1)}s`; }, 100);
   const paint = () => { if (big) { const T = document.getElementById('dbTrk'); if (T) T.innerHTML = lanes() + '<i class="db-fin"></i>'; const s2 = R.slice().sort((a, b) => b.sc - a.sc || a.tm - b.tm), P = document.getElementById('gmPos'); if (P) P.textContent = `${ppOrd(s2.indexOf(me) + 1)} of ${g.n}`; return; }
@@ -6602,9 +6623,9 @@ function gmRace(mode, t, O, seed) { const g = GM[mode], r = cpRng(seed * 7 + 11)
       me.sc += pts; me.tm += tm; if (okk) me.ok++; O.forEach(o => { o.sc += o.res[i].pts; o.tm += o.res[i].tm; });
       document.querySelectorAll('#dbPair [data-dp]').forEach(x => { const a = x.dataset.dp === 'a', pc = a ? p.pa : 100 - p.pa; x.classList.add(pc >= 50 ? 'crowd' : 'not'); x.querySelector('.db-pc').textContent = pc + '%'; });
       b.classList.add(okk ? 'ok' : 'bad'); const F = $('#dbFb'); F.className = 'db-fb ' + (okk ? 'ok' : 'bad'); F.innerHTML = okk ? `✓ Crowd pick · <b>+${pts}</b>${pts > 10 ? ` (speed +${pts - 10})` : ''}` : '✕ The crowd picked the other photo';
-      try { navigator.vibrate && navigator.vibrate(okk ? 12 : [25, 30, 25]); } catch (e) {} paint(); i++;
-      setTimeout(() => { if (i < DB_N) { F.className = 'db-fb'; F.textContent = 'Tap a photo · faster = more points'; show(); } else { clearInterval(clk); gmEnd(mode, t, R, me.ok, DB_N); } }, 1100); }); };
-  show(); }
+      try { navigator.vibrate && navigator.vibrate(okk ? 12 : [25, 30, 25]); } catch (e) {} paint(); i++; try { raceCall(R, me, i, DB_N); } catch (e) {}
+      setTimeout(() => { if (i < DB_N) { F.className = 'db-fb'; F.textContent = 'Tap a photo · faster = more points'; show(); } else { clearInterval(clk); photoFinish(() => gmEnd(mode, t, R, me.ok, DB_N)); } }, 1100); }); };
+  raceGo(show); }
 function gmStreak(mode, t, O, seed) { const g = GM[mode], r = cpRng(seed * 5 + 3), MAXS = 25, pairs = hsPairs(MAXS, seed * 5 + 3), me = { h: 'You', c: '#D9AE4F', sc: 0, tm: 0, ok: 0, me: 1 };
   O.forEach(o => { let n = 0; const p = Math.min(.93, o.acc + .17); while (n < MAXS && r() < p) n++; o.sc = n; o.tm = n * (1.6 + r() * 2.4); });
   const board = () => O.slice().sort((a, b) => b.sc - a.sc).map(o => `<div class="${me.sc > o.sc ? 'pass' : ''}"><i style="background:${o.c}">${esc(o.h[0].toUpperCase())}</i><b>@${esc(o.h)}</b><em>🔥 ${o.sc}</em>${me.sc > o.sc ? '<u>passed ✓</u>' : ''}</div>`).join('');
@@ -6686,7 +6707,7 @@ function gmFeedHTML() { const r = cpRng(Math.floor(Date.now() / 90000)), G = ['G
 function gmFreeRealHTML() { return !isCash() && !S.frGiven && frReady() ? `<button class="gmfr" data-freereal><span>🎟️</span><b>Your first real game is on us</b><small>$1 Match Race · win $1.70 real cash</small></button>` : ''; }
 function gmCardsHTML() { const real = isCash();
   return `<div class="gmr"><p class="gmr-h">Photo games · ${real ? 'real cash' : 'coin games'}</p>${real && (S.bonus || 0) > 0 ? `<p class="gmr-b">🎁 Bonus Cash <b>${money(S.bonus)}</b> · used first on entries</p>` : ''}${real && (S.cashTix || 0) > 0 ? `<p class="gmr-b">🎟️ ${S.cashTix} free $1 ticket${S.cashTix > 1 ? 's' : ''}</p>` : ''}${gmFreeRealHTML()}
-    <div class="gmr-g">${Object.entries(GM).map(([k, g]) => `<button class="gmc" data-gm="${k}"><span class="gmc-ic">${g.ic}</span><b>${g.t}</b><small>${g.sub}</small></button>`).join('')}</div>${real ? gmFeedHTML() : ''}</div>`; }
+    <div class="gmr-g">${Object.entries(GM).map(([k, g]) => `<button class="gmc" data-gm="${k}"><span class="gmc-ic">${g.ic}</span><b>${g.t}</b><small>${g.sub}</small><em class="gmc-live">${gmLive(k)} playing</em></button>`).join('')}</div>${real ? gmFeedHTML() : ''}</div>`; }
 document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-freereal]'); if (b) { e.preventDefault(); freeRealStart(); } });
 function freeRealStart() { if (isCash()) { gmHub(); return; } try { popClose(); closeFlow(); } catch (e) {} S.cashTix = (S.cashTix || 0) + 1; S.frGiven = 1; save(); try { paintWallet(); } catch (e) {}
   setTimeout(() => { window.__forceReal = 1; gmOpen('match', 1); setTimeout(() => { const b = document.getElementById('dbGo'); b && b.click(); }, 80); }, 250); }
@@ -6764,11 +6785,11 @@ function photoMoment() { S.phAsked = 1; save(); window.__nudgeAt = Date.now();
 function verdictShow(p) { const r = cpRng(ppHash('vd:' + p.id)), pct = p.starter ? 72 : Math.round(52 + r() * 28), beat = Math.max(2, Math.min(9, Math.round((pct - 45) / 4))), cat = ({ pets: 'pet', nature: 'nature', garden: 'garden' })[photoShow(p) || 'pets'] || 'pet';
   window.__vdAt = Date.now(); p.vd = { pct, beat, at: Date.now() }; p.views = Math.max(p.views || 20, 20); p.pool = pct >= 60 ? Date.now() : 0; p.plAt = p.starter ? Date.now() - 40 * 60e3 : Date.now(); save(); window.__nudgeAt = Date.now();
   popOpen(`<div class="pp vdx"><p class="pp-k">📷 ${p.starter ? 'Your starter photo' : 'Your photo'}</p><h2 class="db-h">Its first 20 votes are in</h2>
-    <div class="vd-ph"><img src="${p.src}" alt=""></div><div class="vd-big"><b>${pct}%</b><span>of voters picked it</span></div>
-    <p class="vd-beat">Better than <b>${beat} in 10</b> ${esc(cat)} photos</p>${p.pool ? `<p class="vd-pool ok">🎉 It made the <b>Play Pool</b>: it now appears in real games and ${p.starter ? 'earns coins' : 'earns you cash'} every time it’s played.</p>` : `<p class="vd-pool">Just short of the <b>Play Pool</b> (60%+). Photos in the pool earn every time they’re played. Try a stronger shot?</p>`}
+    <div class="vd-ph"><img src="${p.src}" alt=""></div><div class="vd-big"><b class="vd-n" data-to="${pct}">0%</b><span>of voters picked it</span></div>
+    <div class="vd-meter"><i style="--w:${pct}%"></i><u title="Play Pool"></u></div><p class="vd-beat">Better than <b>${beat} in 10</b> ${esc(cat)} photos</p>${p.pool ? `<p class="vd-pool ok">🎉 It made the <b>Play Pool</b>: it now appears in real games and ${p.starter ? 'earns coins' : 'earns you cash'} every time it’s played.</p>` : `<p class="vd-pool">Just short of the <b>Play Pool</b> (60%+). Photos in the pool earn every time they’re played. Try a stronger shot?</p>`}
     <p class="db-s">It’s in the qualifiers now. <b>Every vote you cast = 1 more view</b> for it. Full result tomorrow.${p.starter ? '<br><small>Starter photos earn coins only. Upload your own to earn cash.</small>' : ''}</p>
     ${p.starter ? '' : '<button class="btn block db-go cashb" id="vdCt">🏆 Enter today’s contest</button>'}<button class="btn block db-go" id="vdVote">⚖️ Vote to move it up</button><div style="text-align:center"><button class="link pc-later" id="vdMore">📷 ${p.starter ? 'Upload one of yours' : 'Add another photo'}</button></div></div>`);
-  setTimeout(() => { try { rvConfetti(document.querySelector('.vdx'), 30); } catch (e) {} }, 300);
+  vdCount(); setTimeout(() => { try { if (p.pool) rvConfetti(document.querySelector('.vdx'), 40); } catch (e) {} }, 1450);
   $('#vdVote').onclick = () => { popClose(); go('judge'); renderJudge(); }; if ($('#vdCt')) $('#vdCt').onclick = () => { popClose(); setTimeout(() => ctOpen(photoShow(p), p.id), 200); }; $('#vdMore').onclick = () => { popClose(); setTimeout(finPick, 200); }; }
 const CAL_R = [20, 30, 40, 50, 60, 80, 150];
 function calShow() { const t = new Date().toDateString(), y = new Date(Date.now() - 864e5).toDateString(), C = S.cal || {}; const n = C.last === y ? Math.min(7, (C.n || 0) + 1) : 1; const day = C.last === y && C.n === 7 ? 1 : n;
@@ -6871,6 +6892,26 @@ function frNudge() { S.frNudged = 1; save(); window.__nudgeAt = Date.now();
     <button class="btn block db-go cashb" id="fnGo">🎟️ Play my free real game</button><div style="text-align:center"><button class="link pc-later" id="fnLater">Later</button></div></div>`);
   $('#fnGo').onclick = () => { popClose(); setTimeout(freeRealStart, 200); }; $('#fnLater').onclick = () => popClose(); }
 (() => { const ur = upReady; upReady = function (p) { if (p && p.starter) { p.nmAsk = 1; p.framed = Date.now(); S.ffDone = 1; save(); try { closeFlow(); } catch (e) {} try { const fp = document.getElementById('finPick'); if (fp) fp.className = ''; myShow(); } catch (e) {} setTimeout(() => upDone(p), 300); return; } return ur(p); }; })();
+function raceGo(go) { const el = document.getElementById('dbCd'), com = document.getElementById('dbCom'), P = document.getElementById('dbPair'); if (!el) { go(); return; }
+  if (P) P.style.visibility = 'hidden'; const seq = ['3', '2', '1', 'GO!']; let k = 0;
+  const step = () => { const e2 = document.getElementById('dbCd'); if (!e2) return; if (k < seq.length) { e2.textContent = seq[k]; e2.className = 'db-cd on' + (k === 3 ? ' go' : ''); try { navigator.vibrate && navigator.vibrate(k === 3 ? 30 : 8); } catch (e) {} k++; setTimeout(step, k === 4 ? 450 : 520); }
+    else { e2.className = 'db-cd'; if (P) P.style.visibility = ''; if (com) com.textContent = '🏇 And they’re off!'; go(); } };
+  step(); }
+function raceCall(R, me, i, N) { const c = document.getElementById('dbCom'); if (!c) return; const o = R.slice().sort((a, b) => b.sc - a.sc || a.tm - b.tm), rk = o.indexOf(me) + 1, lead = o[0] === me ? o[1] : o[0], gap = Math.abs(me.sc - lead.sc), nm = x => x.me ? 'You' : '@' + esc(x.h);
+  const prev = c.dataset.rk ? +c.dataset.rk : 0; c.dataset.rk = rk; let t;
+  if (i >= N) t = '📸 Across the line…'; else if (prev && rk < prev && rk === 1) t = '🔥 You take the lead!'; else if (rk === 1 && gap >= 25) t = `🏇 You’re clear by ${gap} points!`;
+  else if (gap <= 6) t = `⚡ Neck and neck with ${nm(lead)}!`; else if (prev && rk < prev) t = `▲ Up to ${ppOrd(rk)}!`; else if (prev && rk > prev) t = `▼ ${nm(o[rk - 2])} slips past you`;
+  else if (i === N - 2) t = '🏁 Final stretch: 2 pairs to go!'; else t = rk === 1 ? '🏇 Holding the lead…' : `${nm(o[0])} leads · you’re ${ppOrd(rk)}, ${gap} behind`;
+  c.innerHTML = t; c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); }
+function photoFinish(then) { const f = document.createElement('div'); f.className = 'pfx'; f.innerHTML = '<b>📸 PHOTO FINISH</b>'; document.body.appendChild(f); try { navigator.vibrate && navigator.vibrate([20, 60, 20]); } catch (e) {}
+  setTimeout(() => { then(); }, 900); setTimeout(() => f.remove(), 1400); }
+function vdCount() { const el = document.querySelector('#coach .vd-n'); if (!el) return; const to = +el.dataset.to, t0 = Date.now(), D = 1200;
+  const tick = () => { const e2 = document.querySelector('#coach .vd-n'); if (!e2) return; const k = Math.min(1, (Date.now() - t0) / D), v = Math.round(to * (1 - Math.pow(1 - k, 3))); e2.textContent = v + '%'; if (k < 1) requestAnimationFrame(tick); else { e2.classList.add('done'); try { navigator.vibrate && navigator.vibrate(15); } catch (e) {} } };
+  requestAnimationFrame(tick); }
+function gmLive(k) { const r = cpRng(ppHash(k + Math.floor(Date.now() / 90000))), base = { derby: 140, match: 210, gn: 380, streak: 95 }[k] || 100; return Math.round(base * (.8 + r() * .4)); }
+(() => { const rm = renderMyShow; renderMyShow = function () { const out = rm.apply(this, arguments);
+  try { document.querySelectorAll('#gallery .gx-rec').forEach(x => { const v = [...x.querySelectorAll('b')].map(b => b.textContent.trim()); if (v.every(t => ['$0.00', '0', '–', '-'].includes(t))) { const card = x.closest('.gx-card'); x.outerHTML = card && card.querySelector('.vd-e') ? '' : '<p class="gx-new">🆕 Fresh entry<br><small>Its record starts with its first contest</small></p>'; } }); document.querySelectorAll('#gallery .gx-card').forEach(card => { const side = card.querySelector('.gx-side'), L = card.querySelectorAll('.gx-plq .vd-l'); if (side && L.length) { const box = document.createElement('div'); box.className = 'vd-box'; L.forEach(l => box.appendChild(l)); side.prepend(box); } }); } catch (e) {}
+  return out; }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
