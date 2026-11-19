@@ -1560,6 +1560,9 @@ html.coinp #qsChip,html #judge #qsChip{display:none!important}
 .vrr-rw{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}.vrr-rw div{background:#fff;border-radius:14px;padding:10px;box-shadow:inset 0 0 0 1.5px #EADCC6}.vrr-rw b{display:block;font:900 1.25rem Nunito,system-ui;color:#14213D}.vrr-rw small{font-size:.74rem;color:#5B4A3F}
 .vrr-did{text-align:left;background:#fff;border-radius:14px;padding:10px 12px;margin:0 0 10px;box-shadow:inset 0 0 0 1.5px #EADCC6;font-size:.84rem;line-height:1.5;color:#14213D}
 html body .ppop .vrr .btn.db-go{margin-top:6px}
+.vrq{margin:0 0 8px;padding:12px;border-radius:14px;background:#F1F6EC;box-shadow:inset 0 0 0 2px #2F6B3F;color:#22502F;font-size:.88rem;line-height:1.45;animation:cdPop .5s ease-out both}.vrq b{color:#14213D;font-size:1rem}
+.vrq-p{margin:0 0 6px;font-size:.88rem;color:#14213D}
+.ct-tk{margin:-2px 0 6px;padding:7px 10px;border-radius:10px;background:#F3EEE5;font:700 .84rem Nunito,system-ui;color:#5B4A3F;text-align:left}.ct-tk.ok{background:#F1F6EC;color:#22502F;box-shadow:inset 0 0 0 1.5px #2F6B3F}.ct-tk b{color:#14213D}
 </style>
 </head>
 <body>
@@ -3749,7 +3752,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v149</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v150</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -6885,19 +6888,21 @@ document.addEventListener('click', e => { const b = e.target.closest && e.target
 function ctOpen(cat, pid0) { cat = cat || SHOW_ROT[0].k; const P = (S.photos || []).filter(p => p.framed && !p.starter && photoShow(p) === cat); let pid = pid0 && P.some(p => p.id === pid0) ? pid0 : (P[0] || {}).id;
   const draw = () => { const pp = P.find(x => x.id === pid), pc = (pp && pp.vd && pp.vd.pct) || 60, nf = ctGrp(ctN(cat, 'f'), pc), nc = ctGrp(ctN(cat, 'c'), pc), hasQ = () => ctEntries().some(e => !e.done && e.tier === 'q' && e.pid === pid), has = t => !!(S.ct || {})[ctDay() + cat + t + pid];
     popOpen(`<div class="pp ctx"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🏆 Today’s ${esc(showName(cat))} contests</p><h2 class="db-h">Best ${esc(showName(cat))} photo</h2>
-      <p class="db-s">The crowd’s votes decide. Daily contests close in <b>${ctLeft()}</b>.</p><p class="ct-m">🤝 You’re matched with photos like yours, so every photo has a fair chance.</p>
+      <p class="db-s">The crowd’s votes decide. Daily contests close in <b>${ctLeft()}</b>.</p><p class="ct-tk ${(S.entT || 0) ? 'ok' : ''}">${(S.entT || 0) ? `🎟️ You have <b>${S.entT} entry ticket${S.entT > 1 ? 's' : ''}</b>` : `🔒 Free entries need a ticket · judge <b>${3 - (S.vrq || 0)} more round${3 - (S.vrq || 0) === 1 ? '' : 's'}</b> to earn one`}</p><p class="ct-m">🤝 You’re matched with photos like yours, so every photo has a fair chance.</p>
       ${P.length ? `<p class="ct-l">Your photo</p><div class="ct-ph">${P.map(p => `<button data-ctp="${p.id}" class="${p.id === pid ? 'on' : ''}"><img src="${p.src}" alt=""><small>${esc(rcName(p))}${p.vd ? ` · ${p.vd.pct}%` : ''}</small></button>`).join('')}</div>` : `<p class="ct-none">You need a framed ${esc(showName(cat))} photo to enter.</p>`}
-      <div class="ct-t"><div><b>🎟️ Free daily</b><small>${nf} entries · ${ctTable('f', nf)}</small></div>${P.length ? (has('f') ? '<em>Entered ✓</em>' : '<button class="btn db-go" id="ctF">Enter free</button>') : ''}</div>
+      <div class="ct-t"><div><b>🎟️ Free daily · entry ticket</b><small>${nf} entries · ${ctTable('f', nf)}</small></div>${P.length ? (has('f') ? '<em>Entered ✓</em>' : ((S.entT || 0) ? '<button class="btn db-go" id="ctF">Enter · 🎟️</button>' : '<button class="btn db-go quiet" id="ctLock">🔒 Judge</button>')) : ''}</div>
       <div class="ct-t cash"><div><b>💵 $2 cash daily</b><small>${nc} entries · <b>${money(ctPool(nc))}</b> prize pool · top 10% paid<br>${ctTable('c', nc)}</small></div>${P.length ? (has('c') ? '<em>Entered ✓</em>' : '<button class="btn db-go cashb" id="ctC">Enter · $2</button>') : ''}</div>
-      <div class="ct-t cash"><div><b>⚡ Quick contest · $1</b><small>10 photos · top 3 paid: <b>$4</b> · <b>$2.50</b> · <b>$2</b><br>Result within the hour</small></div>${P.length ? (hasQ() ? '<em>Running ✓</em>' : '<button class="btn db-go cashb" id="ctQ">Enter · $1</button>') : ''}</div>
+      <div class="ct-t cash"><div><b>⚡ Quick contest · $1</b><small>10 photos · top 3 paid: <b>$4</b> · <b>$2.50</b> · <b>$2</b><br>Result within the hour</small></div>${P.length ? (hasQ() ? '<em>Running ✓</em>' : ('<button class="btn db-go cashb" id="ctQ">' + ((S.entT || 0) ? 'Enter · 🎟️' : 'Enter · $1') + '</button>')) : ''}</div>
       ${P.length ? '' : '<button class="btn block db-go" id="ctUp">📷 Add a photo</button>'}
       <p class="db-sim">15% PhotoPicks fee on cash entries · Starter photos can’t enter · Demo: daily results ~10 min, quick ~5 min after entering</p></div>`);
     document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose());
     document.querySelectorAll('#coach [data-ctp]').forEach(b => b.onclick = () => { pid = b.dataset.ctp; window.__keepScroll = 1; draw(); });
     if ($('#ctUp')) $('#ctUp').onclick = () => { popClose(); setTimeout(finPick, 200); };
     const enter = tier => { const k = tier === 'q' ? 'q' + pid + Date.now() : ctDay() + cat + tier + pid; S.ct = S.ct || {}; S.ct[k] = { k, cat, tier, pid, day: ctDay(), at: Date.now(), n: tier === 'q' ? 10 : tier === 'f' ? nf : nc }; save(); toast(tier === 'f' ? '🏆 Entered free · the crowd decides' : tier === 'q' ? '⚡ In a quick contest · result within the hour' : '🏆 Entered the $2 contest'); window.__keepScroll = 1; draw(); };
-    if ($('#ctF')) $('#ctF').onclick = () => enter('f');
-    if ($('#ctQ')) $('#ctQ').onclick = () => needAge(() => { popClose(); payCash(1, 'A $1 quick contest entry', () => setTimeout(() => { enter('q'); }, 250)); });
+    if ($('#ctF')) $('#ctF').onclick = () => { if (!(S.entT > 0)) return; S.entT--; save(); enter('f'); };
+    if ($('#ctLock')) $('#ctLock').onclick = () => { popClose(); go('judge'); renderJudge(); };
+    if ($('#ctQ') && S.entT > 0) $('#ctQ').onclick = () => { S.entT--; save(); enter('q'); };
+    else if ($('#ctQ')) $('#ctQ').onclick = () => needAge(() => { popClose(); payCash(1, 'A $1 quick contest entry', () => setTimeout(() => { enter('q'); }, 250)); });
     if ($('#ctC')) $('#ctC').onclick = () => needAge(() => { popClose(); payCash(2, 'A $2 photo contest entry', () => setTimeout(() => { enter('c'); }, 250)); }); };
   draw(); }
 function ctResult(e) { e.done = 1; const rk = ctRank(e, true), prize = ctPrize(e.tier, e.n, rk), p = (S.photos || []).find(x => x.id === e.pid); e.rank = rk; e.prize = prize;
@@ -6963,7 +6968,7 @@ const vrMine = () => (S.photos || []).filter(p => p.framed).sort((a, b) => (b.st
     return r; };
   renderJudge = function () { const r = rj.apply(this, arguments); try { vrDecor(); } catch (e) {} return r; }; })();
 function vrBarHTML() { const v = S.vr || { n: 1, res: [] }, ok = v.res.filter(Boolean).length;
-  return `<div class="vr-top" id="vrTop"><div><b>Round ${v.n}</b><small>${S.fmPend || S.tut === 1 ? 'Finish it for your free Match Race' : 'Call the crowd · 10 pairs'}</small></div><span class="vr-score">${ok} ✓</span><div class="vr-dots">${Array.from({ length: 10 }, (_, i) => `<i class="${i < v.res.length ? (v.res[i] ? 'ok' : 'no') : i === v.res.length ? 'now' : ''}"></i>`).join('')}</div></div>`; }
+  return `<div class="vr-top" id="vrTop"><div><b>Round ${v.n}</b><small>${S.fmPend || S.tut === 1 ? 'Finish it for your free Match Race' : (S.entT || 0) > 0 ? '🎟️ Entry ticket ready · enter your photo' : `Round ${(S.vrq || 0) + 1} of 3 · earn your photo entry`}</small></div><span class="vr-score">${ok} ✓</span><div class="vr-dots">${Array.from({ length: 10 }, (_, i) => `<i class="${i < v.res.length ? (v.res[i] ? 'ok' : 'no') : i === v.res.length ? 'now' : ''}"></i>`).join('')}</div></div>`; }
 function vrPaint() { const t = document.getElementById('vrTop'); if (t) t.outerHTML = vrBarHTML(); }
 function vrDecor() { const J = document.getElementById('judge'); if (!J || J.querySelector('#vrTop')) return; const h = J.querySelector('.tot-h'), jc = document.getElementById('jcard'); if (!h || !jc) return;
   h.insertAdjacentHTML('beforebegin', vrBarHTML());
@@ -6977,17 +6982,19 @@ function vrEnd() { if (!S.vr || S.vr.res.length < 10) return; if (!freeScreen())
   if (p) { const was = (p.vd && p.vd.pct) || 55; p.views = (p.views || 20) + 10; if (p.vd && !p.pool && !p.starter) { p.vd.pct = Math.min(80, was + Math.floor(cpRng(ppHash(p.id + v.n))() * 3)); if (p.vd.pct >= 60) { p.pool = Date.now(); p.plAt = Date.now(); } }
     const now = (p.vd && p.vd.pct) || was; mv = `📷 <b>${esc(rcName(p))}</b> was shown to 10 more voters${now !== was ? ` · ${was}% → <b>${now}%</b>` : ''}${p.pool && now >= 60 && was < 60 ? '<br>🎉 <b>It made the Play Pool!</b> It now earns every time it’s played.' : ''}`; }
   const first = !!S.fmPend; S.fmPend = 0; const res = v.res.slice(0, 10); S.vr = { n: v.n + 1, res: v.res.slice(10), hot: v.hot }; save(); window.__nudgeAt = Date.now();
-  const head = ok >= 9 ? 'Crowd whisperer!' : ok >= 7 ? 'Sharp eye!' : ok >= 5 ? 'Solid round' : 'Tough round';
+  S.vrq = (S.vrq || 0) + 1; const qual = S.vrq >= 3; if (qual) { S.vrq = 0; S.entT = (S.entT || 0) + 1; } save();
+  const head = qual ? '🎟️ You qualified!' : ok >= 9 ? 'Crowd whisperer!' : ok >= 7 ? 'Sharp eye!' : ok >= 5 ? 'Solid round' : 'Tough round';
   popOpen(`<div class="pp vrr"><p class="pp-k">⚖️ Round ${v.n} complete</p><h2 class="db-h">${head}</h2>
     <div class="vrr-big">${ok}<small>/10</small></div><div class="vrr-dots">${res.map(x => `<i class="${x ? 'ok' : 'no'}">${x ? '✓' : '✕'}</i>`).join('')}</div>
     <p class="vrr-beat">You beat <b>${beat}%</b> of voters this round</p>
     <div class="vrr-rw"><div><b>+${pay} 🟡</b><small>round reward</small></div><div><b>🔥 ${v.hot}</b><small>rounds in a row ≥ 7</small></div></div>
     <div class="vrr-did">⚖️ Your votes helped decide today’s <b>contests</b> and the next <b>Final</b>${mv ? '<br>' + mv : ''}</div>
-    <button class="btn block db-go" id="vrNext">⚖️ Next round</button>
+    ${qual ? `<div class="vrq">🎟️ <b>Entry ticket earned</b><br>Enter your photo in today’s contest, free. The crowd decides, prizes in real cash.</div><button class="btn block db-go cashb" id="vrEnter">📷 Enter your photo · free</button>` : `<p class="vrq-p">Round ${S.vrq} of 3 done · <b>${3 - S.vrq} more</b> to earn a free photo entry</p>`}<button class="btn block db-go ${qual ? 'quiet' : ''}" id="vrNext">⚖️ ${qual ? 'Keep judging' : 'Next round'}</button>
     <button class="btn block db-go ${first || !isCash() ? '' : 'cashb'}" id="vrRace">⚔️ ${first ? 'Your first Match Race · free' : isCash() ? 'Race someone with this eye · $1' : 'Race someone with this eye · 25 🟡'}</button>
     ${p ? `<div style="text-align:center"><button class="link pc-later" id="vrPh">📷 Check on ${esc(rcName(p))}</button></div>` : ''}</div>`);
   setTimeout(() => { try { paintGems(); gemExplosion(pay, { label: `Round ${v.n} · ${ok}/10` }); if (ok >= 8) rvConfetti(document.querySelector('.vrr'), 40); } catch (e) {} }, 300);
   $('#vrNext').onclick = () => { popClose(); try { renderJudge(); } catch (e) {} };
+  if ($('#vrEnter')) $('#vrEnter').onclick = () => { popClose(); const P = (S.photos || []).filter(x => x.framed && !x.starter); setTimeout(() => P.length ? ctOpen(photoShow(P[0]), P[0].id) : finPick(), 200); };
   $('#vrRace').onclick = () => { popClose(); if (first) { S.gems = (S.gems || 0) + 25; save(); paintGems(); } setTimeout(() => { gmOpen('match', isCash() ? 1 : 0); if (first) setTimeout(() => { const b = document.getElementById('dbGo'); b && b.click(); }, 80); }, 200); };
   if ($('#vrPh')) $('#vrPh').onclick = () => { popClose(); go('gallery'); try { renderMyShow(); } catch (e) {} }; }
 function fcNotify() {
