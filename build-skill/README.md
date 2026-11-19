@@ -306,6 +306,8 @@ Then `rmv148.py`: Voting fun pass: hot-streak glow on the vote tiles at 3/5/10 i
 
 Then `rmv149.py`: Voting in rounds of 10: round bar (score, dots), stakes on about 1 in 3 pairs ('Today's Pets contest · fighting for 4th place'), your photo's strip with score and the 60% Play Pool line; end-of-round card with score, dots, 'you beat X% of voters', coins (100/60/40/25/10), rounds-in-a-row, what your votes did and your photo's move (can cross into the Play Pool); Next round / Race with this eye / Check on your photo; first round leads to the free first Match Race. Race clock fixed during the countdown.
 
+Then `rmv150.py`: Judge 3 rounds to earn your photo entry: round bar shows 'Round 2 of 3 · earn your photo entry'; every 3rd round 'You qualified!' with an entry ticket and 'Enter your photo · free' as the main button; free daily needs a ticket ('🔒 Judge'), Quick contest takes a ticket instead of $1, cash $2 entries need none; contest screen shows tickets or rounds to go.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -451,6 +453,7 @@ python3 rmv146.py
 python3 rmv147.py
 python3 rmv148.py
 python3 rmv149.py
+python3 rmv150.py
 ```
 
 ## Skill only
