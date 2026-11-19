@@ -316,6 +316,8 @@ Then `rmv153.py`: Per-photo progress viewer at the top of voting: 'Your photos i
 
 Then `rmv154.py`: watch your photo's qualifier matches live at the top of the Vote screen (7-vote matches, countdown, verdict).
 
+Then `rmv155.py`: the Final is a $2 one-on-one duel (winner takes $3.40), watched live on the Vote screen, with win streaks.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -466,6 +468,7 @@ python3 rmv151.py
 python3 rmv152.py
 python3 rmv153.py
 python3 rmv154.py
+python3 rmv155.py
 ```
 
 ## Skill only
