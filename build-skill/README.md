@@ -290,6 +290,8 @@ Then `rmv140.py`: Stage 3: photo moment after the first game (upload, or try a s
 
 Then `rmv141.py`: Stage 4: Play Pool (photos picked by 60%+ at their verdict), simulated royalties 0.7¢ per play to the cash balance (starter photos 1 coin), earnings card on My Photos (this week, plays, Play Pool count, top earner, how it works), per-photo plays and earnings, 'While you were away' pop with plays and earnings, every 5th vote is a live Final pair tagged 'your vote counts'.
 
+Then `rmv142.py`: Stage 5 daily photo contests (no sponsors): per live category, a free daily (guaranteed $10/$6/$4) and a $2 cash daily (85% of entries, top 10% paid, stepped prizes that add up to the pool), closing at midnight. Pick your photo, enter; live position on My Photos; result with cash prize and a rosette for top 3. Cards on My Photos and Play, 'Enter today's contest' on a verdict. Entrants/rankings simulated; demo results 10 min after entering.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -427,6 +429,7 @@ python3 rmv138.py
 python3 rmv139.py
 python3 rmv140.py
 python3 rmv141.py
+python3 rmv142.py
 ```
 
 ## Skill only
