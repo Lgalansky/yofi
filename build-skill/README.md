@@ -314,6 +314,8 @@ Then `rmv152.py`: The photo loop: newbies start by entering a photo; each photo 
 
 Then `rmv153.py`: Per-photo progress viewer at the top of voting: 'Your photos in play' with stage tracker (Qualifier › Final › Prize), wins bar to 8 with finish flag, won/lost counts, wins to go and losses to spare, last matchup, coins won per photo (+5 per win, +50 for qualifying), finalist Race $1 button, raced place and cash won; compact rows when 2+ photos.
 
+Then `rmv154.py`: watch your photo's qualifier matches live at the top of the Vote screen (7-vote matches, countdown, verdict).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -463,6 +465,7 @@ python3 rmv150.py
 python3 rmv151.py
 python3 rmv152.py
 python3 rmv153.py
+python3 rmv154.py
 ```
 
 ## Skill only
