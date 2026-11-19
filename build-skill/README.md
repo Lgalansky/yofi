@@ -288,6 +288,8 @@ Then `rmv139.py`: Newbie run-through fixes: no age form on arrival (asked once, 
 
 Then `rmv140.py`: Stage 3: photo moment after the first game (upload, or try a starter photo · coins only), 'Collecting its first votes…' then an instant verdict (68% picked it · better than 7 in 10), every vote you cast adds a view to your photos, Gallery → My Photos with views/verdict per photo, 7-day reward calendar, notifications opt-in after the first win, frame screen wording updated.
 
+Then `rmv141.py`: Stage 4: Play Pool (photos picked by 60%+ at their verdict), simulated royalties 0.7¢ per play to the cash balance (starter photos 1 coin), earnings card on My Photos (this week, plays, Play Pool count, top earner, how it works), per-photo plays and earnings, 'While you were away' pop with plays and earnings, every 5th vote is a live Final pair tagged 'your vote counts'.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -424,6 +426,7 @@ python3 rmv137.py
 python3 rmv138.py
 python3 rmv139.py
 python3 rmv140.py
+python3 rmv141.py
 ```
 
 ## Skill only
