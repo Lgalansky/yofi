@@ -278,6 +278,8 @@ Then `rmv134.py`: Quick Sprint pairs: both photos from the same live category; c
 
 Then `rmv135.py`: Photo Derby: 4-rider skill race on the same 10 photo pairs; coins or $1/$2/$5/$10 entry, 15% fee shown, 1st 70% / 2nd 30% of the pool; lobby, live horses, results with Rematch / Step up. Opponents simulated. Card on the Finals tab and in the coins menu.
 
+Then `rmv136.py`: Three more skill games on the Derby engine: Match Race (1v1, win 1.7×), Grand National (50 riders, 1st 15× / 2nd 8× / 3rd 5.5× / 4th–10th 2×), Hot Streak (4 players, one wrong ends your run, longest run wins, opponents' streaks shown as targets). Coins or $1–$10, 15% fee shown, Rematch / Step up / Other games. Games row on the Finals tab, 'Photo games' in the coins menu. Opponents simulated.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -409,6 +411,7 @@ python3 rmv132.py
 python3 rmv133.py
 python3 rmv134.py
 python3 rmv135.py
+python3 rmv136.py
 ```
 
 ## Skill only
