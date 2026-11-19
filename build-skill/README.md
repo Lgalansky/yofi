@@ -296,6 +296,8 @@ Then `rmv143.py`: Hidden fair matching: daily contests split into groups of simi
 
 Then `rmv144.py`: First-session pacing: first game matched with newer (weaker simulated) players; free real game offer waits until after the photo verdict (or a skipped photo moment) and arrives as its own 'Now race for real cash' moment; starter photo auto-framed (3 screens to the verdict); daily reward only in the first 90 s of a later session; Play tab shows games only.
 
+Then `rmv145.py`: Four of the owner's own photos added to the library: Pets 'Morning run' (Labrador on the dunes); Nature 'Golden cliff', 'Sea of flowers', 'Desert pause'. Cropped to 3:4 portrait. Pets now 7 photos, Nature 11.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -436,6 +438,7 @@ python3 rmv141.py
 python3 rmv142.py
 python3 rmv143.py
 python3 rmv144.py
+python3 rmv145.py
 ```
 
 ## Skill only
