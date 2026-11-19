@@ -1680,6 +1680,13 @@ html body .mp-ent b{font:800 .95rem/1.3 Nunito,system-ui}html body .mp-ent .mp-i
 .qv2-l.w{background:#F1F6EC;color:#22502F}.qv2-l.l{background:#F9ECE8;color:#A6402F}.qv2-l b{color:#14213D}.qv2-l.nw{animation:qmFl .4s ease-out both}
 .vrqb{margin:6px 2px 8px;padding:8px 12px;border-radius:12px;background:#F1F6EC;box-shadow:inset 0 0 0 1.5px #2F6B3F;font:700 .84rem Nunito,system-ui;color:#22502F;text-align:center;animation:qmFl .35s ease-out both;transition:opacity .4s}
 .vrqb b{color:#14213D}.vrqb small{display:block;font-size:.76rem;color:#3D4A5C}.vrqb.bye{opacity:0}
+html body #judge .dpr{display:none!important}
+.ldb{margin:6px 2px 8px;padding:8px 12px;border-radius:14px;background:#14213D;box-shadow:0 0 0 2px #D9AE4F;text-align:center;animation:qmFl .35s ease-out both}
+.ldb-h{display:flex;align-items:center;gap:8px;margin:0 0 4px}.ldb-h b{font:900 .8rem Nunito,system-ui;letter-spacing:.05em;text-transform:uppercase;color:#F3D98B}.ldb-h em{margin-left:auto;font-style:normal;font:800 .72rem Nunito,system-ui;color:#fff;background:#2F6B3F;border-radius:999px;padding:2px 8px}
+.ldb-s{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}.ldb-s span{font:800 .74rem Nunito,system-ui;color:#C9D3E6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ldb-s span:first-child{text-align:right}.ldb-s span:last-child{text-align:left}
+.ldb-s b{font:900 1.5rem/1 Fraunces,Georgia,serif;color:#fff}.ldb-s b.bp{animation:qmBp .45s ease-out}
+.ldb-f{margin:4px 0 0;font:700 .74rem Nunito,system-ui;color:#C9D3E6}.ldb-f b{color:#F3D98B}.ldb-f i{font-style:normal;color:#8C9AB5;font-size:.66rem}.ldb.done .ldb-f{color:#9FE3AE}
+html body #judge:has(.ldb) .vr-stake{display:none}
 </style>
 </head>
 <body>
@@ -3869,7 +3876,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v158</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v159</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -7196,7 +7203,7 @@ function vdLine(p) { const q = p.ql; let st = '';
 function earnHeadHTML() { if (!(S.photos || []).length) return ''; const left = 3 - (S.vrq || 0), t = S.entT || 0, A = qlReal();
   return `<div class="ern"><p class="ern-k">🎀 Your photos in play</p><p class="ern-top">${A.filter(p => p.ql && !p.ql.done).length} qualifying · ${A.filter(p => p.fin).length} finalist${A.filter(p => p.fin).length === 1 ? '' : 's'} · ${A.filter(p => p.dr).length} duelled</p>
     <p class="ern-top">${t ? `🎟️ <b>${t} entry ticket${t > 1 ? 's' : ''}</b> ready` : `🎟️ Judge <b>${left} more round${left === 1 ? '' : 's'}</b> for your next entry`}</p><button class="btn block db-go" onclick="finPick()">📷 Enter a photo</button></div>`; }
-function qlStripHTML() { const now = Date.now(), P = (S.photos || []).filter(p => p.ql && (!p.ql.done || !p.ql.shown || p.fin || (p.raced && now - p.raced.at < 3 * 3600e3) || (p.ql.done === 'x' && now - (p.ql.at || 0) < 3600e3))).slice(0, 3);
+function qlStripHTML() { const now = Date.now(), P = (S.photos || []).filter(p => p.ql && (!p.ql.done || !p.ql.shown || p.fin || (p.du && !p.du.shown))).slice(0, 3);
   if (!P.length) return '<div id="qlS"></div>';
   return `<div class="qv ${P.length > 1 ? 'cmp' : ''}" id="qlS"><p class="qv-h">📷 Your photos in play</p>${P.map(p => { const q = p.ql, st = (p.dr && p.dr.w) || (p.raced && !p.dr) ? 3 : p.fin || q.done === 'q' ? 2 : 1, out = q.done === 'x';
     const tag = (i, l) => `<span class="${st > i ? 'done' : st === i ? (out && i === 1 ? 'out' : 'on') : ''}">${l}</span>`;
@@ -7392,6 +7399,17 @@ function qlLiveHTML(p) { const q = p.ql, L = q.last, nw = L && Date.now() - (q.f
     <div class="qv2-p">${pips}<u style="left:calc(${QF_WIN / QF_N * 100}% - 1px)"></u></div>
     <p class="qv2-l ${L ? (L.win ? 'w' : 'l') : ''} ${nw ? 'nw' : ''}">${L ? `${L.src ? `<img src="${L.src}" alt="">` : ''}<span>${L.win ? `✓ A voter picked <b>${esc(rcName(p))}</b> over “${esc(L.t)}” · +5 🟡` : `✕ A voter picked “${esc(L.t)}” over ${esc(rcName(p))}`}</span>` : '⏳ Votes are coming in…'}</p></div>`; }
 function qlPaint() { const e = document.getElementById('qlS'); if (e) e.outerHTML = qlStripHTML(); }
+function prNew() { return; }
+try { if (S && S.pr) { S.pr = null; } } catch (e) {}
+function ldBanner() { const jc = document.getElementById('jcard'), top = document.getElementById('vrTop'), o = document.getElementById('ldB'); if (o) o.remove(); if (!window.__finPair || !jc || !top) return;
+  const r = cpRng((S.votes || 0) * 7 + 3), h = () => '@' + QS_NAMES[Math.floor(r() * QS_NAMES.length)], a = 3 + Math.floor(r() * 5), b = 3 + Math.floor(r() * 5), left = 15 - a - b;
+  window.__ld = { a, b, ha: h(), hb: h() };
+  top.insertAdjacentHTML('afterend', `<div class="ldb" id="ldB"><p class="ldb-h"><span class="qm-live">● LIVE</span><b>🥊 $2 duel</b><em>winner takes ${money(DU_PRIZE)}</em></p>
+    <div class="ldb-s"><span>${window.__ld.ha}</span><b id="ldS">${a} – ${b}</b><span>${window.__ld.hb}</span></div>
+    <p class="ldb-f" id="ldF">⏱ ${left} votes to go · <b>your vote decides it</b> · <i>simulated</i></p></div>`); }
+(() => { const rj = renderJudge; renderJudge = function () { const r = rj.apply(this, arguments); try { ldBanner(); } catch (e) {} return r; }; })();
+(() => { const cf = callFx; callFx = function (pick) { const r = cf.apply(this, arguments); try { const L = window.__ld, s1 = document.getElementById('ldS'), f = document.getElementById('ldF');
+  if (L && window.__finPair && s1) { if (pick === 0) L.a++; else L.b++; s1.textContent = `${L.a} – ${L.b}`; s1.classList.add('bp'); f.innerHTML = `✓ <b>Your vote counted</b> · ${L.a === L.b ? 'all square' : `${L.a > L.b ? L.ha : L.hb} leads`} · ${15 - L.a - L.b} to go`; document.getElementById('ldB').classList.add('done'); } } catch (e) {} return r; }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -7619,7 +7637,7 @@ function renderJudge() {
   const left = CFG.BATTLE_EVERY - S.since, ds = dailyState(), combo = S.combo || 0;
   const [pa, pb] = seedPair();
   const inTour = S.tour && !S.tour.seen;
-  $('#judge').innerHTML = `${false && inTour ? `<button class="tjs" id="tjStrip"><span class="tjs-h tk-w-in"></span></button>` : waitCardHTML()}<div class="vstrip"><button class="vs-en ${energy() <= 10 ? 'low' : ''}" id="vsEn" aria-label="Energy. Tap to buy more"><span>⚡</span><b>${energy()}</b><i>+</i></button><button class="vs-tk" id="vsTk" aria-label="Free tournament entries"><span>🎟️</span><b>${S.cashTix || 0}</b><small>${S.tixDay === frHourKey() && S.tixToday ? `next in ${frMinsLeft()}m` : `${S.tixV || 0}/${TIX_EVERY} votes`}</small></button></div>${qsChipHTML()}<div class="tot-h">${nextUpHTML()}<h2>Which is better?</h2><p><b>${esc(finCatOf(pa) ? showName(finCatOf(pa)) : (CHAL[pa.cat] || 'Photo'))}</b> · tap your pick${window.__finPair ? ' · <em class="fin-tag">🔴 Live Final · your vote counts</em>' : ''}</p></div>
+  $('#judge').innerHTML = `${false && inTour ? `<button class="tjs" id="tjStrip"><span class="tjs-h tk-w-in"></span></button>` : waitCardHTML()}<div class="vstrip"><button class="vs-en ${energy() <= 10 ? 'low' : ''}" id="vsEn" aria-label="Energy. Tap to buy more"><span>⚡</span><b>${energy()}</b><i>+</i></button><button class="vs-tk" id="vsTk" aria-label="Free tournament entries"><span>🎟️</span><b>${S.cashTix || 0}</b><small>${S.tixDay === frHourKey() && S.tixToday ? `next in ${frMinsLeft()}m` : `${S.tixV || 0}/${TIX_EVERY} votes`}</small></button></div>${qsChipHTML()}<div class="tot-h">${nextUpHTML()}<h2>Which is better?</h2><p><b>${esc(finCatOf(pa) ? showName(finCatOf(pa)) : (CHAL[pa.cat] || 'Photo'))}</b> · tap your pick${window.__finPair ? '' : ''}</p></div>
     <div class="tot" id="jcard">${[pa, pb].map((x, i) => `<button class="tot-c" data-i="${i}" aria-label="Pick photo ${i + 1} by @${esc(x.owner ? x.owner.h : 'yofi')}"><img src="${x.src}" alt=""><span class="tot-o">${x.title ? `<b>${esc(x.title)}</b> · ` : ''}@${esc(x.owner ? x.owner.h : 'yofi')}</span><span class="tot-r"></span><span class="jrep" role="button" tabindex="0" data-rep="${i}" aria-label="Report this photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></span></button>`).join('<span class="tot-vs">VS</span>')}</div>
     <div class="jfoot jf2">
       ${energy() < 1 ? `<div class="jf-en en-out"><span class="en-ic">⚡</span><span class="eo-t"><b>Out of energy</b><small class="en-nx">+5 ⚡ in ${enNext()}</small><small class="en-full">Full again at ${enFullAt()}</small></span><button id="enBuy">Refill</button></div>` : `<div class="jf-en ${energy() > 10 ? 'en-hide' : 'en-low'}"><div class="en-top"><span class="en-ic">⚡</span><span class="en-bar"><i style="width:${Math.min(100, energy() / EN_MAX * 100)}%"></i></span><span class="en-n">${energy() > EN_MAX ? `${EN_MAX}<small> +${energy() - EN_MAX}</small>` : `${energy()}/${EN_MAX}`}</span><button class="en-plus" id="enPlus" aria-label="Buy energy">+</button></div>
