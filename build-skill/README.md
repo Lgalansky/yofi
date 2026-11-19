@@ -332,6 +332,8 @@ Then `rmv161.py`: live-Final banner above the pair removed.
 
 Then `rmv162.py`: simple loop: 100-coin photo entries, swipeable photo cards on the Vote screen, your votes move your photo to the Final, full-screen rivals + $2/$5/$10/$20 entry + race.
 
+Then `rmv163.py`: watch your photo qualify full screen: at 7 wins the deciding votes play out live, then Qualified! with rosette.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -490,6 +492,7 @@ python3 rmv159.py
 python3 rmv160.py
 python3 rmv161.py
 python3 rmv162.py
+python3 rmv163.py
 ```
 
 ## Skill only
