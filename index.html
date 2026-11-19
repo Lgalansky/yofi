@@ -3700,7 +3700,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v143</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v144</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -6577,7 +6577,7 @@ function gmOpen(mode, ti0) { const g = GM[mode] || GM.derby; let ti = ti0 == nul
   draw(); }
 function gmOpps(k, eye, r) { const col = ['#C0392B', '#2E86C1', '#8E44AD', '#16A085', '#D35400', '#7F8C8D'], nm = ppShuffle(QS_NAMES.slice(), r);
   return Array.from({ length: k }, (_, i) => ({ h: i < nm.length ? nm[i] : nm[i % nm.length].split(/[._]/)[0] + (10 + Math.floor(r() * 89)), acc: Math.max(.45, Math.min(.9, eye + (r() - .5) * .22)), c: col[i % col.length] })); }
-function gmMatch(mode, t) { const g = GM[mode], seed = Date.now() % 1e7, r = cpRng(seed), eye = dbEye(), O = gmOpps(g.n - 1, eye, r), me = ((S.user && S.user.h) || 'you');
+function gmMatch(mode, t) { const g = GM[mode], seed = Date.now() % 1e7, r = cpRng(seed), eye = dbEye(), O = gmOpps(g.n - 1, (S.gmN || 0) < 1 ? Math.max(.3, eye - .25) : eye, r), me = ((S.user && S.user.h) || 'you');
   const big = g.n > 4, done = () => setTimeout(() => (g.streak ? gmStreak : gmRace)(mode, t, O, seed), 1100);
   popOpen(`<div class="pp dbx"><p class="pp-k">${g.ic} ${g.t} · ${gmAmt(t, t.fee)}</p><h2 class="db-h" id="dbMh">Finding players at your level…</h2>
     ${big ? `<div class="gm-cnt"><b id="gmCn">1</b><span>of ${g.n} riders</span><div class="nfx-bar"><i id="gmCb" style="width:2%"></i></div></div>` : `<div class="db-lobby gm-l${g.n}"><div class="db-rd in me"><i>${esc(me[0].toUpperCase())}</i><b>You</b><small>Eye ${Math.round(eye * 100)}%</small></div>${O.map((o, i) => `<div class="db-rd" id="dbR${i}"><i>?</i><b>Searching…</b><small>&nbsp;</small></div>`).join('')}</div>`}
@@ -6666,7 +6666,7 @@ setInterval(() => { try { if (!S || !S.fmPend || $('#coach').classList.contains(
   celebrate({ src: (SEED.find(z => z.src && z.cat === 'Pets') || {}).src || '', score: '⚔️', title: 'Your first Match Race is on us', text: `You’ve voted on ${FP_VOTES} pairs. Now race a player on the <b>same 10 photo pairs</b>: pick the crowd’s choice, right and fast. Win <b>43 🟡</b>.`,
     cta: '⚔️ Race now · free', onCta: () => { closeFlow(); S.gems = (S.gems || 0) + 25; save(); paintGems(); gmOpen('match', 0); setTimeout(() => { const b = document.getElementById('dbGo'); b && b.click(); }, 80); }, later: 'Later' }); } catch (e) {} }, 1200);
 function finalsTab() { const cur = ppSlot(), g = ppGame(cur), y = isYoungW();
-  openFlow(`<div class="fnx"><h1 class="fn-h">Play</h1><p class="fn-s">Race real players on the same photo pairs. Your eye against theirs.</p>${gmCardsHTML()}${ctCardHTML()}
+  openFlow(`<div class="fnx"><h1 class="fn-h">Play</h1><p class="fn-s">Race real players on the same photo pairs. Your eye against theirs.</p>${gmCardsHTML()}
     <div class="fn-live"><div class="fn-top"><span class="fn-k">● Live now · ${raceName(cur)} Final</span><b class="fn-cat">${SHOW_IC[g.k] || '🎀'} ${esc(showName(g.k))}</b></div>
       <div class="fn-ph">${g.ph.map(p => `<img src="${p.src}" alt="">`).join('')}</div>
       <p class="fn-s2">${y ? 'Judges' : 'Voters'} decide the order. The finalists’ creators share the prize.</p>
@@ -6683,7 +6683,7 @@ function tixClaim(go2) { if (S.tixDay === todayK()) { toast('You’ve claimed to
 function gmFeedHTML() { const r = cpRng(Math.floor(Date.now() / 90000)), G = ['Grand National', 'Photo Derby', 'Match Race', 'Hot Streak'], M = [15, 2.38, 1.7, 2.38], F = [1, 2, 5, 10, 2, 1];
   return `<div class="gmf"><p class="gmf-h">🏆 Recent winners <small>(simulated)</small></p>${[0, 1, 2].map(k => { const gi = Math.floor(r() * 4), f = F[Math.floor(r() * F.length)], nm = QS_NAMES[Math.floor(r() * QS_NAMES.length)];
     return `<div><b>@${esc(nm)}</b><span>won <em>${money(+(f * M[gi]).toFixed(2))}</em> in the ${G[gi]}</span><small>${1 + Math.floor(r() * 9)} min ago</small></div>`; }).join('')}</div>`; }
-function gmFreeRealHTML() { return !isCash() && !S.frGiven ? `<button class="gmfr" data-freereal><span>🎟️</span><b>Your first real game is on us</b><small>$1 Match Race · win $1.70 real cash</small></button>` : ''; }
+function gmFreeRealHTML() { return !isCash() && !S.frGiven && frReady() ? `<button class="gmfr" data-freereal><span>🎟️</span><b>Your first real game is on us</b><small>$1 Match Race · win $1.70 real cash</small></button>` : ''; }
 function gmCardsHTML() { const real = isCash();
   return `<div class="gmr"><p class="gmr-h">Photo games · ${real ? 'real cash' : 'coin games'}</p>${real && (S.bonus || 0) > 0 ? `<p class="gmr-b">🎁 Bonus Cash <b>${money(S.bonus)}</b> · used first on entries</p>` : ''}${real && (S.cashTix || 0) > 0 ? `<p class="gmr-b">🎟️ ${S.cashTix} free $1 ticket${S.cashTix > 1 ? 's' : ''}</p>` : ''}${gmFreeRealHTML()}
     <div class="gmr-g">${Object.entries(GM).map(([k, g]) => `<button class="gmc" data-gm="${k}"><span class="gmc-ic">${g.ic}</span><b>${g.t}</b><small>${g.sub}</small></button>`).join('')}</div>${real ? gmFeedHTML() : ''}</div>`; }
@@ -6758,11 +6758,11 @@ function photoMoment() { S.phAsked = 1; save(); window.__nudgeAt = Date.now();
   popOpen(`<div class="pp phm"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">📷 Your photos</p><h2 class="db-h">Now let’s see how your eye does as a photographer</h2>
     <p class="db-s">Enter a photo and get its <b>verdict in minutes</b>: how many voters pick it. Every vote you cast gives your photo more views, and winners race in the Finals for prizes.</p>
     <button class="btn block db-go" id="phUp">📷 Upload your best photo</button><div style="text-align:center"><button class="link pc-later" id="phStart">🐶 No photo to hand? Try with a starter photo</button></div></div>`);
-  document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose());
+  document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => { S.phSkip = 1; save(); popClose(); });
   $('#phUp').onclick = () => { popClose(); setTimeout(finPick, 200); };
   $('#phStart').onclick = () => { popClose(); const x = SEED.find(z => z.src && z.cat === 'Pets' && z.id === 'shades') || SEED.find(z => z.src && z.cat === 'Pets'); window.__starter = 1; window.__starterT = x.title; window.__preCat = 'pets'; window.__sampleURL = x.src; window.__sample = 1; try { $('#file').dispatchEvent(new Event('change', { bubbles: true })); } catch (e) { window.__starter = 0; } }; }
 function verdictShow(p) { const r = cpRng(ppHash('vd:' + p.id)), pct = Math.round(52 + r() * 28), beat = Math.max(2, Math.min(9, Math.round((pct - 45) / 4))), cat = ({ pets: 'pet', nature: 'nature', garden: 'garden' })[photoShow(p) || 'pets'] || 'pet';
-  p.vd = { pct, beat, at: Date.now() }; p.views = Math.max(p.views || 20, 20); p.pool = pct >= 60 ? Date.now() : 0; p.plAt = Date.now(); save(); window.__nudgeAt = Date.now();
+  window.__vdAt = Date.now(); p.vd = { pct, beat, at: Date.now() }; p.views = Math.max(p.views || 20, 20); p.pool = pct >= 60 ? Date.now() : 0; p.plAt = Date.now(); save(); window.__nudgeAt = Date.now();
   popOpen(`<div class="pp vdx"><p class="pp-k">📷 ${p.starter ? 'Your starter photo' : 'Your photo'}</p><h2 class="db-h">Its first 20 votes are in</h2>
     <div class="vd-ph"><img src="${p.src}" alt=""></div><div class="vd-big"><b>${pct}%</b><span>of voters picked it</span></div>
     <p class="vd-beat">Better than <b>${beat} in 10</b> ${esc(cat)} photos</p>${p.pool ? `<p class="vd-pool ok">🎉 It made the <b>Play Pool</b>: it now appears in real games and ${p.starter ? 'earns coins' : 'earns you cash'} every time it’s played.</p>` : `<p class="vd-pool">Just short of the <b>Play Pool</b> (60%+). Photos in the pool earn every time they’re played. Try a stronger shot?</p>`}
@@ -6786,7 +6786,8 @@ setInterval(() => { try { if (!S || !S.user || !$('#app').classList.contains('on
   const nv = (S.photos || []).find(p => p.framed && !p.vd && Date.now() - (p.framed || 0) > 6000); if (nv) { verdictShow(nv); return; }
   if (S.phPend && !(S.photos || []).length) { S.phPend = 0; photoMoment(); return; } S.phPend = 0;
   if (S.notifPend && !S.notifAsked) { notifAsk(); return; }
-  if ((S.gmN || 0) >= 1 && (!S.cal || S.cal.last !== new Date().toDateString())) { calShow(); return; } } catch (e) {} }, 1500);
+  if (frReady() && !S.frGiven && !S.frNudged && !isCash() && Date.now() - (window.__vdAt || 0) > 25000) { frNudge(); return; }
+  if (window.__gmN0 >= 1 && Date.now() - window.__sessAt < 90000 && (!S.cal || S.cal.last !== new Date().toDateString())) { calShow(); return; } } catch (e) {} }, 1500);
 function upDone(p) { window.__nudgeAt = Date.now();
   popOpen(`<div class="pp vdc"><p class="pp-k">📷 ${esc(rcName(p))}</p><h2 class="db-h">Collecting its first votes…</h2><div class="vd-ph"><img src="${p.src}" alt=""></div><div class="nfx-bar vdc-bar"><i></i></div><p class="db-s">Voters are seeing it now.</p></div>`);
   setTimeout(() => { if (document.querySelector('#coach .vdc')) { popClose(); setTimeout(() => verdictShow(p), 150); } }, 3200); }
@@ -6862,6 +6863,13 @@ function ctResult(e) { e.done = 1; const rk = ctRank(e, true), prize = ctPrize(e
 setInterval(() => { try { if (!S || !S.ct || !$('#app').classList.contains('on') || !freeScreen() || !popGap()) return; const e = ctEntries().find(x => !x.done && Date.now() - x.at > (x.tier === 'q' ? CT_DEMO / 2 : CT_DEMO)); if (e) ctResult(e); } catch (x) {} }, 2000);
 const ctMid = pct => pct < 60 ? 52 : pct < 70 ? 65 : 76;
 const ctGrp = (n, pct) => Math.max(12, Math.round(n * (pct < 60 ? .4 : pct < 70 ? .35 : .25)));
+const frReady = () => !!(S && ((S.photos || []).some(p => p.vd) || S.phSkip));
+window.__sessAt = Date.now(); try { window.__gmN0 = (S && S.gmN) || 0; } catch (e) { window.__gmN0 = 0; }
+function frNudge() { S.frNudged = 1; save(); window.__nudgeAt = Date.now();
+  popOpen(`<div class="pp"><p class="pp-k">💵 Ready for the real thing?</p><h2 class="db-h">Now race for real cash</h2><p class="db-s">Same game, same photo pairs. Your first <b>$1 Match Race</b> is on us. Win and <b>$1.70</b> real cash is yours.</p>
+    <button class="btn block db-go cashb" id="fnGo">🎟️ Play my free real game</button><div style="text-align:center"><button class="link pc-later" id="fnLater">Later</button></div></div>`);
+  $('#fnGo').onclick = () => { popClose(); setTimeout(freeRealStart, 200); }; $('#fnLater').onclick = () => popClose(); }
+(() => { const ur = upReady; upReady = function (p) { if (p && p.starter) { p.nmAsk = 1; p.framed = Date.now(); S.ffDone = 1; save(); try { closeFlow(); } catch (e) {} try { const fp = document.getElementById('finPick'); if (fp) fp.className = ''; myShow(); } catch (e) {} setTimeout(() => upDone(p), 300); return; } return ur(p); }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
