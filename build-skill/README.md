@@ -328,6 +328,8 @@ Then `rmv159.py`: live duels shown inside judging (every 5th pair is a live $2 d
 
 Then `rmv160.py`: the 6-photo race Final is back ($1, 1st $3.50, 2nd $1.60); duel retired; wording restored everywhere.
 
+Then `rmv161.py`: live-Final banner above the pair removed.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -484,6 +486,7 @@ python3 rmv157.py
 python3 rmv158.py
 python3 rmv159.py
 python3 rmv160.py
+python3 rmv161.py
 ```
 
 ## Skill only
