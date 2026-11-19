@@ -304,6 +304,8 @@ Then `rmv147.py`: Creative-director fun pass: race countdown 3·2·1·GO, live r
 
 Then `rmv148.py`: Voting fun pass: hot-streak glow on the vote tiles at 3/5/10 in a row with banners (On fire! / Hot streak! / Crowd whisperer!); 🔮 Crowd Call bonus pair about every 20 votes (3× coins if right, nothing lost if wrong; never on a live-Final pair); race caller adds 'First past the post!' / 'Pipped at the post!'.
 
+Then `rmv149.py`: Voting in rounds of 10: round bar (score, dots), stakes on about 1 in 3 pairs ('Today's Pets contest · fighting for 4th place'), your photo's strip with score and the 60% Play Pool line; end-of-round card with score, dots, 'you beat X% of voters', coins (100/60/40/25/10), rounds-in-a-row, what your votes did and your photo's move (can cross into the Play Pool); Next round / Race with this eye / Check on your photo; first round leads to the free first Match Race. Race clock fixed during the countdown.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -448,6 +450,7 @@ python3 rmv145.py
 python3 rmv146.py
 python3 rmv147.py
 python3 rmv148.py
+python3 rmv149.py
 ```
 
 ## Skill only
