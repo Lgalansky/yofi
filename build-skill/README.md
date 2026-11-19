@@ -286,6 +286,8 @@ Then `rmv138.py`: Stage 2 real-play funnel: coin players see coin games only plu
 
 Then `rmv139.py`: Newbie run-through fixes: no age form on arrival (asked once, right before anything with cash); Fall Fair look when no age given; free real game account screen 'Your free $1 game is waiting · real-cash games are for adults 18+'; real-only switches on at the first deposit (non-depositors keep coin games, results offer 'Add cash to play again'); coin players' header shows coins and streak only.
 
+Then `rmv140.py`: Stage 3: photo moment after the first game (upload, or try a starter photo · coins only), 'Collecting its first votes…' then an instant verdict (68% picked it · better than 7 in 10), every vote you cast adds a view to your photos, Gallery → My Photos with views/verdict per photo, 7-day reward calendar, notifications opt-in after the first win, frame screen wording updated.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -421,6 +423,7 @@ python3 rmv136.py
 python3 rmv137.py
 python3 rmv138.py
 python3 rmv139.py
+python3 rmv140.py
 ```
 
 ## Skill only
