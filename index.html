@@ -1510,6 +1510,7 @@ html body .ctc-g b{color:#F3D98B!important;-webkit-text-fill-color:#F3D98B;font-
 .ct-t div{flex:1;display:flex;flex-direction:column}.ct-t div b{color:#14213D}.ct-t small{font-size:.76rem;line-height:1.4}.ct-t em{font-style:normal;font-weight:900;color:#2F6B3F;white-space:nowrap}
 html body .ppop .ct-t .btn{width:auto;flex:none;padding:10px 14px;font-size:.9rem;margin:0}
 .ct-none{font-size:.88rem;margin:6px 0 10px}
+.ct-m{margin:-4px 0 8px;font-size:.82rem;color:#2F6B3F;font-weight:700}
 </style>
 </head>
 <body>
@@ -3699,7 +3700,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v142</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v143</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -6811,52 +6812,56 @@ setInterval(() => { try { if (!S || !S.user) return; const r = royAccrue(true); 
 document.addEventListener('visibilitychange', () => { try { if (document.visibilityState === 'hidden' && S) { S.lastAway = Date.now(); save(); } } catch (e) {} });
 (() => { const sp = seedPair; seedPair = function () { window.__finPair = false; try { if (S && (S.votes || 0) % 5 === 4) { const g = ppGame(ppSlot()), L = g.ph.map(x => SEED.find(z => z.src === x.src)).filter(Boolean);
       if (L.length >= 2) { const r = cpRng((S.votes || 0) * 13 + ppSlot()), i = Math.floor(r() * L.length); let j = Math.floor(r() * L.length); if (j === i) j = (i + 1) % L.length; window.__finPair = true; return [L[i], L[j]]; } } } catch (e) {} return sp(); }; })();
-const CT_DEMO = 10 * 60e3, CT_FREE = [10, 6, 4];
+const CT_DEMO = 10 * 60e3, CT_FREE = [6, 4, 2];
 const ctDay = () => new Date().toDateString();
 const ctLeft = () => { const m = new Date(); m.setHours(24, 0, 0, 0); const r = m - Date.now(); return `${Math.floor(r / 3600e3)}h ${Math.floor(r / 60e3) % 60}m`; };
 function ctN(cat, tier) { const r = cpRng(ppHash(ctDay() + cat + tier)), h = new Date().getHours() + new Date().getMinutes() / 60; return Math.round((tier === 'f' ? 700 : 120) * (0.35 + h / 24) * (0.85 + r() * .3)); }
 function ctPool(n) { return +(n * 2 * .85).toFixed(2); }
-function ctPrize(tier, n, rank) { if (tier === 'f') return CT_FREE[rank - 1] || 0; const pool = ctPool(n), paid = Math.max(3, Math.floor(n / 10));
+function ctPrize(tier, n, rank) { if (tier === 'q') return [4, 2.5, 2][rank - 1] || 0; if (tier === 'f') return CT_FREE[rank - 1] || 0; const pool = ctPool(n), paid = Math.max(3, Math.floor(n / 10));
   if (rank > paid) return 0; const w = k => k <= 3 ? [30, 18, 12][k - 1] : Math.min(8, 40 / Math.max(1, paid - 3)), tot = 60 + (paid - 3) * w(4); return Math.floor(pool * w(rank) / tot * 100) / 100; }
-function ctTable(tier, n) { if (tier === 'f') return `1st <b>$10</b> · 2nd <b>$6</b> · 3rd <b>$4</b> · guaranteed`; const paid = Math.max(3, Math.floor(n / 10));
+function ctTable(tier, n) { if (tier === 'f') return `1st <b>$6</b> · 2nd <b>$4</b> · 3rd <b>$2</b> · guaranteed`; const paid = Math.max(3, Math.floor(n / 10));
   return paid <= 3 ? `1st <b>${money(ctPrize('c', n, 1))}</b> · 2nd <b>${money(ctPrize('c', n, 2))}</b> · 3rd <b>${money(ctPrize('c', n, 3))}</b>` : `1st <b>${money(ctPrize('c', n, 1))}</b> · 2nd <b>${money(ctPrize('c', n, 2))}</b> · 3rd <b>${money(ctPrize('c', n, 3))}</b> · ${paid === 4 ? '4th' : `4th–${paid}th`} <b>${money(ctPrize('c', n, 4))}</b> each`; }
-function ctRank(e, final) { const p = (S.photos || []).find(x => x.id === e.pid), pct = (p && p.vd && p.vd.pct) || 58, r = cpRng(ppHash(e.k + e.pid)), base = pct + (r() - .5) * 22;
-  const drift = final ? 0 : (cpRng(ppHash(e.k + Math.floor(Date.now() / 120000)))() - .5) * 4 * Math.max(0, 1 - (Date.now() - e.at) / CT_DEMO), sc = base + drift, q = Math.max(.002, Math.min(.98, 1 - (sc - 42) / 44));
+function ctRank(e, final) { const p = (S.photos || []).find(x => x.id === e.pid), pct = (p && p.vd && p.vd.pct) || 58, r = cpRng((ppHash(e.k + e.pid) * 2654435761 + 12345) % 2147483647); r(); r(); r(); const base = pct + (r() - .5) * 22;
+  const drift = final ? 0 : (cpRng(ppHash(e.k + Math.floor(Date.now() / 120000)))() - .5) * 4 * Math.max(0, 1 - (Date.now() - e.at) / (e.tier === 'q' ? CT_DEMO / 2 : CT_DEMO)), sc = base + drift, q = Math.max(.002, Math.min(.98, .5 - (sc - ctMid(pct) - (pct - ctMid(pct)) * .5) / 26));
   return Math.max(1, Math.min(e.n, Math.round(e.n * q))); }
 function ctEntries() { return Object.values(S.ct || {}); }
-function ctCardHTML() { if (!S || !(S.photos || []).some(p => p.framed && !p.starter) && !(S.photos || []).length) return `<div class="ctc"><p class="ctc-k">🏆 Today’s photo contests</p><p class="ctc-s">Enter your best photo free. The crowd’s votes decide. Closes in ${ctLeft()}.</p><div class="ctc-g">${SHOW_ROT.map(z => `<button data-ct="${z.k}"><b>${SHOW_IC[z.k] || '🎀'} ${esc(z.n)}</b><small>Free · $20 prizes · ${money(ctPool(ctN(z.k, 'c')))} cash contest</small></button>`).join('')}</div></div>`;
+function ctCardHTML() { if (!S || !(S.photos || []).some(p => p.framed && !p.starter) && !(S.photos || []).length) return `<div class="ctc"><p class="ctc-k">🏆 Today’s photo contests</p><p class="ctc-s">Enter your best photo free. The crowd’s votes decide. Closes in ${ctLeft()}.</p><div class="ctc-g">${SHOW_ROT.map(z => `<button data-ct="${z.k}"><b>${SHOW_IC[z.k] || '🎀'} ${esc(z.n)}</b><small>Free · $2 daily · ⚡ $1 quick</small></button>`).join('')}</div></div>`;
   const mine = ctEntries().filter(e => !e.done && e.day === ctDay());
   return `<div class="ctc"><p class="ctc-k">🏆 Today’s photo contests · closes in ${ctLeft()}</p>${mine.map(e => { const p = (S.photos || []).find(x => x.id === e.pid), rk = ctRank(e), paid = e.tier === 'f' ? 3 : Math.max(3, Math.floor(e.n / 10));
-      return `<div class="ctc-e ${rk <= paid ? 'ok' : ''}"><img src="${p ? p.src : ''}" alt=""><span><b>${esc(p ? rcName(p) : 'Your photo')} · ${e.tier === 'f' ? 'Free' : '$2'} ${esc(showName(e.cat))}</b><small>Now <b>${ppOrd(rk)}</b> of ${e.n} · top ${paid} paid${rk <= paid ? ` · would win ${money(ctPrize(e.tier, e.n, rk))}` : ''}</small></span></div>`; }).join('')}
-    <div class="ctc-g">${SHOW_ROT.map(z => `<button data-ct="${z.k}"><b>${SHOW_IC[z.k] || '🎀'} ${esc(z.n)}</b><small>Free · $20 prizes · ${money(ctPool(ctN(z.k, 'c')))} cash contest</small></button>`).join('')}</div></div>`; }
+      return `<div class="ctc-e ${rk <= paid ? 'ok' : ''}"><img src="${p ? p.src : ''}" alt=""><span><b>${esc(p ? rcName(p) : 'Your photo')} · ${e.tier === 'f' ? 'Free' : e.tier === 'q' ? '⚡ Quick $1' : '$2'} ${esc(showName(e.cat))}</b><small>Now <b>${ppOrd(rk)}</b> of ${e.n} · top ${paid} paid${rk <= paid ? ` · would win ${money(ctPrize(e.tier, e.n, rk))}` : ''}</small></span></div>`; }).join('')}
+    <div class="ctc-g">${SHOW_ROT.map(z => `<button data-ct="${z.k}"><b>${SHOW_IC[z.k] || '🎀'} ${esc(z.n)}</b><small>Free · $2 daily · ⚡ $1 quick</small></button>`).join('')}</div></div>`; }
 document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ct]'); if (b) { e.preventDefault(); try { closeFlow(); } catch (x) {} ctOpen(b.dataset.ct); } });
 function ctOpen(cat, pid0) { cat = cat || SHOW_ROT[0].k; const P = (S.photos || []).filter(p => p.framed && !p.starter && photoShow(p) === cat); let pid = pid0 && P.some(p => p.id === pid0) ? pid0 : (P[0] || {}).id;
-  const draw = () => { const nf = ctN(cat, 'f'), nc = ctN(cat, 'c'), has = t => !!(S.ct || {})[ctDay() + cat + t + pid];
+  const draw = () => { const pp = P.find(x => x.id === pid), pc = (pp && pp.vd && pp.vd.pct) || 60, nf = ctGrp(ctN(cat, 'f'), pc), nc = ctGrp(ctN(cat, 'c'), pc), hasQ = () => ctEntries().some(e => !e.done && e.tier === 'q' && e.pid === pid), has = t => !!(S.ct || {})[ctDay() + cat + t + pid];
     popOpen(`<div class="pp ctx"><button class="pc-x" data-shclose aria-label="Close">${QS_X}</button><p class="pp-k">🏆 Today’s ${esc(showName(cat))} contests</p><h2 class="db-h">Best ${esc(showName(cat))} photo</h2>
-      <p class="db-s">The crowd’s votes decide. Closes in <b>${ctLeft()}</b>.</p>
+      <p class="db-s">The crowd’s votes decide. Daily contests close in <b>${ctLeft()}</b>.</p><p class="ct-m">🤝 You’re matched with photos like yours, so every photo has a fair chance.</p>
       ${P.length ? `<p class="ct-l">Your photo</p><div class="ct-ph">${P.map(p => `<button data-ctp="${p.id}" class="${p.id === pid ? 'on' : ''}"><img src="${p.src}" alt=""><small>${esc(rcName(p))}${p.vd ? ` · ${p.vd.pct}%` : ''}</small></button>`).join('')}</div>` : `<p class="ct-none">You need a framed ${esc(showName(cat))} photo to enter.</p>`}
       <div class="ct-t"><div><b>🎟️ Free daily</b><small>${nf} entries · ${ctTable('f', nf)}</small></div>${P.length ? (has('f') ? '<em>Entered ✓</em>' : '<button class="btn db-go" id="ctF">Enter free</button>') : ''}</div>
       <div class="ct-t cash"><div><b>💵 $2 cash daily</b><small>${nc} entries · <b>${money(ctPool(nc))}</b> prize pool · top 10% paid<br>${ctTable('c', nc)}</small></div>${P.length ? (has('c') ? '<em>Entered ✓</em>' : '<button class="btn db-go cashb" id="ctC">Enter · $2</button>') : ''}</div>
+      <div class="ct-t cash"><div><b>⚡ Quick contest · $1</b><small>10 photos · top 3 paid: <b>$4</b> · <b>$2.50</b> · <b>$2</b><br>Result within the hour</small></div>${P.length ? (hasQ() ? '<em>Running ✓</em>' : '<button class="btn db-go cashb" id="ctQ">Enter · $1</button>') : ''}</div>
       ${P.length ? '' : '<button class="btn block db-go" id="ctUp">📷 Add a photo</button>'}
-      <p class="db-sim">15% PhotoPicks fee on cash entries · Starter photos can’t enter · Demo: results about 10 min after entering</p></div>`);
+      <p class="db-sim">15% PhotoPicks fee on cash entries · Starter photos can’t enter · Demo: daily results ~10 min, quick ~5 min after entering</p></div>`);
     document.querySelectorAll('#coach [data-shclose]').forEach(b => b.onclick = () => popClose());
     document.querySelectorAll('#coach [data-ctp]').forEach(b => b.onclick = () => { pid = b.dataset.ctp; window.__keepScroll = 1; draw(); });
     if ($('#ctUp')) $('#ctUp').onclick = () => { popClose(); setTimeout(finPick, 200); };
-    const enter = tier => { const k = ctDay() + cat + tier + pid; S.ct = S.ct || {}; S.ct[k] = { k, cat, tier, pid, day: ctDay(), at: Date.now(), n: tier === 'f' ? nf : nc }; save(); toast(tier === 'f' ? '🏆 Entered free · the crowd decides' : '🏆 Entered the $2 contest'); window.__keepScroll = 1; draw(); };
+    const enter = tier => { const k = tier === 'q' ? 'q' + pid + Date.now() : ctDay() + cat + tier + pid; S.ct = S.ct || {}; S.ct[k] = { k, cat, tier, pid, day: ctDay(), at: Date.now(), n: tier === 'q' ? 10 : tier === 'f' ? nf : nc }; save(); toast(tier === 'f' ? '🏆 Entered free · the crowd decides' : tier === 'q' ? '⚡ In a quick contest · result within the hour' : '🏆 Entered the $2 contest'); window.__keepScroll = 1; draw(); };
     if ($('#ctF')) $('#ctF').onclick = () => enter('f');
+    if ($('#ctQ')) $('#ctQ').onclick = () => needAge(() => { popClose(); payCash(1, 'A $1 quick contest entry', () => setTimeout(() => { enter('q'); }, 250)); });
     if ($('#ctC')) $('#ctC').onclick = () => needAge(() => { popClose(); payCash(2, 'A $2 photo contest entry', () => setTimeout(() => { enter('c'); }, 250)); }); };
   draw(); }
 function ctResult(e) { e.done = 1; const rk = ctRank(e, true), prize = ctPrize(e.tier, e.n, rk), p = (S.photos || []).find(x => x.id === e.pid); e.rank = rk; e.prize = prize;
   if (prize) { S.cash = +((S.cash || 0) + prize).toFixed(2); try { earnAdd({ kind: 'c', pid: e.pid, t: p ? p.title : '', amt: prize, place: rk }); } catch (x) {} } if (p && rk <= 3) rzAdd(p, rk - 1); save(); window.__nudgeAt = Date.now();
   const paid = e.tier === 'f' ? 3 : Math.max(3, Math.floor(e.n / 10));
-  popOpen(`<div class="pp"><p class="pp-k">🏆 ${e.tier === 'f' ? 'Free' : '$2'} ${esc(showName(e.cat))} contest · result</p><h2 class="db-h">${esc(p ? rcName(p) : 'Your photo')} finished ${ppOrd(rk)} of ${e.n}</h2>
+  popOpen(`<div class="pp"><p class="pp-k">🏆 ${e.tier === 'f' ? 'Free' : e.tier === 'q' ? '⚡ Quick $1' : '$2'} ${esc(showName(e.cat))} contest · result</p><h2 class="db-h">${esc(p ? rcName(p) : 'Your photo')} finished ${ppOrd(rk)} of ${e.n}</h2>
     <div class="re-ok">${p ? `<img src="${p.src}" alt="">` : ''}${rk <= 3 ? `<i class="re-rz">${rosette(rk - 1)}</i>` : ''}</div>
     ${prize ? `<div class="rv-won"><span>Cash won</span><b>${money(prize)}</b></div>` : `<p class="db-s">Top ${paid} were paid. ${rk <= paid * 2 ? 'So close! ' : ''}A stronger photo or a different category could get you there.</p>`}
     ${rk <= 3 ? `<p class="re-rzl">🎀 ${['Gold', 'Silver', 'Bronze'][rk - 1]} rosette won · it hangs on its frame</p>` : ''}
     <button class="btn block db-go" id="crAgain">🏆 Enter today’s contests</button><div style="text-align:center"><button class="link pc-later" id="crAdd">📷 Add another photo</button></div></div>`);
   if (prize) setTimeout(() => { try { paintWallet(); cashExplosion(prize, { label: 'Photo contest' }); } catch (x) {} }, 350);
   $('#crAgain').onclick = () => { popClose(); setTimeout(() => ctOpen(e.cat), 200); }; $('#crAdd').onclick = () => { popClose(); setTimeout(finPick, 200); }; }
-setInterval(() => { try { if (!S || !S.ct || !$('#app').classList.contains('on') || !freeScreen() || !popGap()) return; const e = ctEntries().find(x => !x.done && Date.now() - x.at > CT_DEMO); if (e) ctResult(e); } catch (x) {} }, 2000);
+setInterval(() => { try { if (!S || !S.ct || !$('#app').classList.contains('on') || !freeScreen() || !popGap()) return; const e = ctEntries().find(x => !x.done && Date.now() - x.at > (x.tier === 'q' ? CT_DEMO / 2 : CT_DEMO)); if (e) ctResult(e); } catch (x) {} }, 2000);
+const ctMid = pct => pct < 60 ? 52 : pct < 70 ? 65 : 76;
+const ctGrp = (n, pct) => Math.max(12, Math.round(n * (pct < 60 ? .4 : pct < 70 ? .35 : .25)));
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
