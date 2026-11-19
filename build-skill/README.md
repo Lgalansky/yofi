@@ -276,6 +276,8 @@ Then `rmv133.py`: Every screen stays inside one category: Garden & flowers parke
 
 Then `rmv134.py`: Quick Sprint pairs: both photos from the same live category; crowd share follows hidden photo appeal plus noise (stronger photo wins ~72%), replacing the 50/50 coin flip; nothing from the Finals feeds Sprint results.
 
+Then `rmv135.py`: Photo Derby: 4-rider skill race on the same 10 photo pairs; coins or $1/$2/$5/$10 entry, 15% fee shown, 1st 70% / 2nd 30% of the pool; lobby, live horses, results with Rematch / Step up. Opponents simulated. Card on the Finals tab and in the coins menu.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -406,6 +408,7 @@ python3 rmv131.py
 python3 rmv132.py
 python3 rmv133.py
 python3 rmv134.py
+python3 rmv135.py
 ```
 
 ## Skill only
