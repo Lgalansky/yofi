@@ -320,6 +320,8 @@ Then `rmv155.py`: the Final is a $2 one-on-one duel (winner takes $3.40), watche
 
 Then `rmv156.py`: free coin predictions on other players' live duels (+20 coins if right; cash stays with photo owners).
 
+Then `rmv157.py`: My Photos rebuilt as photo hero cards (rosette on the frame, one next-step button, last duel); old 6-photo Final leftovers removed.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -472,6 +474,7 @@ python3 rmv153.py
 python3 rmv154.py
 python3 rmv155.py
 python3 rmv156.py
+python3 rmv157.py
 ```
 
 ## Skill only
