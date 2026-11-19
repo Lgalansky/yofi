@@ -302,6 +302,8 @@ Then `rmv146.py`: Newbie fixes: cash winnings ($0.50+) unlock real games without
 
 Then `rmv147.py`: Creative-director fun pass: race countdown 3·2·1·GO, live race caller (lead changes, neck and neck, final stretch), bigger horses, PHOTO FINISH flash before results; verdict % counts up with a meter marking the 60% Play Pool line, then the result and confetti; My Photos drops zero boxes (Fresh entry only for photos with no plays) and shows views/plays/earnings in a side panel with a live dot; Play cards show live player counts (simulated).
 
+Then `rmv148.py`: Voting fun pass: hot-streak glow on the vote tiles at 3/5/10 in a row with banners (On fire! / Hot streak! / Crowd whisperer!); 🔮 Crowd Call bonus pair about every 20 votes (3× coins if right, nothing lost if wrong; never on a live-Final pair); race caller adds 'First past the post!' / 'Pipped at the post!'.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -445,6 +447,7 @@ python3 rmv144.py
 python3 rmv145.py
 python3 rmv146.py
 python3 rmv147.py
+python3 rmv148.py
 ```
 
 ## Skill only
