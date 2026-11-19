@@ -1563,6 +1563,9 @@ html body .ppop .vrr .btn.db-go{margin-top:6px}
 .vrq{margin:0 0 8px;padding:12px;border-radius:14px;background:#F1F6EC;box-shadow:inset 0 0 0 2px #2F6B3F;color:#22502F;font-size:.88rem;line-height:1.45;animation:cdPop .5s ease-out both}.vrq b{color:#14213D;font-size:1rem}
 .vrq-p{margin:0 0 6px;font-size:.88rem;color:#14213D}
 .ct-tk{margin:-2px 0 6px;padding:7px 10px;border-radius:10px;background:#F3EEE5;font:700 .84rem Nunito,system-ui;color:#5B4A3F;text-align:left}.ct-tk.ok{background:#F1F6EC;color:#22502F;box-shadow:inset 0 0 0 1.5px #2F6B3F}.ct-tk b{color:#14213D}
+.vr-l{flex:1;min-width:0}.vr-l b{display:block;font:800 .92rem/1.25 Nunito,system-ui,sans-serif!important;color:#F3D98B!important;-webkit-text-fill-color:#F3D98B}
+.vr-tk{display:flex;align-items:center;gap:5px;margin-top:5px}.vr-tk i{width:22px;height:8px;border-radius:4px;background:rgba(255,255,255,.2)}.vr-tk i.got{background:#E9B949}.vr-tk i.now{background:rgba(233,185,73,.45);box-shadow:0 0 0 1.5px #E9B949}
+.vr-tk em{font-style:normal;font:800 .72rem Nunito,system-ui;color:#9FE3AE;margin-left:6px}
 </style>
 </head>
 <body>
@@ -3752,7 +3755,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v150</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v151</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -6342,7 +6345,7 @@ try { const _go0 = go; go = function (w, ...a) { return _go0.call(this, w === 's
 var FP_VOTES = 10;
 const fgSl = () => (S.pp || {})[ppSlot()] ? ppSlot() + 1 : ppSlot();
 const BOX_T = { 3: { k: 3, n: 20, t: 'Bronze', c: '#B87333' }, 5: { k: 6, n: 40, t: 'Silver', c: '#9AA4B2' }, 10: { k: 10, n: 80, t: 'Gold', c: '#D9AE4F' } };
-function miniDrop(kind) { const B = BOX_T[kind] || BOX_T[3]; S.gems = (S.gems || 0) + B.n; save();
+function miniDrop(kind) { return; const B = BOX_T[kind] || BOX_T[3]; S.gems = (S.gems || 0) + B.n; save();
   { chestBurst(B); return; }
   popOpen(`<div class="pp bx2"><p class="pp-k">🔥 ${B.k} right in a row</p><h2 class="bx2-h">${B.t} box</h2>
     <div class="bx2-box" style="--bc:${B.c}"><span class="bx2-lid">🎁</span></div>
@@ -6952,7 +6955,7 @@ function gmLive(k) { const r = cpRng(ppHash(k + Math.floor(Date.now() / 90000)))
     try { const jc = document.getElementById('jcard');
       if (window.__ccOn) { window.__ccOn = 0; if (agree) { const bonus = Math.max(4, (earn || 2) * 2); S.gems = (S.gems || 0) + bonus; save(); setTimeout(() => { try { paintGems(); gemExplosion(bonus, { label: '🔮 Crowd Call · 3×' }); } catch (e) {} }, 500); banner('cc', `🔮 <b>Crowd Call!</b> 3× coins`); }
         else banner('cc miss', '🔮 Not this time · no coins lost'); }
-      else { const t = tier(combo); if (agree && t && t !== tier(combo - 1)) { banner('t' + t, ['', '🔥 <b>On fire!</b> 3 in a row', '🔥🔥 <b>Hot streak!</b> 5 in a row', '👑 <b>Crowd whisperer!</b> 10 in a row'][t]); try { navigator.vibrate && navigator.vibrate([10, 40, 10, 40, 20]); } catch (e) {} } }
+      else { const t = tier(combo); if (false && agree && t && t !== tier(combo - 1)) { banner('t' + t, ['', '🔥 <b>On fire!</b> 3 in a row', '🔥🔥 <b>Hot streak!</b> 5 in a row', '👑 <b>Crowd whisperer!</b> 10 in a row'][t]); try { navigator.vibrate && navigator.vibrate([10, 40, 10, 40, 20]); } catch (e) {} } }
       if (sv % 20 === 14) window.__ccNext = 1; } catch (e) {}
     return r; };
   renderJudge = function () { const r = rj.apply(this, arguments);
@@ -6964,7 +6967,7 @@ const vrMine = () => (S.photos || []).filter(p => p.framed).sort((a, b) => (b.st
 (() => { const cf = callFx, rj = renderJudge;
   callFx = function (pick, pct, agree) { const r = cf.apply(this, arguments);
     try { S.vr = S.vr || { n: 1, res: [], hot: 0 }; S.vr.res.push(agree ? 1 : 0); save(); vrPaint();
-      if (S.vr.res.length >= 10) setTimeout(vrEnd, 1500); } catch (e) {}
+      if (S.vr.res.length >= VR_N) setTimeout(vrEnd, 1500); } catch (e) {}
     return r; };
   renderJudge = function () { const r = rj.apply(this, arguments); try { vrDecor(); } catch (e) {} return r; }; })();
 function vrBarHTML() { const v = S.vr || { n: 1, res: [] }, ok = v.res.filter(Boolean).length;
@@ -6976,27 +6979,32 @@ function vrDecor() { const J = document.getElementById('judge'); if (!J || J.que
     if (k && r() < .36) { const pl = 1 + Math.floor(r() * 9); jc.insertAdjacentHTML('beforebegin', `<div class="vr-stake">🏆 <b>Today’s ${esc(showName(k))} contest</b> · these two are fighting for <b>${ppOrd(pl)} place</b>. Your vote counts.</div>`); } }
   const p = vrMine(); if (p) { const pc = (p.vd && p.vd.pct) || 55, sd = (S.vr && S.vr.res.length) || 0;
     (document.getElementById('stk2') || jc).insertAdjacentHTML('afterend', `<div class="vr-mine"><img src="${p.src}" alt=""><span><b>${esc(rcName(p))}</b> · ${p.views || 20} views${sd ? ` · +${sd} this round` : ''}<div class="vr-bar"><i style="width:${pc}%"></i><u></u></div>${pc}% picked it · ${p.pool ? 'in the Play Pool ▶️' : `${60 - pc}% to the Play Pool`}</span></div>`); } }
-function vrEnd() { if (!S.vr || S.vr.res.length < 10) return; if (!freeScreen()) { setTimeout(vrEnd, 1200); return; }
-  const v = S.vr, ok = v.res.slice(0, 10).filter(Boolean).length, pay = VR_PAY[ok] || 10, beat = VR_BEAT[ok]; v.hot = ok >= 7 ? (v.hot || 0) + 1 : 0;
+function vrEnd() { if (!S.vr || S.vr.res.length < VR_N) return; if (!freeScreen()) { setTimeout(vrEnd, 1200); return; }
+  const v = S.vr, ok = v.res.slice(0, VR_N).filter(Boolean).length, k = Math.round(ok * 10 / VR_N), pay = VR_PAY[k] || 10, beat = VR_BEAT[k]; v.hot = k >= 7 ? (v.hot || 0) + 1 : 0;
   S.gems = (S.gems || 0) + pay; const p = vrMine(); let mv = '';
   if (p) { const was = (p.vd && p.vd.pct) || 55; p.views = (p.views || 20) + 10; if (p.vd && !p.pool && !p.starter) { p.vd.pct = Math.min(80, was + Math.floor(cpRng(ppHash(p.id + v.n))() * 3)); if (p.vd.pct >= 60) { p.pool = Date.now(); p.plAt = Date.now(); } }
     const now = (p.vd && p.vd.pct) || was; mv = `📷 <b>${esc(rcName(p))}</b> was shown to 10 more voters${now !== was ? ` · ${was}% → <b>${now}%</b>` : ''}${p.pool && now >= 60 && was < 60 ? '<br>🎉 <b>It made the Play Pool!</b> It now earns every time it’s played.' : ''}`; }
-  const first = !!S.fmPend; S.fmPend = 0; const res = v.res.slice(0, 10); S.vr = { n: v.n + 1, res: v.res.slice(10), hot: v.hot }; save(); window.__nudgeAt = Date.now();
+  const first = !!S.fmPend; S.fmPend = 0; const res = v.res.slice(0, VR_N); S.vr = { n: v.n + 1, res: v.res.slice(VR_N), hot: v.hot }; save(); window.__nudgeAt = Date.now(); setTimeout(() => { try { vrPaint(); } catch (e) {} }, 0);
   S.vrq = (S.vrq || 0) + 1; const qual = S.vrq >= 3; if (qual) { S.vrq = 0; S.entT = (S.entT || 0) + 1; } save();
-  const head = qual ? '🎟️ You qualified!' : ok >= 9 ? 'Crowd whisperer!' : ok >= 7 ? 'Sharp eye!' : ok >= 5 ? 'Solid round' : 'Tough round';
+  const head = qual ? '🎟️ You qualified!' : k >= 9 ? 'Crowd whisperer!' : k >= 7 ? 'Sharp eye!' : k >= 5 ? 'Solid round' : 'Tough round';
   popOpen(`<div class="pp vrr"><p class="pp-k">⚖️ Round ${v.n} complete</p><h2 class="db-h">${head}</h2>
-    <div class="vrr-big">${ok}<small>/10</small></div><div class="vrr-dots">${res.map(x => `<i class="${x ? 'ok' : 'no'}">${x ? '✓' : '✕'}</i>`).join('')}</div>
+    <div class="vrr-big">${ok}<small>/${VR_N}</small></div><div class="vrr-dots">${res.map(x => `<i class="${x ? 'ok' : 'no'}">${x ? '✓' : '✕'}</i>`).join('')}</div>
     <p class="vrr-beat">You beat <b>${beat}%</b> of voters this round</p>
-    <div class="vrr-rw"><div><b>+${pay} 🟡</b><small>round reward</small></div><div><b>🔥 ${v.hot}</b><small>rounds in a row ≥ 7</small></div></div>
+    <div class="vrr-rw"><div><b>+${pay} 🟡</b><small>round reward</small></div><div><b>🔥 ${v.hot}</b><small>great rounds in a row</small></div></div>
     <div class="vrr-did">⚖️ Your votes helped decide today’s <b>contests</b> and the next <b>Final</b>${mv ? '<br>' + mv : ''}</div>
     ${qual ? `<div class="vrq">🎟️ <b>Entry ticket earned</b><br>Enter your photo in today’s contest, free. The crowd decides, prizes in real cash.</div><button class="btn block db-go cashb" id="vrEnter">📷 Enter your photo · free</button>` : `<p class="vrq-p">Round ${S.vrq} of 3 done · <b>${3 - S.vrq} more</b> to earn a free photo entry</p>`}<button class="btn block db-go ${qual ? 'quiet' : ''}" id="vrNext">⚖️ ${qual ? 'Keep judging' : 'Next round'}</button>
     <button class="btn block db-go ${first || !isCash() ? '' : 'cashb'}" id="vrRace">⚔️ ${first ? 'Your first Match Race · free' : isCash() ? 'Race someone with this eye · $1' : 'Race someone with this eye · 25 🟡'}</button>
     ${p ? `<div style="text-align:center"><button class="link pc-later" id="vrPh">📷 Check on ${esc(rcName(p))}</button></div>` : ''}</div>`);
-  setTimeout(() => { try { paintGems(); gemExplosion(pay, { label: `Round ${v.n} · ${ok}/10` }); if (ok >= 8) rvConfetti(document.querySelector('.vrr'), 40); } catch (e) {} }, 300);
+  setTimeout(() => { try { paintGems(); gemExplosion(pay, { label: `Round ${v.n} · ${ok}/${VR_N}` }); if (k >= 8) rvConfetti(document.querySelector('.vrr'), 40); } catch (e) {} }, 300);
   $('#vrNext').onclick = () => { popClose(); try { renderJudge(); } catch (e) {} };
   if ($('#vrEnter')) $('#vrEnter').onclick = () => { popClose(); const P = (S.photos || []).filter(x => x.framed && !x.starter); setTimeout(() => P.length ? ctOpen(photoShow(P[0]), P[0].id) : finPick(), 200); };
   $('#vrRace').onclick = () => { popClose(); if (first) { S.gems = (S.gems || 0) + 25; save(); paintGems(); } setTimeout(() => { gmOpen('match', isCash() ? 1 : 0); if (first) setTimeout(() => { const b = document.getElementById('dbGo'); b && b.click(); }, 80); }, 200); };
   if ($('#vrPh')) $('#vrPh').onclick = () => { popClose(); go('gallery'); try { renderMyShow(); } catch (e) {} }; }
+const VR_N = 6;
+function vrBarHTML() { const v = S.vr || { n: 1, res: [] }, ok = v.res.filter(Boolean).length, q = S.vrq || 0, left = 3 - q, nb = S.fmPend || S.tut === 1;
+  return `<div class="vr-top" id="vrTop"><div class="vr-l"><b>${nb ? '⚔️ Free Match Race at the end of this round' : `🎟️ ${left === 1 ? 'Last round' : left + ' rounds'} to your next photo entry`}</b>
+    <span class="vr-tk">${nb ? '' : [0, 1, 2].map(i => `<i class="${i < q ? 'got' : i === q ? 'now' : ''}"></i>`).join('')}${(S.entT || 0) ? `<em>🎟️ ${S.entT} ready to use</em>` : ''}</span></div>
+    <span class="vr-score">${ok} ✓</span><div class="vr-dots">${Array.from({ length: VR_N }, (_, i) => `<i class="${i < v.res.length ? (v.res[i] ? 'ok' : 'no') : i === v.res.length ? 'now' : ''}"></i>`).join('')}</div></div>`; }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -7229,7 +7237,7 @@ function renderJudge() {
     <div class="jfoot jf2">
       ${energy() < 1 ? `<div class="jf-en en-out"><span class="en-ic">⚡</span><span class="eo-t"><b>Out of energy</b><small class="en-nx">+5 ⚡ in ${enNext()}</small><small class="en-full">Full again at ${enFullAt()}</small></span><button id="enBuy">Refill</button></div>` : `<div class="jf-en ${energy() > 10 ? 'en-hide' : 'en-low'}"><div class="en-top"><span class="en-ic">⚡</span><span class="en-bar"><i style="width:${Math.min(100, energy() / EN_MAX * 100)}%"></i></span><span class="en-n">${energy() > EN_MAX ? `${EN_MAX}<small> +${energy() - EN_MAX}</small>` : `${energy()}/${EN_MAX}`}</span><button class="en-plus" id="enPlus" aria-label="Buy energy">+</button></div>
       </div>`}
-      <div class="stk2" id="stk2">${stkHTML(combo)}</div>
+      
     </div>
     ${(S.eyeN || 0) >= 10 ? `<p class="eye">👁️ <b>Your eye: ${Math.round((S.eyeOk || 0) / S.eyeN * 100)}%</b> agree with the crowd${S.potSeen && !S.geoBlock ? ' · that’s your Quick Sprint edge' : ''}</p>` : `<p class="eye">👁️ Vote ${10 - (S.eyeN || 0)} more to see how often you agree with the crowd</p>`}<div class="vh" id="jRes" aria-live="polite"></div>
 `;
