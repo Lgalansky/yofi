@@ -308,6 +308,8 @@ Then `rmv149.py`: Voting in rounds of 10: round bar (score, dots), stakes on abo
 
 Then `rmv150.py`: Judge 3 rounds to earn your photo entry: round bar shows 'Round 2 of 3 · earn your photo entry'; every 3rd round 'You qualified!' with an entry ticket and 'Enter your photo · free' as the main button; free daily needs a ticket ('🔒 Judge'), Quick contest takes a ticket instead of $1, cash $2 entries need none; contest screen shows tickets or rounds to go.
 
+Then `rmv151.py`: Calmer voting: streak meter, streak chests and On-fire banners removed; rounds of 6 pairs (an entry costs 18 votes, not 30); round bar shows '🎟️ 2 rounds to your next photo entry' with 3 progress pips and '1 ready to use' when a ticket waits; bar repaints after each round.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -454,6 +456,7 @@ python3 rmv147.py
 python3 rmv148.py
 python3 rmv149.py
 python3 rmv150.py
+python3 rmv151.py
 ```
 
 ## Skill only
