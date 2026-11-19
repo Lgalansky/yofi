@@ -326,6 +326,8 @@ Then `rmv158.py`: the qualifier is 15 crowd votes (win 8), shown vote by vote; r
 
 Then `rmv159.py`: live duels shown inside judging (every 5th pair is a live $2 duel); prediction card removed; finished photos leave the panel.
 
+Then `rmv160.py`: the 6-photo race Final is back ($1, 1st $3.50, 2nd $1.60); duel retired; wording restored everywhere.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -481,6 +483,7 @@ python3 rmv156.py
 python3 rmv157.py
 python3 rmv158.py
 python3 rmv159.py
+python3 rmv160.py
 ```
 
 ## Skill only
