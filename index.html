@@ -1688,6 +1688,7 @@ html body #judge .dpr{display:none!important}
 .ldb-f{margin:4px 0 0;font:700 .74rem Nunito,system-ui;color:#C9D3E6}.ldb-f b{color:#F3D98B}.ldb-f i{font-style:normal;color:#8C9AB5;font-size:.66rem}.ldb.done .ldb-f{color:#9FE3AE}
 html body #judge:has(.ldb) .vr-stake{display:none}
 .mp-pl{width:40px;text-align:center;font:900 1.6rem/1 Fraunces,Georgia,serif;color:#14213D}
+html body .ldb{display:none!important}
 </style>
 </head>
 <body>
@@ -3877,7 +3878,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v160</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v161</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -7438,6 +7439,7 @@ function ldBanner() { const top = document.getElementById('vrTop'), o = document
   top.insertAdjacentHTML('afterend', `<div class="ldb" id="ldB"><p class="ldb-h"><span class="qm-live">● LIVE</span><b>🏁 ${esc(raceName(g.sl))} Final</b><em>1st takes $3.50</em></p>
     <p class="ldb-f" id="ldF">These two are racing in it right now · <b>your vote moves them</b> · <i>simulated</i></p></div>`); }
 (() => { const cf = callFx; callFx = function () { const r = cf.apply(this, arguments); try { const f = document.getElementById('ldF'); if (window.__finPair && f) { f.innerHTML = '✓ <b>Your vote counted</b> · it just moved the race'; document.getElementById('ldB').classList.add('done'); } } catch (e) {} return r; }; })();
+function ldBanner() { const o = document.getElementById('ldB'); if (o) o.remove(); }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
