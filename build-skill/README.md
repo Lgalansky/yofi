@@ -282,6 +282,8 @@ Then `rmv136.py`: Three more skill games on the Derby engine: Match Race (1v1, w
 
 Then `rmv137.py`: Stage 1 of 'your photos earn money': Final picks (cash and coins), Winner odds, free Final pick ticket, the free-pick newbie journey, Coin Pick, Quick Sprint, game rotation and unused-coins pop removed from reach (entry points lead to Photo games). New players: 10 votes → free coin Match Race. Finals tab → Play (Photo games + live Final to watch/vote). Framing free. Landing, coins menu, Add cash, FAQ reworded; example stories labelled as prototype.
 
+Then `rmv138.py`: Stage 2 real-play funnel: coin players see coin games only plus 'Your first real game is on us' (free $1 Match Race, switches to real play for good); real players see $0.50–$10 only; Bonus Cash spent first, then $1 tickets, then cash; 'Add $5, get $10 Bonus Cash' after the first real game and on the add-cash screen; out-of-money screen; coins buy a free $1 ticket (500, 1 a day); simulated winners feed; green real-money buttons.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -415,6 +417,7 @@ python3 rmv134.py
 python3 rmv135.py
 python3 rmv136.py
 python3 rmv137.py
+python3 rmv138.py
 ```
 
 ## Skill only
