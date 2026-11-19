@@ -298,6 +298,8 @@ Then `rmv144.py`: First-session pacing: first game matched with newer (weaker si
 
 Then `rmv145.py`: Four of the owner's own photos added to the library: Pets 'Morning run' (Labrador on the dunes); Nature 'Golden cliff', 'Sea of flowers', 'Desert pause'. Cropped to 3:4 portrait. Pets now 7 photos, Nature 11.
 
+Then `rmv146.py`: Newbie fixes: cash winnings ($0.50+) unlock real games without a deposit; starter photo scores 72%, joins the Play Pool and shows first plays within a minute; first-ever game against a newcomer (simulated 32%); earnings card shows how to start earning instead of zeros, and coins earned for a starter-only pool.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -439,6 +441,7 @@ python3 rmv142.py
 python3 rmv143.py
 python3 rmv144.py
 python3 rmv145.py
+python3 rmv146.py
 ```
 
 ## Skill only
