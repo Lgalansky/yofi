@@ -318,6 +318,8 @@ Then `rmv154.py`: watch your photo's qualifier matches live at the top of the Vo
 
 Then `rmv155.py`: the Final is a $2 one-on-one duel (winner takes $3.40), watched live on the Vote screen, with win streaks.
 
+Then `rmv156.py`: free coin predictions on other players' live duels (+20 coins if right; cash stays with photo owners).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -469,6 +471,7 @@ python3 rmv152.py
 python3 rmv153.py
 python3 rmv154.py
 python3 rmv155.py
+python3 rmv156.py
 ```
 
 ## Skill only
