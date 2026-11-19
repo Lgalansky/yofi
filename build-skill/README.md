@@ -324,6 +324,8 @@ Then `rmv157.py`: My Photos rebuilt as photo hero cards (rosette on the frame, o
 
 Then `rmv158.py`: the qualifier is 15 crowd votes (win 8), shown vote by vote; rounds 1-2 end with a banner, only the ticket round opens a popup.
 
+Then `rmv159.py`: live duels shown inside judging (every 5th pair is a live $2 duel); prediction card removed; finished photos leave the panel.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -478,6 +480,7 @@ python3 rmv155.py
 python3 rmv156.py
 python3 rmv157.py
 python3 rmv158.py
+python3 rmv159.py
 ```
 
 ## Skill only
