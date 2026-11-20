@@ -2011,6 +2011,9 @@ html body #coach:has(.qfx){background:#0E1830!important;padding:0!important}html
 .lf-steps span{font:600 .86rem/1.35 Nunito,system-ui;color:#5B4A3F}.lf-steps strong{display:block;font:800 1rem Nunito,system-ui;color:#14213D}
 #bnTag{margin-left:6px;padding:2px 7px;border-radius:999px;background:#FFF1C9;color:#9A6B12;font:800 .66rem Nunito,system-ui;white-space:nowrap}
 html body #wCash{position:relative;overflow:visible!important}html body #wCash #bnTag{display:block!important;position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);margin:0;padding:0 8px;background:#FFF1C9;color:#9A6B12;box-shadow:0 0 0 1.5px #D9AE4F;font:800 .56rem/1.55 Nunito,system-ui;z-index:2}
+.qf2-s b{color:#F3D98B}.qr-net{margin:6px 0 8px;text-align:center;font:italic 600 1.05rem Fraunces,Georgia,serif;color:#F3D98B}.qr-net b{font-style:normal}
+html body .sx-btns.one{grid-template-columns:1fr;margin-top:12px}html body .sx-row .sx-f{font-size:.76rem;white-space:normal;border-radius:10px}
+.sx-alt{display:block;margin:8px auto 0;border:0;background:none;font:700 .84rem Nunito,system-ui;color:#2E4F8A;text-decoration:underline;cursor:pointer}
 </style>
 </head>
 <body>
@@ -4200,7 +4203,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v201</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v202</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -7960,9 +7963,9 @@ function trBegin(p, tuned) { p.tr = null; p.trw = p.trw || 0; save(); try { popC
 function h2hOpen(p, fee, rv) { if (!p) return; const k = photoShow(p) || 'pets', pool = SEED.filter(x => x.src && finCatOf(x) === k && x.src !== p.src), o = rv || pool[Math.floor(Math.random() * pool.length)] || { src: p.src, title: 'A rival' };
   const h = '@' + QS_NAMES[Math.floor(Math.random() * QS_NAMES.length)], cash = fee > 0, nm = esc(rcName(p)), R = rv ? rv : { src: o.src, title: o.title || 'A rival', h };
   popOpen(`<div class="pp qfx h2x"><p class="pp-k">${cash ? `💵 Cash head-to-head` : '🏋️ Training head-to-head'} · ${esc(showName(k))}</p><h2 class="db-h">${nm} vs ${esc(R.title)}</h2>
-    <div class="h2-vs"><div class="me"><img src="${p.src}" alt=""><small>You · 💪 +${p.form || 0}</small></div><b class="h2-x">VS</b><div><img src="${R.src}" alt=""><small>${esc(R.h)}</small></div></div>
+    <div class="h2-vs"><div class="me"><img src="${p.src}" alt=""><small>You</small></div><b class="h2-x">VS</b><div><img src="${R.src}" alt=""><small>${esc(R.h)}</small></div></div>
     ${cash ? `<div class="qfp-f h2-f">${H2H_FEES.map(f => `<button data-h2f="${f}" class="${f === fee ? 'on' : ''}"><b>$${f}</b><small>win ${money(f * H2H_PAY)}</small></button>`).join('')}</div>
-      <div class="qfp-p">Winner takes <b>${money(fee * H2H_PAY)}</b><small>You both pay $${fee}. ${H2H_V} crowd votes decide it.</small></div>`
+      <div class="qfp-p">Winner takes <b>${money(fee * H2H_PAY)}</b><small>You both pay $${fee} · PhotoPicks fee ${money(2 * fee - fee * H2H_PAY)} · ${H2H_V} crowd votes decide it.</small></div>`
     : `<div class="qfp-p">Win: <b>+${TRN_COINS} 🟡</b> and 💪 form +1<small>Free. ${H2H_V} crowd votes decide it. Losing costs nothing.</small></div>`}
     <button class="btn block db-go ${cash ? 'cashb' : ''}" id="h2Go">${cash ? `💵 Play · $${fee}` : '🏋️ Start training'}</button><div style="text-align:center"><button class="link pc-later" id="h2L">Back to stable</button></div>
     <p class="db-sim">Prototype: rival and votes are simulated</p></div>`);
@@ -8183,7 +8186,7 @@ function qfPick(p, fee) { const R = qfRivals(p), k = photoShow(p); fee = fee || 
     <div class="qf2-win"><span class="qf2-cup">🏆</span><div><b>1st wins ${money(fee * QF_PAY[0])}</b><small>2nd wins ${money(fee * QF_PAY[1])}</small></div></div>
     <p class="nv-rule"><span>Meet the 6 finalists</span></p><div class="qf2-g">${tile({ src: p.src }, 1)}${R.map(x => tile(x, 0)).join('')}</div>
     <p class="nv-rule"><span>Choose your entry</span></p><div class="qf2-f">${QF_FEES.map(f => `<button data-qff="${f}" class="${f === fee ? 'on' : ''}"><b>$${f}</b><small>1st ${money(f * QF_PAY[0]).replace('.00', '')}</small></button>`).join('')}</div>
-    <p class="qf2-s">Each finalist pays $${fee}. Crowd votes decide the winners.</p>
+    <p class="qf2-s">6 × $${fee} = <b>${money(6 * fee)}</b> · prizes <b>${money(fee * (QF_PAY[0] + QF_PAY[1]))}</b> · PhotoPicks fee ${money(6 * fee - fee * (QF_PAY[0] + QF_PAY[1]))}<br>Crowd votes decide the winners.</p>
     <button class="btn block nv-go" id="qfpGo">Enter the final · $${fee}</button><div style="text-align:center"><button class="link nv-later" id="qfpL">Later</button></div>
     <p class="nv-sim">You have ${money(S.cash || 0)}${(S.bonus || 0) > 0 ? ` + ${money(S.bonus)} Bonus Cash` : ''} · demo: other finalists simulated</p></div>`);
   document.querySelectorAll('[data-qff]').forEach(b => b.onclick = () => { window.__keepScroll = 1; qfPick(p, +b.dataset.qff); });
@@ -8292,9 +8295,9 @@ function qrCount(p, o, oh, run, kick, sub) { const box = document.querySelector(
     if (n > 0) arc(); else { document.getElementById('cdR').classList.add('go'); const a = document.getElementById('cdArc'); if (a) { a.style.transition = 'stroke-dashoffset .35s ease-out'; a.style.strokeDashoffset = '0'; } try { navigator.vibrate && navigator.vibrate(30); } catch (x) {} }
     if (n <= 0) { clearInterval(t); setTimeout(() => { const c = document.getElementById('qrCd'); if (c) { c.classList.add('bye'); setTimeout(() => c.remove(), 350); } run(); }, 700); } }, 900); }
 function stWon(p) { return +((S.earn || []).filter(e => e.pid === p.id).reduce((a, e) => a + (e.amt || 0), 0)).toFixed(2); }
-function stHero(p) { const H = p.h2h || { w: 0, l: 0 }, won = stWon(p), rz = (p.rz && p.rz[0]) || (H.w > 0) ? rosette(0) : rosette('f');
+function stHero(p) { const H = p.h2h || { w: 0, l: 0 }, won = stWon(p), rz = rosette(rzList(p).length ? rzList(p)[0] : 'f');
   return `<div class="sx-hero"><div class="sx-ph"><img src="${p.src}" alt=""><i class="sx-rz">${rz}</i><div class="sx-cap"><b>${esc(rcName(p))}</b>${won ? `<em>${money(won)} won</em>` : '<em class="no">Ready to race</em>'}</div></div>
-    <p class="sx-rule"><span>Cash races unlocked</span></p><p class="sx-chip">Head-to-head ${H.w}–${H.l} <i>•</i> Form +${p.form || 0}</p>
+    <p class="sx-rule"><span>Cash races unlocked</span></p><p class="sx-chip">Head-to-head ${H.w}–${H.l}</p>
     <div class="sx-btns"><button class="btn sx-go" data-stf="${p.id}">🏁 Enter a final</button><div class="sx-h2"><small>Head-to-head · $2–$20</small><button class="btn sx-ol" data-sth="${p.id}" data-m="c"><i>VS</i> Head-to-head</button></div></div></div>`; }
 function stTrain(p) { const q = p.ql, T = p.tq || { w: 0, l: 0 }, inQ = q && !q.done;
   const stt = inQ ? '🎀 In qualifying' : q && q.done === 'x' ? '📷 Missed the cut' : '😴 Resting';
@@ -8472,6 +8475,15 @@ function payCash(amt, what, then) {
 (() => { const pw = paintWallet; paintWallet = function () { const r = pw.apply(this, arguments); try { const w = document.getElementById('wCash'); if (!w) return r; let t = document.getElementById('bnTag'); const b = S.bonus || 0;
   if (b > 0) { if (!t) { t = document.createElement('small'); t.id = 'bnTag'; const n = document.getElementById('cashNum'); n.insertAdjacentElement('afterend', t); } t.textContent = `+ ${money(b)} bonus`; } else if (t) t.remove(); } catch (e) {} return r; }; })();
 setTimeout(() => { try { paintWallet(); } catch (e) {} }, 800);
+(() => { const qr = qfResult; qfResult = function (p, L, ord) { const r = qr.apply(this, arguments); try { const R = p.raced || {}, fee = R.fee || window.__qfFee || 2, box = document.querySelector('#coach.on .qfx .rv-won');
+    const line = R.prize ? `$${fee} entry · <b>${money(R.prize - fee)}</b> net win` : `$${fee} entry · lost`;
+    if (box) box.insertAdjacentHTML('afterend', `<p class="qr-net">${line}</p>`); else { const sp = document.querySelector('#coach.on .qfx .db-s'); if (sp) sp.insertAdjacentHTML('afterend', `<p class="qr-net">${line}</p>`); } } catch (e) {} return r; }; })();
+function stTrain(p) { const q = p.ql, T = p.tq || { w: 0, l: 0 }, inQ = q && !q.done, w = rmqWait(p), rd = rmqReady(p), tr = T.w || T.l;
+  const stt = inQ ? `🎀 Qualifying · ${Math.min(QS_STEPS, q.got || 0)} of ${QS_STEPS} steps` : rd || !w ? '🏁 Rematch ready' : `⏱ Free rematch in <span class="rm-t" data-until="${p.rmAt}">${rmqFmt(p.rmAt)}</span>`;
+  const main = inQ ? '<button class="btn sx-nv" data-stv>⚖️ Vote to move it</button>' : rd || !w ? `<button class="btn sx-go" data-rmg="${p.id}">🏁 Race the rematch</button>` : `<button class="btn sx-nv" data-sth="${p.id}" data-m="t">🏋️ Train now · ${TQ_COST} coins</button>`;
+  const alt = !inQ && !(rd || !w) ? '' : `<button class="sx-alt" data-sth="${p.id}" data-m="t">or train with coins · ${TQ_COST} a match</button>`;
+  return `<div class="sx-card"><div class="sx-row"><img src="${p.src}" alt=""><div><b>${esc(rcName(p))}</b><span class="sx-st">${stt}</span>${tr ? `<span class="sx-f">🏋️ Training ${T.w}–${T.l} · win ${TQ_WIN} before ${TQ_WIN} losses</span>` : ''}</div></div>
+    <div class="sx-btns one">${main}</div>${alt}</div>`; }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
