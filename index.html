@@ -1922,6 +1922,16 @@ html body .t2 .btn.t2-b.blue{background:linear-gradient(180deg,#2347B8,#1A3A99)!
 .t2-f{margin:14px 6px 0;font:600 .9rem/1.4 Nunito,system-ui;color:#C9D3E6}
 .pv-fn{display:flex;align-items:center;gap:10px;margin:8px 0 2px}.pv-fn img{width:54px;height:54px;border-radius:10px;object-fit:cover;box-shadow:0 0 0 3px #D9AE4F;flex:none}
 .pv-fn b{display:block;font:900 1.1rem Fraunces,Georgia,serif;color:#14213D}.pv-fn small{font:700 .78rem Nunito,system-ui;color:#5B4A3F}
+.hr-trk{position:relative;margin:4px 0 10px;padding:10px 10px 8px;border-radius:18px;background:linear-gradient(180deg,#1B2B52,#14213D);box-shadow:inset 0 0 0 2px #D9AE4F,0 8px 20px rgba(0,0,0,.35);text-align:left}
+.hr-fin{position:absolute;top:8px;bottom:8px;right:52px;width:10px;background:repeating-linear-gradient(0deg,#fff 0 8px,#14213D 8px 16px);border-radius:2px;z-index:2}.hr-fin span{position:absolute;top:-14px;left:-6px;font-size:1.1rem}
+.hr-ln{position:relative;display:grid;grid-template-columns:1fr 44px;align-items:center;gap:6px;padding:6px 0;transition:background .3s}.hr-ln+.hr-ln{border-top:1px dashed rgba(255,255,255,.18)}
+.hr-nm{grid-column:1/-1;font:700 .8rem Nunito,system-ui;color:#C9D3E6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hr-nm b{color:#F3D98B}
+.hr-rail{position:relative;height:60px;border-radius:30px;background:rgba(255,255,255,.05)}.hr-rail img{position:absolute;top:4px;left:0;width:52px;height:52px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px #fff;transition:left .55s cubic-bezier(.3,1.3,.5,1);z-index:3}
+.hr-ln.me .hr-rail img{box-shadow:0 0 0 3px #F3D98B,0 0 16px rgba(243,217,139,.7)}.hr-ln.lead .hr-rail img{animation:hrGal .35s ease-in-out infinite alternate}@keyframes hrGal{to{transform:translateY(-4px) rotate(-4deg)}}
+.hr-ln.lead .hr-rail{background:rgba(233,185,73,.12)}.hr-ln.lead .hr-nm::after{content:' · leads';color:#9FE3AE;font-weight:900}
+.hr-v{font:900 2rem/1 Fraunces,Georgia,serif;color:#FBF3DC;text-align:center}.hr-ln.me .hr-v{color:#F3D98B}.hr-ln.hit .hr-v{animation:qmBp .45s ease-out}
+.hr-ticks{position:absolute;inset:0;pointer-events:none}.hr-ticks i{position:absolute;bottom:6px;width:1px;height:6px;background:rgba(255,255,255,.25)}
+html body #coach.on .qrx>.qr-cd.cd2{position:fixed!important;inset:0!important;z-index:9999!important}
 </style>
 </head>
 <body>
@@ -4111,7 +4121,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v187</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v188</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -8008,7 +8018,7 @@ function qrCount(p, o, oh, run) { const box = document.querySelector('.qrx'); if
 function pvStep(p, s, fin) { const pos = Math.min(1, s / QS_STEPS), k = S.stk || 0;
   return `<div class="pv-tr"><div class="pv-rail">${Array.from({ length: QS_STEPS - 1 }, (_, i) => `<i style="left:${(i + 1) / QS_STEPS * 100}%"></i>`).join('')}<u style="width:${pos * 100}%"></u></div>
       <img class="pv-hz" src="${p.src}" alt="" style="left:calc(${pos} * (100% - 40px))"><span class="pv-fl">🏁</span></div>
-    <div class="pv-k"><span class="pv-dots">${Array.from({ length: QS_RUN }, (_, i) => `<i class="${i < k ? 'on' : i === QS_RUN - 1 && k === QS_RUN - 1 ? 'next' : ''}"></i>`).join('')}</span>${k === QS_RUN - 1 ? '<em class="pv-1m">1 more for a step!</em>' : ''}<b>Step ${Math.min(QS_STEPS, s)} of ${QS_STEPS}${fin ? ' to the Final' : ''}</b></div>`; }
+    <div class="pv-k"><span class="pv-dots">${Array.from({ length: QS_RUN }, (_, i) => `<i class="${i < k ? 'on' : i === QS_RUN - 1 && k === QS_RUN - 1 ? 'next' : ''}"></i>`).join('')}</span>${k === QS_RUN - 1 ? '<em class="pv-1m">1 more for a step!</em>' : ''}<b>${Math.min(QS_STEPS, s)} of ${QS_STEPS} steps · 2 in a row = 1 step</b></div>`; }
 (() => { const pc = pvCard; pvCard = function (p) { const q = p.ql;
   if (q && !q.done && !p.tr) return `<div class="pv-c" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">${q.live ? '<i>●</i> Qualifier race · live' : '🎀 Qualifier'}</span><em>🟡 +${p.qc || 0}</em></div>${pvStep(p, q.got || 0, 0)}</div>`;
   if (p.fin) { p.fr = p.fr || { s: 0 }; return `<div class="pv-c fin" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">🏆 Finalist</span><em>🟡 +${p.qc || 0}</em></div>${pvStep(p, p.fr.s || 0, 1)}</div>`; }
@@ -8062,12 +8072,14 @@ function qlRace(p) { const q = p.ql; if (!q || q.done) return; window.__qlLive =
   for (let i = seq.length - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [seq[i], seq[k]] = [seq[k], seq[i]]; } seq.push(W);
   popOpen(`<div class="pp qfx qrx nv qr2"><div class="nv-bg" style="background-image:url('${p.src}')"></div><p class="nv-brand">PhotoPicks</p>
     <div class="nv-pillrow"><span class="nv-pill">Live qualifier</span></div><h2 class="nv-h">Race to ${QR_WIN}</h2><p class="nv-s">Winner advances to the<br>${fn} Final.</p>
-    <div class="qr2-c me" id="qrCA"><div class="qr2-im"><img src="${p.src}" alt=""><span class="qr2-n">${nm} · <b>You</b></span></div><div class="qr2-r"><b id="qrAv">0</b><small>of ${QR_WIN} votes</small><span class="qr2-p" id="qrAp">${nvPips(0, 'on')}</span></div></div>
-    <div class="qr2-c" id="qrCB"><div class="qr2-im"><img src="${o.src}" alt=""><span class="qr2-n">${esc(o.t)}</span></div><div class="qr2-r"><b id="qrBv">0</b><small>of ${QR_WIN} votes</small><span class="qr2-p" id="qrBp">${nvPips(0, 'on')}</span></div></div>
+    <div class="hr-trk"><div class="hr-fin"><span>🏁</span></div>
+      <div class="hr-ln me" id="qrCA"><span class="hr-nm">${nm} · <b>You</b></span><div class="hr-rail"><i class="hr-dust"></i><img id="qrHA" src="${p.src}" alt=""></div><b class="hr-v" id="qrAv">0</b></div>
+      <div class="hr-ln" id="qrCB"><span class="hr-nm">${esc(o.t)}</span><div class="hr-rail"><i class="hr-dust"></i><img id="qrHB" src="${o.src}" alt=""></div><b class="hr-v" id="qrBv">0</b></div>
+      <div class="hr-ticks">${Array.from({ length: QR_WIN - 1 }, (_, k) => `<i style="left:calc(${(k + 1) / QR_WIN} * (100% - 120px) + 40px)"></i>`).join('')}</div></div><span hidden id="qrAp"></span><span hidden id="qrBp"></span>
     <p class="qr2-v" id="qrV">🗳️ The crowd is voting…</p><div class="nv-goal" id="qrG"><b>${QR_WIN}</b> votes to qualify</div><p class="nv-sim">Demo · simulated votes · rival ${esc(oh)}</p></div>`);
   const run = () => { let i = 0, A = 0, B = 0; const iv = setInterval(() => { if (!document.getElementById('qrG')) { clearInterval(iv); window.__qlLive = 0; return; }
       const me = seq[i++]; if (me) A++; else B++; const vh = '@' + QS_NAMES[Math.floor(Math.random() * QS_NAMES.length)];
-      $('#qrAv').textContent = A; $('#qrBv').textContent = B; $('#qrAp').innerHTML = nvPips(A, 'on'); $('#qrBp').innerHTML = nvPips(B, 'on');
+      $('#qrAv').textContent = A; $('#qrBv').textContent = B; $('#qrAp').innerHTML = nvPips(A, 'on'); $('#qrBp').innerHTML = nvPips(B, 'on'); { const mv = (id, v) => { const h = document.getElementById(id); if (h) h.style.left = `calc(${Math.min(1, v / QR_WIN)} * (100% - 52px))`; }; mv('qrHA', A); mv('qrHB', B); const la = document.getElementById('qrCA'), lb = document.getElementById('qrCB'); la.classList.toggle('lead', A > B); lb.classList.toggle('lead', B > A); }
       const c = document.getElementById(me ? 'qrCA' : 'qrCB'); c.classList.remove('hit'); void c.offsetWidth; c.classList.add('hit');
       $('#qrV').innerHTML = `🗳️ <b>${vh}</b> voted for <b class="${me ? 'me' : ''}">${me ? nm : esc(o.t)}</b>`;
       const g = $('#qrG'), left = QR_WIN - A; g.innerHTML = left > 0 ? `<b>${left}</b> more vote${left === 1 ? '' : 's'} to qualify` : '<b>🏁</b> Qualified!'; g.classList.toggle('hot', left <= 2 && left > 0);
