@@ -416,6 +416,8 @@ Then `rmv203.py`: one Welcome back screen on return (rematch, Final, challenges,
 
 Then `rmv204.py`: Your cash sheet with withdrawal (min $10, bank or PayPal, demo only); Bonus Cash shown as not withdrawable.
 
+Then `rmv205.py`: the + on the cash balance opens the Your cash sheet.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -616,6 +618,7 @@ python3 rmv201.py
 python3 rmv202.py
 python3 rmv203.py
 python3 rmv204.py
+python3 rmv205.py
 ```
 
 ## Skill only
