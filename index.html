@@ -2061,6 +2061,9 @@ html body .nv.qw.crr .qw-ph{width:40%!important;margin-left:auto!important;margi
 html body #qlS .pv-k{flex-wrap:wrap;row-gap:4px}.pv-k .jg{order:-1;flex-basis:100%;margin:0;font:800 .9rem Nunito,system-ui;color:#14213D;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pv-k .jg u{text-decoration:none;color:#9A6B12}.pv-c:not(.fin) .pv-k .jg u{color:#2F7A3F}.pv-k .jg.live{color:#B3261E}
 html body #flow .sx .sx-btns:not(.one):not(.two){grid-template-columns:1fr!important;gap:8px!important}html body #flow .sx .sx-h2{width:100%;align-items:stretch}html body #flow .sx .sx-h2 .btn{width:100%!important;margin:0!important}html body #flow .sx .sx-h2 small{text-align:center}
 .h2r{position:relative}.h2r .h2r-x{position:absolute;top:12px;right:14px;z-index:3;border:0;background:none;color:#C9D3E6;font-size:1.2rem;cursor:pointer}
+.su-age{margin:4px 0 6px}.su-age>span{display:block;margin-bottom:6px;font:800 .9rem Nunito,system-ui;color:#14213D}.su-age>span small{font-weight:600;color:#6B5B4B}
+.su-age>div{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.su-age button{min-height:40px;border:0;border-radius:12px;background:#FBF6EE;box-shadow:inset 0 0 0 1.5px #E2D5C2;font:700 .86rem Nunito,system-ui;color:#3D2B1F;cursor:pointer}
+.su-age button[aria-pressed="true"]{background:#14213D;color:#F3D98B;box-shadow:inset 0 0 0 2px #D9AE4F}
 </style>
 </head>
 <body>
@@ -3418,6 +3421,7 @@ function openSignup(then, opts = {}) {
     <p class="sub">${opts.real ? 'Real-cash games are for adults 18+. Your winnings are saved to your account. ' : opts.pick ? 'Your picks and any winnings are saved to your account. ' : opts.photo ? 'Keep your framed photo and its prize record safe. ' : opts.win ? 'Keep your coins and your win. ' : ''}${opts.real ? '' : 'Create your account so nothing gets lost.'}</p>
     <label class="field">Username<input id="suH" autocomplete="username" placeholder="e.g. goldenhourgreg" maxlength="24"></label>
     <label class="field">Email<input id="suE" type="email" autocomplete="email" placeholder="you@example.com"></label>
+    ${S.ageBr && S.obDone ? '' : `<div class="su-age"><span>Age group <small>· PhotoPicks is for adults 18+</small></span><div>${OB_AGES.map(a => `<button type="button" data-sua="${a}" aria-pressed="${a === S.ageBr}">${a}</button>`).join('')}</div></div>`}
     <p class="err" id="suErr"></p>
     <button class="btn block" id="suGo">Create account</button>${opts.locked === false ? '<div style="text-align:center"><button class="link" id="suLater">Later</button></div>' : ''}`, { locked: opts.locked !== false });
   if ($('#suLater')) $('#suLater').onclick = () => { closeSheet(); if (then) then(); };
@@ -3426,6 +3430,8 @@ function openSignup(then, opts = {}) {
     const h = $('#suH').value.trim().replace(/^@/, ''), em = $('#suE').value.trim();
     if (!/^[a-zA-Z0-9._]{3,24}$/.test(h)) { $('#suErr').textContent = 'Use 3 to 24 letters, numbers, dots or underscores.'; return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) { $('#suErr').textContent = 'Enter an email like name@example.com.'; return; }
+    if (document.querySelector('.su-age') && !window.__suAge) { $('#suErr').textContent = 'Pick your age group. PhotoPicks is for adults 18+.'; return; }
+    if (window.__suAge) { S.ageBr = window.__suAge; window.__suAge = null; S.likes0 = null; S.crews = []; S.crewCur = null; S.age18 = 1; S.adult = 1; S.obDone = 1; save(); try { setLook(); youngPass(); paintTop(); } catch (e) {} }
     const wb = !S.giftEn ? CFG.FIRST_WIN + CFG.SIGNUP : CFG.SIGNUP; S.giftEn = true; S.giftAck = true; S.user = { h, em }; S.gems += wb;
     const firstTime = !S.onboarded; S.onboarded = true; save();
     paintAvatar();
@@ -4250,7 +4256,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v214</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v215</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -8743,6 +8749,9 @@ function h2hLive(p, R, fee) { const cash = fee > 0, prize = +(fee * H2H_PAY).toF
       if (A < H3_WIN && B < H3_WIN && i < seq.length) { setTimeout(step, 1000); return; } setTimeout(() => photoFinish(() => h3Done(p, o, oh, fee, A > B, A, B)), 600); };
     step(); };
   qrCount(p, o, oh, run, cash ? `💵 $${fee} head-to-head` : '🏋️ Training match', cash ? `First to ${H3_WIN} votes wins ${money(prize)}` : `First to ${H3_WIN} votes wins`); }
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-sua]'); if (!b) return; e.preventDefault(); window.__suAge = b.dataset.sua;
+  document.querySelectorAll('[data-sua]').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); const er = document.getElementById('suErr'); if (er && /age/.test(er.textContent)) er.textContent = ''; });
+setTimeout(() => { try { if (S.user && !S.user.guest && !(S.obDone && S.ageBr)) qsWhenFree(() => { if (!(S.obDone && S.ageBr)) ageGate(); }); } catch (e) {} }, 1500);
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
