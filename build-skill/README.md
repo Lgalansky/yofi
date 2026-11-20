@@ -366,6 +366,8 @@ Then `rmv178.py`: coins sheet is now Train for Cash Races (your photos with trai
 
 Then `rmv179.py`: "cash-ready (for good)" renamed to "Ready for Cash Races" everywhere.
 
+Then `rmv180.py`: encourage 2 photos: entry tip, 'Add a second photo' on the start line, +25 coins for two in play, Name it on auto-named photos; start line matches the streak rule.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -541,6 +543,7 @@ python3 rmv176.py
 python3 rmv177.py
 python3 rmv178.py
 python3 rmv179.py
+python3 rmv180.py
 ```
 
 ## Skill only
