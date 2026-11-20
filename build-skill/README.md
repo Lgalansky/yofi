@@ -448,6 +448,8 @@ Then `rmv219.py`: rmv219: Vote card shows Steps n/3 and Streak n/2 with feedback
 
 Then `rmv220.py`: rmv220: fun pass (visible vote verdict + coin float, sounds and haptics with mute, race emoji, playable landing guess, winners ticker).
 
+Then `rmv221.py`: rmv221: vote reveal starts at 50/50 and slides to the real split.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -664,6 +666,7 @@ python3 rmv217.py
 python3 rmv218.py
 python3 rmv219.py
 python3 rmv220.py
+python3 rmv221.py
 ```
 
 ## Skill only
