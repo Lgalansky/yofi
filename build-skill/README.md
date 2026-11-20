@@ -408,6 +408,8 @@ Then `rmv199.py`: every extra photo you pick gets its own name-and-frame step be
 
 Then `rmv200.py`: pinned main buttons on all navy screens; old coins popup, 3-in-a-row toast and prize-pool figure removed; landing page rewritten to the real loop.
 
+Then `rmv201.py`: coin entry is one per player (account required); Bonus Cash spent first, kept separate, shown beside cash.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -604,6 +606,7 @@ python3 rmv197.py
 python3 rmv198.py
 python3 rmv199.py
 python3 rmv200.py
+python3 rmv201.py
 ```
 
 ## Skill only
