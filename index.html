@@ -4228,7 +4228,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v207</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v208</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -8495,7 +8495,7 @@ function payCash(amt, what, then) {
   const tot = () => +((S.cash || 0) + (S.bonus || 0)).toFixed(2);
   const take = () => { const b = Math.min(S.bonus || 0, amt), c = +(amt - b).toFixed(2); S.bonus = +((S.bonus || 0) - b).toFixed(2); S.cash = +((S.cash || 0) - c).toFixed(2); try { goCash(); } catch (e) {} save(); paintWallet();
     if (b > 0) toast(`🎁 ${money(b)} Bonus Cash used${c > 0 ? ` · ${money(c)} cash` : ''}`); then(); };
-  if (tot() < amt) { openStore(`${what} costs ${money(amt)}.`, () => { if (tot() >= amt) take(); }); return false; }
+  if (tot() < amt) { openStore(`${what} costs ${money(amt)} cash.`, () => { if (tot() >= amt) take(); }); return false; }
   take(); return true; }
 (() => { const pw = paintWallet; paintWallet = function () { const r = pw.apply(this, arguments); try { const w = document.getElementById('wCash'); if (!w) return r; let t = document.getElementById('bnTag'); const b = S.bonus || 0;
   if (b > 0) { if (!t) { t = document.createElement('small'); t.id = 'bnTag'; const n = document.getElementById('cashNum'); n.insertAdjacentElement('afterend', t); } t.textContent = `+ ${money(b)} bonus`; } else if (t) t.remove(); } catch (e) {} return r; }; })();
