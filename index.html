@@ -1920,6 +1920,8 @@ html body .t2 .btn.t2-b.blue{background:linear-gradient(180deg,#2347B8,#1A3A99)!
 .t2-inv{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:4px 0 0;padding:12px 16px;border:0;border-radius:16px;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1.5px #8C9AB5;cursor:pointer;text-align:left;font:inherit;color:#EEF1F8}
 .t2-inv b{display:block;font:900 1.3rem Fraunces,Georgia,serif;color:#FBF3DC}.t2-inv small{font:600 .88rem Nunito,system-ui;color:#C9D3E6}.t2-inv em{font-style:normal;font-size:1.6rem;color:#FBF3DC}
 .t2-f{margin:14px 6px 0;font:600 .9rem/1.4 Nunito,system-ui;color:#C9D3E6}
+.pv-fn{display:flex;align-items:center;gap:10px;margin:8px 0 2px}.pv-fn img{width:54px;height:54px;border-radius:10px;object-fit:cover;box-shadow:0 0 0 3px #D9AE4F;flex:none}
+.pv-fn b{display:block;font:900 1.1rem Fraunces,Georgia,serif;color:#14213D}.pv-fn small{font:700 .78rem Nunito,system-ui;color:#5B4A3F}
 </style>
 </head>
 <body>
@@ -4109,7 +4111,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v186</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v187</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -8011,7 +8013,7 @@ function pvStep(p, s, fin) { const pos = Math.min(1, s / QS_STEPS), k = S.stk ||
   if (q && !q.done && !p.tr) return `<div class="pv-c" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">${q.live ? '<i>●</i> Qualifier race · live' : '🎀 Qualifier'}</span><em>🟡 +${p.qc || 0}</em></div>${pvStep(p, q.got || 0, 0)}</div>`;
   if (p.fin) { p.fr = p.fr || { s: 0 }; return `<div class="pv-c fin" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">🏆 Finalist</span><em>🟡 +${p.qc || 0}</em></div>${pvStep(p, p.fr.s || 0, 1)}</div>`; }
   return pc.apply(this, arguments); }; })();
-const qsElig = () => pvList().filter(p => (p.ql && !p.ql.done && !p.ql.live && !p.tr) || (p.fin && !(p.fr && p.fr.go)));
+const qsElig = () => pvList().filter(p => p.ql && !p.ql.done && !p.ql.live && !p.tr);
 function qsTarget() { const E = qsElig(); if (!E.length) return null; const t = E.find(p => p.id === window.__pvSel) || E[0]; if (t.fin && !t.fr) t.fr = { s: 0 }; return t; }
 (() => { const pc = pvCard; pvCard = function (p) { let h = pc.apply(this, arguments); try { const E = qsElig(); if (E.length > 1 && E.includes(p)) { const t = qsTarget();
     h = h.replace('<div class="pv-c', `<div class="pv-c ${t && t.id === p.id ? 'act' : 'wait'}`); h = h.replace(/<\/div>\s*$/, `<p class="pv-who"><span class="a">⚖️ Your votes are moving this one</span><span class="w">👉 Swipe here and vote to move this one</span></p></div>`); } } catch (e) {} return h; }; })();
@@ -8232,6 +8234,11 @@ function useGems() { const g = Math.floor(S.gems || 0), n = Math.floor(g / TQ_CO
   B.querySelectorAll('[data-tcf]').forEach(b => b.onclick = () => { const p = S.photos.find(x => x.id === b.dataset.tcf); closeSheet(); setTimeout(() => qfStart(p), 200); });
   B.querySelectorAll('[data-tcn]').forEach(b => b.onclick = () => { closeSheet(); setTimeout(finPick, 200); });
   B.querySelectorAll('[data-tci]').forEach(b => b.onclick = () => { closeSheet(); setTimeout(openFriends, 200); }); }
+try { (S.photos || []).forEach(p => { if (p.fin) p.fr = { s: QS_STEPS, go: 1 }; }); save(); } catch (e) {}
+(() => { const pc = pvCard; pvCard = function (p) { if (!p.fin) return pc.apply(this, arguments); p.fr = { s: QS_STEPS, go: 1 };
+  return `<div class="pv-c fin" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">🏆 Finalist</span><em>🟡 +${p.qc || 0}</em></div>
+    <div class="pv-fn"><img src="${p.src}" alt=""><div><b>Into the Final!</b><small>Pick your entry ($2–$20) · 1st wins up to ${money(20 * QF_PAY[0])}</small></div></div>
+    <button class="btn block pv-go" data-qfr="${p.id}">🏁 Meet your finalists & race</button></div>`; }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
