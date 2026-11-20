@@ -360,6 +360,8 @@ Then `rmv175.py`: when no photo is in play, the Vote screen shows an empty-lane 
 
 Then `rmv176.py`: sign-up after the first framed photo; slower qualifier race with each voter shown; prize up front on the race and rivals screens.
 
+Then `rmv177.py`: Qualified! screen shows the Final and what 1st could win.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -532,6 +534,7 @@ python3 rmv173.py
 python3 rmv174.py
 python3 rmv175.py
 python3 rmv176.py
+python3 rmv177.py
 ```
 
 ## Skill only
