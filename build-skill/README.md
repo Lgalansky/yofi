@@ -338,6 +338,8 @@ Then `rmv164.py`: full-screen start line when a photo enters its qualifier (Ster
 
 Then `rmv165.py`: no 100-coin pop; free retry when a photo goes out; first two entries strongly favoured to qualify.
 
+Then `rmv166.py`: loop for photos that miss: free tune-up, training head-to-heads for coins and form, then free re-entry.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -499,6 +501,7 @@ python3 rmv162.py
 python3 rmv163.py
 python3 rmv164.py
 python3 rmv165.py
+python3 rmv166.py
 ```
 
 ## Skill only
