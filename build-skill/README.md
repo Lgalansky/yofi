@@ -388,6 +388,8 @@ Then `rmv189.py`: first Final free ($2 entry); vote pairs match your qualifying 
 
 Then `rmv190.py`: winning the qualifier sends you back to voting; 3 voting-streak steps take the photo to its Final.
 
+Then `rmv191.py`: free first Final switched off; all Final entries paid.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -574,6 +576,7 @@ python3 rmv187.py
 python3 rmv188.py
 python3 rmv189.py
 python3 rmv190.py
+python3 rmv191.py
 ```
 
 ## Skill only
