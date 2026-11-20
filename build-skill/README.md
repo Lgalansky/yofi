@@ -346,6 +346,8 @@ Then `rmv168.py`: Play tab becomes your Stable: train photos head-to-head for co
 
 Then `rmv169.py`: old qualifier popups switched off; big rival photos; coin countdown removed from the Vote screen.
 
+Then `rmv170.py`: free photo entries (5 a day, several at once); training costs 20 coins a match, 3 wins before 3 losses = cash-ready for good (Finals + cash head-to-heads).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -511,6 +513,7 @@ python3 rmv166.py
 python3 rmv167.py
 python3 rmv168.py
 python3 rmv169.py
+python3 rmv170.py
 ```
 
 ## Skill only
