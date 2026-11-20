@@ -402,6 +402,8 @@ Then `rmv196.py`: lost qualifier loop: near-miss coins, free rematch on a timer,
 
 Then `rmv197.py`: consistency pass: all full-screen moments share one navy and one gold wordmark; one green / navy / gold button system; stray blues removed.
 
+Then `rmv198.py`: head-to-head entries of $2/$5/$10/$20 with step-up through each level.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -595,6 +597,7 @@ python3 rmv194.py
 python3 rmv195.py
 python3 rmv196.py
 python3 rmv197.py
+python3 rmv198.py
 ```
 
 ## Skill only
