@@ -410,6 +410,8 @@ Then `rmv200.py`: pinned main buttons on all navy screens; old coins popup, 3-in
 
 Then `rmv201.py`: coin entry is one per player (account required); Bonus Cash spent first, kept separate, shown beside cash.
 
+Then `rmv202.py`: honest money lines (lobby pool/prizes/fee, net result, head-to-head fee); simpler Stable cards; Form hidden; one rosette rule.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -607,6 +609,7 @@ python3 rmv198.py
 python3 rmv199.py
 python3 rmv200.py
 python3 rmv201.py
+python3 rmv202.py
 ```
 
 ## Skill only
