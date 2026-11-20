@@ -354,6 +354,8 @@ Then `rmv172.py`: 3 correct votes in a row move your photo 1 step (3 steps to th
 
 Then `rmv173.py`: on 2 in a row the third streak dot pulses with '1 more for a step!'.
 
+Then `rmv174.py`: 2 correct in a row moves a photo a step; votes move one photo at a time (the card you're on); cash and coin balances always shown.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -523,6 +525,7 @@ python3 rmv170.py
 python3 rmv171.py
 python3 rmv172.py
 python3 rmv173.py
+python3 rmv174.py
 ```
 
 ## Skill only
