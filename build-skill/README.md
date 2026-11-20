@@ -406,6 +406,8 @@ Then `rmv198.py`: head-to-head entries of $2/$5/$10/$20 with step-up through eac
 
 Then `rmv199.py`: every extra photo you pick gets its own name-and-frame step before it joins the race.
 
+Then `rmv200.py`: pinned main buttons on all navy screens; old coins popup, 3-in-a-row toast and prize-pool figure removed; landing page rewritten to the real loop.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -601,6 +603,7 @@ python3 rmv196.py
 python3 rmv197.py
 python3 rmv198.py
 python3 rmv199.py
+python3 rmv200.py
 ```
 
 ## Skill only
