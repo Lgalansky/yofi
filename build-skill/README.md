@@ -404,6 +404,8 @@ Then `rmv197.py`: consistency pass: all full-screen moments share one navy and o
 
 Then `rmv198.py`: head-to-head entries of $2/$5/$10/$20 with step-up through each level.
 
+Then `rmv199.py`: every extra photo you pick gets its own name-and-frame step before it joins the race.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -598,6 +600,7 @@ python3 rmv195.py
 python3 rmv196.py
 python3 rmv197.py
 python3 rmv198.py
+python3 rmv199.py
 ```
 
 ## Skill only
