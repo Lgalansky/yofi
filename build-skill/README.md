@@ -418,6 +418,8 @@ Then `rmv204.py`: Your cash sheet with withdrawal (min $10, bank or PayPal, demo
 
 Then `rmv205.py`: the + on the cash balance opens the Your cash sheet.
 
+Then `rmv206.py`: rmv206: Daily Cup. 100 coins enters one race-ready photo into a daily $100 fixed prize pot (top of the Stable).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -619,6 +621,7 @@ python3 rmv202.py
 python3 rmv203.py
 python3 rmv204.py
 python3 rmv205.py
+python3 rmv206.py
 ```
 
 ## Skill only
