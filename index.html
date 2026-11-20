@@ -1906,6 +1906,20 @@ html body #flow .sx .btn.sx-ol{background:#fff!important;color:#1E5C2E!important
 html body #flow .sx .btn.sx-nv{background:linear-gradient(180deg,#22325A,#14213D)!important;color:#fff!important;font-size:.92rem!important}
 html body #flow .sx .sx-add{font:600 1.15rem Nunito,system-ui;color:#14213D}html body #flow .sx .sx-add b{font-weight:900}
 html body #flow .sx .btn.sx-ol i{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#1E5C2E!important}
+html body #sheet:has(.t2){background:linear-gradient(180deg,#14224A,#0B1530)!important;color:#EEF1F8}html body #sheet:has(.t2) .grab,html body #sheet:has(.t2) [class*=handle]{background:#8C9AB5!important}
+.t2{position:relative;padding:4px 2px 10px;text-align:center}.t2-x{position:absolute;top:-6px;right:0;border:0;background:none;color:#FBF3DC;font-size:1.6rem;cursor:pointer}
+html body .t2 h2.t2-h{margin:14px 0 8px;font:900 2.2rem/1.05 Fraunces,Georgia,serif;color:#FBF3DC!important;-webkit-text-fill-color:#FBF3DC!important}
+.t2-s{margin:0 0 14px;font:600 1.02rem/1.4 Nunito,system-ui;color:#EEF1F8}.t2-s b{font-size:1.12rem;color:#fff}
+.t2-bal{display:flex;align-items:center;justify-content:space-around;padding:12px 10px;border-radius:16px;box-shadow:inset 0 0 0 2px #D9AE4F;font:700 1.05rem Nunito,system-ui;color:#EEF1F8}.t2-bal b{font-size:1.25rem;color:#fff}.t2-bal i{width:1.5px;height:26px;background:#D9AE4F}
+.t2-per{margin:10px 0 12px;font:800 1.05rem Nunito,system-ui;color:#EEF1F8}
+.t2-c{margin:0 0 12px;padding:12px;border-radius:20px;background:#FBF6EE;text-align:left}.t2-r{display:flex;gap:14px;align-items:center;margin-bottom:10px}.t2-r img{width:104px;height:92px;border-radius:14px;object-fit:cover;flex:none}
+.t2-r div{display:flex;flex-direction:column;gap:3px;min-width:0}.t2-r b{font:900 1.6rem/1.05 Fraunces,Georgia,serif;color:#14213D;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.t2-r span{font:800 1rem Nunito,system-ui;color:#3D2B1F}.t2-r small{font:700 .95rem Nunito,system-ui;color:#5B4A3F}
+html body .t2 .btn.t2-b{width:100%!important;min-height:48px!important;margin:0!important;border-radius:14px!important;font:800 1.15rem Nunito,system-ui!important;color:#fff!important;box-shadow:none!important}
+html body .t2 .btn.t2-b.blue{background:linear-gradient(180deg,#2347B8,#1A3A99)!important}html body .t2 .btn.t2-b.green{background:linear-gradient(180deg,#2F8A3F,#1F6A2E)!important}html body .t2 .btn.t2-b.off{background:#D8CFC0!important;color:#5B4A3F!important}
+.t2-e p{margin:0 0 10px;font:700 .95rem Nunito,system-ui;color:#3D4A5C;text-align:center}
+.t2-inv{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:4px 0 0;padding:12px 16px;border:0;border-radius:16px;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1.5px #8C9AB5;cursor:pointer;text-align:left;font:inherit;color:#EEF1F8}
+.t2-inv b{display:block;font:900 1.3rem Fraunces,Georgia,serif;color:#FBF3DC}.t2-inv small{font:600 .88rem Nunito,system-ui;color:#C9D3E6}.t2-inv em{font-style:normal;font-size:1.6rem;color:#FBF3DC}
+.t2-f{margin:14px 6px 0;font:600 .9rem/1.4 Nunito,system-ui;color:#C9D3E6}
 </style>
 </head>
 <body>
@@ -4095,7 +4109,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v185</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v186</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -8200,6 +8214,24 @@ function finalsTab() { const H = stHorses(), R = H.filter(isCashOK), O = H.filte
     ${R.map(stHero).join('')}${O.map(stTrain).join('')}${H.length ? '' : '<div class="sx-card sx-empty"><p>Your stable is empty. Add a photo and vote it into a qualifier, or train it with coins.</p></div>'}
     <button class="sx-add" data-stn><b>＋</b> Add a photo</button><p class="db-sim">Demo · rivals and crowd votes are simulated</p></div>`, false);
   $('#flow').classList.add('astab'); ['segJudge', 'segStudio', 'segGallery'].forEach(id => $('#' + id).setAttribute('aria-pressed', 'false')); $('#segCompete').setAttribute('aria-pressed', 'true'); setTimeout(() => { $('#ptitle').textContent = 'Stable'; }, 0); }
+function useGems() { const g = Math.floor(S.gems || 0), n = Math.floor(g / TQ_COST), P = stHorses(), O = P.filter(p => !isCashOK(p)), R = P.filter(isCashOK);
+  const st = p => { const q = p.ql; return q && !q.done ? 'In qualifying' : q && q.done === 'x' ? 'Missed the cut' : 'Resting'; };
+  const tc = p => { const T = p.tq || { w: 0, l: 0 }, go = T.w || T.l;
+    return `<div class="t2-c"><div class="t2-r"><img src="${p.src}" alt=""><div><b>${esc(rcName(p))}</b><span>${st(p)}</span><small>${T.w} win${T.w === 1 ? '' : 's'} · ${T.l} loss${T.l === 1 ? '' : 'es'}</small></div></div>
+      ${g >= TQ_COST ? `<button class="btn t2-b blue" data-tct="${p.id}">${go ? 'Continue training' : 'Start training'}</button>` : `<button class="btn t2-b off" disabled>Need ${TQ_COST - g} more coins</button>`}</div>`; };
+  const rc = p => { const w = stWon(p); return `<div class="t2-c"><div class="t2-r"><img src="${p.src}" alt=""><div><b>${esc(rcName(p))}</b><span>Cash races unlocked</span><small>${w ? `${money(w)} won` : 'Ready to race'}</small></div></div><button class="btn t2-b green" data-tcf="${p.id}">Enter a final</button></div>`; };
+  openSheet(`<div class="trc t2"><button class="t2-x" data-t2x aria-label="Close">✕</button><h2 class="t2-h">Train for Cash Races</h2>
+    <p class="t2-s"><b>Win 3 before 3 losses to qualify.</b><br>Unlock head-to-heads and $2–$20 finals.</p>
+    <div class="t2-bal"><span>🪙 <b>${g.toLocaleString()} coins</b></span><i></i><span>${n} match${n === 1 ? '' : 'es'} available</span></div><p class="t2-per">🪙 ${TQ_COST} coins per training match</p>
+    ${O.map(tc).join('')}${R.map(rc).join('')}${P.length ? '' : `<div class="t2-c t2-e"><p>📷 Enter a photo (free), then train it here with your coins.</p><button class="btn t2-b blue" data-tcn>Enter a photo · free</button></div>`}
+    <button class="t2-inv" data-tci><span><b>Invite a friend</b><small>You each get 100 coins when they judge 15 photos.</small></span><em>›</em></button>
+    <p class="t2-f">Earn coins by judging. Get 50 more when a photo qualifies. Coins can’t be bought.</p></div>`);
+  const B = $('#sheetBody');
+  B.querySelectorAll('[data-t2x]').forEach(b => b.onclick = () => closeSheet());
+  B.querySelectorAll('[data-tct]').forEach(b => b.onclick = () => { const p = S.photos.find(x => x.id === b.dataset.tct); closeSheet(); setTimeout(() => h2hOpen(p, 0), 200); });
+  B.querySelectorAll('[data-tcf]').forEach(b => b.onclick = () => { const p = S.photos.find(x => x.id === b.dataset.tcf); closeSheet(); setTimeout(() => qfStart(p), 200); });
+  B.querySelectorAll('[data-tcn]').forEach(b => b.onclick = () => { closeSheet(); setTimeout(finPick, 200); });
+  B.querySelectorAll('[data-tci]').forEach(b => b.onclick = () => { closeSheet(); setTimeout(openFriends, 200); }); }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
