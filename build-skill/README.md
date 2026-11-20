@@ -398,6 +398,8 @@ Then `rmv194.py`: one-tap rematch on results: Race again, Step up, and Race agai
 
 Then `rmv195.py`: challenges while you're away: other players challenge your race-ready photos; While you were away card, Stable Challenges box, Play tab count.
 
+Then `rmv196.py`: lost qualifier loop: near-miss coins, free rematch on a timer, train now to skip the wait; free Final entry 250 coins; challenges only after first cash race.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -589,6 +591,7 @@ python3 rmv192.py
 python3 rmv193.py
 python3 rmv194.py
 python3 rmv195.py
+python3 rmv196.py
 ```
 
 ## Skill only
