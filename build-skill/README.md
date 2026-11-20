@@ -436,6 +436,8 @@ Then `rmv213.py`: rmv213: tap-through audit fixes (Final buttons say Vote N step
 
 Then `rmv214.py`: rmv214: route cards (steps > qualifier race > steps > Final), stacked Stable buttons, head-to-heads as live horse races.
 
+Then `rmv215.py`: rmv215: age group asked at sign-up (and once on open for older accounts), not before the Final.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -646,6 +648,7 @@ python3 rmv211.py
 python3 rmv212.py
 python3 rmv213.py
 python3 rmv214.py
+python3 rmv215.py
 ```
 
 ## Skill only
