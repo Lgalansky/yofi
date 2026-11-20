@@ -1949,6 +1949,10 @@ html body .qf2-f button.lk{opacity:.4}
 .tw-earn{margin:4px 0 14px;padding:12px 14px;border-radius:16px;background:#fff;box-shadow:inset 0 0 0 1.5px #EADCC6}.tw-k{margin:0 0 6px;font:900 .74rem Nunito,system-ui;letter-spacing:.08em;text-transform:uppercase;color:#8A7B6C}
 .tw-er{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid #F0E6D6}.tw-er:first-of-type{border-top:0}.tw-er img{width:40px;height:40px;border-radius:8px;object-fit:cover}.tw-er div{flex:1;min-width:0}.tw-er b{display:block;font:800 .88rem Nunito,system-ui;color:#14213D}.tw-er small{font:600 .76rem Nunito,system-ui;color:#5B4A3F}.tw-er em{font-style:normal;font:900 1rem Fraunces,Georgia,serif;color:#2F6B3F}
 html body #gallery .tw .sx-add{font:700 1.1rem Nunito,system-ui}
+html body .nv .btn.nv-coin{display:block;width:100%;min-height:52px!important;margin:10px 0 0!important;border-radius:999px!important;background:linear-gradient(180deg,#F3D98B,#D9AE4F)!important;color:#14213D!important;font:900 1.05rem Nunito,system-ui!important;box-shadow:0 4px 12px rgba(0,0,0,.3)!important;line-height:1.15!important;padding:6px 10px!important}
+html body .nv .btn.nv-coin small{display:block;font:700 .74rem Nunito,system-ui;color:#3D2B1F}
+.nv-coinp{margin:10px 0 0;font:700 .86rem Nunito,system-ui;color:#C9D3E6}.nv-coinp b{color:#F3D98B}.nv-coinp span,.t2-tk span{display:block;height:7px;margin:5px auto 0;max-width:240px;border-radius:4px;background:rgba(255,255,255,.14);overflow:hidden}.nv-coinp i,.t2-tk i{display:block;height:100%;background:linear-gradient(90deg,#F3D98B,#E9B949)}
+.t2-tk{margin:0 0 12px;padding:10px 14px;border-radius:14px;background:rgba(233,185,73,.12);box-shadow:inset 0 0 0 1.5px #D9AE4F;text-align:center}.t2-tk b{display:block;font:800 1rem Nunito,system-ui;color:#F3D98B}.t2-tk small{font:600 .82rem Nunito,system-ui;color:#EEF1F8}.t2-tk span{max-width:none}
 </style>
 </head>
 <body>
@@ -4138,7 +4142,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v192</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v193</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -8306,6 +8310,13 @@ function renderMyShow() { const g = $('#gallery'); if (!g) return; const P = (S.
   g.querySelectorAll('[data-twa]').forEach(b => b.onclick = () => { const p = S.photos.find(x => x.id === b.dataset.pid), a = b.dataset.twa;
     if (a === 'v') { go('judge'); renderJudge(); } else if (a === 'f') qfStart(p); else finalsTab(); });
   g.querySelectorAll('[data-twn]').forEach(b => b.onclick = () => finPick()); }
+const FIN_COINS = 300;
+(() => { const qp = qfPick; qfPick = function (p, fee) { const r = qp.apply(this, arguments); try { const go = document.getElementById('qfpGo'); if (!go) return r; const g = Math.floor(S.gems || 0);
+    if (g >= FIN_COINS) { go.insertAdjacentHTML('afterend', `<button class="btn block nv-coin" id="qfpCoin">🪙 Enter free with ${FIN_COINS} coins<small>a $2 entry · 1st wins ${money(2 * QF_PAY[0])} cash</small></button>`);
+      document.getElementById('qfpCoin').onclick = () => { if ((S.gems || 0) < FIN_COINS) return; S.gems -= FIN_COINS; save(); try { paintGems(); } catch (e) {} window.__qfFee = 2; popClose(); toast(`🪙 −${FIN_COINS} coins · free $2 entry`); const R = qfRivals(p); setTimeout(() => qfRace(p, [{ src: p.src, t: rcName(p), h: 'You', me: 1, st: qlStrength(p) }].concat(R)), 250); }; }
+    else go.insertAdjacentHTML('afterend', `<p class="nv-coinp">🪙 <b>${FIN_COINS - g} more coins</b> for a free $2 entry<span><i style="width:${Math.min(100, g / FIN_COINS * 100)}%"></i></span></p>`); } catch (e) {} return r; }; })();
+(() => { const ug = useGems; useGems = function () { const r = ug.apply(this, arguments); try { const per = document.querySelector('.t2 .t2-per'), g = Math.floor(S.gems || 0); if (per) per.insertAdjacentHTML('afterend',
+    `<div class="t2-tk"><b>🎟️ ${FIN_COINS} coins = a free $2 Final entry</b><small>${g >= FIN_COINS ? 'You have enough: use it when you enter a Final.' : `${FIN_COINS - g} more coins to go. Use it in the Final lobby.`}</small><span><i style="width:${Math.min(100, g / FIN_COINS * 100)}%"></i></span></div>`); } catch (e) {} return r; }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
