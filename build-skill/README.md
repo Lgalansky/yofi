@@ -368,6 +368,8 @@ Then `rmv179.py`: "cash-ready (for good)" renamed to "Ready for Cash Races" ever
 
 Then `rmv180.py`: encourage 2 photos: entry tip, 'Add a second photo' on the start line, +25 coins for two in play, Name it on auto-named photos; start line matches the streak rule.
 
+Then `rmv181.py`: navy & gold redesign of the live qualifier (Race to 11), You're in the final!, and the Final lobby, from the owner's mock-ups.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -544,6 +546,7 @@ python3 rmv177.py
 python3 rmv178.py
 python3 rmv179.py
 python3 rmv180.py
+python3 rmv181.py
 ```
 
 ## Skill only
