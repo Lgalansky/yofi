@@ -350,6 +350,8 @@ Then `rmv170.py`: free photo entries (5 a day, several at once); training costs 
 
 Then `rmv171.py`: your 10 votes start a photo's qualifier; the qualifier is a full-screen live 2-horse race (first to 11 votes).
 
+Then `rmv172.py`: 3 correct votes in a row move your photo 1 step (3 steps to the qualifier, 3 more to the Final); 3-2-1 head-to-head intro before the qualifier race.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -517,6 +519,7 @@ python3 rmv168.py
 python3 rmv169.py
 python3 rmv170.py
 python3 rmv171.py
+python3 rmv172.py
 ```
 
 ## Skill only
