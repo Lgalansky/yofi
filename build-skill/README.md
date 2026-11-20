@@ -434,6 +434,8 @@ Then `rmv212.py`: rmv212: Ready for Cash Races celebration after the third train
 
 Then `rmv213.py`: rmv213: tap-through audit fixes (Final buttons say Vote N steps, photos return to voting after a Final, no instant Final replays, low-coin training, invite sheet, picker wording, one Add cash sheet).
 
+Then `rmv214.py`: rmv214: route cards (steps > qualifier race > steps > Final), stacked Stable buttons, head-to-heads as live horse races.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -643,6 +645,7 @@ python3 rmv210.py
 python3 rmv211.py
 python3 rmv212.py
 python3 rmv213.py
+python3 rmv214.py
 ```
 
 ## Skill only
