@@ -370,6 +370,8 @@ Then `rmv180.py`: encourage 2 photos: entry tip, 'Add a second photo' on the sta
 
 Then `rmv181.py`: navy & gold redesign of the live qualifier (Race to 11), You're in the final!, and the Final lobby, from the owner's mock-ups.
 
+Then `rmv182.py`: every race has a goal, 3-2-1, suspense and a celebration: stable head-to-heads rebuilt as navy Race to 8; 3-2-1 before the 6-photo Final.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -547,6 +549,7 @@ python3 rmv178.py
 python3 rmv179.py
 python3 rmv180.py
 python3 rmv181.py
+python3 rmv182.py
 ```
 
 ## Skill only
