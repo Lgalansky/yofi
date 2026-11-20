@@ -376,6 +376,8 @@ Then `rmv183.py`: head-to-head in the owner's mock-up style: story headlines (On
 
 Then `rmv184.py`: the 3-2-1 before every race rebuilt: Get ready, prize in gold, big photos with VS, gold countdown ring, green GO!.
 
+Then `rmv185.py`: the Stable in the owner's mock-up style: hero cards for photos unlocked for cash races, training cards with Wins/Losses, Add a photo.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -556,6 +558,7 @@ python3 rmv181.py
 python3 rmv182.py
 python3 rmv183.py
 python3 rmv184.py
+python3 rmv185.py
 ```
 
 ## Skill only
