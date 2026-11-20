@@ -2009,6 +2009,8 @@ html body #coach:has(.qfx){background:#0E1830!important;padding:0!important}html
 .lf-steps{list-style:none;margin:10px 0 14px;padding:0;display:grid;gap:8px;text-align:left}.lf-steps li{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1.5px #EADCC6}
 .lf-steps li>b{flex:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#14213D;color:#F3D98B;font:900 1rem Fraunces,Georgia,serif;box-shadow:0 0 0 2px #D9AE4F}
 .lf-steps span{font:600 .86rem/1.35 Nunito,system-ui;color:#5B4A3F}.lf-steps strong{display:block;font:800 1rem Nunito,system-ui;color:#14213D}
+#bnTag{margin-left:6px;padding:2px 7px;border-radius:999px;background:#FFF1C9;color:#9A6B12;font:800 .66rem Nunito,system-ui;white-space:nowrap}
+html body #wCash{position:relative;overflow:visible!important}html body #wCash #bnTag{display:block!important;position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);margin:0;padding:0 8px;background:#FFF1C9;color:#9A6B12;box-shadow:0 0 0 1.5px #D9AE4F;font:800 .56rem/1.55 Nunito,system-ui;z-index:2}
 </style>
 </head>
 <body>
@@ -2428,7 +2430,7 @@ const uid = () => Math.random().toString(36).slice(2, 9);
 const fresh = () => ({ gems: 0, cash: 0, bonus: 0, frames: {}, user: null, photos: [], cur: null, votes: 0, since: 0, jIdx: 0, order: null, bw: 0, bl: 0, entered: {}, entries: [], vault: {}, onboarded: false });
 let S = fresh();
 try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) { /* storage unavailable: run in memory */ }
-if (S.bonus) { S.cash = +((S.cash || 0) + S.bonus).toFixed(2); S.bonus = 0; }
+
 // the Daily Cash Cup is gone: drop any open entries so they no longer show (and free the photos)
 if (Array.isArray(S.entries)) { S.entries = S.entries.filter(e => !(e.cid === 'daily' && !e.done)); if (S.entered) delete S.entered.daily; }
 { const M = { portrait: 'selfie', landscape: 'travel', sunrise: 'travel', golden: 'travel', city: 'travel', street: 'travel', arch: 'travel', surf: 'travel', hiking: 'travel', wildlife: 'any', action: 'fitness', cars: 'any', garden: 'any', bw: 'any' }; if (Array.isArray(S.photos)) S.photos.forEach(p => { if (p.cat && M[p.cat]) p.cat = M[p.cat]; }); }
@@ -4198,7 +4200,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v200</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v201</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -8183,7 +8185,7 @@ function qfPick(p, fee) { const R = qfRivals(p), k = photoShow(p); fee = fee || 
     <p class="nv-rule"><span>Choose your entry</span></p><div class="qf2-f">${QF_FEES.map(f => `<button data-qff="${f}" class="${f === fee ? 'on' : ''}"><b>$${f}</b><small>1st ${money(f * QF_PAY[0]).replace('.00', '')}</small></button>`).join('')}</div>
     <p class="qf2-s">Each finalist pays $${fee}. Crowd votes decide the winners.</p>
     <button class="btn block nv-go" id="qfpGo">Enter the final · $${fee}</button><div style="text-align:center"><button class="link nv-later" id="qfpL">Later</button></div>
-    <p class="nv-sim">You have ${money(S.cash || 0)} · demo: other finalists simulated</p></div>`);
+    <p class="nv-sim">You have ${money(S.cash || 0)}${(S.bonus || 0) > 0 ? ` + ${money(S.bonus)} Bonus Cash` : ''} · demo: other finalists simulated</p></div>`);
   document.querySelectorAll('[data-qff]').forEach(b => b.onclick = () => { window.__keepScroll = 1; qfPick(p, +b.dataset.qff); });
   $('#qfpL').onclick = () => popClose();
   $('#qfpGo').onclick = () => { window.__qfFee = fee; popClose(); payCash(fee, `A $${fee} Final entry`, () => setTimeout(() => qfRace(p, [{ src: p.src, t: rcName(p), h: 'You', me: 1, st: qlStrength(p) }].concat(R)), 250)); }; }
@@ -8367,15 +8369,15 @@ function renderMyShow() { const g = $('#gallery'); if (!g) return; const P = (S.
     if (a === 'v') { go('judge'); renderJudge(); } else if (a === 'f') qfStart(p); else finalsTab(); });
   g.querySelectorAll('[data-twn]').forEach(b => b.onclick = () => finPick()); }
 const FIN_COINS = 250;
-(() => { const qp = qfPick; qfPick = function (p, fee) { const r = qp.apply(this, arguments); try { const go = document.getElementById('qfpGo'); if (!go) return r; const g = Math.floor(S.gems || 0);
-    if (g >= FIN_COINS) { go.insertAdjacentHTML('afterend', `<button class="btn block nv-coin" id="qfpCoin">🪙 Enter free with ${FIN_COINS} coins<small>a $2 entry · 1st wins ${money(2 * QF_PAY[0])} cash</small></button>`);
-      document.getElementById('qfpCoin').onclick = () => { if ((S.gems || 0) < FIN_COINS) return; S.gems -= FIN_COINS; save(); try { paintGems(); } catch (e) {} window.__qfFee = 2; popClose(); toast(`🪙 −${FIN_COINS} coins · free $2 entry`); const R = qfRivals(p); setTimeout(() => qfRace(p, [{ src: p.src, t: rcName(p), h: 'You', me: 1, st: qlStrength(p) }].concat(R)), 250); }; }
-    else go.insertAdjacentHTML('afterend', `<p class="nv-coinp">🪙 <b>${FIN_COINS - g} more coins</b> for a free $2 entry<span><i style="width:${Math.min(100, g / FIN_COINS * 100)}%"></i></span></p>`); } catch (e) {} return r; }; })();
-(() => { const ug = useGems; useGems = function () { const r = ug.apply(this, arguments); try { const per = document.querySelector('.t2 .t2-per'), g = Math.floor(S.gems || 0); if (per) per.insertAdjacentHTML('afterend',
-    `<div class="t2-tk"><b>🎟️ ${FIN_COINS} coins = a free $2 Final entry</b><small>${g >= FIN_COINS ? 'You have enough: use it when you enter a Final.' : `${FIN_COINS - g} more coins to go. Use it in the Final lobby.`}</small><span><i style="width:${Math.min(100, g / FIN_COINS * 100)}%"></i></span></div>`); } catch (e) {} return r; }; })();
+(() => { const qp = qfPick; qfPick = function (p, fee) { const r = qp.apply(this, arguments); try { const go = document.getElementById('qfpGo'); if (!go || S.coinFin) return r; const g = Math.floor(S.gems || 0);
+    if (g >= FIN_COINS) { go.insertAdjacentHTML('afterend', `<button class="btn block nv-coin" id="qfpCoin">🪙 Your first Final free · ${FIN_COINS} coins<small>one free $2 entry per player · 1st wins ${money(2 * QF_PAY[0])} cash</small></button>`);
+      document.getElementById('qfpCoin').onclick = () => { if ((S.gems || 0) < FIN_COINS) return; if (S.user && S.user.guest) { popClose(); openSignup(() => setTimeout(() => qfPick(p, 2), 250), { locked: false, photo: 1 }); return; } S.gems -= FIN_COINS; S.coinFin = 1; save(); try { paintGems(); } catch (e) {} window.__qfFee = 2; popClose(); toast(`🪙 −${FIN_COINS} coins · free $2 entry`); const R = qfRivals(p); setTimeout(() => qfRace(p, [{ src: p.src, t: rcName(p), h: 'You', me: 1, st: qlStrength(p) }].concat(R)), 250); }; }
+    else go.insertAdjacentHTML('afterend', `<p class="nv-coinp">🪙 <b>${FIN_COINS - g} more coins</b> for your one free $2 entry<span><i style="width:${Math.min(100, g / FIN_COINS * 100)}%"></i></span></p>`); } catch (e) {} return r; }; })();
+(() => { const ug = useGems; useGems = function () { const r = ug.apply(this, arguments); try { const per = document.querySelector('.t2 .t2-per'), g = Math.floor(S.gems || 0); if (per && !S.coinFin) per.insertAdjacentHTML('afterend',
+    `<div class="t2-tk"><b>🎟️ Your first Final free: ${FIN_COINS} coins</b><small>${g >= FIN_COINS ? 'One per player. You have enough: use it when you enter a Final.' : `One per player. ${FIN_COINS - g} more coins to go.`}</small><span><i style="width:${Math.min(100, g / FIN_COINS * 100)}%"></i></span></div>`); } catch (e) {} return r; }; })();
 (() => { const qr = qfResult; qfResult = function (p, L, ord) { const r = qr.apply(this, arguments); try { const fee = window.__qfFee || 2, up = QF_FEES[QF_FEES.indexOf(fee) + 1], e = document.getElementById('qrE'); if (!e) return r;
     const again = f => { p.fin = 1; p.fr = { s: QS_STEPS, go: 1 }; p.fl = null; save(); window.__qfFee = f; popClose(); payCash(f, `A $${f} Final entry`, () => setTimeout(() => qfRace(p, [{ src: p.src, t: rcName(p), h: 'You', me: 1, st: qlStrength(p) }].concat(qfRivals(p))), 250)); };
-    e.insertAdjacentHTML('beforebegin', `<button class="btn block db-go cashb" id="qrA">🏁 Race again · $${fee}</button>${up ? `<button class="btn block db-go rm-up" id="qrU">⬆️ Step up · $${up} · 1st wins ${money(up * QF_PAY[0])}</button>` : ''}${(S.gems || 0) >= FIN_COINS ? `<button class="btn block db-go rm-coin" id="qrC">🪙 Race again free · ${FIN_COINS} coins</button>` : ''}`);
+    e.insertAdjacentHTML('beforebegin', `<button class="btn block db-go cashb" id="qrA">🏁 Race again · $${fee}</button>${up ? `<button class="btn block db-go rm-up" id="qrU">⬆️ Step up · $${up} · 1st wins ${money(up * QF_PAY[0])}</button>` : ''}${false ? `<button class="btn block db-go rm-coin" id="qrC">🪙 Race again free · ${FIN_COINS} coins</button>` : ''}`);
     e.classList.add('quiet'); $('#qrA').onclick = () => again(fee); if ($('#qrU')) $('#qrU').onclick = () => again(up);
     if ($('#qrC')) $('#qrC').onclick = () => { S.gems -= FIN_COINS; p.fin = 1; p.fr = { s: QS_STEPS, go: 1 }; p.fl = null; save(); try { paintGems(); } catch (x) {} window.__qfFee = 2; popClose(); setTimeout(() => qfRace(p, [{ src: p.src, t: rcName(p), h: 'You', me: 1, st: qlStrength(p) }].concat(qfRivals(p))), 250); }; } catch (x) {} return r; }; })();
 const CH_MAX = 2, CH_TTL = 864e5;
@@ -8460,6 +8462,16 @@ function landFix() { try { const L = document.getElementById('landing'); if (!L 
   L.querySelectorAll('.cs').forEach(e => { if (/camera roll to cash|everyday joy|quick answers/i.test(e.textContent)) e.remove(); });
   const end = L.querySelector('.cs-end'); if (end) end.innerHTML = end.innerHTML.replace('Your first frame is free.', 'Entering a photo is free.'); } catch (e) {} }
 landFix(); setTimeout(landFix, 400); setTimeout(landFix, 1500);
+function payCash(amt, what, then) {
+  if (S.user && S.user.guest) { openSignup(() => payCash(amt, what, then), { locked: false, real: 1 }); return false; }
+  const tot = () => +((S.cash || 0) + (S.bonus || 0)).toFixed(2);
+  const take = () => { const b = Math.min(S.bonus || 0, amt), c = +(amt - b).toFixed(2); S.bonus = +((S.bonus || 0) - b).toFixed(2); S.cash = +((S.cash || 0) - c).toFixed(2); try { goCash(); } catch (e) {} save(); paintWallet();
+    if (b > 0) toast(`🎁 ${money(b)} Bonus Cash used${c > 0 ? ` · ${money(c)} cash` : ''}`); then(); };
+  if (tot() < amt) { openStore(`${what} costs ${money(amt)}.`, () => { if (tot() >= amt) take(); }); return false; }
+  take(); return true; }
+(() => { const pw = paintWallet; paintWallet = function () { const r = pw.apply(this, arguments); try { const w = document.getElementById('wCash'); if (!w) return r; let t = document.getElementById('bnTag'); const b = S.bonus || 0;
+  if (b > 0) { if (!t) { t = document.createElement('small'); t.id = 'bnTag'; const n = document.getElementById('cashNum'); n.insertAdjacentElement('afterend', t); } t.textContent = `+ ${money(b)} bonus`; } else if (t) t.remove(); } catch (e) {} return r; }; })();
+setTimeout(() => { try { paintWallet(); } catch (e) {} }, 800);
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
@@ -8624,7 +8636,7 @@ function runOut(kind, title, onBuy, need) {
       buy: () => { c.classList.remove('on', 'cr'); if ($('#sheet').classList.contains('on')) closeSheet(); if ($('#flow').classList.contains('on')) closeFlow(); go('judge'); renderJudge(); },
       free: (() => { const per = CFG.VOTE * (jMult() || 0), n = need && per ? Math.ceil(need / per) : 0;
         return `<span class="rj-ic">⚖️</span><span class="rj-t"><b>Earn free coins by judging</b><small>Get coins for every vote</small></span>`; })(), freeCls: 'rj', freeFn: () => { if ($('#flow').classList.contains('on')) closeFlow(); go('judge'); renderJudge(); } }
-    : (() => { const w = !S.paidCash && !S.bonusGot, cash = w ? 5 : 10, coins = w ? 25 : 10; return { ic: '💵', title: title || 'Add cash to play', tag: w ? 'Welcome offer' : 'Most popular', big: w ? `$${cash} <small class="ro-plus">+ $10 Bonus Cash</small>` : `$${cash}`, sub: w ? 'cash to play · plus $10 Bonus Cash for entries' : 'cash to play', usd: cash,
+    : (() => { const w = !S.paidCash && !S.bonusGot, cash = w ? 5 : 10, coins = w ? 25 : 10; return { ic: '💵', title: title || 'Add cash to play', tag: w ? 'Welcome offer' : 'Most popular', big: w ? `$${cash} <small class="ro-plus">+ $10 Bonus Cash</small>` : `$${cash}`, sub: w ? 'cash to play · plus $10 Bonus Cash, spent first on entries · can’t be withdrawn' : 'cash to play', usd: cash,
       buy: () => checkout(`$${cash} cash`, cash, () => applyOffer(cash, 0, w ? 'Welcome offer · $10 Bonus Cash' : '$10 pack', () => { S.cashMode = 1; save(); if (w && !S.bonusGot) { S.bonusGot = 1; S.bonus = +((S.bonus || 0) + 10).toFixed(2); save(); toast('🎁 $10 Bonus Cash added · used first on entries'); } if (onBuy) onBuy(); })), free: 'Not now', freeFn: () => {} }; })();
   c.innerHTML = `<div class="crbox enx ro" role="dialog" aria-modal="true" aria-labelledby="crT"><div class="cr-rays" aria-hidden="true"></div>
     <div class="enx-ic">${cfg.ic}</div><h2 id="crT">${cfg.title}</h2>
@@ -9297,7 +9309,7 @@ function buyTicket() {
   window.__spent = true; S.gems -= TIX_GEMS; S.cashTix = (S.cashTix || 0) + 1; save(); paintGems(); paintTixTag(); closeSheet();
   ticketPop();
 }
-function payCash(amt, what, then) {
+function payCashOld(amt, what, then) {
   if (S.user && S.user.guest) { openSignup(() => payCash(amt, what, then), { locked: false, real: 1 }); return false; }
   if (amt === 1 && (S.cashTix || 0) > 0) { S.cashTix--; save(); toast(`🎟️ Free entry used${S.cashTix ? ` · ${S.cashTix} left` : ''}`); then(); return true; }
   if ((S.cash || 0) < amt) { openStore(`${what} costs ${money(amt)} cash.`, () => { if ((S.cash || 0) >= amt) { S.cash = +((S.cash || 0) - amt).toFixed(2); goCash(); save(); paintWallet(); then(); } }); return false; }
