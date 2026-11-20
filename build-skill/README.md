@@ -342,6 +342,8 @@ Then `rmv166.py`: loop for photos that miss: free tune-up, training head-to-head
 
 Then `rmv167.py`: accuracy counter removed from the Vote screen; round bar shows only coins to the next photo entry.
 
+Then `rmv168.py`: Play tab becomes your Stable: train photos head-to-head for coins and form, cash head-to-heads ($2/$5) for qualified photos, Finals and re-entry from each horse's card.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -505,6 +507,7 @@ python3 rmv164.py
 python3 rmv165.py
 python3 rmv166.py
 python3 rmv167.py
+python3 rmv168.py
 ```
 
 ## Skill only
