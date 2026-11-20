@@ -386,6 +386,8 @@ Then `rmv188.py`: qualifier is a real 2-horse race on a track; full-screen 3-2-1
 
 Then `rmv189.py`: first Final free ($2 entry); vote pairs match your qualifying photo's category; daily-rewards pop held until first qualifier; finalist card says Your Final is waiting.
 
+Then `rmv190.py`: winning the qualifier sends you back to voting; 3 voting-streak steps take the photo to its Final.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -571,6 +573,7 @@ python3 rmv186.py
 python3 rmv187.py
 python3 rmv188.py
 python3 rmv189.py
+python3 rmv190.py
 ```
 
 ## Skill only
