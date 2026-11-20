@@ -396,6 +396,8 @@ Then `rmv193.py`: 300 coins = a free $2 Final entry (lobby button + coins sheet)
 
 Then `rmv194.py`: one-tap rematch on results: Race again, Step up, and Race again free with 300 coins; Step up on head-to-heads.
 
+Then `rmv195.py`: challenges while you're away: other players challenge your race-ready photos; While you were away card, Stable Challenges box, Play tab count.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -586,6 +588,7 @@ python3 rmv191.py
 python3 rmv192.py
 python3 rmv193.py
 python3 rmv194.py
+python3 rmv195.py
 ```
 
 ## Skill only
