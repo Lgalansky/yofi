@@ -426,6 +426,8 @@ Then `rmv208.py`: rmv208: cash entries with too little cash open Add cash, not t
 
 Then `rmv209.py`: rmv209: navy Add cash sheet that names the entry, sizes the offer to cover it and enters straight after paying.
 
+Then `rmv210.py`: rmv210: clear path after a missed qualifier (free rematch or train for 50 coins, straight into the match).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -631,6 +633,7 @@ python3 rmv206.py
 python3 rmv207.py
 python3 rmv208.py
 python3 rmv209.py
+python3 rmv210.py
 ```
 
 ## Skill only
