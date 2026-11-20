@@ -382,6 +382,8 @@ Then `rmv186.py`: Train for Cash Races sheet in the owner's navy mock-up style.
 
 Then `rmv187.py`: finalist cards no longer get stuck at Step 3 of 3: they show Into the Final! with Meet your finalists & race.
 
+Then `rmv188.py`: qualifier is a real 2-horse race on a track; full-screen 3-2-1; clearer step label.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -565,6 +567,7 @@ python3 rmv184.py
 python3 rmv185.py
 python3 rmv186.py
 python3 rmv187.py
+python3 rmv188.py
 ```
 
 ## Skill only
