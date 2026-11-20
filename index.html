@@ -1792,6 +1792,16 @@ html.coinp #wCash{display:flex!important}
 .qfp-h{margin-bottom:4px!important}.qfp-win{margin:0 0 12px;padding:12px;border-radius:16px;background:linear-gradient(180deg,#22325A,#14213D);box-shadow:0 0 0 2px #D9AE4F,0 6px 18px rgba(20,33,61,.25);color:#C9D3E6}
 .qfp-win span{display:block;font:900 .72rem Nunito,system-ui;letter-spacing:.1em;text-transform:uppercase;color:#F3D98B}.qfp-win b{display:block;font:900 2.6rem/1.05 Fraunces,Georgia,serif;color:#F3D98B}.qfp-win small{font:700 .82rem Nunito,system-ui}
 .ql-win{animation:cdPop .5s .4s ease-out both}
+.trc h2{margin-bottom:2px}.trc-rule{margin:8px 0 12px;padding:10px 12px;border-radius:14px;background:#FFF8E6;box-shadow:inset 0 0 0 1.5px #D9AE4F;font:700 .86rem/1.45 Nunito,system-ui;color:#5B3D06}.trc-rule b{color:#14213D}
+.trc-l{display:grid;gap:8px}.trc-r{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1.5px #EADCC6}.trc-r img{width:52px;height:52px;border-radius:10px;object-fit:cover;flex:none}
+.trc-i{flex:1;min-width:0}.trc-i b{display:block;font:800 1rem Fraunces,Georgia,serif;color:#14213D;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.trc-i small{font:700 .74rem Nunito,system-ui;color:#5B4A3F}.trc-i small.ok{color:#2F6B3F;font-weight:900}
+.trc-d{display:flex;align-items:center;gap:5px;margin-top:3px}.trc-d i{width:12px;height:12px;border-radius:50%;background:#EEE6D8}.trc-d i.w{background:#2F6B3F}.trc-d small{margin-left:4px}
+html body .trc-b{width:auto!important;min-height:0!important;margin:0!important;padding:9px 14px!important;border-radius:999px!important;font:800 .82rem Nunito,system-ui!important;background:#2E4F8A!important;color:#fff!important;box-shadow:none!important;white-space:nowrap}
+html body .trc-b.cash{background:#2F6B3F!important}html body .trc-b:disabled{background:#EEE6D8!important;color:#8A7B6C!important}
+.trc-e{padding:12px;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1.5px #EADCC6;text-align:center}.trc-e p{margin:0 0 8px;font:700 .9rem Nunito,system-ui;color:#3D4A5C}
+.trc-inv{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;margin:12px 0 0;padding:10px 12px;border:0;border-radius:12px;background:#F3EEE5;cursor:pointer;font:inherit;text-align:left}.trc-inv span{font:800 .88rem Nunito,system-ui;color:#14213D}.trc-inv em{font-style:normal;font:700 .76rem Nunito,system-ui;color:#5B4A3F}
+.trc-how{margin:10px 2px 0;font:600 .76rem/1.4 Nunito,system-ui;color:#8A7B6C;text-align:center}
+html body .trc-inv span{white-space:nowrap}html body .trc-inv{background:#F3EEE5!important}html body .trc-d small{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -3981,7 +3991,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v177</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v178</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -7778,7 +7788,7 @@ function vrQuiet(n, ok, pay) { try { paintGems(); gemExplosion(pay, { label: 'Ro
   setTimeout(() => { try { vrPaint(); } catch (e) {} const top = document.getElementById('vrTop'); if (!top) return; const o = document.getElementById('vrQ'); if (o) o.remove();
     top.insertAdjacentHTML('afterend', `<div class="vrqb" id="vrQ">✓ <b>+${pay} 🟡 round bonus</b></div>`);
     setTimeout(() => { const e = document.getElementById('vrQ'); if (e) { e.classList.add('bye'); setTimeout(() => e.remove(), 400); } }, 3200); }, 50); }
-const DAY_ENT = 5, TQ_COST = 20, TQ_WIN = 3;
+const DAY_ENT = 5, TQ_COST = 50, TQ_WIN = 3;
 const dEnt = () => { const t = todayKey(); if (!S.dEnt || S.dEnt.d !== t) S.dEnt = { d: t, n: 0 }; return S.dEnt; };
 function qlStart(p) { qlStrength(p); S.freeRe = 0; S.entT = 0; S.nEnt = (S.nEnt || 0) + 1; p.bo = !p.starter && S.nEnt <= 2 ? 1 : 0; if (!p.starter) dEnt().n++;
   p.ql = { w: 0, l: 0, at: Date.now() }; p.pool = 0; save(); }
@@ -7901,6 +7911,21 @@ document.addEventListener('scroll', e => { const t = e.target; if (!t || t.id !=
     <p class="pe-s">${full ? 'That’s 5 photos today. Train or race your photos in your stable.' : 'Free to enter · your votes move it to a live race · win and it races for cash'}</p>
     ${full ? '<button class="btn block pv-go" data-pe="s">🐎 Open your stable</button>' : `<button class="btn block pv-go" data-pe="u">📷 Enter a photo · free</button>${ready ? '<button class="link pe-l" data-pe="s">🐎 Or race one from your stable</button>' : ''}`}</div></div>`; }; })();
 document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-pe]'); if (!b) return; e.preventDefault(); if (b.dataset.pe === 'u') finPick(); else finalsTab(); });
+function useGems() { const g = Math.floor(S.gems || 0), n = Math.floor(g / TQ_COST), P = stHorses();
+  const row = p => { const ok = isCashOK(p), T = p.tq || { w: 0, l: 0 };
+    return `<div class="trc-r"><img src="${p.src}" alt=""><div class="trc-i"><b>${esc(rcName(p))}</b>${ok ? '<small class="ok">💵 Cash-ready ✓</small>' : `<span class="trc-d">${[0, 1, 2].map(i => `<i class="${i < T.w ? 'w' : ''}"></i>`).join('')}<small>${T.w || T.l ? `${T.w}–${T.l} · ${TQ_WIN - T.w} to go` : 'Not started'}</small></span>`}</div>
+      ${ok ? `<button class="btn trc-b cash" data-tcf="${p.id}">🏁 Race a Final</button>` : `<button class="btn trc-b" data-tct="${p.id}" ${g < TQ_COST ? 'disabled' : ''}>Train · ${TQ_COST} 🟡</button>`}</div>`; };
+  openSheet(`<div class="trc"><h2>🏋️ Train for Cash Races</h2><p class="sub">You have <b>${g.toLocaleString()} 🟡</b>${n ? ` · enough for <b>${n} training match${n > 1 ? 'es' : ''}</b>` : ` · ${TQ_COST - g} more for a training match`}</p>
+    <div class="trc-rule">Each training match is <b>${TQ_COST} 🟡</b>. Win <b>3</b> before 3 losses and your photo is <b>💵 cash-ready for good</b>: Finals ($2–$20) and cash head-to-heads.</div>
+    ${P.length ? `<div class="trc-l">${P.map(row).join('')}</div>` : `<div class="trc-e"><p>📷 Enter a photo (free), then train it here with your coins.</p><button class="btn block db-go" data-tcn>📷 Enter a photo · free</button></div>`}
+    <button class="trc-inv" data-tci><span>👥 Invite a friend</span><em>+100 🟡 each when they judge 15 photos ›</em></button>
+    <p class="trc-how">Earn coins by voting: round bonuses, +50 🟡 when a photo qualifies. Coins can’t be bought.</p></div>`);
+  const B = $('#sheetBody');
+  B.querySelectorAll('[data-tct]').forEach(b => b.onclick = () => { const p = S.photos.find(x => x.id === b.dataset.tct); closeSheet(); setTimeout(() => h2hOpen(p, 0), 200); });
+  B.querySelectorAll('[data-tcf]').forEach(b => b.onclick = () => { const p = S.photos.find(x => x.id === b.dataset.tcf); closeSheet(); setTimeout(() => qfStart(p), 200); });
+  B.querySelectorAll('[data-tcn]').forEach(b => b.onclick = () => { closeSheet(); setTimeout(finPick, 200); });
+  B.querySelectorAll('[data-tci]').forEach(b => b.onclick = () => { closeSheet(); setTimeout(openFriends, 200); }); }
+function coinTour() { useGems(); }
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
