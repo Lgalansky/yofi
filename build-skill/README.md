@@ -356,6 +356,8 @@ Then `rmv173.py`: on 2 in a row the third streak dot pulses with '1 more for a s
 
 Then `rmv174.py`: 2 correct in a row moves a photo a step; votes move one photo at a time (the card you're on); cash and coin balances always shown.
 
+Then `rmv175.py`: when no photo is in play, the Vote screen shows an empty-lane card promoting a free photo entry (or the stable).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -526,6 +528,7 @@ python3 rmv171.py
 python3 rmv172.py
 python3 rmv173.py
 python3 rmv174.py
+python3 rmv175.py
 ```
 
 ## Skill only
