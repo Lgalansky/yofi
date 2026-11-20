@@ -430,6 +430,8 @@ Then `rmv210.py`: rmv210: clear path after a missed qualifier (free rematch or t
 
 Then `rmv211.py`: rmv211: one-tap Train again with wins and coins left.
 
+Then `rmv212.py`: rmv212: Ready for Cash Races celebration after the third training win.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -637,6 +639,7 @@ python3 rmv208.py
 python3 rmv209.py
 python3 rmv210.py
 python3 rmv211.py
+python3 rmv212.py
 ```
 
 ## Skill only
