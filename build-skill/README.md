@@ -412,6 +412,8 @@ Then `rmv201.py`: coin entry is one per player (account required); Bonus Cash sp
 
 Then `rmv202.py`: honest money lines (lobby pool/prizes/fee, net result, head-to-head fee); simpler Stable cards; Form hidden; one rosette rule.
 
+Then `rmv203.py`: one Welcome back screen on return (rematch, Final, challenges, daily reward); reopen on Vote; My Photos banner and rematch status fixed.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -610,6 +612,7 @@ python3 rmv199.py
 python3 rmv200.py
 python3 rmv201.py
 python3 rmv202.py
+python3 rmv203.py
 ```
 
 ## Skill only
