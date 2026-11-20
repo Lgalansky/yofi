@@ -424,6 +424,8 @@ Then `rmv207.py`: rmv207: Tell me when it's ready (rematch and Daily Cup) and si
 
 Then `rmv208.py`: rmv208: cash entries with too little cash open Add cash, not the coins pop.
 
+Then `rmv209.py`: rmv209: navy Add cash sheet that names the entry, sizes the offer to cover it and enters straight after paying.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -628,6 +630,7 @@ python3 rmv205.py
 python3 rmv206.py
 python3 rmv207.py
 python3 rmv208.py
+python3 rmv209.py
 ```
 
 ## Skill only
