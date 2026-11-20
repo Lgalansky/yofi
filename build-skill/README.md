@@ -390,6 +390,8 @@ Then `rmv190.py`: winning the qualifier sends you back to voting; 3 voting-strea
 
 Then `rmv191.py`: free first Final switched off; all Final entries paid.
 
+Then `rmv192.py`: My Photos rebuilt as your trophy wall: earnings banner, framed photos with rosettes, record row, one current status line per photo.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -577,6 +579,7 @@ python3 rmv188.py
 python3 rmv189.py
 python3 rmv190.py
 python3 rmv191.py
+python3 rmv192.py
 ```
 
 ## Skill only
