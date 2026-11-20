@@ -1779,6 +1779,8 @@ html body .qr-ln{grid-template-columns:84px 1fr 34px}html body .qr-nm{font-size:
 .qr-vs b{font:800 .9rem Fraunces,Georgia,serif;color:#14213D;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.qr-vs small{font:700 .72rem Nunito,system-ui;color:#5B4A3F}
 .qr-vs>span{font:900 1rem Fraunces,Georgia,serif;color:#fff;background:#14213D;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px #D9AE4F}
 .qr-num{display:block;font:900 4.5rem/1 Fraunces,Georgia,serif;color:#14213D;margin:8px 0 4px}.qr-num.go{animation:cdPop .6s ease-out both}.qr-sub{margin:0;font:700 .86rem Nunito,system-ui;color:#5B4A3F}
+.pv-dots i.next{background:#FFF1C9;box-shadow:0 0 0 2px #D9AE4F;animation:pvPulse .9s ease-in-out infinite}@keyframes pvPulse{50%{transform:scale(1.35);box-shadow:0 0 0 3px #D9AE4F,0 0 10px #F3D98B}}
+.pv-1m{font-style:normal;font:900 .76rem Nunito,system-ui;color:#9A6B12;animation:qmFl .35s ease-out both}
 </style>
 </head>
 <body>
@@ -3968,7 +3970,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v172</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v173</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -7865,7 +7867,7 @@ function qrCount(p, o, oh, run) { const box = document.querySelector('.qrx'); if
 function pvStep(p, s, fin) { const pos = Math.min(1, s / QS_STEPS), k = S.stk || 0;
   return `<div class="pv-tr"><div class="pv-rail">${Array.from({ length: QS_STEPS - 1 }, (_, i) => `<i style="left:${(i + 1) / QS_STEPS * 100}%"></i>`).join('')}<u style="width:${pos * 100}%"></u></div>
       <img class="pv-hz" src="${p.src}" alt="" style="left:calc(${pos} * (100% - 40px))"><span class="pv-fl">🏁</span></div>
-    <div class="pv-k"><span class="pv-dots">${[0, 1, 2].map(i => `<i class="${i < k ? 'on' : ''}"></i>`).join('')}</span><b>Step ${Math.min(QS_STEPS, s)} of ${QS_STEPS}${fin ? ' to the Final' : ''}</b></div>`; }
+    <div class="pv-k"><span class="pv-dots">${[0, 1, 2].map(i => `<i class="${i < k ? 'on' : i === 2 && k === 2 ? 'next' : ''}"></i>`).join('')}</span>${k === 2 ? '<em class="pv-1m">1 more for a step!</em>' : ''}<b>Step ${Math.min(QS_STEPS, s)} of ${QS_STEPS}${fin ? ' to the Final' : ''}</b></div>`; }
 (() => { const pc = pvCard; pvCard = function (p) { const q = p.ql;
   if (q && !q.done && !p.tr) return `<div class="pv-c" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">${q.live ? '<i>●</i> Qualifier race · live' : '🎀 Qualifier'}</span><em>🟡 +${p.qc || 0}</em></div>${pvStep(p, q.got || 0, 0)}</div>`;
   if (p.fin) { p.fr = p.fr || { s: 0 }; return `<div class="pv-c fin" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">🏆 Finalist</span><em>🟡 +${p.qc || 0}</em></div>${pvStep(p, p.fr.s || 0, 1)}</div>`; }
