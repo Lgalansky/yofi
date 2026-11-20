@@ -422,6 +422,8 @@ Then `rmv206.py`: rmv206: Daily Cup. 100 coins enters one race-ready photo into 
 
 Then `rmv207.py`: rmv207: Tell me when it's ready (rematch and Daily Cup) and sign-up titles that match the moment.
 
+Then `rmv208.py`: rmv208: cash entries with too little cash open Add cash, not the coins pop.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -625,6 +627,7 @@ python3 rmv204.py
 python3 rmv205.py
 python3 rmv206.py
 python3 rmv207.py
+python3 rmv208.py
 ```
 
 ## Skill only
