@@ -392,6 +392,8 @@ Then `rmv191.py`: free first Final switched off; all Final entries paid.
 
 Then `rmv192.py`: My Photos rebuilt as your trophy wall: earnings banner, framed photos with rosettes, record row, one current status line per photo.
 
+Then `rmv193.py`: 300 coins = a free $2 Final entry (lobby button + coins sheet).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -580,6 +582,7 @@ python3 rmv189.py
 python3 rmv190.py
 python3 rmv191.py
 python3 rmv192.py
+python3 rmv193.py
 ```
 
 ## Skill only
