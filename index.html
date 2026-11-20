@@ -2004,6 +2004,11 @@ html body .h2-f{grid-template-columns:repeat(4,1fr)!important;gap:6px}html body 
 html body .xq-in{display:block;width:100%;box-sizing:border-box;margin:4px 0 12px;padding:13px 14px;border:0;border-radius:14px;background:#FBF6EE;box-shadow:inset 0 0 0 2px #D9AE4F;font:700 1.05rem Nunito,system-ui;color:#14213D;text-align:center}
 .xq-card{display:flex;align-items:center;gap:10px;width:100%;margin:8px 0 0;padding:8px 12px;border:0;border-radius:14px;background:#FFF8E6;box-shadow:inset 0 0 0 2px #D9AE4F;cursor:pointer;text-align:left;font:inherit}
 .xq-card img{width:46px;height:46px;border-radius:10px;object-fit:cover}.xq-card span{flex:1}.xq-card b{display:block;font:800 .95rem Nunito,system-ui;color:#14213D}.xq-card small{font:600 .78rem Nunito,system-ui;color:#5B4A3F}.xq-card em{font-style:normal;font-size:1.4rem;color:#14213D}
+html body #coach .qfx #qfpGo,html body #coach .qfx #qsJ,html body #coach .qfx #qrA,html body #coach .qfx #h2Ag,html body #coach .qfx #qlvGo,html body #coach .qfx #xqGo,html body #coach .qfx #h2Go,html body #coach .qfx #trY,html body #coach .qfx.qw>.nv-go[data-trn]{position:sticky!important;bottom:12px;z-index:6;box-shadow:0 0 0 7px rgba(14,24,48,.94),0 -14px 22px 8px rgba(14,24,48,.75),0 10px 24px rgba(0,0,0,.5)!important}
+html body #coach:has(.qfx){background:#0E1830!important;padding:0!important}html body #coach:has(.qfx) .ppop{min-height:100dvh;height:100dvh!important;padding-bottom:calc(env(safe-area-inset-bottom) + 22px)!important}
+.lf-steps{list-style:none;margin:10px 0 14px;padding:0;display:grid;gap:8px;text-align:left}.lf-steps li{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1.5px #EADCC6}
+.lf-steps li>b{flex:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#14213D;color:#F3D98B;font:900 1rem Fraunces,Georgia,serif;box-shadow:0 0 0 2px #D9AE4F}
+.lf-steps span{font:600 .86rem/1.35 Nunito,system-ui;color:#5B4A3F}.lf-steps strong{display:block;font:800 1rem Nunito,system-ui;color:#14213D}
 </style>
 </head>
 <body>
@@ -4193,7 +4198,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v199</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v200</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -6550,7 +6555,7 @@ function finPick() { let o = document.getElementById('finPick'); if (!o) { o = d
   const first = ffreeFirst(), L = SHOW_ROT.map(x => ({ k: x.k, sl: finFor(x.k) })).sort((a, b) => a.sl - b.sl);
   o.innerHTML = `<div class="fp-in"><button class="fp-x" aria-label="Close">✕</button><p class="fp-k">📷 Enter your photo</p><h2>Choose your Final</h2>
     <p class="fp-s">Pick the category your photo is for. Your voting streaks take it to its qualifier: a live 2-horse race decided by the crowd. Win it and it races in a 6-photo Final for cash. Entry is free.</p><p class="two-tip">📷 <b>Pick 2 photos · double your chances</b><small>If one misses, the other’s still racing.</small></p>
-    ${L.map(x => { const g = ppGame(x.sl); return `<button class="fp-c" data-fpk="${x.k}">${lpImg(x.k) ? `<img src="${lpImg(x.k)}" alt="">` : `<span class="fp-e">${SHOW_IC[x.k] || '🎀'}</span>`}<span class="fp-t"><b>${SHOW_IC[x.k] || ''} ${esc(showName(x.k))}</b><small>Next Final · <b>${finReady(x.sl)}</b></small><em>${ppPool(g.players)} prize pool</em><u class="fp-sel">📷 Choose your photo…</u></span><i aria-hidden="true">›</i></button>`; }).join('')}
+    ${L.map(x => { const g = ppGame(x.sl); return `<button class="fp-c" data-fpk="${x.k}">${lpImg(x.k) ? `<img src="${lpImg(x.k)}" alt="">` : `<span class="fp-e">${SHOW_IC[x.k] || '🎀'}</span>`}<span class="fp-t"><b>${SHOW_IC[x.k] || ''} ${esc(showName(x.k))}</b><small>Next Final · <b>${finReady(x.sl)}</b></small><em>1st wins up to ${money(20 * QF_PAY[0])}</em><u class="fp-sel">📷 Choose your photo…</u></span><i aria-hidden="true">›</i></button>`; }).join('')}
     <p class="fp-n">Finals for Pets and Nature &amp; landscapes · Garden &amp; flowers coming soon.</p></div>`;
   o.className = 'on'; o.querySelector('.fp-x').onclick = () => { o.className = ''; window.__uiT = Date.now(); };
   o.querySelectorAll('[data-fpk]').forEach(b => b.onclick = () => { const k = b.dataset.fpk; o.querySelectorAll('.fp-c').forEach(x => x.classList.toggle('sel', x === b)); window.__uiT = Date.now(); window.__preCat = showHint(k).cats[0];
@@ -8077,7 +8082,7 @@ const qsWhenFree = fn => setTimeout(function tm() { if (document.querySelector('
     [qsTarget()].filter(Boolean).forEach(p => { const q = p.ql;
       if (q && !q.done && !q.live && !p.tr) { q.got = (q.got || 0) + 1; moved++; if (q.got >= QS_STEPS) { q.live = 1; qsWhenFree(() => qlRace(p)); } }
       else if (p.fin && p.fr && !p.fr.go) { p.fr.s = (p.fr.s || 0) + 1; moved++; if (p.fr.s >= QS_STEPS) { p.fr.go = 1; qsWhenFree(() => qfStart(p)); } } });
-    if (moved) { try { toast('🐎 3 in a row · your photo moves on!'); } catch (e) {} } }
+    if (moved) { try { toast('🐎 2 in a row · your photo moves on!'); } catch (e) {} } }
   save(); qlPaint(); } catch (e) {} return r; }; })();
 (() => { const qs = qfStart; qfStart = function (p) { if (!p) return; if (!(p.fr && p.fr.s >= QS_STEPS)) { p.fin = 1; p.fr = p.fr || { s: 0 }; save(); try { popClose(); } catch (e) {} try { closeFlow(); } catch (e) {}
     go('judge'); renderJudge(); toast(`🏁 Vote 3 in a row to move ${rcName(p)} on · ${QS_STEPS - (p.fr.s || 0)} steps to the Final`); return; }
@@ -8445,6 +8450,16 @@ function xqNext() { const Q = xqList(); if (!Q.length) { try { popClose(); } cat
 (() => { const qs = qlStripHTML; qlStripHTML = function () { let h = qs.apply(this, arguments); try { const Q = xqList(); if (Q.length && !document.querySelector('#coach.on')) { const card = `<button class="xq-card" data-xqn><img src="${Q[0].src}" alt=""><span><b>Name and frame your photo</b><small>${Q.length > 1 ? `${Q.length} photos are waiting` : 'It joins the race once it’s framed'}</small></span><em>›</em></button>`;
     h = h.replace(/<\/div>\s*$/, card + '</div>'); } } catch (e) {} return h; }; })();
 document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-xqn]'); if (b) { e.preventDefault(); window.__xqTot = xqList().length; xqNext(); } });
+function gemNudge() { return false; }
+function landFix() { try { const L = document.getElementById('landing'); if (!L || L.dataset.fx) return; L.dataset.fx = 1;
+  const sub = L.querySelector('.lp-sub'); if (sub) sub.textContent = 'Enter your photos. Vote them into a live race. Win real cash in the Final.';
+  const S2 = L.querySelectorAll('.lp2-sec');
+  if (S2[2]) S2[2].innerHTML = `<h2>How it works</h2><ol class="lf-steps"><li><b>1</b><span><strong>Enter a photo</strong>Free. Pets or Nature &amp; landscapes.</span></li><li><b>2</b><span><strong>Vote it forward</strong>Two right in a row moves it a step.</span></li><li><b>3</b><span><strong>Win the live qualifier</strong>A 2-horse race decided by the crowd.</span></li><li><b>4</b><span><strong>Race the Final for cash</strong>$2 to $20 entry. 1st wins 3.5×, up to $70.</span></li></ol><button class="lp-btn" onclick="rmEnterOwn()">📷 Enter your photo <span aria-hidden="true">→</span></button>`;
+  if (S2[1]) S2[1].remove();
+  L.querySelectorAll('.lp-ct,.lp-watch').forEach(e => e.remove());
+  L.querySelectorAll('.cs').forEach(e => { if (/camera roll to cash|everyday joy|quick answers/i.test(e.textContent)) e.remove(); });
+  const end = L.querySelector('.cs-end'); if (end) end.innerHTML = end.innerHTML.replace('Your first frame is free.', 'Entering a photo is free.'); } catch (e) {} }
+landFix(); setTimeout(landFix, 400); setTimeout(landFix, 1500);
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
