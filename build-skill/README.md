@@ -438,6 +438,8 @@ Then `rmv214.py`: rmv214: route cards (steps > qualifier race > steps > Final), 
 
 Then `rmv215.py`: rmv215: age group asked at sign-up (and once on open for older accounts), not before the Final.
 
+Then `rmv216.py`: rmv216: one Final per run; Race it again from the qualifier (free); head-to-heads stay open.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -649,6 +651,7 @@ python3 rmv212.py
 python3 rmv213.py
 python3 rmv214.py
 python3 rmv215.py
+python3 rmv216.py
 ```
 
 ## Skill only
