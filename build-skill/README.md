@@ -378,6 +378,8 @@ Then `rmv184.py`: the 3-2-1 before every race rebuilt: Get ready, prize in gold,
 
 Then `rmv185.py`: the Stable in the owner's mock-up style: hero cards for photos unlocked for cash races, training cards with Wins/Losses, Add a photo.
 
+Then `rmv186.py`: Train for Cash Races sheet in the owner's navy mock-up style.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -559,6 +561,7 @@ python3 rmv182.py
 python3 rmv183.py
 python3 rmv184.py
 python3 rmv185.py
+python3 rmv186.py
 ```
 
 ## Skill only
