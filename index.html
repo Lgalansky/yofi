@@ -1791,6 +1791,7 @@ html.coinp #wCash{display:flex!important}
 .qr-v{margin:6px 0 0;min-height:1.4em;font:700 .9rem Nunito,system-ui;color:#3D4A5C}.qr-v b{color:#14213D}.qr-v b.me{color:#9A6B12}.qr-v.pop{animation:qmFl .35s ease-out both}
 .qfp-h{margin-bottom:4px!important}.qfp-win{margin:0 0 12px;padding:12px;border-radius:16px;background:linear-gradient(180deg,#22325A,#14213D);box-shadow:0 0 0 2px #D9AE4F,0 6px 18px rgba(20,33,61,.25);color:#C9D3E6}
 .qfp-win span{display:block;font:900 .72rem Nunito,system-ui;letter-spacing:.1em;text-transform:uppercase;color:#F3D98B}.qfp-win b{display:block;font:900 2.6rem/1.05 Fraunces,Georgia,serif;color:#F3D98B}.qfp-win small{font:700 .82rem Nunito,system-ui}
+.ql-win{animation:cdPop .5s .4s ease-out both}
 </style>
 </head>
 <body>
@@ -3980,7 +3981,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v176</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v177</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -7839,7 +7840,7 @@ function qlRace(p) { const q = p.ql; if (!q || q.done) return; window.__qlLive =
     const R = document.getElementById('qrR'), H = document.getElementById('qrH');
     setTimeout(() => photoFinish(() => { if (won) { q.done = 'q'; rzAdd(p, 3); S.gems = (S.gems || 0) + 50; p.qc = (p.qc || 0) + 50; p.fin = 1; p.cashOK = 1; save();
         popOpen(`<div class="pp qfx qlv"><p class="pp-k">🎀 Qualifier race · ${A}–${B}</p><h2 class="db-h qlv-win">Qualified!</h2><div class="qlv-ph"><img src="${p.src}" alt=""><i class="qlv-rz">${rosette('f')}</i></div>
-          <p class="re-rzl">🎀 Finalist rosette · +50 🟡 · 💵 cash-ready</p><p class="db-s">${nm} beat “${esc(o.t)}” ${A}–${B} and is through to the Final.</p>
+          <p class="re-rzl">🎀 Finalist rosette · +50 🟡 · 💵 cash-ready</p><p class="db-s">${nm} beat “${esc(o.t)}” ${A}–${B}.</p><div class="qr-stake ql-win">🏆 ${nm} is in the <b>${esc(showName(photoShow(p) || "pets"))} Final</b><small>1st could win up to <b>${money(20 * QF_PAY[0])}</b> · from a $2 entry, 1st wins ${money(2 * QF_PAY[0])}</small></div>
           <button class="btn block db-go cashb" id="qlvGo">⚖️ Vote your way to the Final</button><div style="text-align:center"><button class="link pc-later" id="qlvL">Later</button></div></div>`);
         try { paintGems(); gemExplosion(50, { label: 'Qualified!' }); rvConfetti(document.querySelector('.qlv'), 70); } catch (e) {}
         $('#qlvGo').onclick = () => qfStart(p); $('#qlvL').onclick = () => { popClose(); try { renderJudge(); } catch (e) {} }; }
