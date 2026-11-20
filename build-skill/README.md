@@ -420,6 +420,8 @@ Then `rmv205.py`: the + on the cash balance opens the Your cash sheet.
 
 Then `rmv206.py`: rmv206: Daily Cup. 100 coins enters one race-ready photo into a daily $100 fixed prize pot (top of the Stable).
 
+Then `rmv207.py`: rmv207: Tell me when it's ready (rematch and Daily Cup) and sign-up titles that match the moment.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -622,6 +624,7 @@ python3 rmv203.py
 python3 rmv204.py
 python3 rmv205.py
 python3 rmv206.py
+python3 rmv207.py
 ```
 
 ## Skill only
