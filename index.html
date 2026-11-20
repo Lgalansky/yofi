@@ -1934,6 +1934,7 @@ html body .t2 .btn.t2-b.blue{background:linear-gradient(180deg,#2347B8,#1A3A99)!
 html body #coach.on .qrx>.qr-cd.cd2{position:fixed!important;inset:0!important;z-index:9999!important}
 .qf2-free{margin:-4px 0 10px;padding:8px 12px;border-radius:12px;background:rgba(63,194,90,.15);box-shadow:inset 0 0 0 1.5px #3FC25A;font:800 .95rem Nunito,system-ui;color:#9FE3AE}
 html body .qf2-f button.lk{opacity:.4}
+.qw-nx{margin:0 0 12px;font:700 1.05rem/1.35 Nunito,system-ui;color:#EEF1F8}.qw-nx b{color:#F3D98B}.qw-nx small{font-size:.85rem;color:#C9D3E6}
 </style>
 </head>
 <body>
@@ -4123,7 +4124,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v189</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v190</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -8020,12 +8021,12 @@ function qrCount(p, o, oh, run) { const box = document.querySelector('.qrx'); if
 function pvStep(p, s, fin) { const pos = Math.min(1, s / QS_STEPS), k = S.stk || 0;
   return `<div class="pv-tr"><div class="pv-rail">${Array.from({ length: QS_STEPS - 1 }, (_, i) => `<i style="left:${(i + 1) / QS_STEPS * 100}%"></i>`).join('')}<u style="width:${pos * 100}%"></u></div>
       <img class="pv-hz" src="${p.src}" alt="" style="left:calc(${pos} * (100% - 40px))"><span class="pv-fl">🏁</span></div>
-    <div class="pv-k"><span class="pv-dots">${Array.from({ length: QS_RUN }, (_, i) => `<i class="${i < k ? 'on' : i === QS_RUN - 1 && k === QS_RUN - 1 ? 'next' : ''}"></i>`).join('')}</span>${k === QS_RUN - 1 ? '<em class="pv-1m">1 more for a step!</em>' : ''}<b>${Math.min(QS_STEPS, s)} of ${QS_STEPS} steps · 2 in a row = 1 step</b></div>`; }
+    <div class="pv-k"><span class="pv-dots">${Array.from({ length: QS_RUN }, (_, i) => `<i class="${i < k ? 'on' : i === QS_RUN - 1 && k === QS_RUN - 1 ? 'next' : ''}"></i>`).join('')}</span>${k === QS_RUN - 1 ? '<em class="pv-1m">1 more for a step!</em>' : ''}<b>${Math.min(QS_STEPS, s)} of ${QS_STEPS} steps${fin ? ' to the Final' : ' · 2 in a row = 1 step'}</b></div>`; }
 (() => { const pc = pvCard; pvCard = function (p) { const q = p.ql;
   if (q && !q.done && !p.tr) return `<div class="pv-c" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">${q.live ? '<i>●</i> Qualifier race · live' : '🎀 Qualifier'}</span><em>🟡 +${p.qc || 0}</em></div>${pvStep(p, q.got || 0, 0)}</div>`;
   if (p.fin) { p.fr = p.fr || { s: 0 }; return `<div class="pv-c fin" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">🏆 Finalist</span><em>🟡 +${p.qc || 0}</em></div>${pvStep(p, p.fr.s || 0, 1)}</div>`; }
   return pc.apply(this, arguments); }; })();
-const qsElig = () => pvList().filter(p => p.ql && !p.ql.done && !p.ql.live && !p.tr);
+const qsElig = () => pvList().filter(p => (p.ql && !p.ql.done && !p.ql.live && !p.tr) || (p.fin && !(p.fr && p.fr.go)));
 function qsTarget() { const E = qsElig(); if (!E.length) return null; const t = E.find(p => p.id === window.__pvSel) || E[0]; if (t.fin && !t.fr) t.fr = { s: 0 }; return t; }
 (() => { const pc = pvCard; pvCard = function (p) { let h = pc.apply(this, arguments); try { const E = qsElig(); if (E.length > 1 && E.includes(p)) { const t = qsTarget();
     h = h.replace('<div class="pv-c', `<div class="pv-c ${t && t.id === p.id ? 'act' : 'wait'}`); h = h.replace(/<\/div>\s*$/, `<p class="pv-who"><span class="a">⚖️ Your votes are moving this one</span><span class="w">👉 Swipe here and vote to move this one</span></p></div>`); } } catch (e) {} return h; }; })();
@@ -8088,13 +8089,13 @@ function qlRace(p) { const q = p.ql; if (!q || q.done) return; window.__qlLive =
       if (i < seq.length) return; clearInterval(iv); window.__qlLive = 0; q.live = 0; q.shown = 1; q.w = A; q.l = B; q.last = { win: won, t: o.t, src: o.src };
       setTimeout(() => photoFinish(() => won ? qlWon(p, o, A, B) : qlLost(p, o, A, B)), 600); }, 1000); };
   qrCount(p, o, oh, run); }
-function qlWon(p, o, A, B) { const q = p.ql, nm = esc(rcName(p)); q.done = 'q'; rzAdd(p, 3); S.gems = (S.gems || 0) + 50; p.qc = (p.qc || 0) + 50; p.fin = 1; p.cashOK = 1; p.fr = { s: QS_STEPS, go: 1 }; save();
-  popOpen(`<div class="pp qfx nv qw"><p class="nv-brand">PhotoPicks</p><h2 class="nv-big">You’re in<br>the final!</h2><i class="nv-sw"></i>
+function qlWon(p, o, A, B) { const q = p.ql, nm = esc(rcName(p)); q.done = 'q'; rzAdd(p, 3); S.gems = (S.gems || 0) + 50; p.qc = (p.qc || 0) + 50; p.fin = 1; p.cashOK = 1; p.fr = { s: 0 }; save();
+  popOpen(`<div class="pp qfx nv qw"><p class="nv-brand">PhotoPicks</p><h2 class="nv-big">Qualified!</h2><i class="nv-sw"></i>
     <div class="qw-ph"><img src="${p.src}" alt=""><i class="qw-rz">${rosette('f')}</i></div>
     <p class="qw-r">${nm} wins ${A}–${B}</p><p class="qw-o">Against ${esc(o.t)}</p><p class="qw-c"><span>🪙</span> +50 coins</p>
-    <button class="btn block nv-go" id="qlvGo">Meet your finalists</button><div style="text-align:center"><button class="link nv-later" id="qlvL">Later</button></div></div>`);
+    <p class="qw-nx">Next: <b>${QS_STEPS} voting steps</b> to the Final<br><small>Vote 2 in a row with the crowd = 1 step</small></p><button class="btn block nv-go" id="qlvGo">⚖️ Vote your way to the Final</button><div style="text-align:center"><button class="link nv-later" id="qlvL">Later</button></div></div>`);
   try { paintGems(); rvConfetti(document.querySelector('.qw'), 90); } catch (e) {}
-  $('#qlvGo').onclick = () => qfStart(p); $('#qlvL').onclick = () => { popClose(); try { renderJudge(); } catch (e) {} }; }
+  $('#qlvGo').onclick = () => { popClose(); go('judge'); renderJudge(); }; $('#qlvL').onclick = () => { popClose(); try { renderJudge(); } catch (e) {} }; }
 function qlLost(p, o, A, B) { const q = p.ql, nm = esc(rcName(p)); q.done = 'x'; q.at = Date.now(); save();
   popOpen(`<div class="pp qfx nv qw"><p class="nv-brand">PhotoPicks</p><h2 class="nv-big sm">So close</h2><i class="nv-sw"></i>
     <div class="qw-ph out"><img src="${p.src}" alt=""></div><p class="qw-r">${esc(o.t)} wins ${B}–${A}</p><p class="qw-o">${nm} gets a free tune-up, then train it for Cash Races</p>
@@ -8248,8 +8249,8 @@ function useGems() { const g = Math.floor(S.gems || 0), n = Math.floor(g / TQ_CO
   B.querySelectorAll('[data-tcf]').forEach(b => b.onclick = () => { const p = S.photos.find(x => x.id === b.dataset.tcf); closeSheet(); setTimeout(() => qfStart(p), 200); });
   B.querySelectorAll('[data-tcn]').forEach(b => b.onclick = () => { closeSheet(); setTimeout(finPick, 200); });
   B.querySelectorAll('[data-tci]').forEach(b => b.onclick = () => { closeSheet(); setTimeout(openFriends, 200); }); }
-try { (S.photos || []).forEach(p => { if (p.fin) p.fr = { s: QS_STEPS, go: 1 }; }); save(); } catch (e) {}
-(() => { const pc = pvCard; pvCard = function (p) { if (!p.fin) return pc.apply(this, arguments); p.fr = { s: QS_STEPS, go: 1 };
+
+(() => { const pc = pvCard; pvCard = function (p) { if (!p.fin) return pc.apply(this, arguments); p.fr = p.fr || { s: 0 }; if (!p.fr.go) return `<div class="pv-c fin" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">🏆 Qualified</span><em>🟡 +${p.qc || 0}</em></div>${pvStep(p, p.fr.s || 0, 1)}</div>`;
   return `<div class="pv-c fin" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">🏆 Finalist</span><em>🟡 +${p.qc || 0}</em></div>
     <div class="pv-fn"><img src="${p.src}" alt=""><div><b>Your Final is waiting</b><small>${S.fin1 ? `Pick your entry ($2–$20) · 1st wins up to ${money(20 * QF_PAY[0])}` : '🎁 Your first Final is free · 1st wins $7.00'}</small></div></div>
     <button class="btn block pv-go" data-qfr="${p.id}">🏁 Meet your finalists & race</button></div>`; }; })();
