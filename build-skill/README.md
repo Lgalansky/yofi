@@ -348,6 +348,8 @@ Then `rmv169.py`: old qualifier popups switched off; big rival photos; coin coun
 
 Then `rmv170.py`: free photo entries (5 a day, several at once); training costs 20 coins a match, 3 wins before 3 losses = cash-ready for good (Finals + cash head-to-heads).
 
+Then `rmv171.py`: your 10 votes start a photo's qualifier; the qualifier is a full-screen live 2-horse race (first to 11 votes).
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -514,6 +516,7 @@ python3 rmv167.py
 python3 rmv168.py
 python3 rmv169.py
 python3 rmv170.py
+python3 rmv171.py
 ```
 
 ## Skill only
