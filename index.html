@@ -4124,7 +4124,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v190</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v191</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -8252,9 +8252,9 @@ function useGems() { const g = Math.floor(S.gems || 0), n = Math.floor(g / TQ_CO
 
 (() => { const pc = pvCard; pvCard = function (p) { if (!p.fin) return pc.apply(this, arguments); p.fr = p.fr || { s: 0 }; if (!p.fr.go) return `<div class="pv-c fin" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">🏆 Qualified</span><em>🟡 +${p.qc || 0}</em></div>${pvStep(p, p.fr.s || 0, 1)}</div>`;
   return `<div class="pv-c fin" data-pid="${p.id}"><div class="pv-t"><b>${esc(rcName(p))}</b><span class="pv-st">🏆 Finalist</span><em>🟡 +${p.qc || 0}</em></div>
-    <div class="pv-fn"><img src="${p.src}" alt=""><div><b>Your Final is waiting</b><small>${S.fin1 ? `Pick your entry ($2–$20) · 1st wins up to ${money(20 * QF_PAY[0])}` : '🎁 Your first Final is free · 1st wins $7.00'}</small></div></div>
+    <div class="pv-fn"><img src="${p.src}" alt=""><div><b>Your Final is waiting</b><small>Pick your entry ($2–$20) · 1st wins up to ${money(20 * QF_PAY[0])}</small></div></div>
     <button class="btn block pv-go" data-qfr="${p.id}">🏁 Meet your finalists & race</button></div>`; }; })();
-(() => { const qp = qfPick; qfPick = function (p, fee) { const free = !S.fin1; if (free) fee = 2; const r = qp.call(this, p, fee); if (!free) return r;
+(() => { const qp = qfPick; qfPick = function (p, fee) { const free = false; const r = qp.call(this, p, fee); if (!free) return r;
   try { const box = document.querySelector('.qf2-win'); if (box) box.insertAdjacentHTML('afterend', '<p class="qf2-free">🎁 Your first Final is free · a $2 entry on us</p>');
     document.querySelectorAll('.qf2-f button').forEach(b => { if (b.dataset.qff !== '2') { b.disabled = true; b.classList.add('lk'); } });
     const s2 = document.querySelector('.qf2-s'); if (s2) s2.textContent = 'Higher entries unlock after your first Final. Crowd votes decide the winners.';
