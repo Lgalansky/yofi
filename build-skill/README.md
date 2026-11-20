@@ -372,6 +372,8 @@ Then `rmv181.py`: navy & gold redesign of the live qualifier (Race to 11), You'r
 
 Then `rmv182.py`: every race has a goal, 3-2-1, suspense and a celebration: stable head-to-heads rebuilt as navy Race to 8; 3-2-1 before the 6-photo Final.
 
+Then `rmv183.py`: head-to-head in the owner's mock-up style: story headlines (One vote from victory), Winner takes, 15-vote counting bar, You won + net win, New challenge.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -550,6 +552,7 @@ python3 rmv179.py
 python3 rmv180.py
 python3 rmv181.py
 python3 rmv182.py
+python3 rmv183.py
 ```
 
 ## Skill only
