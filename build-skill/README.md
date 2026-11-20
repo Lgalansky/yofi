@@ -362,6 +362,8 @@ Then `rmv176.py`: sign-up after the first framed photo; slower qualifier race wi
 
 Then `rmv177.py`: Qualified! screen shows the Final and what 1st could win.
 
+Then `rmv178.py`: coins sheet is now Train for Cash Races (your photos with training progress); training costs 50 coins a match.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -535,6 +537,7 @@ python3 rmv174.py
 python3 rmv175.py
 python3 rmv176.py
 python3 rmv177.py
+python3 rmv178.py
 ```
 
 ## Skill only
