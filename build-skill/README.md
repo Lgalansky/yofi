@@ -444,6 +444,8 @@ Then `rmv217.py`: rmv217: simpler Vote cards (name, route, one goal line) and a 
 
 Then `rmv218.py`: rmv218: coins sheet buttons show the coin cost, right aligned.
 
+Then `rmv219.py`: rmv219: Vote card shows Steps n/3 and Streak n/2 with feedback on every vote.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -658,6 +660,7 @@ python3 rmv215.py
 python3 rmv216.py
 python3 rmv217.py
 python3 rmv218.py
+python3 rmv219.py
 ```
 
 ## Skill only
