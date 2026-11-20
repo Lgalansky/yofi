@@ -358,6 +358,8 @@ Then `rmv174.py`: 2 correct in a row moves a photo a step; votes move one photo 
 
 Then `rmv175.py`: when no photo is in play, the Vote screen shows an empty-lane card promoting a free photo entry (or the stable).
 
+Then `rmv176.py`: sign-up after the first framed photo; slower qualifier race with each voter shown; prize up front on the race and rivals screens.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -529,6 +531,7 @@ python3 rmv172.py
 python3 rmv173.py
 python3 rmv174.py
 python3 rmv175.py
+python3 rmv176.py
 ```
 
 ## Skill only
