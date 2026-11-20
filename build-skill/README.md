@@ -440,6 +440,8 @@ Then `rmv215.py`: rmv215: age group asked at sign-up (and once on open for older
 
 Then `rmv216.py`: rmv216: one Final per run; Race it again from the qualifier (free); head-to-heads stay open.
 
+Then `rmv217.py`: rmv217: simpler Vote cards (name, route, one goal line) and a short button-led coins sheet.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -652,6 +654,7 @@ python3 rmv213.py
 python3 rmv214.py
 python3 rmv215.py
 python3 rmv216.py
+python3 rmv217.py
 ```
 
 ## Skill only
