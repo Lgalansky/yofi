@@ -394,6 +394,8 @@ Then `rmv192.py`: My Photos rebuilt as your trophy wall: earnings banner, framed
 
 Then `rmv193.py`: 300 coins = a free $2 Final entry (lobby button + coins sheet).
 
+Then `rmv194.py`: one-tap rematch on results: Race again, Step up, and Race again free with 300 coins; Step up on head-to-heads.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -583,6 +585,7 @@ python3 rmv190.py
 python3 rmv191.py
 python3 rmv192.py
 python3 rmv193.py
+python3 rmv194.py
 ```
 
 ## Skill only
