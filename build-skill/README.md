@@ -340,6 +340,8 @@ Then `rmv165.py`: no 100-coin pop; free retry when a photo goes out; first two e
 
 Then `rmv166.py`: loop for photos that miss: free tune-up, training head-to-heads for coins and form, then free re-entry.
 
+Then `rmv167.py`: accuracy counter removed from the Vote screen; round bar shows only coins to the next photo entry.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -502,6 +504,7 @@ python3 rmv163.py
 python3 rmv164.py
 python3 rmv165.py
 python3 rmv166.py
+python3 rmv167.py
 ```
 
 ## Skill only
