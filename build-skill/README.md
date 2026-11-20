@@ -364,6 +364,8 @@ Then `rmv177.py`: Qualified! screen shows the Final and what 1st could win.
 
 Then `rmv178.py`: coins sheet is now Train for Cash Races (your photos with training progress); training costs 50 coins a match.
 
+Then `rmv179.py`: "cash-ready (for good)" renamed to "Ready for Cash Races" everywhere.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -538,6 +540,7 @@ python3 rmv175.py
 python3 rmv176.py
 python3 rmv177.py
 python3 rmv178.py
+python3 rmv179.py
 ```
 
 ## Skill only
