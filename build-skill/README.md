@@ -384,6 +384,8 @@ Then `rmv187.py`: finalist cards no longer get stuck at Step 3 of 3: they show I
 
 Then `rmv188.py`: qualifier is a real 2-horse race on a track; full-screen 3-2-1; clearer step label.
 
+Then `rmv189.py`: first Final free ($2 entry); vote pairs match your qualifying photo's category; daily-rewards pop held until first qualifier; finalist card says Your Final is waiting.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -568,6 +570,7 @@ python3 rmv185.py
 python3 rmv186.py
 python3 rmv187.py
 python3 rmv188.py
+python3 rmv189.py
 ```
 
 ## Skill only
