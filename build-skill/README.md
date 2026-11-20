@@ -352,6 +352,8 @@ Then `rmv171.py`: your 10 votes start a photo's qualifier; the qualifier is a fu
 
 Then `rmv172.py`: 3 correct votes in a row move your photo 1 step (3 steps to the qualifier, 3 more to the Final); 3-2-1 head-to-head intro before the qualifier race.
 
+Then `rmv173.py`: on 2 in a row the third streak dot pulses with '1 more for a step!'.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -520,6 +522,7 @@ python3 rmv169.py
 python3 rmv170.py
 python3 rmv171.py
 python3 rmv172.py
+python3 rmv173.py
 ```
 
 ## Skill only
