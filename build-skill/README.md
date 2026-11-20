@@ -442,6 +442,8 @@ Then `rmv216.py`: rmv216: one Final per run; Race it again from the qualifier (f
 
 Then `rmv217.py`: rmv217: simpler Vote cards (name, route, one goal line) and a short button-led coins sheet.
 
+Then `rmv218.py`: rmv218: coins sheet buttons show the coin cost, right aligned.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -655,6 +657,7 @@ python3 rmv214.py
 python3 rmv215.py
 python3 rmv216.py
 python3 rmv217.py
+python3 rmv218.py
 ```
 
 ## Skill only
