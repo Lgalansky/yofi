@@ -2243,6 +2243,17 @@ html body #flow .sx .sx-btns.sx-two{display:grid!important;grid-template-columns
 .oc-q span{font:800 .85rem/1.25 Nunito,system-ui;color:#F3D98B}
 .oc-q small{font:700 .72rem Nunito,system-ui;color:#CFC6B4}
 #coach .oc-demo,.oc-demo{font:inherit!important;color:#F3D98B!important;text-decoration:underline;padding:0!important;margin:0!important;background:none!important;border:0!important;box-shadow:none!important;min-height:0!important;height:auto!important;display:inline!important}
+.st-rec{margin:10px 12px 4px!important}
+.lb-k{margin:18px 2px 8px;font:800 .8rem/1 Nunito,system-ui;letter-spacing:.12em;text-transform:uppercase;color:#7A5A12}
+.lb-l{display:grid;gap:8px}
+.lb-r{display:flex;align-items:center;gap:12px;padding:10px;border-radius:18px;background:#fff;box-shadow:inset 0 0 0 1.5px #E2D3B4}
+.lb-r img{width:58px;height:58px;border-radius:12px;object-fit:cover;flex:none}
+.lb-r div{flex:1;min-width:0}.lb-r b{display:block;font:800 1.05rem Fraunces,Georgia,serif;color:#14213D}.lb-r small{font:700 .78rem Nunito,system-ui;color:#5B6380}
+.lb .lb-b{flex:none;min-width:84px;padding:10px 16px;border-radius:999px;font:800 .95rem Nunito,system-ui;background:#2F7A4A!important;color:#fff!important}
+.lb-empty{padding:14px;border-radius:18px;background:#fff;box-shadow:inset 0 0 0 1.5px #E2D3B4;text-align:center}.lb-empty p{margin:0 0 10px;font:700 .95rem Nunito,system-ui;color:#14213D}
+.lb .lb-b2{padding:10px 18px;border-radius:999px;font:800 .95rem Nunito,system-ui;background:#14213D!important;color:#fff!important}
+.lb-c{display:grid;gap:14px}.lb-c .sv,.lb-c .cup{margin:0!important}
+.sx.lb:not(.coinv) #cupC{display:block!important}
 .rg-l{display:grid;gap:8px;margin:12px 0 14px}.rg-r{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1.5px rgba(217,174,79,.5);text-align:left}.rg-r>span{font-size:1.4rem}.rg-r>div{flex:1;min-width:0}.rg-r b{display:block;font:900 .98rem Nunito,system-ui;color:#FBF3DC}.rg-r small{font:600 .78rem Nunito,system-ui;color:#C9D3E6}
 html body .rgp .rg-r .btn{flex:none;min-width:76px;min-height:40px!important;margin:0!important;padding:0 14px!important;border-radius:999px!important;font:900 .9rem Nunito,system-ui!important}
 </style>
@@ -11091,6 +11102,39 @@ function streakHello() { if ((S.tut || 9) < 9 || Date.now() - (window.__autoT ||
   if (S.user) setTimeout(streakHello, 1200);
   if (S.user) paintAvatar();
   shownGems = S.gems;
+})();
+
+/* ===== One stable in My Photos (option A) =====
+   - The My Photos tab becomes Stable: each photo has one card with its record, next step and games.
+   - Play becomes the lobby: Real games for each cash-ready photo, plus Coin games (Survivor, Daily Cup). */
+(() => {
+  const recRow = p => { try { const r = twRec(p); return `<div class="tw-rec st-rec"><div><b>${r.qual}</b><small>Qualified</small></div><div><b>${r.fin}</b><small>Finals</small></div><div><b>${r.h.w}–${r.h.l}</b><small>Quick matches</small></div><div><b>${money(r.cash)}</b><small>Cash won</small></div></div>`; } catch (e) { return ''; } };
+  const addRec = (h, p) => { if (!h || h.indexOf('st-rec') >= 0) return h; const i = h.indexOf('<div class="pg2">'); return i >= 0 ? h.slice(0, i) + recRow(p) + h.slice(i) : h; };
+  const sh = stHero; stHero = function (p) { return addRec(sh.apply(this, arguments), p); };
+  if (typeof stTrain === 'function') { const stt = stTrain; stTrain = function (p) { return addRec(stt.apply(this, arguments), p); }; }
+  const press = id => ['segJudge', 'segStudio', 'segGallery', 'segCompete'].forEach(x => { const b = $('#' + x); if (b) b.setAttribute('aria-pressed', x === id ? 'true' : 'false'); });
+  // every stable view belongs to the Stable tab
+  const ft = finalsTab; finalsTab = function () {
+    if (window.__ptab === 'coins' && window.__inLobby) { window.__ptab = 'stable'; return playLobby(); }
+    window.__inLobby = 0; const r = ft.apply(this, arguments);
+    try { press('segGallery'); setTimeout(() => { $('#ptitle').textContent = 'Stable'; }, 0); } catch (e) {} return r; };
+  window.playLobby = function playLobby() {
+    window.__inLobby = 1; const H = (typeof stHorses === 'function' ? stHorses() : (S.photos || []).filter(p => p.framed)), R = H.filter(isCashOK);
+    const rg = R.length ? R.map(p => `<div class="lb-r"><img src="${p.src}" alt=""><div><b>${esc(rcName(p))}</b><small>${(() => { const w = stWon(p); return w ? `${money(w)} won · ` : ''; })()}Final, quick match, challenges</small></div><button class="btn lb-b" data-rg="${p.id}">Play</button></div>`).join('')
+      : `<div class="lb-empty"><p>Qualify a photo to unlock cash games.</p><button class="btn lb-b2" data-lbst>🐎 Go to your stable</button></div>`;
+    openFlow(`<div class="fnx sx lb"><h1 class="sx-h"><span>Play</span></h1><p class="sx-sub">Cash games for your photos, and coin games for everyone.</p>
+      <p class="lb-k">💵 Real games</p><div class="lb-l">${rg}</div>
+      <p class="lb-k">🪙 Coin games · ${Math.floor(S.gems || 0).toLocaleString()} coins</p><div class="lb-c">${svCard()}${cupCard()}</div>
+      <p class="db-sim">Demo · rivals and crowd votes are simulated</p></div>`, false);
+    $('#flow').classList.add('astab'); press('segCompete'); setTimeout(() => { $('#ptitle').textContent = 'Play'; }, 0); };
+  // Survivor lock-in, results and Cup entry return to the lobby when that's where the player was
+  const cj = cupJoin; cupJoin = function () { const inL = window.__inLobby; const r = cj.apply(this, arguments); try { if (inL && !document.querySelector('#coach.on')) playLobby(); } catch (e) {} return r; };
+  document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-lbst]'); if (!b) return; e.preventDefault(); window.__ptab = 'stable'; finalsTab(); });
+  // tabs
+  const sg = $('#segGallery'); if (sg) { sg.innerHTML = '<span class="ms-ic" aria-hidden="true">🐎</span><span>Stable</span><i class="fr-dot" id="frDot" hidden></i>';
+    sg.onclick = () => { try { if ($('#sheet').classList.contains('on')) closeSheet(); popClose(); } catch (e) {} const has = (S.photos || []).some(p => p.framed && !(p.starter && !p.ql));
+      if (!has) { myShow(); press('segGallery'); setTimeout(() => { $('#ptitle').textContent = 'Stable'; }, 0); return; } window.__ptab = 'stable'; finalsTab(); }; }
+  const sc = $('#segCompete'); if (sc) sc.onclick = () => { try { if ($('#sheet').classList.contains('on')) closeSheet(); popClose(); } catch (e) {} playLobby(); };
 })();
 })();
 
