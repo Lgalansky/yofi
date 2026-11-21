@@ -2255,6 +2255,7 @@ html body #flow .sx .sx-btns.sx-two{display:grid!important;grid-template-columns
 .lb-c{display:grid;gap:14px}.lb-c .sv,.lb-c .cup{margin:0!important}
 .sx.lb:not(.coinv) #cupC{display:block!important}
 #flow .sx-btns .st-vote{background:#14213D!important;color:#fff!important;box-shadow:none!important;border:0!important}
+#flow .pg2 .tk,#flow .pg-bar,#qlS,.pv-tr,.ql-tr{display:none!important}
 .vstk{display:flex;align-items:center;gap:10px;margin:6px 0 10px;padding:10px 12px;border-radius:16px;background:#14213D;color:#fff;box-shadow:0 8px 18px -10px rgba(20,33,61,.7)}
 .vstk-f{font-size:1.6rem;line-height:1}
 .vstk-m{flex:1;min-width:0}.vstk-m p{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:0 0 6px}.vstk-m b{font:800 1rem Fraunces,Georgia,serif}.vstk-m span{font:700 .78rem Nunito,system-ui;color:#CFC6B4}.vstk-m em{font-style:normal;color:#F3D98B}
@@ -11151,17 +11152,17 @@ function streakHello() { if ((S.tut || 9) < 9 || Date.now() - (window.__autoT ||
    - Winning the qualifier makes its Final ready straight away (no voting steps).
    - Voting has a streak bar: agree with the crowd in a row for coin bonuses. */
 (() => {
-  const QL_COST = 500, QL_NEW = 100, STK = [[3, 10], [5, 25], [10, 100]];
+  const QL_COST = 500, QL_NEW = 0, STK = [[3, 10], [5, 25], [10, 100]];
   const qlCost = () => (S.qlPaid || 0) ? QL_COST : QL_NEW;
   qsTarget = function () { return null; };   // votes no longer move photos step by step
   const finReady = () => { let ch = 0; (S.photos || []).forEach(p => { if (p.fin && (!p.fr || !p.fr.go)) { p.fr = { s: QS_STEPS, go: 1 }; ch = 1; } }); if (ch) save(); };
   window.qlPay = function (p) { if (!p) return; const q = p.ql || (p.ql = { w: 0, l: 0 }), c = qlCost(), g = Math.floor(S.gems || 0), nm = esc(rcName(p)), first = !(S.qlPaid || 0);
     if (q.done || q.live) return;
-    popOpen(`<div class="pp qfx nv qw qlp"><p class="nv-brand">PhotoPicks</p><div class="nv-pillrow"><span class="nv-pill">🎀 Qualifier race</span></div><h2 class="nv-big sm">${first ? 'Your first race!' : 'Ready to race?'}</h2>
+    popOpen(`<div class="pp qfx nv qw qlp"><p class="nv-brand">PhotoPicks</p><div class="nv-pillrow"><span class="nv-pill">🎀 Qualifier race</span></div><h2 class="nv-big sm">${first ? 'You’ve qualified to race!' : 'Ready to race?'}</h2>
       <div class="qw-ph"><img src="${p.src}" alt=""></div>
       <p class="qlp-t">${nm} vs a rival · <b>first to ${typeof QR_WIN !== 'undefined' ? QR_WIN : 5} crowd votes</b> goes to the Final</p>
-      ${first ? `<p class="qlp-deal"><s>${QL_COST}</s> <b>${QL_NEW} coins</b> · first race discount</p>` : ''}
-      ${g >= c ? `<button class="btn block nv-go qlp-go" id="qlpGo">🎀 Race now · ${c} 🪙</button>` : `<button class="btn block nv-go qlp-go off" disabled>${c - g} more coins to race</button><p class="qw-o">Vote to earn coins · streaks pay bonuses</p>`}
+      ${first ? `<p class="qlp-deal">Your first qualifier is <b>free</b></p>` : ''}
+      ${g >= c ? `<button class="btn block nv-go qlp-go" id="qlpGo">${c ? `🎀 Race now · ${c} 🪙` : '🎀 Start the qualifier'}</button>` : `<button class="btn block nv-go qlp-go off" disabled>${c - g} more coins to race</button><p class="qw-o">Vote to earn coins · streaks pay bonuses</p>`}
       <div style="text-align:center"><button class="link nv-later" id="qlpX">${g >= c ? 'Later' : '⚖️ Vote to earn coins'}</button></div><p class="nv-sim">Demo · rival and crowd votes are simulated</p></div>`);
     try { rvConfetti(document.querySelector('.qlp'), 40); } catch (e) {}
     $('#qlpX').onclick = () => { popClose(); if (g < c) { try { closeFlow(); } catch (e) {} go('judge'); renderJudge(); } };
@@ -11170,15 +11171,17 @@ function streakHello() { if ((S.tut || 9) < 9 || Date.now() - (window.__autoT ||
   // stable card: the qualifier step becomes "Enter the qualifier · coins"
   const sl = stLadder; stLadder = function (p) { finReady(); let h = sl.apply(this, arguments); try { const q = p.ql;
       if (q && !q.done && !q.live) { const c = qlCost();
-        h = h.replace(/<small>\d+\/\d+ steps<\/small>/, `<small>${c} coins</small>`);
-        h = h.replace(/<div class="pg2-now[\s\S]*?<\/div><\/div>$/, `<div class="pg2-now tap" data-qlpay="${p.id}"><div><p>▶ Now</p><b>Enter the qualifier race</b><small>${(S.qlPaid || 0) ? `${QL_COST} coins` : `First race ${QL_NEW} coins <s>${QL_COST}</s>`} · win it and your Final is ready</small></div><em class="qlp-em">${c} 🪙 ›</em></div></div>`); }
+        
+        h = h.replace(/<div class="pg2-now[\s\S]*?<\/div><\/div>$/, `<div class="pg2-now tap" data-qlpay="${p.id}"><div><p>▶ Now</p><b>Enter the qualifier race</b><small>${(S.qlPaid || 0) ? `${QL_COST} coins` : 'Your first race is free'} · win it and your Final is ready</small></div><em class="qlp-em">${c ? `${c} 🪙` : 'Free'} ›</em></div></div>`); }
       if (p.fin) h = h.replace(/<small>\d+\/\d+ steps<\/small>/, '<small>Ready!</small>');
     } catch (e) {} return h; };
-  const fix = (h, p) => { try { const q = p.ql; if (q && !q.done && !q.live) { const c = qlCost(); h = h.replace(/Qualifying · \d+ of \d+ steps/g, `Ready to race · ${c} coins`).replace(/⚖️ Vote to move it/g, '⚖️ Vote to earn coins'); } } catch (e) {} return h; };
+  const fix = (h, p) => { try { const q = p.ql; if (q && !q.done && !q.live) { const c = qlCost(); h = h.replace(/Qualifying · \d+ of \d+ steps/g, (c ? `Ready to race · ${c} coins` : 'Ready to race · free')).replace(/⚖️ Vote to move it/g, '⚖️ Vote to earn coins'); } } catch (e) {} return h; };
   if (typeof stTrain === 'function') { const st2 = stTrain; stTrain = function (p) { return fix(st2.apply(this, arguments), p); }; }
   { const sh2 = stHero; stHero = function (p) { return fix(sh2.apply(this, arguments), p); }; }
   const ft = finalsTab; finalsTab = function () { finReady(); return ft.apply(this, arguments); };
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-qlpay]'); if (!b) return; e.preventDefault(); e.stopPropagation(); qlPay((S.photos || []).find(x => x.id === b.dataset.qlpay)); }, true);
+  if (typeof qlStart === 'function') { const qs0 = qlStart; qlStart = function (p) { const r = qs0.apply(this, arguments); try { if (!(S.qlPaid || 0) && p && !S.qlOffered) { S.qlOffered = 1; save(); qsWhenFree(() => qlPay(p)); } } catch (e) {} return r; }; }
+  setInterval(() => { try { if ((S.qlPaid || 0) || S.qlOffered || !S.user) return; const p = (S.photos || []).find(x => x.framed && x.ql && !x.ql.done && !x.ql.live); if (!p || document.querySelector('#coach.on, #sheet.on, #finPick.on, #ageGate.on')) return; S.qlOffered = 1; save(); qlPay(p); } catch (e) {} }, 2000);
   // vote streak bar with coin bonuses
   const stkBar = () => { const n = S.vst || 0, nx = STK.find(x => x[0] > n) || STK[STK.length - 1], prev = (STK.filter(x => x[0] <= n).pop() || [0])[0], pct = Math.min(100, (n - prev) / (nx[0] - prev) * 100);
     return `<div class="vstk" id="vStk"><span class="vstk-f">🔥</span><div class="vstk-m"><p><b>${n} in a row</b><span>Next bonus at ${nx[0]} · <em>+${nx[1]} 🪙</em></span></p><i class="vstk-b"><u style="width:${pct}%"></u></i></div></div>`; };
