@@ -2201,6 +2201,25 @@ html body #flow .sx .btn.sv-b{width:100%!important;min-height:48px!important;mar
 .sv-dots{display:flex;gap:6px;margin:0 0 12px}.sv-dots i{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.15)}.sv-dots i.on{background:linear-gradient(90deg,#8CC79A,#2F7A3F)}
 .sv-pk{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:rgba(255,255,255,.08)}.sv-pk img{width:48px;height:48px;border-radius:10px;object-fit:cover;box-shadow:0 0 0 2px #D9AE4F}.sv-pk b{display:block;font:900 .95rem Nunito,system-ui}.sv-pk small{font:600 .78rem Nunito,system-ui;color:#C9D3E6}
 .sv-demo{display:block;margin:8px auto 0;color:#C9D3E6!important;font:700 .8rem Nunito,system-ui}
+.svg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 10px}
+.svg-p{position:relative;height:96px;padding:0;border:0;border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.18)}
+.svg-p img{width:100%;height:100%;object-fit:cover;display:block}
+.svg-p span{position:absolute;left:6px;bottom:5px;padding:2px 8px;border-radius:999px;font:800 .72rem Nunito,system-ui;color:#fff;background:rgba(10,16,36,.75)}
+.svg-p.on{box-shadow:0 0 0 3px #3BD38A}
+.svg-p.on::after{content:"✓ Your pick";position:absolute;top:6px;right:6px;padding:2px 7px;border-radius:999px;font:900 .64rem Nunito,system-ui;background:#3BD38A;color:#052615}
+.svg-rule{margin:0 0 10px;padding:9px 12px;border-radius:14px;border:1.5px solid rgba(243,217,139,.45);background:rgba(243,217,139,.1);font:700 .8rem Nunito,system-ui;color:#F3D98B;text-align:center}
+.svg-rule b{color:#fff}
+.svl{display:grid;gap:5px;margin:8px 0 10px;text-align:left}
+.svl-r{display:grid;grid-template-columns:20px 34px 1fr 64px 34px;align-items:center;gap:8px;padding:5px 8px;border-radius:10px;background:rgba(255,255,255,.05);opacity:.7}
+.svl-r.in{opacity:1}
+.svl-r.me{background:rgba(243,217,139,.2);box-shadow:inset 0 0 0 2px #F3D98B;opacity:1}
+.svl-r em{font:900 .8rem Fraunces,Georgia,serif;font-style:normal;color:#F3D98B}
+.svl-r img{width:34px;height:34px;border-radius:7px;object-fit:cover}
+.svl-r b{font:800 .76rem/1.15 Nunito,system-ui;color:#fff;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.svl-b{height:7px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}
+.svl-b u{display:block;height:100%;background:linear-gradient(90deg,#F3D98B,#D9AE4F)}
+.svl-r i{font:800 .74rem Nunito,system-ui;font-style:normal;color:#F3D98B;text-align:right}
+.svl-cut{text-align:center;font:900 .64rem Nunito,system-ui;letter-spacing:.08em;color:#FFB4A8;margin:2px 0}
 .svm{display:grid;gap:8px;margin:10px 0 12px}.svm-r{display:flex;align-items:center;gap:6px}.svm-x{flex:none;font:900 .78rem Fraunces,Georgia,serif;color:#F3D98B}
 .svm-p{position:relative;flex:1;display:flex;align-items:center;gap:8px;padding:6px;border:0;border-radius:12px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.18);color:#fff;text-align:left;cursor:pointer}.svm-p img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex:none}.svm-p span{font:800 .8rem/1.2 Nunito,system-ui}
 .svm-p.on{background:rgba(217,174,79,.25);box-shadow:inset 0 0 0 2.5px #F3D98B}.svm-p.used{opacity:.35}.svm-p em{position:absolute;right:6px;top:4px;font:900 .6rem Nunito,system-ui;font-style:normal;color:#FFB4A8}
@@ -9216,34 +9235,40 @@ const SV_COST = 50, SV_DAYS = 7, SV_PRIZE = 100, SV_FIELD = 1000, CN = () => gem
 const svWeek = () => { const m = new Date(); m.setHours(0, 0, 0, 0); m.setDate(m.getDate() - ((m.getDay() + 6) % 7)); return m.toISOString().slice(0, 10); };
 function svS() { const w = svWeek(); if (!S.sv || (S.sv.wk !== w && !(S.sv.in && !S.sv.done))) { S.sv = { wk: w, in: 0 }; } return S.sv; }
 const svStr = x => 25 + ppHash(String(x.title || '') + String(x.src).slice(-60)) % 70;
-function svMx() { const V = svS(); if (V.mx && V.mxd === V.day) return V.mx; const pool = ppShuffle(SEED.filter(x => x.src), cpRng((Date.now() % 1e6) + V.day * 97)).slice(0, 8);
-  V.mx = [0, 1, 2, 3].map(i => [pool[i * 2], pool[i * 2 + 1]].map(x => ({ src: x.src, t: x.title || 'Photo', h: '@' + QS_NAMES[ppHash(x.src.slice(-30)) % QS_NAMES.length], st: svStr(x) }))); V.mxd = V.day; save(); return V.mx; }
+/* Survivor: each day pick 1 of 8 photos. They are in Vote all day; ranked by vote share at 8pm. Top half (4 of 8) survives. */
+const SV_N = 8, SV_SAFE = 4;
+function svMx() { const V = svS(); if (V.mx && V.mxd === V.day && !Array.isArray(V.mx[0])) return V.mx; const used = V.used || [];
+  const pool = ppShuffle(SEED.filter(x => x.src && !used.includes(x.src)), cpRng((Date.now() % 1e6) + V.day * 97)).slice(0, SV_N);
+  V.mx = pool.map(x => ({ src: x.src, t: x.title || 'Photo', h: '@' + QS_NAMES[ppHash(x.src.slice(-30)) % QS_NAMES.length], st: svStr(x) })); V.mxd = V.day; save(); return V.mx; }
 function svCard() { const V = svS(), g = Math.floor(S.gems || 0), dots = n => `<span class="sv-dots">${Array.from({ length: SV_DAYS }, (_, i) => `<i class="${i < n ? 'on' : ''}"></i>`).join('')}</span>`; let body;
-  if (!V.in) body = `<h3>$${SV_PRIZE} for the last ones standing</h3><p class="sv-s">Each day pick one photo to win its race. Wrong pick and you’re out. You can only pick a photo once.</p>
+  if (!V.in) body = `<h3>$${SV_PRIZE} for the last ones standing</h3><p class="sv-s">Each day pick 1 of ${SV_N} photos. Finish in the top ${SV_SAFE} by crowd votes and you survive. You can only pick a photo once.</p>
     ${g >= SV_COST ? `<button class="btn sv-b" data-sv="enter">Enter · ${CN()} ${SV_COST}</button>` : `<button class="btn sv-b off" disabled>${SV_COST - g} more coins to enter</button>`}<p class="sv-f">7 days · prize paid by PhotoPicks · enter with coins you earn</p>`;
-  else if (V.done === 'out') body = `<h3>Knocked out on day ${V.day}</h3><p class="sv-s">${V.last ? `${esc(V.last.mine)} lost ${V.last.b}–${V.last.a}. ` : ''}${V.left.toLocaleString()} of ${SV_FIELD.toLocaleString()} are still standing.</p>${dots(V.day - 1)}<button class="btn sv-b" data-sv="new">Demo: start a new week</button><p class="sv-f">The next Survivor starts Monday</p>`;
+  else if (V.done === 'out') body = `<h3>Knocked out on day ${V.day}</h3><p class="sv-s">${V.last && V.last.rank ? `${esc(V.last.mine)} finished ${ppOrd(V.last.rank)} of ${SV_N}. ` : ''}${V.left.toLocaleString()} of ${SV_FIELD.toLocaleString()} are still standing.</p>${dots(V.day - 1)}<button class="btn sv-b" data-sv="new">Demo: start a new week</button><p class="sv-f">The next Survivor starts Monday</p>`;
   else if (V.done === 'won') body = `<h3>You survived all ${SV_DAYS} days!</h3><p class="sv-s">You and ${V.left - 1} others split $${SV_PRIZE}: <b>${money(V.prize)}</b> added to your cash.</p>${dots(SV_DAYS)}<button class="btn sv-b" data-sv="new">Demo: start a new week</button>`;
-  else { const P = V.pk, M = P && svMx()[P.i], me = P && M[P.side], op = P && M[1 - P.side];
+  else { if (V.pk && V.pk.side != null) V.pk = null; const P = V.pk, me = P && svMx()[P.i];
     body = `<h3>Day ${V.day} of ${SV_DAYS}</h3><p class="sv-s"><b>${V.left.toLocaleString()}</b> of ${SV_FIELD.toLocaleString()} still standing</p>${dots(V.day - 1)}
-      ${P ? `<div class="sv-pk"><img src="${me.src}" alt=""><div><b>Your pick: ${esc(me.t)}</b><small>vs ${esc(op.t)} · results tonight 8pm</small></div></div><button class="link sv-demo" data-sv="settle">Demo: settle today now</button>`
+      ${me ? `<div class="sv-pk"><img src="${me.src}" alt=""><div><b>Your pick: ${esc(me.t)}</b><small>Needs a top ${SV_SAFE} finish · results tonight 8pm</small></div></div><button class="link sv-demo" data-sv="settle">Demo: settle today now</button>`
         : `<button class="btn sv-b" data-sv="pick">🛡️ Make today’s pick</button>`}`; }
   return `<div class="sv" id="svC"><span class="sv-ic">🛡️</span><p class="sv-k">Survivor · this week</p>${body}</div>`; }
-function svPick() { const V = svS(), M = svMx(), used = V.used || []; let sel = null;
-  popOpen(`<div class="pp qfx nv svp"><p class="nv-brand">PhotoPicks</p><div class="nv-pillrow"><span class="nv-pill">Survivor · day ${V.day}</span></div><h2 class="nv-h2">Pick one photo to win today</h2><p class="qw-o">The crowd decides each race. Wrong pick and you’re out.</p>
-    <div class="svm">${M.map((m, i) => `<div class="svm-r">${m.map((x, k) => { const u = used.includes(x.src); return `<button class="svm-p ${u ? 'used' : ''}" data-svp="${i}:${k}" ${u ? 'disabled' : ''}><img src="${x.src}" alt=""><span>${esc(x.t)}</span>${u ? '<em>used</em>' : ''}</button>`; }).join('<b class="svm-x">VS</b>')}</div>`).join('')}</div>
+function svPick() { const V = svS(), M = svMx(); let sel = null;
+  popOpen(`<div class="pp qfx nv svp"><p class="nv-brand">PhotoPicks</p><div class="nv-pillrow"><span class="nv-pill">Survivor · day ${V.day}</span></div><h2 class="nv-h2">Pick a crowd favourite</h2><p class="qw-o">Today’s ${SV_N} photos are in Vote all day.</p>
+    <div class="svg">${M.map((x, i) => `<button class="svg-p" data-svp="${i}"><img src="${x.src}" alt=""><span>${esc(x.t)}</span></button>`).join('')}</div>
+    <p class="svg-rule">Your photo needs a <b>top ${SV_SAFE}</b> vote share at 8pm to survive</p>
     <button class="btn block nv-go" id="svGo" disabled>Pick a photo</button><div style="text-align:center"><button class="link nv-later" id="svL">Later</button></div><p class="nv-sim">Demo · other players and crowd votes are simulated</p></div>`);
-  document.querySelectorAll('[data-svp]').forEach(b => b.onclick = () => { document.querySelectorAll('[data-svp]').forEach(x => x.classList.toggle('on', x === b)); const [i, k] = b.dataset.svp.split(':').map(Number); sel = { i, side: k }; const g = $('#svGo'); g.disabled = false; g.textContent = `Lock in ${M[i][k].t}`; });
-  $('#svL').onclick = () => popClose(); $('#svGo').onclick = () => { if (!sel) return; V.pk = sel; save(); popClose(); toast(`🛡️ Locked in: ${M[sel.i][sel.side].t}`); window.__ptab = 'coins'; finalsTab(); }; }
-function svSettle() { const V = svS(), P = V.pk; if (!P) return; const M = svMx()[P.i], me = M[P.side], op = M[1 - P.side], pMe = me.st / (me.st + op.st), won = Math.random() < pMe;
-  const tot = 9, a = won ? Math.max(5, Math.round(tot * Math.max(pMe, .56))) : Math.min(4, Math.round(tot * Math.min(pMe, .44))), b = tot - a, before = V.left;
-  V.used = (V.used || []).concat(me.src); V.last = { mine: me.t, opp: op.t, a, b }; V.pk = null; V.mx = null;
-  V.left = Math.max(won ? 2 : 1, Math.round(V.left * (0.56 + Math.random() * 0.1)));
+  document.querySelectorAll('[data-svp]').forEach(b => b.onclick = () => { document.querySelectorAll('[data-svp]').forEach(x => x.classList.toggle('on', x === b)); sel = +b.dataset.svp; const g = $('#svGo'); g.disabled = false; g.textContent = `Lock in ${M[sel].t}`; });
+  $('#svL').onclick = () => popClose(); $('#svGo').onclick = () => { if (sel == null) return; V.pk = { i: sel }; save(); popClose(); toast(`🛡️ Locked in: ${M[sel].t}`); window.__ptab = 'coins'; finalsTab(); }; }
+function svSettle() { const V = svS(), P = V.pk; if (!P) return; const M = svMx(), me = M[P.i];
+  const raw = M.map(x => Math.max(1, x.st * (0.7 + Math.random() * 0.6))), sum = raw.reduce((a, b) => a + b, 0);
+  const R = M.map((x, i) => ({ x, i, sh: raw[i] / sum * 100 })).sort((a, b) => b.sh - a.sh), rank = R.findIndex(r => r.i === P.i) + 1, won = rank <= SV_SAFE, before = V.left;
+  V.used = (V.used || []).concat(me.src); V.last = { mine: me.t, rank }; V.pk = null; V.mx = null;
+  V.left = Math.max(won ? 2 : 1, Math.round(V.left * (0.48 + Math.random() * 0.1)));
   if (!won) V.done = 'out'; else if (V.day >= SV_DAYS) { V.done = 'won'; V.prize = +(SV_PRIZE / V.left).toFixed(2); S.cash = +((S.cash || 0) + V.prize).toFixed(2); try { earnAdd({ kind: 'sv', amt: V.prize, t: 'Survivor' }); } catch (e) {} } else V.day++;
   save(); try { paintWallet(); } catch (e) {}
+  const rows = R.map((r, k) => `${k === SV_SAFE ? '<div class="svl-cut">▲ survive · out ▼</div>' : ''}<div class="svl-r ${r.i === P.i ? 'me' : ''} ${k < SV_SAFE ? 'in' : ''}"><em>${k + 1}</em><img src="${r.x.src}" alt=""><b>${esc(r.x.t)}${r.i === P.i ? ' · your pick' : ''}</b><span class="svl-b"><u style="width:${Math.round(r.sh / R[0].sh * 100)}%"></u></span><i>${Math.round(r.sh)}%</i></div>`).join('');
   popOpen(`<div class="pp qfx nv qw svr"><p class="nv-brand">PhotoPicks</p><div class="nv-pillrow"><span class="nv-pill">Survivor · day ${V.done === 'won' ? SV_DAYS : won ? V.day - 1 : V.day}</span></div>
     <h2 class="nv-big sm">${V.done === 'won' ? 'You survived the week!' : won ? 'You survived!' : 'Knocked out'}</h2>
-    <div class="svr-vs"><div class="${won ? 'w' : ''}"><img src="${me.src}" alt=""><b>${esc(me.t)}</b><small>Your pick</small></div><i>VS</i><div class="${won ? '' : 'w'}"><img src="${op.src}" alt=""><b>${esc(op.t)}</b></div></div>
-    <div class="svr-bar"><u style="width:${Math.round(a / tot * 100)}%"></u><span>${Math.round(a / tot * 100)}%</span><span>${Math.round(b / tot * 100)}%</span></div>
+    <p class="qw-o">${esc(me.t)} finished <b class="gold">${ppOrd(rank)}</b> of ${SV_N} by vote share</p>
+    <div class="svl">${rows}</div>
     <p class="qw-o">${V.done === 'won' ? `You and ${V.left - 1} others split $${SV_PRIZE}: <b class="gold">${money(V.prize)}</b> added to your cash.` : won ? `${before.toLocaleString()} → <b class="gold">${V.left.toLocaleString()}</b> still standing · day ${V.day} pick opens now` : `${V.left.toLocaleString()} of ${SV_FIELD.toLocaleString()} still standing. Try again next week.`}</p>
     <button class="btn block nv-go" id="svOk">${won && V.done !== 'won' ? `🛡️ Make day ${V.day}’s pick` : 'Back to coin games'}</button><p class="nv-sim">Demo · results and other players are simulated · prize paid by PhotoPicks</p></div>`);
   setTimeout(() => { try { if (V.done === 'won') { cashExplosion(V.prize, { label: 'Survivor' }); rvConfetti(document.querySelector('.svr'), 120); } else if (won) rvConfetti(document.querySelector('.svr'), 50); SFX(won ? 'win' : 'lose'); } catch (e) {} }, 300);
