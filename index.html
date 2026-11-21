@@ -2186,6 +2186,11 @@ html body #flow .sx .btn.cup2-b{width:100%!important;min-height:48px!important;m
 .pg-goal{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 12px;border-radius:16px;background:#F4EBD6;opacity:.75}.pg-goal.on{opacity:1;background:#14213D;color:#fff}.pg-goal>i{font-style:normal;font-size:1.3rem}.pg-goal>div{flex:1}.pg-goal b{display:block;font:900 .95rem Nunito,system-ui}.pg-goal small{font:600 .76rem Nunito,system-ui;opacity:.8}.pg-goal em{font-style:normal;font:900 .72rem Nunito,system-ui;letter-spacing:.08em;color:#F3D98B}
 .q2-l{display:block;margin:12px auto 0}
 html body .qls2 .q2-b #qsJ{background:linear-gradient(180deg,#2F8A45,#1E6B34)!important;color:#fff!important}
+html body :is(#flow,#coach,#sheet,#qlS,#cupC,#app,#finPick,body) .pk-cash.pk-cash.pk-cash.pk-cash,html body .pk-cash.pk-cash.pk-cash.pk-cash.pk-cash{background:linear-gradient(180deg,#2F8A45,#1E6B34)!important;color:#fff!important;box-shadow:0 6px 14px -6px rgba(30,107,52,.6)!important;border:0!important}
+html body :is(#flow,#coach,#sheet,#qlS,#cupC,#app,#finPick,body) .pk-coin.pk-coin.pk-coin.pk-coin,html body .pk-coin.pk-coin.pk-coin.pk-coin.pk-coin{background:linear-gradient(180deg,#F6DE94,#D9AE4F)!important;color:#14213D!important;box-shadow:0 6px 14px -6px rgba(201,149,45,.6)!important;border:0!important}
+html body :is(#flow,#coach,#sheet,#qlS,#cupC,#app,#finPick,body) .pk-free.pk-free.pk-free.pk-free,html body .pk-free.pk-free.pk-free.pk-free.pk-free{background:linear-gradient(180deg,#22325A,#14213D)!important;color:#fff!important;box-shadow:0 6px 14px -8px rgba(20,33,61,.6)!important;border:0!important}
+html body :is(#flow,#coach,#sheet,#qlS,#cupC,#app,#finPick,body) .pk-free.pk-dark.pk-dark.pk-dark.pk-dark,html body .pk-free.pk-dark.pk-dark.pk-dark.pk-dark.pk-dark{background:#FBF3DC!important;color:#14213D!important;box-shadow:none!important}
+html body :is(#flow,#coach,#sheet,#qlS,#cupC,#app,#finPick,body) .pk-cash.pk-cash.pk-cash *,html body :is(#flow,#coach,#sheet,#qlS,#cupC,#app,#finPick,body) .pk-free.pk-free:not(.pk-dark) *{color:inherit!important}
 </style>
 </head>
 <body>
@@ -4378,7 +4383,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v232</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v233</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -9158,6 +9163,15 @@ stLadder = function (p) { const q = p.ql || {}, inQ = p.ql && !q.done, ok = isCa
 (() => { const ud = upDone; upDone = function (p) { const r = ud.apply(this, arguments); try { const c = document.querySelector('#coach.on .q2-two'); if (c) { const T2 = c.querySelector('#qs2'); const l = document.createElement('button'); l.className = 'link nv-later q2-l'; l.textContent = '📷 Add a second photo · +25 🪙'; l.onclick = () => T2 && T2.click(); c.parentNode.insertBefore(l, c); c.style.display = 'none'; } } catch (e) {} return r; }; })();
 (() => { const ql = qlLost; qlLost = function (p) { const r = ql.apply(this, arguments); try { if (!document.querySelector('#coach.on #qlvV')) return r; const L = document.getElementById('qlvL'); if (!L) return r;
     const n = L.cloneNode(false); n.id = 'qlvN'; n.textContent = '📷 Enter another photo'; n.onclick = () => { popClose(); setTimeout(finPick, 200); }; L.parentNode.replaceChild(n, L); } catch (e) {} return r; }; })();
+const PK_CASH = /\$\d|play for real|deposit|add cash|withdraw|enter the final|first final|head-to-head|race (the|your) final|enter a final|meet your finalists|accept/i, PK_COIN = /🪙|🟡|\bcoins?\b/i;
+function pkTag(b) { if (!b || b.disabled || b.classList.contains('off') || b.closest('.qf2-f, .qfp-f, .h2-f, .tot, nav, .lp-pod, .su-age') || b.matches('.link, .nv-later, .pc-later, .h3-x, .t2-x, .qs2-x, .cg-n, .tm-b, .snd-t')) return;
+  const t = (b.innerText || b.textContent || '').trim(); if (!t) return;
+  let k = b.matches('[data-ldc], [data-chy], [data-wbf], [data-qfr]') ? 'cash' : b.matches('[data-cup]') ? 'coin' : PK_COIN.test(t) ? 'coin' : PK_CASH.test(t) ? 'cash' : b.matches('[data-ldc], [data-chy]') ? 'cash' : 'free';
+  if (PK_COIN.test(t) && PK_CASH.test(t)) k = /\$\d|cash|deposit|play for real/i.test(t) ? 'cash' : 'coin';
+  const dark = !!b.closest('.nv, .wbk, .h2r, .qls2, #sheet.su-nv, .cup2, .cup, .pg-goal.on, .qfx.h3, .trn3, .acn, .wo');
+  b.classList.remove('pk-cash', 'pk-coin', 'pk-free', 'pk-dark'); b.classList.add('pk-' + k); if (dark) b.classList.add('pk-dark'); }
+function pkAll() { document.querySelectorAll('#coach .btn, #sheet .btn, #flow .btn, #qlS .btn, #cupC .btn, .ld-b, .wbk-b, .cs-b, #finPick .btn').forEach(pkTag); }
+(() => { let q = 0; new MutationObserver(() => { if (q) return; q = 1; requestAnimationFrame(() => { q = 0; try { pkAll(); } catch (e) {} }); }).observe(document.body, { childList: true, subtree: true, characterData: true }); setTimeout(pkAll, 500); })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
