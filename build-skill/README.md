@@ -472,6 +472,8 @@ Then `rmv231.py`: rmv231: two actions per Stable card and qualifier screen.
 
 Then `rmv232.py`: rmv232: So close with low coins offers Enter another photo as the second option.
 
+Then `rmv233.py`: rmv233: button colour rule (green = real money, gold = coins, navy/cream = free).
+
 Then `rmv224.py`: rmv224: first Final free with one button; Final result goes to the stable; ladder shows the Final; 250-coin entry retired.
 
 ```bash
@@ -702,6 +704,7 @@ python3 rmv229.py
 python3 rmv230.py
 python3 rmv231.py
 python3 rmv232.py
+python3 rmv233.py
 python3 rmv224.py
 ```
 
