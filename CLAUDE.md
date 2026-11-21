@@ -102,6 +102,8 @@ Offer specific improvements as suggestions, prioritised by likely impact on fun,
 
 **Make everything earn its place.** For every reward, step, screen, button, line of copy or rule (existing ones too, not just new ones), ask: what does this do for the player at this exact moment? If it does nothing there (e.g. 150 coins at sign-up that buy nothing yet, a second sign-up, a free entry that needs its own economy), say so unprompted and recommend removing it, moving it to the moment it matters, or replacing it with something simpler. Prefer fewer systems, fewer walls and fewer words. Raise these without waiting to be asked.
 
+**At most 2 options on any screen.** Every result, popup or decision screen offers at most two actions (one main button, one secondary link). Cut the rest.
+
 **Always give 2 options.** For every issue or idea you raise, offer two concrete ways to fix it (with a one-line trade-off each) and say which you recommend. Always show the options graphically: a visual board of mock-ups (in the app's own style) comparing the two options side by side, sent as an image, plus a short text summary.
 
 ### 6. Build a functioning prototype
