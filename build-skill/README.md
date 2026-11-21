@@ -468,6 +468,8 @@ Then `rmv229.py`: rmv229: first Final is free only; welcome offer moves to the n
 
 Then `rmv230.py`: rmv230: 2-option head-to-head result, navy qualifier start screen, simpler Daily Cup tile, Done/Now/Still-to-do progress.
 
+Then `rmv231.py`: rmv231: two actions per Stable card and qualifier screen.
+
 Then `rmv224.py`: rmv224: first Final free with one button; Final result goes to the stable; ladder shows the Final; 250-coin entry retired.
 
 ```bash
@@ -696,6 +698,7 @@ python3 rmv227.py
 python3 rmv228.py
 python3 rmv229.py
 python3 rmv230.py
+python3 rmv231.py
 python3 rmv224.py
 ```
 
