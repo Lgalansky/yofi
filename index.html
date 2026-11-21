@@ -2218,6 +2218,8 @@ html body #flow .sx .sx-btns.sx-btns-now{margin:10px 0 4px!important;padding:0!i
 .pg2-now.tap{cursor:pointer}.pg2-now em{flex:none;padding:7px 12px;border-radius:999px;background:#14213D;color:#fff;font:900 .82rem Nunito,system-ui;font-style:normal}
 html body #flow .sx .sx-btns.sx-two{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;margin:12px 14px 14px!important;padding:0!important}html body #flow .sx .sx-two .btn{width:100%!important;min-width:0!important;margin:0!important;min-height:52px!important;border-radius:16px!important;font:900 1rem Nunito,system-ui!important;white-space:nowrap}
 .sx-hero .pg,.sx-card .pg{display:none}
+.cgp .cg-l{display:grid;gap:14px;margin:14px 0 6px;text-align:left}
+.cgp .cg-l .sv,.cgp .cg-l .cup{margin:0!important}
 .rg-l{display:grid;gap:8px;margin:12px 0 14px}.rg-r{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1.5px rgba(217,174,79,.5);text-align:left}.rg-r>span{font-size:1.4rem}.rg-r>div{flex:1;min-width:0}.rg-r b{display:block;font:900 .98rem Nunito,system-ui;color:#FBF3DC}.rg-r small{font:600 .78rem Nunito,system-ui;color:#C9D3E6}
 html body .rgp .rg-r .btn{flex:none;min-width:76px;min-height:40px!important;margin:0!important;padding:0 14px!important;border-radius:999px!important;font:900 .9rem Nunito,system-ui!important}
 </style>
@@ -9231,7 +9233,7 @@ function svPick() { const V = svS(), M = svMx(), used = V.used || []; let sel = 
     <div class="svm">${M.map((m, i) => `<div class="svm-r">${m.map((x, k) => { const u = used.includes(x.src); return `<button class="svm-p ${u ? 'used' : ''}" data-svp="${i}:${k}" ${u ? 'disabled' : ''}><img src="${x.src}" alt=""><span>${esc(x.t)}</span>${u ? '<em>used</em>' : ''}</button>`; }).join('<b class="svm-x">VS</b>')}</div>`).join('')}</div>
     <button class="btn block nv-go" id="svGo" disabled>Pick a photo</button><div style="text-align:center"><button class="link nv-later" id="svL">Later</button></div><p class="nv-sim">Demo · other players and crowd votes are simulated</p></div>`);
   document.querySelectorAll('[data-svp]').forEach(b => b.onclick = () => { document.querySelectorAll('[data-svp]').forEach(x => x.classList.toggle('on', x === b)); const [i, k] = b.dataset.svp.split(':').map(Number); sel = { i, side: k }; const g = $('#svGo'); g.disabled = false; g.textContent = `Lock in ${M[i][k].t}`; });
-  $('#svL').onclick = () => popClose(); $('#svGo').onclick = () => { if (!sel) return; V.pk = sel; save(); popClose(); toast(`🛡️ Locked in: ${M[sel.i][sel.side].t}`); finalsTab(); }; }
+  $('#svL').onclick = () => popClose(); $('#svGo').onclick = () => { if (!sel) return; V.pk = sel; save(); popClose(); toast(`🛡️ Locked in: ${M[sel.i][sel.side].t}`); window.__ptab = 'coins'; finalsTab(); }; }
 function svSettle() { const V = svS(), P = V.pk; if (!P) return; const M = svMx()[P.i], me = M[P.side], op = M[1 - P.side], pMe = me.st / (me.st + op.st), won = Math.random() < pMe;
   const tot = 9, a = won ? Math.max(5, Math.round(tot * Math.max(pMe, .56))) : Math.min(4, Math.round(tot * Math.min(pMe, .44))), b = tot - a, before = V.left;
   V.used = (V.used || []).concat(me.src); V.last = { mine: me.t, opp: op.t, a, b }; V.pk = null; V.mx = null;
@@ -9251,7 +9253,6 @@ document.addEventListener('click', e => { const b = e.target.closest && e.target
   if (k === 'enter') { if ((S.gems || 0) < SV_COST || V.in) return; S.gems -= SV_COST; Object.assign(V, { in: 1, day: 1, left: SV_FIELD, used: [], pk: null, mx: null, done: null }); save(); try { paintGems(); } catch (x) {} toast(`🛡️ You’re in Survivor · −${SV_COST} 🪙`); setTimeout(svPick, 250); }
   else if (k === 'pick') svPick(); else if (k === 'settle') svSettle(); else if (k === 'new') { S.sv = { wk: svWeek(), in: 0 }; save(); finalsTab(); } });
 (() => { const ft = finalsTab; finalsTab = function () { const r = ft.apply(this, arguments); try { const sx = document.querySelector('#flow .sx'); if (!sx) return r; const coins = window.__ptab === 'coins', sub = sx.querySelector('.sx-sub');
-    if (sub && !sx.querySelector('.pt-seg')) sub.insertAdjacentHTML('afterend', `<div class="pt-seg"><button data-pt="stable" class="${coins ? '' : 'on'}">🐎 My stable</button><button data-pt="coins" class="${coins ? 'on' : ''}">${CN()} Coin games</button></div>`);
     sx.classList.toggle('coinv', coins);
     if (coins) { if (sub) sub.textContent = 'Earn coins by voting. Play them for cash prizes.'; const seg = sx.querySelector('.pt-seg'); seg.insertAdjacentHTML('afterend', `<div id="svW">${svCard()}</div>`); const cup = document.getElementById('cupC'); if (cup) document.getElementById('svW').appendChild(cup); } } catch (e) {} return r; }; })();
 (() => { const ft = finalsTab; finalsTab = function () { const r = ft.apply(this, arguments); try { const h = document.querySelector('#flow .sx .sx-h span') || document.querySelector('#flow .sx .sx-h'); if (h) h.textContent = window.__ptab === 'coins' ? 'Coin games' : 'Your stable'; } catch (e) {} return r; }; })();
@@ -9293,6 +9294,13 @@ stLadder = function (p) { const q = p.ql || {}, inQ = !!(p.ql && !q.done), ok = 
 (() => { const sh = stHero; stHero = function (p) { let h = sh.apply(this, arguments); try { const t = document.createElement('div'); t.innerHTML = h; const b = t.querySelector('.sx-btns'); if (b) { b.className = 'sx-btns sx-btns-now sx-two';
       b.innerHTML = `<button class="btn rg-b" data-rg="${p.id}">💵 Real games</button><button class="btn cg-b2" data-pt="coins">${gemIcon('cn-ic')} Coin games</button>`; const pg = t.querySelector('.pg2'); if (pg) pg.insertAdjacentElement('afterend', b); }
     h = t.innerHTML; } catch (e) {} return h; }; })();
+function coinGames() {
+  popOpen(`<div class="pp qfx nv cgp"><p class="nv-brand">PhotoPicks</p><div class="nv-pillrow"><span class="nv-pill">${CN()} Coin games · ${Math.floor(S.gems || 0).toLocaleString()} coins</span></div><h2 class="nv-h2">Play your coins for cash</h2>
+    <p class="qw-o">Earn coins by voting. Prizes are real cash, paid by PhotoPicks.</p>
+    <div class="cg-l">${svCard()}${cupCard()}</div><div style="text-align:center"><button class="link nv-later" id="cgX">Back to your stable</button></div></div>`);
+  $('#cgX').onclick = () => popClose(); }
+(() => { const ft = finalsTab; finalsTab = function () { if (window.__ptab === 'coins') { window.__ptab = 'stable'; const r = ft.apply(this, arguments); setTimeout(coinGames, 120); return r; } return ft.apply(this, arguments); }; })();
+(() => { const cj = cupJoin; cupJoin = function () { const r = cj.apply(this, arguments); try { if (document.querySelector('#coach.on .cgp')) coinGames(); } catch (e) {} return r; }; })();
 function realGames(p) { if (!p) return; const C = (() => { try { return chList().filter(c => c.pid === p.id); } catch (e) { return []; } })(), nm = esc(rcName(p)), fs = Math.min(QS_STEPS, (p.fr && p.fr.s) || 0);
   const row = (ic, t, s, btn) => `<div class="rg-r"><span>${ic}</span><div><b>${t}</b><small>${s}</small></div>${btn}</div>`;
   const rows = [];
