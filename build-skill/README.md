@@ -460,6 +460,8 @@ Then `rmv225.py`: rmv225: one required sign-up right after framing; no walls lat
 
 Then `rmv226.py`: rmv226: navy & gold sign-up showing the framed photo.
 
+Then `rmv227.py`: rmv227: no coin bonus at sign-up.
+
 Then `rmv224.py`: rmv224: first Final free with one button; Final result goes to the stable; ladder shows the Final; 250-coin entry retired.
 
 ```bash
@@ -684,6 +686,7 @@ python3 rmv223.py
 python3 rmv224.py
 python3 rmv225.py
 python3 rmv226.py
+python3 rmv227.py
 python3 rmv224.py
 ```
 
