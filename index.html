@@ -2135,6 +2135,9 @@ html body #landing .lp.lp2 .lp-h{font-size:1.95rem!important}html body #landing 
 .ld.goal{margin-top:4px;padding:8px 10px 8px 0;border-radius:14px}.ld.goal:not(.l){background:linear-gradient(90deg,rgba(217,174,79,.0),rgba(217,174,79,.18))}.ld.goal>i{background:#14213D;box-shadow:0 0 0 2px #D9AE4F}
 html body #flow .sx .ld-b,.ld-b{flex:none;margin:0!important;min-height:0!important;padding:6px 14px;border:0;border-radius:999px;background:linear-gradient(#F3D98B,#D9AE4F)!important;color:#14213D!important;font:900 .82rem Nunito,system-ui!important;cursor:pointer}
 html body #qlS .pv-c.trn2 .pv-fn b{font-size:.95rem!important}
+.qf2-fr{margin:14px 0 26px;padding:14px;border-radius:18px;text-align:center;background:linear-gradient(180deg,#FBF3DC,#F3D98B);color:#14213D;font:900 1.2rem Fraunces,Georgia,serif}.qf2-fr b{display:block;color:#14213D}.qf2-fr small{display:block;margin-top:3px;font:700 .9rem Nunito,system-ui;color:#5B4A3F}
+.st-note{margin:6px 14px 10px;padding:9px 12px;border-radius:12px;background:#14213D;color:#F3D98B;font:800 .85rem Nunito,system-ui;text-align:center}
+.st-hl{animation:stHl 2.2s ease-out}@keyframes stHl{0%{box-shadow:0 0 0 0 rgba(217,174,79,.9)}40%{box-shadow:0 0 0 8px rgba(217,174,79,.45)}100%{box-shadow:0 0 0 0 rgba(217,174,79,0)}}
 </style>
 </head>
 <body>
@@ -4327,7 +4330,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v223</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v224</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -8614,7 +8617,7 @@ window.__awayMs = (() => { try { return S && S.seenAt ? Date.now() - S.seenAt : 
 function wbRows() { const P = S.photos || [], R = [];
   P.filter(p => rmqReady(p)).forEach(p => R.push(`<div class="wbk-r"><img src="${p.src}" alt=""><div><b>${esc(rcName(p))}’s rematch is ready</b><small>A new live race for a place in the Final</small></div><button class="btn wbk-b" data-rmg="${p.id}">🏁 Race</button></div>`));
   P.filter(p => p.fin).forEach(p => { const fr = p.fr || { s: 0 }, free = !S.coinFin && (S.gems || 0) >= FIN_COINS;
-    R.push(fr.go ? `<div class="wbk-r"><img src="${p.src}" alt=""><div><b>${esc(rcName(p))}’s Final is waiting</b><small>${free ? `Your first Final is free with ${FIN_COINS} coins` : '1st wins up to ' + money(20 * QF_PAY[0])}</small></div><button class="btn wbk-b" data-wbf="${p.id}">🏁 Enter</button></div>`
+    R.push(fr.go ? `<div class="wbk-r"><img src="${p.src}" alt=""><div><b>${esc(rcName(p))}’s Final is waiting</b><small>${free ? 'Your first Final is free' : '1st wins up to ' + money(20 * QF_PAY[0])}</small></div><button class="btn wbk-b" data-wbf="${p.id}">🏁 Enter</button></div>`
       : `<div class="wbk-r"><img src="${p.src}" alt=""><div><b>${esc(rcName(p))} is qualified</b><small>${Math.min(QS_STEPS, fr.s || 0)} of ${QS_STEPS} steps to the Final</small></div><button class="btn wbk-b nv2" data-wbv>⚖️ Vote</button></div>`); });
   P.filter(p => rmqWait(p) && !rmqReady(p)).forEach(p => R.push(`<div class="wbk-r"><img src="${p.src}" alt=""><div><b>${esc(rcName(p))}</b><small>Free rematch in <span class="rm-t" data-until="${p.rmAt}">${rmqFmt(p.rmAt)}</span></small></div><button class="btn wbk-b nv2" data-wbv>⚖️ Vote</button></div>`));
   return R; }
@@ -8859,7 +8862,7 @@ function coinSheet() { const g = Math.floor(S.gems || 0), P = S.photos || [], R 
   const b = (lab, attr, off) => `<button class="btn cs-b ${off ? 'off' : ''}" ${attr} ${off ? 'disabled' : ''}>${lab}</button>`;
   const fin = P.find(p => p.fin && p.fr && p.fr.go), need = n => `${n - g} more`;
   const rows = [row('🏆', 'Daily Cup', `${CUP_COST} coins · $100 prizes`, cs === 'in' ? '<em class="cs-ok">✓ Entered</em>' : cs === 'ready' ? b('Results', 'data-cs="cupres"') : !R.length ? '<em class="cs-no">Qualify first</em>' : g < CUP_COST ? `<em class="cs-no">${need(CUP_COST)}</em>` : b('Enter', 'data-cs="cup"'))];
-  if (!S.coinFin) rows.push(row('🎟️', 'Free Final entry', `${FIN_COINS} coins · once`, g < FIN_COINS ? `<em class="cs-no">${need(FIN_COINS)}</em>` : fin ? b('Use', `data-cs="fin" data-pid="${fin.id}"`) : '<em class="cs-ok">✓ Ready</em>'));
+  if (false) rows.push(row('🎟️', 'Free Final entry', `${FIN_COINS} coins · once`, g < FIN_COINS ? `<em class="cs-no">${need(FIN_COINS)}</em>` : fin ? b('Use', `data-cs="fin" data-pid="${fin.id}"`) : '<em class="cs-ok">✓ Ready</em>'));
   T.forEach(p => rows.push(row(`<img src="${p.src}" alt="">`, `Train ${esc(rcName(p))}`, `${TQ_COST} coins a match · ${(p.tq || { w: 0 }).w}/${TQ_WIN} wins`, g < TQ_COST ? `<em class="cs-no">${need(TQ_COST)}</em>` : b('Train', `data-cs="trn" data-pid="${p.id}"`))));
   rows.push(row('👥', 'Invite a friend', '+100 coins each', b('Invite', 'data-cs="inv"')));
   openSheet(`<div class="trc t2 cs"><button class="t2-x" data-csx aria-label="Close">✕</button><p class="cs-k">Your coins</p><div class="cs-bal"><span>🪙</span>${g.toLocaleString()}</div>
@@ -8875,7 +8878,7 @@ function coinSheet() { const g = Math.floor(S.gems || 0), P = S.photos || [], R 
   const cost = (n, attr, ok) => `<button class="btn cs-b ${ok ? '' : 'off'}" ${attr} ${ok ? '' : 'disabled'}>🪙 ${n}</button>`;
   const rows = [row('🏆', 'Daily Cup', cs === 'in' ? 'You’re in tonight’s Cup' : !R.length ? 'Qualify a photo to enter' : g < CUP_COST ? more(CUP_COST) : '$100 in prizes tonight',
     cs === 'in' ? '<em class="cs-ok">✓ Entered</em>' : cs === 'ready' ? '<button class="btn cs-b" data-cs="cupres">Results</button>' : cost(CUP_COST, 'data-cs="cup"', R.length && g >= CUP_COST))];
-  if (!S.coinFin) rows.push(row('🎟️', 'Free Final entry', g < FIN_COINS ? more(FIN_COINS) : fin ? 'Use it in your Final now' : 'Use it in your next Final', g >= FIN_COINS && !fin ? '<em class="cs-ok">✓ Ready</em>' : cost(FIN_COINS, fin ? `data-cs="fin" data-pid="${fin.id}"` : '', g >= FIN_COINS && fin)));
+  if (false) rows.push(row('🎟️', 'Free Final entry', g < FIN_COINS ? more(FIN_COINS) : fin ? 'Use it in your Final now' : 'Use it in your next Final', g >= FIN_COINS && !fin ? '<em class="cs-ok">✓ Ready</em>' : cost(FIN_COINS, fin ? `data-cs="fin" data-pid="${fin.id}"` : '', g >= FIN_COINS && fin)));
   T.forEach(p => rows.push(row(`<img src="${p.src}" alt="">`, `Train ${esc(rcName(p))}`, g < TQ_COST ? more(TQ_COST) : `${(p.tq || { w: 0 }).w}/${TQ_WIN} wins to cash races`, cost(TQ_COST, `data-cs="trn" data-pid="${p.id}"`, g >= TQ_COST))));
   rows.push(row('👥', 'Invite a friend', 'You both get 100 coins', '<button class="btn cs-b" data-cs="inv">+🪙 100</button>'));
   openSheet(`<div class="trc t2 cs"><button class="t2-x" data-csx aria-label="Close">✕</button><p class="cs-k">Your coins</p><div class="cs-bal"><span>🪙</span>${g.toLocaleString()}</div>
@@ -9002,6 +9005,23 @@ function h2hLive(p, R, fee) { const cash = fee > 0, prize = +(fee * H2H_PAY).toF
       if (A < H3_WIN && B < H3_WIN && i < seq.length) { setTimeout(step, cash ? 1000 : 420); return; } setTimeout(() => photoFinish(() => h3Done(p, o, oh, fee, A > B, A, B)), cash ? 600 : 300); };
     step(); };
   if (cash) qrCount(p, o, oh, run, `💵 $${fee} head-to-head`, `First to ${H3_WIN} votes wins ${money(prize)}`); else setTimeout(run, 500); }
+(() => { const qp = qfPick; qfPick = function (p, fee) { if (S.coinFin) return qp.apply(this, arguments); const r = qp.call(this, p, 2); try { const box = document.querySelector('#coach.on .qf2'); if (!box) return r; const gone = x => x && x.parentNode && x.parentNode.removeChild(x);
+    const rules = box.querySelectorAll('.nv-rule'); if (rules[1]) gone(rules[1]); ['.qf2-f', '.qf2-s', '#qfpCoin', '.nv-coinp', '.qf2-free'].forEach(q => box.querySelectorAll(q).forEach(gone));
+    const sim = box.querySelector('.nv-sim'); if (sim) sim.textContent = 'Demo · other finalists simulated';
+    const go = document.getElementById('qfpGo'); if (!go) return r; go.insertAdjacentHTML('beforebegin', `<p class="qf2-fr">🎟️ <b>Your first Final is free</b><small>No entry fee · 1st wins ${money(2 * QF_PAY[0])} cash</small></p>`);
+    go.textContent = '🎟️ Enter free · your first Final';
+    go.onclick = () => { if (S.user && S.user.guest) { popClose(); openSignup(() => setTimeout(() => qfPick(p, 2), 250), { locked: false, photo: 1, fin: 1 }); return; }
+      S.coinFin = 1; save(); window.__qfFee = 2; window.__qfFree = 1; popClose(); const R = qfRivals(p); setTimeout(() => qfRace(p, [{ src: p.src, t: rcName(p), h: 'You', me: 1, st: qlStrength(p) }].concat(R)), 250); }; } catch (e) {} return r; }; })();
+(() => { const qr = qfResult; qfResult = function (p) { const free = window.__qfFree; window.__qfFree = 0; const r = qr.apply(this, arguments); try { const box = document.querySelector('#coach.on .qfx') || document.querySelector('#coach.on'); if (!box) return r; const gone = x => x && x.parentNode && x.parentNode.removeChild(x);
+    if (free) { const w = document.createTreeWalker(box, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) n.nodeValue = n.nodeValue.replace(/\$2 entry/g, 'Free entry'); }
+    box.querySelectorAll('.btn').forEach(gone); gone(box.querySelector('.rn-end')); const R = p.raced || {}, nm = esc(rcName(p)), J = document.getElementById('qrJ');
+    const html = `<button class="btn block nv-go" id="qrS">🐎 See ${nm} in your stable</button>`; if (J && J.parentNode) J.parentNode.insertAdjacentHTML('beforebegin', html); else box.insertAdjacentHTML('beforeend', html);
+    document.getElementById('qrS').onclick = () => { popClose(); window.__stFocus = p.id; window.__stNote = `🏁 Final complete · ${ppOrd(R.rank || 0)}${R.prize ? ` · won ${money(R.prize)}` : ''} · ${nm}’s run is on your trophy wall`; finalsTab(); };
+    if (J) J.onclick = () => { popClose(); go('judge'); renderJudge(); }; } catch (e) {} return r; }; })();
+(() => { const ft = finalsTab; finalsTab = function () { const r = ft.apply(this, arguments); try { const note = window.__stNote, id = window.__stFocus; window.__stNote = null; window.__stFocus = null; if (!note) return r;
+    const sub = document.querySelector('#flow .sx .sx-sub'); if (sub) sub.insertAdjacentHTML('afterend', `<p class="st-note">${note}</p>`);
+    const p = (S.photos || []).find(x => x.id === id); if (p) setTimeout(() => { const c = [...document.querySelectorAll('#flow .sx-hero, #flow .sx-card')].find(e => { const im = e.querySelector('img'); return im && im.getAttribute('src') === p.src; }); if (c) { c.scrollIntoView({ behavior: 'smooth', block: 'start' }); c.classList.add('st-hl'); } }, 350); } catch (e) {} return r; }; })();
+(() => { const sl = stLadder; stLadder = function (p) { let h = sl.apply(this, arguments); try { if (p && p.raced) { const R = p.raced; h = h.replace('<div class="ld goal', `<div class="ld d"><i>🏁</i><div><b>Final · ${ppOrd(R.rank)}</b><small>${R.prize ? `Won ${money(R.prize)}` : 'Run complete · rosette on the frame'}</small></div></div><div class="ld goal`); } } catch (e) {} return h; }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
