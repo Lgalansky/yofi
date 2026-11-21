@@ -452,6 +452,8 @@ Then `rmv221.py`: rmv221: vote reveal starts at 50/50 and slides to the real spl
 
 Then `rmv222.py`: rmv222: landing page from the mock-up (crowd-favourite guess, navy Live races card, vote link), copy corrected.
 
+Then `rmv223.py`: rmv223: train-only way back after a missed qualifier, training as replays of earned votes, shorter races (7 and 5), horse ladder to cash challenges in Play.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -670,6 +672,7 @@ python3 rmv219.py
 python3 rmv220.py
 python3 rmv221.py
 python3 rmv222.py
+python3 rmv223.py
 ```
 
 ## Skill only
