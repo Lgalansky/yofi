@@ -450,6 +450,8 @@ Then `rmv220.py`: rmv220: fun pass (visible vote verdict + coin float, sounds an
 
 Then `rmv221.py`: rmv221: vote reveal starts at 50/50 and slides to the real split.
 
+Then `rmv222.py`: rmv222: landing page from the mock-up (crowd-favourite guess, navy Live races card, vote link), copy corrected.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -667,6 +669,7 @@ python3 rmv218.py
 python3 rmv219.py
 python3 rmv220.py
 python3 rmv221.py
+python3 rmv222.py
 ```
 
 ## Skill only
