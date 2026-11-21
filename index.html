@@ -4383,7 +4383,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v233</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v234</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -9172,6 +9172,10 @@ function pkTag(b) { if (!b || b.disabled || b.classList.contains('off') || b.clo
   b.classList.remove('pk-cash', 'pk-coin', 'pk-free', 'pk-dark'); b.classList.add('pk-' + k); if (dark) b.classList.add('pk-dark'); }
 function pkAll() { document.querySelectorAll('#coach .btn, #sheet .btn, #flow .btn, #qlS .btn, #cupC .btn, .ld-b, .wbk-b, .cs-b, #finPick .btn').forEach(pkTag); }
 (() => { let q = 0; new MutationObserver(() => { if (q) return; q = 1; requestAnimationFrame(() => { q = 0; try { pkAll(); } catch (e) {} }); }).observe(document.body, { childList: true, subtree: true, characterData: true }); setTimeout(pkAll, 500); })();
+function pkBgDark(el) { let e = el.parentElement; while (e && e !== document.documentElement) { const cs = getComputedStyle(e), bi = cs.backgroundImage, bc = cs.backgroundColor;
+    if (bi && bi !== 'none') { const m = bi.match(/rgba?\(([^)]+)\)/); if (m) { const [r, g, b] = m[1].split(',').map(Number); return (0.299 * r + 0.587 * g + 0.114 * b) < 140; } }
+    const m = bc.match(/rgba?\(([^)]+)\)/); if (m) { const v = m[1].split(',').map(Number); if (v.length < 4 || v[3] > 0.5) return (0.299 * v[0] + 0.587 * v[1] + 0.114 * v[2]) < 140; } e = e.parentElement; } return false; }
+(() => { const pt = pkTag; pkTag = function (b) { pt.apply(this, arguments); try { if (b && b.classList.contains('pk-free')) b.classList.toggle('pk-dark', pkBgDark(b)); } catch (e) {} }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
