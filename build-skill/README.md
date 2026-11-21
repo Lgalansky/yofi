@@ -474,6 +474,8 @@ Then `rmv232.py`: rmv232: So close with low coins offers Enter another photo as 
 
 Then `rmv233.py`: rmv233: button colour rule (green = real money, gold = coins, navy/cream = free).
 
+Then `rmv234.py`: rmv234: free buttons pick navy or cream from the colour behind them.
+
 Then `rmv224.py`: rmv224: first Final free with one button; Final result goes to the stable; ladder shows the Final; 250-coin entry retired.
 
 ```bash
@@ -705,6 +707,7 @@ python3 rmv230.py
 python3 rmv231.py
 python3 rmv232.py
 python3 rmv233.py
+python3 rmv234.py
 python3 rmv224.py
 ```
 
