@@ -2184,6 +2184,8 @@ html body #flow .sx .btn.cup2-b{width:100%!important;min-height:48px!important;m
 .pg-now.idle{background:#F4EBD6;box-shadow:inset 0 0 0 1.5px #E2D5C2}
 .pg-todo{display:flex;flex-direction:column;gap:5px}.pg-todo span{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1.5px #E7DCC8;color:#8A7A6A;font:800 .86rem Nunito,system-ui}.pg-todo em{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-style:normal;font:900 .72rem Nunito,system-ui;background:#EFE6D6;color:#8A7A6A}
 .pg-goal{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 12px;border-radius:16px;background:#F4EBD6;opacity:.75}.pg-goal.on{opacity:1;background:#14213D;color:#fff}.pg-goal>i{font-style:normal;font-size:1.3rem}.pg-goal>div{flex:1}.pg-goal b{display:block;font:900 .95rem Nunito,system-ui}.pg-goal small{font:600 .76rem Nunito,system-ui;opacity:.8}.pg-goal em{font-style:normal;font:900 .72rem Nunito,system-ui;letter-spacing:.08em;color:#F3D98B}
+.q2-l{display:block;margin:12px auto 0}
+html body .qls2 .q2-b #qsJ{background:linear-gradient(180deg,#2F8A45,#1E6B34)!important;color:#fff!important}
 </style>
 </head>
 <body>
@@ -4376,7 +4378,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v230</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v231</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -9148,10 +9150,12 @@ stLadder = function (p) { const q = p.ql || {}, inQ = p.ql && !q.done, ok = isCa
   else if (!ok) { now = { ic: '🎀', t: 'Qualifier', sub: 'Vote to start its race', pct: 0 }; todo.push('🏁 Final'); }
   const isD = x => x.includes('lost') ? 'x' : '';
   return `<div class="pg"><p class="pg-k">✓ Done</p><div class="pg-done">${done.map(x => `<span class="${isD(x)}">${isD(x) ? '✕' : '✓'} ${x}</span>`).join('')}</div>
-    ${now ? `<p class="pg-k now">▶ Now</p><div class="pg-now"><i>${now.ic}</i><div><b>${now.t}</b><small>${now.sub}</small><span class="pg-bar"><u style="width:${Math.round(now.pct * 100)}%"></u></span></div></div>` : `<p class="pg-k now">▶ Now</p><div class="pg-now idle"><i>🏁</i><div><b>Run complete</b><small>Race it again, or play a cash head-to-head</small></div></div>`}
+    ${now ? `<p class="pg-k now">▶ Now</p><div class="pg-now"><i>${now.ic}</i><div><b>${now.t}</b><small>${now.sub}</small><span class="pg-bar"><u style="width:${Math.round(now.pct * 100)}%"></u></span></div></div>` : `<p class="pg-k now">▶ Now</p><div class="pg-now idle"><i>🏁</i><div><b>Run complete</b><small>Its Final is done · rosette on the frame</small></div></div>`}
     ${todo.length ? `<p class="pg-k">Still to do</p><div class="pg-todo">${todo.map((x, i) => `<span><em>${i + 1}</em>${x}</span>`).join('')}</div>` : ''}
     <div class="pg-goal ${ok ? 'on' : ''}"><i>⚔️</i><div><b>Cash challenges</b><small>${!ok ? 'Unlock by getting Cash-ready' : C.length ? `${C.length} player${C.length === 1 ? '' : 's'} want${C.length === 1 ? 's' : ''} to race ${esc(rcName(p))}` : 'Challengers arrive while you’re away'}</small></div>${ok && C.length ? '<button class="ld-b" data-ldc>See</button>' : ok ? '<em>OPEN</em>' : '<em>🔒</em>'}</div></div>`; };
 (() => { const ft = finalsTab; finalsTab = function () { const r = ft.apply(this, arguments); try { const sub = document.querySelector('#flow .sx .sx-sub'); if (sub) sub.textContent = 'Your photos and what’s next'; } catch (e) {} return r; }; })();
+(() => { const sh = stHero; stHero = function (p) { let h = sh.apply(this, arguments); try { h = h.replace(/<small>Head-to-head · \$2–\$20<\/small>/, '').replace('<i>VS</i> Head-to-head</button>', '⚔️ Head-to-head · $2–$20</button>'); } catch (e) {} return h; }; })();
+(() => { const ud = upDone; upDone = function (p) { const r = ud.apply(this, arguments); try { const c = document.querySelector('#coach.on .q2-two'); if (c) { const T2 = c.querySelector('#qs2'); const l = document.createElement('button'); l.className = 'link nv-later q2-l'; l.textContent = '📷 Add a second photo · +25 🪙'; l.onclick = () => T2 && T2.click(); c.parentNode.insertBefore(l, c); c.style.display = 'none'; } } catch (e) {} return r; }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
