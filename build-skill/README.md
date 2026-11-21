@@ -466,6 +466,8 @@ Then `rmv228.py`: rmv228: Play for Real welcome popup at the Final (deposit $10 
 
 Then `rmv229.py`: rmv229: first Final is free only; welcome offer moves to the next Final.
 
+Then `rmv230.py`: rmv230: 2-option head-to-head result, navy qualifier start screen, simpler Daily Cup tile, Done/Now/Still-to-do progress.
+
 Then `rmv224.py`: rmv224: first Final free with one button; Final result goes to the stable; ladder shows the Final; 250-coin entry retired.
 
 ```bash
@@ -693,6 +695,7 @@ python3 rmv226.py
 python3 rmv227.py
 python3 rmv228.py
 python3 rmv229.py
+python3 rmv230.py
 python3 rmv224.py
 ```
 
