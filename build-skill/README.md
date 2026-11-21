@@ -464,6 +464,8 @@ Then `rmv227.py`: rmv227: no coin bonus at sign-up.
 
 Then `rmv228.py`: rmv228: Play for Real welcome popup at the Final (deposit $10 get $5), Welcome back with big streak, navy training screen, no tune-up, Cup teaser, simpler Stable card.
 
+Then `rmv229.py`: rmv229: first Final is free only; welcome offer moves to the next Final.
+
 Then `rmv224.py`: rmv224: first Final free with one button; Final result goes to the stable; ladder shows the Final; 250-coin entry retired.
 
 ```bash
@@ -690,6 +692,7 @@ python3 rmv225.py
 python3 rmv226.py
 python3 rmv227.py
 python3 rmv228.py
+python3 rmv229.py
 python3 rmv224.py
 ```
 
