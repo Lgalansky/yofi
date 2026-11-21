@@ -2239,6 +2239,10 @@ html body #flow .sx .sx-btns.sx-two{display:grid!important;grid-template-columns
 .sx-hero .pg,.sx-card .pg{display:none}
 .cgp .cg-l{display:grid;gap:14px;margin:14px 0 6px;text-align:left}
 .cgp .cg-l .sv,.cgp .cg-l .cup{margin:0!important}
+.oc-q{display:grid;place-items:center;align-content:center;gap:6px;aspect-ratio:1;border-radius:16px;border:3px dashed rgba(243,217,139,.6);padding:10px;text-align:center}
+.oc-q span{font:800 .85rem/1.25 Nunito,system-ui;color:#F3D98B}
+.oc-q small{font:700 .72rem Nunito,system-ui;color:#CFC6B4}
+#coach .oc-demo,.oc-demo{font:inherit!important;color:#F3D98B!important;text-decoration:underline;padding:0!important;margin:0!important;background:none!important;border:0!important;box-shadow:none!important;min-height:0!important;height:auto!important;display:inline!important}
 .rg-l{display:grid;gap:8px;margin:12px 0 14px}.rg-r{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1.5px rgba(217,174,79,.5);text-align:left}.rg-r>span{font-size:1.4rem}.rg-r>div{flex:1;min-width:0}.rg-r b{display:block;font:900 .98rem Nunito,system-ui;color:#FBF3DC}.rg-r small{font:600 .78rem Nunito,system-ui;color:#C9D3E6}
 html body .rgp .rg-r .btn{flex:none;min-width:76px;min-height:40px!important;margin:0!important;padding:0 14px!important;border-radius:999px!important;font:900 .9rem Nunito,system-ui!important}
 </style>
@@ -8173,7 +8177,7 @@ function stStatus(p) { const q = p.ql;
 function stCard(p) { const st = stStatus(p), H = p.h2h || { w: 0, l: 0, cash: 0 }, pr = stProven(p);
   return `<div class="st-c ${st.k}"><div class="st-top"><img src="${p.src}" alt=""><div class="st-i"><b>${esc(rcName(p))}</b><span class="st-s">${st.t}</span>
       <span class="st-m"><em>💪 Form +${p.form || 0}</em><em>H2H ${H.w}–${H.l}</em>${H.cash ? `<em class="cash">${money(H.cash)} won</em>` : ''}</span></div></div>
-    <div class="st-a"><button class="btn st-b tr" data-sth="${p.id}" data-m="t">🏋️ Train · free</button>${pr ? `<button class="btn st-b cash" data-sth="${p.id}" data-m="c">💵 Head-to-head · $2</button>` : '<button class="btn st-b lock" disabled>🔒 Cash H2H · qualify once</button>'}</div>${st.btn ? `<div class="st-a one">${st.btn}</div>` : ''}</div>`; }
+    <div class="st-a"><button class="btn st-b tr" data-sth="${p.id}" data-m="t">🏋️ Train · free</button>${pr ? `<button class="btn st-b cash" data-sth="${p.id}" data-m="c">💵 Quick match · $2</button>` : '<button class="btn st-b lock" disabled>🔒 Cash H2H · qualify once</button>'}</div>${st.btn ? `<div class="st-a one">${st.btn}</div>` : ''}</div>`; }
 function finalsTab() { const H = stHorses();
   openFlow(`<div class="fnx stx"><h1 class="fn-h">🐎 Your stable</h1><p class="fn-s">Your photos are your horses. ${isYoungW() ? 'Judging' : 'Voting'} moves them through the qualifier; training (coins) is the other way in. Once a photo is 💵 Ready for Cash Races, it stays that way.</p>
     ${H.length ? H.map(stCard).join('') : '<div class="st-e"><p>Your stable is empty.</p></div>'}
@@ -8192,7 +8196,7 @@ function trBegin(p, tuned) { p.tr = null; p.trw = p.trw || 0; save(); try { popC
 // head-to-head (training or cash), full screen, plays out instantly
 function h2hOpen(p, fee, rv) { if (!p) return; const k = photoShow(p) || 'pets', pool = SEED.filter(x => x.src && finCatOf(x) === k && x.src !== p.src), o = rv || pool[Math.floor(Math.random() * pool.length)] || { src: p.src, title: 'A rival' };
   const h = '@' + QS_NAMES[Math.floor(Math.random() * QS_NAMES.length)], cash = fee > 0, nm = esc(rcName(p)), R = rv ? rv : { src: o.src, title: o.title || 'A rival', h };
-  popOpen(`<div class="pp qfx h2x"><p class="pp-k">${cash ? `💵 Cash head-to-head` : '🏋️ Training head-to-head'} · ${esc(showName(k))}</p><h2 class="db-h">${nm} vs ${esc(R.title)}</h2>
+  popOpen(`<div class="pp qfx h2x"><p class="pp-k">${cash ? `💵 Quick match · instant` : '🏋️ Training head-to-head'} · ${esc(showName(k))}</p><h2 class="db-h">${nm} vs ${esc(R.title)}</h2>
     <div class="h2-vs"><div class="me"><img src="${p.src}" alt=""><small>You</small></div><b class="h2-x">VS</b><div><img src="${R.src}" alt=""><small>${esc(R.h)}</small></div></div>
     ${cash ? `<div class="qfp-f h2-f">${H2H_FEES.map(f => `<button data-h2f="${f}" class="${f === fee ? 'on' : ''}"><b>$${f}</b><small>win ${money(f * H2H_PAY)}</small></button>`).join('')}</div>
       <div class="qfp-p">Winner takes <b>${money(fee * H2H_PAY)}</b><small>You both pay $${fee} · PhotoPicks fee ${money(2 * fee - fee * H2H_PAY)} · ${H2H_V} crowd votes decide it.</small></div>`
@@ -8201,12 +8205,12 @@ function h2hOpen(p, fee, rv) { if (!p) return; const k = photoShow(p) || 'pets',
     <p class="db-sim">Prototype: rival and votes are simulated</p></div>`);
   document.querySelectorAll('[data-h2f]').forEach(b => b.onclick = () => h2hOpen(p, +b.dataset.h2f, R));
   $('#h2L').onclick = () => { popClose(); finalsTab(); };
-  $('#h2Go').onclick = () => cash ? payCash(fee, `A $${fee} head-to-head`, () => h2hLive(p, R, fee)) : h2hLive(p, R, 0); }
+  $('#h2Go').onclick = () => cash ? payCash(fee, `A $${fee} quick match`, () => h2hLive(p, R, fee)) : h2hLive(p, R, 0); }
 function h2hLive(p, R, fee) { const cash = fee > 0, st = qlStrength(p), rs = cash ? st + (Math.random() - .5) * 14 : st - 4 - Math.random() * 8, pv = Math.max(.3, Math.min(.72, .5 + (st - rs) / 60));
   const won = Math.random() < (cash ? Math.max(.35, Math.min(.62, pv)) : pv), mv = won ? 8 + Math.floor(Math.random() * 4) : 3 + Math.floor(Math.random() * 5), seq = [...Array(H2H_V)].map((_, i) => i < mv);
   for (let i = H2H_V - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [seq[i], seq[k]] = [seq[k], seq[i]]; }
   const nm = esc(rcName(p)), prize = +(fee * H2H_PAY).toFixed(2);
-  popOpen(`<div class="pp qfx h2x"><p class="pp-k">${cash ? `💵 $${fee} head-to-head` : '🏋️ Training'} · live</p><h2 class="db-h">The crowd is voting…</h2>
+  popOpen(`<div class="pp qfx h2x"><p class="pp-k">${cash ? `💵 $${fee} quick match` : '🏋️ Training'} · live</p><h2 class="db-h">The crowd is voting…</h2>
     <div class="h2-vs"><div class="me" id="h2A"><img src="${p.src}" alt=""><small>You</small><b id="h2a">0</b></div><b class="h2-x">VS</b><div id="h2B"><img src="${R.src}" alt=""><small>${esc(R.h)}</small><b id="h2b">0</b></div></div>
     <div class="h2-bar"><i id="h2i" style="width:50%"></i></div><p class="db-com" id="h2n">0 of ${H2H_V} votes</p><div id="h2R"></div><p class="db-sim">Prototype: votes are simulated</p></div>`);
   let v = 0, m = 0; const iv = setInterval(() => { if (!document.getElementById('h2n')) { clearInterval(iv); return; } if (seq[v]) m++; v++;
@@ -8220,7 +8224,7 @@ function h2hLive(p, R, fee) { const cash = fee > 0, st = qlStrength(p), rs = cas
     $('#h2R').innerHTML = `${won ? (cash ? `<div class="rv-won"><span>Cash won</span><b>${money(prize)}</b></div>` : `<p class="re-rzl">+${TRN_COINS} 🟡 · 💪 form +1${p.ql && p.ql.done === 'x' ? ` · ${Math.min(TR_WIN, p.trw)}/${TR_WIN} training wins` : ''}</p>`) : `<p class="db-s">${cash ? `You lost $${fee}.` : 'No harm done in training.'} Record ${H.w}–${H.l}.</p>`}
       ${fit ? `<p class="re-rzl">✓ ${nm} is race fit! Re-enter it free from your stable.</p>` : ''}
       <button class="btn block db-go ${cash ? 'cashb' : ''}" id="h2Ag">${cash ? `💵 Again · $${fee}` : '🏋️ Train again'}</button><div style="text-align:center"><button class="link pc-later" id="h2Bk">Back to stable</button></div>`;
-    if (won) setTimeout(() => { try { cash ? (paintWallet(), cashExplosion(prize, { label: 'Head-to-head' })) : (paintGems(), gemExplosion(TRN_COINS, { label: 'Training win' })); rvConfetti(document.querySelector('.h2x'), 40); } catch (e) {} }, 250);
+    if (won) setTimeout(() => { try { cash ? (paintWallet(), cashExplosion(prize, { label: 'Quick match' })) : (paintGems(), gemExplosion(TRN_COINS, { label: 'Training win' })); rvConfetti(document.querySelector('.h2x'), 40); } catch (e) {} }, 250);
     $('#h2Ag').onclick = () => h2hOpen(p, fee); $('#h2Bk').onclick = () => { popClose(); finalsTab(); }; }, 400); }
 function rcHeat() { return; }
 function rcQualPop() { return; }
@@ -8257,7 +8261,7 @@ function stCard(p) { const st = stStatus(p), H = p.h2h || { w: 0, l: 0, cash: 0 
   return `<div class="st-c ${st.k}"><div class="st-top"><img src="${p.src}" alt=""><div class="st-i"><b>${esc(rcName(p))}</b><span class="st-s">${st.t}</span>
       <span class="st-m"><em>💪 Form +${p.form || 0}</em>${H.w || H.l ? `<em>H2H ${H.w}–${H.l}</em>` : ''}${H.cash ? `<em class="cash">${money(H.cash)} won</em>` : ''}</span></div></div>
     ${ok ? '' : `<div class="st-tq">${[0, 1, 2].map(i => `<i class="${i < T.w ? 'w' : ''}">${i < T.w ? '✓' : ''}</i>`).join('')}<span>Win ${TQ_WIN} before ${TQ_WIN} losses to be 💵 Ready for Cash Races</span>${[0, 1, 2].map(i => `<i class="x ${i < T.l ? 'l' : ''}">${i < T.l ? '✕' : ''}</i>`).join('')}</div>`}
-    <div class="st-a">${ok ? `<button class="btn st-b cash" data-sth="${p.id}" data-m="c">💵 Head-to-head · $2</button>` : `<button class="btn st-b tr" data-sth="${p.id}" data-m="t">🏋️ Train · ${TQ_COST} 🟡</button>`}${st.btn}</div></div>`; }
+    <div class="st-a">${ok ? `<button class="btn st-b cash" data-sth="${p.id}" data-m="c">💵 Quick match · $2</button>` : `<button class="btn st-b tr" data-sth="${p.id}" data-m="t">🏋️ Train · ${TQ_COST} 🟡</button>`}${st.btn}</div></div>`; }
 (() => { const ho = h2hOpen; h2hOpen = function (p, fee, rv) { const r = ho.apply(this, arguments); try { if (!(fee > 0)) { const P = document.querySelector('.h2x .qfp-p'), T = p.tq || { w: 0, l: 0 };
       if (P) P.innerHTML = `Training · <b>${TQ_COST} 🟡</b> a match<small>You’re ${T.w}–${T.l}. Win ${TQ_WIN} before ${TQ_WIN} losses and ${esc(rcName(p))} is Ready for Cash Races: Finals and cash head-to-heads.</small>`;
       const g = $('#h2Go'); g.textContent = `🏋️ Train · ${TQ_COST} 🟡`; g.onclick = () => { if ((S.gems || 0) < TQ_COST) { toast(`🟡 Train now to skip the wait · ${TQ_COST} coins a match · vote to earn them`); return; } S.gems -= TQ_COST; save(); try { paintGems(); } catch (e) {} h2hLive(p, R2(p), 0); }; } } catch (e) {} return r; };
@@ -8431,7 +8435,7 @@ function h2hLive(p, R, fee) { const cash = fee > 0, nm = esc(rcName(p)), prize =
   const st = qlStrength(p), rs = cash ? st + (Math.random() - .5) * 14 : st - 4 - Math.random() * 8, pv = Math.max(.3, Math.min(.72, .5 + (st - rs) / 60)), won = Math.random() < (cash ? Math.max(.35, Math.min(.62, pv)) : pv);
   const loseV = 2 + Math.floor(Math.random() * 5), W = won ? 1 : 0, seq = [...Array(H2_WIN - 1).fill(W), ...Array(loseV).fill(1 - W)];
   for (let i = seq.length - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [seq[i], seq[k]] = [seq[k], seq[i]]; } seq.push(W);
-  const goal = cash ? `Win ${money(prize)}` : `1 training win · ${Math.min(TQ_WIN, T.w + 1)} of ${TQ_WIN}`, kick = cash ? `💵 Cash head-to-head · $${fee}` : '🏋️ Training match';
+  const goal = cash ? `Win ${money(prize)}` : `1 training win · ${Math.min(TQ_WIN, T.w + 1)} of ${TQ_WIN}`, kick = cash ? `💵 Quick match · $${fee}` : '🏋️ Training match';
   popOpen(`<div class="pp qfx qrx nv qr2"><div class="nv-bg" style="background-image:url('${p.src}')"></div><p class="nv-brand">PhotoPicks</p>
     <div class="nv-pillrow"><span class="nv-pill">${cash ? `Cash race · $${fee}` : 'Training race'}</span></div><h2 class="nv-h">Race to ${H2_WIN}</h2><p class="nv-s">${cash ? `First to ${H2_WIN} votes wins <b class="gold">${money(prize)}</b>` : `First to ${H2_WIN} votes · ${goal}`}</p>
     <div class="qr2-c me" id="qrCA"><div class="qr2-im"><img src="${p.src}" alt=""><span class="qr2-n">${nm} · <b>You</b></span></div><div class="qr2-r"><b id="qrAv">0</b><small>of ${H2_WIN} votes</small><span class="qr2-p" id="qrAp">${pipsN(0, H2_WIN)}</span></div></div>
@@ -8453,14 +8457,14 @@ function h2hDone(p, o, fee, won, A, B) { const cash = fee > 0, nm = esc(rcName(p
   else { if (won) { T.w++; p.form = Math.min(10, (p.form || 0) + 1); qlStrength(p); p.vd.pct = Math.min(85, p.vd.pct + 1); } else T.l++;
     if (T.w >= TQ_WIN) { p.cashOK = 1; fresh = true; } const dots = `<div class="h2w-dots">${[0, 1, 2].map(i => `<i class="${i < T.w ? 'w' : ''}"></i>`).join('')}</div>`;
     big = fresh ? 'Ready for Cash Races!' : won ? 'Training win!' : 'So close'; line = won ? `${nm} wins ${A}–${B}` : `${esc(o.t)} wins ${B}–${A}`;
-    extra = fresh ? `<p class="qw-o">${nm} can now race in Finals ($2–$20) and cash head-to-heads.</p>` : T.l >= TQ_WIN ? `<p class="qw-o">Training over at ${T.w}–${T.l}. Start a fresh run or try another photo.</p>` : `${dots}<p class="qw-o">${T.w} of ${TQ_WIN} training wins · ${TQ_WIN - T.w} more to be Ready for Cash Races</p>`;
+    extra = fresh ? `<p class="qw-o">${nm} can now race in Finals ($2–$20) and cash quick matches.</p>` : T.l >= TQ_WIN ? `<p class="qw-o">Training over at ${T.w}–${T.l}. Start a fresh run or try another photo.</p>` : `${dots}<p class="qw-o">${T.w} of ${TQ_WIN} training wins · ${TQ_WIN - T.w} more to be Ready for Cash Races</p>`;
     if (T.l >= TQ_WIN && !fresh) p.tq = { w: 0, l: 0 }; }
   save(); try { paintWallet(); paintGems(); } catch (e) {}
   popOpen(`<div class="pp qfx nv qw"><p class="nv-brand">PhotoPicks</p><h2 class="nv-big ${big.length > 12 ? 'sm' : ''}">${big}</h2><i class="nv-sw"></i>
     <div class="qw-ph ${won ? '' : 'out'}"><img src="${p.src}" alt="">${fresh ? `<i class="qw-rz">${rosette(0)}</i>` : ''}</div><p class="qw-r">${line}</p>${extra}
     ${p.cashOK ? `<button class="btn block nv-go" id="h2Ag">${cash ? `💵 Race again · $${fee}` : finBtn(p)}</button>` : `<button class="btn block nv-go" id="h2Ag">🏋️ Train again · ${TQ_COST} 🟡</button>`}
     <div style="text-align:center"><button class="link nv-later" id="h2Bk">Back to stable</button></div></div>`);
-  if (won) setTimeout(() => { try { cash ? cashExplosion(prize, { label: 'Head-to-head win' }) : gemExplosion(0, { label: fresh ? 'Ready for Cash Races!' : 'Training win!' }); rvConfetti(document.querySelector('.qw'), fresh || cash ? 110 : 60); } catch (e) {} }, 300);
+  if (won) setTimeout(() => { try { cash ? cashExplosion(prize, { label: 'Quick match win' }) : gemExplosion(0, { label: fresh ? 'Ready for Cash Races!' : 'Training win!' }); rvConfetti(document.querySelector('.qw'), fresh || cash ? 110 : 60); } catch (e) {} }, 300);
   $('#h2Ag').onclick = () => { if (p.cashOK && !cash) { popClose(); qfStart(p); } else h2hOpen(p, fee); }; $('#h2Bk').onclick = () => { popClose(); finalsTab(); }; }
 (() => { const qr = qfRace; qfRace = function (p, L) { const self = this, args = arguments; const fee = window.__qfFee || 2;
   popOpen(`<div class="pp qfx nv qw"><p class="nv-brand">PhotoPicks</p><div class="nv-pillrow"><span class="nv-pill">The Final · $${fee}</span></div><h2 class="nv-h2">6 finalists · 1st wins ${money(fee * QF_PAY[0])}</h2>
@@ -8479,7 +8483,7 @@ function h2hLive(p, R, fee) { const cash = fee > 0, prize = +(fee * H2H_PAY).toF
   const st = qlStrength(p), rs = cash ? st + (Math.random() - .5) * 14 : st - 4 - Math.random() * 8, pv = Math.max(.3, Math.min(.72, .5 + (st - rs) / 60)), won = Math.random() < (cash ? Math.max(.35, Math.min(.62, pv)) : pv);
   const wv = H3_WIN + Math.floor(Math.random() * 4), seq = [...Array(wv).fill(won ? 1 : 0), ...Array(H3_V - wv).fill(won ? 0 : 1)];
   for (let i = seq.length - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [seq[i], seq[k]] = [seq[k], seq[i]]; }
-  const tag = `<i class="h3-dot"></i>LIVE · ${cash ? `$${fee} head-to-head` : 'Training match'}`, sub = `<p class="h3-sub">${cash ? `Winner takes ${money(prize)}` : `Win = training win ${Math.min(TQ_WIN, T.w + 1)} of ${TQ_WIN}`}</p>`;
+  const tag = `<i class="h3-dot"></i>LIVE · ${cash ? `$${fee} quick match` : 'Training match'}`, sub = `<p class="h3-sub">${cash ? `Winner takes ${money(prize)}` : `Win = training win ${Math.min(TQ_WIN, T.w + 1)} of ${TQ_WIN}`}</p>`;
   const foot = `<div class="h3-bar"><i id="h3B" style="width:0%"></i><span id="h3P">0%</span></div><p class="h3-n" id="h3N">0 of ${H3_V} votes counted</p><p class="qr2-v h3-v" id="qrV">🗳️ The crowd is voting…</p>`;
   popOpen(h3Shell(p, o, oh, fee, 0, 0, tag, 'The crowd decides', sub, foot, ''));
   const close = () => { popClose(); finalsTab(); }; document.querySelectorAll('[data-h3x]').forEach(b => b.onclick = close);
@@ -8495,21 +8499,21 @@ function h2hLive(p, R, fee) { const cash = fee > 0, prize = +(fee * H2H_PAY).toF
       if (!dec && (A >= H3_WIN || B >= H3_WIN)) dec = 1;
       if (i < H3_V) { setTimeout(step, dec ? 350 : 1000); return; } setTimeout(() => photoFinish(() => h3Done(p, o, oh, fee, won, A, B)), 500); };
     step(); };
-  qrCount(p, o, oh, run, cash ? `💵 $${fee} head-to-head` : '🏋️ Training match', cash ? `Most votes of ${H3_V} wins ${money(prize)}` : `Most votes of ${H3_V} wins`); }
+  qrCount(p, o, oh, run, cash ? `💵 $${fee} quick match` : '🏋️ Training match', cash ? `Most votes of ${H3_V} wins ${money(prize)}` : `Most votes of ${H3_V} wins`); }
 function h3Done(p, o, oh, fee, won, A, B) { const cash = fee > 0, prize = +(fee * H2H_PAY).toFixed(2), H = p.h2h = p.h2h || { w: 0, l: 0, cash: 0 }, T = p.tq = p.tq || { w: 0, l: 0 }; let head, foot, fresh = false;
   if (won) H.w++; else H.l++;
   if (cash) { if (won) { H.cash = +(H.cash + prize).toFixed(2); S.cash = +((S.cash || 0) + prize).toFixed(2); try { earnAdd({ kind: 'h2', pid: p.id, t: p.title, amt: prize }); } catch (e) {} }
     head = won ? `<h2 class="h3-h">You won</h2><div class="h3-amt">${money(prize)}</div>` : '<h2 class="h3-h">Not this time</h2>';
-    foot = `<p class="h3-n">First to ${H3_WIN} votes wins</p><p class="h3-net">$${fee} entry · ${won ? `${money(prize - fee)} net win` : 'lost'}</p><button class="btn block nv-go" id="h2Ag">New challenge · $${fee}</button>${false ? `<button class="btn block nv-up" id="h2Up">⬆️ Step up · $${H2H_FEES[H2H_FEES.indexOf(fee) + 1]} · winner takes ${money(H2H_FEES[H2H_FEES.indexOf(fee) + 1] * H2H_PAY)}</button>` : ""}`; }
+    foot = `<p class="h3-n">First to ${H3_WIN} votes wins</p><p class="h3-net">$${fee} entry · ${won ? `${money(prize - fee)} net win` : 'lost'}</p><button class="btn block nv-go" id="h2Ag">⚡ Play again · $${fee}</button>${false ? `<button class="btn block nv-up" id="h2Up">⬆️ Step up · $${H2H_FEES[H2H_FEES.indexOf(fee) + 1]} · winner takes ${money(H2H_FEES[H2H_FEES.indexOf(fee) + 1] * H2H_PAY)}</button>` : ""}`; }
   else { if (won) { T.w++; p.form = Math.min(10, (p.form || 0) + 1); qlStrength(p); p.vd.pct = Math.min(85, p.vd.pct + 1); } else T.l++;
     if (T.w >= TQ_WIN) { p.cashOK = 1; fresh = true; }
     head = `<h2 class="h3-h">${fresh ? 'Ready for Cash Races!' : won ? 'Training win' : 'Not this time'}</h2>`;
-    foot = `<p class="h3-n">First to ${H3_WIN} votes wins</p><div class="h2w-dots">${[0, 1, 2].map(i => `<i class="${i < T.w ? 'w' : ''}"></i>`).join('')}</div><p class="h3-net">${fresh ? `Cash head-to-heads are open · ${QS_STEPS} voting steps to a Final` : T.l >= TQ_WIN ? `Training over at ${T.w}–${T.l} · start a fresh run` : `${T.w} of ${TQ_WIN} training wins`}</p>
+    foot = `<p class="h3-n">First to ${H3_WIN} votes wins</p><div class="h2w-dots">${[0, 1, 2].map(i => `<i class="${i < T.w ? 'w' : ''}"></i>`).join('')}</div><p class="h3-net">${fresh ? `Cash quick matches are open · ${QS_STEPS} voting steps to a Final` : T.l >= TQ_WIN ? `Training over at ${T.w}–${T.l} · start a fresh run` : `${T.w} of ${TQ_WIN} training wins`}</p>
       <button class="btn block nv-go" id="h2Ag">${fresh ? `⚖️ Vote ${QS_STEPS} steps to the Final` : `🏋️ Train again · ${TQ_COST} 🟡`}</button>`;
     if (T.l >= TQ_WIN && !fresh) p.tq = { w: 0, l: 0 }; }
   save(); try { paintWallet(); paintGems(); } catch (e) {}
-  popOpen(h3Shell(p, o, oh, fee, A, B, `${cash ? `$${fee} head-to-head` : 'Training match'} · Final`, '', head, `${foot}<div style="text-align:center"><button class="link nv-later" id="h2Bk">Back to stable</button></div>`, won ? 'w' : 'l').replace('<h2 class="h3-h" id="h3H"></h2>', ''));
-  if (won) setTimeout(() => { try { if (cash) cashExplosion(prize, { label: 'Head-to-head win' }); rvConfetti(document.querySelector('.h3'), 120); } catch (e) {} }, 300);
+  popOpen(h3Shell(p, o, oh, fee, A, B, `${cash ? `$${fee} quick match` : 'Training match'} · Final`, '', head, `${foot}<div style="text-align:center"><button class="link nv-later" id="h2Bk">Back to stable</button></div>`, won ? 'w' : 'l').replace('<h2 class="h3-h" id="h3H"></h2>', ''));
+  if (won) setTimeout(() => { try { if (cash) cashExplosion(prize, { label: 'Quick match win' }); rvConfetti(document.querySelector('.h3'), 120); } catch (e) {} }, 300);
   document.querySelectorAll('[data-h3x]').forEach(b => b.onclick = () => { popClose(); finalsTab(); });
   $('#h2Ag').onclick = () => { if (fresh) { popClose(); qfStart(p); } else h2hOpen(p, fee); }; if ($('#h2Up')) $('#h2Up').onclick = () => h2hOpen(p, H2H_FEES[H2H_FEES.indexOf(fee) + 1]); $('#h2Bk').onclick = () => { popClose(); finalsTab(); }; }
 function qrCount(p, o, oh, run, kick, sub) { const box = document.querySelector('.qrx'); if (!box) { run(); return; }
@@ -8528,7 +8532,7 @@ function stWon(p) { return +((S.earn || []).filter(e => e.pid === p.id).reduce((
 function stHero(p) { const H = p.h2h || { w: 0, l: 0 }, won = stWon(p), rz = rosette(rzList(p).length ? rzList(p)[0] : 'f');
   return `<div class="sx-hero"><div class="sx-ph"><img src="${p.src}" alt=""><i class="sx-rz">${rz}</i><div class="sx-cap"><b>${esc(rcName(p))}</b>${won ? `<em>${money(won)} won</em>` : '<em class="no">Ready to race</em>'}</div></div>
     <p class="sx-rule"><span>Cash races unlocked</span></p><p class="sx-chip">Head-to-head ${H.w}–${H.l}</p>
-    <div class="sx-btns"><button class="btn sx-go" data-stf="${p.id}">${finBtn(p)}</button><div class="sx-h2"><small>Head-to-head · $2–$20</small><button class="btn sx-ol" data-sth="${p.id}" data-m="c"><i>VS</i> Head-to-head</button></div></div></div>`; }
+    <div class="sx-btns"><button class="btn sx-go" data-stf="${p.id}">${finBtn(p)}</button><div class="sx-h2"><small>Quick match · $2–$20</small><button class="btn sx-ol" data-sth="${p.id}" data-m="c"><i>VS</i> Quick match</button></div></div></div>`; }
 function stTrain(p) { const q = p.ql, T = p.tq || { w: 0, l: 0 }, inQ = q && !q.done;
   const stt = inQ ? '🎀 In qualifying' : q && q.done === 'x' ? '📷 Missed the cut' : '😴 Resting';
   return `<div class="sx-card"><div class="sx-row"><img src="${p.src}" alt=""><div><b>${esc(rcName(p))}</b><span class="sx-st">${stt}</span><span class="sx-f">💪 Form +${p.form || 0}</span></div></div>
@@ -8585,16 +8589,16 @@ function twRec(p) { const E = (S.earn || []).filter(e => e.pid === p.id), H = p.
 function twCard(p) { const st = twStatus(p), r = twRec(p), L = rzList(p).slice(0, 4);
   return `<div class="tw-c"><div class="tw-fr"><div class="tw-mat"><img src="${p.src}" alt=""></div>${L.length ? `<div class="tw-rz">${L.map((k, i) => `<i style="transform:rotate(${[-8, 6, -3, 9][i]}deg)">${rosette(k)}</i>`).join('')}</div>` : ''}${r.cash ? `<span class="tw-won">${money(r.cash)} won</span>` : ''}</div>
     <div class="tw-pl"><b>${esc(rcName(p))}</b>${twCat(p) ? `<small>${esc(twCat(p))}</small>` : ''}</div>
-    <div class="tw-rec"><div><b>${r.qual}</b><small>Qualified</small></div><div><b>${r.fin}</b><small>Finals</small></div><div><b>${r.h.w}–${r.h.l}</b><small>Head-to-head</small></div><div><b>${money(r.cash)}</b><small>Cash won</small></div></div>
+    <div class="tw-rec"><div><b>${r.qual}</b><small>Qualified</small></div><div><b>${r.fin}</b><small>Finals</small></div><div><b>${r.h.w}–${r.h.l}</b><small>Quick matches</small></div><div><b>${money(r.cash)}</b><small>Cash won</small></div></div>
     <button class="tw-st ${st.c}" data-twa="${st.a}" data-pid="${p.id}"><span>${st.t}</span><em>›</em></button></div>`; }
 function renderMyShow() { const g = $('#gallery'); if (!g) return; const P = (S.photos || []).filter(p => p.framed && !(p.starter && !p.ql));
   if (!P.length) return renderMyShowIntro(); $('#ptitle').textContent = 'My Photos';
   const rank = p => { const st = twStatus(p).c; return ({ f: 0, q: 1, r: 2, t: 3, x: 4 })[st]; };
   const L = P.slice().sort((a, b) => stWon(b) - stWon(a) || rank(a) - rank(b));
   const E = S.earn || [], tot = E.reduce((a, e) => a + (e.amt || 0), 0), wk = earnWeek(), nRz = P.reduce((a, p) => a + rzList(p).length, 0);
-  const lab = e => e.kind === 'h2' ? '💵 Head-to-head win' : e.kind === 'f' ? `🏁 Final · ${ppOrd(e.place || 1)}` : e.kind === 'du' ? '🥊 Duel win' : e.kind === 'cup' ? `🏆 Daily Cup · ${ppOrd(e.place || 1)}` : '🏆 Prize';
+  const lab = e => e.kind === 'h2' ? '💵 Quick match win' : e.kind === 'f' ? `🏁 Final · ${ppOrd(e.place || 1)}` : e.kind === 'du' ? '🥊 Duel win' : e.kind === 'cup' ? `🏆 Daily Cup · ${ppOrd(e.place || 1)}` : '🏆 Prize';
   g.innerHTML = `<div class="ms tw"><h1 class="tw-h">My Photos</h1><p class="tw-sub">Your trophy wall</p>
-    <div class="tw-bank"><span>Your photos have won</span><b>${money(tot)}</b><small>${money(wk)} this week · ${E.filter(e => e.kind === 'f').length} Final prize${E.filter(e => e.kind === 'f').length === 1 ? '' : 's'} · ${E.filter(e => e.kind === 'h2').length} head-to-head win${E.filter(e => e.kind === 'h2').length === 1 ? '' : 's'} · ${nRz} rosette${nRz === 1 ? '' : 's'}</small></div>
+    <div class="tw-bank"><span>Your photos have won</span><b>${money(tot)}</b><small>${money(wk)} this week · ${E.filter(e => e.kind === 'f').length} Final prize${E.filter(e => e.kind === 'f').length === 1 ? '' : 's'} · ${E.filter(e => e.kind === 'h2').length} quick match win${E.filter(e => e.kind === 'h2').length === 1 ? '' : 's'} · ${nRz} rosette${nRz === 1 ? '' : 's'}</small></div>
     ${L.map(twCard).join('')}
     ${E.length ? `<div class="tw-earn"><p class="tw-k">Recent winnings</p>${E.slice(-5).reverse().map(e => { const ph = P.find(x => x.id === e.pid); return `<div class="tw-er">${ph ? `<img src="${ph.src}" alt="">` : '<span>🏆</span>'}<div><b>${lab(e)}</b><small>${esc((ph && rcName(ph)) || e.t || '')}</small></div><em>+${money(e.amt)}</em></div>`; }).join('')}</div>` : ''}
     <button class="sx-add" data-twn><b>＋</b> Add a photo · free</button></div>`;
@@ -8847,7 +8851,7 @@ function crReady(p) { if (!p || p.crSeen) return; p.crSeen = 1; save(); const nm
     <div class="crr-box"><div><b>⚔️ Cash head-to-heads · open now</b><small>1 on 1 · ${m0(H2H_FEES[0])} entry, winner takes <em>${money(H2H_FEES[0] * H2H_PAY)}</em></small></div>
       <div><b>🏁 Finals · ${QS_STEPS} voting steps away</b><small>6 photos race · ${m0(lo)} entry, 1st wins <em>${m0(lo * QF_PAY[0])}</em> · up to ${m0(hi)} entry, 1st wins <em>${m0(hi * QF_PAY[0])}</em></small></div>
       <div><b>🏆 Daily Cup</b><small>${CUP_COST} coins · $100 in prizes every day</small></div></div>
-    <button class="btn block nv-go" id="crrGo">⚔️ Race a ${m0(H2H_FEES[0])} head-to-head</button><button class="btn block nv-go2" id="crrF">⚖️ Vote ${QS_STEPS} steps to the Final</button><div style="text-align:center"><button class="link nv-later" id="crrL">Back to your stable</button></div><p class="nv-sim">Entry fees are real cash · prizes are paid from entries after the PhotoPicks fee</p></div>`);
+    <button class="btn block nv-go" id="crrGo">⚡ Play a ${m0(H2H_FEES[0])} quick match</button><button class="btn block nv-go2" id="crrF">⚖️ Vote ${QS_STEPS} steps to the Final</button><div style="text-align:center"><button class="link nv-later" id="crrL">Back to your stable</button></div><p class="nv-sim">Entry fees are real cash · prizes are paid from entries after the PhotoPicks fee</p></div>`);
   try { rvConfetti(document.querySelector('.crr'), 130); } catch (e) {}
   $('#crrGo').onclick = () => { popClose(); h2hOpen(p, H2H_FEES[0]); }; $('#crrF').onclick = () => { popClose(); qfStart(p); }; $('#crrL').onclick = () => { popClose(); finalsTab(); }; }
 (() => { const hd = h3Done; h3Done = function (p, o, oh, fee) { const was = p && p.cashOK; const r = hd.apply(this, arguments); try { if (p && !(fee > 0) && p.cashOK && !was) setTimeout(() => { if (document.getElementById('h2Ag')) crReady(p); }, 2200); } catch (e) {} return r; }; })();
@@ -8907,7 +8911,7 @@ function h2hLive(p, R, fee) { const cash = fee > 0, prize = +(fee * H2H_PAY).toF
   const wv = H3_WIN + Math.floor(Math.random() * 4), seq = [...Array(wv).fill(won ? 1 : 0), ...Array(H3_V - wv).fill(won ? 0 : 1)];
   for (let i = seq.length - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [seq[i], seq[k]] = [seq[k], seq[i]]; }
   popOpen(`<div class="pp qfx qrx nv qr2 h2r"><div class="nv-bg" style="background-image:url('${p.src}')"></div><button class="h3-x h2r-x" data-h3x aria-label="Close">✕</button><p class="nv-brand">PhotoPicks</p>
-    <div class="nv-pillrow"><span class="nv-pill">${cash ? `Live · $${fee} head-to-head` : 'Live · training match'}</span></div><h2 class="nv-h">Race to ${H3_WIN}</h2><p class="nv-s">${cash ? `Winner takes <b class="gold">${money(prize)}</b>` : `Win = training win ${Math.min(TQ_WIN, T.w + 1)} of ${TQ_WIN}`}</p>
+    <div class="nv-pillrow"><span class="nv-pill">${cash ? `Live · $${fee} quick match` : 'Live · training match'}</span></div><h2 class="nv-h">Race to ${H3_WIN}</h2><p class="nv-s">${cash ? `Winner takes <b class="gold">${money(prize)}</b>` : `Win = training win ${Math.min(TQ_WIN, T.w + 1)} of ${TQ_WIN}`}</p>
     <div class="hr-trk"><div class="hr-fin"><span>🏁</span></div>
       <div class="hr-ln me" id="qrCA"><span class="hr-nm">${nm} · <b>You</b></span><div class="hr-rail"><i class="hr-dust"></i><img id="qrHA" src="${p.src}" alt=""></div><b class="hr-v" id="qrAv">0</b></div>
       <div class="hr-ln" id="qrCB"><span class="hr-nm">${esc(oh)}</span><div class="hr-rail"><i class="hr-dust"></i><img id="qrHB" src="${o.src}" alt=""></div><b class="hr-v" id="qrBv">0</b></div>
@@ -8925,7 +8929,7 @@ function h2hLive(p, R, fee) { const cash = fee > 0, prize = +(fee * H2H_PAY).toF
       g.classList.toggle('hot', A === H3_WIN - 1 || B === H3_WIN - 1);
       if (A < H3_WIN && B < H3_WIN && i < seq.length) { setTimeout(step, 1000); return; } setTimeout(() => photoFinish(() => h3Done(p, o, oh, fee, A > B, A, B)), 600); };
     step(); };
-  qrCount(p, o, oh, run, cash ? `💵 $${fee} head-to-head` : '🏋️ Training match', cash ? `First to ${H3_WIN} votes wins ${money(prize)}` : `First to ${H3_WIN} votes wins`); }
+  qrCount(p, o, oh, run, cash ? `💵 $${fee} quick match` : '🏋️ Training match', cash ? `First to ${H3_WIN} votes wins ${money(prize)}` : `First to ${H3_WIN} votes wins`); }
 document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-sua]'); if (!b) return; e.preventDefault(); window.__suAge = b.dataset.sua;
   document.querySelectorAll('[data-sua]').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); const er = document.getElementById('suErr'); if (er && /age/.test(er.textContent)) er.textContent = ''; });
 setTimeout(() => { try { if (S.user && !S.user.guest && !(S.obDone && S.ageBr)) qsWhenFree(() => { if (!(S.obDone && S.ageBr)) ageGate(); }); } catch (e) {} }, 1500);
@@ -9035,7 +9039,7 @@ function lpGame(el) { const T = [['pets', 48], ['nature', 33], ['garden', 19]], 
     el.querySelectorAll('.lp-ros').forEach((r, n) => setTimeout(() => r.classList.remove('hid'), 150 + n * 120)); SFX(i === 0 ? 'win' : 'ok');
     const cap = document.getElementById('lpCap'); if (cap) cap.innerHTML = i === 0 ? '✓ <b>Spot on!</b> You think like the crowd. That’s how you move photos forward.' : `So close: the crowd put that one <b>${med[i]}</b>. Your eye gets sharper with every vote.`;
     try { const btn = document.querySelector('#landing .lp-btn'); if (btn) btn.classList.add('lp-pulse'); } catch (e) {} }); }
-(() => { const W = [['@pawprincess', '$7.00', 'Pets Final'], ['@catlover22', '$17.50', 'Pets Final'], ['@linda.blooms', '$3.40', 'head-to-head'], ['@nana_bakes', '$30.00', 'Daily Cup'], ['@tom_frames', '$8.50', 'head-to-head'], ['@ella.travels', '$7.00', 'Nature Final']]; let i = 0;
+(() => { const W = [['@pawprincess', '$7.00', 'Pets Final'], ['@catlover22', '$17.50', 'Pets Final'], ['@linda.blooms', '$3.40', 'quick match'], ['@nana_bakes', '$30.00', 'Daily Cup'], ['@tom_frames', '$8.50', 'quick match'], ['@ella.travels', '$7.00', 'Nature Final']]; let i = 0;
   setInterval(() => { const t = document.getElementById('lpTick'); if (!t) return; i = (i + 1) % W.length; const w = W[i]; t.innerHTML = `<span class="in">🏁 ${w[0]} just won <b>${w[1]}</b> in the ${w[2]}</span>`; }, 3200); })();
 (() => { const cf = callFx; callFx = function () { const r = cf.apply(this, arguments); try { const B = [...document.querySelectorAll('#judge .tot-c .cfx-fill b')], T = B.map(b => parseInt(b.textContent, 10) || 50), t0 = performance.now() + 350, dur = 900;
     B.forEach(b => b.textContent = '50%'); const ease = x => 1 - Math.pow(1 - x, 3);
@@ -9075,7 +9079,7 @@ function stLadder(p) { const q = p.ql || {}, inQ = q && !q.done && p.ql, won = i
   const rows = [st('d', '📷', 'Entered', esc(showName(photoShow(p) || finCatOf(p) || 'pets')))];
   rows.push(inQ ? st('n', '🎀', 'Qualifier', `${Math.min(QS_STEPS, q.got || 0)} of ${QS_STEPS} steps to its race`) : lost ? st('x', '🎀', 'Qualifier', `Lost ${q.w || 0}–${q.l || 0}`) : st('d', '🎀', 'Qualifier', won ? 'Won' : ''));
   if (lost || T.w || T.l) rows.push(ok ? st('d', '🏋️', 'Training', `${T.w} of ${TQ_WIN} wins`) : st('n', '🏋️', `Training · ${T.w} of ${TQ_WIN} wins`, `${TQ_COST} 🪙 a match`));
-  rows.push(st(ok ? 'd' : 'l', '💵', 'Cash-ready', ok ? 'Finals and head-to-heads open' : 'Unlocks Finals and challenges'));
+  rows.push(st(ok ? 'd' : 'l', '💵', 'Cash-ready', ok ? 'Finals and quick matches open' : 'Unlocks Finals and challenges'));
   rows.push(`<div class="ld goal ${ok ? '' : 'l'}"><i>⚔️</i><div><b>Cash challenges</b><small>${!ok ? 'Other players challenge cash-ready photos' : C.length ? `${C.length} player${C.length === 1 ? '' : 's'} want${C.length === 1 ? 's' : ''} to race ${esc(rcName(p))}` : 'Challengers arrive while you’re away'}</small></div>${ok && C.length ? '<button class="ld-b" data-ldc>See</button>' : ''}</div>`);
   return `<div class="ldr">${rows.join('')}</div>`; }
 document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ldc]'); if (!b) return; e.preventDefault(); const c = document.querySelector('#flow .cg, #flow [class*="cg-"]'); if (c) c.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
@@ -9090,7 +9094,7 @@ function h2hLive(p, R, fee) { const cash = fee > 0, prize = +(fee * H2H_PAY).toF
   const wv = H3_WIN + Math.floor(Math.random() * 4), seq = [...Array(wv).fill(won ? 1 : 0), ...Array(H3_V - wv).fill(won ? 0 : 1)];
   for (let i = seq.length - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [seq[i], seq[k]] = [seq[k], seq[i]]; }
   popOpen(`<div class="pp qfx qrx nv qr2 h2r"><div class="nv-bg" style="background-image:url('${p.src}')"></div><button class="h3-x h2r-x" data-h3x aria-label="Close">✕</button><p class="nv-brand">PhotoPicks</p>
-    <div class="nv-pillrow"><span class="nv-pill">${cash ? `Live · $${fee} head-to-head` : 'Training replay'}</span></div><h2 class="nv-h">Race to ${H3_WIN}</h2><p class="nv-s">${cash ? `Winner takes <b class="gold">${money(prize)}</b>` : `Training win ${Math.min(TQ_WIN, T.w + 1)} of ${TQ_WIN} · replay of ${nm}’s last ${nv} crowd votes`}</p>
+    <div class="nv-pillrow"><span class="nv-pill">${cash ? `Live · $${fee} quick match` : 'Training replay'}</span></div><h2 class="nv-h">Race to ${H3_WIN}</h2><p class="nv-s">${cash ? `Winner takes <b class="gold">${money(prize)}</b>` : `Training win ${Math.min(TQ_WIN, T.w + 1)} of ${TQ_WIN} · replay of ${nm}’s last ${nv} crowd votes`}</p>
     <div class="hr-trk"><div class="hr-fin"><span>🏁</span></div>
       <div class="hr-ln me" id="qrCA"><span class="hr-nm">${nm} · <b>You</b></span><div class="hr-rail"><i class="hr-dust"></i><img id="qrHA" src="${p.src}" alt=""></div><b class="hr-v" id="qrAv">0</b></div>
       <div class="hr-ln" id="qrCB"><span class="hr-nm">${esc(oh)}</span><div class="hr-rail"><i class="hr-dust"></i><img id="qrHB" src="${o.src}" alt=""></div><b class="hr-v" id="qrBv">0</b></div>
@@ -9107,7 +9111,7 @@ function h2hLive(p, R, fee) { const cash = fee > 0, prize = +(fee * H2H_PAY).toF
       const g = $('#h3N'); g.innerHTML = A >= H3_WIN ? '<b>🏁</b> You win!' : B >= H3_WIN ? `<b>🏁</b> ${esc(oh)} wins` : A === H3_WIN - 1 && B === H3_WIN - 1 ? '<b>Next vote wins it!</b>' : A === H3_WIN - 1 ? '<b>One vote</b> from victory' : B === H3_WIN - 1 ? 'They need <b>one more</b>…' : A === B ? 'Neck and neck' : A > B ? `You lead by <b>${A - B}</b>` : `Behind by <b>${B - A}</b>`;
       if (A < H3_WIN && B < H3_WIN && i < seq.length) { setTimeout(step, cash ? 1000 : 420); return; } setTimeout(() => photoFinish(() => h3Done(p, o, oh, fee, A > B, A, B)), cash ? 600 : 300); };
     step(); };
-  if (cash) qrCount(p, o, oh, run, `💵 $${fee} head-to-head`, `First to ${H3_WIN} votes wins ${money(prize)}`); else setTimeout(run, 500); }
+  if (cash) qrCount(p, o, oh, run, `💵 $${fee} quick match`, `First to ${H3_WIN} votes wins ${money(prize)}`); else setTimeout(run, 500); }
 (() => { const qp = qfPick; qfPick = function (p, fee) { if (S.coinFin) return qp.apply(this, arguments); const r = qp.call(this, p, 2); try { const box = document.querySelector('#coach.on .qf2'); if (!box) return r; const gone = x => x && x.parentNode && x.parentNode.removeChild(x);
     const rules = box.querySelectorAll('.nv-rule'); if (rules[1]) gone(rules[1]); ['.qf2-f', '.qf2-s', '#qfpCoin', '.nv-coinp', '.qf2-free'].forEach(q => box.querySelectorAll(q).forEach(gone));
     const sim = box.querySelector('.nv-sim'); if (sim) sim.textContent = 'Demo · other finalists simulated';
@@ -9209,11 +9213,11 @@ stLadder = function (p) { const q = p.ql || {}, inQ = p.ql && !q.done, ok = isCa
     ${todo.length ? `<p class="pg-k">Still to do</p><div class="pg-todo">${todo.map((x, i) => `<span><em>${i + 1}</em>${x}</span>`).join('')}</div>` : ''}
     <div class="pg-goal ${ok ? 'on' : ''}"><i>⚔️</i><div><b>Cash challenges</b><small>${!ok ? 'Unlock by getting Cash-ready' : C.length ? `${C.length} player${C.length === 1 ? '' : 's'} want${C.length === 1 ? 's' : ''} to race ${esc(rcName(p))}` : 'Challengers arrive while you’re away'}</small></div>${ok && C.length ? '<button class="ld-b" data-ldc>See</button>' : ok ? '<em>OPEN</em>' : '<em>🔒</em>'}</div></div>`; };
 (() => { const ft = finalsTab; finalsTab = function () { const r = ft.apply(this, arguments); try { const sub = document.querySelector('#flow .sx .sx-sub'); if (sub) sub.textContent = 'Your photos and what’s next'; } catch (e) {} return r; }; })();
-(() => { const sh = stHero; stHero = function (p) { let h = sh.apply(this, arguments); try { h = h.replace(/<small>Head-to-head · \$2–\$20<\/small>/, '').replace('<i>VS</i> Head-to-head</button>', '⚔️ Head-to-head · $2–$20</button>'); } catch (e) {} return h; }; })();
+(() => { const sh = stHero; stHero = function (p) { let h = sh.apply(this, arguments); try { h = h.replace(/<small>Quick match · \$2–\$20<\/small>/, '').replace('<i>VS</i> Quick match</button>', '⚡ Quick match · $2–$20</button>'); } catch (e) {} return h; }; })();
 (() => { const ud = upDone; upDone = function (p) { const r = ud.apply(this, arguments); try { const c = document.querySelector('#coach.on .q2-two'); if (c) { const T2 = c.querySelector('#qs2'); const l = document.createElement('button'); l.className = 'link nv-later q2-l'; l.textContent = '📷 Add a second photo · +25 🪙'; l.onclick = () => T2 && T2.click(); c.parentNode.insertBefore(l, c); c.style.display = 'none'; } } catch (e) {} return r; }; })();
 (() => { const ql = qlLost; qlLost = function (p) { const r = ql.apply(this, arguments); try { if (!document.querySelector('#coach.on #qlvV')) return r; const L = document.getElementById('qlvL'); if (!L) return r;
     const n = L.cloneNode(false); n.id = 'qlvN'; n.textContent = '📷 Enter another photo'; n.onclick = () => { popClose(); setTimeout(finPick, 200); }; L.parentNode.replaceChild(n, L); } catch (e) {} return r; }; })();
-const PK_CASH = /\$\d|play for real|deposit|add cash|withdraw|enter the final|first final|head-to-head|race (the|your) final|enter a final|meet your finalists|accept/i, PK_COIN = /🪙|🟡|\bcoins?\b/i;
+const PK_CASH = /\$\d|play for real|deposit|add cash|withdraw|enter the final|first final|head-to-head|quick match|race (the|your) final|enter a final|meet your finalists|accept/i, PK_COIN = /🪙|🟡|\bcoins?\b/i;
 function pkTag(b) { if (!b || b.disabled || b.classList.contains('off') || b.closest('.qf2-f, .qfp-f, .h2-f, .tot, nav, .lp-pod, .su-age') || b.matches('.link, .nv-later, .pc-later, .h3-x, .t2-x, .qs2-x, .cg-n, .tm-b, .snd-t')) return;
   const t = (b.innerText || b.textContent || '').trim(); if (!t) return;
   let k = b.matches('[data-ldc], [data-chy], [data-wbf], [data-qfr]') ? 'cash' : b.matches('[data-cup]') ? 'coin' : PK_COIN.test(t) ? 'coin' : PK_CASH.test(t) ? 'cash' : b.matches('[data-ldc], [data-chy]') ? 'cash' : 'free';
@@ -9315,7 +9319,7 @@ stLadder = function (p) { const q = p.ql || {}, inQ = !!(p.ql && !q.done), ok = 
   else now = { t: 'Cash games unlocked', s: 'Play real games below', p: 1 };
   return `<div class="pg2"><div class="tk"><i class="tk-l"><u style="width:${pct}%"></u></i>${stops.map(([k, ic, lab]) => `<div class="tk-s ${st[k] || 'f'}"><span>${st[k] === 'd' ? '✓' : st[k] === 'x' ? '✕' : ic}</span><b>${lab}</b><small>${sub[k] || ''}</small></div>`).join('')}</div>
     <div class="pg2-now ${now.v ? 'tap' : ''}" ${now.v ? 'data-stv' : ''}><div><p>▶ Now</p><b>${now.t}</b><small>${now.s}</small><span class="pg-bar"><u style="width:${Math.round(now.p * 100)}%"></u></span></div>${now.v ? '<em>Vote ›</em>' : ''}</div></div>`; };
-(() => { const pt = pkTag; pkTag = function (b) { pt.apply(this, arguments); try { if (b && b.matches && b.matches('[data-rg], [data-rgf], [data-rga], [data-rgh]')) { b.classList.remove('pk-free', 'pk-coin', 'pk-dark'); b.classList.add('pk-cash'); } } catch (e) {} }; })();
+(() => { const pt = pkTag; pkTag = function (b) { pt.apply(this, arguments); try { if (b && b.matches && b.matches('[data-rg], [data-rgf], [data-rga], [data-rgh], [data-ocn], [data-ocg]')) { b.classList.remove('pk-free', 'pk-coin', 'pk-dark'); b.classList.add('pk-cash'); } } catch (e) {} }; })();
 (() => { const sh = stHero; stHero = function (p) { let h = sh.apply(this, arguments); try { const t = document.createElement('div'); t.innerHTML = h; const b = t.querySelector('.sx-btns'); if (b) { b.className = 'sx-btns sx-btns-now sx-two';
       b.innerHTML = `<button class="btn rg-b" data-rg="${p.id}">💵 Real games</button><button class="btn cg-b2" data-pt="coins">${gemIcon('cn-ic')} Coin games</button>`; const pg = t.querySelector('.pg2'); if (pg) pg.insertAdjacentElement('afterend', b); }
     h = t.innerHTML; } catch (e) {} return h; }; })();
@@ -9326,6 +9330,32 @@ function coinGames() {
   $('#cgX').onclick = () => popClose(); }
 (() => { const ft = finalsTab; finalsTab = function () { if (window.__ptab === 'coins') { window.__ptab = 'stable'; const r = ft.apply(this, arguments); setTimeout(coinGames, 120); return r; } return ft.apply(this, arguments); }; })();
 (() => { const cj = cupJoin; cupJoin = function () { const r = cj.apply(this, arguments); try { if (document.querySelector('#coach.on .cgp')) coinGames(); } catch (e) {} return r; }; })();
+/* Post a challenge: you set the stake and wait for a rival to accept. Stake is held, refunded after 24h if nobody accepts. Demo: a rival accepts after ~2 min. */
+const OC_TTL = 864e5, OC_DEMO = 120e3;
+const ocOf = p => { const c = (S.oc || []).find(x => x.pid === p.id); if (c && !c.acc && Date.now() - c.at > OC_TTL) { S.cash = +((S.cash || 0) + c.fee).toFixed(2); S.oc = S.oc.filter(x => x !== c); save(); try { paintWallet(); } catch (e) {} toast(`↩️ Nobody accepted · $${c.fee} refunded`); return null; } return c || null; };
+function ocRow(p) { const c = ocOf(p), r = (ic, t, s, btn) => `<div class="rg-r"><span>${ic}</span><div><b>${t}</b><small>${s}</small></div>${btn}</div>`;
+  if (!c) return r('⚔️', 'Post a challenge', `Pick your stake · wait for a rival to accept · refund if nobody does in 24h`, `<button class="btn rg-go" data-ocn="${p.id}">Post</button>`);
+  if (Date.now() >= c.ready) return r('⚔️', `${esc(c.h)} accepted your $${c.fee} challenge!`, `Winner takes ${money(c.fee * H2H_PAY)} · 9 crowd votes decide it`, `<button class="btn rg-go" data-ocg="${p.id}">Play</button>`);
+  return r('⏳', `Your $${c.fee} challenge is posted`, `Waiting for a rival · winner takes ${money(c.fee * H2H_PAY)} · <button class="link oc-demo" data-ocd="${p.id}">Demo: accept now</button>`, '');
+}
+function ocOpen(p, fee) { if (!p) return; fee = fee || H2H_FEES[1]; const nm = esc(rcName(p)), k = photoShow(p) || 'pets';
+  popOpen(`<div class="pp qfx h2x"><p class="pp-k">💵 Post a challenge · ${esc(showName(k))}</p><h2 class="db-h">${nm} wants a rival</h2>
+    <div class="h2-vs"><div class="me"><img src="${p.src}" alt=""><small>You</small></div><b class="h2-x">VS</b><div class="oc-q"><span>Any ${esc(showName(k).toLowerCase())} photo can accept</span><small>Waiting…</small></div></div>
+    <div class="qfp-f h2-f">${H2H_FEES.map(f => `<button data-ocf="${f}" class="${f === fee ? 'on' : ''}"><b>$${f}</b><small>win ${money(f * H2H_PAY)}</small></button>`).join('')}</div>
+    <div class="qfp-p">Winner takes <b>${money(fee * H2H_PAY)}</b><small>Your $${fee} is held until someone accepts · full refund if nobody does in 24h · PhotoPicks fee ${money(2 * fee - fee * H2H_PAY)}</small></div>
+    <button class="btn block db-go cashb" id="ocGo">💵 Post challenge · $${fee}</button><div style="text-align:center"><button class="link pc-later" id="ocL">Play a quick match instead</button></div>
+    <p class="db-sim">Prototype: rivals and votes are simulated</p></div>`);
+  document.querySelectorAll('[data-ocf]').forEach(b => b.onclick = () => ocOpen(p, +b.dataset.ocf));
+  $('#ocL').onclick = () => { popClose(); h2hOpen(p, H2H_FEES[0]); };
+  $('#ocGo').onclick = () => payCash(fee, `A $${fee} challenge`, () => { const pool = SEED.filter(x => x.src && finCatOf(x) === k && x.src !== p.src), o = pool[Math.floor(Math.random() * pool.length)] || { src: p.src, title: 'A rival' };
+    S.oc = (S.oc || []).filter(x => x.pid !== p.id).concat({ pid: p.id, fee, at: Date.now(), ready: Date.now() + OC_DEMO, h: '@' + QS_NAMES[Math.floor(Math.random() * QS_NAMES.length)], src: o.src, t: o.title || 'A rival' }); save();
+    popClose(); toast(`⚔️ Challenge posted · $${fee} held until a rival accepts`); setTimeout(() => realGames(p), 250); }); }
+function ocPlay(p) { const c = ocOf(p); if (!c) return; S.oc = S.oc.filter(x => x !== c); save(); popClose(); setTimeout(() => h2hLive(p, { src: c.src, title: c.t, h: c.h }, c.fee), 200); }
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ocn], [data-ocg], [data-ocd]'); if (!b) return; e.preventDefault(); e.stopPropagation(); const P = id => (S.photos || []).find(x => x.id === id);
+  if (b.dataset.ocn) { popClose(); setTimeout(() => ocOpen(P(b.dataset.ocn)), 150); }
+  else if (b.dataset.ocg) ocPlay(P(b.dataset.ocg));
+  else if (b.dataset.ocd) { const c = ocOf(P(b.dataset.ocd)); if (c) { c.ready = Date.now(); save(); realGames(P(b.dataset.ocd)); } } }, true);
+setInterval(() => { try { (S.oc || []).forEach(c => { if (!c.told && Date.now() >= c.ready) { c.told = 1; save(); toast(`⚔️ ${c.h} accepted your $${c.fee} challenge · open Real games to play`); } }); } catch (e) {} }, 5000);
 function realGames(p) { if (!p) return; const C = (() => { try { return chList().filter(c => c.pid === p.id); } catch (e) { return []; } })(), nm = esc(rcName(p)), fs = Math.min(QS_STEPS, (p.fr && p.fr.s) || 0);
   const row = (ic, t, s, btn) => `<div class="rg-r"><span>${ic}</span><div><b>${t}</b><small>${s}</small></div>${btn}</div>`;
   const rows = [];
@@ -9333,7 +9363,8 @@ function realGames(p) { if (!p) return; const C = (() => { try { return chList()
   else if (p.runEnd) rows.push(row('🏁', 'Race it again', 'Back to the qualifier, then a new Final', `<button class="btn rg-go" data-rga="${p.id}">Start</button>`));
   else if (p.fin) rows.push(row('🏁', 'Final', `${QS_STEPS - fs} voting step${QS_STEPS - fs === 1 ? '' : 's'} to go · vote to unlock`, `<button class="btn rg-v" data-stv>Vote</button>`));
   C.forEach(c => rows.push(row('⚔️', `${esc(c.h)} challenged ${nm}`, `$${c.fee} entry · winner takes ${money(c.fee * H2H_PAY)}`, `<button class="btn rg-go" data-chy="${c.id}">Accept</button>`)));
-  rows.push(row('⚔️', 'Head-to-head', `1 on 1 · $2–$20 · winner takes up to ${money(20 * H2H_PAY)}`, `<button class="btn rg-go" data-rgh="${p.id}">Play</button>`));
+  rows.push(row('⚡', 'Quick match', `Instant · random rival · $2–$20 · winner takes up to ${money(20 * H2H_PAY)}`, `<button class="btn rg-go" data-rgh="${p.id}">Play</button>`));
+  rows.push(ocRow(p));
   popOpen(`<div class="pp qfx nv rgp"><p class="nv-brand">PhotoPicks</p><div class="nv-pillrow"><span class="nv-pill">Real games · ${nm}</span></div><h2 class="nv-h2">Play for real cash</h2>
     <div class="rg-l">${rows.join('')}</div><div style="text-align:center"><button class="link nv-later" id="rgX">Back to your stable</button></div><p class="nv-sim">Entry fees are real cash · demo: rivals simulated</p></div>`);
   $('#rgX').onclick = () => popClose(); }
@@ -9558,7 +9589,7 @@ function tixStripHTML() { const n = (S && S.user && S.cashTix) || 0; if (!n) ret
 document.addEventListener('click', e => { if (e.target.closest('#tixStrip')) { const t = $('#tixTag'); if (t) t.click(); else { tArm(); openTourney(); } } });
 function nextUpHTML() {
   const n = nextUp(); if (!n) return '';
-  const lab = n.k === 'tour' ? '🏆 Tournament' : n.k === 'cash' ? '🏅 Head-to-head' : '🟡 Practice challenge';
+  const lab = n.k === 'tour' ? '🏆 Tournament' : n.k === 'cash' ? '⚡ Quick match' : '🟡 Practice challenge';
   return `<div class="nxu nxu-${n.k}"><span class="t"><b>${lab}</b> ${n.left === 1 ? 'after this vote' : `in <b>${n.left}</b> votes`}</span><span class="d">${Array.from({ length: CFG.BATTLE_EVERY }, (_, i) => `<i class="${i < n.done ? 'on' : ''}"></i>`).join('')}</span></div>`;
 }
 function renderJudge() {
@@ -10081,7 +10112,7 @@ function openCashBattle(stake, th, photo) {
           : `<div class="kg2-next lose"><small>You lost</small><b>${money(stake)}</b><span>Touch up your photo to win more votes</span></div>`}
         <button class="btn block kg2-go" id="duAgain">Play again · $${stake}</button>
         <div style="text-align:center"><button class="link kg2-back" data-shclose>Back to judging</button></div>`;
-      if (won) setTimeout(() => cashExplosion(prize, { label: 'Head-to-head win' }), 300);
+      if (won) setTimeout(() => cashExplosion(prize, { label: 'Quick match win' }), 300);
       $('#duAgain').onclick = () => openCashBattle(stake);
       document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
     }, 220);
@@ -10114,7 +10145,7 @@ function openBattleChooser() {
     <h2 id="crT">🏅 Time to compete!</h2><p>Pick your challenge. Winners are decided by member votes.</p>
     <div class="bch-l">
       <button class="bch-o raid" data-b="raid"><span class="bi">🟡</span><span class="bt"><b>Coin challenge</b><small>Free · win coins from a rival's vault</small></span><em>Free</em></button>
-      <button class="bch-o duel" data-b="duel" ${off ? 'disabled' : ''}><span class="bi">💵</span><span class="bt"><b>Cash head-to-head</b><small>1 v 1 · win ${money(2 * (1 - KING_FEE))}</small></span><em>$1</em></button>
+      <button class="bch-o duel" data-b="duel" ${off ? 'disabled' : ''}><span class="bi">💵</span><span class="bt"><b>Quick match</b><small>1 v 1 · win ${money(2 * (1 - KING_FEE))}</small></span><em>$1</em></button>
       <button class="bch-o show" data-b="tour" ${off ? 'disabled' : ''}><span class="bi">🏆</span><span class="bt"><b>Knockout Tournament</b><small>${S.tour && !S.tour.seen ? (() => { const ph = tPhase(S.tour); return ph.st === 'lobby' ? 'You\'re in · starting soon' : ph.st === 'live' ? `You're in the ${T_NAMES[ph.r]}` : 'Your result is in!'; })() : `$1 every 15 min · $5 every 30 min`}</small></span><em>${S.tour && !S.tour.seen ? 'View' : '$1+'}</em></button>
       <button class="bch-o king" data-b="king" ${off ? 'disabled' : ''}><span class="bi">🏅</span><span class="bt"><b>Challenge the Champion</b><small>${esc(catLabel(kc))} bounty <b class="kb">${money(K.bounty)}</b></small></span><em>$1</em></button>
     </div>
