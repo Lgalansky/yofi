@@ -2207,6 +2207,9 @@ html body #flow .sx .btn.sv-b{width:100%!important;min-height:48px!important;mar
 .svr-vs{display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0}.svr-vs div{text-align:center;opacity:.6}.svr-vs div.w{opacity:1}.svr-vs img{width:110px;height:110px;object-fit:cover;border-radius:14px;border:3px solid rgba(255,255,255,.25)}.svr-vs div.w img{border-color:#F3D98B}.svr-vs b{display:block;margin-top:4px;font:800 .85rem Nunito,system-ui}.svr-vs small{font:700 .72rem Nunito,system-ui;color:#F3D98B}.svr-vs i{font-style:normal;font:900 .9rem Fraunces,Georgia,serif;color:#F3D98B}
 .svr-bar{position:relative;height:26px;margin:6px 0 10px;border-radius:13px;background:rgba(255,255,255,.15);overflow:hidden}.svr-bar u{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#F3D98B,#D9AE4F)}.svr-bar span{position:relative;z-index:1;display:inline-block;width:50%;line-height:26px;font:900 .8rem Nunito,system-ui;color:#14213D;padding:0 10px}.svr-bar span+span{text-align:right;color:#fff}
 html body svg.cn-ic{display:inline-block!important;width:1.05em!important;height:1.05em!important;vertical-align:-.16em;flex:none}
+.crr2{text-align:center}.crr2 .nv-big{font-size:2.1rem!important}html body .nv.qw.crr2 .qw-ph{width:62%!important;margin-left:auto!important;margin-right:auto!important}
+.crr2-t{margin:14px 0 4px;font:800 1.25rem/1.25 Nunito,system-ui;color:#FBF3DC}.crr2-t b{font:900 2rem/1.1 Fraunces,Georgia,serif;color:#F3D98B}.crr2 #crrS{margin-top:18px!important}
+html body #flow .sx .sx-btns.sx-btns-now{margin:10px 0 4px!important;padding:0!important}
 </style>
 </head>
 <body>
@@ -4399,7 +4402,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v236</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v237</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -9248,6 +9251,19 @@ document.addEventListener('click', e => { const b = e.target.closest && e.target
     const first = L.querySelector('.cs-r'); (first || L).insertAdjacentHTML(first ? 'afterend' : 'beforeend', `<div class="cs-r"><span class="cs-ic">🛡️</span><div><b>Survivor</b><small>${sub}</small></div>${btn}</div>`); } catch (e) {} return r; }; })();
 useGems = coinSheet;
 document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-svgo]'); if (!b) return; e.preventDefault(); try { closeSheet(); } catch (x) {} window.__ptab = 'coins'; setTimeout(finalsTab, 200); });
+function crReady(p) { if (!p || p.crSeen) return; p.crSeen = 1; save(); const nm = esc(rcName(p));
+  popOpen(`<div class="pp qfx nv qw crr2"><p class="nv-brand">PhotoPicks</p><h2 class="nv-big">Congratulations!</h2><i class="nv-sw"></i>
+    <div class="qw-ph"><img src="${p.src}" alt=""></div>
+    <p class="crr2-t">${nm} is ready for<br><b>cash races</b></p><p class="qw-o">${TQ_WIN} training wins · it’s in your stable</p>
+    <button class="btn block nv-go" id="crrS">🐎 Go to your stable</button></div>`);
+  try { rvConfetti(document.querySelector('.crr2'), 140); } catch (e) {}
+  $('#crrS').onclick = () => { popClose(); window.__ptab = 'stable'; window.__stFocus = p.id; window.__stNote = `🎉 ${nm} is ready for cash races`; finalsTab(); }; }
+(() => { const sl = stLadder; stLadder = function (p) { let h = sl.apply(this, arguments); try { const q = p.ql || {}, T = p.tq || { w: 0, l: 0 };
+    if (q.done === 'x' && isCashOK(p)) h = h.replace('<span class="">✓ 🎀 Qualified</span>', `<span class="x">✕ 🎀 Qualifier lost ${q.w || 0}–${q.l || 0}</span><span class="">✓ 🏋️ Trained</span>`);
+    h = h.replace(/<button class="ld-b" data-ldc>See<\/button>/, '<em>WAITING</em>'); } catch (e) {} return h; }; })();
+(() => { const sh = stHero; stHero = function (p) { let h = sh.apply(this, arguments); try { const C = (() => { try { return chList().filter(c => c.pid === p.id); } catch (e) { return []; } })(), c = C[0];
+    if (c) h = h.replace(/<button class="btn sx-ol" data-sth="[^"]*" data-m="c">[\s\S]*?<\/button>/, `<button class="btn sx-ol" data-chy="${c.id}">⚔️ Accept ${esc(c.h)}’s $${c.fee} challenge</button>`);
+    const t = document.createElement('div'); t.innerHTML = h; const now = t.querySelector('.pg-now'), btns = t.querySelector('.sx-btns'); if (now && btns) { btns.classList.add('sx-btns-now'); now.insertAdjacentElement('afterend', btns); } if (c) { const g = t.querySelector('.pg-goal'); if (g) g.parentNode.removeChild(g); } h = t.innerHTML; } catch (e) {} return h; }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
