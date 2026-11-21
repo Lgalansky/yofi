@@ -480,6 +480,8 @@ Then `rmv235.py`: Survivor coin game ($100 house prize), Coin games toggle in Pl
 
 Then `rmv236.py`: Survivor polish: coin icon sizing, Coin games heading, Survivor on the coins sheet.
 
+Then `rmv237.py`: Simple Ready for Cash Races popup (one button to the stable); stable card shows Trained, buttons under Now, challenge as the green button.
+
 Then `rmv224.py`: rmv224: first Final free with one button; Final result goes to the stable; ladder shows the Final; 250-coin entry retired.
 
 ```bash
@@ -714,6 +716,7 @@ python3 rmv233.py
 python3 rmv234.py
 python3 rmv235.py
 python3 rmv236.py
+python3 rmv237.py
 python3 rmv224.py
 ```
 
