@@ -454,6 +454,8 @@ Then `rmv222.py`: rmv222: landing page from the mock-up (crowd-favourite guess, 
 
 Then `rmv223.py`: rmv223: train-only way back after a missed qualifier, training as replays of earned votes, shorter races (7 and 5), horse ladder to cash challenges in Play.
 
+Then `rmv224.py`: rmv224: first Final free with one button; Final result goes to the stable; ladder shows the Final; 250-coin entry retired.
+
 ```bash
 python3 rmv6.py
 python3 rmv7.py
@@ -673,6 +675,7 @@ python3 rmv220.py
 python3 rmv221.py
 python3 rmv222.py
 python3 rmv223.py
+python3 rmv224.py
 ```
 
 ## Skill only
