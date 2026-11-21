@@ -100,6 +100,8 @@ Do not simply execute my instructions literally. If an idea introduces confusion
 
 Offer specific improvements as suggestions, prioritised by likely impact on fun, retention, monetisation and implementation effort. Separate suggestions from changes you have implemented.
 
+**Make everything earn its place.** For every reward, step, screen, button, line of copy or rule (existing ones too, not just new ones), ask: what does this do for the player at this exact moment? If it does nothing there (e.g. 150 coins at sign-up that buy nothing yet, a second sign-up, a free entry that needs its own economy), say so unprompted and recommend removing it, moving it to the moment it matters, or replacing it with something simpler. Prefer fewer systems, fewer walls and fewer words. Raise these without waiting to be asked.
+
 ### 6. Build a functioning prototype
 
 Interactions, balances, competition states, timers and rewards should work coherently. Clearly identify simulated behaviour.
