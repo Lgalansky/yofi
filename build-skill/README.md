@@ -470,6 +470,8 @@ Then `rmv230.py`: rmv230: 2-option head-to-head result, navy qualifier start scr
 
 Then `rmv231.py`: rmv231: two actions per Stable card and qualifier screen.
 
+Then `rmv232.py`: rmv232: So close with low coins offers Enter another photo as the second option.
+
 Then `rmv224.py`: rmv224: first Final free with one button; Final result goes to the stable; ladder shows the Final; 250-coin entry retired.
 
 ```bash
@@ -699,6 +701,7 @@ python3 rmv228.py
 python3 rmv229.py
 python3 rmv230.py
 python3 rmv231.py
+python3 rmv232.py
 python3 rmv224.py
 ```
 
