@@ -2255,6 +2255,11 @@ html body #flow .sx .sx-btns.sx-two{display:grid!important;grid-template-columns
 .lb-c{display:grid;gap:14px}.lb-c .sv,.lb-c .cup{margin:0!important}
 .sx.lb:not(.coinv) #cupC{display:block!important}
 #flow .sx-btns .st-vote{background:#14213D!important;color:#fff!important;box-shadow:none!important;border:0!important}
+.pv-tr.vb{position:relative;margin:8px 0 2px;padding:0 34px 0 0}
+.pv-tr.vb .vb-r{position:relative;height:10px;border-radius:999px;background:#E9E2D2;overflow:hidden}
+.pv-tr.vb .vb-r u{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,#2F7A4A,#4FB37A);transition:width .4s}
+.pv-tr.vb .vb-e{position:absolute;right:0;top:-9px;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#FFF1CC;box-shadow:inset 0 0 0 2px #E2B95B;font-size:.85rem}
+.pv-tr.vb .vb-t{margin:8px 0 0;font:700 .85rem Nunito,system-ui;color:#4A5270}.pv-tr.vb .vb-t b{color:#14213D}
 .rg-l{display:grid;gap:8px;margin:12px 0 14px}.rg-r{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1.5px rgba(217,174,79,.5);text-align:left}.rg-r>span{font-size:1.4rem}.rg-r>div{flex:1;min-width:0}.rg-r b{display:block;font:900 .98rem Nunito,system-ui;color:#FBF3DC}.rg-r small{font:600 .78rem Nunito,system-ui;color:#C9D3E6}
 html body .rgp .rg-r .btn{flex:none;min-width:76px;min-height:40px!important;margin:0!important;padding:0 14px!important;border-radius:999px!important;font:900 .9rem Nunito,system-ui!important}
 </style>
@@ -11136,6 +11141,43 @@ function streakHello() { if ((S.tut || 9) < 9 || Date.now() - (window.__autoT ||
     sg.onclick = () => { try { if ($('#sheet').classList.contains('on')) closeSheet(); popClose(); } catch (e) {} const has = (S.photos || []).some(p => p.framed && !(p.starter && !p.ql));
       if (!has) { myShow(); press('segGallery'); setTimeout(() => { $('#ptitle').textContent = 'Stable'; }, 0); return; } window.__ptab = 'stable'; finalsTab(); }; }
   const sc = $('#segCompete'); if (sc) sc.onclick = () => { try { if ($('#sheet').classList.contains('on')) closeSheet(); popClose(); } catch (e) {} playLobby(); };
+})();
+
+/* ===== Votes, not streaks =====
+   - Every vote counts (no 2-in-a-row needed).
+   - Newbies: 20 votes to their qualifier race. Only a player's first photo has to qualify.
+   - Later photos (and runs again) skip the qualifier and go straight to Final voting.
+   - 50 votes to the Final. */
+(() => {
+  const NEW_Q = 20, FIN_V = 50;
+  const vet = () => !!S.qlEver || (S.photos || []).some(p => p.ql && p.ql.done === 'q' && !p.ql.skip);
+  const tgt0 = qsTarget; qsTarget = function () { return window.__noStep ? null : tgt0.apply(this, arguments); };
+  const skipQ = p => { p.ql = { done: 'q', w: 0, l: 0, skip: 1, at: Date.now() }; p.cashOK = true; p.fin = 1; p.fr = { s: 0, v: 0 }; };
+  const qs0 = qlStart; qlStart = function (p) { const r = qs0.apply(this, arguments); try { if (p && vet()) { skipQ(p); save(); } } catch (e) {} return r; };
+  try { (S.photos || []).forEach(p => { if (p.ql && p.ql.done === 'q' && !p.ql.skip) S.qlEver = 1; }); save(); } catch (e) {}
+  const cf = callFx; callFx = function () { window.__noStep = 1; let r; try { r = cf.apply(this, arguments); } finally { window.__noStep = 0; }
+    try { const p = tgt0(); if (p) { const q = p.ql;
+        if (q && !q.done && !q.live && !p.tr) { q.v = (q.v || 0) + 1; if (q.v >= NEW_Q) { q.got = QS_STEPS; q.live = 1; qsWhenFree(() => qlRace(p)); } }
+        else if (p.fin && p.fr && !p.fr.go) { p.fr.v = (p.fr.v || 0) + 1; if (p.fr.v >= FIN_V) { p.fr.s = QS_STEPS; p.fr.go = 1; qsWhenFree(() => qfStart(p)); } }
+        save(); try { qlPaint(); } catch (e) {} try { document.querySelectorAll(`#qlS .pv-c[data-pid="${p.id}"] .pv-tr.vb`).forEach(el => { el.outerHTML = pvStep(p); }); } catch (e) {} } } catch (e) {} return r; };
+  const vOf = p => { const q = p.ql; if (q && !q.done) return { v: Math.min(NEW_Q, q.v || 0), n: NEW_Q, fin: 0, live: !!q.live }; const f = p.fr || {}; return { v: f.go ? FIN_V : Math.min(FIN_V, f.v || 0), n: FIN_V, fin: 1, live: false }; };
+  pvStep = function (p, s, fin) { const o = vOf(p), pct = o.v / o.n * 100;
+    return `<div class="pv-tr vb"><div class="vb-r"><u style="width:${pct}%"></u></div><span class="vb-e">${o.fin ? '🏁' : '🎀'}</span><p class="vb-t">${o.live ? '🔴 Qualifier race · live' : `<b>${o.v} of ${o.n} votes</b> to ${o.fin ? 'your Final' : 'your qualifier race'}`}</p></div>`; };
+  finBtn = function (p, plain) { const o = p ? vOf(p) : { v: 0, n: FIN_V }, n = o.n - o.v; return p && p.fr && p.fr.go ? `${plain ? '' : '🏁 '}Enter a Final` : `${plain ? '' : '⚖️ '}${n} vote${n === 1 ? '' : 's'} to the Final`; };
+  const sl = stLadder; stLadder = function (p) { let h = sl.apply(this, arguments); try { const o = vOf(p);
+      h = h.replace(/Vote 2 in a row with the crowd = 1 step/g, 'Every vote you make counts')
+        .replace(/(Final|Qualifier) · \d+ of \d+ steps/g, (m, w) => `${w} · ${o.v} of ${o.n} votes`)
+        .replace(/<small>\d+\/\d+ steps<\/small>/g, `<small>${o.v}/${o.n} votes</small>`)
+        .replace(/<span class="pg-bar"><u style="width:[^"]*"><\/u><\/span>/, `<span class="pg-bar"><u style="width:${o.v / o.n * 100}%"></u></span>`);
+      if (p.ql && p.ql.skip) h = h.replace(/<b>Qualifier<\/b><small>[^<]*<\/small>/, '<b>Qualifier</b><small>Not needed</small>'); } catch (e) {} return h; };
+  const fixTxt = (h, p) => { try { const o = vOf(p); return h.replace(/Qualifying · \d+ of \d+ steps/g, `Qualifying · ${o.v} of ${o.n} votes`).replace(/Qualified · \d+ of \d+ steps to the Final/g, `${o.v} of ${o.n} votes to the Final`); } catch (e) { return h; } };
+  { const sh = stHero; stHero = function (p) { return fixTxt(sh.apply(this, arguments), p); }; }
+  if (typeof stTrain === 'function') { const st = stTrain; stTrain = function (p) { return fixTxt(st.apply(this, arguments), p); }; }
+  if (typeof twStatus === 'function') { const tw = twStatus; twStatus = function (p) { const r = tw.apply(this, arguments); try { const o = vOf(p); if (r && r.t) r.t = r.t.replace(/\d+ of \d+ steps to its qualifier race/, `${o.v} of ${o.n} votes to its qualifier race`).replace(/Qualified · \d+ of \d+ steps to the Final/, `${o.v} of ${o.n} votes to the Final`); } catch (e) {} return r; }; }
+  const ts = toast; toast = function (m) { try { if (/in a row with the crowd = 1 step|2 in a row · your photo moves on/.test(String(m))) return; } catch (e) {} return ts.apply(this, arguments); };
+  if (typeof twRec === 'function') { const tr = twRec; twRec = function (p) { const r = tr.apply(this, arguments); try { if (p && p.ql && p.ql.skip && r) r.qual = Math.max(0, (r.qual || 0) - 1); } catch (e) {} return r; }; }
+  // a run again skips straight to Final voting
+  const ra = runAgain; runAgain = function (p) { const r = ra.apply(this, arguments); try { if (p && !(p.fr && p.fr.go)) { skipQ(p); p.runEnd = 0; save(); try { finalsTab(); } catch (e) {} } } catch (e) {} return r; };
 })();
 })();
 
