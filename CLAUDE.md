@@ -72,7 +72,9 @@ Optimise for sustainable engagement and player trust. Keep costs, prize conditio
 
 Maintain the established look and feel across the entire app.
 
-Use consistent fonts, typography hierarchy, colours, buttons, spacing, icons, cards, popups and navigation. Follow the existing cream, navy and gold visual direction and established button styles.
+Use consistent fonts, typography hierarchy, colours, buttons, spacing, icons, cards, popups and navigation.
+
+**Button colour = what it costs:** green buttons are always real money (cash entries, head-to-heads, Finals, challenges, deposits); gold/yellow buttons are always coins (training, Daily Cup); free actions (voting, navigation) are neutral: navy on light screens, cream on dark screens. Follow the existing cream, navy and gold visual direction and established button styles.
 
 Reuse shared components and design tokens. Avoid creating a new style for each screen. When a shared style changes, check every affected screen.
 
