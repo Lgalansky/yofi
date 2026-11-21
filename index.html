@@ -4356,7 +4356,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v228</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v229</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -9070,7 +9070,7 @@ function addCashNv(amt, what, onBuy) { amt = +amt || 0; const have = +((S.cash |
     <div style="text-align:center"><button class="link nv-later" id="acnAll">Other amounts</button> <button class="link nv-later" id="acnNo">Not now</button></div><p class="nv-sim">Demo · no real payment is taken</p></div>`);
   $('#acnGo').onclick = () => { popClose(); checkout(`$${add} cash`, add, () => applyOffer(add, 0, w ? `Welcome offer · $${WO_BON} free` : `$${add} deposit`, woGive(onBuy))); };
   $('#acnAll').onclick = () => { popClose(); openStore(null, onBuy, 'cash'); }; $('#acnNo').onclick = () => popClose(); }
-(() => { const qp = qfPick; qfPick = function (p, fee) { if (!p || S.paidCash || S.bonusGot || p.woSeen || window.__woSkip) { window.__woSkip = 0; return qp.apply(this, arguments); } p.woSeen = 1; save(); const nm = esc(rcName(p));
+(() => { const qp = qfPick; qfPick = function (p, fee) { if (!p || !S.coinFin || S.paidCash || S.bonusGot || p.woSeen || window.__woSkip) { window.__woSkip = 0; return qp.apply(this, arguments); } p.woSeen = 1; save(); const nm = esc(rcName(p));
   popOpen(`<div class="pp qfx nv qw wo"><p class="nv-brand">PhotoPicks</p><div class="nv-pillrow"><span class="nv-pill">Welcome offer</span></div><h2 class="nv-big sm">${nm} is in the Final!</h2><i class="nv-sw"></i>
     <div class="qw-ph"><img src="${p.src}" alt=""><i class="qw-rz">${rosette('f')}</i></div>
     <div class="wo-box"><small>Deposit</small><b>$${WO_DEP}</b><em>get $${WO_BON} free</em><p>$${WO_DEP + WO_BON} to play · enter this Final at $10 and 1st wins ${money(10 * QF_PAY[0]).replace(".00", "")}</p></div>
