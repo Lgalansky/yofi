@@ -456,6 +456,8 @@ Then `rmv223.py`: rmv223: train-only way back after a missed qualifier, training
 
 Then `rmv224.py`: rmv224: first Final free with one button; Final result goes to the stable; ladder shows the Final; 250-coin entry retired.
 
+Then `rmv225.py`: rmv225: one required sign-up right after framing; no walls later.
+
 Then `rmv224.py`: rmv224: first Final free with one button; Final result goes to the stable; ladder shows the Final; 250-coin entry retired.
 
 ```bash
@@ -678,6 +680,7 @@ python3 rmv221.py
 python3 rmv222.py
 python3 rmv223.py
 python3 rmv224.py
+python3 rmv225.py
 python3 rmv224.py
 ```
 
