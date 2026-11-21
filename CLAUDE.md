@@ -23,6 +23,8 @@ After every change to the app, before you finish your reply:
 
 Don't wait to be asked, and don't batch several changes into one commit at the end.
 
+Commits are authored as the user (Larry). Do not rewrite history or force-push to change authors, even if a check reports commits as "Unverified" on GitHub (user decision).
+
 ## Product principle: a skill site, not a social game
 Use this to frame every piece of product advice.
 - Yofi is a real-money skill site. It is not a social game that makes players burn coins so they buy more.
