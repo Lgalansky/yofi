@@ -4378,7 +4378,7 @@ function openMenu() {
     <div class="stats"><div><b>${S.votes}</b><span>Votes cast</span></div><div><b>${money((S.earn || []).reduce((a, e) => a + e.amt, 0))}</b><span>Prize money</span></div><div><b>${(S.photos || []).filter(p => p.framed).length}</b><span>Framed photos</span></div></div>
     <div class="menu"><button class="btn quiet block" id="mG">🏆 Hall of Fame</button><button class="btn quiet block" id="mC">🎀 Finals</button><button class="btn quiet block" id="mS" style="display:none">Coin store</button>
     <button class="btn quiet block" id="pfFriends">👥 Friends</button><p class="pf-type">You’re a <b>${playerType()}</b></p><p class="pf-test">Testing</p>${isCash() ? '<button class="btn quiet block" id="pfToCoin">↺ Switch to coin player</button>' : '<button class="btn quiet block" id="pfToReal">↺ Switch to real money player</button>'}
-    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v231</p></div>`);
+    <button class="link" id="mR" style="margin-top:6px">Reset prototype</button><p class="pf-ver">PhotoPicks v232</p></div>`);
   $('#mG').onclick = openGallery; $('#mC').onclick = () => { closeSheet(); finalsTab(); }; $('#mS').onclick = () => openStore();
   if ($('#pfAv')) $('#pfAv').onclick = $('#pfChg').onclick = () => pickProfilePic(() => { openMenu(); if ($('#panes').dataset.at === 'gallery') renderGallery(); });
   $('#mR').onclick = () => {
@@ -9156,6 +9156,8 @@ stLadder = function (p) { const q = p.ql || {}, inQ = p.ql && !q.done, ok = isCa
 (() => { const ft = finalsTab; finalsTab = function () { const r = ft.apply(this, arguments); try { const sub = document.querySelector('#flow .sx .sx-sub'); if (sub) sub.textContent = 'Your photos and what’s next'; } catch (e) {} return r; }; })();
 (() => { const sh = stHero; stHero = function (p) { let h = sh.apply(this, arguments); try { h = h.replace(/<small>Head-to-head · \$2–\$20<\/small>/, '').replace('<i>VS</i> Head-to-head</button>', '⚔️ Head-to-head · $2–$20</button>'); } catch (e) {} return h; }; })();
 (() => { const ud = upDone; upDone = function (p) { const r = ud.apply(this, arguments); try { const c = document.querySelector('#coach.on .q2-two'); if (c) { const T2 = c.querySelector('#qs2'); const l = document.createElement('button'); l.className = 'link nv-later q2-l'; l.textContent = '📷 Add a second photo · +25 🪙'; l.onclick = () => T2 && T2.click(); c.parentNode.insertBefore(l, c); c.style.display = 'none'; } } catch (e) {} return r; }; })();
+(() => { const ql = qlLost; qlLost = function (p) { const r = ql.apply(this, arguments); try { if (!document.querySelector('#coach.on #qlvV')) return r; const L = document.getElementById('qlvL'); if (!L) return r;
+    const n = L.cloneNode(false); n.id = 'qlvN'; n.textContent = '📷 Enter another photo'; n.onclick = () => { popClose(); setTimeout(finPick, 200); }; L.parentNode.replaceChild(n, L); } catch (e) {} return r; }; })();
 function fcNotify() {
   const n = S.fr ? S.fr.ch.filter(c => c.st === 'yours' || c.st === 'ready').length : 0, d = $('#frDot');
   if (d) { d.hidden = !n; d.textContent = n; }
