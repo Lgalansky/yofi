@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PhotoPicks</title>
+<title>PhotoPicks (Test)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800;9..144,900&family=Archivo+Black&family=Nunito+Sans:wght@400;600;700;800&family=Pacifico&family=Playfair+Display:ital,wght@0,700;0,800;1,500;1,600&display=swap" rel="stylesheet">
@@ -2255,6 +2255,14 @@ html body #flow .sx .sx-btns.sx-two{display:grid!important;grid-template-columns
 .lb-c{display:grid;gap:14px}.lb-c .sv,.lb-c .cup{margin:0!important}
 .sx.lb:not(.coinv) #cupC{display:block!important}
 #flow .sx-btns .st-vote{background:#14213D!important;color:#fff!important;box-shadow:none!important;border:0!important}
+.vstk{display:flex;align-items:center;gap:10px;margin:6px 0 10px;padding:10px 12px;border-radius:16px;background:#14213D;color:#fff;box-shadow:0 8px 18px -10px rgba(20,33,61,.7)}
+.vstk-f{font-size:1.6rem;line-height:1}
+.vstk-m{flex:1;min-width:0}.vstk-m p{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:0 0 6px}.vstk-m b{font:800 1rem Fraunces,Georgia,serif}.vstk-m span{font:700 .78rem Nunito,system-ui;color:#CFC6B4}.vstk-m em{font-style:normal;color:#F3D98B}
+.vstk-b{display:block;height:8px;border-radius:4px;background:rgba(255,255,255,.14);overflow:hidden}.vstk-b u{display:block;height:100%;background:linear-gradient(90deg,#F3D98B,#E8A93A);transition:width .4s}
+.qlp-t{margin:10px 0 6px;font:700 .95rem Nunito,system-ui;color:#F7EFDD;text-align:center}.qlp-t b{color:#F3D98B}
+.qlp-deal{margin:0 0 10px;text-align:center;font:800 1rem Nunito,system-ui;color:#F3D98B}.qlp-deal s{opacity:.6;margin-right:4px}
+#coach .qlp .qlp-go{background:linear-gradient(180deg,#F3D68A,#D9AE4E)!important;color:#2A1600!important}
+.qlp-em{font-style:normal;font-weight:800;color:#7A5A12;white-space:nowrap}
 .rg-l{display:grid;gap:8px;margin:12px 0 14px}.rg-r{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1.5px rgba(217,174,79,.5);text-align:left}.rg-r>span{font-size:1.4rem}.rg-r>div{flex:1;min-width:0}.rg-r b{display:block;font:900 .98rem Nunito,system-ui;color:#FBF3DC}.rg-r small{font:600 .78rem Nunito,system-ui;color:#C9D3E6}
 html body .rgp .rg-r .btn{flex:none;min-width:76px;min-height:40px!important;margin:0!important;padding:0 14px!important;border-radius:999px!important;font:900 .9rem Nunito,system-ui!important}
 </style>
@@ -8418,7 +8426,7 @@ function qlWon(p, o, A, B) { const q = p.ql, nm = esc(rcName(p)); q.done = 'q'; 
   popOpen(`<div class="pp qfx nv qw"><p class="nv-brand">PhotoPicks</p><h2 class="nv-big">Qualified!</h2><i class="nv-sw"></i>
     <div class="qw-ph"><img src="${p.src}" alt=""><i class="qw-rz">${rosette('f')}</i></div>
     <p class="qw-r">${nm} wins ${A}–${B}</p><p class="qw-o">Against ${esc(o.t)}</p><p class="qw-c"><span>🪙</span> +50 coins</p>
-    <p class="qw-nx">Next: <b>${QS_STEPS} voting steps</b> to the Final<br><small>Vote 2 in a row with the crowd = 1 step</small></p><button class="btn block nv-go" id="qlvGo">⚖️ Vote your way to the Final</button><div style="text-align:center"><button class="link nv-later" id="qlvL">Later</button></div></div>`);
+    <p class="qw-nx">Next: <b>your Final is ready</b><br><small>6 photos race · enter it from Real games</small></p><button class="btn block nv-go" id="qlvGo">⚖️ Vote your way to the Final</button><div style="text-align:center"><button class="link nv-later" id="qlvL">Later</button></div></div>`);
   try { paintGems(); rvConfetti(document.querySelector('.qw'), 90); } catch (e) {}
   $('#qlvGo').onclick = () => { popClose(); go('judge'); renderJudge(); }; $('#qlvL').onclick = () => { popClose(); try { renderJudge(); } catch (e) {} }; }
 function qlLost(p, o, A, B) { const q = p.ql, nm = esc(rcName(p)); q.done = 'x'; q.at = Date.now(); save();
@@ -8861,9 +8869,9 @@ function crReady(p) { if (!p || p.crSeen) return; p.crSeen = 1; save(); const nm
     <div class="qw-ph"><img src="${p.src}" alt=""><i class="qw-rz">${rosette('f')}</i></div>
     <p class="qw-r">${nm} earned its place</p><p class="qw-o">${TQ_WIN} training wins · no qualifier needed</p>
     <div class="crr-box"><div><b>⚔️ Cash head-to-heads · open now</b><small>1 on 1 · ${m0(H2H_FEES[0])} entry, winner takes <em>${money(H2H_FEES[0] * H2H_PAY)}</em></small></div>
-      <div><b>🏁 Finals · ${QS_STEPS} voting steps away</b><small>6 photos race · ${m0(lo)} entry, 1st wins <em>${m0(lo * QF_PAY[0])}</em> · up to ${m0(hi)} entry, 1st wins <em>${m0(hi * QF_PAY[0])}</em></small></div>
+      <div><b>🏁 Finals · ready now</b><small>6 photos race · ${m0(lo)} entry, 1st wins <em>${m0(lo * QF_PAY[0])}</em> · up to ${m0(hi)} entry, 1st wins <em>${m0(hi * QF_PAY[0])}</em></small></div>
       <div><b>🏆 Daily Cup</b><small>${CUP_COST} coins · $100 in prizes every day</small></div></div>
-    <button class="btn block nv-go" id="crrGo">⚡ Play a ${m0(H2H_FEES[0])} quick match</button><button class="btn block nv-go2" id="crrF">⚖️ Vote ${QS_STEPS} steps to the Final</button><div style="text-align:center"><button class="link nv-later" id="crrL">Back to your stable</button></div><p class="nv-sim">Entry fees are real cash · prizes are paid from entries after the PhotoPicks fee</p></div>`);
+    <button class="btn block nv-go" id="crrGo">⚡ Play a ${m0(H2H_FEES[0])} quick match</button><button class="btn block nv-go2" id="crrF">🏁 Enter a Final</button><div style="text-align:center"><button class="link nv-later" id="crrL">Back to your stable</button></div><p class="nv-sim">Entry fees are real cash · prizes are paid from entries after the PhotoPicks fee</p></div>`);
   try { rvConfetti(document.querySelector('.crr'), 130); } catch (e) {}
   $('#crrGo').onclick = () => { popClose(); h2hOpen(p, H2H_FEES[0]); }; $('#crrF').onclick = () => { popClose(); qfStart(p); }; $('#crrL').onclick = () => { popClose(); finalsTab(); }; }
 (() => { const hd = h3Done; h3Done = function (p, o, oh, fee) { const was = p && p.cashOK; const r = hd.apply(this, arguments); try { if (p && !(fee > 0) && p.cashOK && !was) setTimeout(() => { if (document.getElementById('h2Ag')) crReady(p); }, 2200); } catch (e) {} return r; }; })();
@@ -11136,6 +11144,52 @@ function streakHello() { if ((S.tut || 9) < 9 || Date.now() - (window.__autoT ||
     sg.onclick = () => { try { if ($('#sheet').classList.contains('on')) closeSheet(); popClose(); } catch (e) {} const has = (S.photos || []).some(p => p.framed && !(p.starter && !p.ql));
       if (!has) { myShow(); press('segGallery'); setTimeout(() => { $('#ptitle').textContent = 'Stable'; }, 0); return; } window.__ptab = 'stable'; finalsTab(); }; }
   const sc = $('#segCompete'); if (sc) sc.onclick = () => { try { if ($('#sheet').classList.contains('on')) closeSheet(); popClose(); } catch (e) {} playLobby(); };
+})();
+
+/* ===== TEST: coin-paid qualification, no voting steps, vote streak bar =====
+   - A photo enters its qualifier race by paying coins: 100 for your first, 500 after.
+   - Winning the qualifier makes its Final ready straight away (no voting steps).
+   - Voting has a streak bar: agree with the crowd in a row for coin bonuses. */
+(() => {
+  const QL_COST = 500, QL_NEW = 100, STK = [[3, 10], [5, 25], [10, 100]];
+  const qlCost = () => (S.qlPaid || 0) ? QL_COST : QL_NEW;
+  qsTarget = function () { return null; };   // votes no longer move photos step by step
+  const finReady = () => { let ch = 0; (S.photos || []).forEach(p => { if (p.fin && (!p.fr || !p.fr.go)) { p.fr = { s: QS_STEPS, go: 1 }; ch = 1; } }); if (ch) save(); };
+  window.qlPay = function (p) { if (!p) return; const q = p.ql || (p.ql = { w: 0, l: 0 }), c = qlCost(), g = Math.floor(S.gems || 0), nm = esc(rcName(p)), first = !(S.qlPaid || 0);
+    if (q.done || q.live) return;
+    popOpen(`<div class="pp qfx nv qw qlp"><p class="nv-brand">PhotoPicks</p><div class="nv-pillrow"><span class="nv-pill">🎀 Qualifier race</span></div><h2 class="nv-big sm">${first ? 'Your first race!' : 'Ready to race?'}</h2>
+      <div class="qw-ph"><img src="${p.src}" alt=""></div>
+      <p class="qlp-t">${nm} vs a rival · <b>first to ${typeof QR_WIN !== 'undefined' ? QR_WIN : 5} crowd votes</b> goes to the Final</p>
+      ${first ? `<p class="qlp-deal"><s>${QL_COST}</s> <b>${QL_NEW} coins</b> · first race discount</p>` : ''}
+      ${g >= c ? `<button class="btn block nv-go qlp-go" id="qlpGo">🎀 Race now · ${c} 🪙</button>` : `<button class="btn block nv-go qlp-go off" disabled>${c - g} more coins to race</button><p class="qw-o">Vote to earn coins · streaks pay bonuses</p>`}
+      <div style="text-align:center"><button class="link nv-later" id="qlpX">${g >= c ? 'Later' : '⚖️ Vote to earn coins'}</button></div><p class="nv-sim">Demo · rival and crowd votes are simulated</p></div>`);
+    try { rvConfetti(document.querySelector('.qlp'), 40); } catch (e) {}
+    $('#qlpX').onclick = () => { popClose(); if (g < c) { try { closeFlow(); } catch (e) {} go('judge'); renderJudge(); } };
+    if ($('#qlpGo')) $('#qlpGo').onclick = () => { if ((S.gems || 0) < c) return; S.gems -= c; S.qlPaid = (S.qlPaid || 0) + 1; q.got = QS_STEPS; q.live = 1; q.paid = 1; q.at = Date.now(); save(); try { paintGems(); } catch (e) {}
+      popClose(); try { closeFlow(); } catch (e) {} setTimeout(() => qlRace(p), 250); }; };
+  // stable card: the qualifier step becomes "Enter the qualifier · coins"
+  const sl = stLadder; stLadder = function (p) { finReady(); let h = sl.apply(this, arguments); try { const q = p.ql;
+      if (q && !q.done && !q.live) { const c = qlCost();
+        h = h.replace(/<small>\d+\/\d+ steps<\/small>/, `<small>${c} coins</small>`);
+        h = h.replace(/<div class="pg2-now[\s\S]*?<\/div><\/div>$/, `<div class="pg2-now tap" data-qlpay="${p.id}"><div><p>▶ Now</p><b>Enter the qualifier race</b><small>${(S.qlPaid || 0) ? `${QL_COST} coins` : `First race ${QL_NEW} coins <s>${QL_COST}</s>`} · win it and your Final is ready</small></div><em class="qlp-em">${c} 🪙 ›</em></div></div>`); }
+      if (p.fin) h = h.replace(/<small>\d+\/\d+ steps<\/small>/, '<small>Ready!</small>');
+    } catch (e) {} return h; };
+  const fix = (h, p) => { try { const q = p.ql; if (q && !q.done && !q.live) { const c = qlCost(); h = h.replace(/Qualifying · \d+ of \d+ steps/g, `Ready to race · ${c} coins`).replace(/⚖️ Vote to move it/g, '⚖️ Vote to earn coins'); } } catch (e) {} return h; };
+  if (typeof stTrain === 'function') { const st2 = stTrain; stTrain = function (p) { return fix(st2.apply(this, arguments), p); }; }
+  { const sh2 = stHero; stHero = function (p) { return fix(sh2.apply(this, arguments), p); }; }
+  const ft = finalsTab; finalsTab = function () { finReady(); return ft.apply(this, arguments); };
+  document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-qlpay]'); if (!b) return; e.preventDefault(); e.stopPropagation(); qlPay((S.photos || []).find(x => x.id === b.dataset.qlpay)); }, true);
+  // vote streak bar with coin bonuses
+  const stkBar = () => { const n = S.vst || 0, nx = STK.find(x => x[0] > n) || STK[STK.length - 1], prev = (STK.filter(x => x[0] <= n).pop() || [0])[0], pct = Math.min(100, (n - prev) / (nx[0] - prev) * 100);
+    return `<div class="vstk" id="vStk"><span class="vstk-f">🔥</span><div class="vstk-m"><p><b>${n} in a row</b><span>Next bonus at ${nx[0]} · <em>+${nx[1]} 🪙</em></span></p><i class="vstk-b"><u style="width:${pct}%"></u></i></div></div>`; };
+  const paintStk = () => { const o = document.getElementById('vStk'); if (o) o.outerHTML = stkBar(); else { const h = document.querySelector('#judge .tot-h'); if (h) h.insertAdjacentHTML('afterend', stkBar()); } };
+  const rj = renderJudge; renderJudge = function () { const r = rj.apply(this, arguments); try { paintStk(); } catch (e) {} return r; };
+  const cf = callFx; callFx = function (pick, pct, agree) { const r = cf.apply(this, arguments); try { S.vst = agree ? (S.vst || 0) + 1 : 0; const hit = STK.find(x => x[0] === S.vst);
+      if (hit) { S.gems = (S.gems || 0) + hit[1]; try { gemExplosion(hit[1], { label: `🔥 ${hit[0]} in a row!` }); } catch (e) { toast(`🔥 ${hit[0]} in a row · +${hit[1]} coins`); } try { paintGems(); } catch (e) {} }
+      if (S.vst >= STK[STK.length - 1][0] && !hit) { /* keep counting */ }
+      save(); paintStk(); } catch (e) {} return r; };
+  // wording that still talks about voting steps
+  setTimeout(finReady, 500);
 })();
 })();
 
