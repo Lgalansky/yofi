@@ -2256,6 +2256,9 @@ html body #flow .sx .sx-btns.sx-two{display:grid!important;grid-template-columns
 .sx.lb:not(.coinv) #cupC{display:block!important}
 #flow .sx-btns .st-vote{background:#14213D!important;color:#fff!important;box-shadow:none!important;border:0!important}
 #flow .pg2 .tk,#flow .pg-bar,#qlS,.pv-tr,.ql-tr{display:none!important}
+.tkt{display:block;margin-top:4px;font:800 .78rem Nunito,system-ui;color:#7A5A12}
+.lb .lb-fin{min-width:120px!important}
+.lb-rdy{display:inline!important;font:800 .78rem Nunito,system-ui!important;color:#2F7A4A!important}
 .vstk{display:flex;align-items:center;gap:10px;margin:6px 0 10px;padding:10px 12px;border-radius:16px;background:#14213D;color:#fff;box-shadow:0 8px 18px -10px rgba(20,33,61,.7)}
 .vstk-f{font-size:1.6rem;line-height:1}
 .vstk-m{flex:1;min-width:0}.vstk-m p{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:0 0 6px}.vstk-m b{font:800 1rem Fraunces,Georgia,serif}.vstk-m span{font:700 .78rem Nunito,system-ui;color:#CFC6B4}.vstk-m em{font-style:normal;color:#F3D98B}
@@ -11193,6 +11196,18 @@ function streakHello() { if ((S.tut || 9) < 9 || Date.now() - (window.__autoT ||
       save(); paintStk(); } catch (e) {} return r; };
   // wording that still talks about voting steps
   setTimeout(finReady, 500);
+  // every real-money game also costs a coin ticket to play
+  const TICKET = 50, isGame = w => /entry|quick match|challenge|head-to-head|duel|final|showdown|tournament|derby|contest/i.test(String(w || '')) && !/friends$/i.test(String(w || ''));
+  const pc = payCash; payCash = function (amt, what, then) { if (!isGame(what)) return pc.apply(this, arguments);
+    if ((S.gems || 0) < TICKET) { const g = Math.floor(S.gems || 0);
+      popOpen(`<div class="pp qfx nv qw"><p class="nv-brand">PhotoPicks</p><div class="nv-pillrow"><span class="nv-pill">🎟️ Coin ticket</span></div><h2 class="nv-big sm">${TICKET - g} more coins to play</h2><p class="qw-o">Every real game costs <b class="gold">${TICKET} coins</b> to play, plus your cash entry.<br>Vote to earn coins · streaks pay bonuses.</p><button class="btn block nv-go" id="tkV">⚖️ Vote to earn coins</button><div style="text-align:center"><button class="link nv-later" id="tkX">Later</button></div></div>`);
+      $('#tkX').onclick = () => popClose(); $('#tkV').onclick = () => { popClose(); try { closeFlow(); } catch (e) {} go('judge'); renderJudge(); }; return false; }
+    return pc.call(this, amt, what, () => { S.gems = (S.gems || 0) - TICKET; save(); try { paintGems(); } catch (e) {} toast(`🎟️ ${TICKET} coins to play · ${typeof money === 'function' ? money(amt) : '$' + amt} cash entry`); then(); }); };
+  const po = popOpen; popOpen = function () { const r = po.apply(this, arguments); try { document.querySelectorAll('#coach.on .qfp-p').forEach(b => { if (!b.querySelector('.tkt')) b.insertAdjacentHTML('beforeend', `<small class="tkt">🎟️ + ${TICKET} 🪙 to play</small>`); }); } catch (e) {} return r; };
+  // Play tab: a ready Final can be entered straight from the game screen
+  if (typeof playLobby === 'function') { const pl = playLobby; window.playLobby = playLobby = function () { finReady(); const r = pl.apply(this, arguments); try {
+      document.querySelectorAll('#flow .lb-r [data-rg]').forEach(b => { const ph = (S.photos || []).find(x => x.id === b.dataset.rg); if (ph && ph.fin && ph.fr && ph.fr.go) { b.outerHTML = `<button class="btn lb-b lb-fin" data-rgf="${ph.id}">🏁 Enter Final</button>`; const sm = document.querySelector(`#flow .lb-r img[src="${ph.src}"]`); const t = sm && sm.parentElement.querySelector('small'); if (t) t.innerHTML = `<b class="lb-rdy">Final ready</b> · $2–$20 entry + ${TICKET} 🪙`; } });
+    } catch (e) {} return r; }; }
 })();
 })();
 
