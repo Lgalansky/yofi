@@ -92,6 +92,8 @@ h3{font-size:1rem}
 .duel button.pick{box-shadow:0 0 0 4px var(--good)}
 .duel button.pick.miss{box-shadow:0 0 0 4px var(--warn)}
 .duel button[disabled]{cursor:default}
+.duel img.qc{filter:blur(7px) brightness(.6) saturate(.4);-webkit-filter:blur(7px) brightness(.6) saturate(.4);transform:scale(1.12)}
+.duel button:hover img.qc{transform:scale(1.12)}
 .duel .pct{position:absolute;left:8px;bottom:8px;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.62);color:#fff;font:700 .95rem var(--font-data);animation:pop .25s ease-out}
 .duel .pct.top{background:var(--good)}
 .verdict{margin:10px 0 0;text-align:center;font-weight:700;font-size:.95rem;color:var(--muted);min-height:1.4em}
@@ -185,7 +187,7 @@ const img = (id, blur) => blur ? (blurCache[id] || byId[id].src) : byId[id].src;
 /* ---------- blurred copies for hidden test pairs ---------- */
 const blurCache = {};
 function makeBlur(id) { const im = new Image(); im.onload = () => { try { const c = document.createElement('canvas'), w = 240, h = Math.round(240 * im.height / im.width); c.width = w; c.height = h; const x = c.getContext('2d'); x.filter = 'blur(6px) brightness(.55) saturate(.4)'; x.drawImage(im, 0, 0, w, h); blurCache[id] = c.toDataURL('image/jpeg', .7); } catch (e) {} }; im.src = byId[id].src; }
-PHOTOS.forEach(p => makeBlur(p.id));
+
 
 /* ---------- state ---------- */
 let S;
@@ -328,7 +330,7 @@ function vHeats() {
   } else if (J && !J.done) body = vJudge(J, `Judge heat #${J.heatNo}`);
   else if (J && J.done) body = `${judgeCard(J)}<div class="card"><h3>Heat #${H.no} is being judged</h3><p class="note">Players in other heats are judging yours now.</p><button class="btn ghost block" data-act="heatRes">Demo: show my heat result</button></div>`;
   return `<div><p class="eyebrow">Photo heats</p><h1>Race your photo</h1><p class="lede">Sit-and-go heats of ${HEAT}. Judged blind by players in other heats.</p></div>
-    <div class="facts"><div class="fact"><b>${money(FEE)}</b><small>Entry</small></div><div class="fact"><b>${money(HEAT * FEE * (1 - HOUSE - TO_FINAL) * HEAT_SPLIT[0])}</b><small>1st prize</small></div><div class="fact"><b>${S.retiredToday + Object.keys(S.retired).length}</b><small>Retired today</small></div></div>${body}
+    <div class="facts"><div class="fact"><b>${money(FEE)}</b><small>Entry</small></div><div class="fact"><b>${money(HEAT * FEE * (1 - HOUSE - TO_FINAL) * HEAT_SPLIT[0])}</b><small>1st prize</small></div><div class="fact"><b class="mono" id="cd">${countdown()}</b><small>To 8pm final</small></div></div>${body}
     <div class="demo"><span>Demo</span><button class="link" data-act="reset">Start over</button></div>`;
 }
 function vEnter() {
@@ -342,7 +344,7 @@ function vEnter() {
 function vJudge(J, title) { const rv = J.reveal, k = J.votes.length - (rv ? 1 : 0), p = J.queue[k]; if (!rv) J.t0 = performance.now();
   const hits = J.votes.filter(withCrowd).length, streak = (() => { let n = 0; for (let i = J.votes.length - 1; i >= 0 && withCrowd(J.votes[i]); i--) n++; return n; })();
   const side = (sd, ph) => { const pct = sd === 'L' ? crowdOf(p) : 100 - crowdOf(p), mine = rv && rv.side === sd;
-    return `<button data-vote="${sd}" ${rv ? 'disabled' : ''} class="${mine ? 'pick' + (rv.hit ? '' : ' miss') : ''}" aria-label="Pick the ${sd === 'L' ? 'left' : 'right'} photo"><img src="${img(ph.id, ph.blur)}" alt="">${rv ? `<span class="pct ${pct > 50 ? 'top' : ''}">${pct}%</span>` : ''}</button>`; };
+    return `<button data-vote="${sd}" ${rv ? 'disabled' : ''} class="${mine ? 'pick' + (rv.hit ? '' : ' miss') : ''}" aria-label="Pick the ${sd === 'L' ? 'left' : 'right'} photo"><img src="${img(ph.id)}" alt=""${ph.blur ? ' class="qc"' : ''}>${rv ? `<span class="pct ${pct > 50 ? 'top' : ''}">${pct}%</span>` : ''}</button>`; };
   return `<div class="card"><p class="eyebrow">${title}</p><div class="prog"><span class="mono">${Math.min(k + 1, J_PAIRS)} / ${J_PAIRS}</span><span class="track"><i style="width:${J.votes.length / J_PAIRS * 100}%"></i></span><span class="chip ${J.votes.length ? 'good' : ''}" title="Picks that matched the crowd">${hits}/${J.votes.length} with crowd</span></div><h3>Which photo is better?</h3>
     <div class="duel">${side('L', p.L)}${side('R', p.R)}</div>
     <p class="verdict ${rv ? (rv.hit ? 'hit' : 'miss') : ''}" aria-live="polite">${rv ? (rv.hit ? `✓ With the crowd${streak >= 3 ? ` · ${streak} in a row` : ''}` : `The crowd picked the other one`) : 'Pick one. You’ll see what the crowd picked.'}</p>
