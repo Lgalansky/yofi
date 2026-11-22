@@ -185,6 +185,19 @@ tr:last-child td{border-bottom:0}
 .minivs b{margin:0 -6px;z-index:1;background:var(--fg);color:var(--bg);font:800 .62rem var(--font-display);padding:4px 5px;border-radius:999px}
 .minivs em{position:absolute;right:-6px;top:-10px;background:var(--brass);color:#1B1400;font:800 .62rem var(--font-data);padding:2px 6px;border-radius:999px;font-style:normal;transform:rotate(8deg)}
 @media (max-width:360px){.brand{font-size:.78rem}.pill{padding:4px 7px;font-size:.78rem}.pill.bb i{display:none}.minivs img{width:36px;height:46px}.judgecard h2{font-size:1.25rem}}
+.themetag{display:inline-block;background:var(--brass-soft);color:var(--fg);font:800 .78rem var(--font-body);padding:5px 11px;border-radius:999px;margin-bottom:6px}
+.week{display:flex;flex-direction:column;gap:8px}
+.strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.strip button{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:6px 1px 5px;text-align:center;font:inherit;min-width:0}
+.strip small{display:block;font:700 .6rem var(--font-data);color:var(--muted)}
+.strip span{display:block;font-size:1.05rem;margin:2px 0 1px}
+.strip b{display:block;font-size:.58rem;line-height:1.15;overflow-wrap:anywhere}
+.strip i{display:block;font:800 .5rem var(--font-body);font-style:normal;letter-spacing:.06em;text-transform:uppercase;color:var(--brass);margin-top:2px}
+.strip .today{background:var(--felt);color:var(--felt-ink);border-color:var(--felt)}.strip .today small,.strip .today i{color:var(--felt-ink);opacity:.85}
+.strip button[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--brass)}
+.dayline{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:.84rem;line-height:1.4}
+.dayline small{display:block;color:var(--muted);font-size:.74rem;margin-top:2px}
+.dayline .link{flex:none;font-weight:700}.dayline em{flex:none;font-style:normal;font-weight:700;font-size:.78rem;color:var(--good)}
 .card[data-go]{width:100%;color:inherit;font:inherit}
 .roll button[disabled]{cursor:not-allowed}
 </style>
@@ -214,6 +227,17 @@ const FIN_N = 9, FIN_SPLIT = [0.5, 0.3, 0.2], BET_FEE = 0.10, FULL_MIN = 75, J_P
 const BB_STAKES = [10000, 25000, 50000, 100000], CASH_STAKES = [2, 5, 10], TIERS = [[2, 10000], [5, 25000], [10, 50000], [25, 100000]];
 const kfmt = n => n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? Math.round(n / 1e3) + 'k' : String(n);
 const JUDGE_MIN = 50, BAN_DAYS = 7;
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const THEMES = [
+  { e: '🚗', short: 'Trips', name: 'Road Trips', heat: 'Road Trip Heats', photo: 'road trip photo', best: 'Best Road Trip', tease: 'Small towns, open roads, the long weekend.', pics: ['pineroad', 'hilltop', 'owndesert', 'city', 'owncliff', 'cove'] },
+  { e: '🐾', short: 'Pets', name: 'Pets', heat: 'Pet Heats', photo: 'pet photo', best: 'Best Pet', tease: 'Dogs, cats, anything with fur or feathers.', pics: ['beachdog', 'tabby', 'goldie', 'shades', 'kitten', 'hatdog'] },
+  { e: '🍳', short: 'Food', name: 'Food', heat: 'Food Heats', photo: 'food photo', best: 'Best Dish', tease: 'Got a great plate? Home cooking counts.', pics: ['feast', 'villa', 'palms', 'hilltop', 'almond', 'cove'] },
+  { e: '🌷', short: 'Garden', name: 'Gardens', heat: 'Garden Heats', photo: 'garden photo', best: 'Best Garden', tease: 'Flowers, veg patches, balconies, fall colours.', pics: ['almond', 'palms', 'ownflowers', 'villa', 'pineroad', 'hilltop'] },
+  { e: '🏒', short: 'Sports', name: 'Sports', heat: 'Sports Heats', photo: 'sports photo', best: 'Best Sports Shot', tease: 'Hockey, golf, curling, fishing, the grandkids’ games.', pics: ['surf', 'bike', 'owndog', 'disco', 'cove', 'beachdog'] },
+  { e: '🎉', short: 'Party', name: 'Celebrations', heat: 'Celebration Heats', photo: 'celebration photo', best: 'Best Celebration', tease: 'Birthdays, weddings, anniversaries, holidays.', pics: ['disco', 'hugs', 'feast', 'city', 'shades', 'kitten'] },
+  { e: '🛶', short: 'Lake', name: 'Cottage &amp; Lake', heat: 'Cottage &amp; Lake Heats', photo: 'lake photo', best: 'Best Lake Shot', tease: 'Docks, canoes, campfires, the view from the deck.', pics: ['cove', 'infinity', 'sunburst', 'owncliff', 'villa', 'pineroad'] }
+];
+const dayNo = () => new Date().getDay(), TH = () => THEMES[dayNo()];
 const BB_PER_USD = 4000, BB_MATCH = 25, BB_FIN = 50, BB_BONUS = 150, BB_CALL = 250, SOLO_MAX = 5;
 const kbb = n => n >= 1000 ? (n / 1000) + 'k' : String(n), amt = (n, cur) => cur === 'bb' ? bbs(Math.round(n)) : money(n);
 const bbs = n => n.toLocaleString('en-US') + ' BB', bbUsd = n => '$' + (n / BB_PER_USD).toFixed(2);
@@ -240,7 +264,7 @@ function makeBlur(id) { const im = new Image(); im.onload = () => { try { const 
 let S;
 function fresh() {
   return { tab: 'lobby', cash: 60, races: {}, retired: {}, heat: null, heatNo: 141, judge: null, judgeHist: [], sub: null, pick: null, back: 0,
-    final: null, finalResult: null, heatsToday: 68, retiredToday: 23, pot: 68 * HEAT * FEE * TO_FINAL, bets: [], finMine: [], finTests: [], bb: 60000, bbToday: 0, solo: 0, bbPaidToday: 68 * 6 * 290 };
+    final: null, finalResult: null, heatsToday: 68, retiredToday: 23, pot: 68 * HEAT * FEE * TO_FINAL, bets: [], finMine: [], finTests: [], bb: 60000, bbToday: 0, remind: {}, solo: 0, bbPaidToday: 68 * 6 * 290 };
 }
 
 /* ---------- ranking from 1v1 results (weighted Bradley–Terry) ---------- */
@@ -365,23 +389,29 @@ function settleFinal() {
 /* ---------- views ---------- */
 function vLobby() {
   if (!S.lobbyPics) S.lobbyPics = pickN(OTHERS.filter(p => !LOWQ[p.id]), 8).map(p => p.id);
-  const s3 = S.lobbyPics.slice(0, 3).map(id => byId[id]), six = S.lobbyPics.slice(0, 6), pair = S.lobbyPics.slice(6, 8), js = judgeScore();
+  const T = TH(), six = T.pics.filter(id => byId[id]).slice(0, 6), pair = S.lobbyPics.slice(6, 8), js = judgeScore();
   return `<div><p class="eyebrow">Casino lobby</p><h1>Tonight’s games</h1></div>
   <div class="feature"><div><div class="lineup" aria-hidden="true">${six.map((id, i) => `<span class="lp${i === 2 ? ' win' : ''}" style="--i:${i - 2.5}"><img src="${img(id)}" alt="">${i === 2 ? '<em>1st</em>' : ''}</span>`).join('')}</div>
-    <p class="eyebrow" style="color:inherit;opacity:.8">Photo contests</p><h2>Photo Heats</h2><p>Race your photo against 5 others. Top 2 win cash, and the winner races tonight’s final.</p>
+    <span class="themetag">${T.e} Today: ${T.name}</span><h2>${T.heat}</h2><p>Race your ${T.photo} against 5 others. Top 2 win cash, and the winner races tonight’s ${T.best} final.</p>
     <div class="upside"><div><b>${money(HEAT * FEE * (1 - HOUSE - TO_FINAL) * HEAT_SPLIT[0])}</b><small>Win your heat</small></div><div><b>${money(S.pot * FIN_SPLIT[0])}</b><small>Win tonight’s final</small></div></div>
-    <button class="btn block featcta" data-act="${S.heat && S.heat.stage !== 'done' ? 'toHeats' : 'enterNow'}">${S.heat && S.heat.stage !== 'done' ? 'Back to your heat' : 'Enter a photo'}</button></div>
+    <button class="btn block featcta" data-act="${S.heat && S.heat.stage !== 'done' ? 'toHeats' : 'enterNow'}">${S.heat && S.heat.stage !== 'done' ? 'Back to your heat' : `Enter a ${T.photo}`}</button></div>
     </div>
+  ${weekStrip()}
   <div class="card judgecard"><div class="row" style="justify-content:space-between;align-items:center;gap:8px;flex-wrap:nowrap"><div><p class="eyebrow">Free · earn BB</p><h2>Judge &amp; earn</h2></div>
     <div class="minivs" aria-hidden="true"><img src="${img(pair[0])}" alt=""><b>VS</b><img src="${img(pair[1])}" alt=""><em>+${BB_MATCH} BB</em></div></div>
     <p class="note">Pick the better of two photos. Earn ${BB_MATCH} BB every time you match the crowd, plus a ${bbs(BB_BONUS)} bonus for a strong session.</p>
     ${S.banned ? `<div class="hold">Judging paused for ${BAN_DAYS} days: two sessions in a row scored under ${JUDGE_MIN}.</div>`
       : S.solo >= SOLO_MAX ? `<p class="note"><b>That’s today’s ${SOLO_MAX} sessions.</b> Back tomorrow.</p>`
       : `<button class="btn block" data-act="solo">Judge photos · free</button><p class="note" style="text-align:center;margin:6px 0 0">${SOLO_MAX - S.solo} of ${SOLO_MAX} sessions left today${S.bbToday ? ` · <b class="bbtxt">+${bbs(S.bbToday)} today</b>` : ''}${js != null ? ` · score ${js}` : ''}</p>`}</div>
-  <button class="card" data-go="final" style="text-align:left;border-color:var(--brass)"><p class="eyebrow">Tonight · 8pm</p><h2>Best of the Day</h2><p class="note">Top ${FIN_N} heat winners. Bets close at 7:30: Win, Top 3 and Trifecta.</p>
+  <button class="card" data-go="final" style="text-align:left;border-color:var(--brass)"><p class="eyebrow">Tonight · 8pm · ${TH().e} ${TH().name}</p><h2>${TH().best} of the Day</h2><p class="note">Top ${FIN_N} heat winners. Bets close at 7:30: Win, Top 3 and Trifecta.</p>
     <div class="facts"><div class="fact"><b>${money(S.pot)}</b><small>Prize pot</small></div><div class="fact"><b>${S.heatsToday}</b><small>Heats today</small></div><div class="fact"><b class="mono" id="cd">${countdown()}</b><small>Starts in</small></div></div></button>
   <div class="games" aria-label="Other games">${[['🎰', 'Slots'], ['🃏', 'Blackjack'], ['🎡', 'Roulette']].map(([i, t]) => `<div class="game"><span>${i}</span>${t}</div>`).join('')}</div>
   <p class="note">Other games are placeholders. Everything here is simulated: no real money moves.</p>`;
+}
+function weekStrip() {
+  const today = dayNo(), sel = S.daySel ?? (today + 1) % 7, order = [1, 2, 3, 4, 5, 6, 0], T = THEMES[sel], rel = sel === today ? 'Today' : sel === (today + 1) % 7 ? 'Tomorrow' : DAYS[sel];
+  return `<div class="week"><div class="strip" role="group" aria-label="This week’s themes">${order.map(d => `<button data-day="${d}" aria-pressed="${d === sel}" class="${d === today ? 'today' : d === (today + 1) % 7 ? 'next' : ''}"><small>${DAYS[d]}</small><span>${THEMES[d].e}</span><b>${THEMES[d].short}</b>${d === today ? '<i>Today</i>' : ''}</button>`).join('')}</div>
+    <div class="dayline"><span><b>${rel}: ${T.e} ${T.name}.</b> ${T.tease} <small>Heats all day · bets close 7:30 · ${T.best} final 8pm</small></span>${sel === today ? '' : S.remind[sel] ? '<em>✓ Reminder set</em>' : `<button class="link" data-remind="${sel}">Remind me</button>`}</div></div>`;
 }
 function countdown(h = 20, m = 0) { const n = new Date(), t = new Date(n); t.setHours(h, m, 0, 0); if (t <= n) t.setDate(t.getDate() + 1); const s = Math.floor((t - n) / 1000); return `${Math.floor(s / 3600)}h ${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}m`; }
 
@@ -405,7 +435,7 @@ function vHeats() {
       </div>`;
   } else if (J && !J.done) body = vJudge(J, `Judge heat #${J.heatNo}`);
   else if (J && J.done) body = `${judgeCard(J)}<div class="card"><h3>Heat #${H.no} is being judged</h3><p class="note">Players in other heats are judging yours now.</p><button class="btn ghost block" data-act="heatRes">Demo: show my heat result</button></div>`;
-  return `<div><p class="eyebrow">Photo heats</p><h1>Race your photo</h1><p class="lede">Sit-and-go heats of ${HEAT}. Judged blind by players in other heats.</p></div>
+  return `<div><p class="eyebrow">${TH().e} Today: ${TH().name}</p><h1>${TH().heat}</h1><p class="lede">Sit-and-go heats of ${HEAT}. Judged blind by players in other heats.</p></div>
     <div class="facts"><div class="fact"><b>${money(FEE)}</b><small>Entry</small></div><div class="fact"><b>${money(HEAT * FEE * (1 - HOUSE - TO_FINAL) * HEAT_SPLIT[0])}</b><small>1st prize</small></div><div class="fact"><b class="mono" id="cd">${countdown()}</b><small>To 8pm final</small></div></div>${body}
     <div class="demo"><span>Demo</span><button class="link" data-act="reset">Start over</button></div>`;
 }
@@ -415,7 +445,7 @@ function vJudgeOnly(inner) {
 }
 function vEnter() {
   const sel = S.pick, back = S.back;
-  return `<div><p class="eyebrow">Enter a heat · ${money(FEE)}</p><h1>Pick your photo</h1><p class="lede">Each photo races up to ${MAX_RACES} heats, then retires. Bring new photos to keep racing.</p></div>
+  return `<div><p class="eyebrow">Enter a heat · ${money(FEE)}</p><h1>Pick your ${TH().photo}</h1><p class="lede">Each photo races up to ${MAX_RACES} heats, then retires. Bring new photos to keep racing.</p></div>
   <div class="card"><h3>Your camera roll</h3><div class="roll">${ROLL.map(id => { const n = S.races[id] || 0, off = S.retired[id]; return `<button data-roll="${id}" aria-pressed="${sel === id}" ${off ? 'disabled' : ''} aria-label="${esc(byId[id].title)}"><img src="${img(id)}" alt="" style="${off ? 'opacity:.35' : ''}"><span class="chip" style="position:absolute;left:4px;bottom:4px;background:var(--surface)">${off ? 'Retired' : `${MAX_RACES - n} left`}</span></button>`; }).join('')}</div></div>
   <div class="card"><h3>Back yourself to win <span class="chip">optional</span></h3><p class="note">Each entrant may back their own photo to win the heat. If yours wins, you take that pool minus 10%. You can never back a rival.</p>
     <div class="stakes">${[0, 2, 5, 10].map(v => `<button data-back="${v}" aria-pressed="${back === v}">${v ? money(v) : 'None'}</button>`).join('')}</div></div>
@@ -465,7 +495,7 @@ function vFinal() {
       : `<div class="role"><div><b>Help judge the final</b>Judge now and ${FIN_PAIRS} of your ${J_PAIRS} pairs will be finalists: ${bbs(BB_FIN)} per crowd match, and ${bbs(BB_CALL)} for each one the 8pm result agrees with.</div></div><button class="btn block" data-act="${busy ? 'toHeats' : 'soloFinal'}" style="margin-top:10px">${busy ? 'Back to your heat' : 'Judge now · free'}</button>`}</div>`;
     void open;
   } else body = vFinalRes();
-  return `<div><p class="eyebrow">Tonight · 8pm</p><h1>Best of the Day</h1><p class="lede">The day’s top heat winners, judged blind by players in tonight’s heats.</p></div>
+  return `<div><p class="eyebrow">Tonight · 8pm · ${TH().e} ${TH().name}</p><h1>${TH().best} of the Day</h1><p class="lede">The day’s top heat winners, judged blind by players in tonight’s heats.</p></div>
     <div class="phase"><span class="${F.stage === 'betting' ? 'on' : 'done'}">${F.stage === 'betting' ? '' : '✓ '}Bets · to 7:30</span><span class="${F.stage === 'judging' ? 'on' : F.stage === 'done' ? 'done' : ''}">${F.stage === 'done' ? '✓ ' : ''}Judging · 7:55</span><span class="${F.stage === 'done' ? 'on' : ''}">Results · 8pm</span></div>
     <div class="facts"><div class="fact"><b>${money(S.pot)}</b><small>Prize pot</small></div><div class="fact"><b>${money(poolTotal(F.pools.win) + poolTotal(F.pools.top3) + F.pools.tri)}</b><small>Cash in pools</small></div><div class="fact"><b class="mono">${F.stage === 'betting' ? countdown(19, 30) : F.stage === 'judging' ? 'Live' : 'Done'}</b><small>${F.stage === 'betting' ? 'Bets close in' : 'Status'}</small></div></div>
     ${body}
@@ -529,6 +559,8 @@ document.addEventListener('click', e => {
   if (d.back != null) { S.back = +d.back; render(); return; }
   if (d.bt) { S.sub = d.bt; S.sel = []; render(); return; }
   if (d.tier != null) { S.tier = +d.tier; render(); return; }
+  if (d.day != null) { S.daySel = +d.day; render(); return; }
+  if (d.remind != null) { S.remind[+d.remind] = true; toast(`We’ll remind you on ${DAYS[+d.remind]}`); render(); return; }
 
   if (d.fp) { if (S.myFinalist) return; const bet = ['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win', need = bet === 'tri' ? 3 : 1; S.sel = S.sel || [];
     const i = S.sel.indexOf(d.fp); if (i >= 0) S.sel.splice(i, 1); else { if (S.sel.length >= need) S.sel = need === 1 ? [] : S.sel; if (S.sel.length < need) S.sel.push(d.fp); } render(); return; }
