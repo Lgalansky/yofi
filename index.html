@@ -169,7 +169,7 @@ const PHOTOS = [{"id": "almond", "title": "Almond blossom", "src": "data:image/j
 'use strict';
 /* ---------- rules ---------- */
 const FEE = 5, HOUSE = 0.10, TO_FINAL = 0.05, HEAT = 6, HEAT_SPLIT = [0.6, 0.4], MAX_RACES = 3;
-const FIN_N = 10, FIN_SPLIT = [0.5, 0.3, 0.2], BET_FEE = 0.10, PANEL_MIN = 90, J_PAIRS = 10, J_TESTS = 2;
+const FIN_N = 10, FIN_SPLIT = [0.5, 0.3, 0.2], BET_FEE = 0.10, FULL_MIN = 75, J_PAIRS = 10, J_TESTS = 2, FIN_PAIRS = 3, FIN_JUDGES = 68, MIN_FIN_VOTES = 120;
 const ROLL = ['owndog', 'owncliff', 'ownflowers', 'owndesert'];
 const byId = Object.fromEntries(PHOTOS.map(p => [p.id, p]));
 const LOWQ = { hatdog: 38, feast: 40, city: 34, surf: 42, beachdog: 45 };
@@ -193,7 +193,7 @@ function makeBlur(id) { const im = new Image(); im.onload = () => { try { const 
 let S;
 function fresh() {
   return { tab: 'lobby', cash: 60, races: {}, retired: {}, heat: null, heatNo: 141, judge: null, judgeHist: [], sub: null, pick: null, back: 0,
-    final: null, finalResult: null, heatsToday: 68, retiredToday: 23, pot: 68 * HEAT * FEE * TO_FINAL, bets: [], panelMe: null };
+    final: null, finalResult: null, heatsToday: 68, retiredToday: 23, pot: 68 * HEAT * FEE * TO_FINAL, bets: [], finMine: [], finTests: [] };
 }
 
 /* ---------- ranking from 1v1 results (weighted Bradley–Terry) ---------- */
@@ -218,6 +218,7 @@ function consensusOf(allVotes) { const t = {}; allVotes.forEach(v => { if (v.tes
   return (a, b) => { const x = t[[a, b].sort().join('|')]; if (!x) return null; const ta = x[a] || 0, tb = x[b] || 0; return ta === tb ? null : ta > tb; }; }
 
 /* ---------- heats ---------- */
+const finalOpenToMe = () => !!(S.final && S.final.stage === 'judging' && !S.bets.length && !S.myFinalist);
 function enterHeat(photo, back) {
   const pool = OTHERS.filter(p => p.id !== photo), field = [photo].concat(pickN(pool, HEAT - 1).map(p => p.id));
   S.heatNo++; S.heat = { no: S.heatNo, field, me: photo, back, stage: 'judging', backs: field.map(id => id === photo ? back : [0, 0, 2, 5][Math.floor(Math.random() * 4)]) };
@@ -225,6 +226,8 @@ function enterHeat(photo, back) {
   const other = pickN(pool.filter(p => !field.includes(p.id)), HEAT).map(p => p.id), q = [], tests = new Set(pickN([...Array(J_PAIRS).keys()], J_TESTS));
   for (let k = 0; k < J_PAIRS; k++) { if (tests.has(k)) { const a = pickN(other, 1)[0], pr = [{ id: a }, { id: a, blur: true }]; if (Math.random() < .5) pr.reverse(); q.push({ L: pr[0], R: pr[1], test: true }); }
     else { const [a, b] = pickN(other, 2); q.push({ L: { id: a }, R: { id: b }, test: false }); } }
+  if (finalOpenToMe()) { const F = S.final, slots = pickN(q.map((x, i) => x.test ? -1 : i).filter(i => i >= 0), FIN_PAIRS);
+    slots.forEach(i => { const [a, b] = pickN(F.field, 2); q[i] = { L: { id: a }, R: { id: b }, test: false, fin: true }; }); }
   S.judge = { heatNo: S.heatNo + 3, field: other, queue: q, votes: [], t0: 0, done: false, kind: 'heat' };
 }
 function settleHeat() {
@@ -253,6 +256,8 @@ function finishJudging() {
   const t = trust(mine, tests, cons), norm = mine.filter(v => !v.test);
   J.summary = { agreed: J.votes.filter(withCrowd).length, of: J.votes.length, tests: tests.filter(x => x.ok).length, testsOf: tests.length, score: t.score };
   S.judgeHist.push(t.score); J.done = true;
+  const fin = J.votes.filter(v => v.fin); if (fin.length) { S.finMine = S.finMine.concat(fin.map(v => ({ L: v.L.id, R: v.R.id, pickLeft: v.pickLeft, ms: v.ms }))); S.finTests = S.finTests.concat(tests); }
+  J.summary.fin = fin.length;
 }
 const judgeScore = () => S.judgeHist.length ? Math.round(S.judgeHist.reduce((a, b) => a + b, 0) / S.judgeHist.length) : null;
 
@@ -268,18 +273,16 @@ function buildFinal() {
 const poolTotal = o => typeof o === 'number' ? o : Object.values(o).reduce((a, b) => a + b, 0);
 function closeFinal() {
   const F = S.final; F.stage = 'judging';
-  const panelNames = HANDLES.slice(0, 12);
-  F.panel = panelNames.map(n => ({ name: n, kind: n === F.linked.judge ? 'linked' : n === '@okafor' ? 'random' : 'honest' }));
-  F.panel.forEach(j => { j.votes = simVotes(F.field, 15, j.kind, F.linked.photo); j.tests = [0, 1, 2].map(() => ({ ok: j.kind === 'random' ? Math.random() < .5 : Math.random() < .97 })); });
-  if (S.panelMe === 'yes') { const q = [], tests = new Set(pickN([...Array(J_PAIRS).keys()], J_TESTS));
-    for (let k = 0; k < J_PAIRS; k++) { if (tests.has(k)) { const a = pickN(F.field, 1)[0], pr = [{ id: a }, { id: a, blur: true }]; if (Math.random() < .5) pr.reverse(); q.push({ L: pr[0], R: pr[1], test: true }); } else { const [a, b] = pickN(F.field, 2); q.push({ L: { id: a }, R: { id: b }, test: false }); } }
-    S.judge = { field: F.field, queue: q, votes: [], t0: 0, done: false, kind: 'final' }; }
+  // tonight's heat judges between 7:30 and 7:55: each gets 3 final pairs inside their normal 10
+  F.panel = [...Array(FIN_JUDGES).keys()].map(i => { const h = HANDLES[i % HANDLES.length], name = i < HANDLES.length ? h : h + (i + 7);
+    return { name, kind: name === F.linked.judge ? 'linked' : ['@okafor', '@benji21', '@viv40'].includes(name) ? 'random' : 'honest' }; });
+  F.panel.forEach(j => { j.votes = simVotes(F.field, FIN_PAIRS, j.kind, F.linked.photo); j.extra = simVotes(F.field, 5, j.kind, F.linked.photo); j.tests = [0, 1].map(() => ({ ok: j.kind === 'random' ? Math.random() < .5 : Math.random() < .97 })); });
 }
 function settleFinal() {
   const F = S.final, all = F.panel.slice();
-  if (S.panelMe === 'yes' && S.judge && S.judge.kind === 'final') all.push({ name: 'You', kind: 'you', votes: S.judge.votes.filter(v => !v.test).map(v => ({ L: v.L.id, R: v.R.id, pickLeft: v.pickLeft, ms: v.ms })), tests: S.judge.votes.filter(v => v.test).map(v => ({ ok: v.pickLeft ? !v.L.blur : !v.R.blur })) });
+  if (S.finMine.length) all.push({ name: 'You', kind: 'you', votes: S.finMine, tests: S.finTests });
   const cons = consensusOf(all.flatMap(j => j.votes));
-  all.forEach(j => { j.t = trust(j.votes, j.tests, cons); j.linked = j.name === F.linked.judge; j.w = j.linked || j.t.T < .5 || j.t.med < 800 || j.t.score < 50 ? 0 : j.t.T < .75 || j.t.score < 75 ? .5 : 1; if (j.linked) j.t.score = Math.min(j.t.score, 20); });
+  all.forEach(j => { j.t = trust(j.votes.concat(j.extra || []), j.tests, cons); j.linked = j.name === F.linked.judge; j.w = j.linked || j.t.T < .5 || j.t.med < 800 || j.t.score < 50 ? 0 : j.t.T < .75 || j.t.score < 75 ? .5 : 1; if (j.linked) j.t.score = Math.min(j.t.score, 20); });
   const votes = all.flatMap(j => j.votes.map(v => Object.assign({}, v, { w: j.w })));
   const R = rank(F.field, votes), raw = rank(F.field, all.flatMap(j => j.votes.map(v => Object.assign({}, v, { w: 1 })))), top = R.slice(0, 3).map(x => x.id);
   const prizes = FIN_SPLIT.map(f => +(S.pot * f).toFixed(2));
@@ -295,8 +298,7 @@ function settleFinal() {
   const trusted = all.reduce((a, j) => a + j.w * j.votes.length, 0) / all.reduce((a, j) => a + j.votes.length, 0), linkedWin = top[0] === F.linked.photo;
   const hold = linkedWin || trusted < .7;
   if (!hold) S.cash = +(S.cash + myWon).toFixed(2);
-  if (S.panelMe === 'yes') { const me = all.find(j => j.name === 'You'); if (me) S.judgeHist.push(me.t.score); }
-  S.finalResult = { R, raw, prizes, myWon: +myWon.toFixed(2), place, all, trusted, hold, linkedWin, triRolls: !triHits && !S.bets.some(b => b.type === 'tri' && b.paid), winPool, top3Pool, triPool };
+  S.finalResult = { finVotes: all.reduce((a, j) => a + j.votes.length, 0), judges: all.length, R, raw, prizes, myWon: +myWon.toFixed(2), place, all, trusted, hold, linkedWin, triRolls: !triHits && !S.bets.some(b => b.type === 'tri' && b.paid), winPool, top3Pool, triPool };
   F.stage = 'done';
 }
 
@@ -306,13 +308,13 @@ function vLobby() {
   return `<div><p class="eyebrow">Casino lobby</p><h1>Tonight’s games</h1></div>
   <button class="feature" data-go="heats" aria-label="Open photo heats"><div><p class="eyebrow" style="color:inherit;opacity:.8">Photo contests</p><h2>Photo Heats</h2><p>6 photos a heat, ${money(FEE)} entry. Win your heat and race in tonight’s Best of the Day.</p></div>
     <div class="stack" aria-hidden="true">${s3.map((e, i) => `<img src="${img(e.id)}" alt="" style="left:${i * 16}px;top:${i * 10}px;transform:rotate(${[-8, 3, 10][i]}deg)">`).join('')}</div></button>
-  <button class="card" data-go="final" style="text-align:left;border-color:var(--brass)"><p class="eyebrow">Tonight · 8pm</p><h2>Best of the Day</h2><p class="note">Top 10 heat winners. Betting open: Win, Top 3 and Trifecta.</p>
+  <button class="card" data-go="final" style="text-align:left;border-color:var(--brass)"><p class="eyebrow">Tonight · 8pm</p><h2>Best of the Day</h2><p class="note">Top 10 heat winners. Bets close at 7:30: Win, Top 3 and Trifecta.</p>
     <div class="facts"><div class="fact"><b>${money(S.pot)}</b><small>Prize pot</small></div><div class="fact"><b>${S.heatsToday}</b><small>Heats today</small></div><div class="fact"><b class="mono" id="cd">${countdown()}</b><small>Starts in</small></div></div></button>
   <div class="games" aria-label="Other games">${[['🎰', 'Slots'], ['🃏', 'Blackjack'], ['🎡', 'Roulette']].map(([i, t]) => `<div class="game"><span>${i}</span>${t}</div>`).join('')}</div>
-  ${js != null ? `<p class="note">Your judge score: <b>${js}</b>${js >= PANEL_MIN ? ' · eligible for tonight’s panel' : ` · ${PANEL_MIN}+ to judge the final`}</p>` : ''}
+  ${js != null ? `<p class="note">Your judge score: <b>${js}</b>${js >= FULL_MIN ? ' · your votes count in full' : ` · ${FULL_MIN}+ for your votes to count in full`}</p>` : ''}
   <p class="note">Other games are placeholders. Everything here is simulated: no real money moves.</p>`;
 }
-function countdown() { const n = new Date(), t = new Date(n); t.setHours(20, 0, 0, 0); if (t <= n) t.setDate(t.getDate() + 1); const s = Math.floor((t - n) / 1000); return `${Math.floor(s / 3600)}h ${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}m`; }
+function countdown(h = 20, m = 0) { const n = new Date(), t = new Date(n); t.setHours(h, m, 0, 0); if (t <= n) t.setDate(t.getDate() + 1); const s = Math.floor((t - n) / 1000); return `${Math.floor(s / 3600)}h ${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}m`; }
 
 function vHeats() {
   if (S.sub === 'enter') return vEnter();
@@ -351,19 +353,19 @@ function vJudge(J, title) { const rv = J.reveal, k = J.votes.length - (rv ? 1 : 
     <p class="note">You never judge a heat you’re in. Some pairs are quality checks.</p></div>`; }
 function judgeCard(J) { const s = J.summary, js = judgeScore();
   return `<div class="card"><p class="eyebrow">Your judging</p><h2>Judge score ${s.score}</h2><div class="money"><div class="fact"><b>${s.agreed}/${s.of}</b><small>Picked with the crowd</small></div><div class="fact"><b>${s.tests}/${s.testsOf}</b><small>Quality checks</small></div></div>
-    <p class="note">Your average: <b>${js}</b>. ${js >= PANEL_MIN ? 'You’re eligible to judge tonight’s Best of the Day.' : `Average ${PANEL_MIN}+ to be picked for the final’s panel. Low scores count for less.`}</p></div>`; }
+    <p class="note">Your average: <b>${js}</b>. ${js >= FULL_MIN ? 'Your votes count in full.' : `Average ${FULL_MIN}+ for your votes to count in full. Low scores count for less.`}${s.fin ? ` ${s.fin} of your pairs were from tonight’s Best of the Day.` : ''}</p></div>`; }
 
 function vFinal() {
   buildFinal(); const F = S.final, js = judgeScore(), inFinal = !!S.myFinalist, bet = ['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win';
   let body = '';
   if (F.stage === 'betting') {
     const myBets = S.bets.map(b => `<div class="lr bet"><span class="pl">${b.type === 'tri' ? '1-2-3' : b.type === 'win' ? 'Win' : 'Top 3'}</span><span class="row" style="gap:4px">${b.picks.map(id => `<img src="${img(id)}" alt="" style="width:36px;height:36px">`).join('')}</span><span class="pz">${money(b.stake)}</span></div>`).join('');
-    const panelOffer = !inFinal && js != null && js >= PANEL_MIN && !S.bets.length && S.panelMe !== 'yes' ? `<div class="role"><div><b>You’re invited to judge tonight</b>Your judge score is ${js}. Panel judges can’t bet on the final. <button class="btn ghost" data-act="panel" style="margin-top:10px;display:block">Join the panel</button></div></div>` : S.panelMe === 'yes' ? `<div class="role"><div><b>You’re on tonight’s panel</b>Judges can’t bet on the final. You’ll judge when betting closes.</div></div>` : '';
-    const canBet = S.panelMe !== 'yes';
+    const panelOffer = '';
+    const canBet = true;
     const sel = S.sel || [], need = bet === 'tri' ? 3 : 1;
     body = `${panelOffer}
     <div class="card"><h3>The field</h3><div class="field">${F.field.map((id, i) => { const n = sel.indexOf(id); return `<button data-fp="${id}" aria-pressed="${n >= 0}" ${!canBet || (inFinal && bet !== 'win') ? '' : ''}><img src="${img(id)}" alt="Finalist ${i + 1}"><span>#${i + 1}${id === S.myFinalist ? '<em>You</em>' : n >= 0 ? `<em>${bet === 'tri' ? ord(n + 1) : '✓'}</em>` : ''}</span></button>`; }).join('')}</div>
-      <p class="note">Finalists are anonymous. No odds are shown: each pool pays winners its total minus 10%.</p></div>
+      <p class="note">Finalists are anonymous. No odds are shown: each pool pays winners its total minus 10%. Judging starts when bets close, and anyone with a bet never judges the final.</p></div>
     ${canBet ? `<div class="card"><h3>${inFinal ? 'Back your photo' : 'Place a bet'}</h3>
       ${inFinal ? `<p class="note">You have a photo in the final, so you can only back your own photo to win.</p>` : `<div class="phase">${[['win', 'Win'], ['top3', 'Top 3'], ['tri', 'Trifecta']].map(([k, l]) => `<span role="button" tabindex="0" data-bt="${k}" class="${bet === k ? 'on' : ''}" style="cursor:pointer">${l}</span>`).join('')}</div>
       <p class="note">${bet === 'win' ? 'Pick the photo that finishes 1st.' : bet === 'top3' ? 'Pick a photo to finish anywhere in the top 3.' : 'Pick 1st, 2nd and 3rd in exact order. Tap three photos.'}</p>`}
@@ -371,14 +373,19 @@ function vFinal() {
       <button class="btn cash block" data-act="bet" ${inFinal ? '' : sel.length === need ? '' : 'disabled'}>Place ${money(S.stake || 5)} ${inFinal ? 'on your photo' : bet === 'tri' ? 'trifecta' : bet === 'win' ? 'win bet' : 'top 3 bet'}</button></div>` : ''}
     ${myBets ? `<div class="card"><h3>Your bets</h3><div class="lb">${myBets}</div></div>` : ''}`;
   } else if (F.stage === 'judging') {
-    const J = S.judge && S.judge.kind === 'final' ? S.judge : null;
-    body = J && !J.done ? vJudge(J, 'Best of the Day · panel') : `<div class="card"><h3>Betting closed · the panel is judging</h3><p class="note">${F.panel.length + (S.panelMe === 'yes' ? 1 : 0)} judges with scores of ${PANEL_MIN}+ are judging the final now. None of them have bets on it.</p></div>`;
+    const mine = S.finMine.length, open = finalOpenToMe(), busy = S.heat && S.heat.stage !== 'done';
+    body = `<div class="card"><h3>Bets closed · tonight’s heats are judging</h3><p class="note">Until 7:55, ${FIN_PAIRS} of every heat judge’s ${J_PAIRS} pairs are finalists. They look like any other pair. About ${FIN_JUDGES} judges, ${FIN_JUDGES * FIN_PAIRS} votes.</p>
+      ${S.myFinalist ? `<div class="role"><div><b>Your photo is being judged</b>While it’s in the final, your own judging shows heat pairs only.</div></div>`
+      : S.bets.length ? `<div class="role"><div><b>You have bets on the final</b>So your judging shows heat pairs only. Results at 8pm.</div></div>`
+      : mine ? `<div class="ok">You judged ${mine} final pairs. Thanks: results at 8pm.</div>`
+      : `<div class="role"><div><b>Help judge the final</b>Enter a heat now and ${FIN_PAIRS} of your ${J_PAIRS} pairs will be finalists.</div></div><button class="btn cash block" data-act="${busy ? 'toHeats' : 'enterNow'}" style="margin-top:10px">${busy ? 'Back to your heat' : `Enter a heat · ${money(FEE)}`}</button>`}</div>`;
+    void open;
   } else body = vFinalRes();
-  return `<div><p class="eyebrow">Tonight · 8pm</p><h1>Best of the Day</h1><p class="lede">The day’s top heat winners, judged by the top-rated judges.</p></div>
-    <div class="phase"><span class="${F.stage === 'betting' ? 'on' : 'done'}">${F.stage === 'betting' ? '' : '✓ '}Betting</span><span class="${F.stage === 'judging' ? 'on' : F.stage === 'done' ? 'done' : ''}">${F.stage === 'done' ? '✓ ' : ''}Judging</span><span class="${F.stage === 'done' ? 'on' : ''}">Results</span></div>
-    <div class="facts"><div class="fact"><b>${money(S.pot)}</b><small>Prize pot</small></div><div class="fact"><b>${money(poolTotal(F.pools.win) + poolTotal(F.pools.top3) + F.pools.tri)}</b><small>In bet pools</small></div><div class="fact"><b class="mono">${F.stage === 'betting' ? countdown() : F.stage === 'judging' ? 'Live' : 'Done'}</b><small>${F.stage === 'betting' ? 'Starts in' : 'Status'}</small></div></div>
+  return `<div><p class="eyebrow">Tonight · 8pm</p><h1>Best of the Day</h1><p class="lede">The day’s top heat winners, judged blind by players in tonight’s heats.</p></div>
+    <div class="phase"><span class="${F.stage === 'betting' ? 'on' : 'done'}">${F.stage === 'betting' ? '' : '✓ '}Bets · to 7:30</span><span class="${F.stage === 'judging' ? 'on' : F.stage === 'done' ? 'done' : ''}">${F.stage === 'done' ? '✓ ' : ''}Judging · 7:55</span><span class="${F.stage === 'done' ? 'on' : ''}">Results · 8pm</span></div>
+    <div class="facts"><div class="fact"><b>${money(S.pot)}</b><small>Prize pot</small></div><div class="fact"><b>${money(poolTotal(F.pools.win) + poolTotal(F.pools.top3) + F.pools.tri)}</b><small>In bet pools</small></div><div class="fact"><b class="mono">${F.stage === 'betting' ? countdown(19, 30) : F.stage === 'judging' ? 'Live' : 'Done'}</b><small>${F.stage === 'betting' ? 'Bets close in' : 'Status'}</small></div></div>
     ${body}
-    <div class="demo"><span>Demo</span>${F.stage === 'betting' ? '<button class="btn ghost" data-act="close">Skip to 8pm</button>' : F.stage === 'judging' ? `<button class="btn ghost" data-act="settle" ${S.judge && S.judge.kind === 'final' && !S.judge.done ? 'disabled' : ''}>Show results</button>` : ''}<button class="link" data-act="reset">Start over</button></div>`;
+    <div class="demo"><span>Demo</span>${F.stage === 'betting' ? '<button class="btn ghost" data-act="close">Skip to 7:30</button>' : F.stage === 'judging' ? `<button class="btn ghost" data-act="settle" ${S.judge && S.judge.kind === 'heat' && !S.judge.done && S.judge.queue.some(q => q.fin) ? 'disabled' : ''}>Skip to 8pm</button>` : ''}<button class="link" data-act="reset">Start over</button></div>`;
 }
 function vFinalRes() { const R = S.finalResult, F = S.final;
   const rows = R.R.map((x, i) => `<div class="lr ${x.id === S.myFinalist ? 'me' : ''}"><span class="pl">${i + 1}</span><img src="${img(x.id)}" alt=""><span><b>${x.id === S.myFinalist ? 'Your photo' : esc(handleFor(x.id))}</b><small>${x.r} rating</small></span><span class="pz">${i < 3 ? money(R.prizes[i]) : ''}</span></div>`).join('');
@@ -391,16 +398,18 @@ function vFinalRes() { const R = S.finalResult, F = S.final;
 function vStaff() {
   const R = S.finalResult, col = t => t >= 75 ? 'var(--good)' : t >= 50 ? 'var(--warn)' : 'var(--bad)';
   const heatStats = `<div class="kpis"><div class="fact"><b>${S.heatsToday}</b><small>Heats today</small></div><div class="fact"><b>${S.retiredToday + Object.keys(S.retired).length}</b><small>Photos retired</small></div><div class="fact"><b>${money(S.heatsToday * HEAT * FEE * HOUSE)}</b><small>House fee</small></div></div>`;
-  if (!R) return `<div><p class="eyebrow">Staff · integrity</p><h1>Judge quality</h1><p class="lede">The final’s panel review appears when Best of the Day is judged.</p></div>${heatStats}<div class="demo"><button class="btn ghost" data-act="quick">Run tonight’s final now</button></div>`;
+  if (!R) return `<div><p class="eyebrow">Staff · integrity</p><h1>Judge quality</h1><p class="lede">The final’s review appears when Best of the Day is judged.</p></div>${heatStats}<div class="demo"><button class="btn ghost" data-act="quick">Run tonight’s final now</button></div>`;
   const J = R.all.slice().sort((a, b) => a.t.score - b.t.score), ts = Math.round(R.trusted * 100), F = S.final;
   const rawPos = R.raw.findIndex(x => x.id === F.linked.photo) + 1, realPos = R.R.findIndex(x => x.id === F.linked.photo) + 1;
-  return `<div><p class="eyebrow">Staff · Best of the Day review</p><h1>Judge quality</h1><p class="lede">Panel judges need a score of ${PANEL_MIN}+ and no bets on the final. Each is re-scored on tonight’s test pairs and agreement.</p></div>
+  return `<div><p class="eyebrow">Staff · Best of the Day review</p><h1>Judge quality</h1><p class="lede">The final was judged by tonight’s heat judges, ${FIN_PAIRS} pairs each (trust is scored on their whole 10-pair session), between 7:30 and 7:55. Anyone with a bet on the final or a photo in it got heat pairs only.</p></div>
   ${R.hold ? `<div class="hold">Payouts held. ${R.linkedWin ? `The winner was backed by ${esc(F.linked.bettor)}, linked to judge ${esc(F.linked.judge)}.` : `Only ${ts}% of votes came from trusted judges.`}</div>` : `<div class="ok">Cleared for payout. ${ts}% of votes came from trusted judges.</div>`}
+  <div class="kpis"><div class="fact"><b>${R.judges}</b><small>Final judges</small></div><div class="fact"><b>${R.finVotes}</b><small>Final votes</small></div><div class="fact"><b>${R.all.filter(j => !j.w).length}</b><small>Judges dropped</small></div></div>
+  <p class="note">${R.finVotes >= MIN_FIN_VOTES ? `✓ Above the ${MIN_FIN_VOTES}-vote minimum.` : `Below the ${MIN_FIN_VOTES}-vote minimum: invite judges scoring 90+ as a backup panel.`} Quiet nights fall back to a 90+ panel.</p>
   ${heatStats}
-  <div class="card"><h3>Effect of cleaning the votes</h3><p class="note">The photo backed by ${esc(F.linked.bettor)} would have finished <b>${ord(rawPos)}</b> on raw votes and finished <b>${ord(realPos)}</b> after ${esc(F.linked.judge)}’s votes were dropped.</p></div>
-  <div class="card"><h3>Panel, lowest trust first</h3><div class="tbl"><table><thead><tr><th>Judge</th><th>Trust</th><th>Checks</th><th>With crowd</th><th>Median time</th><th>Weight</th><th>Flags</th></tr></thead><tbody>
-  ${J.map(j => `<tr><td>${esc(j.name)}</td><td><span class="trust"><i><u style="width:${j.t.score}%;background:${col(j.t.score)}"></u></i>${j.t.score}</span></td><td class="n">${Math.round(j.t.T * 100)}%</td><td class="n">${Math.round(j.t.agree * 100)}%</td><td class="n">${(j.t.med / 1000).toFixed(1)}s</td>
-    <td>${j.w === 1 ? '<span class="chip good">Full</span>' : j.w ? '<span class="chip warn">Half</span>' : '<span class="chip bad">Dropped</span>'}</td><td>${[j.linked ? ['Linked to a bettor', 'bad'] : null, j.t.T < .5 ? ['Failed checks', 'bad'] : j.t.T < .75 ? ['Missed a check', 'warn'] : null, j.t.med < 800 ? ['Too fast', 'warn'] : null].filter(Boolean).map(([f, c]) => `<span class="chip ${c}">${f}</span>`).join(' ') || '—'}</td></tr>`).join('')}</tbody></table></div></div>
+  <div class="card"><h3>Effect of cleaning the votes</h3><p class="note">The photo backed by ${esc(F.linked.bettor)} would have finished <b>${ord(rawPos)}</b> on raw votes and finished <b>${ord(realPos)}</b> after ${esc(F.linked.judge)}’s votes were dropped. One judge only gets ${FIN_PAIRS} of ${R.finVotes} votes, so a linked judge can barely move the result.</p></div>
+  <div class="card"><h3>Final judges, lowest trust first</h3><div class="tbl"><table><thead><tr><th>Judge</th><th>Trust</th><th>Checks</th><th>With crowd</th><th>Median time</th><th>Weight</th><th>Flags</th></tr></thead><tbody>
+  ${J.slice(0, 10).map(j => `<tr><td>${esc(j.name)}</td><td><span class="trust"><i><u style="width:${j.t.score}%;background:${col(j.t.score)}"></u></i>${j.t.score}</span></td><td class="n">${Math.round(j.t.T * 100)}%</td><td class="n">${Math.round(j.t.agree * 100)}%</td><td class="n">${(j.t.med / 1000).toFixed(1)}s</td>
+    <td>${j.w === 1 ? '<span class="chip good">Full</span>' : j.w ? '<span class="chip warn">Half</span>' : '<span class="chip bad">Dropped</span>'}</td><td>${[j.linked ? ['Linked to a bettor', 'bad'] : null, j.t.T < .5 ? ['Failed checks', 'bad'] : j.t.T < .75 ? ['Missed a check', 'warn'] : null, j.t.med < 800 ? ['Too fast', 'warn'] : null].filter(Boolean).map(([f, c]) => `<span class="chip ${c}">${f}</span>`).join(' ') || '—'}</td></tr>`).join('')}</tbody></table></div>${J.length > 10 ? `<p class="note">+ ${J.length - 10} more judges: ${J.slice(10).filter(j => j.w === 1).length} at full weight, ${J.slice(10).filter(j => j.w === .5).length} at half.</p>` : ''}</div>
   <div class="card"><h3>Money tonight</h3><div class="money"><div class="fact"><b>${money(S.pot)}</b><small>Final prize pot (5% of heats)</small></div><div class="fact"><b>${money(R.winPool)}</b><small>Win pool</small></div><div class="fact"><b>${money(R.top3Pool)}</b><small>Top 3 pool</small></div><div class="fact"><b>${money(R.triPool)}</b><small>Trifecta pool</small></div></div><p class="note">Bet pools pay winners minus 10%. The house never takes a side.</p></div>`;
 }
 
@@ -419,10 +428,10 @@ document.addEventListener('click', e => {
   if (d.back != null) { S.back = +d.back; render(); return; }
   if (d.bt) { S.sub = d.bt; S.sel = []; render(); return; }
   if (d.st) { S.stake = +d.st; render(); return; }
-  if (d.fp) { if (S.panelMe === 'yes' || S.myFinalist) return; const bet = ['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win', need = bet === 'tri' ? 3 : 1; S.sel = S.sel || [];
+  if (d.fp) { if (S.myFinalist) return; const bet = ['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win', need = bet === 'tri' ? 3 : 1; S.sel = S.sel || [];
     const i = S.sel.indexOf(d.fp); if (i >= 0) S.sel.splice(i, 1); else { if (S.sel.length >= need) S.sel = need === 1 ? [] : S.sel; if (S.sel.length < need) S.sel.push(d.fp); } render(); return; }
   if (d.vote) { const J = S.judge; if (!J || J.reveal) return; const p = J.queue[J.votes.length]; crowdOf(p);
-    const v = { L: p.L, R: p.R, test: p.test, crowdL: p.crowdL, pickLeft: d.vote === 'L', ms: performance.now() - J.t0 }; J.votes.push(v);
+    const v = { L: p.L, R: p.R, test: p.test, fin: !!p.fin, crowdL: p.crowdL, pickLeft: d.vote === 'L', ms: performance.now() - J.t0 }; J.votes.push(v);
     J.reveal = { side: d.vote, hit: withCrowd(v) }; render();
     setTimeout(() => { if (S.judge !== J) return; J.reveal = null;
       if (J.votes.length >= J_PAIRS) { if (J.kind === 'heat') finishJudging(); else J.done = true; toast('Judging done · thanks'); } render(); }, 1100);
@@ -432,14 +441,15 @@ document.addEventListener('click', e => {
   else if (a === 'back') S.sub = null;
   else if (a === 'confirmEnter') { const c = FEE + S.back; if (S.cash < c) { toast('Not enough cash'); return; } S.cash -= c; enterHeat(S.pick, S.back); S.sub = null; toast(`Entered heat #${S.heatNo} · ${money(c)} paid`); }
   else if (a === 'heatRes') { settleHeat(); }
-  else if (a === 'panel') { S.panelMe = 'yes'; toast('You’re on tonight’s panel'); }
+  else if (a === 'enterNow') { S.tab = 'heats'; S.sub = 'enter'; S.pick = null; S.back = 0; }
+  else if (a === 'toHeats') { S.tab = 'heats'; S.sub = null; }
   else if (a === 'bet') { const F = S.final, bet = S.myFinalist ? 'win' : (['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win'), st = S.stake || 5, picks = S.myFinalist ? [S.myFinalist] : S.sel.slice();
     if (S.cash < st) { toast('Not enough cash'); return; } S.cash -= st; S.bets.push({ type: bet, picks, stake: st });
     if (bet === 'tri') F.pools.tri += st; else F.pools[bet][picks[0]] = (F.pools[bet][picks[0]] || 0) + st; S.sel = []; toast(`Bet placed · ${money(st)}`); }
   else if (a === 'close') { closeFinal(); }
   else if (a === 'settle') settleFinal();
   else if (a === 'reset') { const tab = S.tab; S = fresh(); S.tab = tab; }
-  else if (a === 'quick') { buildFinal(); if (S.final.stage === 'betting') closeFinal(); if (S.judge && S.judge.kind === 'final') S.judge.done = true; settleFinal(); }
+  else if (a === 'quick') { buildFinal(); if (S.final.stage === 'betting') closeFinal(); settleFinal(); }
   render(); window.scrollTo(0, 0);
 });
 document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.dataset && e.target.dataset.bt) { e.preventDefault(); e.target.click(); } });
