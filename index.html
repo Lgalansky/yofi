@@ -159,6 +159,9 @@ tr:last-child td{border-bottom:0}
 .cur button.cash[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--felt)}
 .cur button.bb[aria-pressed="true"]{background:var(--brass-soft);box-shadow:inset 0 0 0 2px var(--brass)}
 .lr.bet .pz small{display:block;font:500 .66rem var(--font-data);color:var(--muted);text-align:right}
+.flybb{position:absolute;left:50%;top:45%;transform:translate(-50%,0);padding:6px 12px;border-radius:999px;background:var(--brass);color:#1B1400;font:800 1.05rem var(--font-data);white-space:nowrap;pointer-events:none;box-shadow:0 6px 16px rgba(0,0,0,.3);animation:flyup 1s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes flyup{0%{opacity:0;transform:translate(-50%,10px) scale(.7)}20%{opacity:1;transform:translate(-50%,0) scale(1.1)}100%{opacity:0;transform:translate(-50%,-90px) scale(1)}}
+@media (prefers-reduced-motion:reduce){.flybb{animation:none;opacity:0}}
 .card[data-go]{width:100%;color:inherit;font:inherit}
 .roll button[disabled]{cursor:not-allowed}
 </style>
@@ -389,9 +392,9 @@ function vJudge(J, title) { const rv = J.reveal, k = J.votes.length - (rv ? 1 : 
   const hits = J.votes.filter(withCrowd).length, streak = (() => { let n = 0; for (let i = J.votes.length - 1; i >= 0 && withCrowd(J.votes[i]); i--) n++; return n; })();
   const side = (sd, ph) => { const pct = sd === 'L' ? crowdOf(p) : 100 - crowdOf(p), mine = rv && rv.side === sd;
     return `<button data-vote="${sd}" ${rv ? 'disabled' : ''} class="${mine ? 'pick' + (rv.hit ? '' : ' miss') : ''}" aria-label="Pick the ${sd === 'L' ? 'left' : 'right'} photo"><img src="${img(ph.id)}" alt=""${ph.blur ? ' class="qc"' : ''}>${rv ? `<span class="pct ${pct > 50 ? 'top' : ''}">${pct}%</span>` : ''}</button>`; };
-  return `<div class="card"><p class="eyebrow">${title}</p><div class="prog"><span class="mono">${Math.min(k + 1, J_PAIRS)} / ${J_PAIRS}</span><span class="track"><i style="width:${J.votes.length / J_PAIRS * 100}%"></i></span><span class="chip ${J.votes.length ? 'good' : ''}" title="Picks that matched the crowd">${hits}/${J.votes.length} · <span class="bbtxt">${J.earn} BB</span></span></div><h3>Which photo is better?</h3>
+  return `<div class="card"><p class="eyebrow">${title}</p><div class="prog"><span class="mono">${Math.min(k + 1, J_PAIRS)} / ${J_PAIRS}</span><span class="track"><i style="width:${J.votes.length / J_PAIRS * 100}%"></i></span><span class="chip ${J.votes.length ? 'good' : ''}" title="Picks that matched the crowd">${hits}/${J.votes.length} with crowd</span></div><h3>Which photo is better?</h3>
     <div class="duel">${side('L', p.L)}${side('R', p.R)}</div>
-    <p class="verdict ${rv ? (rv.hit ? 'hit' : 'miss') : ''}" aria-live="polite">${rv ? (rv.hit ? `✓ With the crowd · <span class="bbtxt">+${rv.pay} BB</span>${streak >= 3 ? ` · ${streak} in a row` : ''}` : `The crowd picked the other one`) : `Match the crowd to earn ${BB_MATCH} BB a pair.`}</p>
+    <p class="verdict ${rv ? (rv.hit ? 'hit' : 'miss') : ''}" aria-live="polite">${rv ? (rv.hit ? `✓ With the crowd${streak >= 3 ? ` · ${streak} in a row` : ''}` : `The crowd picked the other one`) : 'Pick one. You’ll see what the crowd picked.'}</p>
     <p class="note">You never judge a heat you’re in. Some pairs are quality checks.</p></div>`; }
 function judgeCard(J) { const s = J.summary, js = judgeScore();
   return `<div class="card"><p class="eyebrow">Your judging</p><h2>Judge score ${s.score}</h2>
@@ -482,6 +485,7 @@ document.addEventListener('click', e => {
   if (d.vote) { const J = S.judge; if (!J || J.reveal) return; const p = J.queue[J.votes.length]; crowdOf(p);
     const v = { L: p.L, R: p.R, test: p.test, fin: !!p.fin, crowdL: p.crowdL, pickLeft: d.vote === 'L', ms: performance.now() - J.t0 }; J.votes.push(v);
     const hit = withCrowd(v), pay = hit ? (v.fin ? BB_FIN : BB_MATCH) : 0; J.earn += pay; J.reveal = { side: d.vote, hit, pay }; render();
+    if (pay) { const btn = document.querySelector('.duel button.pick'); if (btn) { const f = document.createElement('span'); f.className = 'flybb'; f.textContent = `+${pay} BB`; btn.appendChild(f); } }
     setTimeout(() => { if (S.judge !== J) return; J.reveal = null;
       if (J.votes.length >= J_PAIRS) { if (J.kind === 'heat') finishJudging(); else J.done = true; toast('Judging done · thanks'); } render(); }, 1100);
     return; }
