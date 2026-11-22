@@ -166,6 +166,8 @@ tr:last-child td{border-bottom:0}
 .flybb{position:fixed;z-index:50;padding:6px 12px;border-radius:999px;background:var(--brass);color:#1B1400;font:800 1.05rem var(--font-data);white-space:nowrap;pointer-events:none;box-shadow:0 6px 16px rgba(0,0,0,.3);transform:translate(-50%,-50%)}
 .pill.bump{animation:bump .45s ease-out}
 @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.18);box-shadow:0 0 0 4px var(--brass-soft)}100%{transform:scale(1)}}
+.judgecard{border-color:var(--brass);background:linear-gradient(180deg,var(--brass-soft),var(--surface) 70%)}
+.judgecard h2{margin:2px 0 0}
 .card[data-go]{width:100%;color:inherit;font:inherit}
 .roll button[disabled]{cursor:not-allowed}
 </style>
@@ -221,7 +223,7 @@ function makeBlur(id) { const im = new Image(); im.onload = () => { try { const 
 let S;
 function fresh() {
   return { tab: 'lobby', cash: 60, races: {}, retired: {}, heat: null, heatNo: 141, judge: null, judgeHist: [], sub: null, pick: null, back: 0,
-    final: null, finalResult: null, heatsToday: 68, retiredToday: 23, pot: 68 * HEAT * FEE * TO_FINAL, bets: [], finMine: [], finTests: [], bb: 60000, solo: 0, bbPaidToday: 68 * 6 * 290 };
+    final: null, finalResult: null, heatsToday: 68, retiredToday: 23, pot: 68 * HEAT * FEE * TO_FINAL, bets: [], finMine: [], finTests: [], bb: 60000, bbToday: 0, solo: 0, bbPaidToday: 68 * 6 * 290 };
 }
 
 /* ---------- ranking from 1v1 results (weighted Bradley–Terry) ---------- */
@@ -289,7 +291,7 @@ function finishJudging() {
   S.judgeHist.push(t.score); J.done = true;
   const fin = J.votes.filter(v => v.fin); if (fin.length) { S.finMine = S.finMine.concat(fin.map(v => ({ L: v.L.id, R: v.R.id, pickLeft: v.pickLeft, ms: v.ms }))); S.finTests = S.finTests.concat(tests); }
   J.summary.fin = fin.length;
-  J.summary.bonus = t.score >= FULL_MIN ? BB_BONUS : 0; J.summary.bb = J.earn + J.summary.bonus; S.bb += J.summary.bonus; S.bbPaidToday += J.summary.bonus; if (J.solo) S.solo++;
+  J.summary.bonus = t.score >= FULL_MIN ? BB_BONUS : 0; J.summary.bb = J.earn + J.summary.bonus; S.bb += J.summary.bonus; S.bbToday += J.summary.bonus; S.bbPaidToday += J.summary.bonus; if (J.solo) S.solo++;
   S.lowRun = t.score < JUDGE_MIN ? (S.lowRun || 0) + 1 : 0; J.summary.warn = S.lowRun === 1; if (S.lowRun >= 2) { S.banned = true; J.summary.banned = true; }
 }
 const judgeScore = () => S.judgeHist.length ? Math.round(S.judgeHist.reduce((a, b) => a + b, 0) / S.judgeHist.length) : null;
@@ -349,11 +351,14 @@ function vLobby() {
   return `<div><p class="eyebrow">Casino lobby</p><h1>Tonight’s games</h1></div>
   <button class="feature" data-go="heats" aria-label="Open photo heats"><div><p class="eyebrow" style="color:inherit;opacity:.8">Photo contests</p><h2>Photo Heats</h2><p>6 photos a heat, ${money(FEE)} entry. Win your heat and race in tonight’s Best of the Day.</p></div>
     <div class="stack" aria-hidden="true">${s3.map((e, i) => `<img src="${img(e.id)}" alt="" style="left:${i * 16}px;top:${i * 10}px;transform:rotate(${[-8, 3, 10][i]}deg)">`).join('')}</div></button>
+  <div class="card judgecard"><div class="row" style="justify-content:space-between;align-items:flex-start;gap:8px"><div><p class="eyebrow">Free · earn BB</p><h2>Judge &amp; earn</h2></div><span class="pill bb"><i>Today</i>+${S.bbToday.toLocaleString('en-US')}</span></div>
+    <p class="note">Pick the better of two photos. Earn ${BB_MATCH} BB every time you match the crowd, plus a ${bbs(BB_BONUS)} bonus for a strong session.</p>
+    ${S.banned ? `<div class="hold">Judging paused for ${BAN_DAYS} days: two sessions in a row scored under ${JUDGE_MIN}.</div>`
+      : S.solo >= SOLO_MAX ? `<p class="note"><b>That’s today’s ${SOLO_MAX} sessions.</b> Back tomorrow.</p>`
+      : `<button class="btn block" data-act="solo">Judge photos · free</button><p class="note" style="text-align:center;margin:6px 0 0">${SOLO_MAX - S.solo} of ${SOLO_MAX} sessions left today${js != null ? ` · judge score ${js}` : ''}</p>`}</div>
   <button class="card" data-go="final" style="text-align:left;border-color:var(--brass)"><p class="eyebrow">Tonight · 8pm</p><h2>Best of the Day</h2><p class="note">Top ${FIN_N} heat winners. Bets close at 7:30: Win, Top 3 and Trifecta.</p>
     <div class="facts"><div class="fact"><b>${money(S.pot)}</b><small>Prize pot</small></div><div class="fact"><b>${S.heatsToday}</b><small>Heats today</small></div><div class="fact"><b class="mono" id="cd">${countdown()}</b><small>Starts in</small></div></div></button>
   <div class="games" aria-label="Other games">${[['🎰', 'Slots'], ['🃏', 'Blackjack'], ['🎡', 'Roulette']].map(([i, t]) => `<div class="game"><span>${i}</span>${t}</div>`).join('')}</div>
-  <p class="note"><b>Judge &amp; earn:</b> judge photos for free and earn BB. 20,000 BB ≈ $5.</p>
-  ${S.banned ? `<p class="note">Judging paused for ${BAN_DAYS} days (score under ${JUDGE_MIN} twice).</p>` : ''}${js != null ? `<p class="note">Your judge score: <b>${js}</b>${js >= FULL_MIN ? ' · your votes count in full' : ` · ${FULL_MIN}+ for your votes to count in full`}</p>` : ''}
   <p class="note">Other games are placeholders. Everything here is simulated: no real money moves.</p>`;
 }
 function countdown(h = 20, m = 0) { const n = new Date(), t = new Date(n); t.setHours(h, m, 0, 0); if (t <= n) t.setDate(t.getDate() + 1); const s = Math.floor((t - n) / 1000); return `${Math.floor(s / 3600)}h ${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}m`; }
@@ -372,10 +377,10 @@ function vHeats() {
     const SJ = S.judge && S.judge.solo ? S.judge : null;
     if (SJ && !SJ.done) return vJudgeOnly(vJudge(SJ, `Judge &amp; earn · heat #${SJ.heatNo}`));
     if (SJ && SJ.done) return vJudgeOnly(`${judgeCard(SJ)}<div class="card"><h3>Keep judging?</h3><p class="note">You’ve judged ${S.solo} of ${SOLO_MAX} sessions today.</p>
-      ${S.banned ? `<p class="note">Judging is paused for ${BAN_DAYS} days.</p>` : S.solo < SOLO_MAX ? `<button class="btn block" data-act="solo">Judge another heat</button>` : `<p class="note">That’s today’s limit. Back tomorrow, or enter a heat to keep judging.</p>`}<button class="link" data-act="soloDone">Back to heats</button></div>`);
+      ${S.banned ? `<p class="note">Judging is paused for ${BAN_DAYS} days.</p>` : S.solo < SOLO_MAX ? `<button class="btn block" data-act="solo">Judge another heat</button>` : `<p class="note">That’s today’s limit. Back tomorrow.</p>`}<button class="link" data-act="soloDone">Back to lobby</button></div>`);
     body += `<div class="card"><h3>How heats work</h3><p class="note">6 photos race. You judge 10 pairs from another heat running now, never your own, and earn BB for picks that match the crowd. 1st and 2nd are paid; the winner goes to tonight’s final. Each photo can race ${MAX_RACES} times, then it retires.</p>
       <button class="btn cash block" data-act="enter">Enter a heat · ${money(FEE)}</button>
-      ${S.banned ? `<p class="note" style="text-align:center">Judging paused for ${BAN_DAYS} days.</p>` : `<button class="link" data-act="solo" ${S.solo >= SOLO_MAX ? 'disabled' : ''}>Or judge only, free · earn up to ${bbs(J_PAIRS * BB_MATCH + BB_BONUS)}</button>`}</div>`;
+      </div>`;
   } else if (J && !J.done) body = vJudge(J, `Judge heat #${J.heatNo}`);
   else if (J && J.done) body = `${judgeCard(J)}<div class="card"><h3>Heat #${H.no} is being judged</h3><p class="note">Players in other heats are judging yours now.</p><button class="btn ghost block" data-act="heatRes">Demo: show my heat result</button></div>`;
   return `<div><p class="eyebrow">Photo heats</p><h1>Race your photo</h1><p class="lede">Sit-and-go heats of ${HEAT}. Judged blind by players in other heats.</p></div>
@@ -479,7 +484,7 @@ function render() { $('#bal').textContent = money(S.cash); $('#bbal').textConten
   $('#view').innerHTML = S.tab === 'lobby' ? vLobby() : S.tab === 'heats' ? vHeats() : S.tab === 'final' ? vFinal() : vStaff(); }
 // BB pops up on the photo you picked, flies to the BB balance, and the balance ticks up when it lands
 function flyBB(pay) {
-  const credit = () => { S.bb += pay; S.bbPaidToday += pay; const el = $('#bbal'); el.textContent = S.bb.toLocaleString('en-US'); const pill = el.closest('.pill'); pill.classList.remove('bump'); void pill.offsetWidth; pill.classList.add('bump'); };
+  const credit = () => { S.bb += pay; S.bbToday += pay; S.bbPaidToday += pay; const el = $('#bbal'); el.textContent = S.bb.toLocaleString('en-US'); const pill = el.closest('.pill'); pill.classList.remove('bump'); void pill.offsetWidth; pill.classList.add('bump'); };
   const btn = document.querySelector('.duel button.pick'), pill = $('#bbal').closest('.pill');
   if (!btn || matchMedia('(prefers-reduced-motion: reduce)').matches || !document.body.animate) { credit(); return; }
   const a = btn.getBoundingClientRect(), b = pill.getBoundingClientRect(), f = document.createElement('span');
@@ -521,7 +526,7 @@ document.addEventListener('click', e => {
   else if (a === 'enterNow') { S.tab = 'heats'; S.sub = 'enter'; S.pick = null; S.back = 0; }
   else if (a === 'toHeats') { S.tab = 'heats'; S.sub = null; }
   else if (a === 'solo' || a === 'soloFinal') { if (S.banned) { toast('Judging is paused'); return; } if (S.solo >= SOLO_MAX) { toast('Daily judging limit reached'); return; } S.judge = newJudge(OTHERS, true); S.tab = 'heats'; S.sub = null; }
-  else if (a === 'soloDone') { S.judge = null; }
+  else if (a === 'soloDone') { S.judge = null; S.tab = 'lobby'; }
   else if (a === 'bet') { const F = S.final, bet = S.myFinalist ? 'win' : (['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win'), cur = S.cur || 'cash', st = cur === 'bb' ? (S.bbStake || BB_STAKES[0]) : (S.stake || 5), picks = S.myFinalist ? [S.myFinalist] : S.sel.slice();
     if ((cur === 'bb' ? S.bb : S.cash) < st) { toast(cur === 'bb' ? 'Not enough BB' : 'Not enough cash'); return; }
     if (cur === 'bb') S.bb -= st; else S.cash = +(S.cash - st).toFixed(2); S.bets.push({ type: bet, picks, stake: st, cur });
