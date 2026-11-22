@@ -89,6 +89,14 @@ h3{font-size:1rem}
 .prog .track i{display:block;height:100%;background:var(--felt);transition:width .25s}
 .duel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .duel button{padding:0;border:0;border-radius:14px;overflow:hidden;aspect-ratio:3/4;background:var(--sunk);position:relative}
+.duel button.pick{box-shadow:0 0 0 4px var(--good)}
+.duel button.pick.miss{box-shadow:0 0 0 4px var(--warn)}
+.duel button[disabled]{cursor:default}
+.duel .pct{position:absolute;left:8px;bottom:8px;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.62);color:#fff;font:700 .95rem var(--font-data);animation:pop .25s ease-out}
+.duel .pct.top{background:var(--good)}
+.verdict{margin:10px 0 0;text-align:center;font-weight:700;font-size:.95rem;color:var(--muted);min-height:1.4em}
+.verdict.hit{color:var(--good)}.verdict.miss{color:var(--warn)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
 .duel img{width:100%;height:100%;object-fit:cover;display:block}
 .duel button:hover img{transform:scale(1.02)}
 .duel img{transition:transform .2s}
@@ -229,12 +237,19 @@ function settleHeat() {
   H.result = { R, prizes, place, won, backPool, myBackWin, winnerBack, qualified: place === 1 }; H.stage = 'done';
   if (place === 1) S.myFinalist = H.me;
 }
+// simulated crowd split for a pair: % of other judges who picked the left photo
+function crowdOf(p) { if (p.crowdL != null) return p.crowdL;
+  let x;
+  if (p.test) { const sharp = 93 + Math.floor(Math.random() * 6); x = p.L.blur ? 100 - sharp : sharp; }
+  else { const pr = 1 / (1 + Math.exp(-(QUAL[p.L.id] - QUAL[p.R.id]) / 7)); x = Math.round(100 * pr + (Math.random() - .5) * 12); x = Math.max(8, Math.min(92, x)); if (x === 50) x = 51; }
+  return p.crowdL = x; }
+const withCrowd = v => v.pickLeft ? crowdOf(v) > 50 : crowdOf(v) < 50;
 function finishJudging() {
-  const J = S.judge, sims = []; for (let j = 0; j < 10; j++) simVotes(J.field, 10, 'honest').forEach(v => sims.push(v));
-  const mine = J.votes.map(v => ({ L: v.L.id, R: v.R.id, pickLeft: v.pickLeft, ms: v.ms, test: v.test })), cons = consensusOf(sims);
+  const J = S.judge, crowd = {}; J.votes.forEach(v => { crowd[v.L.id + '|' + v.R.id] = crowdOf(v) > 50; });
+  const mine = J.votes.map(v => ({ L: v.L.id, R: v.R.id, pickLeft: v.pickLeft, ms: v.ms, test: v.test })), cons = (a, b) => crowd[a + '|' + b] ?? null;
   const tests = J.votes.filter(v => v.test).map(v => ({ ok: v.pickLeft ? !v.L.blur : !v.R.blur }));
   const t = trust(mine, tests, cons), norm = mine.filter(v => !v.test);
-  J.summary = { agreed: norm.filter(v => { const c = cons(v.L, v.R); return c == null || (v.pickLeft ? c : !c); }).length, of: norm.length, tests: tests.filter(x => x.ok).length, testsOf: tests.length, score: t.score };
+  J.summary = { agreed: J.votes.filter(withCrowd).length, of: J.votes.length, tests: tests.filter(x => x.ok).length, testsOf: tests.length, score: t.score };
   S.judgeHist.push(t.score); J.done = true;
 }
 const judgeScore = () => S.judgeHist.length ? Math.round(S.judgeHist.reduce((a, b) => a + b, 0) / S.judgeHist.length) : null;
@@ -324,12 +339,16 @@ function vEnter() {
     <div class="stakes">${[0, 2, 5, 10].map(v => `<button data-back="${v}" aria-pressed="${back === v}">${v ? money(v) : 'None'}</button>`).join('')}</div></div>
   <button class="btn cash block" data-act="confirmEnter" ${sel && !S.retired[sel] ? '' : 'disabled'}>Pay ${money(FEE + back)} and enter</button><button class="link" data-act="back">Back</button>`;
 }
-function vJudge(J, title) { const k = J.votes.length, p = J.queue[k]; J.t0 = performance.now();
-  return `<div class="card"><p class="eyebrow">${title}</p><div class="prog"><span class="mono">${k + 1} / ${J_PAIRS}</span><span class="track"><i style="width:${k / J_PAIRS * 100}%"></i></span></div><h3>Which photo is better?</h3>
-    <div class="duel"><button data-vote="L" aria-label="Pick the left photo"><img src="${img(p.L.id, p.L.blur)}" alt=""></button><button data-vote="R" aria-label="Pick the right photo"><img src="${img(p.R.id, p.R.blur)}" alt=""></button></div>
-    <p class="note">You never judge a heat you’re in. Some pairs are quality checks. You’ll see how you did at the end.</p></div>`; }
+function vJudge(J, title) { const rv = J.reveal, k = J.votes.length - (rv ? 1 : 0), p = J.queue[k]; if (!rv) J.t0 = performance.now();
+  const hits = J.votes.filter(withCrowd).length, streak = (() => { let n = 0; for (let i = J.votes.length - 1; i >= 0 && withCrowd(J.votes[i]); i--) n++; return n; })();
+  const side = (sd, ph) => { const pct = sd === 'L' ? crowdOf(p) : 100 - crowdOf(p), mine = rv && rv.side === sd;
+    return `<button data-vote="${sd}" ${rv ? 'disabled' : ''} class="${mine ? 'pick' + (rv.hit ? '' : ' miss') : ''}" aria-label="Pick the ${sd === 'L' ? 'left' : 'right'} photo"><img src="${img(ph.id, ph.blur)}" alt="">${rv ? `<span class="pct ${pct > 50 ? 'top' : ''}">${pct}%</span>` : ''}</button>`; };
+  return `<div class="card"><p class="eyebrow">${title}</p><div class="prog"><span class="mono">${Math.min(k + 1, J_PAIRS)} / ${J_PAIRS}</span><span class="track"><i style="width:${J.votes.length / J_PAIRS * 100}%"></i></span><span class="chip ${J.votes.length ? 'good' : ''}" title="Picks that matched the crowd">${hits}/${J.votes.length} with crowd</span></div><h3>Which photo is better?</h3>
+    <div class="duel">${side('L', p.L)}${side('R', p.R)}</div>
+    <p class="verdict ${rv ? (rv.hit ? 'hit' : 'miss') : ''}" aria-live="polite">${rv ? (rv.hit ? `✓ With the crowd${streak >= 3 ? ` · ${streak} in a row` : ''}` : `The crowd picked the other one`) : 'Pick one. You’ll see what the crowd picked.'}</p>
+    <p class="note">You never judge a heat you’re in. Some pairs are quality checks.</p></div>`; }
 function judgeCard(J) { const s = J.summary, js = judgeScore();
-  return `<div class="card"><p class="eyebrow">Your judging</p><h2>Judge score ${s.score}</h2><div class="money"><div class="fact"><b>${s.agreed}/${s.of}</b><small>With the crowd</small></div><div class="fact"><b>${s.tests}/${s.testsOf}</b><small>Quality checks</small></div></div>
+  return `<div class="card"><p class="eyebrow">Your judging</p><h2>Judge score ${s.score}</h2><div class="money"><div class="fact"><b>${s.agreed}/${s.of}</b><small>Picked with the crowd</small></div><div class="fact"><b>${s.tests}/${s.testsOf}</b><small>Quality checks</small></div></div>
     <p class="note">Your average: <b>${js}</b>. ${js >= PANEL_MIN ? 'You’re eligible to judge tonight’s Best of the Day.' : `Average ${PANEL_MIN}+ to be picked for the final’s panel. Low scores count for less.`}</p></div>`; }
 
 function vFinal() {
@@ -400,8 +419,12 @@ document.addEventListener('click', e => {
   if (d.st) { S.stake = +d.st; render(); return; }
   if (d.fp) { if (S.panelMe === 'yes' || S.myFinalist) return; const bet = ['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win', need = bet === 'tri' ? 3 : 1; S.sel = S.sel || [];
     const i = S.sel.indexOf(d.fp); if (i >= 0) S.sel.splice(i, 1); else { if (S.sel.length >= need) S.sel = need === 1 ? [] : S.sel; if (S.sel.length < need) S.sel.push(d.fp); } render(); return; }
-  if (d.vote) { const J = S.judge, p = J.queue[J.votes.length]; J.votes.push({ L: p.L, R: p.R, test: p.test, pickLeft: d.vote === 'L', ms: performance.now() - J.t0 });
-    if (J.votes.length >= J_PAIRS) { if (J.kind === 'heat') finishJudging(); else J.done = true; toast('Judging done · thanks'); } render(); return; }
+  if (d.vote) { const J = S.judge; if (!J || J.reveal) return; const p = J.queue[J.votes.length]; crowdOf(p);
+    const v = { L: p.L, R: p.R, test: p.test, crowdL: p.crowdL, pickLeft: d.vote === 'L', ms: performance.now() - J.t0 }; J.votes.push(v);
+    J.reveal = { side: d.vote, hit: withCrowd(v) }; render();
+    setTimeout(() => { if (S.judge !== J) return; J.reveal = null;
+      if (J.votes.length >= J_PAIRS) { if (J.kind === 'heat') finishJudging(); else J.done = true; toast('Judging done · thanks'); } render(); }, 1100);
+    return; }
   const a = d.act; if (!a) return;
   if (a === 'enter') { S.sub = 'enter'; S.pick = null; S.back = 0; }
   else if (a === 'back') S.sub = null;
