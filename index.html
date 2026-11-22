@@ -151,7 +151,7 @@ tr:last-child td{border-bottom:0}
 .bbwin b{display:block;font:800 1.5rem var(--font-data);color:var(--brass)}
 .bbwin small{font-size:.8rem;color:var(--fg)}
 .bbwin.held{background:var(--sunk);border-color:var(--line)}.bbwin.held b{color:var(--muted)}
-.btn:not(.cash):not(.ghost).block{background:var(--fg);color:var(--bg)}
+.btn:not(.cash):not(.ghost):not(.bbbtn).block{background:var(--fg);color:var(--bg)}
 @media (max-width:420px){.brand{font-size:.95rem;white-space:nowrap}.pill.cashp i{display:none}.brand small{display:none}.pill{padding:5px 8px;gap:4px}}
 .btn.bbbtn{background:var(--brass);color:#1B1400}
 .cur{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 10px}
@@ -162,6 +162,26 @@ tr:last-child td{border-bottom:0}
 .flybb{position:absolute;left:50%;top:45%;transform:translate(-50%,0);padding:6px 12px;border-radius:999px;background:var(--brass);color:#1B1400;font:800 1.05rem var(--font-data);white-space:nowrap;pointer-events:none;box-shadow:0 6px 16px rgba(0,0,0,.3);animation:flyup 1s cubic-bezier(.2,.7,.3,1) forwards}
 @keyframes flyup{0%{opacity:0;transform:translate(-50%,10px) scale(.7)}20%{opacity:1;transform:translate(-50%,0) scale(1.1)}100%{opacity:0;transform:translate(-50%,-90px) scale(1)}}
 @media (prefers-reduced-motion:reduce){.flybb{animation:none;opacity:0}}
+.segA{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+.segA button,.tiers button,.chips button,.lay button{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:8px 2px;font:700 .85rem var(--font-body)}
+.segA small,.tiers small{display:block;font:500 .66rem var(--font-data);color:var(--muted);margin-top:2px}
+.segA button[aria-pressed="true"]{background:var(--brass-soft);box-shadow:inset 0 0 0 2px var(--brass)}
+.tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.tiers button{font:700 .9rem var(--font-data)}.tiers small{color:var(--brass);font-size:.72rem}
+.tiers button[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--fg)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btcards{display:flex;flex-direction:column;gap:6px}
+.btcards button{display:flex;align-items:center;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:14px;padding:10px 12px;font:inherit}
+.btcards .ic{flex:none;width:36px;height:36px;border-radius:10px;background:var(--sunk);display:grid;place-items:center;font:800 .8rem var(--font-display)}
+.btcards b{display:block;font-size:.95rem}.btcards small{display:block;font-size:.76rem;color:var(--muted)}
+.btcards .pools{margin-left:auto;text-align:right;font:700 .78rem var(--font-data);white-space:nowrap}.btcards .pools u{display:block;text-decoration:none;color:var(--brass)}
+.btcards button[aria-pressed="true"]{background:var(--brass-soft);box-shadow:inset 0 0 0 2px var(--brass)}
+.chips{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:10px}
+.chips button{font:700 .74rem var(--font-data);padding:9px 0}.chips .c{color:var(--good)}.chips .b{color:var(--brass)}
+.chips button.c[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--felt)}
+.chips button.b[aria-pressed="true"]{background:var(--brass-soft);box-shadow:inset 0 0 0 2px var(--brass)}
+.lay{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;color:var(--muted)}.lay button{padding:5px 10px}
+.lay button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
 .card[data-go]{width:100%;color:inherit;font:inherit}
 .roll button[disabled]{cursor:not-allowed}
 </style>
@@ -188,7 +208,8 @@ const PHOTOS = [{"id": "almond", "title": "Almond blossom", "src": "data:image/j
 /* ---------- rules ---------- */
 const FEE = 5, HOUSE = 0.10, TO_FINAL = 0.05, HEAT = 6, HEAT_SPLIT = [0.6, 0.4], MAX_RACES = 3;
 const FIN_N = 10, FIN_SPLIT = [0.5, 0.3, 0.2], BET_FEE = 0.10, FULL_MIN = 75, J_PAIRS = 10, J_TESTS = 2, FIN_PAIRS = 3, FIN_JUDGES = 68, MIN_FIN_VOTES = 120;
-const BB_STAKES = [10000, 25000, 50000, 100000], CASH_STAKES = [2, 5, 10];
+const BB_STAKES = [10000, 25000, 50000, 100000], CASH_STAKES = [2, 5, 10], TIERS = [[2, 10000], [5, 25000], [10, 50000], [25, 100000]];
+const kfmt = n => n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? Math.round(n / 1e3) + 'k' : String(n);
 const BB_PER_USD = 4000, BB_MATCH = 25, BB_FIN = 50, BB_BONUS = 150, BB_CALL = 250, SOLO_MAX = 5;
 const kbb = n => n >= 1000 ? (n / 1000) + 'k' : String(n), amt = (n, cur) => cur === 'bb' ? bbs(Math.round(n)) : money(n);
 const bbs = n => n.toLocaleString('en-US') + ' BB', bbUsd = n => '$' + (n / BB_PER_USD).toFixed(2);
@@ -291,7 +312,7 @@ const judgeScore = () => S.judgeHist.length ? Math.round(S.judgeHist.reduce((a, 
 /* ---------- Best of the Day final ---------- */
 function buildFinal() {
   if (S.final) return;
-  const pool = OTHERS.filter(p => !LOWQ[p.id]).map(p => p.id), field = pickN(pool, FIN_N - (S.myFinalist ? 1 : 0)); if (S.myFinalist) field.unshift(S.myFinalist);
+  const pool = OTHERS.filter(p => !LOWQ[p.id] && p.id !== S.myFinalist).map(p => p.id), field = pickN(pool, FIN_N - (S.myFinalist ? 1 : 0)); if (S.myFinalist) field.unshift(S.myFinalist);
   const seedPool = (k, base) => { const o = {}; field.forEach(id => { o[id] = Math.round(base * (0.4 + Math.random() * 1.2)); }); return o; };
   S.final = { field, stage: 'betting', pools: { win: seedPool('win', 22), top3: seedPool('top3', 14), tri: 0 }, triBets: [], panel: [], linked: { judge: '@gabe', bettor: '@silent_partner', photo: field[3 + Math.floor(Math.random() * 5)] } };
   S.final.pools.tri = 180 + Math.round(Math.random() * 120);
@@ -409,17 +430,22 @@ function vFinal() {
     const panelOffer = '';
     const canBet = true;
     const sel = S.sel || [], need = bet === 'tri' ? 3 : 1;
-    body = `${panelOffer}
-    <div class="card"><h3>The field</h3><div class="field">${F.field.map((id, i) => { const n = sel.indexOf(id); return `<button data-fp="${id}" aria-pressed="${n >= 0}" ${!canBet || (inFinal && bet !== 'win') ? '' : ''}><img src="${img(id)}" alt="Finalist ${i + 1}"><span>#${i + 1}${id === S.myFinalist ? '<em>You</em>' : n >= 0 ? `<em>${bet === 'tri' ? ord(n + 1) : '✓'}</em>` : ''}</span></button>`; }).join('')}</div>
-      <p class="note">Finalists are anonymous. No odds are shown. Cash and BB bets go in separate pools, each paying winners its total minus 10%. Judging starts when bets close, and anyone with a bet never judges the final.</p></div>
-    ${canBet ? `<div class="card"><h3>${inFinal ? 'Back your photo' : 'Place a bet'}</h3>
-      <div class="cur" role="group" aria-label="Bet with">${[['cash', 'Cash · ' + money(S.cash)], ['bb', 'BB · ' + bbs(S.bb)]].map(([k, l]) => `<button data-cur="${k}" aria-pressed="${cur === k}" class="${k}">${l}</button>`).join('')}</div>
-      ${inFinal ? `<p class="note">You have a photo in the final, so you can only back your own photo to win.</p>` : `<div class="phase">${[['win', 'Win'], ['top3', 'Top 3'], ['tri', 'Trifecta']].map(([k, l]) => `<span role="button" tabindex="0" data-bt="${k}" class="${bet === k ? 'on' : ''}" style="cursor:pointer">${l}</span>`).join('')}</div>
-      <p class="note">${bet === 'win' ? 'Pick the photo that finishes 1st.' : bet === 'top3' ? 'Pick a photo to finish anywhere in the top 3.' : 'Pick 1st, 2nd and 3rd in exact order. Tap three photos.'}</p>`}
-      <div class="fact" style="margin:10px 0"><b>${amt(poolTotal(P[inFinal ? 'win' : bet]), cur)}</b><small>${cur === 'bb' ? 'BB ' : 'Cash '}${inFinal ? 'win' : bet === 'tri' ? 'trifecta' : bet === 'win' ? 'win' : 'top 3'} pool · winners split it minus 10%</small></div>
-      <div class="stakes" style="grid-template-columns:repeat(${cur === 'bb' ? 4 : 3},1fr);margin-bottom:10px">${(cur === 'bb' ? BB_STAKES : CASH_STAKES).map(v => `<button data-st="${v}" aria-pressed="${st === v}">${cur === 'bb' ? kbb(v) : '$' + v}</button>`).join('')}</div>
-      <button class="btn ${cur === 'bb' ? 'bbbtn' : 'cash'} block" data-act="bet" ${inFinal ? '' : sel.length === need ? '' : 'disabled'}>Place ${amt(st, cur)} ${inFinal ? 'on your photo' : bet === 'tri' ? 'trifecta' : bet === 'win' ? 'win bet' : 'top 3 bet'}</button></div>` : ''}
-    ${myBets ? `<div class="card"><h3>Your bets</h3><div class="lb">${myBets}</div></div>` : ''}`;
+    const BT = [['win', 'Win', 'Pick the photo that finishes 1st', '1'], ['top3', 'Top 3', 'Pick a photo to finish in the top 3', '3'], ['tri', 'Trifecta', '1st, 2nd and 3rd in exact order', '123']].filter(x => !inFinal || x[0] === 'win');
+    const pt = (c, k) => poolTotal((c === 'bb' ? F.bbPools : F.pools)[k]), ready = inFinal || sel.length === need, tip = inFinal ? 'You have a photo in the final, so you can only back your own photo to win.' : bet === 'tri' ? `Tap 1st, 2nd and 3rd in order${sel.length ? ` · ${sel.length} of 3` : ''}.` : bet === 'win' ? 'Tap the photo you think finishes 1st.' : 'Tap a photo you think finishes in the top 3.';
+    const fieldCard = h => `<div class="card"><h3>${h}</h3>FIELD<p class="note">Finalists are anonymous. No odds: cash and BB bets go in separate pools, each paying winners its total minus 10%. Anyone with a bet never judges the final.</p></div>`;
+    const tier = TIERS[S.tier ?? 1];
+    const layoutA = `${fieldCard(inFinal ? 'Your photo' : 'Tap your photos')}
+      <div class="card">${inFinal ? '' : `<div class="segA">${BT.map(([k, l]) => `<button data-bt="${k}" aria-pressed="${bet === k}">${l}<small>${money(pt('cash', k))} · ${kfmt(pt('bb', k))}</small></button>`).join('')}</div>`}
+      <p class="note" style="margin:0 0 10px">${tip}</p>
+      <div class="tiers">${TIERS.map(([c, b], n) => `<button data-tier="${n}" aria-pressed="${(S.tier ?? 1) === n}">$${c}<small>${kfmt(b)}</small></button>`).join('')}</div>
+      <div class="two"><button class="btn cash" data-act="betc" ${ready ? '' : 'disabled'}>Bet $${tier[0]}</button><button class="btn bbbtn" data-act="betb" ${ready ? '' : 'disabled'}>Bet ${kfmt(tier[1])} BB</button></div></div>`;
+    const chip = S.chip || { cur: 'cash', v: 5 };
+    const layoutB = `<div class="btcards">${BT.map(([k, l, d, ic]) => `<button data-bt="${k}" aria-pressed="${inFinal || bet === k}"><span class="ic">${ic}</span><span><b>${inFinal ? 'Back your photo to win' : l}</b><small>${d}</small></span><span class="pools">${money(pt('cash', k))}<u>${kfmt(pt('bb', k))} BB</u></span></button>`).join('')}</div>
+      ${fieldCard(inFinal ? 'Your photo' : bet === 'tri' ? 'Pick 1st, 2nd, 3rd' : bet === 'win' ? 'Pick the winner' : 'Pick a top 3 photo')}
+      <div class="card"><p class="note" style="margin:0 0 8px">${tip}</p><div class="chips">${CASH_STAKES.map(v => `<button class="c" data-chip="cash:${v}" aria-pressed="${chip.cur === 'cash' && chip.v === v}">$${v}</button>`).join('')}${BB_STAKES.map(v => `<button class="b" data-chip="bb:${v}" aria-pressed="${chip.cur === 'bb' && chip.v === v}">${kfmt(v)}</button>`).join('')}</div>
+      <button class="btn ${chip.cur === 'bb' ? 'bbbtn' : 'cash'} block" data-act="betchip" ${ready ? '' : 'disabled'}>Place ${amt(chip.v, chip.cur)} ${inFinal ? 'on your photo' : bet === 'tri' ? 'trifecta' : bet === 'win' ? 'win bet' : 'top 3 bet'}</button></div>`;
+    body = (S.layout === 'B' ? layoutB : layoutA).replace('FIELD', `<div class="field">${F.field.map((id, i) => { const n = sel.indexOf(id); return `<button data-fp="${id}" aria-pressed="${n >= 0}" ${!canBet || (inFinal && bet !== 'win') ? '' : ''}><img src="${img(id)}" alt="Finalist ${i + 1}"><span>#${i + 1}${id === S.myFinalist ? '<em>You</em>' : n >= 0 ? `<em>${bet === 'tri' ? ord(n + 1) : '✓'}</em>` : ''}</span></button>`; }).join('')}</div>`);
+    body += `${myBets ? `<div class="card"><h3>Your bets</h3><div class="lb">${myBets}</div></div>` : ''}`;
   } else if (F.stage === 'judging') {
     const mine = S.finMine.length, open = finalOpenToMe(), busy = S.heat && S.heat.stage !== 'done';
     body = `<div class="card"><h3>Bets closed · tonight’s heats are judging</h3><p class="note">Until 7:55, ${FIN_PAIRS} of every heat judge’s ${J_PAIRS} pairs are finalists. They look like any other pair. About ${FIN_JUDGES} judges, ${FIN_JUDGES * FIN_PAIRS} votes.</p>
@@ -433,7 +459,7 @@ function vFinal() {
     <div class="phase"><span class="${F.stage === 'betting' ? 'on' : 'done'}">${F.stage === 'betting' ? '' : '✓ '}Bets · to 7:30</span><span class="${F.stage === 'judging' ? 'on' : F.stage === 'done' ? 'done' : ''}">${F.stage === 'done' ? '✓ ' : ''}Judging · 7:55</span><span class="${F.stage === 'done' ? 'on' : ''}">Results · 8pm</span></div>
     <div class="facts"><div class="fact"><b>${money(S.pot)}</b><small>Prize pot</small></div><div class="fact"><b>${money(poolTotal(F.pools.win) + poolTotal(F.pools.top3) + F.pools.tri)}</b><small>Cash in pools</small></div><div class="fact"><b class="mono">${F.stage === 'betting' ? countdown(19, 30) : F.stage === 'judging' ? 'Live' : 'Done'}</b><small>${F.stage === 'betting' ? 'Bets close in' : 'Status'}</small></div></div>
     ${body}
-    <div class="demo"><span>Demo</span>${F.stage === 'betting' ? '<button class="btn ghost" data-act="close">Skip to 7:30</button>' : F.stage === 'judging' ? `<button class="btn ghost" data-act="settle" ${S.judge && S.judge.kind === 'heat' && !S.judge.done && S.judge.queue.some(q => q.fin) ? 'disabled' : ''}>Skip to 8pm</button>` : ''}<button class="link" data-act="reset">Start over</button></div>`;
+    <div class="demo"><span>Demo</span>${F.stage === 'betting' ? `<span class="lay">Layout ${['A', 'B'].map(x => `<button data-layout="${x}" aria-pressed="${(S.layout || 'A') === x}">${x}</button>`).join('')}</span><button class="btn ghost" data-act="close">Skip to 7:30</button>` : F.stage === 'judging' ? `<button class="btn ghost" data-act="settle" ${S.judge && S.judge.kind === 'heat' && !S.judge.done && S.judge.queue.some(q => q.fin) ? 'disabled' : ''}>Skip to 8pm</button>` : ''}<button class="link" data-act="reset">Start over</button></div>`;
 }
 function vFinalRes() { const R = S.finalResult, F = S.final;
   const rows = R.R.map((x, i) => `<div class="lr ${x.id === S.myFinalist ? 'me' : ''}"><span class="pl">${i + 1}</span><img src="${img(x.id)}" alt=""><span><b>${x.id === S.myFinalist ? 'Your photo' : esc(handleFor(x.id))}</b><small>${x.r} rating</small></span><span class="pz">${i < 3 ? money(R.prizes[i]) : ''}</span></div>`).join('');
@@ -480,6 +506,9 @@ document.addEventListener('click', e => {
   if (d.bt) { S.sub = d.bt; S.sel = []; render(); return; }
   if (d.st) { if ((S.cur || 'cash') === 'bb') S.bbStake = +d.st; else S.stake = +d.st; render(); return; }
   if (d.cur) { S.cur = d.cur; render(); return; }
+  if (d.layout) { S.layout = d.layout; render(); return; }
+  if (d.tier != null) { S.tier = +d.tier; render(); return; }
+  if (d.chip) { const [c, v] = d.chip.split(':'); S.chip = { cur: c, v: +v }; render(); return; }
   if (d.fp) { if (S.myFinalist) return; const bet = ['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win', need = bet === 'tri' ? 3 : 1; S.sel = S.sel || [];
     const i = S.sel.indexOf(d.fp); if (i >= 0) S.sel.splice(i, 1); else { if (S.sel.length >= need) S.sel = need === 1 ? [] : S.sel; if (S.sel.length < need) S.sel.push(d.fp); } render(); return; }
   if (d.vote) { const J = S.judge; if (!J || J.reveal) return; const p = J.queue[J.votes.length]; crowdOf(p);
@@ -489,7 +518,9 @@ document.addEventListener('click', e => {
     setTimeout(() => { if (S.judge !== J) return; J.reveal = null;
       if (J.votes.length >= J_PAIRS) { if (J.kind === 'heat') finishJudging(); else J.done = true; toast('Judging done · thanks'); } render(); }, 1100);
     return; }
-  const a = d.act; if (!a) return;
+  let a = d.act; if (!a) return;
+  if (a === 'betc' || a === 'betb') { const T = TIERS[S.tier ?? 1]; S.cur = a === 'betb' ? 'bb' : 'cash'; S.stake = T[0]; S.bbStake = T[1]; a = 'bet'; }
+  else if (a === 'betchip') { const c = S.chip || { cur: 'cash', v: 5 }; S.cur = c.cur; if (c.cur === 'bb') S.bbStake = c.v; else S.stake = c.v; a = 'bet'; }
   if (a === 'enter') { S.sub = 'enter'; S.pick = null; S.back = 0; }
   else if (a === 'back') S.sub = null;
   else if (a === 'confirmEnter') { const c = FEE + S.back; if (S.cash < c) { toast('Not enough cash'); return; } S.cash -= c; enterHeat(S.pick, S.back); S.sub = null; toast(`Entered heat #${S.heatNo} · ${money(c)} paid`); }
