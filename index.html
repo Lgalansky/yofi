@@ -173,6 +173,18 @@ tr:last-child td{border-bottom:0}
 .upside div{background:rgba(255,255,255,.14);border-radius:12px;padding:10px 12px}
 .upside b{display:block;font:800 1.45rem var(--font-data);color:inherit}
 .upside small{font:600 .7rem var(--font-body);letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.lineup{position:relative;height:118px;margin:2px 0 14px}
+.lineup .lp{position:absolute;left:calc(50% + var(--i) * min(46px, 11.5vw));top:18px;width:62px;height:78px;margin-left:-31px;border-radius:9px;border:3px solid #fff;overflow:visible;box-shadow:0 8px 18px rgba(0,0,0,.35);transform:rotate(calc(var(--i) * 5deg));background:#fff}
+.lineup .lp img{width:100%;height:100%;object-fit:cover;border-radius:6px;display:block}
+.lineup .lp.win{top:0;width:84px;height:104px;margin-left:-42px;z-index:2;transform:none;border-color:var(--brass);box-shadow:0 12px 26px rgba(0,0,0,.45)}
+.lineup .lp em{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);background:var(--brass);color:#1B1400;font:800 .72rem var(--font-data);padding:3px 9px;border-radius:999px;font-style:normal;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+.lineup .lp:nth-child(1),.lineup .lp:nth-child(6){opacity:.85}
+.minivs{position:relative;display:flex;align-items:center;flex:none}
+.minivs img{width:46px;height:58px;object-fit:cover;border-radius:7px;border:2px solid #fff;box-shadow:0 5px 12px rgba(0,0,0,.25)}
+.minivs img:first-child{transform:rotate(-6deg)}.minivs img:last-of-type{transform:rotate(6deg)}
+.minivs b{margin:0 -6px;z-index:1;background:var(--fg);color:var(--bg);font:800 .62rem var(--font-display);padding:4px 5px;border-radius:999px}
+.minivs em{position:absolute;right:-6px;top:-10px;background:var(--brass);color:#1B1400;font:800 .62rem var(--font-data);padding:2px 6px;border-radius:999px;font-style:normal;transform:rotate(8deg)}
+@media (max-width:360px){.brand{font-size:.78rem}.pill{padding:4px 7px;font-size:.78rem}.pill.bb i{display:none}.minivs img{width:36px;height:46px}.judgecard h2{font-size:1.25rem}}
 .card[data-go]{width:100%;color:inherit;font:inherit}
 .roll button[disabled]{cursor:not-allowed}
 </style>
@@ -352,17 +364,20 @@ function settleFinal() {
 
 /* ---------- views ---------- */
 function vLobby() {
-  const s3 = pickN(OTHERS, 3), js = judgeScore();
+  if (!S.lobbyPics) S.lobbyPics = pickN(OTHERS.filter(p => !LOWQ[p.id]), 8).map(p => p.id);
+  const s3 = S.lobbyPics.slice(0, 3).map(id => byId[id]), six = S.lobbyPics.slice(0, 6), pair = S.lobbyPics.slice(6, 8), js = judgeScore();
   return `<div><p class="eyebrow">Casino lobby</p><h1>Tonight’s games</h1></div>
-  <div class="feature"><div><p class="eyebrow" style="color:inherit;opacity:.8">Photo contests</p><h2>Photo Heats</h2><p>Race your photo against 5 others. Top 2 win cash, and the winner races tonight’s final.</p>
+  <div class="feature"><div><div class="lineup" aria-hidden="true">${six.map((id, i) => `<span class="lp${i === 2 ? ' win' : ''}" style="--i:${i - 2.5}"><img src="${img(id)}" alt="">${i === 2 ? '<em>1st</em>' : ''}</span>`).join('')}</div>
+    <p class="eyebrow" style="color:inherit;opacity:.8">Photo contests</p><h2>Photo Heats</h2><p>Race your photo against 5 others. Top 2 win cash, and the winner races tonight’s final.</p>
     <div class="upside"><div><b>${money(HEAT * FEE * (1 - HOUSE - TO_FINAL) * HEAT_SPLIT[0])}</b><small>Win your heat</small></div><div><b>${money(S.pot * FIN_SPLIT[0])}</b><small>Win tonight’s final</small></div></div>
     <button class="btn block featcta" data-act="${S.heat && S.heat.stage !== 'done' ? 'toHeats' : 'enterNow'}">${S.heat && S.heat.stage !== 'done' ? 'Back to your heat' : 'Enter a photo'}</button></div>
-    <div class="stack" aria-hidden="true">${s3.map((e, i) => `<img src="${img(e.id)}" alt="" style="left:${i * 16}px;top:${i * 10}px;transform:rotate(${[-8, 3, 10][i]}deg)">`).join('')}</div></div>
-  <div class="card judgecard"><div class="row" style="justify-content:space-between;align-items:flex-start;gap:8px"><div><p class="eyebrow">Free · earn BB</p><h2>Judge &amp; earn</h2></div><span class="pill bb"><i>Today</i>+${S.bbToday.toLocaleString('en-US')}</span></div>
+    </div>
+  <div class="card judgecard"><div class="row" style="justify-content:space-between;align-items:center;gap:8px;flex-wrap:nowrap"><div><p class="eyebrow">Free · earn BB</p><h2>Judge &amp; earn</h2></div>
+    <div class="minivs" aria-hidden="true"><img src="${img(pair[0])}" alt=""><b>VS</b><img src="${img(pair[1])}" alt=""><em>+${BB_MATCH} BB</em></div></div>
     <p class="note">Pick the better of two photos. Earn ${BB_MATCH} BB every time you match the crowd, plus a ${bbs(BB_BONUS)} bonus for a strong session.</p>
     ${S.banned ? `<div class="hold">Judging paused for ${BAN_DAYS} days: two sessions in a row scored under ${JUDGE_MIN}.</div>`
       : S.solo >= SOLO_MAX ? `<p class="note"><b>That’s today’s ${SOLO_MAX} sessions.</b> Back tomorrow.</p>`
-      : `<button class="btn block" data-act="solo">Judge photos · free</button><p class="note" style="text-align:center;margin:6px 0 0">${SOLO_MAX - S.solo} of ${SOLO_MAX} sessions left today${js != null ? ` · judge score ${js}` : ''}</p>`}</div>
+      : `<button class="btn block" data-act="solo">Judge photos · free</button><p class="note" style="text-align:center;margin:6px 0 0">${SOLO_MAX - S.solo} of ${SOLO_MAX} sessions left today${S.bbToday ? ` · <b class="bbtxt">+${bbs(S.bbToday)} today</b>` : ''}${js != null ? ` · score ${js}` : ''}</p>`}</div>
   <button class="card" data-go="final" style="text-align:left;border-color:var(--brass)"><p class="eyebrow">Tonight · 8pm</p><h2>Best of the Day</h2><p class="note">Top ${FIN_N} heat winners. Bets close at 7:30: Win, Top 3 and Trifecta.</p>
     <div class="facts"><div class="fact"><b>${money(S.pot)}</b><small>Prize pot</small></div><div class="fact"><b>${S.heatsToday}</b><small>Heats today</small></div><div class="fact"><b class="mono" id="cd">${countdown()}</b><small>Starts in</small></div></div></button>
   <div class="games" aria-label="Other games">${[['🎰', 'Slots'], ['🃏', 'Blackjack'], ['🎡', 'Roulette']].map(([i, t]) => `<div class="game"><span>${i}</span>${t}</div>`).join('')}</div>
