@@ -153,6 +153,12 @@ tr:last-child td{border-bottom:0}
 .bbwin.held{background:var(--sunk);border-color:var(--line)}.bbwin.held b{color:var(--muted)}
 .btn:not(.cash):not(.ghost).block{background:var(--fg);color:var(--bg)}
 @media (max-width:420px){.brand{font-size:.95rem;white-space:nowrap}.pill.cashp i{display:none}.brand small{display:none}.pill{padding:5px 8px;gap:4px}}
+.btn.bbbtn{background:var(--brass);color:#1B1400}
+.cur{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 10px}
+.cur button{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:9px 6px;font:700 .82rem var(--font-data)}
+.cur button.cash[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--felt)}
+.cur button.bb[aria-pressed="true"]{background:var(--brass-soft);box-shadow:inset 0 0 0 2px var(--brass)}
+.lr.bet .pz small{display:block;font:500 .66rem var(--font-data);color:var(--muted);text-align:right}
 .card[data-go]{width:100%;color:inherit;font:inherit}
 .roll button[disabled]{cursor:not-allowed}
 </style>
@@ -179,7 +185,9 @@ const PHOTOS = [{"id": "almond", "title": "Almond blossom", "src": "data:image/j
 /* ---------- rules ---------- */
 const FEE = 5, HOUSE = 0.10, TO_FINAL = 0.05, HEAT = 6, HEAT_SPLIT = [0.6, 0.4], MAX_RACES = 3;
 const FIN_N = 10, FIN_SPLIT = [0.5, 0.3, 0.2], BET_FEE = 0.10, FULL_MIN = 75, J_PAIRS = 10, J_TESTS = 2, FIN_PAIRS = 3, FIN_JUDGES = 68, MIN_FIN_VOTES = 120;
+const BB_STAKES = [10000, 25000, 50000, 100000], CASH_STAKES = [2, 5, 10];
 const BB_PER_USD = 4000, BB_MATCH = 25, BB_FIN = 50, BB_BONUS = 150, BB_CALL = 250, SOLO_MAX = 5;
+const kbb = n => n >= 1000 ? (n / 1000) + 'k' : String(n), amt = (n, cur) => cur === 'bb' ? bbs(Math.round(n)) : money(n);
 const bbs = n => n.toLocaleString('en-US') + ' BB', bbUsd = n => '$' + (n / BB_PER_USD).toFixed(2);
 const ROLL = ['owndog', 'owncliff', 'ownflowers', 'owndesert'];
 const byId = Object.fromEntries(PHOTOS.map(p => [p.id, p]));
@@ -204,7 +212,7 @@ function makeBlur(id) { const im = new Image(); im.onload = () => { try { const 
 let S;
 function fresh() {
   return { tab: 'lobby', cash: 60, races: {}, retired: {}, heat: null, heatNo: 141, judge: null, judgeHist: [], sub: null, pick: null, back: 0,
-    final: null, finalResult: null, heatsToday: 68, retiredToday: 23, pot: 68 * HEAT * FEE * TO_FINAL, bets: [], finMine: [], finTests: [], bb: 2500, solo: 0, bbPaidToday: 68 * 6 * 290 };
+    final: null, finalResult: null, heatsToday: 68, retiredToday: 23, pot: 68 * HEAT * FEE * TO_FINAL, bets: [], finMine: [], finTests: [], bb: 60000, solo: 0, bbPaidToday: 68 * 6 * 290 };
 }
 
 /* ---------- ranking from 1v1 results (weighted Bradley–Terry) ---------- */
@@ -284,6 +292,8 @@ function buildFinal() {
   const seedPool = (k, base) => { const o = {}; field.forEach(id => { o[id] = Math.round(base * (0.4 + Math.random() * 1.2)); }); return o; };
   S.final = { field, stage: 'betting', pools: { win: seedPool('win', 22), top3: seedPool('top3', 14), tri: 0 }, triBets: [], panel: [], linked: { judge: '@gabe', bettor: '@silent_partner', photo: field[3 + Math.floor(Math.random() * 5)] } };
   S.final.pools.tri = 180 + Math.round(Math.random() * 120);
+  const seedBB = base => { const o = {}; field.forEach(id => { o[id] = Math.round(base * (0.4 + Math.random() * 1.2) / 5000) * 5000; }); return o; };
+  S.final.bbPools = { win: seedBB(90000), top3: seedBB(60000), tri: 600000 + Math.round(Math.random() * 40) * 10000 };
   S.final.pools.win[S.final.linked.photo] += 60;   // a large bet from the account linked to one of the judges
 }
 const poolTotal = o => typeof o === 'number' ? o : Object.values(o).reduce((a, b) => a + b, 0);
@@ -303,20 +313,24 @@ function settleFinal() {
   const R = rank(F.field, votes), raw = rank(F.field, all.flatMap(j => j.votes.map(v => Object.assign({}, v, { w: 1 })))), top = R.slice(0, 3).map(x => x.id);
   const prizes = FIN_SPLIT.map(f => +(S.pot * f).toFixed(2));
   // settle bets from pools
-  const winPool = poolTotal(F.pools.win), top3Pool = poolTotal(F.pools.top3), triPool = F.pools.tri;
-  const winOn = F.pools.win[top[0]] || 0, top3On = top.reduce((a, id) => a + (F.pools.top3[id] || 0), 0), triHits = S.bets.filter(b => b.type === 'tri' && b.picks.join() === top.join()).length;
-  let myWon = 0; S.bets.forEach(b => {
-    if (b.type === 'win' && b.picks[0] === top[0]) b.paid = +(b.stake / winOn * winPool * (1 - BET_FEE)).toFixed(2);
-    else if (b.type === 'top3' && top.includes(b.picks[0])) b.paid = +(b.stake / top3On * top3Pool * (1 - BET_FEE)).toFixed(2);
-    else if (b.type === 'tri' && b.picks.join() === top.join()) b.paid = +(triPool * (1 - BET_FEE) / Math.max(1, triHits)).toFixed(2);
-    else b.paid = 0; myWon += b.paid; });
+  const settle = (P, cur) => { const mine = S.bets.filter(b => (b.cur || 'cash') === cur);
+    const winPool = poolTotal(P.win), top3Pool = poolTotal(P.top3), triPool = P.tri, winOn = P.win[top[0]] || 0, top3On = top.reduce((a, id) => a + (P.top3[id] || 0), 0);
+    const triHits = mine.filter(b => b.type === 'tri' && b.picks.join() === top.join()).length, dp = cur === 'bb' ? 0 : 2; let won = 0;
+    mine.forEach(b => {
+      if (b.type === 'win' && b.picks[0] === top[0]) b.paid = +(b.stake / winOn * winPool * (1 - BET_FEE)).toFixed(dp);
+      else if (b.type === 'top3' && top.includes(b.picks[0])) b.paid = +(b.stake / top3On * top3Pool * (1 - BET_FEE)).toFixed(dp);
+      else if (b.type === 'tri' && b.picks.join() === top.join()) b.paid = +(triPool * (1 - BET_FEE) / Math.max(1, triHits)).toFixed(dp);
+      else b.paid = 0; won += b.paid; });
+    return { won, winPool, top3Pool, triPool, triRolls: !triHits && mine.some(b => b.type === 'tri') }; };
+  const C = settle(F.pools, 'cash'), B = settle(F.bbPools, 'bb'), winPool = C.winPool, top3Pool = C.top3Pool, triPool = C.triPool;
+  let myWon = C.won; const myWonBB = B.won;
   const place = S.myFinalist ? R.findIndex(x => x.id === S.myFinalist) + 1 : 0; if (place && place <= 3) myWon += prizes[place - 1];
   const trusted = all.reduce((a, j) => a + j.w * j.votes.length, 0) / all.reduce((a, j) => a + j.votes.length, 0), linkedWin = top[0] === F.linked.photo;
   const hold = linkedWin || trusted < .7;
-  if (!hold) S.cash = +(S.cash + myWon).toFixed(2);
+  if (!hold) { S.cash = +(S.cash + myWon).toFixed(2); S.bb += myWonBB; }
   const rk = {}; R.forEach((x, i) => { rk[x.id] = i; });
   const called = S.finMine.filter(v => (rk[v.L] < rk[v.R]) === v.pickLeft).length, calledBB = called * BB_CALL; if (!hold) { S.bb += calledBB; S.bbPaidToday += calledBB; }
-  S.finalResult = { called, calledBB, finVotes: all.reduce((a, j) => a + j.votes.length, 0), judges: all.length, R, raw, prizes, myWon: +myWon.toFixed(2), place, all, trusted, hold, linkedWin, triRolls: !triHits && !S.bets.some(b => b.type === 'tri' && b.paid), winPool, top3Pool, triPool };
+  S.finalResult = { called, calledBB, finVotes: all.reduce((a, j) => a + j.votes.length, 0), judges: all.length, R, raw, prizes, myWon: +myWon.toFixed(2), myWonBB, C, B, place, all, trusted, hold, linkedWin, triRolls: C.triRolls, winPool, top3Pool, triPool };
   F.stage = 'done';
 }
 
@@ -385,21 +399,23 @@ function judgeCard(J) { const s = J.summary, js = judgeScore();
     <p class="note">Your average: <b>${js}</b>. ${js >= FULL_MIN ? 'Your votes count in full.' : `Average ${FULL_MIN}+ for your votes to count in full. Low scores count for less.`}${s.fin ? ` ${s.fin} of your pairs were from tonight’s Best of the Day.` : ''}</p></div>`; }
 
 function vFinal() {
-  buildFinal(); const F = S.final, js = judgeScore(), inFinal = !!S.myFinalist, bet = ['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win';
+  buildFinal(); const F = S.final, js = judgeScore(), inFinal = !!S.myFinalist, bet = ['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win', cur = S.cur || 'cash', st = cur === 'bb' ? (S.bbStake || BB_STAKES[0]) : (S.stake || 5), P = cur === 'bb' ? F.bbPools : F.pools;
   let body = '';
   if (F.stage === 'betting') {
-    const myBets = S.bets.map(b => `<div class="lr bet"><span class="pl">${b.type === 'tri' ? '1-2-3' : b.type === 'win' ? 'Win' : 'Top 3'}</span><span class="row" style="gap:4px">${b.picks.map(id => `<img src="${img(id)}" alt="" style="width:36px;height:36px">`).join('')}</span><span class="pz">${money(b.stake)}</span></div>`).join('');
+    const myBets = S.bets.map(b => `<div class="lr bet"><span class="pl">${b.type === 'tri' ? '1-2-3' : b.type === 'win' ? 'Win' : 'Top 3'}</span><span class="row" style="gap:4px">${b.picks.map(id => `<img src="${img(id)}" alt="" style="width:36px;height:36px">`).join('')}</span><span class="pz"${b.cur === "bb" ? ' style="color:var(--brass)"' : ""}>${amt(b.stake, b.cur)}</span></div>`).join('');
     const panelOffer = '';
     const canBet = true;
     const sel = S.sel || [], need = bet === 'tri' ? 3 : 1;
     body = `${panelOffer}
     <div class="card"><h3>The field</h3><div class="field">${F.field.map((id, i) => { const n = sel.indexOf(id); return `<button data-fp="${id}" aria-pressed="${n >= 0}" ${!canBet || (inFinal && bet !== 'win') ? '' : ''}><img src="${img(id)}" alt="Finalist ${i + 1}"><span>#${i + 1}${id === S.myFinalist ? '<em>You</em>' : n >= 0 ? `<em>${bet === 'tri' ? ord(n + 1) : '✓'}</em>` : ''}</span></button>`; }).join('')}</div>
-      <p class="note">Finalists are anonymous. No odds are shown: each pool pays winners its total minus 10%. Judging starts when bets close, and anyone with a bet never judges the final.</p></div>
+      <p class="note">Finalists are anonymous. No odds are shown. Cash and BB bets go in separate pools, each paying winners its total minus 10%. Judging starts when bets close, and anyone with a bet never judges the final.</p></div>
     ${canBet ? `<div class="card"><h3>${inFinal ? 'Back your photo' : 'Place a bet'}</h3>
+      <div class="cur" role="group" aria-label="Bet with">${[['cash', 'Cash · ' + money(S.cash)], ['bb', 'BB · ' + bbs(S.bb)]].map(([k, l]) => `<button data-cur="${k}" aria-pressed="${cur === k}" class="${k}">${l}</button>`).join('')}</div>
       ${inFinal ? `<p class="note">You have a photo in the final, so you can only back your own photo to win.</p>` : `<div class="phase">${[['win', 'Win'], ['top3', 'Top 3'], ['tri', 'Trifecta']].map(([k, l]) => `<span role="button" tabindex="0" data-bt="${k}" class="${bet === k ? 'on' : ''}" style="cursor:pointer">${l}</span>`).join('')}</div>
       <p class="note">${bet === 'win' ? 'Pick the photo that finishes 1st.' : bet === 'top3' ? 'Pick a photo to finish anywhere in the top 3.' : 'Pick 1st, 2nd and 3rd in exact order. Tap three photos.'}</p>`}
-      <div class="money"><div class="fact"><b>${money(poolTotal(F.pools[inFinal ? 'win' : bet]))}</b><small>${inFinal ? 'Win' : bet === 'tri' ? 'Trifecta' : bet === 'win' ? 'Win' : 'Top 3'} pool</small></div><div class="fact"><div class="stakes" style="grid-template-columns:repeat(3,1fr)">${[2, 5, 10].map(v => `<button data-st="${v}" aria-pressed="${(S.stake || 5) === v}">$${v}</button>`).join('')}</div></div></div>
-      <button class="btn cash block" data-act="bet" ${inFinal ? '' : sel.length === need ? '' : 'disabled'}>Place ${money(S.stake || 5)} ${inFinal ? 'on your photo' : bet === 'tri' ? 'trifecta' : bet === 'win' ? 'win bet' : 'top 3 bet'}</button></div>` : ''}
+      <div class="fact" style="margin:10px 0"><b>${amt(poolTotal(P[inFinal ? 'win' : bet]), cur)}</b><small>${cur === 'bb' ? 'BB ' : 'Cash '}${inFinal ? 'win' : bet === 'tri' ? 'trifecta' : bet === 'win' ? 'win' : 'top 3'} pool · winners split it minus 10%</small></div>
+      <div class="stakes" style="grid-template-columns:repeat(${cur === 'bb' ? 4 : 3},1fr);margin-bottom:10px">${(cur === 'bb' ? BB_STAKES : CASH_STAKES).map(v => `<button data-st="${v}" aria-pressed="${st === v}">${cur === 'bb' ? kbb(v) : '$' + v}</button>`).join('')}</div>
+      <button class="btn ${cur === 'bb' ? 'bbbtn' : 'cash'} block" data-act="bet" ${inFinal ? '' : sel.length === need ? '' : 'disabled'}>Place ${amt(st, cur)} ${inFinal ? 'on your photo' : bet === 'tri' ? 'trifecta' : bet === 'win' ? 'win bet' : 'top 3 bet'}</button></div>` : ''}
     ${myBets ? `<div class="card"><h3>Your bets</h3><div class="lb">${myBets}</div></div>` : ''}`;
   } else if (F.stage === 'judging') {
     const mine = S.finMine.length, open = finalOpenToMe(), busy = S.heat && S.heat.stage !== 'done';
@@ -412,17 +428,17 @@ function vFinal() {
   } else body = vFinalRes();
   return `<div><p class="eyebrow">Tonight · 8pm</p><h1>Best of the Day</h1><p class="lede">The day’s top heat winners, judged blind by players in tonight’s heats.</p></div>
     <div class="phase"><span class="${F.stage === 'betting' ? 'on' : 'done'}">${F.stage === 'betting' ? '' : '✓ '}Bets · to 7:30</span><span class="${F.stage === 'judging' ? 'on' : F.stage === 'done' ? 'done' : ''}">${F.stage === 'done' ? '✓ ' : ''}Judging · 7:55</span><span class="${F.stage === 'done' ? 'on' : ''}">Results · 8pm</span></div>
-    <div class="facts"><div class="fact"><b>${money(S.pot)}</b><small>Prize pot</small></div><div class="fact"><b>${money(poolTotal(F.pools.win) + poolTotal(F.pools.top3) + F.pools.tri)}</b><small>In bet pools</small></div><div class="fact"><b class="mono">${F.stage === 'betting' ? countdown(19, 30) : F.stage === 'judging' ? 'Live' : 'Done'}</b><small>${F.stage === 'betting' ? 'Bets close in' : 'Status'}</small></div></div>
+    <div class="facts"><div class="fact"><b>${money(S.pot)}</b><small>Prize pot</small></div><div class="fact"><b>${money(poolTotal(F.pools.win) + poolTotal(F.pools.top3) + F.pools.tri)}</b><small>Cash in pools</small></div><div class="fact"><b class="mono">${F.stage === 'betting' ? countdown(19, 30) : F.stage === 'judging' ? 'Live' : 'Done'}</b><small>${F.stage === 'betting' ? 'Bets close in' : 'Status'}</small></div></div>
     ${body}
     <div class="demo"><span>Demo</span>${F.stage === 'betting' ? '<button class="btn ghost" data-act="close">Skip to 7:30</button>' : F.stage === 'judging' ? `<button class="btn ghost" data-act="settle" ${S.judge && S.judge.kind === 'heat' && !S.judge.done && S.judge.queue.some(q => q.fin) ? 'disabled' : ''}>Skip to 8pm</button>` : ''}<button class="link" data-act="reset">Start over</button></div>`;
 }
 function vFinalRes() { const R = S.finalResult, F = S.final;
   const rows = R.R.map((x, i) => `<div class="lr ${x.id === S.myFinalist ? 'me' : ''}"><span class="pl">${i + 1}</span><img src="${img(x.id)}" alt=""><span><b>${x.id === S.myFinalist ? 'Your photo' : esc(handleFor(x.id))}</b><small>${x.r} rating</small></span><span class="pz">${i < 3 ? money(R.prizes[i]) : ''}</span></div>`).join('');
-  const bets = S.bets.map(b => `<div class="lr bet"><span class="pl">${b.type === 'tri' ? '1-2-3' : b.type === 'win' ? 'Win' : 'Top 3'}</span><span class="row" style="gap:4px">${b.picks.map(id => `<img src="${img(id)}" alt="" style="width:36px;height:36px">`).join('')}</span><span class="pz" style="color:${b.paid ? 'var(--good)' : 'var(--muted)'}">${b.paid ? money(b.paid) : 'Lost'}</span></div>`).join('');
-  return `${R.hold ? `<div class="hold">Payouts are on hold while staff review the final.${R.myWon ? ` Your ${money(R.myWon)} is paid once it’s cleared.` : ''}</div>` : ''}
+  const bets = S.bets.map(b => `<div class="lr bet"><span class="pl">${b.type === 'tri' ? '1-2-3' : b.type === 'win' ? 'Win' : 'Top 3'}</span><span class="row" style="gap:4px">${b.picks.map(id => `<img src="${img(id)}" alt="" style="width:36px;height:36px">`).join('')}</span><span class="pz" style="color:${b.paid ? (b.cur === 'bb' ? 'var(--brass)' : 'var(--good)') : 'var(--muted)'}">${b.paid ? amt(b.paid, b.cur) : 'Lost'} <small>${amt(b.stake, b.cur)} stake</small></span></div>`).join('');
+  return `${R.hold ? `<div class="hold">Payouts are on hold while staff review the final.${R.myWon || R.myWonBB ? ` Your winnings are paid once it’s cleared.` : ''}</div>` : ''}
     ${S.finMine.length ? `<div class="bbwin"><b>+${bbs(R.calledBB)}</b><small>You called ${R.called} of ${S.finMine.length} final pairs you judged · ${bbs(BB_CALL)} each${R.hold ? " · paid once cleared" : ""}</small></div>` : ''}
-    ${S.myFinalist || S.bets.length ? `<div class="money">${S.myFinalist ? `<div class="fact"><b>${R.place ? ord(R.place) : '—'}</b><small>Your photo</small></div>` : `<div class="fact"><b>${S.bets.filter(b => b.paid).length}/${S.bets.length}</b><small>Bets won</small></div>`}<div class="fact"><b class="${R.myWon ? 'up' : ''}">${money(R.myWon)}</b><small>You won</small></div></div>` : ""}
-    ${bets ? `<div class="card"><h3>Your bets</h3><div class="lb">${bets}</div>${R.triRolls ? `<p class="note">Nobody hit the trifecta. Its ${money(R.triPool)} pool rolls into tomorrow’s.</p>` : ''}</div>` : ''}
+    ${S.myFinalist || S.bets.length ? `<div class="money">${S.myFinalist ? `<div class="fact"><b>${R.place ? ord(R.place) : '—'}</b><small>Your photo</small></div>` : `<div class="fact"><b>${S.bets.filter(b => b.paid).length}/${S.bets.length}</b><small>Bets won</small></div>`}<div class="fact"><b class="${R.myWon ? 'up' : ''}">${R.myWonBB && !R.myWon && !S.bets.some(b => b.cur !== "bb") && !S.myFinalist ? `<span class="bbtxt">+${bbs(R.myWonBB)}</span>` : money(R.myWon) + (R.myWonBB ? `<br><span class="bbtxt">+${bbs(R.myWonBB)}</span>` : "")}</b><small>You won</small></div></div>` : ""}
+    ${bets ? `<div class="card"><h3>Your bets</h3><div class="lb">${bets}</div>${R.triRolls ? `<p class="note">Nobody hit the cash trifecta. Its ${money(R.triPool)} pool rolls into tomorrow’s.</p>` : ''}${R.B.triRolls ? `<p class="note">Nobody hit the BB trifecta. Its ${bbs(R.B.triPool)} pool rolls into tomorrow’s.</p>` : ''}</div>` : ''}
     <div class="card"><h3>Final standings</h3><div class="lb">${rows}</div></div>`; }
 
 function vStaff() {
@@ -440,7 +456,8 @@ function vStaff() {
   <div class="card"><h3>Final judges, lowest trust first</h3><div class="tbl"><table><thead><tr><th>Judge</th><th>Trust</th><th>Checks</th><th>With crowd</th><th>Median time</th><th>Weight</th><th>Flags</th></tr></thead><tbody>
   ${J.slice(0, 10).map(j => `<tr><td>${esc(j.name)}</td><td><span class="trust"><i><u style="width:${j.t.score}%;background:${col(j.t.score)}"></u></i>${j.t.score}</span></td><td class="n">${Math.round(j.t.T * 100)}%</td><td class="n">${Math.round(j.t.agree * 100)}%</td><td class="n">${(j.t.med / 1000).toFixed(1)}s</td>
     <td>${j.w === 1 ? '<span class="chip good">Full</span>' : j.w ? '<span class="chip warn">Half</span>' : '<span class="chip bad">Dropped</span>'}</td><td>${[j.linked ? ['Linked to a bettor', 'bad'] : null, j.t.T < .5 ? ['Failed checks', 'bad'] : j.t.T < .75 ? ['Missed a check', 'warn'] : null, j.t.med < 800 ? ['Too fast', 'warn'] : null].filter(Boolean).map(([f, c]) => `<span class="chip ${c}">${f}</span>`).join(' ') || '—'}</td></tr>`).join('')}</tbody></table></div>${J.length > 10 ? `<p class="note">+ ${J.length - 10} more judges: ${J.slice(10).filter(j => j.w === 1).length} at full weight, ${J.slice(10).filter(j => j.w === .5).length} at half.</p>` : ''}</div>
-  <div class="card"><h3>Money tonight</h3><div class="money"><div class="fact"><b>${money(S.pot)}</b><small>Final prize pot (5% of heats)</small></div><div class="fact"><b>${money(R.winPool)}</b><small>Win pool</small></div><div class="fact"><b>${money(R.top3Pool)}</b><small>Top 3 pool</small></div><div class="fact"><b>${money(R.triPool)}</b><small>Trifecta pool</small></div></div><p class="note">Bet pools pay winners minus 10%. The house never takes a side.</p>
+  <div class="card"><h3>Money tonight</h3><div class="money"><div class="fact"><b>${money(S.pot)}</b><small>Final prize pot (5% of heats)</small></div><div class="fact"><b>${money(R.winPool)}</b><small>Win pool</small></div><div class="fact"><b>${money(R.top3Pool)}</b><small>Top 3 pool</small></div><div class="fact"><b>${money(R.triPool)}</b><small>Trifecta pool</small></div></div><div class="money"><div class="fact"><b>${bbs(poolTotal(R.B.winPool) + R.B.top3Pool + R.B.triPool)}</b><small>BB bet pools</small></div><div class="fact"><b>${bbs(Math.round((R.B.winPool + R.B.top3Pool + R.B.triPool) * BET_FEE))}</b><small>BB bet fee · ${bbUsd(Math.round((R.B.winPool + R.B.top3Pool + R.B.triPool) * BET_FEE))}</small></div></div>
+  <p class="note">Bet pools pay winners minus 10%. The house never takes a side.</p>
   <div class="money"><div class="fact"><b>${bbs(S.bbPaidToday)}</b><small>BB paid to judges today</small></div><div class="fact"><b>${bbUsd(S.bbPaidToday)}</b><small>Face value · ${Math.round(S.bbPaidToday / BB_PER_USD / (S.heatsToday * HEAT * FEE * HOUSE) * 100)}% of heat fees</small></div></div></div>`;
 }
 
@@ -458,7 +475,8 @@ document.addEventListener('click', e => {
   if (d.roll) { S.pick = d.roll; render(); return; }
   if (d.back != null) { S.back = +d.back; render(); return; }
   if (d.bt) { S.sub = d.bt; S.sel = []; render(); return; }
-  if (d.st) { S.stake = +d.st; render(); return; }
+  if (d.st) { if ((S.cur || 'cash') === 'bb') S.bbStake = +d.st; else S.stake = +d.st; render(); return; }
+  if (d.cur) { S.cur = d.cur; render(); return; }
   if (d.fp) { if (S.myFinalist) return; const bet = ['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win', need = bet === 'tri' ? 3 : 1; S.sel = S.sel || [];
     const i = S.sel.indexOf(d.fp); if (i >= 0) S.sel.splice(i, 1); else { if (S.sel.length >= need) S.sel = need === 1 ? [] : S.sel; if (S.sel.length < need) S.sel.push(d.fp); } render(); return; }
   if (d.vote) { const J = S.judge; if (!J || J.reveal) return; const p = J.queue[J.votes.length]; crowdOf(p);
@@ -476,9 +494,10 @@ document.addEventListener('click', e => {
   else if (a === 'toHeats') { S.tab = 'heats'; S.sub = null; }
   else if (a === 'solo' || a === 'soloFinal') { if (S.solo >= SOLO_MAX) { toast('Daily judging limit reached'); return; } S.judge = newJudge(OTHERS, true); S.tab = 'heats'; S.sub = null; }
   else if (a === 'soloDone') { S.judge = null; }
-  else if (a === 'bet') { const F = S.final, bet = S.myFinalist ? 'win' : (['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win'), st = S.stake || 5, picks = S.myFinalist ? [S.myFinalist] : S.sel.slice();
-    if (S.cash < st) { toast('Not enough cash'); return; } S.cash -= st; S.bets.push({ type: bet, picks, stake: st });
-    if (bet === 'tri') F.pools.tri += st; else F.pools[bet][picks[0]] = (F.pools[bet][picks[0]] || 0) + st; S.sel = []; toast(`Bet placed · ${money(st)}`); }
+  else if (a === 'bet') { const F = S.final, bet = S.myFinalist ? 'win' : (['win', 'top3', 'tri'].includes(S.sub) ? S.sub : 'win'), cur = S.cur || 'cash', st = cur === 'bb' ? (S.bbStake || BB_STAKES[0]) : (S.stake || 5), picks = S.myFinalist ? [S.myFinalist] : S.sel.slice();
+    if ((cur === 'bb' ? S.bb : S.cash) < st) { toast(cur === 'bb' ? 'Not enough BB' : 'Not enough cash'); return; }
+    if (cur === 'bb') S.bb -= st; else S.cash = +(S.cash - st).toFixed(2); S.bets.push({ type: bet, picks, stake: st, cur });
+    const P = cur === 'bb' ? F.bbPools : F.pools; if (bet === 'tri') P.tri += st; else P[bet][picks[0]] = (P[bet][picks[0]] || 0) + st; S.sel = []; toast(`Bet placed · ${amt(st, cur)}`); }
   else if (a === 'close') { closeFinal(); }
   else if (a === 'settle') settleFinal();
   else if (a === 'reset') { const tab = S.tab; S = fresh(); S.tab = tab; }
