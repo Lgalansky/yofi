@@ -406,6 +406,14 @@ h1{font-size:1.65rem}
 .rhead{position:relative}
 .rhead .snd{top:-4px;right:-4px}
 
+.est{background:rgba(5,22,28,.55);border:1px solid rgba(245,181,51,.35);border-radius:14px;padding:10px 12px;margin:0 0 12px;text-align:center}
+.est span{display:block;font-size:.8rem;color:var(--muted)}
+.est div{display:flex;justify-content:center;align-items:baseline;gap:10px;margin:2px 0}
+.est b{font:900 1.45rem var(--font-data);color:var(--gold-hi)}.est b.bbtxt{color:var(--brass);font-size:1.2rem}
+.est i{font-style:normal;color:var(--muted);font-size:.8rem}
+.est small{display:block;font-size:.72rem;color:var(--muted)}
+.est.muted{color:var(--muted);font-size:.85rem;border-style:dashed}
+
 .card[data-go]{width:100%;color:inherit;font:inherit}
 .roll button[disabled]{cursor:not-allowed}
 </style>
@@ -562,6 +570,13 @@ function buildFinal() {
   S.final.bbPools = { win: seedBB(90000), top3: seedBB(60000), tri: 600000 + Math.round(Math.random() * 40) * 10000 };
   S.final.pools.win[S.final.linked.photo] += 60;   // a large bet from the account linked to one of the judges
 }
+function estPay(P, bet, picks, stake) {
+  if (bet === 'tri') return (P.tri + stake) * (1 - BET_FEE);
+  const pool = poolTotal(P[bet]) + stake, on = (P[bet][picks[0]] || 0) + stake;
+  if (bet === 'win') return stake / on * pool * (1 - BET_FEE);
+  const others = Object.entries(P.top3).filter(([id]) => id !== picks[0]).map(([, v]) => v).sort((a, b) => a - b), mid = others.length ? others[Math.floor(others.length / 2)] : 0;
+  return stake / (on + 2 * mid) * pool * (1 - BET_FEE);
+}
 const poolTotal = o => typeof o === 'number' ? o : Object.values(o).reduce((a, b) => a + b, 0);
 function closeFinal() {
   const F = S.final; F.stage = 'judging';
@@ -700,12 +715,16 @@ function vFinal() {
     const sel = S.sel || [], need = bet === 'tri' ? 3 : 1;
     const BT = [['win', 'Win', 'Pick the photo that finishes 1st', '1'], ['top3', 'Top 3', 'Pick a photo to finish in the top 3', '3'], ['tri', 'Trifecta', '1st, 2nd and 3rd in exact order', '123']].filter(x => !inFinal || x[0] === 'win');
     const pt = (c, k) => poolTotal((c === 'bb' ? F.bbPools : F.pools)[k]), ready = inFinal || sel.length === need, tip = inFinal ? 'You have a photo in the final, so you can only back your own photo to win.' : bet === 'tri' ? `Tap 1st, 2nd and 3rd in order${sel.length ? ` · ${sel.length} of 3` : ''}.` : bet === 'win' ? 'Tap the photo you think finishes 1st.' : 'Tap a photo you think finishes in the top 3.';
-    const fieldCard = h => `<div class="card"><h3>${h}</h3>FIELD<p class="note">Finalists are anonymous. No odds: cash and BB bets go in separate pools, each paying winners its total minus 10%. Anyone with a bet never judges the final.</p></div>`;
+    const fieldCard = h => `<div class="card"><h3>${h}</h3>FIELD<p class="note">Finalists are anonymous. Pool betting: winners split the pool, minus 10%. Cash and BB have separate pools. Anyone with a bet never judges the final.</p></div>`;
     const tier = TIERS[S.tier ?? 1];
     const layoutA = `${fieldCard(inFinal ? 'Your photo' : 'Tap your photos')}
       <div class="card">${inFinal ? '' : `<div class="segA">${BT.map(([k, l]) => `<button data-bt="${k}" aria-pressed="${bet === k}">${l}<small>${money(pt('cash', k))} · ${kfmt(pt('bb', k))}</small></button>`).join('')}</div>`}
       <p class="note" style="margin:0 0 10px">${tip}</p>
       <div class="tiers">${TIERS.map(([c, b], n) => `<button data-tier="${n}" aria-pressed="${(S.tier ?? 1) === n}">$${c}<small>${kfmt(b)}</small></button>`).join('')}</div>
+      ${(() => { if (!ready) return `<div class="est muted">${bet === 'tri' ? 'Pick 1st, 2nd and 3rd' : 'Pick a photo'} to see what your bet pays.</div>`;
+        const pk = inFinal ? [S.myFinalist] : sel, b = inFinal ? 'win' : bet, c = estPay(F.pools, b, pk, tier[0]), bb = estPay(F.bbPools, b, pk, tier[1]);
+        const what = b === 'tri' ? 'If your order is right' : b === 'win' ? `If #${F.field.indexOf(pk[0]) + 1} wins` : `If #${F.field.indexOf(pk[0]) + 1} finishes top 3`;
+        return `<div class="est"><span>${what}, it pays about</span><div><b>${money(c)}</b><i>or</i><b class="bbtxt">${kfmt(Math.round(bb / 1000) * 1000)} BB</b></div><small>${b === 'tri' ? 'If nobody else has the same order. Shared if they do.' : 'Based on the pool right now. It changes as people bet, until 7:30.'}</small></div>`; })()}
       <div class="two"><button class="btn cash" data-act="betc" ${ready ? '' : 'disabled'}>Bet $${tier[0]}</button><button class="btn bbbtn" data-act="betb" ${ready ? '' : 'disabled'}>Bet ${kfmt(tier[1])} BB</button></div></div>`;
     body = layoutA.replace('FIELD', `<div class="field">${F.field.map((id, i) => { const n = sel.indexOf(id); return `<button data-fp="${id}" aria-pressed="${n >= 0}" ${!canBet || (inFinal && bet !== 'win') ? '' : ''}><img src="${img(id)}" alt="Finalist ${i + 1}"><span>#${i + 1}${id === S.myFinalist ? '<em>You</em>' : n >= 0 ? `<em>${bet === 'tri' ? ord(n + 1) : '✓'}</em>` : ''}</span></button>`; }).join('')}</div>`);
     body += `${myBets ? `<div class="card"><h3>Your bets</h3><div class="lb">${myBets}</div></div>` : ''}`;
