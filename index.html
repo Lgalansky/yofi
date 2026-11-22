@@ -373,13 +373,13 @@ h1{font-size:1.65rem}
 .rhead{text-align:center}
 .rhead h2{font:900 1.5rem var(--font-display);text-transform:uppercase;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .call{margin:6px 0 0;min-height:2.6em;display:flex;align-items:center;justify-content:center;font:800 1rem/1.3 var(--font-display);color:#fff;background:rgba(5,22,28,.6);border:1px solid rgba(245,181,51,.35);border-radius:12px;padding:6px 10px}
-.track{position:relative;border-radius:16px;padding:8px 10px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 2px,transparent 2px 12.5%),linear-gradient(180deg,#2F7D3E,#24652F);box-shadow:inset 0 0 0 3px #E8D9B5,inset 0 0 30px rgba(0,0,0,.35)}
+.rtrack{position:relative;border-radius:16px;padding:8px 10px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 2px,transparent 2px 12.5%),linear-gradient(180deg,#2F7D3E,#24652F);box-shadow:inset 0 0 0 3px #E8D9B5,inset 0 0 30px rgba(0,0,0,.35)}
 .lane{position:relative;height:52px;border-bottom:2px dashed rgba(255,255,255,.28)}
 .lane:last-of-type{border-bottom:0}
-.track.tight .lane{height:40px}
+.rtrack.tight .lane{height:40px}
 .run{position:absolute;inset:0 44px 0 0}
 .horse{--p:0;position:absolute;top:50%;left:calc(var(--p) * 100%);transform:translate(0,-50%);width:44px;height:44px;will-change:left}
-.track.tight .horse{width:34px;height:34px}
+.rtrack.tight .horse{width:34px;height:34px}
 .horse img{width:100%;height:100%;object-fit:cover;border-radius:50%;border:2.5px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.45)}
 .horse b{position:absolute;left:-8px;top:-6px;min-width:18px;height:18px;padding:0 3px;border-radius:5px;display:grid;place-items:center;font:900 .66rem var(--font-display);box-shadow:0 2px 4px rgba(0,0,0,.4)}
 .horse.me img{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,181,51,.55),0 4px 12px rgba(0,0,0,.5)}
@@ -390,7 +390,7 @@ h1{font-size:1.65rem}
 .horse .plc.p1{background:var(--gold-grad);color:#4A2C00}
 .gate{position:absolute;top:6px;bottom:6px;left:8px;width:3px;background:rgba(255,255,255,.55);border-radius:2px}
 .finish{position:absolute;top:6px;bottom:6px;right:10px;width:12px;border-radius:2px;background:conic-gradient(#111 25%,#fff 0 50%,#111 0 75%,#fff 0) 0 0/12px 12px}
-.track.done .horse:not(:has(.p1)){opacity:.75}
+.rtrack.done .horse:not(:has(.p1)){opacity:.75}
 .rfoot{text-align:center}
 .rfoot .link{color:#CFE0E3}
 @media (max-width:360px){.brand{font-size:1rem}.wallet{grid-template-columns:1fr 1fr}.btn.dep{grid-column:span 2;min-height:38px}.hero h1{font-size:1.6rem}.tile .tl{font-size:.6rem}}
@@ -644,14 +644,14 @@ function vHeats() {
       <button class="btn cash block" data-act="enter">Enter a race · ${money(FEE)}</button>
       </div>`;
   } else if (J && !J.done) body = vJudge(J, `Judge race ${J.heatNo}`);
-  else if (J && J.done) body = `${judgeCard(J)}<div class="card"><h3>Race ${H.no} is ready</h3><p class="note">Players in other races have judged yours. They’re loading the gates.</p><button class="btn cash block" data-act="heatRes">Watch the race</button></div>`;
+  else if (J && J.done) body = `${judgeNote(J)}<div class="card"><h3>Race ${H.no} is ready</h3><p class="note">Players in other races have judged yours. They’re loading the gates.</p><button class="btn cash block" data-act="heatRes">Watch the race</button></div>`;
   return `<div><p class="eyebrow">${TH().e} Today: ${TH().name}</p><h1>${TH().race}</h1><p class="lede">Sit-and-go races of ${HEAT}. Judged blind by players in other races.</p></div>
     <div class="facts"><div class="fact"><b>${money(FEE)}</b><small>Entry</small></div><div class="fact"><b>${money(HEAT * FEE * (1 - HOUSE - TO_FINAL) * HEAT_SPLIT[0])}</b><small>1st prize</small></div><div class="fact"><b class="mono" id="cd">${countdown()}</b><small>To 8pm final</small></div></div>${body}`;
 }
 function vJudgeTab() {
   const SJ = S.judge && S.judge.solo ? S.judge : null, js = judgeScore(), pair = lobbyPics().slice(6, 8);
   if (SJ && !SJ.done) return vJudgeOnly(vJudge(SJ, `Judge &amp; earn · race ${SJ.heatNo}`));
-  if (SJ && SJ.done) return vJudgeOnly(`${judgeCard(SJ)}<div class="card"><h3>Keep judging?</h3><p class="note">You’ve judged ${S.solo} of ${SOLO_MAX} sessions today.</p>
+  if (SJ && SJ.done) return vJudgeOnly(`${judgeNote(SJ)}<div class="card"><h3>Keep judging?</h3><p class="note">${SJ.summary && SJ.summary.bb ? `<b class="bbtxt">+${bbs(SJ.summary.bb)}</b> this session. ` : ''}You’ve judged ${S.solo} of ${SOLO_MAX} sessions today.</p>
       ${S.banned ? `<p class="note">Judging is paused for ${BAN_DAYS} days.</p>` : S.solo < SOLO_MAX ? `<button class="btn block" data-act="solo">Judge another race</button>` : `<p class="note">That’s today’s limit. Back tomorrow.</p>`}<button class="link" data-act="soloDone">Done for now</button></div>`);
   return `<div><p class="eyebrow">Free · earn BBs</p><h1>Judge &amp; earn</h1><p class="lede">You decide the races. Pick the better of two photos and earn BBs every time you agree with the crowd.</p></div>
     <div class="card judgecard"><div class="vsbig" aria-hidden="true"><img src="${img(pair[0])}" alt=""><b>VS</b><img src="${img(pair[1])}" alt=""><em>+${BB_MATCH} BB</em></div>
@@ -680,6 +680,9 @@ function vJudge(J, title) { const rv = J.reveal, k = J.votes.length - (rv ? 1 : 
     <div class="duel">${side('L', p.L)}${side('R', p.R)}</div>
     <p class="verdict ${rv ? (rv.hit ? 'hit' : 'miss') : ''}" aria-live="polite">${rv ? (rv.hit ? `✓ With the crowd${streak >= 3 ? ` · ${streak} in a row` : ''}` : `The crowd picked the other one`) : 'Pick one. You’ll see what the crowd picked.'}</p>
     <p class="note">You never judge a race you’re in. Some pairs are quality checks.</p></div>`; }
+function judgeNote(J) { if (J.skipped) return judgeCard(J); const s = J.summary || {};
+  return s.banned ? `<div class="hold">Judging paused for ${BAN_DAYS} days: two sessions in a row scored under ${JUDGE_MIN}. You can still enter races.</div>`
+    : s.warn ? `<div class="hold" style="background:rgba(245,181,51,.12);color:#FFE2A0;border-color:rgba(245,181,51,.5)">Judge carefully: one more low-scoring session and judging is paused for ${BAN_DAYS} days.</div>` : ''; }
 function judgeCard(J) { if (J.skipped) return `<div class="card"><p class="eyebrow">Your judging</p><h3>Judging paused</h3><p class="note">Your judge score fell under ${JUDGE_MIN} twice in a row, so you can’t judge or earn BB for ${BAN_DAYS} days. Your race still runs as normal.</p></div>`;
   const s = J.summary, js = judgeScore();
   return `<div class="card"><p class="eyebrow">Your judging</p><h2>Judge score ${s.score}</h2>
@@ -860,7 +863,7 @@ function runRace({ title, sub, field, order, me, picks = [], onDone }) {
   const L = field.map((id, i) => ({ id, no: i + 1, r: rank[id], amp: (Math.random() - .5) * .26, ph: Math.random() * 6 }));
   openOvl(`<div class="race" role="dialog" aria-modal="true" aria-label="${title}">
     <div class="rhead">${sndBtn()}<p class="eyebrow">${sub}</p><h2>${title}</h2><p class="call" id="call" aria-live="polite">They’re in the gates…</p></div>
-    <div class="track${n > 6 ? ' tight' : ''}">${L.map(h => `<div class="lane"><div class="run"><span class="horse${h.id === me ? ' me' : ''}${picks.includes(h.id) ? ' pick' : ''}" id="hz${h.no}"><img src="${img(h.id)}" alt="${nameOf(h.id, h.no)}"><b style="background:${SILK[h.no - 1][0]};color:${SILK[h.no - 1][1]}">${h.no}</b>${h.id === me ? '<em>YOU</em>' : picks.includes(h.id) ? '<em class="pk">YOUR BET</em>' : ''}</span></div></div>`).join('')}<i class="gate"></i><i class="finish"></i></div>
+    <div class="rtrack${n > 6 ? ' tight' : ''}">${L.map(h => `<div class="lane"><div class="run"><span class="horse${h.id === me ? ' me' : ''}${picks.includes(h.id) ? ' pick' : ''}" id="hz${h.no}"><img src="${img(h.id)}" alt="${nameOf(h.id, h.no)}"><b style="background:${SILK[h.no - 1][0]};color:${SILK[h.no - 1][1]}">${h.no}</b>${h.id === me ? '<em>YOU</em>' : picks.includes(h.id) ? '<em class="pk">YOUR BET</em>' : ''}</span></div></div>`).join('')}<i class="gate"></i><i class="finish"></i></div>
     <div class="rfoot"><button class="link" id="rskip">Skip to the finish</button></div></div>`, 'raceo');
   const o = ovl(), D = matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 6800, START = 900, t0 = performance.now();
   const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
@@ -881,7 +884,7 @@ function runRace({ title, sub, field, order, me, picks = [], onDone }) {
     else if (t < .97) call(`Down the stretch: it’s #${a.no} and #${b.no}!`);
     if (t >= 1 && !ended) { ended = true; const w = L.find(h => h.r === 0); o._stop(); roar();
       call(`${nameOf(w.id, w.no)} wins it!`);
-      o.querySelector('.track').classList.add('done');
+      o.querySelector('.rtrack').classList.add('done');
       L.filter(h => h.r < 3).forEach(h => { const el = document.getElementById('hz' + h.no); el.insertAdjacentHTML('beforeend', `<i class="plc p${h.r + 1}">${ord(h.r + 1)}</i>`); });
       $('#rskip').textContent = 'Continue'; $('#rskip').onclick = () => { closeOvl(); onDone(); };
       o._done = setTimeout(() => { if (!o.hidden && o.querySelector('.race')) { closeOvl(); onDone(); } }, 1900);
