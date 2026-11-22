@@ -169,6 +169,10 @@ tr:last-child td{border-bottom:0}
 .judgecard{border-color:var(--brass);background:linear-gradient(180deg,var(--brass-soft),var(--surface) 70%)}
 .judgecard h2{margin:2px 0 0}
 .featcta{margin-top:14px;background:var(--felt-ink);color:var(--felt);font-size:1rem}
+.upside{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.upside div{background:rgba(255,255,255,.14);border-radius:12px;padding:10px 12px}
+.upside b{display:block;font:800 1.45rem var(--font-data);color:inherit}
+.upside small{font:600 .7rem var(--font-body);letter-spacing:.08em;text-transform:uppercase;opacity:.85}
 .card[data-go]{width:100%;color:inherit;font:inherit}
 .roll button[disabled]{cursor:not-allowed}
 </style>
@@ -350,8 +354,9 @@ function settleFinal() {
 function vLobby() {
   const s3 = pickN(OTHERS, 3), js = judgeScore();
   return `<div><p class="eyebrow">Casino lobby</p><h1>Tonight’s games</h1></div>
-  <div class="feature"><div><p class="eyebrow" style="color:inherit;opacity:.8">Photo contests</p><h2>Photo Heats</h2><p>6 photos a heat, ${money(FEE)} entry. Win your heat and race in tonight’s Best of the Day.</p>
-    <button class="btn block featcta" data-act="${S.heat && S.heat.stage !== 'done' ? 'toHeats' : 'enterNow'}">${S.heat && S.heat.stage !== 'done' ? 'Back to your heat' : `Enter a photo · ${money(FEE)}`}</button></div>
+  <div class="feature"><div><p class="eyebrow" style="color:inherit;opacity:.8">Photo contests</p><h2>Photo Heats</h2><p>Race your photo against 5 others. Top 2 win cash, and the winner races tonight’s final.</p>
+    <div class="upside"><div><b>${money(HEAT * FEE * (1 - HOUSE - TO_FINAL) * HEAT_SPLIT[0])}</b><small>Win your heat</small></div><div><b>${money(S.pot * FIN_SPLIT[0])}</b><small>Win tonight’s final</small></div></div>
+    <button class="btn block featcta" data-act="${S.heat && S.heat.stage !== 'done' ? 'toHeats' : 'enterNow'}">${S.heat && S.heat.stage !== 'done' ? 'Back to your heat' : 'Enter a photo'}</button></div>
     <div class="stack" aria-hidden="true">${s3.map((e, i) => `<img src="${img(e.id)}" alt="" style="left:${i * 16}px;top:${i * 10}px;transform:rotate(${[-8, 3, 10][i]}deg)">`).join('')}</div></div>
   <div class="card judgecard"><div class="row" style="justify-content:space-between;align-items:flex-start;gap:8px"><div><p class="eyebrow">Free · earn BB</p><h2>Judge &amp; earn</h2></div><span class="pill bb"><i>Today</i>+${S.bbToday.toLocaleString('en-US')}</span></div>
     <p class="note">Pick the better of two photos. Earn ${BB_MATCH} BB every time you match the crowd, plus a ${bbs(BB_BONUS)} bonus for a strong session.</p>
