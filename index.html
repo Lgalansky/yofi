@@ -191,7 +191,7 @@ const PHOTOS = [{"id": "almond", "title": "Almond blossom", "src": "data:image/j
 'use strict';
 /* ---------- rules ---------- */
 const FEE = 5, HOUSE = 0.10, TO_FINAL = 0.05, HEAT = 6, HEAT_SPLIT = [0.6, 0.4], MAX_RACES = 3;
-const FIN_N = 10, FIN_SPLIT = [0.5, 0.3, 0.2], BET_FEE = 0.10, FULL_MIN = 75, J_PAIRS = 10, J_TESTS = 2, FIN_PAIRS = 3, FIN_JUDGES = 68, MIN_FIN_VOTES = 120;
+const FIN_N = 9, FIN_SPLIT = [0.5, 0.3, 0.2], BET_FEE = 0.10, FULL_MIN = 75, J_PAIRS = 10, J_TESTS = 2, FIN_PAIRS = 3, FIN_JUDGES = 68, MIN_FIN_VOTES = 120;
 const BB_STAKES = [10000, 25000, 50000, 100000], CASH_STAKES = [2, 5, 10], TIERS = [[2, 10000], [5, 25000], [10, 50000], [25, 100000]];
 const kfmt = n => n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? Math.round(n / 1e3) + 'k' : String(n);
 const JUDGE_MIN = 50, BAN_DAYS = 7;
@@ -349,7 +349,7 @@ function vLobby() {
   return `<div><p class="eyebrow">Casino lobby</p><h1>Tonight’s games</h1></div>
   <button class="feature" data-go="heats" aria-label="Open photo heats"><div><p class="eyebrow" style="color:inherit;opacity:.8">Photo contests</p><h2>Photo Heats</h2><p>6 photos a heat, ${money(FEE)} entry. Win your heat and race in tonight’s Best of the Day.</p></div>
     <div class="stack" aria-hidden="true">${s3.map((e, i) => `<img src="${img(e.id)}" alt="" style="left:${i * 16}px;top:${i * 10}px;transform:rotate(${[-8, 3, 10][i]}deg)">`).join('')}</div></button>
-  <button class="card" data-go="final" style="text-align:left;border-color:var(--brass)"><p class="eyebrow">Tonight · 8pm</p><h2>Best of the Day</h2><p class="note">Top 10 heat winners. Bets close at 7:30: Win, Top 3 and Trifecta.</p>
+  <button class="card" data-go="final" style="text-align:left;border-color:var(--brass)"><p class="eyebrow">Tonight · 8pm</p><h2>Best of the Day</h2><p class="note">Top ${FIN_N} heat winners. Bets close at 7:30: Win, Top 3 and Trifecta.</p>
     <div class="facts"><div class="fact"><b>${money(S.pot)}</b><small>Prize pot</small></div><div class="fact"><b>${S.heatsToday}</b><small>Heats today</small></div><div class="fact"><b class="mono" id="cd">${countdown()}</b><small>Starts in</small></div></div></button>
   <div class="games" aria-label="Other games">${[['🎰', 'Slots'], ['🃏', 'Blackjack'], ['🎡', 'Roulette']].map(([i, t]) => `<div class="game"><span>${i}</span>${t}</div>`).join('')}</div>
   <p class="note"><b>Judge &amp; earn:</b> judge photos for free and earn BB. 20,000 BB ≈ $5.</p>
