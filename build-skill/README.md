@@ -754,7 +754,8 @@ Then `album.py` shows the Gallery as a card album (binder page with sleeves, hol
 python3 build-skill/galleries.py index.html sp-g.html
 python3 build-skill/album.py sp-g.html sp-a.html
 python3 build-skill/album2.py sp-a.html sp-a2.html
-python3 build-skill/votegoal.py sp-a2.html sp-v.html
+python3 build-skill/improve2.py sp-a2.html sp-i2.html
+python3 build-skill/votegoal.py sp-i2.html sp-v.html
 python3 build-skill/votecash.py sp-v.html sp-c.html
 python3 build-skill/noenergy.py sp-c.html skill-preview.html
 ```
@@ -766,3 +767,5 @@ python3 build-skill/noenergy.py sp-c.html skill-preview.html
 `noenergy.py` removes energy from the screen (votes were already unlimited): no energy bar, button, sheets, or "+N energy" rewards.
 
 `album2.py` restyles the Gallery list: icon pills, "Pets collection" with a filled/tier badge, stitched binder, tier-foil cards with a burgundy "2x coins per vote / +20 today" band, the next collection as a picture sleeve, progress dots and one big button.
+
+`improve2.py` replaces the Improve tab with the card-style screen: the photo card with a burgundy band previewing coins per vote, four touch-ups (Fix lighting, Boost colour, Sharpen details, Soften background) with projected scores, premium filters from 80, and Apply with the price set into the button. Touch-ups raise the matching part score so the overall score stays the average of the five, and the look is saved into the photo.
