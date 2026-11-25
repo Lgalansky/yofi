@@ -55,6 +55,19 @@ openBattle = function () {
   S.potSeen = 1; S.btAlt = true; const f = fighters()[0]; if (f && CATS8.includes(f.cat)) S.nextBth = f.cat; save();
   return _openBattleV.apply(this, arguments);
 };
+
+// button colour = what it costs: any main button that spends real money ($) is green
+const VC_CASH_RX = /\$\s?\d/;
+function vcGreen(root) {
+  (root || document).querySelectorAll('#sheet .btn, #sheet .kg-go, #sheet .kg2-go, #flow .btn, #coach .bt-cta, #coach .btn').forEach(b => {
+    if (b.closest('.vc') || b.classList.contains('link')) return;
+    const t = b.textContent || '', cash = VC_CASH_RX.test(t) && !/🟡|coins?\b/i.test(t);
+    b.classList.toggle('pay-cash', cash);
+    const coin = !cash && /\d/.test(t) && (/🟡|coins?\b/i.test(t) || !!b.querySelector('svg.gem, .gem, .coinic, use[href="#gemPath"]'));
+    b.classList.toggle('pay-coin', coin);
+  });
+}
+new MutationObserver(() => { clearTimeout(vcGreen.t); vcGreen.t = setTimeout(() => vcGreen(), 30); }).observe(document.body, { childList: true, subtree: true, characterData: true });
 const _renderJudgeC2 = renderJudge;
 renderJudge = function () { const r = _renderJudgeC2.apply(this, arguments); try { vcPaint(); } catch (e) {} return r; };
 setInterval(() => { document.querySelectorAll('.vc [data-tat]').forEach(e => { e.textContent = tLeft(+e.dataset.tat); }); }, 1000);
@@ -66,6 +79,13 @@ s = s.replace(_a, """: `<button class="btn block kg2-go vc-up" id="gbCash">💵 
 _b = "if (!opt.revenge && /coins|Free/.test($('#gbAgain').textContent)) $('#gbAgain').onclick = () => openGemBattle(stake || 25);"
 assert s.count(_b) == 1, 'gbAgain handler'
 s = s.replace(_b, "if (!opt.revenge && $('#gbAgain') && /coins|Free/.test($('#gbAgain').textContent)) $('#gbAgain').onclick = () => openGemBattle(stake || 25);\n      if ($('#gbCash')) $('#gbCash').onclick = () => { const ph = opt.photo || fighters()[0]; closeSheet(); openCashBattle(1, null, ph); };\n      if ($('#gbVote')) $('#gbVote').onclick = () => { closeSheet(); go('judge'); };")
+# coin challenge pop: say plainly whether it's free or costs coins
+_c = "cta: bme ? `Free challenge · ${CC_COIN} 🟡` :"
+assert s.count(_c) == 1, 'coin cta'
+s = s.replace(_c, "cta: bme ? (S.gbDone ? `Play · ${CC_COIN} 🟡 · win ${CC_COIN * 2}` : `Play free · win ${CC_COIN * 2} 🟡`) :")
+_d = "Stake <b>${CC_COIN} 🟡</b>, win <b>${CC_COIN * 2} 🟡</b>. Result in 30 seconds.`"
+assert s.count(_d) == 1, 'coin text'
+s = s.replace(_d, "${S.gbDone ? `Stake <b>${CC_COIN} 🟡</b>, win <b>${CC_COIN * 2} 🟡</b>` : `<b>Free this time</b>, win <b>${CC_COIN * 2} 🟡</b>`}. Result in 30 seconds.`")
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
 
 CSS = r'''
@@ -97,6 +117,8 @@ html.yg .vcs i{background:rgba(255,255,255,.2)}html.yg .vcs i.on{background:#FF2
 #judge .vc-tx small{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.25}
 #vgGoal .vg-ci{margin-right:5px;vertical-align:-3px}
 html.yg .vc{background:#FBF6EC!important}
+html body #sheet .pay-coin,html body #coach .pay-coin,.pay-coin{background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;background-color:#E0A82E!important;color:#3A2600!important;box-shadow:0 8px 18px -8px rgba(160,110,10,.7)!important}.pay-coin *{color:#3A2600!important}
+html body #sheet .pay-cash,html body #flow .pay-cash,html body #coach .pay-cash,html:not(.yg) body #sheet .btn.pay-cash,html.yg body #sheet .btn.pay-cash,html:not(.yg) body #sheet .kg .kg-go.pay-cash,html.yg body #sheet .kg .kg-go.pay-cash,.pay-cash{background-color:#21784A!important;background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important;box-shadow:0 8px 18px -8px rgba(33,120,74,.7)!important;border-color:transparent!important}.pay-cash *{color:#fff!important}
 #gbCash.vc-up{background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important;box-shadow:0 8px 18px -8px rgba(33,120,74,.7)!important}
 .vc-nxu{margin:6px 0 0;text-align:center;font-size:.86rem;opacity:.85}
 .vc-who{display:block;margin-top:2px;font-style:normal;font-size:.76rem;font-weight:700;color:#8A5A0A!important}
