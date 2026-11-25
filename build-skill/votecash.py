@@ -24,15 +24,18 @@ function vcCard() {
   if (fr) return { img: fr.theirSrc, t: `@${fr.f} challenged you`, s: `${stakeTxt(fr.stake)} each · winner takes ${prizeTxt(fr.stake)}`, cta: 'View matchup', go: () => fcAccept(fr) };
   // every cash game takes a turn; games that need a 70+ photo are skipped until you have one
   const F = fighters(), best = F[0], T = tSlots()[0], nm = best ? (GAL.PATH.includes(best.cat) ? alName(best) : 'your photo') : '';
+  // real-money games only (coin games live in the coin balance sheet); head-to-head nudges come round most often
+  const h2h = best && (() => { const rv = battleRival(best.cat || 'any'); return { img: rv.src, t: `A rival challenged ${nm}`, s: `Head-to-head · $1 entry · win $${(2 * (1 - KING_FEE)).toFixed(2)}`, cta: 'View matchup', go: () => openCashBattle(1, null, best) }; });
   const G = [
+    h2h,
     best && (() => { const cat = best.cat || 'any', K = kingOf(cat); return { img: K.src, t: `Beat the ${catLabel(cat)} champion`, s: `$1 entry · ${money(K.bounty)} pot`, cta: 'View matchup', go: () => openKing(cat) }; }),
     () => ({ art: '🏆', t: 'Quick tournament', when: T.at, s: `$1 entry · US$${T.gtd} prize`, cta: 'View tournament', go: () => openTourney() }),
+    h2h,
     () => ({ art: '🎯', t: 'Quick Sprint', s: '1 v 1 · $2 entry · win $3.20', cta: 'View sprint', go: () => { window.__qsReal = 1; sprEnter(); } }),
-    best && (() => ({ img: best.src, t: `Head-to-head with ${nm}`, s: `$1 entry · win $${(2 * (1 - KING_FEE)).toFixed(2)}`, cta: 'View matchup', go: () => openCashBattle(1, null, best) })),
     best && (() => ({ art: '⚡', t: '5-player Showdown', s: `$${SD_FEE} entry · winner takes ${money(sdPrize())}`, cta: 'View showdown', go: () => openShowdown() })),
     best && (() => ({ art: '🤝', t: 'Challenge a friend', s: `$1 each · winner takes ${money(fcPrize({ cur: 'cash', amt: 1 }))}`, cta: 'Pick a friend', go: () => fcNew() }))
   ].filter(Boolean);
-  // changes every 5 votes, not every pair
+  // changes every 3 votes
   S.vcTurn = Math.floor(((S.votes || 0) + (S.vcOff || 0)) / 3) % G.length;
   return G[S.vcTurn]();
 }
@@ -46,7 +49,7 @@ function vcPaint() {
   el.innerHTML = `${c.art ? `<span class="vc-art" aria-hidden="true">${c.art}</span>` : `<img src="${c.img}" alt="">`}<span class="vc-tx"><b>${esc(c.t)}</b><small>${c.when ? `🕒 <span data-tat="${c.when}">${tLeft(c.when)}</span> · ` : ''}${esc(c.s)}</small></span><span class="vc-cta">${c.cta}</span>`;
   el.onclick = c.go; card.insertAdjacentElement('afterend', el);
   const nu = h && h.querySelector('.nxu'); if (nu) nu.remove();
-  const n = typeof nextUp === 'function' && nextUp(); if (n) el.insertAdjacentHTML('afterend', `<p class="vc-nxu">${n.k === 'tour' ? '🏆 Tournament' : '🟡 Coin challenge'} ${n.left === 1 ? 'after this vote' : `in <b>${n.left}</b> votes`}</p>`);
+  const n = false; if (n) el.insertAdjacentHTML('afterend', `<p class="vc-nxu">${n.k === 'tour' ? '🏆 Tournament' : '🟡 Coin challenge'} ${n.left === 1 ? 'after this vote' : `in <b>${n.left}</b> votes`}</p>`);
 }
 
 const _openBattleV = openBattle;
@@ -70,6 +73,9 @@ function vcGreen(root) {
 }
 function vcPills() { document.querySelectorAll('.tsr2-e').forEach(e => { const t = e.textContent || '', c = /\$\s?\d/.test(t), g = !c && !!e.querySelector('svg, .gem'); e.classList.toggle('pill-cash', c); e.classList.toggle('pill-coin', g); }); }
 new MutationObserver(() => { clearTimeout(vcGreen.t); vcGreen.t = setTimeout(() => { vcGreen(); vcPills(); }, 30); }).observe(document.body, { childList: true, subtree: true, characterData: true });
+
+const _voteNoPop = vote;
+vote = async function () { if ((S.since || 0) >= CFG.BATTLE_EVERY - 1) S.since = 0; return _voteNoPop.apply(this, arguments); };
 const _renderJudgeC2 = renderJudge;
 renderJudge = function () { const r = _renderJudgeC2.apply(this, arguments); try { vcPaint(); } catch (e) {} return r; };
 setInterval(() => { document.querySelectorAll('.vc [data-tat]').forEach(e => { e.textContent = tLeft(+e.dataset.tat); }); }, 1000);
