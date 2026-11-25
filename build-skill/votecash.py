@@ -157,6 +157,7 @@ html.yg .vcs i{background:rgba(255,255,255,.2)}html.yg .vcs i.on{background:#FF2
 #vgGoal .vg-cta,#vgGoal.ready .vg-cta{background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important}
 #judge .vc-cta{background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important}
 #judge .eye{display:none!important}
+#judge .tot-o{display:none!important} /* no owner @handles on Vote: photos are judged on the photo alone */
 /* whole cards feel like buttons: top = coins (subtle gold), bottom = cash (subtle green) */
 html body #vgGoal.vg,html body #vgGoal.vg.earn,html body #vgGoal.vg.ready{background:linear-gradient(180deg,#FFF9EA,#FBEFD2)!important;box-shadow:inset 0 0 0 1.5px #E3C376,0 6px 14px -9px rgba(160,110,10,.55),inset 0 1px 0 #fff!important}
 html body #judge .vc{background:linear-gradient(180deg,#DDF1E2,#C2E3CC)!important;box-shadow:inset 0 0 0 1.5px #7FBE91,0 6px 14px -9px rgba(33,120,74,.5),inset 0 1px 0 #fff!important}
