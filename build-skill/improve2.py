@@ -79,7 +79,7 @@ function im2Render() {
     : !sel ? `<button class="im2-apply" disabled>Choose a touch-up<span>${fixCost(p)} <i class="im2-coin"></i></span></button>`
     : short ? `<button class="im2-apply" id="i2Vote">Need ${short} more coins · Vote to earn</button>`
     : `<button class="im2-apply" id="i2Go">${esc(sel.v)}<span>${sel.price} <i class="im2-coin"></i></span></button>`;
-  st.innerHTML = `<div class="gl im2">${galSeg('imp')}<button class="im2-back" id="i2Back">‹ ${inGal ? `${esc(galNm(p.cat))} collection` : 'My gallery'}</button>
+  st.innerHTML = `<div class="gl im2">${galSeg('imp')}
     <h2 class="im2-t">Improve ${esc(alName(p))}</h2>
     <div class="im2-grid"><div class="im2-ph t-${(t || 'plain').toLowerCase()}"><img id="i2Img" src="${p.src}" alt="" style="filter:${look.f}"><i class="im2-vig" style="opacity:${look.vig}"></i><i class="im2-warm" style="opacity:${look.warm}"></i><button class="im2-hold" id="i2Hold">Hold to compare</button></div>
       <div class="im2-side"><small class="im2-lb">Overall score</small><div class="im2-sr"><b id="i2Score">${v}</b>${nb ? `<span class="im2-goal">Goal <b>${nb}</b></span>` : '<span class="im2-goal">Platinum</span>'}</div>
@@ -87,7 +87,7 @@ function im2Render() {
     <p class="im2-strip">${strip}${proj ? `<small>${proj}</small>` : ''}</p>
     ${v < IM2.PREM_AT ? `<p class="im2-lock">🔒 Premium filters (Suncast, Velvet, Nocturne) unlock at ${IM2.PREM_AT}</p>` : ''}${btn}</div>`;
   galWire(st);
-  $('#i2Back').onclick = () => { if (inGal) S.galCat = p.cat; AL_OPEN = null; TU_GAL = true; save(); renderStudio(); st.scrollTop = 0; };
+  if ($('#i2Back')) $('#i2Back').onclick = () => { if (inGal) S.galCat = p.cat; AL_OPEN = null; TU_GAL = true; save(); renderStudio(); st.scrollTop = 0; };
   st.querySelectorAll('[data-i2]').forEach(b => b.onclick = () => { IM2SEL = IM2SEL === b.dataset.i2 ? null : b.dataset.i2; im2Render(); });
   const h = $('#i2Hold'); if (h && sel) { const img = $('#i2Img'), vg = st.querySelector('.im2-vig'), wm = st.querySelector('.im2-warm');
     const show = raw => { img.style.filter = raw ? 'none' : look.f; vg.style.opacity = raw ? 0 : look.vig; wm.style.opacity = raw ? 0 : look.warm; h.textContent = raw ? 'Before' : 'Hold to compare'; };
@@ -170,6 +170,16 @@ html.yg .im2-strip{color:#2D2521}html.yg .im2-row{background:#FFFDF9!important}h
 .im2 .im2-hold{white-space:nowrap;font-size:.78rem!important;padding:5px 11px!important}
 .im2 .im2-apply{background:#2D4E86!important;color:#fff!important;opacity:1}.im2 .im2-apply[disabled]{opacity:.55}
 html.yg .im2 .im2-lock{color:#D8CCF0}
+/* tidy layout: no back link, tighter spacing so Apply sits on screen */
+.im2 .gl-seg{margin-bottom:10px}
+.im2-t{margin:2px 16px 10px!important;font-size:clamp(1.7rem,7.8vw,2.1rem)!important}
+.im2-grid{gap:12px;align-items:stretch}
+.im2 .im2-ph{aspect-ratio:auto!important;height:100%;min-height:220px}
+.im2-side{display:flex;flex-direction:column}.im2-sr{margin:0 0 6px}.im2-sr>b{font-size:2.8rem}
+.im2-rows{flex:1;justify-content:space-between;gap:6px}
+.im2-strip{margin:12px 14px 6px;padding:9px 12px}
+.im2 .im2-lock{margin:0 14px 10px;text-align:center;justify-content:center}
+.im2-apply{margin-top:2px}
 @media (prefers-reduced-motion:reduce){.im2-card{animation:none!important}.im2-ph img,.im2-vig,.im2-warm{transition:none}}
 '''
 i = s.rindex('</style>'); s = s[:i] + CSS + s[i:]
