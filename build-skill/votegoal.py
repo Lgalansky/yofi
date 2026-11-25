@@ -54,8 +54,8 @@ const vgDayTotal = () => S.photos.reduce((a, x) => a + galToday(x), 0);
 function vgEarn() {
   const hung = GAL.PATH.filter(galOpen).flatMap(c => galRoom(c).ph); if (!hung.length) return null;
   const tot = vgDayTotal(), top = hung.slice().sort((a, b) => galToday(b) - galToday(a) || b.s.total - a.s.total)[0];
-  return { p: top, earn: tot, t: `Your photos earned <span class="vg-n">+${tot}</span> coins today`,
-    s: galToday(top) ? `Top earner: ${alName(top)} · +${galToday(top)} at ${galMult(top.s.total)}× per vote` : `${hung.length} photo${hung.length === 1 ? '' : 's'} earning every time a voter picks them`,
+  return { p: top, earn: tot, t: `Your photos earned <span class="vg-n">+${tot}</span> coins`,
+    s: '',
     act: () => vgToGallery(top.cat) };
 }
 function vgAdd() {
@@ -114,7 +114,7 @@ function vgAwayCheck(now = Date.now()) {
 const _vgEarnA = vgEarn;
 vgEarn = function () {
   if (!VG_AWAY) return _vgEarnA();
-  const a = VG_AWAY; return { p: a.top, earn: a.tot, t: `Your photos earned <span class="vg-n">+${a.tot}</span> while you were away`, s: `Top earner: ${alName(a.top)} · +${a.topM} coins`, act: () => vgToGallery(a.top.cat) };
+  const a = VG_AWAY; return { p: a.top, earn: a.tot, t: `Your photos earned <span class="vg-n">+${a.tot}</span> while you were away`, s: '', act: () => vgToGallery(a.top.cat) };
 };
 const _vgPaintA = vgPaint;
 vgPaint = function () {
@@ -147,7 +147,7 @@ CSS = r'''
 .vg.ready{background:linear-gradient(180deg,#FFF6DA,#FBEBC0);box-shadow:inset 0 0 0 2px #E0A82E,0 0 0 3px rgba(255,201,60,.25),0 8px 18px -10px rgba(160,110,10,.6)}
 .vg.pop{animation:vgpop .7s cubic-bezier(.2,1.5,.4,1)}@keyframes vgpop{40%{transform:scale(1.04)}}
 html.yg .vg{background:#FBF6EC!important}html.yg .vg.ready{background:linear-gradient(180deg,#FFF6DA,#FBEBC0)!important}.vg .vg-tx b{color:#2D2521!important}.vg .vg-tx small,.vg .vg-row em{color:#6F6258!important}.vg .vg-cta{color:#fff!important}
-.vg.earn{background:linear-gradient(180deg,#F3FAF2,#E3F1E7)!important;box-shadow:inset 0 0 0 1.5px #A9D3B4,0 6px 14px -10px rgba(46,107,66,.5)}.vg.earn .vg-n{color:#2E6B42;font-weight:900}.vg.earn img{box-shadow:0 0 0 2px #fff,0 0 0 3.5px #7FB98E}
+.vg.earn .vg-tx small:empty{display:none}.vg.earn{background:linear-gradient(180deg,#F3FAF2,#E3F1E7)!important;box-shadow:inset 0 0 0 1.5px #A9D3B4,0 6px 14px -10px rgba(46,107,66,.5)}.vg.earn .vg-n{color:#2E6B42;font-weight:900}.vg.earn img{box-shadow:0 0 0 2px #fff,0 0 0 3.5px #7FB98E}
 @media (prefers-reduced-motion:reduce){.vg.pop{animation:none}.vg-bar i{transition:none}}
 '''
 i = s.rindex('</style>'); s = s[:i] + CSS + s[i:]
