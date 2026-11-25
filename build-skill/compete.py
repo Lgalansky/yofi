@@ -152,11 +152,30 @@ function clubTidy() {
 }
 const _renderGalleryCW = renderGallery;
 renderGallery = function () { const r = _renderGalleryCW.apply(this, arguments); try { clubTidy(); } catch (e) {} return r; };
+
+// 1. first-photo screen: if you already picked a category on the landing page, don't ask again
+function obuTidy() {
+  const h = document.querySelector('.obu-h'), g = document.querySelector('.obu-c'); if (!h || !g || g.dataset.tidy) return;
+  const sel = g.querySelector('[aria-pressed="true"]'); if (!sel || !window.__preCat) return;
+  g.dataset.tidy = 1; const nm = sel.innerText.replace(/\s+/g, ' ').trim();
+  h.innerHTML = `Your photo: <b>${esc(nm)}</b> <button class="link obu-chg" type="button">Change</button>`; g.style.display = 'none';
+  h.querySelector('.obu-chg').onclick = () => { g.style.display = ''; h.textContent = 'What’s your photo of?'; };
+}
+setInterval(() => { try { obuTidy(); } catch (e) {} }, 250);
+// sample photos match the category (Nature/Garden were showing people)
+try { Object.assign(BATTLE_POOL, { night: 'Nature', fitness: 'Nature', style: 'Travel' }); } catch (e) {}
+// 2. the gallery starts with the category of your first photo
+function galFirstCat() {
+  if (!S.galFirst) { const f = S.photos.filter(p => p.s && GAL.PATH.includes(p.cat)).sort((a, b) => (a.at || 0) - (b.at || 0))[0]; if (f && !Object.keys(S.galBest || {}).length) { S.galFirst = f.cat; save(); } }
+  const c = S.galFirst; if (c && GAL.PATH[0] !== c && GAL.PATH.includes(c)) { GAL.PATH.splice(GAL.PATH.indexOf(c), 1); GAL.PATH.unshift(c); if (!S.galCat || !galOpen(S.galCat)) S.galCat = c; }
+}
+galFirstCat(); setInterval(() => { try { const b = GAL.PATH[0]; galFirstCat(); if (GAL.PATH[0] !== b && $('#panes').dataset.at === 'studio') renderStudio(); } catch (e) {} }, 1000);
 new MutationObserver(() => { try { cmpPaint(); } catch (e) {} }).observe($('#flowBody'), { childList: true });
 '''
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
 CSS = r'''
 /* one Compete menu */
+.obu-chg{font-size:.9rem;margin-left:6px;padding:0}
 .cw-play{margin:4px 16px 8px;font:900 1.2rem Fraunces,serif;color:#5A1A22}.cw-mem-end{margin-top:14px!important}.cw-cant{opacity:.72}
 html body #gallery .cw-can .bcc-go{background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important}
 .st-line{margin:12px 14px 8px!important}#flowBody .actions .st-line{margin:0 0 10px!important}
