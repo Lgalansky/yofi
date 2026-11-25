@@ -132,6 +132,18 @@ showResult = function (p, o = {}) {
     try { closeFlow(); } catch (e) {} S.cur = p.id; TU_GAL = false; WALL = false; save(); go('studio'); im2After(p, run, changed); return; }
   return _showResultI2.apply(this, arguments);
 };
+
+// every touch-up, from anywhere in the app, uses the four Improve touch-ups and comes back to Improve
+const IM2_PART2K = { light: 'light', colour: 'colour', tech: 'sharp', comp: 'bg' };
+const _startEnhanceI2 = startEnhance;
+startEnhance = function (p, cat) {
+  if (p && p.s && S.user && !(IM2_RUN && IM2_RUN.pid === p.id)) {
+    if (!IM2_PART2K[cat]) { const ok = IM2.EDITS.filter(e => ((p.ed || {})[e.k] || 0) < IM2.LEVELS); const lo = (ok.length ? ok : IM2.EDITS).slice().sort((a, b) => p.s[a.part] - p.s[b.part])[0]; cat = lo.part; }
+    IM2_RUN = { pid: p.id, k: IM2_PART2K[cat], v0: p.s.total, t0: galTier(p.s.total), x0: galMult(p.s.total) };
+    setTimeout(() => { if (IM2_RUN && !$('#flow').classList.contains('on')) IM2_RUN = null; }, 1200);
+  }
+  return _startEnhanceI2.call(this, p, cat);
+};
 const _renderStudioI2 = renderStudio;
 renderStudio = function () {
   if (!TU_GAL && S.user && S.photos.length) { WALL = false; im2Render(); galCheck(); return; }
