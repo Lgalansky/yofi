@@ -128,9 +128,9 @@ renderStudio = function () {
   if (TU_GAL && S.user) { WALL = false; renderGalleries(); galCheck(); return; }
   const r = _renderStudioG.apply(this, arguments);
   try {
-    const st = $('#studio'); if (!S.user || !st || st.querySelector('.gl-seg')) return r;
-    st.insertAdjacentHTML('afterbegin', galSeg('imp')); galWire(st);
-    const p = cur(), h = st.querySelector('.tot-h');
+    const st = $('#studio'); if (!S.user || !st) return r;
+    st.querySelectorAll('.gl-seg').forEach(e => e.remove()); const h0 = st.querySelector('.tot-h'); if (h0) h0.insertAdjacentHTML('afterbegin', galSeg('imp')); else st.insertAdjacentHTML('afterbegin', galSeg('imp')); galWire(st);
+    const p = cur(), h = st.querySelector('.tot-h'); st.querySelectorAll('.gl-tie').forEach(e => e.remove());
     if (p && p.s && h && GAL.PATH.includes(p.cat)) { const rm = galRoom(p.cat), x = galMult(p.s.total), nm = galNextMult(p.s.total), hung = rm.ph.includes(p);
       h.insertAdjacentHTML('beforeend', `<p class="gl-tie">🖼 ${hung ? `In your ${esc(galNm(p.cat))} gallery · earns <b>${x}×</b> per vote${nm ? ` · <b>${nm.at}</b> pays ${nm.x}×` : ''}` : galOpen(p.cat) ? `Not hanging yet: your top 3 ${esc(galNm(p.cat))} photos hang in the gallery` : `${esc(galNm(p.cat))} gallery is still locked`}</p>`); }
     galCheck();
@@ -148,6 +148,7 @@ CSS = r'''
 .gl-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:4px 16px 12px;padding:4px;border-radius:16px;background:#EFE6D6;box-shadow:inset 0 0 0 1.5px #E2D5BE}
 .gl-seg button{border:0;background:none;border-radius:12px;padding:9px 6px;font:800 1rem "Nunito Sans",sans-serif;color:#5F534A;cursor:pointer}
 .gl-seg button[aria-selected="true"]{background:#2D4E86;color:#fff;box-shadow:0 4px 10px -4px rgba(45,78,134,.6)}
+.tot-h .gl-seg{margin:0 0 12px;width:100%;align-self:stretch;box-sizing:border-box}
 html.yg .gl-seg{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.14)}html.yg .gl-seg button{color:#D8CCF0}
 .gl-path{display:flex;align-items:center;gap:0;overflow-x:auto;padding:2px 16px 8px;scrollbar-width:none}.gl-path::-webkit-scrollbar{display:none}
 .gl-path button{flex:none;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:0 2px;font:700 .8rem "Nunito Sans",sans-serif;color:#5F534A;cursor:pointer}

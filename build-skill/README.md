@@ -748,6 +748,9 @@ python3 build-skill/winpop.py                                  # on "push live":
 
 `galleries.py` adds Gallery and Improve tabs to Touch-ups: a room of 3 frames per category (Pets → Travel → Nature → Family → Garden → Baking → Home), room tier set by its lowest photo (Gold 70, Diamond 80, Platinum 90), the next room opens at Gold, and hanging photos earn 2 coins × their rate when voters pick them. It also renames the photo levels to Gold / Diamond / Platinum / Masterpiece. Build the preview from the live `index.html`:
 
+Then `album.py` shows the Gallery as a card album (binder page with sleeves, holographic tier foil, named photo cards, a big card view):
+
 ```bash
-python3 build-skill/galleries.py index.html skill-preview.html
+python3 build-skill/galleries.py index.html sp-g.html
+python3 build-skill/album.py sp-g.html skill-preview.html
 ```
