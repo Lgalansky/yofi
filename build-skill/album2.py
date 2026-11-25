@@ -35,9 +35,9 @@ renderGalleries = function () {
   const tabs = GAL.PATH.map((x, i) => `${i ? '<i class="a2-sep" aria-hidden="true"></i>' : ''}<button data-gc="${x}" class="${x === c ? 'on' : galOpen(x) ? '' : 'lock'}">${al2Ic(x)}<span>${esc(galNm(x))}</span>${galOpen(x) ? '' : '<i class="a2-lk" aria-label="locked">🔒</i>'}</button>`).join('');
   const sleeves = [0, 1, 2].map(i => { const p = r.ph[i];
     return p ? `<button class="a2-sl" data-alc="${p.id}" aria-label="${esc(alName(p))}, ${p.s.total}">${al2Card(p)}</button>`
-      : `<button class="a2-sl empty" data-gadd="${c}"><span class="a2-add"><b>+</b><span>Add a ${esc(one)} photo</span><i class="a2-wm">${al2Ic(c)}</i></span></button>`; });
+      : `<button class="a2-sl empty" data-gadd="${c}"><span class="a2-box"><span class="a2-add"><b>+</b><span>Add a ${esc(one)} photo</span><i class="a2-wm">${al2Ic(c)}</i></span></span><span class="a2-cap"><span class="a2-l1"><b>Empty sleeve</b></span><span class="a2-l2">Earns on votes</span></span></button>`; });
   const nx = GAL.PATH[GAL.PATH.indexOf(c) + 1], nxOpen = nx && galOpen(nx);
-  sleeves.push(nx ? `<button class="a2-sl a2-nx${nxOpen ? ' open' : ''}" data-gc="${nx}" aria-label="${esc(galNm(nx))} collection${nxOpen ? '' : ', locked'}"><span class="a2-nxi" style="background-image:url('${al2Seed(nx)}')"><span class="a2-nxl">${nxOpen ? '✨' : '🔒'}</span><span class="a2-plq">${esc(galNm(nx))} collection${nxOpen ? '<small>Open now</small>' : ''}</span></span></button>` : '<span class="a2-sl blank"></span>');
+  sleeves.push(nx ? `<button class="a2-sl a2-nx${nxOpen ? ' open' : ''}" data-gc="${nx}" aria-label="${esc(galNm(nx))} collection${nxOpen ? '' : ', locked'}"><span class="a2-box"><span class="a2-nxi" style="background-image:url('${al2Seed(nx)}')"><span class="a2-nxl">${nxOpen ? '✨' : '🔒'}</span><span class="a2-plq">${esc(galNm(nx))} collection${nxOpen ? '<small>Open now</small>' : ''}</span></span></span><span class="a2-cap"><span class="a2-l1"><b>Next: ${esc(galNm(nx))}</b></span><span class="a2-l2">${nxOpen ? 'Open now' : 'Opens at Gold'}</span></span></button>` : '<span class="a2-sl blank"><span class="a2-box"></span></span>');
   const band = r.full && r.next ? r.next : 70, bandNm = galBand(band);
   const atBand = r.ph.filter(p => p.s.total >= band).length;
   const dots = [0, 1, 2].map(i => `<i class="${i < atBand ? 'on' : ''} b${band}"></i>`).join('');
@@ -59,10 +59,6 @@ renderGalleries = function () {
   st.querySelectorAll('[data-gimp]').forEach(b => b.onclick = () => galImprove(b.dataset.gimp));
   st.querySelectorAll('[data-alc]').forEach(b => b.onclick = () => { AL_OPEN = b.dataset.alc; renderStudio(); st.scrollTop = 0; });
   const tb = st.querySelector('.a2-tabs .on'); if (tb) tb.scrollIntoView({ inline: 'center', block: 'nearest' });
-  const fc = st.querySelector('.a2-sl[data-alc]');
-  if (!S.galTip && fc) { const q = S.photos.find(x => x.id === fc.dataset.alc), v = q.s.total, nb = [70, 80, 90].find(b => v < b);
-    fc.insertAdjacentHTML('beforeend', `<span class="a2-tip" role="note"><b>${v} is ${esc(alName(q))}’s score</b>${nb ? `Reach ${nb} for ${galBand(nb)} and ${galMult(nb)}× coins every time a voter picks it.` : 'Top tier: 6× coins every time a voter picks it.'}<button class="a2-tipok" id="a2TipOk">Got it</button></span>`);
-    $('#a2TipOk').onclick = e => { e.stopPropagation(); S.galTip = 1; save(); const t = st.querySelector('.a2-tip'); if (t) t.remove(); }; }
 };
 '''
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
@@ -133,6 +129,14 @@ CSS = r'''
 .a2-tip b{display:block;font:800 .9rem Fraunces,serif;margin-bottom:2px;color:#FFE9A8}
 .a2-tipok{display:block;margin:8px 0 0 auto;border:0;border-radius:999px;background:#fff;color:#2D4E86;font:800 .8rem "Nunito Sans",sans-serif;padding:5px 12px;cursor:pointer}
 @keyframes a2tip{from{transform:scale(.85);opacity:0}}
+/* every sleeve: a 3:4 box + a two-line caption, so all four are the same size (Safari too) */
+.a2-grid>.a2-sl{aspect-ratio:auto!important;width:100%;min-height:0;display:flex;flex-direction:column;gap:6px;padding:0!important;margin:0!important;background:none!important;box-shadow:none!important}
+.a2-sl .a2-card{position:relative!important;inset:auto!important;width:100%;aspect-ratio:3/4!important}
+.a2-box{position:relative;display:block;width:100%;aspect-ratio:3/4;border-radius:14px}
+.a2-sl.empty .a2-box,.a2-sl.blank .a2-box{background:linear-gradient(180deg,#FBF7EE,#F3ECDF);box-shadow:inset 0 0 0 1.5px #E2D5BE,inset 0 6px 12px -8px rgba(0,0,0,.15)}
+.a2-sl.empty .a2-l1 b,.a2-sl.a2-nx .a2-l1 b{color:#6F6258}
+.a2-tip{display:none!important}
+.a2-cap{min-width:0;overflow:hidden}.a2-l2{overflow:hidden;text-overflow:ellipsis}
 html.yg .a2-goal{color:#E9E1F7}html.yg .a2-th h3{color:#FF8FC4!important}html.yg .a2-tabs{background:#FBF6EC}
 '''
 i = s.rindex('</style>'); s = s[:i] + CSS + s[i:]
