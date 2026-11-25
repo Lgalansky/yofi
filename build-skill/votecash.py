@@ -28,12 +28,12 @@ function vcCard() {
     best && (() => { const cat = best.cat || 'any', K = kingOf(cat); return { img: K.src, t: `Beat the ${catLabel(cat)} champion`, s: `$1 entry · ${money(K.bounty)} pot`, cta: 'View matchup', go: () => openKing(cat) }; }),
     () => ({ art: '🏆', t: 'Quick tournament', when: T.at, s: `$1 entry · US$${T.gtd} prize`, cta: 'View tournament', go: () => openTourney() }),
     () => ({ art: '🎯', t: 'Quick Sprint', s: '1 v 1 · $2 entry · win $3.20', cta: 'View sprint', go: () => { window.__qsReal = 1; sprEnter(); } }),
-    best && (() => ({ img: best.src, t: `Head-to-head with ${nm}`, s: `$1 entry · win $${(2 * (1 - CASH_FEE)).toFixed(2)}`, cta: 'View matchup', go: () => openCashBattle(1, null, best) })),
+    best && (() => ({ img: best.src, t: `Head-to-head with ${nm}`, s: `$1 entry · win $${(2 * (1 - KING_FEE)).toFixed(2)}`, cta: 'View matchup', go: () => openCashBattle(1, null, best) })),
     best && (() => ({ art: '⚡', t: '5-player Showdown', s: `$${SD_FEE} entry · winner takes ${money(sdPrize())}`, cta: 'View showdown', go: () => openShowdown() })),
     best && (() => ({ art: '🤝', t: 'Challenge a friend', s: `$1 each · winner takes ${money(fcPrize({ cur: 'cash', amt: 1 }))}`, cta: 'Pick a friend', go: () => fcNew() }))
   ].filter(Boolean);
   // changes every 5 votes, not every pair
-  S.vcTurn = Math.floor(((S.votes || 0) + (S.vcOff || 0)) / 5) % G.length;
+  S.vcTurn = Math.floor(((S.votes || 0) + (S.vcOff || 0)) / 3) % G.length;
   return G[S.vcTurn]();
 }
 function vcPaint() {
@@ -46,12 +46,26 @@ function vcPaint() {
   el.innerHTML = `${c.art ? `<span class="vc-art" aria-hidden="true">${c.art}</span>` : `<img src="${c.img}" alt="">`}<span class="vc-tx"><b>${esc(c.t)}</b><small>${c.when ? `🕒 <span data-tat="${c.when}">${tLeft(c.when)}</span> · ` : ''}${esc(c.s)}</small></span><span class="vc-cta">${c.cta}</span>`;
   el.onclick = c.go; card.insertAdjacentElement('afterend', el);
   const nu = h && h.querySelector('.nxu'); if (nu) nu.remove();
-  const n = typeof nextUp === 'function' && nextUp(); if (n) el.insertAdjacentHTML('afterend', `<p class="vc-nxu">${n.k === 'tour' ? '🏆 Tournament' : n.k === 'cash' ? '🏅 Head-to-head' : '🟡 Practice challenge'} ${n.left === 1 ? 'after this vote' : `in <b>${n.left}</b> votes`}</p>`);
+  const n = typeof nextUp === 'function' && nextUp(); if (n) el.insertAdjacentHTML('afterend', `<p class="vc-nxu">${n.k === 'tour' ? '🏆 Tournament' : '🟡 Coin challenge'} ${n.left === 1 ? 'after this vote' : `in <b>${n.left}</b> votes`}</p>`);
 }
+
+const _openBattleV = openBattle;
+openBattle = function () {
+  if (this && this.__cash) return _openBattleV.apply(this, arguments);
+  S.potSeen = 1; S.btAlt = true; const f = fighters()[0]; if (f && CATS8.includes(f.cat)) S.nextBth = f.cat; save();
+  return _openBattleV.apply(this, arguments);
+};
 const _renderJudgeC2 = renderJudge;
 renderJudge = function () { const r = _renderJudgeC2.apply(this, arguments); try { vcPaint(); } catch (e) {} return r; };
 setInterval(() => { document.querySelectorAll('.vc [data-tat]').forEach(e => { e.textContent = tLeft(+e.dataset.tat); }); }, 1000);
 '''
+# coin challenge result: main action is the cash version (opens the $1 head-to-head matchup, charged only on its entry button)
+_a = """: `<button class="btn block kg2-go" id="gbAgain">Play again · Free</button>${!isCash() ? `<button class="btn block pc-real kg2-real" id="gbReal">💵 Play for real · $${LG_FEE}</button>` : ''}<div style="text-align:center"><button class="link kg2-back" data-shclose>Back</button></div>`}`;"""
+assert s.count(_a) == 1, 'coin result buttons'
+s = s.replace(_a, """: `<button class="btn block kg2-go vc-up" id="gbCash">💵 Play for cash · win $${(2 * (1 - KING_FEE)).toFixed(2)}</button><div style="text-align:center"><button class="link kg2-back" id="gbVote">Back to voting</button></div>`}`;""")
+_b = "if (!opt.revenge && /coins|Free/.test($('#gbAgain').textContent)) $('#gbAgain').onclick = () => openGemBattle(stake || 25);"
+assert s.count(_b) == 1, 'gbAgain handler'
+s = s.replace(_b, "if (!opt.revenge && $('#gbAgain') && /coins|Free/.test($('#gbAgain').textContent)) $('#gbAgain').onclick = () => openGemBattle(stake || 25);\n      if ($('#gbCash')) $('#gbCash').onclick = () => { const ph = opt.photo || fighters()[0]; closeSheet(); openCashBattle(1, null, ph); };\n      if ($('#gbVote')) $('#gbVote').onclick = () => { closeSheet(); go('judge'); };")
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
 
 CSS = r'''
@@ -83,6 +97,7 @@ html.yg .vcs i{background:rgba(255,255,255,.2)}html.yg .vcs i.on{background:#FF2
 #judge .vc-tx small{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.25}
 #vgGoal .vg-ci{margin-right:5px;vertical-align:-3px}
 html.yg .vc{background:#FBF6EC!important}
+#gbCash.vc-up{background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important;box-shadow:0 8px 18px -8px rgba(33,120,74,.7)!important}
 .vc-nxu{margin:6px 0 0;text-align:center;font-size:.86rem;opacity:.85}
 .vc-who{display:block;margin-top:2px;font-style:normal;font-size:.76rem;font-weight:700;color:#8A5A0A!important}
 #vgGoal.vg{width:100%;margin:6px 0 4px;box-sizing:border-box}
