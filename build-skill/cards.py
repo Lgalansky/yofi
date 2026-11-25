@@ -86,10 +86,21 @@ renderStudio = function () {
   try {
     const st = $('#studio'), p = cur(); if (!st || !p || !p.s || !S.photos.length || st.querySelector('.enh0')) return r;
     const k = cardTier(p.s.total), nx = CARD_T[k + 1], D = cwDay();
-    st.insertAdjacentHTML('beforeend', `<section class="pc-row" aria-label="My cards"><div class="pc-rh"><h2>My cards</h2><small>${D.n ? `+${D.c} coins from wins today` : 'Cards earn coins while you vote'}</small></div>
-      <div class="pc-list">${S.photos.map(x => `<button class="pc-pick${x.id === p.id ? ' on' : ''}" data-pcp="${x.id}" aria-label="Card ${x.s.total}">${cardHTML(x, { mini: 1 })}</button>`).join('')}</div>
-      <p class="pc-next">Tap a card to touch it up. Higher tiers earn more per vote win: Bronze +3 · Silver +5 · Gold +8 (and enters challenges).</p></section>`);
-    st.querySelectorAll('[data-pcp]').forEach(b => b.onclick = () => { S.cur = b.dataset.pcp; save(); renderStudio(); });
+    // My photos has two views: Touch up (this photo) and My cards (pick a card or print a new one)
+    const seg = v => `<div class="pc-seg" role="tablist"><button role="tab" data-pcv="touch" aria-selected="${v === 'touch'}">Touch up</button><button role="tab" data-pcv="cards" aria-selected="${v === 'cards'}">My cards<em>${S.photos.length}</em></button></div>`;
+    if (S.pcView === 'cards') {
+      st.classList.remove('tallp');
+      st.innerHTML = `${seg('cards')}<div class="pc-cards"><div class="pc-rh"><small>${D.n ? `<b>+${D.c} coins</b> from vote wins today` : 'Your cards earn coins while you vote'}</small></div>
+        <div class="pc-grid">${S.photos.map(x => `<button class="pc-pick${x.id === p.id ? ' on' : ''}" data-pcp="${x.id}" aria-label="Touch up card scoring ${x.s.total}">${cardHTML(x, { mini: 1 })}</button>`).join('')}
+        ${S.photos.length < CFG.MAX_PHOTOS ? `<button class="pc-new" id="pcNew"><b>+</b><span>New card</span><small>Upload a photo · +${CARD_PRINT} coins</small></button>` : ''}</div>
+        <p class="pc-next">Tap a card to touch it up. Each vote it wins pays: Bronze +3 · Silver +5 · Gold +8 (Gold also enters challenges).</p></div>`;
+      st.querySelectorAll('[data-pcp]').forEach(b => b.onclick = () => { S.cur = b.dataset.pcp; S.pcView = 'touch'; save(); renderStudio(); st.scrollTop = 0; });
+      if ($('#pcNew')) $('#pcNew').onclick = () => pickPhoto(true);
+    } else {
+      const h = st.querySelector('.tot-h'); if (h) { const bt = h.querySelector('.sd-btns'); if (bt) bt.remove(); h.insertAdjacentHTML('beforeend', seg('touch')); }
+    }
+    st.querySelectorAll('[data-pcv]').forEach(b => b.onclick = () => { S.pcView = b.dataset.pcv; save(); renderStudio(); st.scrollTop = 0; });
+    if (S.pcView === 'cards') return r;
     { const sc = st.querySelector('.scr2'); if (sc) sc.insertAdjacentHTML('beforeend', `<p class="pc-tag ${CARD_T[k].c}"><strong>${CARD_T[k].n} card</strong> · +${CARD_T[k].pay} coins a vote win${nx ? ` · ${nx.at - p.s.total} to ${nx.n}` : ''}</p>`); }
     if (p.tierSeen == null) { p.tierSeen = k; save(); }
     else if (k > p.tierSeen) { p.tierSeen = k; save(); const t = CARD_T[k];
@@ -107,7 +118,7 @@ rep("  shownGems = S.gems;\n})();\n})();", JS + "  shownGems = S.gems;\n})();\n}
 CSS = r'''
 .pcard{position:relative;background:#fff;border-radius:16px;padding:9px;box-shadow:0 0 0 4px #C9A27A,0 14px 26px -12px rgba(0,0,0,.45);text-align:left;color:#2A211C}
 .pcard.si{box-shadow:0 0 0 4px #AEB7C4,0 14px 26px -12px rgba(0,0,0,.45)}.pcard.go{box-shadow:0 0 0 4px #F3C447,0 0 22px rgba(243,196,71,.6),0 14px 26px -12px rgba(0,0,0,.45)}.pcard.hf{box-shadow:0 0 0 4px #F3C447,0 0 0 8px #2D4E86,0 0 26px rgba(243,196,71,.7)}
-.pc-h{display:flex;justify-content:space-between;align-items:center;font:800 .72rem system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#7A5A12;margin-bottom:6px}.pc-h b{font-size:1rem;letter-spacing:0;color:#2A211C}
+.pc-h span{color:#7A5A12!important;display:inline!important}.pc-h{display:flex;justify-content:space-between;align-items:center;font:800 .72rem system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#7A5A12;margin-bottom:6px}.pc-h b{font-size:1rem;letter-spacing:0;color:#2A211C}
 .pcard img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;display:block}
 .pc-c{margin:6px 0 4px!important;font:800 .8rem system-ui,sans-serif!important;color:#2D4E86!important}
 .pc-st{display:grid;grid-template-columns:76px 1fr 38px;gap:6px;align-items:center;font-size:.72rem;margin:3px 0;color:#463933}.pc-st i{height:6px;border-radius:3px;background:#EEE5D2;overflow:hidden}.pc-st u{display:block;height:100%;background:#2D4E86}.pc-st b{text-align:right}
@@ -117,7 +128,18 @@ CSS = r'''
 .pc-tx{margin:6px 0 14px!important;font-size:.95rem!important;line-height:1.4}
 .pcard.mini{padding:6px;border-radius:12px}.pcard.mini .pc-h{font-size:.6rem;margin-bottom:4px}.pcard.mini .pc-h b{font-size:.82rem}.pcard.mini img{border-radius:8px}
 .pc-w{display:block;margin-top:4px;font:700 .66rem system-ui,sans-serif;color:#6B5B4A;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pc-row{margin:18px 0 16px;grid-column:1/-1}.pc-rh{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 2px 10px}.pc-rh h2{margin:0;font-size:1.35rem}.pc-rh small{font-size:.78rem;opacity:.75}
+.pc-seg{display:flex;gap:4px;margin:10px auto 2px;padding:4px;border-radius:999px;background:rgba(0,0,0,.06);width:max-content;max-width:100%}
+html.yg .pc-seg{background:rgba(255,255,255,.08)}
+.pc-seg button{border:0;background:none;color:inherit;font:800 .95rem system-ui,sans-serif;padding:9px 18px;border-radius:999px;display:flex;gap:6px;align-items:center}
+.pc-seg button[aria-selected="true"]{background:#2D4E86;color:#fff}html.yg .pc-seg button[aria-selected="true"]{background:#fff;color:#1A1030}
+.pc-seg em{font-style:normal;font-size:.72rem;min-width:20px;padding:1px 6px;border-radius:999px;background:#F3C447;color:#2A1600}
+#studio>.pc-seg{margin-top:14px}
+.pc-cards{padding:4px 2px 30px}.pc-cards .pc-rh{justify-content:center;margin:10px 0 14px}
+.pc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.pc-grid .pc-pick{flex:none;opacity:1}
+.pc-new{border:2px dashed rgba(0,0,0,.25);border-radius:16px;background:none;color:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:14px;font:inherit;min-height:200px}
+html.yg .pc-new{border-color:rgba(255,255,255,.3)}
+.pc-new b{font-size:2.2rem;line-height:1}.pc-new span{font-weight:800}.pc-new small{font-size:.76rem;opacity:.75;text-align:center}.pc-rh{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 2px 10px}.pc-rh h2{margin:0;font-size:1.35rem}.pc-rh small{font-size:.78rem;opacity:.75}
 .pc-list{display:flex;gap:14px;overflow-x:auto;padding:6px 6px 10px;scrollbar-width:none}.pc-list::-webkit-scrollbar{display:none}
 .pc-pick{flex:0 0 104px;border:0;background:none;padding:0;border-radius:14px;opacity:.8}.pc-pick.on{opacity:1;transform:translateY(-3px)}.pc-pick.on .pcard{outline:3px solid #2D4E86;outline-offset:5px}
 .pc-hero{outline:4px solid #C9A27A;outline-offset:-4px}.pc-hero.si{outline-color:#AEB7C4}.pc-hero.go{outline-color:#F3C447}.pc-hero.hf{outline-color:#F3C447;box-shadow:0 0 0 4px #2D4E86}
