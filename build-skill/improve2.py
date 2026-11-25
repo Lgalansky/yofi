@@ -64,7 +64,10 @@ function im2Render() {
   const v = p.s.total, t = im2Tier(v), x = galMult(v), opts = im2Opts(p), sel = IM2SEL && opts.find(o => o.k === IM2SEL && !o.max);
   const to = sel ? im2Proj(p, sel) : v, t1 = im2Tier(to), x1 = galMult(to), lk = photoLock(p), inGal = GAL.PATH.includes(p.cat);
   const nb = [70, 80, 90].find(b => v < b), nmx = galNextMult(v);
-  const strip = sel ? `<b>${t1 || 'Untiered'} card:</b> ${x1}× · ${GAL.BASE * x1} coins per vote win${x1 > x ? `<small>Up from ${x}×</small>` : ''}` : `<b>${t || 'Untiered'} card:</b> ${x}× · ${GAL.BASE * x} coins per vote win${nmx ? `<small>Reach ${nmx.at} for ${nmx.x}× · tap a touch-up to preview it free</small>` : ''}`;
+  const shown = sel ? to : v, tS = galTier(shown), nmP = esc(alName(p)), pay = GAL.BASE * galMult(shown), TI = { Gold: '🥇', Diamond: '💎', Platinum: '🏆' };
+  const head = tS ? `${TI[tS]} <b>${tS} photo</b> · ${nmP} ${sel && to !== v ? 'would earn' : 'earns'} <b>${pay} coins</b> each time a voter picks it` : `<b>Not ranked yet</b> · reach <b>70</b> for Gold and ${nmP} earns <b>${GAL.BASE * galMult(70)} coins</b> each time a voter picks it`;
+  const ladder = [[70, 'Gold'], [80, 'Diamond'], [90, 'Platinum']].map(([b, n]) => { const got = v >= b, will = sel && !got && to >= b; return `<span class="im2-st${got ? ' got' : ''}${will ? ' will' : ''}"><i>${got ? '✓' : TI[n]}</i><b>${n}</b><small>${b}+ · ${b === 90 ? GAL.BASE * galMult(90) : `${GAL.BASE * galMult(b)}–${GAL.BASE * galMult(b + 5)}`} coins</small></span>`; }).join('');
+  const strip = `<span class="im2-sh">${head}</span><span class="im2-lad">${ladder}</span>`;
   const look = im2Look(sel && sel.k);
   const tile = o => { const on = sel && sel.k === o.k, cur = p.s[o.part], nxt = on ? im2Raise(p.s, o.part, o.gain)[o.part] : cur;
     return `<button class="im2-row${on ? ' on' : ''}${o.prem ? ' prem' : ''}" data-i2="${o.k}" ${o.max || lk ? 'disabled' : ''}><span class="im2-rl"><span>${o.prem ? '✨ ' : ''}${o.t}</span><b>${o.max ? '✓' : o.prem && !on ? '+' + o.gain : on ? `<em>→</em>${nxt}` : cur}</b></span>${o.prem ? '' : `<i class="im2-bar"><u style="width:${cur}%"></u>${on ? `<s style="left:${cur}%;width:${Math.max(0, nxt - cur)}%"></s>` : ''}</i>`}</button>`; };
@@ -85,8 +88,8 @@ function im2Render() {
     <div class="im2-grid"><div class="im2-ph t-${(t || 'plain').toLowerCase()}"><img id="i2Img" src="${p.src}" alt="" style="filter:${look.f}"><i class="im2-vig" style="opacity:${look.vig}"></i><i class="im2-warm" style="opacity:${look.warm}"></i><button class="im2-hold" id="i2Hold">Hold to compare</button></div>
       <div class="im2-side"><small class="im2-lb">Overall score</small><div class="im2-sr"><b id="i2Score">${v}</b>${nb ? `<span class="im2-goal">Goal <b>${nb}</b></span>` : '<span class="im2-goal">Platinum</span>'}</div>
         <div class="im2-rows">${opts.filter(o => !o.prem).map(tile).join('')}${opts.filter(o => o.prem).map(tile).join('')}</div></div></div>
-    <p class="im2-strip">${strip}${proj ? `<small>${proj}</small>` : ''}</p>
-    ${v < IM2.PREM_AT ? `<p class="im2-lock">🔒 Premium filters (Suncast, Velvet, Nocturne) unlock at ${IM2.PREM_AT}</p>` : ''}${btn}</div>`;
+    <div class="im2-strip">${strip}${proj ? `<small class="im2-pj">${proj}</small>` : ''}</div>
+    ${btn}</div>`;
   galWire(st);
   if ($('#i2Back')) $('#i2Back').onclick = () => { if (inGal) S.galCat = p.cat; AL_OPEN = null; TU_GAL = true; save(); renderStudio(); st.scrollTop = 0; };
   st.querySelectorAll('[data-i2]').forEach(b => b.onclick = () => { IM2SEL = IM2SEL === b.dataset.i2 ? null : b.dataset.i2; im2Render(); });
@@ -235,6 +238,15 @@ html.yg #flowBody .ba-sc .en-sc::before{color:#4E433C}
 .im2-bar s{position:absolute;top:0;bottom:0;background:#3CB371;border-radius:0 3px 3px 0;animation:im2grow .5s ease-out}
 @keyframes im2grow{from{transform:scaleX(0);transform-origin:left}}
 .im2-rows{gap:5px!important}
+/* tier ladder explains Gold / Diamond / Platinum */
+.im2-strip{text-align:left!important;padding:8px 10px 9px!important;margin-top:10px!important}
+.im2-sh{display:block;font-size:.88rem;line-height:1.28;color:#2D2521;margin-bottom:7px}.im2-sh b{color:#6A3500}
+.im2-lad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.im2-st{display:flex;flex-direction:column;align-items:center;gap:0;padding:4px 3px;border-radius:10px;background:rgba(255,255,255,.6);box-shadow:inset 0 0 0 1px #E6D3A6;text-align:center}
+.im2-st i{font-style:normal;font-size:1rem;line-height:1.1}.im2-st b{font:800 .86rem Fraunces,serif;color:#2D2521}.im2-st small{font-size:.68rem;color:#6F6258;font-weight:700;white-space:nowrap}
+.im2-st.got{background:#2E6B42;box-shadow:none}.im2-st.got i,.im2-st.got b,.im2-st.got small{color:#fff}
+.im2-st.will{box-shadow:inset 0 0 0 2px #2D4E86;background:#EEF2FA;animation:im2grow .5s}
+.im2-pj{display:block;margin-top:8px;font-size:.82rem;color:#2D2521;text-align:center}
 @media (prefers-reduced-motion:reduce){.im2-card{animation:none!important}.im2-ph img,.im2-vig,.im2-warm{transition:none}}
 '''
 i = s.rindex('</style>'); s = s[:i] + CSS + s[i:]
