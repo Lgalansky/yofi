@@ -23,9 +23,8 @@ const al2Ic = c => { const P = { pets: '<circle cx="6" cy="9" r="2"/><circle cx=
 const al2Seed = c => { const k = AL2_SEED[c]; const x = SEED.find(y => y.cat === k && y.src) || SEED[0]; return x.src; };
 function al2Card(p) {
   const v = p.s.total, t = galTier(v), x = galMult(v), d = galToday(p);
-  return `<span class="a2-card t-${(t || 'plain').toLowerCase()}"><span class="a2-ph"><img src="${p.src}" alt=""><b class="a2-sc">${v}</b></span>
-    <span class="a2-nm"><b>${esc(alName(p))}</b>${t ? `<i class="a2-tb">${t.toUpperCase()}</i>` : ''}</span>
-    <span class="a2-band"><b>${x}× coins per vote</b><small>+${d} coins today</small></span></span>`;
+  return `<span class="a2-card t-${(t || 'plain').toLowerCase()}"><span class="a2-ph"><img src="${p.src}" alt=""><b class="a2-sc">${v}</b></span></span>
+    <span class="a2-cap"><span class="a2-l1"><b>${esc(alName(p))}</b>${t ? `<i class="a2-tb">${t.toUpperCase()}</i>` : ''}</span><span class="a2-l2"><b>${x}×</b> per vote · <em>+${d} today</em></span></span>`;
 }
 const _renderGalleriesA2 = renderGalleries;
 renderGalleries = function () {
@@ -50,7 +49,7 @@ renderGalleries = function () {
   else if (r.next) { const b = r.ph.filter(p => p.s.total < r.next).sort((a, b) => b.s.total - a.s.total)[0]; act = `<button class="btn block a2-go" data-gimp="${b.id}">Improve ${esc(alName(b))} · ${b.s.total} → ${r.next}</button>`; }
   const opened = GAL.PATH.filter(galOpen).find(x => x !== c && !galRoom(x).ph.length);
   if (r.tier && opened) act = `<button class="btn block a2-go" data-gc="${opened}">Open ${esc(galNm(opened))} collection</button>`;
-  st.innerHTML = `<div class="gl al a2">${galSeg('gal')}<h2 class="a2-h"><span>My gallery</span></h2><nav class="a2-tabs" aria-label="Collections">${tabs}</nav>
+  st.innerHTML = `<div class="gl al a2">${galSeg('gal')}<nav class="a2-tabs" aria-label="Collections">${tabs}</nav>
     <div class="a2-th"><h3>${esc(nm)} collection</h3><span class="a2-badge t-${(r.tier || 'none').toLowerCase()}">${badge}</span></div>
     <div class="a2-book"><i class="a2-ring"></i><i class="a2-ring"></i><div class="a2-grid">${sleeves.join('')}</div></div>
     <p class="a2-goal"><span class="a2-dots" aria-hidden="true">${dots}</span><span class="a2-gs"></span><span>${goalTx}</span></p>${act}</div>`;
@@ -108,6 +107,15 @@ CSS = r'''
 .a2-dots i.on.b70{background:radial-gradient(circle at 35% 30%,#FFF3A8,#E0A82E 60%,#A8761A)}.a2-dots i.on.b80{background:radial-gradient(circle at 35% 30%,#fff,#8FB6EE 60%,#4A70B8)}.a2-dots i.on.b90{background:radial-gradient(circle at 35% 30%,#fff,#C5CCD6 60%,#7D8693)}
 .a2-gs{flex:none;width:1.5px;height:22px;background:#CDBFA8}
 .a2-go{margin:0 14px;width:calc(100% - 28px)!important;min-height:56px;border-radius:999px!important;font-size:1.25rem!important}
+/* photo fills the card; name, tier, rate and today's coins sit under it */
+.a2-sl:not(.empty):not(.blank):not(.a2-nx){aspect-ratio:auto;display:flex;flex-direction:column;gap:6px;padding:0}
+.a2-sl:not(.empty):not(.blank):not(.a2-nx) .a2-card{position:relative;inset:auto;aspect-ratio:4/4.6;padding:4px}
+.a2 .a2-ph{border-radius:10px}
+.a2-cap{display:flex;flex-direction:column;gap:2px;padding:0 3px;text-align:left}
+.a2-l1{display:flex;align-items:center;justify-content:space-between;gap:4px}.a2-l1 b{font:800 1rem/1.1 Fraunces,serif;color:#2D2521;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.a2-l2{font-size:.78rem;color:#4E433C;white-space:nowrap}.a2-l2 b{color:#7A1F27;font-weight:900}.a2-l2 em{font-style:normal;font-weight:800;color:#2E6B42}
+.a2-sl.empty,.a2-sl.a2-nx,.a2-sl.blank{aspect-ratio:4/5.9;align-self:stretch}
+.a2-tabs{margin-top:6px}
 html.yg .a2-goal{color:#E9E1F7}html.yg .a2-th h3{color:#FF8FC4!important}html.yg .a2-tabs{background:#FBF6EC}
 '''
 i = s.rindex('</style>'); s = s[:i] + CSS + s[i:]
