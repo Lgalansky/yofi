@@ -778,3 +778,7 @@ python3 build-skill/nowow.py sp-x.html skill-preview.html
 `compete.py` merges the Compete and Tournaments buttons into one Compete menu with Challenges | Tournaments tabs.
 
 `nowow.py` drops Wow factor: the overall score is the average of the four touch-up scores; existing photos are rescored once on load.
+
+## Live (galleries build)
+
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `nowow.py`, then copy the result to `index.html` with the title "Yofi - Skill".
