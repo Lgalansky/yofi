@@ -739,3 +739,7 @@ python3 build-skill/winpop.py                                  # on "push live":
 ## Upload hint (Skill)
 
 `uploadhint.py`: if tapping an upload button opens no photo picker within ~1.5 s (some in-app browsers, such as the Claude app viewer, Facebook and Instagram, block it), a hint appears under the button pointing to the sample photos and to opening the page in Safari or Chrome. Run after `winpop.py`, same arguments.
+
+## Upload read fix (Skill)
+
+`uploadread.py`: chosen photos are read as data URLs instead of `blob:` links, which some hosts (the Claude app viewer) block, so photos picked from the library never appeared. Run after `uploadhint.py`, same arguments.
