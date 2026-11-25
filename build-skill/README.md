@@ -751,3 +751,9 @@ python3 build-skill/winpop.py                                  # on "push live":
 ## One pop at a time (Skill)
 
 `popqueue.py` (run after `cards.py`): reward and result pops queue and open one after another; nudge pops (daily rewards, streak, gifts, coins nudge, deposit offer and others) are dropped if another pop showed in the last 90 s and wait while a full screen is open; lucky/mystery box pops open at most once every 12 votes (small coin burst in between); card win banners show one at a time and never over a pop; the coins nudge now points to touching up your best card.
+
+## Cleaner Vote screen (Skill)
+
+`voteclean.py` (run after `popqueue.py`): Vote keeps one rank line at the top ("Your card #9 in today's top cards", tap for the top 10, ranked by today's vote wins; rivals simulated in the prototype), the two photos with small dots to the next box, and one card line (wins, coins, tier, Touch up). The touch-up goal card, ticket strip, wins bar and "Your eye" line are hidden.
+
+Skill preview build order on top of the live `index.html`: `popqueue.py` → `voteclean.py` (live already has `winpop`, `uploadhint`, `uploadread`, `cards`).
