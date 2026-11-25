@@ -73,6 +73,8 @@ function galPick() {
   if (p.gd !== d) { p.gd = d; p.gt = 0; } p.gt += m; p.gl = (p.gl || 0) + m; p.gv = (p.gv || 0) + 1; S.gems += m; save();
   const el = document.createElement('div'); el.className = 'gl-pick'; el.setAttribute('role', 'status');
   el.innerHTML = `<img src="${p.src}" alt=""><span><b>Your ${esc(galNm(p.cat))} photo was picked</b><small>${p.s.total} · ${x}× · +${m} coins</small></span>`;
+  const bar = document.querySelector('#vgGoal'), onVote = bar && bar.getClientRects().length && $('#panes').dataset.at === 'judge';
+  if (onVote) { setTimeout(() => { try { gemExplosion(m, { mid: 1, from: document.querySelector('#vgGoal .vg-n') || bar }); } catch (e) { paintGems(); } }, 120); return; }
   document.body.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
   setTimeout(() => { try { gemExplosion(m, { mid: 1, from: el.querySelector('img') }); } catch (e) { paintGems(); } }, 380);
   setTimeout(() => { el.classList.remove('on'); setTimeout(() => el.remove(), 400); }, 2600);

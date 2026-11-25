@@ -48,6 +48,57 @@ renderJudge = function () { const r = _renderJudgeV.apply(this, arguments); try 
 const _voteV = vote;
 vote = async function () { const r = await _voteV.apply(this, arguments); try { vgPaint(); setTimeout(vgPaint, 1600); } catch (e) {} return r; };
 setInterval(() => { try { if ($('#panes') && $('#panes').dataset.at === 'judge') vgPaint(); } catch (e) {} }, 2500);
+/* the top bar rotates through 3 notifications, one per vote: earnings (ticks up live), add photos, improve */
+const vgImprove = vgGoal;
+const vgDayTotal = () => S.photos.reduce((a, x) => a + galToday(x), 0);
+function vgEarn() {
+  const hung = GAL.PATH.filter(galOpen).flatMap(c => galRoom(c).ph); if (!hung.length) return null;
+  const tot = vgDayTotal(), top = hung.slice().sort((a, b) => galToday(b) - galToday(a) || b.s.total - a.s.total)[0];
+  return { p: top, earn: tot, t: `Your photos earned <span class="vg-n">+${tot}</span> coins today`,
+    s: galToday(top) ? `Top earner: ${alName(top)} · +${galToday(top)} at ${galMult(top.s.total)}× per vote` : `${hung.length} photo${hung.length === 1 ? '' : 's'} earning every time a voter picks them`,
+    act: () => vgToGallery(top.cat) };
+}
+function vgAdd() {
+  if (!S.user || !S.photos.length) return vgImprove();
+  const open = GAL.PATH.filter(galOpen);
+  const c = open.find(x => !galRoom(x).full); if (!c) return null;
+  const r = galRoom(c), nm = galNm(c), n = 3 - r.ph.length;
+  return r.ph.length ? { p: r.ph[0], t: `Add ${n} more ${nm} photo${n === 1 ? '' : 's'} to earn more`, s: `Every photo in your ${nm} collection earns on votes`, act: () => vgToGallery(c) }
+    : { t: `Start your ${nm} collection`, s: `Add ${nm.toLowerCase()} photos · each one earns on every vote`, act: () => vgToGallery(c) };
+}
+function vgImp() {
+  const g = vgImprove(); if (g && (g.bar != null || g.ready)) return g;
+  const hung = GAL.PATH.filter(galOpen).flatMap(c => galRoom(c).ph).filter(x => lowestOpen(x) && !photoLock(x) && x.s.total < 99);
+  const p = hung.sort((a, b) => a.s.total - b.s.total)[0]; if (!p) return null;
+  const name = alName(p), cost = fixCost(p), have = Math.floor(S.gems), nb = [70, 80, 90].find(b => p.s.total < b), nx = galNextMult(p.s.total), card = () => { AL_OPEN = p.id; TU_GAL = true; save(); go('studio'); };
+  if (have >= cost) return { p, ready: 1, t: `${name}’s upgrade is ready`, s: `${p.s.total}${nb ? ` → ${nb} for ${galBand(nb)}` : ''} · ${cost} coins`, act: card };
+  return { p, bar: have / cost, n: `${have}/${cost}`, act: card, t: nx ? `Improve ${name} to ${nx.at} to earn ${nx.x}× per vote` : `${cost - have} more coins to improve ${name}`, s: '' };
+}
+vgGoal = function () {
+  if (!S.user || !S.photos.length) return vgImprove();
+  const L = [vgEarn, vgAdd, vgImp], k = (S.vgTurn || 0) % 3;
+  for (let i = 0; i < 3; i++) { const g = L[(k + i) % 3](); if (g) return g; }
+  return vgImprove();
+};
+const vgEsc = esc; let VG_TICK = null;
+const _vgPaintR = vgPaint;
+vgPaint = function () {
+  _vgPaintR();
+  const el = $('#vgGoal'), g = vgGoal(); if (!el || !g) return;
+  if (g.earn != null) { const b = el.querySelector('.vg-tx b'); if (b) b.innerHTML = gemIcon('vg-ci') + g.t; el.classList.add('earn');
+    if (VG_TICK) { const n = el.querySelector('.vg-n'), { from, to } = VG_TICK, t0 = performance.now(); VG_TICK = null;
+      el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+      const tick = t => { if (!n.isConnected) return; const k = Math.min(1, (t - t0) / 900); n.textContent = '+' + Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); };
+      n.textContent = '+' + from; requestAnimationFrame(tick); } }
+  else el.classList.remove('earn');
+};
+const _voteR = vote;
+vote = async function () { const n0 = S.votes; if (!V_BUSY_R) { V_BUSY_R = 1; } const r = await _voteR.apply(this, arguments); V_BUSY_R = 0; if (S.votes > n0) { S.vgTurn = ((S.vgTurn || 0) + 1) % 3; save(); try { vgPaint(); } catch (e) {} } return r; };
+let V_BUSY_R = 0;
+// a photo of yours gets picked: switch the bar to earnings and tick the total up
+const _galPickR = galPick;
+galPick = function () { const t0 = vgDayTotal(); _galPickR.apply(this, arguments); const t1 = vgDayTotal();
+  if (t1 > t0) { S.vgTurn = 0; save(); VG_TICK = { from: t0, to: t1 }; try { vgPaint(); } catch (e) {} } };
 '''
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
 
@@ -66,6 +117,7 @@ CSS = r'''
 .vg.ready{background:linear-gradient(180deg,#FFF6DA,#FBEBC0);box-shadow:inset 0 0 0 2px #E0A82E,0 0 0 3px rgba(255,201,60,.25),0 8px 18px -10px rgba(160,110,10,.6)}
 .vg.pop{animation:vgpop .7s cubic-bezier(.2,1.5,.4,1)}@keyframes vgpop{40%{transform:scale(1.04)}}
 html.yg .vg{background:#FBF6EC!important}html.yg .vg.ready{background:linear-gradient(180deg,#FFF6DA,#FBEBC0)!important}.vg .vg-tx b{color:#2D2521!important}.vg .vg-tx small,.vg .vg-row em{color:#6F6258!important}.vg .vg-cta{color:#fff!important}
+.vg.earn{background:linear-gradient(180deg,#F3FAF2,#E3F1E7)!important;box-shadow:inset 0 0 0 1.5px #A9D3B4,0 6px 14px -10px rgba(46,107,66,.5)}.vg.earn .vg-n{color:#2E6B42;font-weight:900}.vg.earn img{box-shadow:0 0 0 2px #fff,0 0 0 3.5px #7FB98E}
 @media (prefers-reduced-motion:reduce){.vg.pop{animation:none}.vg-bar i{transition:none}}
 '''
 i = s.rindex('</style>'); s = s[:i] + CSS + s[i:]
