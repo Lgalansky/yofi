@@ -66,7 +66,8 @@ function im2Render() {
   const nb = [70, 80, 90].find(b => v < b), nmx = galNextMult(v);
   const strip = sel ? `<b>${t1 || 'Untiered'} card:</b> ${x1}× · ${GAL.BASE * x1} coins per vote win${x1 > x ? `<small>Up from ${x}×</small>` : ''}` : `<b>${t || 'Untiered'} card:</b> ${x}× · ${GAL.BASE * x} coins per vote win${nmx ? `<small>Reach ${nmx.at} for ${nmx.x}× · tap a touch-up to preview it free</small>` : ''}`;
   const look = im2Look(sel && sel.k);
-  const tile = o => `<button class="im2-row${sel && sel.k === o.k ? ' on' : ''}${o.prem ? ' prem' : ''}" data-i2="${o.k}" ${o.max || lk ? 'disabled' : ''}><span>${o.prem ? '✨ ' : ''}${o.t}</span><b>${o.max ? '✓' : sel && sel.k === o.k ? `→ ${im2Proj(p, o)}` : o.prem ? '+' + o.gain : p.s[o.part]}</b></button>`;
+  const tile = o => { const on = sel && sel.k === o.k, cur = p.s[o.part], nxt = on ? im2Raise(p.s, o.part, o.gain)[o.part] : cur;
+    return `<button class="im2-row${on ? ' on' : ''}${o.prem ? ' prem' : ''}" data-i2="${o.k}" ${o.max || lk ? 'disabled' : ''}><span class="im2-rl"><span>${o.prem ? '✨ ' : ''}${o.t}</span><b>${o.max ? '✓' : o.prem && !on ? '+' + o.gain : on ? `<em>→</em>${nxt}` : cur}</b></span>${o.prem ? '' : `<i class="im2-bar"><u style="width:${cur}%"></u>${on ? `<s style="left:${cur}%;width:${Math.max(0, nxt - cur)}%"></s>` : ''}</i>`}</button>`; };
   let proj = '';
   if (sel && inGal) { const r = galRoom(p.cat); if (r.full && r.ph.includes(p)) { const mins = r.ph.map(q => q.id === p.id ? to : q.s.total), tr = galTier(Math.min(...mins));
     if (galRank(tr) > galRank(r.tier)) { const i = GAL.PATH.indexOf(p.cat), nx = GAL.PATH[i + 1]; proj = `<b>Completes ${tr} ${esc(galNm(p.cat))}</b> · all three at ${tr === 'Gold' ? 70 : tr === 'Diamond' ? 80 : 90}+${tr === 'Gold' && nx && !galOpen(nx) ? ` · unlocks ${esc(galNm(nx))}` : ''}`; } } }
@@ -224,6 +225,16 @@ html.yg .im2 .im2-lock{color:#D8CCF0}
 #flowBody .ba-sc .en-sc .medal{font-size:1.5rem!important;margin:0!important;position:static!important}
 #flowBody .ba-sc .en-sc .goal70{margin:0 0 0 auto!important;position:static!important}
 html.yg #flowBody .ba-sc .en-sc::before{color:#4E433C}
+/* score bar under each touch-up, like the old screen */
+.im2 .im2-row{flex-direction:column;align-items:stretch;gap:5px;padding:7px 9px 8px}
+.im2-rl{display:flex;align-items:center;justify-content:space-between;gap:6px}.im2-rl span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.im2-rl b{flex:none;font:900 .95rem Fraunces,serif;color:#2D2521}.im2-rl b em{font:800 .8rem "Nunito Sans",sans-serif;font-style:normal;color:#2E6B42;margin-right:2px}.im2-row.on .im2-rl b{color:#2E6B42}
+.im2-bar{position:relative;display:block;height:6px;border-radius:3px;background:#E9DFCC;overflow:hidden}
+.im2-bar u{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:#2D2521}
+.im2-row.on .im2-bar u{background:#2D4E86}
+.im2-bar s{position:absolute;top:0;bottom:0;background:#3CB371;border-radius:0 3px 3px 0;animation:im2grow .5s ease-out}
+@keyframes im2grow{from{transform:scaleX(0);transform-origin:left}}
+.im2-rows{gap:5px!important}
 @media (prefers-reduced-motion:reduce){.im2-card{animation:none!important}.im2-ph img,.im2-vig,.im2-warm{transition:none}}
 '''
 i = s.rindex('</style>'); s = s[:i] + CSS + s[i:]
