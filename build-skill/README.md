@@ -752,5 +752,8 @@ Then `album.py` shows the Gallery as a card album (binder page with sleeves, hol
 
 ```bash
 python3 build-skill/galleries.py index.html sp-g.html
-python3 build-skill/album.py sp-g.html skill-preview.html
+python3 build-skill/album.py sp-g.html sp-a.html
+python3 build-skill/votegoal.py sp-a.html skill-preview.html
 ```
+
+`votegoal.py` puts a goal bar at the top of Vote (in place of the "Coming up" chip): coins to the next touch-up of the photo holding back your collection, "upgrade is ready", or "add 2 more Pets photos"; tapping it opens that photo's card.
