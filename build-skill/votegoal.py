@@ -99,6 +99,36 @@ let V_BUSY_R = 0;
 const _galPickR = galPick;
 galPick = function () { const t0 = vgDayTotal(); _galPickR.apply(this, arguments); const t1 = vgDayTotal();
   if (t1 > t0) { S.vgTurn = 0; save(); VG_TICK = { from: t0, to: t1 }; try { vgPaint(); } catch (e) {} } };
+
+/* earnings while you were away: credited once on open, shown first in the top bar, ticking up from 0 */
+let VG_AWAY = null;
+function vgAwayCheck(now = Date.now()) {
+  if (!S.user) return; const last = S.galSeen || 0; S.galSeen = now; save();
+  const away = now - last; if (!last || away < 10 * 60000) return;
+  const hrs = Math.min(12, away / 3600000), hung = GAL.PATH.filter(galOpen).flatMap(c => galRoom(c).ph); if (!hung.length) return;
+  let tot = 0, top = null; const d = todayKey();
+  hung.forEach(p => { const n = Math.max(1, Math.min(8, Math.round(hrs * (1 + (p.s.total - 55) / 15)))), m = n * GAL.BASE * galMult(p.s.total);
+    if (p.gd !== d) { p.gd = d; p.gt = 0; } p.gt += m; p.gl = (p.gl || 0) + m; p.gv = (p.gv || 0) + n; tot += m; if (!top || m > top.m) top = { p, m }; });
+  S.gems += tot; S.vgTurn = 0; save(); VG_AWAY = { tot, top: top.p, topM: top.m, shown: 0 };
+}
+const _vgEarnA = vgEarn;
+vgEarn = function () {
+  if (!VG_AWAY) return _vgEarnA();
+  const a = VG_AWAY; return { p: a.top, earn: a.tot, t: `Your photos earned <span class="vg-n">+${a.tot}</span> while you were away`, s: `Top earner: ${alName(a.top)} · +${a.topM} coins`, act: () => vgToGallery(a.top.cat) };
+};
+const _vgPaintA = vgPaint;
+vgPaint = function () {
+  if (VG_AWAY && !VG_AWAY.shown && (S.vgTurn || 0) % 3 === 0 && $('#judge')) { VG_AWAY.shown = 1; VG_TICK = { from: 0, to: VG_AWAY.tot };
+    const n = VG_AWAY.tot; shownGems = S.gems - n; try { paintGems(); } catch (e) {}
+    setTimeout(() => { const t = $('#vgGoal .vg-n'); try { gemExplosion(n, { mid: 1, from: t || $('#vgGoal') }); } catch (e) { paintGems(); } }, 250); }
+  _vgPaintA();
+};
+const _voteA = vote;
+vote = async function () { const n0 = S.votes; const r = await _voteA.apply(this, arguments); if (S.votes > n0 && VG_AWAY && VG_AWAY.shown) VG_AWAY = null; return r; };
+vgAwayCheck(); setTimeout(() => { try { vgPaint(); } catch (e) {} }, 300);
+const _goV = go; go = function (w) { const r = _goV.apply(this, arguments); if (w === 'judge') { try { vgPaint(); } catch (e) {} } return r; };
+setInterval(() => { try { if (S.user) { S.galSeen = Date.now(); save(); } } catch (e) {} }, 60000);
+addEventListener('pagehide', () => { try { if (S.user) { S.galSeen = Date.now(); save(); } } catch (e) {} });
 '''
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
 
