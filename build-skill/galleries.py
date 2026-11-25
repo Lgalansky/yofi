@@ -75,8 +75,7 @@ function galPick() {
   el.innerHTML = `<img src="${p.src}" alt=""><span><b>Your ${esc(galNm(p.cat))} photo was picked</b><small>${p.s.total} · ${x}× · +${m} coins</small></span>`;
   const bar = document.querySelector('#vgGoal'), onVote = bar && bar.getClientRects().length && $('#panes').dataset.at === 'judge';
   if (onVote) { setTimeout(() => { try { gemExplosion(m, { mid: 1, from: document.querySelector('#vgGoal .vg-n') || bar }); } catch (e) { paintGems(); } }, 120); return; }
-  document.body.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
-  setTimeout(() => { try { gemExplosion(m, { mid: 1, from: el.querySelector('img') }); } catch (e) { paintGems(); } }, 380);
+  setTimeout(() => { try { gemExplosion(m, { mid: 1 }); } catch (e) { paintGems(); } }, 120);
   setTimeout(() => { el.classList.remove('on'); setTimeout(() => el.remove(), 400); }, 2600);
 }
 const _voteG = vote;
@@ -198,7 +197,7 @@ html.yg .gl-path button{color:#D8CCF0}html.yg .gl-dot{background:rgba(255,255,25
 .gl-nl{display:inline-block;padding:6px 16px;border-radius:10px;background:#FBF6EC;box-shadow:inset 0 0 0 1.5px #D8C49E;font:800 1.1rem Fraunces,serif}
 .gl-next small{display:block;margin-top:8px;font-weight:700;font-size:.84rem}
 .gl-tie{margin:8px 0 0;font-size:.9rem;opacity:.9}
-.gl-pick{position:fixed;left:50%;top:118px;z-index:205;display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border-radius:999px;background:#FBF6EC;color:#2D2521;box-shadow:inset 0 0 0 1.5px #D8C49E,0 12px 24px -10px rgba(0,0,0,.45);transform:translate(-50%,-14px);opacity:0;transition:transform .3s,opacity .3s;pointer-events:none;max-width:92vw}
+.gl-pick{display:none!important;position:fixed;left:50%;top:118px;z-index:205;display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border-radius:999px;background:#FBF6EC;color:#2D2521;box-shadow:inset 0 0 0 1.5px #D8C49E,0 12px 24px -10px rgba(0,0,0,.45);transform:translate(-50%,-14px);opacity:0;transition:transform .3s,opacity .3s;pointer-events:none;max-width:92vw}
 .gl-pick.on{transform:translate(-50%,0);opacity:1}.gl-pick img{width:38px;height:38px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #FFC93C}
 .gl-pick b{display:block;font:800 .92rem "Nunito Sans",sans-serif}.gl-pick small{display:block;font-size:.8rem;color:#2E6B42;font-weight:800}
 .gl-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:4px 6px 0;position:relative;z-index:2}
