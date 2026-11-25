@@ -4,7 +4,7 @@
 #   the effect on earnings: "3× → 4× coins per vote · Sharpen details · 78 → 80 · Diamond".
 # - Four touch-ups: Fix lighting (+3), Boost colour (+2), Sharpen details (+2), Soften background (+4); each can be
 #   used 3 times and gains 1 less each time. Each tile shows the score it gets you and its price (Skill's touch-up price).
-# - Premium filters (Suncast, Velvet, Nocturne) unlock at 80 and cost 1.5x.
+# - (Premium filters were removed.)
 # - A line when the touch-up completes a collection or opens the next one; Apply button with the price recessed;
 #   short of coins -> "Need 40 more coins · Vote to earn".
 # Scores stay consistent with the rest of Skill: the matching part score goes up (Lighting, Colour, Technical,
@@ -32,7 +32,7 @@ let IM2SEL = null, IM2PID = null;
 const im2All = () => IM2.EDITS.concat(IM2.PREM);
 function im2Opts(p) {
   const lv = p.ed || {}, base = fixCost(p), out = IM2.EDITS.map(e => { const l = lv[e.k] || 0; return { ...e, l, max: l >= IM2.LEVELS, gain: Math.max(1, e.g - l), price: base }; });
-  if (p.s.total >= IM2.PREM_AT) IM2.PREM.forEach(e => { const l = lv[e.k] || 0; out.push({ ...e, prem: 1, l, max: l >= IM2.PLEVELS, gain: Math.max(1, e.g - 2 * l), price: Math.round(base * 1.5) }); });
+  if (false) IM2.PREM.forEach(e => { const l = lv[e.k] || 0; out.push({ ...e, prem: 1, l, max: l >= IM2.PLEVELS, gain: Math.max(1, e.g - 2 * l), price: Math.round(base * 1.5) }); });
   return out;
 }
 // raise the part scores so the overall (average of five) goes up by gain; returns the new score object
@@ -75,7 +75,6 @@ function im2Render() {
   if (sel && inGal) { const r = galRoom(p.cat); if (r.full && r.ph.includes(p)) { const mins = r.ph.map(q => q.id === p.id ? to : q.s.total), tr = galTier(Math.min(...mins));
     if (galRank(tr) > galRank(r.tier)) { const i = GAL.PATH.indexOf(p.cat), nx = GAL.PATH[i + 1]; proj = `<b>Completes ${tr} ${esc(galNm(p.cat))}</b> · all three at ${tr === 'Gold' ? 70 : tr === 'Diamond' ? 80 : 90}+${tr === 'Gold' && nx && !galOpen(nx) ? ` · unlocks ${esc(galNm(nx))}` : ''}`; } } }
   if (sel && !proj && t1 !== t && t1) proj = `<b>${esc(alName(p))} becomes ${t1}</b> · ${x1}× coins every time a voter picks it`;
-  if (sel && !proj && to >= IM2.PREM_AT && v < IM2.PREM_AT) proj = '<b>Unlocks premium filters</b> · Suncast, Velvet and Nocturne';
   const short = sel && S.gems < sel.price ? sel.price - Math.floor(S.gems) : 0;
   const maxed = opts.every(o => o.max);
   const btn = lk ? `<button class="im2-apply" disabled>In a competition · touch up after it ends</button>`
@@ -155,7 +154,7 @@ function im2Levels(p) {
   const row = (b, n) => { const got = v >= b, c = b === 90 ? `${GAL.BASE * galMult(90)}` : `${GAL.BASE * galMult(b)}–${GAL.BASE * galMult(b + 5)}`; return `<div class="im2-lv${got ? ' got' : ''}"><span>${TI[n]}</span><span><b>${n}</b><small>Score ${b}+</small></span><em>${c} coins</em>${got ? '<i>✓</i>' : ''}</div>`; };
   openSheet(`<div class="im2-lvs"><h2>Coins per level</h2><p class="sub">Each time a voter picks your photo, it earns coins. Higher levels earn more.</p>
     <div class="im2-lv"><span>📷</span><span><b>Not ranked</b><small>Under 70</small></span><em>${GAL.BASE * galMult(0)} coins</em>${v < 70 ? '<i>•</i>' : ''}</div>${row(70, 'Gold')}${row(80, 'Diamond')}${row(90, 'Platinum')}
-    <p class="im2-lvn">✨ Diamond (80+) also unlocks premium filters.</p><button class="btn block" data-shclose>Got it</button></div>`);
+    <p class="im2-lvn"></p><button class="btn block" data-shclose>Got it</button></div>`);
   document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
 }
 const _renderStudioI2 = renderStudio;
