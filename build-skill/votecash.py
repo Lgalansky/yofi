@@ -59,15 +59,17 @@ openBattle = function () {
 // button colour = what it costs: any main button that spends real money ($) is green
 const VC_CASH_RX = /\$\s?\d/;
 function vcGreen(root) {
-  (root || document).querySelectorAll('#sheet .btn, #sheet .kg-go, #sheet .kg2-go, #flow .btn, #coach .bt-cta, #coach .btn').forEach(b => {
+  (root || document).querySelectorAll('#sheet .btn, #sheet .kg-go, #sheet .kg2-go, #sheet .tsr2-e, #sheet .bt-cta, #flow .btn, #flow .bt-cta, #coach .bt-cta, #coach .btn').forEach(b => {
+    if (b.closest('#enArea, .actions') && !/\$/.test(b.textContent || '')) return;
     if (b.closest('.vc') || b.classList.contains('link')) return;
     const t = b.textContent || '', cash = VC_CASH_RX.test(t) && !/🟡|coins?\b/i.test(t);
     b.classList.toggle('pay-cash', cash);
-    const coin = !cash && /\d/.test(t) && (/🟡|coins?\b/i.test(t) || !!b.querySelector('svg.gem, .gem, .coinic, use[href="#gemPath"]'));
+    const coin = !cash && !/earn|need|get more|buy/i.test(t) && (/🟡|\bcoins?\b/i.test(t) || !!b.querySelector('svg.gem, .gem, .coinic, use[href="#gemPath"]'));
     b.classList.toggle('pay-coin', coin);
   });
 }
-new MutationObserver(() => { clearTimeout(vcGreen.t); vcGreen.t = setTimeout(() => vcGreen(), 30); }).observe(document.body, { childList: true, subtree: true, characterData: true });
+function vcPills() { document.querySelectorAll('.tsr2-e').forEach(e => { const t = e.textContent || '', c = /\$\s?\d/.test(t), g = !c && !!e.querySelector('svg, .gem'); e.classList.toggle('pill-cash', c); e.classList.toggle('pill-coin', g); }); }
+new MutationObserver(() => { clearTimeout(vcGreen.t); vcGreen.t = setTimeout(() => { vcGreen(); vcPills(); }, 30); }).observe(document.body, { childList: true, subtree: true, characterData: true });
 const _renderJudgeC2 = renderJudge;
 renderJudge = function () { const r = _renderJudgeC2.apply(this, arguments); try { vcPaint(); } catch (e) {} return r; };
 setInterval(() => { document.querySelectorAll('.vc [data-tat]').forEach(e => { e.textContent = tLeft(+e.dataset.tat); }); }, 1000);
@@ -86,6 +88,10 @@ s = s.replace(_c, "cta: bme ? (S.gbDone ? `Play · ${CC_COIN} 🟡 · win ${CC_C
 _d = "Stake <b>${CC_COIN} 🟡</b>, win <b>${CC_COIN * 2} 🟡</b>. Result in 30 seconds.`"
 assert s.count(_d) == 1, 'coin text'
 s = s.replace(_d, "${S.gbDone ? `Stake <b>${CC_COIN} 🟡</b>, win <b>${CC_COIN * 2} 🟡</b>` : `<b>Free this time</b>, win <b>${CC_COIN * 2} 🟡</b>`}. Result in 30 seconds.`")
+# coin challenge sheet: a paid challenge says what it costs
+_e = "free ? 'Start now · Free' : `Free challenge · ${stake} 🟡`}</button>"
+assert s.count(_e) == 1, 'coin sheet label'
+s = s.replace(_e, "free ? 'Start now · Free' : `Play · ${stake} 🟡 · win ${stake * 2}`}</button>")
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
 
 CSS = r'''
@@ -118,6 +124,7 @@ html.yg .vcs i{background:rgba(255,255,255,.2)}html.yg .vcs i.on{background:#FF2
 #vgGoal .vg-ci{margin-right:5px;vertical-align:-3px}
 html.yg .vc{background:#FBF6EC!important}
 html body #sheet .pay-coin,html body #coach .pay-coin,.pay-coin{background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;background-color:#E0A82E!important;color:#3A2600!important;box-shadow:0 8px 18px -8px rgba(160,110,10,.7)!important}.pay-coin *{color:#3A2600!important}
+.tsr2-e.pill-cash{background:#21784A!important;color:#fff!important;border-radius:999px;padding:4px 10px!important;font-weight:800}.tsr2-e.pill-coin{background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important;border-radius:999px;padding:4px 10px!important;font-weight:800}
 html body #sheet .pay-cash,html body #flow .pay-cash,html body #coach .pay-cash,html:not(.yg) body #sheet .btn.pay-cash,html.yg body #sheet .btn.pay-cash,html:not(.yg) body #sheet .kg .kg-go.pay-cash,html.yg body #sheet .kg .kg-go.pay-cash,.pay-cash{background-color:#21784A!important;background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important;box-shadow:0 8px 18px -8px rgba(33,120,74,.7)!important;border-color:transparent!important}.pay-cash *{color:#fff!important}
 #gbCash.vc-up{background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important;box-shadow:0 8px 18px -8px rgba(33,120,74,.7)!important}
 .vc-nxu{margin:6px 0 0;text-align:center;font-size:.86rem;opacity:.85}
