@@ -126,6 +126,9 @@ html.yg .vcs i{background:rgba(255,255,255,.2)}html.yg .vcs i.on{background:#FF2
 #vgGoal .vg-tx b,#judge .vc-tx b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #vgGoal .vg-tx small,#judge .vc-tx small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #judge .vc-tx b{font-size:.95rem}
+/* one line of text per notification */
+#vgGoal .vg-tx small,#judge .vc-tx small{display:none!important}
+#vgGoal .vg-tx b,#judge .vc-tx b{font-size:1.05rem!important;line-height:1.25}
 #judge .vc-tx small{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.25}
 #vgGoal .vg-ci{margin-right:5px;vertical-align:-3px}
 html.yg .vc{background:#FBF6EC!important}
