@@ -42,6 +42,16 @@ useGems = function () {
     if (S.gems < x.cost) { closeSheet(); runOut('gems', `You need ${x.cost - S.gems} more coins`, null, x.cost - S.gems); return; } x.go(); });
   $('#ugBuy').onclick = () => { closeSheet(); openStore(); };
 };
+
+// bottom menu order: Vote · Touch-ups · Compete
+(() => { const a = $('#segStudio'), b = $('#segGallery'); if (a && b && b.parentNode === a.parentNode) b.parentNode.insertBefore(a, b); })();
+// tournament list: only the next tournament of each kind (same prize and entry)
+function cmpDedupe() {
+  const rows = document.querySelectorAll('#flowBody .tsr2'); if (!rows.length) return; const seen = new Set();
+  rows.forEach(r => { const k = ((r.querySelector('.tsr2-p') || {}).textContent || '') + '|' + ((r.querySelector('.tsr2-e') || {}).textContent || '') + '|' + (r.classList.contains('frrow') ? 'fr' : '');
+    if (r.style.display !== 'none' && seen.has(k)) r.style.display = 'none'; else if (!seen.has(k)) { seen.add(k); r.style.display = ''; } });
+}
+new MutationObserver(() => { try { cmpDedupe(); } catch (e) {} }).observe($('#flowBody'), { childList: true, subtree: true });
 new MutationObserver(() => { try { cmpPaint(); } catch (e) {} }).observe($('#flowBody'), { childList: true });
 '''
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
