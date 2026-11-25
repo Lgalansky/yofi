@@ -32,7 +32,7 @@ const IM2 = {
     { k: 'nocturne', t: 'Nocturne', v: 'Apply Nocturne', g: 3, part: 'tech', f: 'contrast(1.1) saturate(.92)', vig: .35 }],
   LEVELS: 3, PLEVELS: 2, PREM_AT: 80
 };
-let IM2SEL = null, IM2PID = null;
+let IM2SEL = null, IM2PID = null, IM2MAN = false;
 const im2All = () => IM2.EDITS.concat(IM2.PREM);
 function im2Opts(p) {
   const lv = p.ed || {}, base = fixCost(p), out = IM2.EDITS.map(e => { const l = lv[e.k] || 0; return { ...e, l, max: l >= IM2.LEVELS, gain: Math.max(1, e.g - l), price: base }; });
@@ -64,7 +64,8 @@ function im2Bake(p, o, done) {
 function im2Render() {
   const st = $('#studio'); st.classList.remove('tallp');
   const p = cur(); if (!p || !p.s) { TU_GAL = true; renderStudio(); return; }
-  if (IM2PID !== p.id) { IM2PID = p.id; IM2SEL = null; }
+  if (IM2PID !== p.id) { IM2PID = p.id; IM2SEL = null; IM2MAN = false; IM2MAN = false; }
+  if (!IM2MAN) { const lo = IM2.EDITS.filter(e => ((p.ed || {})[e.k] || 0) < IM2.LEVELS).sort((a, b) => p.s[a.part] - p.s[b.part])[0]; if (lo) IM2SEL = lo.k; }
   const v = p.s.total, t = im2Tier(v), x = galMult(v), opts = im2Opts(p), sel = IM2SEL && opts.find(o => o.k === IM2SEL && !o.max);
   const to = sel ? im2Proj(p, sel) : v, t1 = im2Tier(to), x1 = galMult(to), lk = photoLock(p), inGal = GAL.PATH.includes(p.cat);
   const nb = [70, 80, 90].find(b => v < b), nmx = galNextMult(v);
@@ -97,7 +98,7 @@ function im2Render() {
   galWire(st);
   $('#i2Info').onclick = () => im2Levels(p);
   if ($('#i2Back')) $('#i2Back').onclick = () => { if (inGal) S.galCat = p.cat; AL_OPEN = null; TU_GAL = true; save(); renderStudio(); st.scrollTop = 0; };
-  st.querySelectorAll('[data-i2]').forEach(b => b.onclick = () => { IM2SEL = IM2SEL === b.dataset.i2 ? null : b.dataset.i2; im2Render(); });
+  st.querySelectorAll('[data-i2]').forEach(b => b.onclick = () => { IM2MAN = true; IM2SEL = b.dataset.i2; im2Render(); });
   const h = $('#i2Hold'); if (h && sel) { const img = $('#i2Img'), vg = st.querySelector('.im2-vig'), wm = st.querySelector('.im2-warm');
     const show = raw => { img.style.filter = raw ? 'none' : look.f; vg.style.opacity = raw ? 0 : look.vig; wm.style.opacity = raw ? 0 : look.warm; h.textContent = raw ? 'Before' : 'Hold to compare'; };
     h.addEventListener('pointerdown', e => { e.preventDefault(); show(true); }); ['pointerup', 'pointerleave', 'pointercancel'].forEach(k => h.addEventListener(k, () => show(false))); }
@@ -108,7 +109,7 @@ function im2Apply(p, o) {
   if (!o || o.max || S.gems < o.price || photoLock(p)) return;
   const v0 = p.s.total, t0 = galTier(v0), x0 = galMult(v0);
   S.gems -= o.price; paintGems(); p.ed = p.ed || {}; p.ed[o.k] = (p.ed[o.k] || 0) + 1;
-  p.s = im2Raise(p.s, o.part, o.gain); p.enh = (p.enh || 0) + 1; p.tu1 = 1; p.q = p.s.total >= CFG.QUALIFY; IM2SEL = null; save();
+  p.s = im2Raise(p.s, o.part, o.gain); p.enh = (p.enh || 0) + 1; p.tu1 = 1; p.q = p.s.total >= CFG.QUALIFY; IM2SEL = null; IM2MAN = false; save();
   const btn = $('#i2Go'); if (btn) { btn.disabled = true; btn.firstChild.textContent = 'Touching up…'; }
   im2Bake(p, o, () => { save(); im2Render();
     const sc = $('#i2Score'), card = document.querySelector('.im2-card'); if (card) { card.classList.remove('up'); void card.offsetWidth; card.classList.add('up'); }
@@ -123,7 +124,7 @@ function im2Apply(p, o) {
 let IM2_RUN = null;
 function im2Run(p, o) {
   if (!o || o.max || S.gems < o.price || photoLock(p)) return;
-  IM2_RUN = { pid: p.id, k: o.k, v0: p.s.total, t0: galTier(p.s.total), x0: galMult(p.s.total) }; IM2SEL = null;
+  IM2_RUN = { pid: p.id, k: o.k, v0: p.s.total, t0: galTier(p.s.total), x0: galMult(p.s.total) }; IM2SEL = null; IM2MAN = false;
   startEnhance(p, o.part);
   setTimeout(() => { if (IM2_RUN && !$('#flow').classList.contains('on')) IM2_RUN = null; }, 800);
 }

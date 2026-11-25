@@ -9,6 +9,8 @@ if '/* no wow factor */' in s: sys.exit('nowow already applied')
 def rep(a, b, n=1):
     global s
     assert s.count(a) == n, (s.count(a), a[:80]); s = s.replace(a, b)
+rep("  { k: 'expr', name: 'Wow factor', sub: 'Emotion & story', src: 'subject' },\n", "")
+rep("crowdOf = (p, c) => c.src === 'total' ? Math.round(p.score / 10) * 10 : p.cc[c.src] * 10;", "crowdOf = (p, c) => c.src === 'total' ? Math.round(p.score / 10) * 10 : ((p.cc && p.cc[c.src] != null ? p.cc[c.src] : Math.round((p.score || 70) / 10))) * 10;")
 rep("    { k: 'subject', name: 'Wow factor', short: 'Wow factor', verb: 'Improve Wow factor', tip: 'Makes your subject pop and draws the eye' },\n", "")
 rep("s.total = Math.round((s.light + s.comp + s.colour + s.subject + s.tech) / 5);", "s.total = Math.round((s.light + s.comp + s.colour + s.tech) / 4);", 2)
 # Improve: four parts, Suncast raises Composition

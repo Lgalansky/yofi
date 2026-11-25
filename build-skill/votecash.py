@@ -154,7 +154,8 @@ html.yg .vcs i{background:rgba(255,255,255,.2)}html.yg .vcs i.on{background:#FF2
 #vgGoal .vg-tx b,#judge .vc-tx b{font:800 1.08rem/1.2 Fraunces,serif!important;color:#2D2521!important;-webkit-line-clamp:2}
 #vgGoal .vg-ci{display:none!important}
 #vgGoal .vg-cta,#judge .vc-cta{flex:none;width:auto!important;max-width:none!important;white-space:nowrap;padding:10px 18px!important;border-radius:12px!important;background:#2D4E86!important;color:#fff!important;font:800 .95rem "Nunito Sans",sans-serif!important}
-#vgGoal.ready .vg-cta{background:#2D4E86!important}
+#vgGoal .vg-cta,#vgGoal.ready .vg-cta{background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important}
+#judge .vc-cta{background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important}
 #judge .eye{display:none!important}
 /* one line of text per notification */
 #vgGoal .vg-tx small,#judge .vc-tx small{display:block!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp:unset!important;font-size:.84rem!important;margin-top:3px;color:#4E433C!important}
