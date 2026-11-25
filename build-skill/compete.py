@@ -135,11 +135,16 @@ const _crewInviteC = crewInvite; crewInvite = function () { if (CW_SKIP_INV) { C
 function clubTidy() {
   const g = $('#gallery'), grid = g && g.querySelector('.tcg'); if (!grid || !g.querySelector('.cw-mem')) return;
   const c = crewCur && crewCur(); if (!c) return; c.pot = c.pot || {}; c.seed = c.seed || {}; let ch = false;
-  CATS8.forEach(k => { if (S.photos.some(p => fitsTheme(p, k)) && !(c.pot[k] > 0)) { c.pot[k] = CLUB_SEED; c.seed[k] = 1; ch = true; } });
+  // starter pots only once 2+ members have each entered: a real (paid) challenge has happened in this club
+  const live = (c.members || []).length >= 1 && CATS8.some(k => (c.pot[k] || 0) > (c.seed[k] ? CLUB_SEED : 0));
+  CATS8.forEach(k => { const can = S.photos.some(p => fitsTheme(p, k));
+    if (live && can && !(c.pot[k] > 0)) { c.pot[k] = CLUB_SEED; c.seed[k] = 1; ch = true; }
+    if (!live && c.seed[k]) { c.pot[k] = Math.max(0, +((c.pot[k] || 0) - CLUB_SEED).toFixed(2)); delete c.seed[k]; ch = true; } });
   if (ch) save();
   const cards = [...grid.children], CK = CATS8;
   cards.forEach((el, i) => { const k = CK[i], can = !el.querySelector('.bcc-go.up'), pot = el.querySelector('.bcc-pot'), lab = el.querySelector('.bcc-l');
-    if (can) { if (pot) pot.textContent = money(c.pot[k] || 0); if (lab && c.seed[k] && (c.pot[k] || 0) <= CLUB_SEED) lab.textContent = 'Starter pot'; el.classList.add('cw-can'); }
+    if (can && !(c.pot[k] > 0)) { if (pot) pot.textContent = '+$1.70'; if (lab) lab.textContent = 'First challenge adds'; el.classList.add('cw-can'); }
+    else if (can) { if (pot) pot.textContent = money(c.pot[k] || 0); if (lab && c.seed[k] && (c.pot[k] || 0) <= CLUB_SEED) lab.textContent = 'Starter pot'; el.classList.add('cw-can'); }
     else { if (pot) pot.style.display = 'none'; if (lab) lab.textContent = 'Add a photo to play'; el.classList.add('cw-cant'); } });
   cards.sort((a, b) => (b.classList.contains('cw-can') ? 1 : 0) - (a.classList.contains('cw-can') ? 1 : 0)).forEach(el => grid.appendChild(el));
   const mem = g.querySelector('.cw-mem'), hdr = g.querySelector('.cw-play');
