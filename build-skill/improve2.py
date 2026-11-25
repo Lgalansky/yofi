@@ -83,6 +83,7 @@ function im2Render() {
   const maxed = opts.every(o => o.max);
   const btn = lk ? `<button class="im2-apply" disabled>In a competition · touch up after it ends</button>`
     : maxed ? `<button class="im2-apply" disabled>${esc(alName(p))} is at its best</button>`
+    : !sel && S.gems < Math.min(...opts.filter(o => !o.max).map(o => o.price)) ? `<button class="im2-apply" id="i2Vote">Need ${Math.min(...opts.filter(o => !o.max).map(o => o.price)) - Math.floor(S.gems)} more coins · Vote to earn</button>`
     : !sel ? `<button class="im2-apply" disabled>Choose a touch-up<span>${fixCost(p)} <i class="im2-coin"></i></span></button>`
     : short ? `<button class="im2-apply" id="i2Vote">Need ${short} more coins · Vote to earn</button>`
     : `<button class="im2-apply" id="i2Go">${esc(sel.v)}<span>${sel.price} <i class="im2-coin"></i></span></button>`;

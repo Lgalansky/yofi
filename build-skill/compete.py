@@ -99,6 +99,7 @@ new MutationObserver(() => { try { cmpPaint(); } catch (e) {} }).observe($('#flo
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
 CSS = r'''
 /* one Compete menu */
+#btGem{display:none!important}
 .cmp-h{text-align:center;margin:6px 16px 10px;font:900 clamp(1.9rem,8.6vw,2.4rem)/1 Fraunces,serif;color:#1F3157}html.yg .cmp-h{color:#fff}
 #flowBody.cmp-t>*:not(.cmp-bar):not(.cmp-cards):not(.cmp-h){display:none!important}
 .cmp-cards{display:flex;flex-direction:column;gap:14px;margin:0 14px 24px}
