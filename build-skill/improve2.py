@@ -15,6 +15,10 @@ src = sys.argv[1] if len(sys.argv) > 1 else 'index.html'; p = sys.argv[2] if len
 s = open(src, encoding='utf-8').read()
 if 'function al2Card(' not in s: sys.exit('run album2.py first')
 if 'function im2Render(' in s: sys.exit('improve2 already applied')
+# touch-up price: about 25 picks of what the photo earns now, +20% for each touch-up already done on it
+_f = "const fixCost0 = p => !p ? CFG.COST : p.s.total >= 90 ? 400 : p.s.total >= 80 ? 200 : p.s.total >= CFG.QUALIFY ? 100 : 50;"
+assert s.count(_f) == 1, 'fixCost0'
+s = s.replace(_f, "const fixCost0 = p => { if (!p) return CFG.COST; let x = p.s.total >= 90 ? 6 : p.s.total >= 85 ? 5 : p.s.total >= 80 ? 4 : p.s.total >= 75 ? 3 : p.s.total >= 70 ? 2 : 1; return Math.round(25 * 2 * x * (1 + 0.2 * (p.enh || 0)) / 5) * 5; };")
 
 JS = r'''
 /* ---------- Improve, card style ---------- */
@@ -154,7 +158,7 @@ function im2Levels(p) {
   const row = (b, n) => { const got = v >= b, c = b === 90 ? `${GAL.BASE * galMult(90)}` : `${GAL.BASE * galMult(b)}–${GAL.BASE * galMult(b + 5)}`; return `<div class="im2-lv${got ? ' got' : ''}"><span>${TI[n]}</span><span><b>${n}</b><small>Score ${b}+</small></span><em>${c} coins</em>${got ? '<i>✓</i>' : ''}</div>`; };
   openSheet(`<div class="im2-lvs"><h2>Coins per level</h2><p class="sub">Each time a voter picks your photo, it earns coins. Higher levels earn more.</p>
     <div class="im2-lv"><span>📷</span><span><b>Not ranked</b><small>Under 70</small></span><em>${GAL.BASE * galMult(0)} coins</em>${v < 70 ? '<i>•</i>' : ''}</div>${row(70, 'Gold')}${row(80, 'Diamond')}${row(90, 'Platinum')}
-    <p class="im2-lvn"></p><button class="btn block" data-shclose>Got it</button></div>`);
+    <p class="im2-lvn">Touch-ups cost about 25 picks of what the photo earns, and a little more each time you touch up the same photo.</p><button class="btn block" data-shclose>Got it</button></div>`);
   document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
 }
 const _renderStudioI2 = renderStudio;

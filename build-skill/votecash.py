@@ -79,8 +79,11 @@ vote = async function () { if ((S.since || 0) >= CFG.BATTLE_EVERY - 1) S.since =
 
 // top notification styled like the bottom card: square photo, short bold title, one-word button
 const _vgGoalS = vgGoal;
+// an affordable upgrade stays on top until it's tapped
+const vgReadyKey = g => g && g.p ? g.p.id + ':' + g.p.s.total : '';
 vgGoal = function () {
-  const g = _vgGoalS(); if (!g) return g; const nm = g.p ? alName(g.p) : '';
+  let g = null; try { const r = vgImp(); if (r && r.ready && vgReadyKey(r) !== S.vgReadyAck) { const act = r.act; r.act = () => { S.vgReadyAck = vgReadyKey(r); save(); act && act(); }; g = r; } } catch (e) {}
+  g = g || _vgGoalS(); if (!g) return g; const nm = g.p ? alName(g.p) : '';
   if (g.earn != null) { g.t = g.t.replace('Your photos earned', 'Earned').replace(' while you were away', ' while away'); g.s = /while/.test(g.t) ? 'Your photos earned while you were away' : 'From voters picking your photos'; g.cta = 'View'; }
   else if (/^Add|^Start/.test(g.t)) { g.t = g.t.replace(' to earn more', '').replace(/^Start your (.+) collection$/, 'Start $1 collection'); g.s = 'Every photo earns coins on votes'; g.cta = 'Add'; }
   else if (g.ready) { g.t = `${nm}’s upgrade is ready`; g.cta = 'Improve'; }
