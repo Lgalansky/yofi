@@ -81,8 +81,8 @@ vote = async function () { if ((S.since || 0) >= CFG.BATTLE_EVERY - 1) S.since =
 const _vgGoalS = vgGoal;
 vgGoal = function () {
   const g = _vgGoalS(); if (!g) return g; const nm = g.p ? alName(g.p) : '';
-  if (g.earn != null) { g.t = g.t.replace('Your photos earned', 'Earned').replace(' while you were away', ' while away'); g.cta = 'View'; }
-  else if (/^Add|^Start/.test(g.t)) { g.t = g.t.replace(' to earn more', '').replace(/^Start your (.+) collection$/, 'Start $1 collection'); g.cta = 'Add'; }
+  if (g.earn != null) { g.t = g.t.replace('Your photos earned', 'Earned').replace(' while you were away', ' while away'); g.s = /while/.test(g.t) ? 'Your photos earned while you were away' : 'From voters picking your photos'; g.cta = 'View'; }
+  else if (/^Add|^Start/.test(g.t)) { g.t = g.t.replace(' to earn more', '').replace(/^Start your (.+) collection$/, 'Start $1 collection'); g.s = 'Every photo earns coins on votes'; g.cta = 'Add'; }
   else if (g.ready) { g.t = `${nm}’s upgrade is ready`; g.cta = 'Improve'; }
   else if (g.p) { const nb = [70, 80, 90].find(b => g.p.s.total < b); g.t = nb ? `Get ${nm} to ${nb}` : `Improve ${nm}`; g.cta = 'Improve'; }
   return g;
@@ -150,7 +150,8 @@ html.yg .vcs i{background:rgba(255,255,255,.2)}html.yg .vcs i.on{background:#FF2
 #vgGoal .vg-cta,#judge .vc-cta{flex:none;width:auto!important;max-width:none!important;white-space:nowrap;padding:10px 18px!important;border-radius:12px!important;background:#2D4E86!important;color:#fff!important;font:800 .95rem "Nunito Sans",sans-serif!important}
 #vgGoal.ready .vg-cta{background:#2D4E86!important}
 /* one line of text per notification */
-#vgGoal .vg-tx small,#judge .vc-tx small{display:none!important}
+#vgGoal .vg-tx small,#judge .vc-tx small{display:block!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp:unset!important;font-size:.84rem!important;margin-top:3px;color:#4E433C!important}
+#vgGoal .vg-tx b,#judge .vc-tx b{display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:2!important;white-space:normal;overflow:hidden;font-size:1rem!important;line-height:1.18!important}
 #vgGoal .vg-tx b,#judge .vc-tx b{font-size:1.05rem!important;line-height:1.25}
 #judge .vc-tx small{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.25}
 #vgGoal .vg-ci{margin-right:5px;vertical-align:-3px}

@@ -53,6 +53,7 @@ const vgImprove = vgGoal;
 const vgDayTotal = () => S.photos.reduce((a, x) => a + galToday(x), 0);
 function vgEarn() {
   const hung = GAL.PATH.filter(galOpen).flatMap(c => galRoom(c).ph); if (!hung.length) return null;
+  if (!vgDayTotal()) return null;
   const tot = vgDayTotal(), top = hung.slice().sort((a, b) => galToday(b) - galToday(a) || b.s.total - a.s.total)[0];
   return { p: top, earn: tot, t: `Your photos earned <span class="vg-n">+${tot}</span> coins`,
     s: '',
