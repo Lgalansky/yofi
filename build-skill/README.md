@@ -754,9 +754,12 @@ Then `album.py` shows the Gallery as a card album (binder page with sleeves, hol
 python3 build-skill/galleries.py index.html sp-g.html
 python3 build-skill/album.py sp-g.html sp-a.html
 python3 build-skill/votegoal.py sp-a.html sp-v.html
-python3 build-skill/votecash.py sp-v.html skill-preview.html
+python3 build-skill/votecash.py sp-v.html sp-c.html
+python3 build-skill/noenergy.py sp-c.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
 
 `votegoal.py` puts a goal bar at the top of Vote (in place of the "Coming up" chip): coins to the next touch-up of the photo holding back your collection, "upgrade is ready", or "add 2 more Pets photos"; tapping it opens that photo's card.
+
+`noenergy.py` removes energy from the screen (votes were already unlimited): no energy bar, button, sheets, or "+N energy" rewards.

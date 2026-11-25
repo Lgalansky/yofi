@@ -25,9 +25,9 @@ function vcCard() {
   S.vcTurn = (S.vcTurn || 0) + 1;
   const F = fighters(), best = F[0];
   if (best && S.vcTurn % 2) { const cat = best.cat || 'any', K = kingOf(cat), nm = GAL.PATH.includes(best.cat) ? alName(best) : 'your photo';
-    return { img: K.src, t: `Beat the ${catLabel(cat)} champion`, s: `$1 entry · ${money(K.bounty)} pot`, who: `@${K.h} · vs your ${nm}`, cta: 'View matchup', go: () => openKing(cat), champ: 1 }; }
+    return { img: K.src, t: `Beat the ${catLabel(cat)} champion`, s: `$1 entry · ${money(K.bounty)} pot`, cta: 'View matchup', go: () => openKing(cat), champ: 1 }; }
   const t = tSlots()[0];
-  return { art: 1, t: 'Quick tournament', when: t.at, s: `$1 entry · US$${t.gtd} guaranteed`, cta: 'View tournament', go: () => openTourney() };
+  return { art: 1, t: 'Quick tournament', when: t.at, s: `$1 entry · US$${t.gtd} prize`, cta: 'View tournament', go: () => openTourney() };
 }
 function vcPaint() {
   const j = $('#judge'), card = j && j.querySelector('#jcard'); if (!card) return;
@@ -36,7 +36,7 @@ function vcPaint() {
   j.querySelectorAll('.vc, .vc-nxu').forEach(e => e.remove());
   const c = vcCard(); if (!c) return;
   const el = document.createElement('button'); el.className = 'vc';
-  el.innerHTML = `${c.art ? `<span class="vc-art" aria-hidden="true">🏆</span>` : `<img src="${c.img}" alt="">`}<span class="vc-tx"><b>${esc(c.t)}</b>${c.when ? `<span class="vc-when">🕒 Starts in <span data-tat="${c.when}">${tLeft(c.when)}</span></span>` : ''}<small>${esc(c.s)}</small>${c.who ? `<em class="vc-who">${esc(c.who)}</em>` : ''}</span><span class="vc-cta">${c.cta}</span>`;
+  el.innerHTML = `${c.art ? `<span class="vc-art" aria-hidden="true">🏆</span>` : `<img src="${c.img}" alt="">`}<span class="vc-tx"><b>${esc(c.t)}</b><small>${c.when ? `🕒 <span data-tat="${c.when}">${tLeft(c.when)}</span> · ` : ''}${esc(c.s)}</small></span><span class="vc-cta">${c.cta}</span>`;
   el.onclick = c.go; card.insertAdjacentElement('afterend', el);
   const nu = h && h.querySelector('.nxu'); if (nu) nu.remove();
   const n = typeof nextUp === 'function' && nextUp(); if (n) el.insertAdjacentHTML('afterend', `<p class="vc-nxu">${n.k === 'tour' ? '🏆 Tournament' : n.k === 'cash' ? '🏅 Head-to-head' : '🟡 Practice challenge'} ${n.left === 1 ? 'after this vote' : `in <b>${n.left}</b> votes`}</p>`);
@@ -66,6 +66,15 @@ html.yg .vcs i{background:rgba(255,255,255,.2)}html.yg .vcs i.on{background:#FF2
 .vc-when{display:inline-block;margin-top:4px;padding:2px 9px;border-radius:999px;background:#F1E9DA;font-size:.78rem;font-weight:700;color:#2D2521!important}
 .vc-cta{flex:none;width:92px;padding:8px 6px;border-radius:12px;background:#2D4E86;color:#fff!important;font:800 .8rem/1.15 "Nunito Sans",sans-serif;text-align:center;box-sizing:border-box}
 #judge .jfoot:has(.en-hide){display:none}
+/* goal bar and cash card: same height */
+#vgGoal.vg,#judge .vc{height:92px;min-height:92px;max-height:92px;padding:0 12px 0 10px;overflow:hidden}
+#vgGoal.vg img,#vgGoal .vg-ic,#judge .vc img,#judge .vc-art{width:68px;height:68px}
+#vgGoal.vg img{border-radius:50%}#judge .vc img,#judge .vc-art{border-radius:12px}
+#vgGoal .vg-tx b,#judge .vc-tx b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#vgGoal .vg-tx small,#judge .vc-tx small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#judge .vc-tx b{font-size:.95rem}
+#judge .vc-tx small{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.25}
+#vgGoal .vg-ci{margin-right:5px;vertical-align:-3px}
 html.yg .vc{background:#FBF6EC!important}
 .vc-nxu{margin:6px 0 0;text-align:center;font-size:.86rem;opacity:.85}
 .vc-who{display:block;margin-top:2px;font-style:normal;font-size:.76rem;font-weight:700;color:#8A5A0A!important}
