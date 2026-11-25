@@ -3,29 +3,31 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Yofi - Skill 2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Figtree:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800;9..144,900&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F8F3EB;--card:#FFFFFF;--line:#E6DAC3;--ink:#22263A;--muted:#6A6458;--navy:#1F3157;--navy2:#2D4E86;--wine:#8E1F2F;--gold:#E9B52F;--goldlt:#FFF1C9;--cash:#2F7A4A;--cashlt:#E3F1E7;--red:#B8402C;
+:root{--bg:#F8F3EB;--card:#FFFDF9;--line:#EADFCB;--ink:#382D29;--muted:#6F6258;--navy:#2D4E86;--navy2:#24406F;--wine:#9E2F2A;--gold:#E0A82E;--goldlt:#FBEFD2;--cash:#2E6B42;--cashlt:#E3F1E7;--red:#B8402C;
 --plat:#7FA9C9;--dia:#5B8DEF;--goldt:#D9A21B;--r:18px}
 *{box-sizing:border-box}html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--ink);font:16px/1.4 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--ink);font:17px/1.45 "Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,label:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:0;letter-spacing:-.01em}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:0;letter-spacing:-.01em;color:#2D2521}h1{font-weight:900}
 .app{max-width:520px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
-.bar{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;align-items:center;gap:10px;padding:max(12px,env(safe-area-inset-top)) 16px 10px;border-bottom:1px solid var(--line)}
-.logo{font:800 1.9rem/1 Fraunces,serif;color:var(--wine)}
-.wallet{margin-left:auto;display:flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;background:var(--card);font-weight:800}
-.wallet span{display:flex;align-items:center;gap:6px;padding:6px 11px}.wallet span+span{border-left:1.5px solid var(--line)}
-.wallet .cash{color:var(--cash)}.wallet .coin{color:#8A6400}
+.bar{position:sticky;top:0;z-index:31;background:var(--bg);display:flex;align-items:center;gap:10px;padding:max(12px,env(safe-area-inset-top)) 16px 10px;border-bottom:1px solid var(--line)}
+.logo{font:900 2.5rem/1 Fraunces,serif;color:var(--wine);letter-spacing:-.02em}
+.wallet{margin-left:auto;display:flex;gap:6px}
+.wp{display:flex;align-items:center;gap:6px;height:38px;padding:0 10px;border-radius:12px;background:#F4EDE0;box-shadow:inset 0 0 0 1.5px #CDBB98}
+.wp b{font:800 1.12rem/1 Fraunces,serif;letter-spacing:-.01em}.wp.cash b{color:#2E6B42}.wp.coin b{color:#2E508A}
+.wp .note{display:block;width:26px;height:17px}.wp .note svg,.note svg{width:100%;height:100%;display:block}.wp .coinic{width:22px;height:22px}
 .rv{border:1px dashed #B9AD96;background:none;border-radius:999px;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;color:var(--muted)}
-.coinic{display:inline-block;width:1.05em;height:1.05em;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF3A8,#F3C447 55%,#C88A06);box-shadow:inset 0 -2px 0 rgba(0,0,0,.18);vertical-align:-.15em;flex:none}
+.coinic{display:inline-block;width:1.1em;height:1.1em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='%23E0A82E' stroke='%23A8761A' stroke-width='1.2'/%3E%3Ccircle cx='12' cy='12' r='6.3' fill='none' stroke='%23F6D67A' stroke-width='1.4'/%3E%3Cpath d='M12 8.2v7.6' stroke='%23A8761A' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;vertical-align:-.18em;flex:none}
 main{flex:1;padding:14px 16px 100px}
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-.tabs div{max-width:520px;margin:0 auto;display:flex}
-.tabs button{flex:1;border:0;background:none;padding:9px 4px 11px;display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:800;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.tabs svg{width:26px;height:26px}.tabs button[aria-current="page"]{color:var(--navy)}
-.tabs button[aria-current="page"] span{position:relative}.tabs button[aria-current="page"] span::after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:3px;border-radius:2px;background:var(--navy)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:13px 18px;font-weight:800;background:var(--navy);color:#fff;min-height:48px}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:#F7F1E7;border-radius:22px 22px 0 0;box-shadow:0 -1px 0 #F3EBDD,0 -12px 30px -16px rgba(38,31,28,.8);padding:6px 8px max(8px,env(safe-area-inset-bottom))}
+.tabs div{max-width:520px;margin:0 auto;display:flex;gap:4px}
+.tabs button{flex:1;border:0;background:none;border-radius:16px;padding:7px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:800;font-size:.86rem;color:#463933}
+.tabs svg{width:25px;height:25px}.tabs button[aria-current="page"]{color:var(--navy);background:#E3EAF5}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:13px 18px;font:800 1.08rem/1.15 Fraunces,Georgia,serif;background:var(--navy);color:#fff;min-height:48px;box-shadow:0 6px 16px rgba(45,78,134,.25)}
+.btn.cash{box-shadow:0 6px 16px rgba(46,107,66,.28)}.btn.ghost{box-shadow:none}
 .btn.block{width:100%}.btn.cash{background:var(--cash)}.btn.ghost{background:none;color:var(--navy);border:1.5px solid var(--navy)}.btn.gold{background:var(--gold);color:#2A1C00}
 .btn[disabled]{opacity:.45;cursor:not-allowed}
 .link{border:0;background:none;color:var(--navy);text-decoration:underline;font-weight:700;padding:8px}
@@ -59,8 +61,8 @@ main{flex:1;padding:14px 16px 100px}
 .vres{text-align:center;min-height:1.6em;margin:8px 0 0;font-weight:800}.vres.hit{color:var(--cash)}.vres.miss{color:var(--red)}
 .promo{display:flex;align-items:center;gap:12px;margin-top:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px}
 .promo .pic,.promo .art{width:72px;height:72px;flex:none;border-radius:12px}
-.promo b{display:block;font:800 .98rem/1.2 Fraunces,serif}.promo small{display:block;color:var(--muted);margin-top:3px}
-.promo .btn{margin-left:auto;flex:none;padding:10px 14px;min-height:40px;font-size:.9rem}
+.promo b{display:block;font:800 1rem/1.2 "Nunito Sans",sans-serif;color:#2D2521}.promo small{display:block;color:var(--muted);margin-top:3px}
+.promo .cta{display:block;margin-top:5px;color:var(--navy);font-weight:800;font-size:.92rem}.promo>span:nth-child(2){flex:1;min-width:0}
 .art{display:grid;place-items:center;background:var(--navy);color:var(--gold)}.art svg{width:70%;height:70%}
 /* gallery */
 .path{display:flex;align-items:center;justify-content:space-between;gap:4px;margin:0 0 14px;overflow-x:auto;padding:2px}
@@ -99,7 +101,7 @@ main{flex:1;padding:14px 16px 100px}
 .prem{margin-top:14px}.prem h3{font-size:1.05rem;margin:0 0 6px}
 .proj{margin:14px 0 10px;border-radius:14px;background:var(--goldlt);padding:11px 13px;font-weight:700}
 .proj b{font-size:1.05rem}.proj div+div{margin-top:3px}
-.apply{display:flex;align-items:center;justify-content:space-between;width:100%;border:0;border-radius:999px;background:var(--navy);color:#fff;padding:8px 8px 8px 22px;font-weight:800;font-size:1.15rem;min-height:60px}
+.apply{display:flex;align-items:center;justify-content:space-between;width:100%;border:0;border-radius:999px;background:var(--navy);color:#fff;padding:8px 8px 8px 22px;font:800 1.2rem Fraunces,serif;min-height:60px;box-shadow:0 6px 16px rgba(45,78,134,.25)}
 .apply .pr{display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.28);box-shadow:inset 0 2px 4px rgba(0,0,0,.35);border-radius:999px;padding:9px 16px;font-size:1.1rem}
 .apply[disabled]{opacity:.5;cursor:not-allowed}
 .short{text-align:center;margin:8px 0 0;font-weight:700;color:var(--red)}
@@ -119,22 +121,53 @@ main{flex:1;padding:14px 16px 100px}
 .tfoot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;font-weight:700}
 .empty{text-align:center;color:var(--muted);padding:18px 8px}
 /* overlays */
-.sheet{position:fixed;inset:0;z-index:30;background:var(--bg);overflow-y:auto;padding:max(12px,env(safe-area-inset-top)) 16px 30px;animation:up .22s ease-out}
+.sheet{position:fixed;inset:var(--hh,62px) 0 0 0;z-index:30;background:var(--bg);overflow-y:auto;padding:max(12px,env(safe-area-inset-top)) 16px 30px;animation:up .22s ease-out}
 .sheet>div{max-width:520px;margin:0 auto}
 @keyframes up{from{transform:translateY(24px);opacity:0}}
 .sh-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}.sh-top h2{font-size:1.5rem}
 .x{margin-left:auto;border:0;background:#EFE6D3;width:38px;height:38px;border-radius:50%;font-size:1.1rem;font-weight:800}
-.pop{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:20px;background:rgba(30,26,22,.62);animation:fade .2s}
+.pop{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:20px 8px;background:rgba(38,31,28,.78);animation:fade .2s}
 @keyframes fade{from{opacity:0}}
-.pbox{position:relative;width:min(100%,380px);background:var(--navy);color:#fff;border-radius:24px;padding:22px 18px 16px;text-align:center;overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);animation:pin .4s cubic-bezier(.2,1.4,.4,1)}
+.pbox{position:relative;width:min(100%,380px);max-height:calc(100vh - 24px);overflow:hidden auto;border-radius:30px;padding:30px 20px 18px;text-align:center;color:#302622;background:radial-gradient(80% 50% at 50% 30%,#EFE3CF,#F5EEE1 70%,#F7F2E8);box-shadow:0 0 0 2px #FFC93C,0 0 40px rgba(255,190,60,.45),0 30px 60px -20px rgba(38,31,28,.8);animation:pin .45s cubic-bezier(.2,1.4,.4,1)}
 @keyframes pin{from{transform:scale(.8);opacity:0}}
-.pbox h2{font-size:1.75rem;color:#fff}.pbox .amt{font:900 2rem Figtree;color:var(--gold);margin:6px 0}
-.pbox p{margin:8px 0;color:#DCE2F0}.pbox .pimg{width:120px;height:120px;margin:12px auto 4px;border-radius:50%;box-shadow:0 0 0 4px #fff}
-.pbox .ribbon{display:inline-block;background:#F6EEDC;color:var(--navy);font:800 1.15rem Fraunces;padding:6px 16px;border-radius:6px;margin-top:-14px;position:relative}
-.pbox .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 6px}.pbox .trio .pic{aspect-ratio:3/4;box-shadow:0 0 0 3px var(--gold)}
-.pbox .btn{width:100%;margin-top:10px}.pbox .btn.main{background:#F6EEDC;color:var(--navy)}.pbox .btn.sec{background:none;border:1.5px solid #F6EEDC;color:#fff}
-.cf{position:absolute;top:-12px;width:8px;height:12px;border-radius:2px;animation:fall 2.6s ease-in infinite;pointer-events:none}
-@keyframes fall{to{transform:translateY(560px) rotate(540deg);opacity:.2}}
+.pbox .rays{position:absolute;left:50%;top:150px;width:620px;height:620px;margin:-310px 0 0 -310px;background:repeating-conic-gradient(rgba(255,214,120,.16) 0 9deg,transparent 9deg 22deg);animation:spin 18s linear infinite;pointer-events:none}
+.pbox.wpop .rays{animation-duration:16s;background:repeating-conic-gradient(rgba(255,201,60,.22) 0 9deg,transparent 9deg 22deg)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pbox>:not(.rays):not(.cf):not(.drop){position:relative;z-index:2}
+.pbox h2{margin:4px 0 8px;font:900 clamp(1.7rem,7.6vw,2.15rem)/1.05 Fraunces,serif;color:#6A3500}
+.pbox.wpop h2{margin-top:24px;text-transform:uppercase}
+.pbox .amt{font:900 2.4rem/1.1 Fraunces,serif;color:#E9A514;margin:4px 0}
+.pbox p{margin:6px 0;color:#423530}.pbox p b{color:#2D2521}
+.pbox .pimg{width:120px;height:120px;margin:10px auto 4px;border-radius:50%;box-shadow:0 0 0 4px #fff,0 0 0 8px #FFC93C}
+.pbox .ribbon{display:inline-block;background:var(--navy);color:#fff;font:800 1.05rem Fraunces;padding:6px 16px;border-radius:8px;margin-top:-14px}
+.pbox .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 6px}.pbox .trio .pic{aspect-ratio:3/4;box-shadow:0 0 0 3px #FFC93C}
+.pbox .btn{width:100%;margin-top:12px}.pbox .btn.main{font-size:1.3rem;min-height:58px;text-transform:uppercase;border-radius:999px}
+.pbox .btn.sec{background:none;box-shadow:none;color:var(--navy);text-decoration:underline;font:700 1rem "Nunito Sans",sans-serif;min-height:40px;margin-top:4px}
+.cf{position:absolute;top:-16px;width:8px;height:13px;border-radius:2px;pointer-events:none;animation:fall 2.4s ease-in infinite}
+@keyframes fall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(620px) rotate(600deg);opacity:.15}}
+.drop{position:absolute;top:-40px;pointer-events:none;animation:drop 2.4s cubic-bezier(.45,0,.75,.6) infinite both}
+.drop .coinic{width:30px;height:30px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35))}.drop .note{display:block;width:36px;height:23px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3))}
+@keyframes drop{0%{transform:translateY(0) rotate(-20deg);opacity:0}10%{opacity:1}100%{transform:translateY(640px) rotate(220deg);opacity:0}}
+.wp-photo{position:relative;width:150px;height:168px;margin:2px auto 0;animation:wppop .55s cubic-bezier(.2,1.5,.4,1) both}
+.wp-photo .pic{width:100%;height:100%;border-radius:18px;box-shadow:0 0 0 4px #fff,0 0 0 8px #FFC93C,0 18px 30px -10px rgba(0,0,0,.6)}
+.wp-badge{position:absolute;right:-16px;bottom:-14px;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:1.7rem;background:radial-gradient(circle at 35% 30%,#FFF3A8,#FFC93C 55%,#E79A00);box-shadow:0 0 0 4px #fff,0 8px 18px -6px rgba(0,0,0,.6);animation:wppulse 1.6s ease-in-out infinite}
+@keyframes wppop{from{transform:scale(.4);opacity:0}}@keyframes wppulse{50%{transform:scale(1.1)}}
+.wp-amt{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 0!important;font:900 2.7rem/1.05 Fraunces,serif;color:#E9A514!important;text-shadow:0 2px 0 rgba(0,0,0,.12)}
+.wp-amt.cash{color:#2E9A5C!important}.wp-amt .coinic{width:38px;height:38px}.wp-amt .note{display:block;width:40px;height:26px}
+.wp-lbl{margin:4px 0 6px!important;font-size:.95rem}
+/* fly to wallet (same motion as Skill) */
+.fx{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.fxp{position:absolute;filter:drop-shadow(0 4px 10px rgba(46,80,138,.45))}.fxp.c{filter:drop-shadow(0 4px 10px rgba(46,107,66,.5))}.fxp>*{width:100%!important;height:100%!important;display:block}
+.fxbig{position:absolute;transform:translate(-50%,-50%);text-align:center;background:#F6F0E5;border-radius:26px;padding:14px 26px 12px;box-shadow:0 20px 50px -12px rgba(89,72,65,.55);animation:gpop 2.6s ease-out forwards;white-space:nowrap}
+.fxbig b{display:flex;align-items:center;justify-content:center;gap:8px;font:800 3.2rem/1 Fraunces,serif;color:#2E508A}.fxbig.c b{color:#2E6B42}.fxbig b .coinic{width:40px;height:40px}.fxbig b .note{display:block;width:46px;height:30px}
+.fxbig span{display:block;font-weight:700;margin-top:4px;color:#382D29}
+@keyframes gpop{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}14%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}24%{transform:translate(-50%,-50%) scale(1)}75%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-75%) scale(.9)}}
+.fxfloat{position:absolute;z-index:3;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;padding:7px 15px 7px 7px;border-radius:999px;font:800 1.9rem/1 Fraunces,serif;color:#fff;background:linear-gradient(135deg,#2E6B42,#0D7A4B);box-shadow:0 0 0 3px rgba(46,107,66,.6),0 12px 30px rgba(46,107,66,.45);animation:gfloat 1.5s cubic-bezier(.3,1.3,.5,1) forwards;white-space:nowrap}
+.fxfloat.noimg{padding-left:15px}.fxfloat img{width:36px;height:36px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #fff}.fxfloat .coinic{width:28px;height:28px}
+@keyframes gfloat{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}18%{transform:translate(-50%,-60%) scale(1.15);opacity:1}35%{transform:translate(-50%,-62%) scale(1)}80%{opacity:1}100%{transform:translate(-50%,-115%) scale(.95);opacity:0}}
+.fxring{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;box-shadow:0 0 0 4px rgba(46,80,138,.6);animation:gring .7s ease-out forwards}@keyframes gring{to{transform:scale(5);opacity:0}}
+.wp.bump{animation:bump .5s;box-shadow:inset 0 0 0 1.5px #2E508A,0 0 18px rgba(46,80,138,.6)}.wp.cash.bump{box-shadow:inset 0 0 0 1.5px #2E6B42,0 0 18px rgba(46,107,66,.6)}
+@keyframes bump{40%{transform:scale(1.12)}}
 .toast{position:fixed;left:50%;top:70px;z-index:50;transform:translateX(-50%);background:var(--navy);color:#fff;border-radius:999px;padding:9px 16px;font-weight:700;font-size:.9rem;box-shadow:0 10px 20px -8px rgba(0,0,0,.5);max-width:92vw;text-align:center}
 /* upload / pick lists */
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}.chips button{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:7px 13px;font-weight:700}
@@ -149,7 +182,7 @@ main{flex:1;padding:14px 16px 100px}
 .terms{display:flex;justify-content:space-around;margin:12px 0;text-align:center}.terms b{display:block;font:800 1.5rem Fraunces}.terms small{color:var(--muted);font-weight:700}
 .duel{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}.duel .pic{aspect-ratio:3/4}
 .duel .vsb{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;font:800 1rem Fraunces}
-.duel figure{margin:0;text-align:center}.duel figcaption{font:800 1.1rem Fraunces;margin-top:6px}.duel figcaption small{display:block;font:600 .8rem Figtree;color:var(--muted)}
+.duel figure{margin:0;text-align:center}.duel figcaption{font:800 1.1rem Fraunces;margin-top:6px}.duel figcaption small{display:block;font:600 .8rem "Nunito Sans";color:var(--muted)}
 .duel figure.win .pic{box-shadow:0 0 0 4px var(--cash)}
 .vbar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:12px 0 4px;background:#EFE6D3}.vbar i{display:block;height:100%;transition:width .2s}.vbar .a{background:var(--navy)}.vbar .b{background:#C9B48A}
 .track{display:flex;flex-direction:column;gap:8px;margin:12px 0}.track div{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:#fff;border:1px solid var(--line)}.track .got{background:var(--cashlt)}
@@ -160,7 +193,7 @@ main{flex:1;padding:14px 16px 100px}
 <body>
 <div class="app">
   <header class="bar"><span class="logo">Yofi</span><button class="rv" id="rvBtn" aria-label="Reviewer controls">Review</button>
-    <div class="wallet" aria-label="Wallet"><span class="cash" title="Demo cash">$<b id="wCash">0.00</b></span><span class="coin" title="Coins"><i class="coinic"></i><b id="wCoins">0</b></span></div></header>
+    <div class="wallet" aria-label="Wallet"><span class="wp cash" title="Demo cash"><i class="note"></i><b id="wCash">$0.00</b></span><span class="wp coin" title="Coins"><i class="coinic"></i><b id="wCoins">0</b></span></div></header>
   <main id="view"></main>
   <nav class="tabs" aria-label="Main"><div>
     <button data-tab="vote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></svg><span>Vote</span></button>
@@ -277,12 +310,20 @@ function pop(o) { PQ.push(o); if (!popOpen) nextPop(); }
 function nextPop() {
   const o = PQ.shift(); if (!o) { popOpen = false; return; } popOpen = true;
   const el = document.createElement('div'); el.className = 'pop'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true');
-  el.innerHTML = `<div class="pbox">${o.confetti ? [...Array(18)].map((_, i) => `<i class="cf" style="left:${(i * 47) % 100}%;background:${['#F3C447', '#FFFFFF', '#E86F6F', '#7FB6F0'][i % 4]};animation-delay:${(i * .12).toFixed(2)}s"></i>`).join('') : ''}
-    <h2>${o.title}</h2>${o.amt ? `<div class="amt">${o.amt}</div>` : ''}${o.trio ? `<div class="trio">${o.trio.map(p => pic(p)).join('')}</div>` : ''}
-    ${o.img ? pic(o.img, { cls: 'pimg' }) : ''}${o.ribbon ? `<div class="ribbon">${o.ribbon}</div>` : ''}${o.text ? `<p>${o.text}</p>` : ''}
-    <button class="btn main" data-pa="go">${o.cta || 'OK'}</button>${o.later ? `<button class="btn sec" data-pa="later">${o.later}</button>` : ''}</div>`;
+  const w = o.win, isC = w && w.cur === 'cash', wic = isC ? noteIc() : '<i class="coinic"></i>', show = v => isC ? money(v) : Math.round(v).toLocaleString();
+  el.innerHTML = `<div class="pbox${w ? ' wpop' : ''}"><i class="rays" aria-hidden="true"></i>
+    ${o.confetti || w ? [...Array(26)].map((_, i) => `<i class="cf" style="left:${(i * 37) % 100}%;background:${['#FFC93C', '#FF6B6B', '#5B8DEF', '#3CCB8A', '#F59E0B'][i % 5]};animation-delay:${(i * .09).toFixed(2)}s;animation-duration:${(2.1 + (i % 5) * .3).toFixed(2)}s"></i>`).join('') : ''}
+    ${w ? [...Array(12)].map((_, i) => `<span class="drop" style="left:${(i * 61 + 7) % 92}%;animation-delay:${(.15 + i * .17).toFixed(2)}s">${wic}</span>`).join('') : ''}
+    ${w ? `<div class="wp-photo">${o.img ? pic(o.img) : ''}<span class="wp-badge" aria-hidden="true">🏆</span></div>` : ''}
+    <h2>${o.title}</h2>
+    ${w ? `<p class="wp-amt${isC ? ' cash' : ''}"><span>+<span class="wpN">${show(0)}</span></span>${wic}</p><p class="wp-lbl">${esc(w.label)} · ${isC ? 'added to your cash' : 'added to your coins'}</p>` : ''}
+    ${!w && o.amt ? `<div class="amt">${o.amt}</div>` : ''}${o.trio ? `<div class="trio">${o.trio.map(p => pic(p)).join('')}</div>` : ''}
+    ${!w && o.img ? pic(o.img, { cls: 'pimg' }) : ''}${o.ribbon ? `<div class="ribbon">${o.ribbon}</div>` : ''}${o.text ? `<p>${o.text}</p>` : ''}
+    <button class="btn main" data-pa="go">${o.cta || (w ? (isC ? 'Collect my cash' : 'Collect my coins') : 'OK')}</button>${o.later ? `<button class="btn sec" data-pa="later">${o.later}</button>` : ''}</div>`;
   document.body.appendChild(el); setTimeout(() => el.querySelector('[data-pa="go"]').focus(), 60);
-  const close = f => { el.remove(); if (f) f(); setTimeout(nextPop, 350); };
+  if (w) { const nEl = el.querySelector('.wpN'), t0 = performance.now(); const tick = t => { if (!nEl.isConnected) return; const k = Math.min(1, (t - t0) / 1100); nEl.textContent = show(w.amt * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); };
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) nEl.textContent = show(w.amt); else requestAnimationFrame(tick); }
+  let shut = false; const close = f => { if (shut) return; shut = true; el.remove(); if (w) setTimeout(() => fly(w.amt, w.cur, { held: 1, label: w.label }), 80); if (o.fly) setTimeout(() => fly(o.fly.n, o.fly.cur, { held: 1, label: o.fly.label }), 80); if (f) f(); setTimeout(nextPop, w || o.fly ? 1200 : 350); };
   el.querySelector('[data-pa="go"]').onclick = () => close(o.go);
   if (el.querySelector('[data-pa="later"]')) el.querySelector('[data-pa="later"]').onclick = () => close(o.no);
 }
@@ -296,7 +337,41 @@ function sheet(title, html, onClose) {
 }
 const closeSheet = () => { const s = $('#sheet'); if (s) s.remove(); };
 /* ---------------- header + render ---------------- */
-function paint() { $('#wCash').textContent = (+S.cash).toFixed(2); $('#wCoins').textContent = Math.floor(S.coins).toLocaleString(); }
+const NOTE = '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="8" width="28" height="17" rx="3" fill="#21C77A"/><rect x="5" y="11" width="22" height="11" rx="2" fill="none" stroke="#0E8F55" stroke-width="1.5"/><circle cx="16" cy="16.5" r="4.2" fill="#FFD84D"/><path d="M16 14v5M17.4 14.9c-.4-.5-2.8-.7-2.8.6 0 1.4 2.8.7 2.8 2.1 0 1.2-2.4 1.1-2.9.5" stroke="#0E8F55" stroke-width="1.1" fill="none" stroke-linecap="round"/></svg>';
+const noteIc = () => `<i class="note">${NOTE}</i>`;
+const PEND = { coins: 0, cash: 0 };
+function paint() { $('#wCash').textContent = money(Math.max(0, S.cash - PEND.cash)); $('#wCoins').textContent = Math.max(0, Math.round(S.coins - PEND.coins)).toLocaleString(); }
+const hold = (cur, n) => { PEND[cur] += n; paint(); };
+// coins or cash burst from a point and fly into the wallet pill, which counts up as each one lands (Skill gemExplosion/cashExplosion)
+function fly(n, cur, o = {}) {
+  if (!o.held) hold(cur, n);
+  const pill = $(cur === 'cash' ? '.wp.cash' : '.wp.coin'), ic = pill && pill.querySelector('i');
+  const release = v => { PEND[cur] = Math.max(0, PEND[cur] - v); if (PEND[cur] < .005) PEND[cur] = 0; paint(); };
+  if (!(n > 0) || !ic || matchMedia('(prefers-reduced-motion: reduce)').matches || typeof Element.prototype.animate !== 'function') { release(n); return; }
+  const ir = ic.getBoundingClientRect(), tx = ir.left + ir.width / 2, ty = ir.top + ir.height / 2;
+  let ox = innerWidth / 2, oy = innerHeight * .42;
+  if (o.at) { ox = o.at.x; oy = o.at.y; } else if (o.from && o.from.isConnected) { const r = o.from.getBoundingClientRect(); ox = r.left + r.width / 2; oy = r.top + r.height / 2; }
+  if (o.mid) ox = Math.min(innerWidth - 80, Math.max(80, ox)); else if (!o.small) ox = Math.min(innerWidth - 140, Math.max(140, ox)), oy = Math.max(110, oy);
+  const isC = cur === 'cash', icon = () => isC ? NOTE : '<i class="coinic"></i>', amt = isC ? '+' + money(n) : '+' + n.toLocaleString();
+  const layer = document.createElement('div'); layer.className = 'fx'; layer.setAttribute('aria-hidden', 'true'); document.body.appendChild(layer);
+  if (o.mid) { layer.insertAdjacentHTML('beforeend', `<i class="fxring" style="left:${ox}px;top:${oy}px"></i><div class="fxfloat${o.img ? '' : ' noimg'}" style="left:${ox}px;top:${oy}px">${o.img ? `<img src="${o.img}" alt="">` : ''}${amt}${isC ? noteIc() : '<i class="coinic"></i>'}</div>`); }
+  else if (!o.small) layer.insertAdjacentHTML('beforeend', `<div class="fxbig${isC ? ' c' : ''}" style="left:${ox}px;top:${oy}px"><b>${amt}${isC ? noteIc() : '<i class="coinic"></i>'}</b><span>${esc(o.label || (isC ? 'cash added' : 'coins earned'))}</span></div>`);
+  const count = o.small ? Math.min(8, Math.max(3, n)) : o.mid ? 12 : isC ? Math.min(18, Math.max(10, Math.round(n / 2))) : Math.min(30, Math.max(14, Math.round(n / 4)));
+  let left = n, k = 0;
+  for (let q = 0; q < count; q++) {
+    const g = document.createElement('i'), sz = o.small ? rnd(14, 22) : o.mid ? rnd(18, 30) : rnd(22, 42);
+    g.className = 'fxp' + (isC ? ' c' : ''); g.style.cssText = `left:${ox}px;top:${oy}px;width:${sz}px;height:${isC ? sz * .62 : sz}px;margin:${-(isC ? sz * .31 : sz / 2)}px 0 0 ${-sz / 2}px`; g.innerHTML = icon(); layer.appendChild(g);
+    const a = Math.random() * Math.PI * 2, d = o.small ? rnd(28, 70) : o.mid ? rnd(60, 130) : rnd(80, 190), dx = Math.cos(a) * d, dy = Math.sin(a) * d * .85, rot = isC ? rnd(-40, 40) : rnd(-220, 220);
+    const an = g.animate([
+      { transform: 'translate(0,0) scale(.1) rotate(0deg)', opacity: 0 },
+      { transform: `translate(${dx}px,${dy}px) scale(1.1) rotate(${rot}deg)`, opacity: 1, offset: o.small ? .3 : .28 },
+      { transform: `translate(${dx * 1.05}px,${dy + 10}px) scale(1) rotate(${rot}deg)`, opacity: 1, offset: o.small ? .45 : .55 },
+      { transform: `translate(${tx - ox}px,${ty - oy}px) scale(.3) rotate(${isC ? 0 : rot * 2}deg)`, opacity: .9 }
+    ], { duration: (o.small ? 950 : o.mid ? 1350 : 1850) + q * (o.small ? 60 : o.mid ? 45 : 38), easing: 'cubic-bezier(.3,.6,.3,1)', fill: 'forwards' });
+    an.onfinish = () => { g.remove(); k++; const step = k >= count ? left : n / count; left -= step; release(step); pill.classList.remove('bump'); void pill.offsetWidth; pill.classList.add('bump'); };
+  }
+  setTimeout(() => layer.remove(), o.small ? 2300 : o.mid ? 2700 : 4300);
+}
 function render() {
   roll(); paint();
   document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-current', b.dataset.tab === S.tab ? 'page' : 'false'));
@@ -353,13 +428,14 @@ function vVote() {
 }
 function promoCard() {
   const c = V.card || { k: 'tour' };
-  if (c.k === 'inv') { const i = S.invites.find(x => x.id === c.id); if (i && i.status === 'open') { const mp = P(i.myId); return `<button class="promo" data-open-inv="${i.id}">${spic(i.sid)}<span><b>${esc(i.from)} challenged ${esc(mp ? mp.name : 'you')}</b><small>${money(i.entry)} entry · ${money(i.prize)} prize</small></span><span class="btn">View matchup</span></button>`; } }
-  if (c.k === 'champ' && !S.champ.mine) { const mp = S.photos.filter(x => x.cat === S.champ.cat).sort((a, b) => b.score - a.score)[0]; return `<button class="promo" data-champ>${spic(S.champ.sid)}<span><b>Can ${esc(mp ? mp.name : 'your photo')} beat ${esc(S.champ.name)}, the ${catName(S.champ.cat)} champion?</b><small>${money(CFG.CHAMP.entry)} entry · ${money(S.champ.pot)} progressive pot</small></span><span class="btn">View matchup</span></button>`; }
+  if (c.k === 'inv') { const i = S.invites.find(x => x.id === c.id); if (i && i.status === 'open') { const mp = P(i.myId); return `<button class="promo" data-open-inv="${i.id}">${spic(i.sid)}<span><b>${esc(i.from)} challenged ${esc(mp ? mp.name : 'you')}</b><small>${money(i.entry)} entry · ${money(i.prize)} prize</small><span class="cta">View matchup ›</span></span></button>`; } }
+  if (c.k === 'champ' && !S.champ.mine) { const mp = S.photos.filter(x => x.cat === S.champ.cat).sort((a, b) => b.score - a.score)[0]; return `<button class="promo" data-champ>${spic(S.champ.sid)}<span><b>Can ${esc(mp ? mp.name : 'your photo')} beat ${esc(S.champ.name)}, the ${catName(S.champ.cat)} champion?</b><small>${money(CFG.CHAMP.entry)} entry · ${money(S.champ.pot)} progressive pot</small><span class="cta">View matchup ›</span></span></button>`; }
   const t = S.tours.sprint; tourTick();
-  return `<button class="promo" data-tour="sprint"><span class="art">${SVG.watch}</span><span><b>Hourly Sprint · ${tourWhen(t)}</b><small>${money(t.entry)} entry · ${money(t.pool)} prize pool</small></span><span class="btn">View tournament</span></button>`;
+  return `<button class="promo" data-tour="sprint"><span class="art">${SVG.watch}</span><span><b>Hourly Sprint · ${tourWhen(t)}</b><small>${money(t.entry)} entry · ${money(t.pool)} prize pool</small><span class="cta">View tournament ›</span></span></button>`;
 }
 function doVote(i) {
   if (V.busy || V.res) return; V.busy = true;
+  const pb = document.querySelector(`[data-vote="${i}"]`), pr = pb && pb.getBoundingClientRect(), at = pr && { x: pr.left + pr.width / 2, y: pr.top + pr.height * .45 };
   const p = V.pair, pct = i ? 100 - p.pa : p.pa, hit = pct >= 50;
   S.votes++; S.coins += CFG.JUDGE;
   const before = cheapest(target() || {}) , couldAfford = S.photos.length && before && S.coins - CFG.JUDGE >= before.price;
@@ -367,18 +443,23 @@ function doVote(i) {
   if (hit) { S.streak++; const m = CFG.STREAK.find(x => x.n === S.streak); if (m) { gift = m; S.coins += m.c; S.giftsGot++; if (S.streak >= CFG.STREAK[CFG.STREAK.length - 1].n) S.streak = 0; } }
   else S.streak = 0;
   // someone somewhere picks one of your photos
-  if (S.photos.length && Math.random() < .45) receive(S.photos[rnd(0, S.photos.length - 1)].id, true);
+  let picked = null; if (S.photos.length && Math.random() < .45) { const ph = S.photos[rnd(0, S.photos.length - 1)]; picked = { p: ph, m: receive(ph.id) }; hold('coins', picked.m); }
+  hold('coins', CFG.JUDGE); if (gift) hold('coins', gift.c);
   V.res = { side: i, hit }; save(); render();
+  fly(CFG.JUDGE, 'coins', { held: 1, small: 1, at });
+  if (picked) setTimeout(() => fly(picked.m, 'coins', { held: 1, mid: 1, img: srcOf(picked.p), from: document.querySelector('.goal .pic') }), 550);
   const nowAfford = S.photos.length && (() => { const c = cheapest(target()); return c && S.coins >= c.price; })();
   setTimeout(() => {
     V.busy = false; newPair(); render();
-    if (gift) { const tp = target(); pop({ title: 'Streak reward', amt: `+${gift.c} coins`, img: nowAfford && !couldAfford ? tp : null, ribbon: nowAfford && !couldAfford ? `${esc(tp.name)}’s upgrade is ready` : '', confetti: 1, cta: nowAfford && !couldAfford ? 'View upgrade' : 'Keep voting', go: nowAfford && !couldAfford ? () => openImprove(tp.id) : null, later: nowAfford && !couldAfford ? 'Keep voting' : '' }); }
+    if (gift) { const tp = target(), up = nowAfford && !couldAfford;
+      if (up) pop({ title: 'Streak reward', amt: `+${gift.c} coins`, img: tp, ribbon: `${esc(tp.name)}’s upgrade is ready`, confetti: 1, cta: 'View upgrade', go: () => openImprove(tp.id), later: 'Keep voting', fly: { n: gift.c, cur: 'coins', label: 'Streak reward' } });
+      else fly(gift.c, 'coins', { held: 1, label: `Streak reward · ${gift.n} in a row`, from: document.querySelector('.streak .gift') }); }
   }, 1000);
 }
 function receive(id, quiet) {
   const p = P(id); if (!p) return 0; const m = CFG.BASE * mult(p.score);
   p.recv = (p.recv || 0) + 1; p.today = (p.today || 0) + m; p.life = (p.life || 0) + m; S.coins += m; p.lastPay = m;
-  if (quiet) toast(`Someone picked ${p.name} · +${m} coins`); return m;
+  return m;
 }
 /* ================= GALLERY ================= */
 function vWall() {
@@ -514,11 +595,11 @@ function openInvite(id) {
   b.querySelector('#dBack').onclick = () => { closeSheet(); S.tab = 'vote'; save(); render(); };
   const go = b.querySelector('#dGo'); if (go) go.onclick = () => { if (i.status === 'done') return; S.cash -= i.entry; i.status = 'playing'; save(); paint();
     const pw = Math.max(.25, Math.min(.8, .5 + (mp.score - Q[i.sid]) / 60)), won = Math.random() < pw;
-    runVotes(b.querySelector('#dBody'), 15, won, (m, t) => { i.status = 'done'; const prize = won ? i.prize : 0; S.cash += prize; S.results.push(`${mp.name} ${won ? 'beat' : 'lost to'} ${i.oname} ${Math.max(m, t)}–${Math.min(m, t)}${won ? ` · won ${money(prize)}` : ''}`); save(); paint();
+    runVotes(b.querySelector('#dBody'), 15, won, (m, t) => { i.status = 'done'; const prize = won ? i.prize : 0; S.cash += prize; hold('cash', prize); S.results.push(`${mp.name} ${won ? 'beat' : 'lost to'} ${i.oname} ${Math.max(m, t)}–${Math.min(m, t)}${won ? ` · won ${money(prize)}` : ''}`); save(); paint();
       (won ? b.querySelector('#dA') : b.querySelector('#dB')).classList.add('win');
       b.querySelector('#dBody').innerHTML = `<h2 style="text-align:center;margin:10px 0 2px">${won ? `${esc(mp.name)} wins!` : `${esc(i.oname)} wins`}</h2><p style="text-align:center;margin:0 0 12px;font-weight:800">${m} – ${t} votes${won ? ` · +${money(prize)}` : ''}</p>
         <button class="btn block" id="dAgain">Challenge again</button><div style="text-align:center"><button class="link" id="dBack2">Back to voting</button></div>`;
-      if (won) pop({ title: 'You win!', img: mp, amt: `+${money(prize)}`, confetti: 1, text: `${esc(mp.name)} beat ${esc(i.oname)} ${m}–${t}.`, cta: 'Collect' });
+      if (won) pop({ title: 'You win!', img: mp, win: { amt: prize, cur: 'cash', label: `${mp.name} beat ${i.oname} ${m}–${t}` } });
       b.querySelector('#dBack2').onclick = () => { closeSheet(); S.tab = 'vote'; save(); render(); };
       b.querySelector('#dAgain').onclick = () => { const o = { id: 'i' + (S.nid++), dir: 'out', from: i.from, sid: i.sid, oname: i.oname, owner: i.owner, myId: mp.id, entry: i.entry, prize: i.prize, status: 'sent' }; S.invites.push(o); save(); closeSheet(); S.tab = 'compete'; S.ctab = 'ch'; render(); toast(`Challenge sent to ${i.from}`); setTimeout(() => { o.status = 'accepted'; save(); if (S.tab === 'compete') render(); toast(`${i.from} accepted your challenge`); }, 6000); };
     });
@@ -556,12 +637,12 @@ function openChamp() {
     const go = b.querySelector('#cGo'); if (go) go.onclick = () => { const mp = P(pid); S.cash -= CFG.CHAMP.entry; save(); paint();
       const won = S.force ? S.force === 'win' : Math.random() < Math.max(.2, Math.min(.7, .4 + (mp.score - Q[ch.sid]) / 60)); S.force = null;
       runVotes(b.querySelector('#dBody'), 21, won, (m, t) => {
-        if (won) { const pot = ch.pot; S.cash += pot; S.results.push(`${mp.name} beat champion ${ch.name} ${m}–${t} · won ${money(pot)}`); S.champ = { name: mp.name, owner: 'you', sid: mp.sid || 'goldie', pid: mp.id, cat: ch.cat, pot: CFG.CHAMP.start, mine: true }; }
+        if (won) { const pot = ch.pot; S.cash += pot; hold('cash', pot); S.results.push(`${mp.name} beat champion ${ch.name} ${m}–${t} · won ${money(pot)}`); S.champ = { name: mp.name, owner: 'you', sid: mp.sid || 'goldie', pid: mp.id, cat: ch.cat, pot: CFG.CHAMP.start, mine: true }; }
         else { ch.pot += CFG.CHAMP.grow; S.results.push(`${ch.name} defended against ${mp.name} ${t}–${m} · pot now ${money(ch.pot)}`); }
         save(); paint(); (won ? b.querySelector('#dA') : b.querySelector('#dB')).classList.add('win');
         b.querySelector('#dBody').innerHTML = `<h2 style="text-align:center;margin:10px 0 2px">${won ? `${esc(mp.name)} is the new champion!` : `${esc(ch.name)} defends`}</h2><p style="text-align:center;margin:0 0 12px;font-weight:800">${m} – ${t} votes · ${won ? `you won ${money(ch.pot)}` : `pot grows to ${money(S.champ.pot)}`}</p><button class="btn block" id="cDone">Back to voting</button>`;
         b.querySelector('#cDone').onclick = () => { closeSheet(); S.tab = 'vote'; V.card = pickCard(); save(); render(); };
-        if (won) pop({ title: 'New champion!', img: mp, amt: `+${money(ch.pot)}`, confetti: 1, text: `${esc(mp.name)} took the ${catName(ch.cat)} crown.`, cta: 'Collect' });
+        if (won) pop({ title: 'New champion!', img: mp, win: { amt: ch.pot, cur: 'cash', label: `${catName(ch.cat)} champion pot` } });
       }); }; };
   draw();
 }
@@ -595,10 +676,10 @@ function playTour(k) {
       if (won && t.round < rounds - 1) { t.round++; save(); b.querySelector('#dBody').innerHTML = `<h2 style="text-align:center;margin:10px 0">Through to the ${rname(t.round).toLowerCase()}! ${m}–${n2}</h2><button class="btn block" id="rNext">Next round</button><div style="text-align:center"><button class="link" id="rBack2">Back to voting</button></div>`;
         b.querySelector('#rNext').onclick = () => playTour(k); b.querySelector('#rBack2').onclick = () => { closeSheet(); S.tab = 'vote'; save(); render(); }; return; }
       const place = won ? 1 : t.round === rounds - 1 ? 2 : t.round === rounds - 2 ? 3 : Math.pow(2, rounds - t.round - 1) + 1, share = place === 1 ? CFG.PAYOUT[0] : place === 2 ? CFG.PAYOUT[1] : place <= 4 ? CFG.PAYOUT[2] : 0, prize = +(t.pool * share).toFixed(2);
-      if (t.state !== 'done') { t.state = 'done'; t.place = place; t.won = prize; S.cash += prize; S.results.push(`${nm}: ${mp.name} finished ${ord(place)}${prize ? ` · won ${money(prize)}` : ''}`); save(); paint(); }
+      if (t.state !== 'done') { t.state = 'done'; t.place = place; t.won = prize; S.cash += prize; hold('cash', prize); S.results.push(`${nm}: ${mp.name} finished ${ord(place)}${prize ? ` · won ${money(prize)}` : ''}`); save(); paint(); }
       b.querySelector('#dBody').innerHTML = `<h2 style="text-align:center;margin:10px 0 2px">${place === 1 ? 'Tournament winner!' : `You finished ${ord(place)}`}</h2><p style="text-align:center;font-weight:800;margin:0 0 12px">${prize ? `+${money(prize)}` : 'No prize this time'}</p><button class="btn block" id="rEnd">Back to voting</button>`;
       b.querySelector('#rEnd').onclick = () => { closeSheet(); S.tours[k] = newTour(k, now()); S.tab = 'vote'; save(); render(); };
-      if (prize) pop({ title: place === 1 ? 'You win the ' + nm + '!' : `${ord(place)} place`, img: mp, amt: `+${money(prize)}`, confetti: place === 1, cta: 'Collect' });
+      if (prize) pop({ title: place === 1 ? 'You win!' : `${ord(place)} place!`, img: mp, win: { amt: prize, cur: 'cash', label: `${nm} ${place === 1 ? 'win' : 'prize'}` } });
     }); };
 }
 /* ================= gift track ================= */
@@ -615,8 +696,8 @@ function awayCheck(force) {
   const away = Date.now() - (S.lastSeen || Date.now()), batch = force || (away > 10 * 60000 ? { id: S.lastSeen } : null); if (!batch || S.credited === batch.id) return;
   const per = force ? force.votes : S.photos.map(p => Math.min(12, Math.round(away / 3600000 * (1 + (p.score - 55) / 15)))), ids = force ? force.ids : S.photos.map(p => p.id);
   let tot = 0, top = null; ids.forEach((id, k) => { const p = P(id), n = per[k] || 0; if (!p || !n) return; let got = 0; for (let j = 0; j < n; j++) got += receive(id); tot += got; if (!top || got > top.got) top = { p, got }; });
-  S.credited = batch.id; save(); paint(); if (!tot) return;
-  pop({ title: `Your photos earned ${tot} coins while you were away`, amt: `+${tot} coins`, img: top.p, ribbon: `Top earner: ${esc(top.p.name)} · ${top.got} coins`, cta: 'View gallery', go: () => { S.tab = 'gallery'; S.view = 'wall'; S.cat = top.p.cat; save(); render(); }, later: 'Keep voting' });
+  S.credited = batch.id; hold('coins', tot); save(); if (!tot) return;
+  pop({ title: `Your photos earned ${tot} coins while you were away`, amt: `+${tot} coins`, img: top.p, ribbon: `Top earner: ${esc(top.p.name)} · ${top.got} coins`, fly: { n: tot, cur: 'coins', label: 'Earned while you were away' }, cta: 'View gallery', go: () => { S.tab = 'gallery'; S.view = 'wall'; S.cat = top.p.cat; save(); render(); }, later: 'Keep voting' });
 }
 /* ================= reviewer controls ================= */
 function mk(cat, list) { S.slots[cat] = [null, null, null]; list.forEach(([sid, name, score], i) => { const p = { id: 'p' + (S.nid++), name, cat, sid, score, lv: {}, pr: {}, today: 0, life: 0, recv: 0 }; S.photos.push(p); S.slots[cat][i] = p.id; }); }
@@ -664,6 +745,8 @@ document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { S.tab
 $('#rvBtn').onclick = openReview;
 setInterval(() => { if (S.tab === 'compete' || (S.tab === 'vote' && V.card && V.card.k === 'tour' && !V.busy)) { const was = JSON.stringify(S.tours); tourTick(); if (S.tab === 'compete' || was !== JSON.stringify(S.tours)) { if (!$('#sheet')) render(); } } }, 30000);
 /* ================= boot ================= */
+document.querySelector('.wp.cash .note').innerHTML = NOTE;
+const setHH = () => document.documentElement.style.setProperty('--hh', document.querySelector('.bar').offsetHeight + 'px'); setHH(); addEventListener('resize', setHH);
 S = load() || fresh(); roll();
 render(); awayCheck();
 if (!S.photos.length && !S.onboard) { S.onboard = 1; save(); pop({ title: 'Your photos can earn', text: 'Add a photo and it earns coins every time someone picks it. Use coins to improve it and build your collection.', cta: 'Add a photo', go: () => openUpload('pets'), later: 'Look around first' }); }
