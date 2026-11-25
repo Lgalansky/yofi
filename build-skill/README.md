@@ -726,3 +726,12 @@ python3 rmv224.py
 ## Skill only
 
 `freech.py` replaces the Freeroll with a free cash challenge (300 coins, once an hour: a quick 1 v 1 photo battle, free, that pays $1.60 real cash on a win). `simplify.py` runs it for Skill and skips it when `YOFI_BUILD=real`, so Real Money keeps its Freeroll.
+
+## Winner pop (Skill)
+
+`winpop.py` gives every challenge win (coin challenge, head-to-head, friend and rivalry challenges, Quick Sprint, free cash challenge, bounty, showdown, tournament) one celebration pop: confetti, falling coins (or notes for cash), the winning photo with a trophy badge, the prize counting up, and a "Collect" button that flies the coins or cash into the balance.
+
+```bash
+python3 build-skill/winpop.py index.html skill-preview.html   # preview copy
+python3 build-skill/winpop.py                                  # on "push live": patch index.html in place
+```
