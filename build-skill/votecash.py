@@ -93,6 +93,9 @@ vgPaint = function () {
   let c = el.querySelector('.vg-cta'); if (!c) { el.insertAdjacentHTML('beforeend', '<span class="vg-cta"></span>'); c = el.querySelector('.vg-cta'); }
   c.textContent = g.cta || 'View';
 };
+// draw the streak + cash card on the very first screen too (it renders before this code loads), and whenever Vote opens
+setTimeout(() => { try { vcPaint(); vgPaint(); } catch (e) {} }, 0); setTimeout(() => { try { vcPaint(); } catch (e) {} }, 400);
+const _goVC = go; go = function (w) { const r = _goVC.apply(this, arguments); if (w === 'judge') { try { vcPaint(); } catch (e) {} } return r; };
 const _renderJudgeC2 = renderJudge;
 renderJudge = function () { const r = _renderJudgeC2.apply(this, arguments); try { vcPaint(); } catch (e) {} return r; };
 setInterval(() => { document.querySelectorAll('.vc [data-tat]').forEach(e => { e.textContent = tLeft(+e.dataset.tat); }); }, 1000);
@@ -149,6 +152,7 @@ html.yg .vcs i{background:rgba(255,255,255,.2)}html.yg .vcs i.on{background:#FF2
 #vgGoal .vg-ci{display:none!important}
 #vgGoal .vg-cta,#judge .vc-cta{flex:none;width:auto!important;max-width:none!important;white-space:nowrap;padding:10px 18px!important;border-radius:12px!important;background:#2D4E86!important;color:#fff!important;font:800 .95rem "Nunito Sans",sans-serif!important}
 #vgGoal.ready .vg-cta{background:#2D4E86!important}
+#judge .eye{display:none!important}
 /* one line of text per notification */
 #vgGoal .vg-tx small,#judge .vc-tx small{display:block!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp:unset!important;font-size:.84rem!important;margin-top:3px;color:#4E433C!important}
 #vgGoal .vg-tx b,#judge .vc-tx b{display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:2!important;white-space:normal;overflow:hidden;font-size:1rem!important;line-height:1.18!important}
