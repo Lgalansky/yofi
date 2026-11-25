@@ -60,11 +60,11 @@ function galCele({ c, tier, opened }) {
     <div class="gl-trio t-${tier.toLowerCase()}">${r.ph.map(p => `<span class="gl-fr"><img src="${p.src}" alt=""></span>`).join('')}</div>
     <h2 id="glpT">${tier} ${esc(galNm(c))} Collection!</h2>
     <p>All three photos reached <b>${band}</b>. They now earn at least <b>${galMult(band)}× coins</b> every time a voter picks them.${opened ? ` <b>${esc(galNm(opened))} is unlocked.</b>` : ''}</p>
-    <button class="bt-cta" id="glpGo">${opened ? `Open ${esc(galNm(opened))}` : 'See the collection'}</button><button class="bt-no" id="glpNo">Keep improving</button></div>`;
+    <button class="bt-cta" id="glpGo">${opened ? `Open ${esc(galNm(opened))}` : 'See the collection'}</button><button class="bt-no" id="glpNo">Back to voting</button></div>`;
   co.classList.add('on', 'cr');
   const close = () => { co.classList.remove('on', 'cr'); co.innerHTML = ''; };
   $('#glpGo').onclick = () => { close(); S.galCat = opened || c; TU_GAL = true; save(); go('studio'); setTimeout(() => { const w = $('.gl-room'); if (w) w.classList.add('cele'); }, 60); };
-  $('#glpNo').onclick = close;
+  $('#glpNo').onclick = () => { close(); go('judge'); try { renderJudge(); } catch (e) {} };
 }
 // a voter somewhere picks one of your hanging photos: 2 coins x its rate
 function galPick() {
