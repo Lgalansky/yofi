@@ -204,6 +204,14 @@ html.yg .im2 .im2-lock{color:#D8CCF0}
 .im2-strip{margin:12px 14px 6px;padding:9px 12px}
 .im2 .im2-lock{margin:0 14px 10px;text-align:center;justify-content:center}
 .im2-apply{margin-top:2px}
+/* Before and after: score sits in a panel, not floating */
+#flowBody .ba-sc{display:block!important;margin:2px 0 12px!important;padding:0!important;width:100%!important;max-width:none!important}
+#flowBody .ba-sc .en-sc{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;width:100%!important;box-sizing:border-box;margin:0!important;padding:10px 14px!important;border-radius:16px;background:#FFFDF9;box-shadow:inset 0 0 0 1.5px #E2D5BE,0 6px 14px -10px rgba(60,40,20,.45);flex-direction:row!important;position:relative}
+#flowBody .ba-sc .en-sc::before{content:"Score now";font:800 .74rem "Nunito Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#4E433C;margin-right:2px}
+#flowBody .ba-sc .en-sc b{font:900 2.4rem/1 Fraunces,serif!important;color:#2E6B42!important;margin:0!important}
+#flowBody .ba-sc .en-sc .medal{font-size:1.5rem!important;margin:0!important;position:static!important}
+#flowBody .ba-sc .en-sc .goal70{margin:0 0 0 auto!important;position:static!important}
+html.yg #flowBody .ba-sc .en-sc::before{color:#4E433C}
 @media (prefers-reduced-motion:reduce){.im2-card{animation:none!important}.im2-ph img,.im2-vig,.im2-warm{transition:none}}
 '''
 i = s.rindex('</style>'); s = s[:i] + CSS + s[i:]
