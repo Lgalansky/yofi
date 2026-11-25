@@ -743,3 +743,7 @@ python3 build-skill/winpop.py                                  # on "push live":
 ## Upload read fix (Skill)
 
 `uploadread.py`: chosen photos are read as data URLs instead of `blob:` links, which some hosts (the Claude app viewer) block, so photos picked from the library never appeared. Run after `uploadhint.py`, same arguments.
+
+## Photo cards (Skill)
+
+`cards.py`: every photo is a card showing its five scores and a tier frame (Bronze, Silver 60+, Gold 70+ = enters challenges, Hall of Fame 85+). Uploading prints the card (+50 coins reveal). While you vote, your cards win votes and pay coins by tier (+3 / +5 / +8, 20 wins a day max) with a banner and a strip on Vote. The Touch-ups tab is renamed "My photos": the touch-up screen shows the card's tier and points to the next tier, a "My cards" row sits below, and a tier-up reveal plays after a touch-up. Also fixes the overall score freezing mid count-up. Run after `uploadread.py` (on a built file, run it on index.html).
