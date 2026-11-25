@@ -10,7 +10,7 @@ if 'function cmpBar(' in s: sys.exit('compete already applied')
 JS = r'''
 /* ---------- one Compete menu with Challenges | Tournaments tabs ---------- */
 let CMP_TAB = 'ch';
-const cmpBar = t => `<div class="cmp-bar" role="tablist" aria-label="Compete"><button role="tab" data-cmp="ch" aria-selected="${t === 'ch'}">🏅 Challenges</button><button role="tab" data-cmp="tour" aria-selected="${t === 'tour'}">🏆 Tournaments</button></div>`;
+const cmpBar = t => `<h1 class="cmp-h">Compete</h1><div class="cmp-bar" role="tablist" aria-label="Compete"><button role="tab" data-cmp="ch" aria-selected="${t === 'ch'}">🏅 Challenges</button><button role="tab" data-cmp="tour" aria-selected="${t === 'tour'}">🏆 Tournaments</button></div>`;
 const _segTourGo = $('#segCompete').onclick;
 function cmpOpen(t) {
   CMP_TAB = t;
@@ -21,8 +21,8 @@ function cmpOpen(t) {
 function cmpWire(el) { el.querySelectorAll('[data-cmp]').forEach(b => b.onclick = () => cmpOpen(b.dataset.cmp)); }
 function cmpPaint() {
   const fl = $('#flow'), fb = $('#flowBody');
-  if (CMP_TAB === 'tour' && fl.classList.contains('on') && fb && !fb.querySelector('.cmp-bar')) { fb.insertAdjacentHTML('afterbegin', cmpBar('tour')); cmpWire(fb); $('#segGallery').setAttribute('aria-pressed', 'true'); $('#segCompete').setAttribute('aria-pressed', 'false'); }
-  const g = $('#gallery'); if (g && $('#panes').dataset.at === 'gallery' && GV.tab === 'battle' && !fl.classList.contains('on') && !g.querySelector('.cmp-bar')) { g.insertAdjacentHTML('afterbegin', cmpBar('ch')); cmpWire(g); }
+  if (CMP_TAB === 'tour' && fl.classList.contains('on') && fb && !fb.querySelector('.cmp-bar')) { fb.querySelectorAll('.cmp-h').forEach(e => e.remove()); fb.insertAdjacentHTML('afterbegin', cmpBar('tour')); cmpWire(fb); $('#segGallery').setAttribute('aria-pressed', 'true'); $('#segCompete').setAttribute('aria-pressed', 'false'); }
+  const g = $('#gallery'); if (g && $('#panes').dataset.at === 'gallery' && GV.tab === 'battle' && !fl.classList.contains('on') && !g.querySelector('.cmp-bar')) { g.querySelectorAll('.cmp-h').forEach(e => e.remove()); g.insertAdjacentHTML('afterbegin', cmpBar('ch')); cmpWire(g); }
 }
 const _renderGalleryC = renderGallery;
 renderGallery = function () { const r = _renderGalleryC.apply(this, arguments); try { if (GV.tab === 'battle') { CMP_TAB = 'ch'; cmpPaint(); } } catch (e) {} return r; };
@@ -51,12 +51,54 @@ function cmpDedupe() {
   rows.forEach(r => { const k = ((r.querySelector('.tsr2-p') || {}).textContent || '') + '|' + ((r.querySelector('.tsr2-e') || {}).textContent || '') + '|' + (r.classList.contains('frrow') ? 'fr' : '');
     if (r.style.display !== 'none' && seen.has(k)) r.style.display = 'none'; else if (!seen.has(k)) { seen.add(k); r.style.display = ''; } });
 }
-new MutationObserver(() => { try { cmpDedupe(); } catch (e) {} }).observe($('#flowBody'), { childList: true, subtree: true });
+new MutationObserver(() => { try { cmpDedupe(); cmpTourCards(); } catch (e) {} }).observe($('#flowBody'), { childList: true, subtree: true });
+
+// middle menu is Gallery
+(() => { const sp = $('#segStudio') && $('#segStudio').querySelector('span'); if (sp) sp.textContent = 'Gallery'; })();
+// tournaments as big cards (one per kind); Enter opens that tournament as before
+const CMP_IC = {
+  watch: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><circle cx="34" cy="36" r="20"/><path d="M34 36l8-9M28 10h12M34 10v6M50 20l4-4M4 30h10M2 38h12M6 46h10"/></svg>',
+  trophy: '<svg viewBox="0 0 64 64" fill="currentColor"><path d="M18 8h28v14a14 14 0 0 1-28 0z"/><path d="M18 12H8a10 10 0 0 0 12 12M46 12h10a10 10 0 0 1-12 12" fill="none" stroke="currentColor" stroke-width="4"/><rect x="29" y="34" width="6" height="12"/><path d="M20 58h24l-3-12H23z"/></svg>',
+  crowd: '<svg viewBox="0 0 64 64" fill="currentColor"><circle cx="32" cy="18" r="9"/><circle cx="13" cy="24" r="7"/><circle cx="51" cy="24" r="7"/><path d="M16 56c0-10 7-18 16-18s16 8 16 18zM1 52c0-8 5-14 12-14 3 0 5 1 7 2-4 4-6 8-6 12zM63 52c0-8-5-14-12-14-3 0-5 1-7 2 4 4 6 8 6 12z"/></svg>',
+  coin: '<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="currentColor"/><circle cx="32" cy="32" r="17" fill="none" stroke="#1F3157" stroke-width="3" opacity=".5"/><path d="M32 22v20" stroke="#1F3157" stroke-width="5" stroke-linecap="round" opacity=".55"/></svg>'
+};
+function cmpTourCards() {
+  const fb = $('#flowBody'); if (CMP_TAB !== 'tour' || !$('#flow').classList.contains('on')) { fb.classList.remove('cmp-t'); return; }
+  const rows = [...fb.querySelectorAll('.tsr2')].filter(r => r.style.display !== 'none' && !r.classList.contains('frrow')); if (!rows.length) return;
+  const sig = rows.map(r => r.textContent.replace(/\s+/g, '')).join('|'); const old = fb.querySelector('.cmp-cards'); if (old && old.dataset.sig === sig) return;
+  const card = (r, i) => { const prize = (r.querySelector('.tsr2-p') || {}).textContent.replace('↑', '').trim(), entry = (r.querySelector('.tsr2-e') || {}).textContent.trim(), when = (r.querySelector('.tsr2-t b') || {}).textContent.trim(), coin = r.classList.contains('gemt') || (r.querySelector('.tsr2-e.pill-coin') != null);
+    const crowd = r.classList.contains('chrow'), name = crowd ? 'Crowd Championship' : coin ? 'Coin Cup' : /100/.test(prize) ? 'Big Cup' : 'Sprint', ic = crowd ? CMP_IC.crowd : coin ? CMP_IC.coin : /100/.test(prize) ? CMP_IC.trophy : CMP_IC.watch;
+    const pz = coin ? `${prize} 🟡 prize pool` : `${prize.replace('US', '')} prize pool`, en = coin ? `${entry} 🟡 entry` : `${entry} entry`;
+    return `<div class="cmp-tc${coin ? ' cmp-c' : ''}"><div class="cmp-ban"><span class="cmp-ic">${ic}</span><span class="cmp-tt"><b>${name}</b><span class="cmp-when">${crowd ? `Ends in ${when}` : /^0?0:|^\d\d:\d\d$/.test(when) && !/h/.test(when) ? `Starts in ${when}` : `Starts in ${when}`}</span></span></div>
+      <div class="cmp-ft"><span>${en} · ${pz}</span><button class="cmp-go ${coin ? 'cmp-gold' : 'cmp-green'}" data-ti="${i}">Enter</button></div></div>`; };
+  if (old) old.remove();
+  fb.classList.add('cmp-t');
+  const bar = fb.querySelector('.cmp-bar'); const html = `<div class="cmp-cards" data-sig="${sig}">${rows.map(card).join('')}</div>`;
+  if (bar) bar.insertAdjacentHTML('afterend', html); else fb.insertAdjacentHTML('afterbegin', html);
+  fb.querySelectorAll('.cmp-go').forEach(b => b.onclick = () => rows[+b.dataset.ti].click());
+}
+setInterval(() => { try { document.querySelectorAll('.cmp-cards').forEach(c => c.dataset.sig = ''); cmpTourCards(); } catch (e) {} }, 1000);
 new MutationObserver(() => { try { cmpPaint(); } catch (e) {} }).observe($('#flowBody'), { childList: true });
 '''
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
 CSS = r'''
 /* one Compete menu */
+.cmp-h{text-align:center;margin:6px 16px 10px;font:900 clamp(1.9rem,8.6vw,2.4rem)/1 Fraunces,serif;color:#1F3157}html.yg .cmp-h{color:#fff}
+#flowBody.cmp-t>*:not(.cmp-bar):not(.cmp-cards):not(.cmp-h){display:none!important}
+.cmp-cards{display:flex;flex-direction:column;gap:14px;margin:0 14px 24px}
+.cmp-tc{border-radius:20px;padding:8px;background:#FFFDF9;box-shadow:inset 0 0 0 1.5px #E2D5BE,0 8px 18px -12px rgba(60,40,20,.5)}
+.cmp-ban{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:linear-gradient(160deg,#1F3157,#14213D)}
+.cmp-ic{flex:none;width:96px;height:84px;color:#E9B52F;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35))}.cmp-ic svg{width:100%;height:100%}
+.cmp-tt{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
+.cmp-tt b{font:900 clamp(1.6rem,7.2vw,2.1rem)/1.02 Fraunces,serif;color:#fff}
+.cmp-when{padding:6px 14px;border-radius:999px;background:#FBF6EC;color:#1F3157;font:800 .95rem Fraunces,serif;white-space:nowrap}
+.cmp-ft{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 6px 4px}
+.cmp-ft span{font:700 1rem Fraunces,serif;color:#2D2521}
+#flowBody .cmp-go{flex:none;border:0;border-radius:12px;padding:10px 20px;font:800 1rem Fraunces,serif;cursor:pointer;color:#fff!important;background:linear-gradient(180deg,#2E9A5C,#21784A)!important;box-shadow:0 6px 14px -8px rgba(33,120,74,.8)!important;min-height:0;width:auto}
+#flowBody .cmp-go.cmp-gold{color:#3A2600!important;background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;box-shadow:0 6px 14px -8px rgba(160,110,10,.7)!important}
+#flowBody .cmp-tc span,#flowBody .cmp-tc b{position:static}#flowBody .cmp-ft span{display:inline}
+html.yg .cmp-tc{background:#FBF6EC}
+
 .ug-h{margin:14px 2px 8px;font:900 1.25rem Fraunces,serif;color:#5A1A22}html.yg .ug-h{color:#FF8FC4}
 .ug .ug-r em.ug-c{background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important}.ug .ug-r em.ug-c.need{opacity:.6}
 #segCompete{display:none!important}
