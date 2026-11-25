@@ -59,6 +59,10 @@ renderGalleries = function () {
   st.querySelectorAll('[data-gimp]').forEach(b => b.onclick = () => galImprove(b.dataset.gimp));
   st.querySelectorAll('[data-alc]').forEach(b => b.onclick = () => { AL_OPEN = b.dataset.alc; renderStudio(); st.scrollTop = 0; });
   const tb = st.querySelector('.a2-tabs .on'); if (tb) tb.scrollIntoView({ inline: 'center', block: 'nearest' });
+  const fc = st.querySelector('.a2-sl[data-alc]');
+  if (!S.galTip && fc) { const q = S.photos.find(x => x.id === fc.dataset.alc), v = q.s.total, nb = [70, 80, 90].find(b => v < b);
+    fc.insertAdjacentHTML('beforeend', `<span class="a2-tip" role="note"><b>${v} is ${esc(alName(q))}’s score</b>${nb ? `Reach ${nb} for ${galBand(nb)} and ${galMult(nb)}× coins every time a voter picks it.` : 'Top tier: 6× coins every time a voter picks it.'}<button class="a2-tipok" id="a2TipOk">Got it</button></span>`);
+    $('#a2TipOk').onclick = e => { e.stopPropagation(); S.galTip = 1; save(); const t = st.querySelector('.a2-tip'); if (t) t.remove(); }; }
 };
 '''
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
@@ -116,6 +120,19 @@ CSS = r'''
 .a2-l2{font-size:.78rem;color:#4E433C;white-space:nowrap}.a2-l2 b{color:#7A1F27;font-weight:900}.a2-l2 em{font-style:normal;font-weight:800;color:#2E6B42}
 .a2-sl.empty,.a2-sl.a2-nx,.a2-sl.blank{aspect-ratio:4/5.9;align-self:stretch}
 .a2-tabs{margin-top:6px}
+.a2-th h3{font-size:clamp(1.35rem,6.6vw,1.85rem)!important;white-space:nowrap}
+/* whole photos: frames match the 3:4 upright shape uploads are cropped to */
+.a2-sl:not(.empty):not(.blank):not(.a2-nx) .a2-card{aspect-ratio:3/4!important}
+.a2-sl.empty,.a2-sl.a2-nx,.a2-sl.blank{aspect-ratio:3/4.95!important}
+.al-card.big img{aspect-ratio:3/4!important;max-height:58vh}
+.im2 .im2-ph{aspect-ratio:3/4!important}
+.a2-ph img,.al-card img,.im2-ph img{object-position:center 35%}
+/* one-time score tip */
+.a2-tip{position:absolute;z-index:5;left:46%;top:38px;width:190px;padding:10px 12px 10px;border-radius:14px;background:#2D4E86;color:#fff;font:600 .8rem/1.35 "Nunito Sans",sans-serif;text-align:left;box-shadow:0 10px 24px -8px rgba(0,0,0,.55);animation:a2tip .4s cubic-bezier(.2,1.4,.4,1)}
+.a2-tip::before{content:"";position:absolute;right:18px;top:-7px;width:14px;height:14px;background:#2D4E86;transform:rotate(45deg);border-radius:2px}
+.a2-tip b{display:block;font:800 .9rem Fraunces,serif;margin-bottom:2px;color:#FFE9A8}
+.a2-tipok{display:block;margin:8px 0 0 auto;border:0;border-radius:999px;background:#fff;color:#2D4E86;font:800 .8rem "Nunito Sans",sans-serif;padding:5px 12px;cursor:pointer}
+@keyframes a2tip{from{transform:scale(.85);opacity:0}}
 html.yg .a2-goal{color:#E9E1F7}html.yg .a2-th h3{color:#FF8FC4!important}html.yg .a2-tabs{background:#FBF6EC}
 '''
 i = s.rindex('</style>'); s = s[:i] + CSS + s[i:]

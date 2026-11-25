@@ -34,7 +34,7 @@ renderGalleries = function () {
   const P = AL_OPEN && S.photos.find(x => x.id === AL_OPEN);
   if (P) {
     const v = P.s.total, nb = [70, 80, 90].find(b => v < b), x = galMult(v);
-    st.innerHTML = `<div class="gl al">${galSeg('gal')}<button class="al-back" id="alBack">‹ ${esc(galNm(P.cat))} gallery</button>${alCard(P, 1)}
+    st.innerHTML = `<div class="gl al">${galSeg('gal')}<button class="al-back" id="alBack">‹ ${esc(galNm(P.cat))} collection</button>${alCard(P, 1)}
       <p class="al-to"><span>${nb ? `${nb - v} point${nb - v === 1 ? '' : 's'} to ${galBand(nb)}` : 'Platinum · the top tier'}</span></p>
       ${galNextMult(v) ? `<p class="al-why">At ${galNextMult(v).at} it earns ${galNextMult(v).x}× (${GAL.BASE * galNextMult(v).x} coins a vote)</p>` : ''}
       <button class="btn block gl-go" id="alImp">Improve ${esc(alName(P))}</button></div>`;
