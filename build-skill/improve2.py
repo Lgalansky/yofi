@@ -93,7 +93,7 @@ function im2Render() {
     const show = raw => { img.style.filter = raw ? 'none' : look.f; vg.style.opacity = raw ? 0 : look.vig; wm.style.opacity = raw ? 0 : look.warm; h.textContent = raw ? 'Before' : 'Hold to compare'; };
     h.addEventListener('pointerdown', e => { e.preventDefault(); show(true); }); ['pointerup', 'pointerleave', 'pointercancel'].forEach(k => h.addEventListener(k, () => show(false))); }
   if ($('#i2Vote')) $('#i2Vote').onclick = () => go('judge');
-  if ($('#i2Go')) $('#i2Go').onclick = () => im2Apply(p, sel);
+  if ($('#i2Go')) $('#i2Go').onclick = () => sel.prem ? im2Apply(p, sel) : im2Run(p, sel);
 }
 function im2Apply(p, o) {
   if (!o || o.max || S.gems < o.price || photoLock(p)) return;
@@ -108,6 +108,30 @@ function im2Apply(p, o) {
     toast(t1 !== t0 && t1 ? `${alName(p)} is ${t1}! ${p.s.total} · ${x1}× coins per vote` : x1 > x0 ? `${alName(p)} ${v0} → ${p.s.total} · now ${x1}× coins per vote` : `${alName(p)} ${v0} → ${p.s.total}`);
     galCheck(); try { paintEnhBadge(); } catch (e) {} });
 }
+
+/* the four touch-ups go through Skill's Before and after screen (pick the new version, see the score jump),
+   then come back to Improve; premium filters still apply straight away */
+let IM2_RUN = null;
+function im2Run(p, o) {
+  if (!o || o.max || S.gems < o.price || photoLock(p)) return;
+  IM2_RUN = { pid: p.id, k: o.k, v0: p.s.total, t0: galTier(p.s.total), x0: galMult(p.s.total) }; IM2SEL = null;
+  startEnhance(p, o.part);
+  setTimeout(() => { if (IM2_RUN && !$('#flow').classList.contains('on')) IM2_RUN = null; }, 800);
+}
+function im2After(p, run, changed) {
+  im2Render(); if (!changed) return;
+  const sc = $('#i2Score'); if (sc) { const a = run.v0, b = p.s.total, t1 = performance.now(); const tick = n => { const k = Math.min(1, (n - t1) / 700); sc.textContent = Math.round(a + (b - a) * k); if (k < 1) requestAnimationFrame(tick); }; requestAnimationFrame(tick); }
+  const t1 = galTier(p.s.total), x1 = galMult(p.s.total);
+  toast(t1 !== run.t0 && t1 ? `${alName(p)} is ${t1}! ${p.s.total} · ${x1}× coins per vote` : x1 > run.x0 ? `${alName(p)} ${run.v0} → ${p.s.total} · now ${x1}× coins per vote` : `${alName(p)} ${run.v0} → ${p.s.total}`);
+  galCheck(); try { paintEnhBadge(); } catch (e) {}
+}
+const _showResultI2 = showResult;
+showResult = function (p, o = {}) {
+  if (IM2_RUN && p && IM2_RUN.pid === p.id) { const run = IM2_RUN; IM2_RUN = null; const changed = o.delta != null;
+    if (changed) { p.ed = p.ed || {}; p.ed[run.k] = (p.ed[run.k] || 0) + 1; p.q = p.s.total >= CFG.QUALIFY; save(); }
+    try { closeFlow(); } catch (e) {} S.cur = p.id; TU_GAL = false; WALL = false; save(); go('studio'); im2After(p, run, changed); return; }
+  return _showResultI2.apply(this, arguments);
+};
 const _renderStudioI2 = renderStudio;
 renderStudio = function () {
   if (!TU_GAL && S.user && S.photos.length) { WALL = false; im2Render(); galCheck(); return; }
