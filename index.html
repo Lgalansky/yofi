@@ -863,6 +863,30 @@ html:not(.yg) .fch-m,html:not(.yg) .fch-r,html:not(.yg) .fch-vs{color:#2B2320}ht
 .fc2 .fc-vs figure{position:relative}.fc2 .fc-n{display:block;font-size:1.6rem;font-weight:900;line-height:1.1;margin-top:2px}.fc2 .fc-vs figure.won img{box-shadow:0 0 0 4px #F2C14E}.fc-bar{margin:6px 0 4px}.fc-won b{color:#2EA36B!important}
 #modeTag{display:none!important}
 #fcReset,#toCoin,#fcRst,.pf-test,.fc-test{display:none!important}
+
+.wpbox{position:relative;overflow:hidden;text-align:center}
+.wpbox .wp-rays{animation:wpspin 16s linear infinite!important;opacity:1}
+@keyframes wpspin{to{transform:rotate(360deg)}}
+.wp-cf{position:absolute;top:-16px;width:8px;height:13px;border-radius:2px;z-index:1;pointer-events:none;animation:wpfall 2.4s ease-in infinite}
+@keyframes wpfall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(620px) rotate(600deg);opacity:.15}}
+.wp-drop{position:absolute;top:-40px;z-index:1;pointer-events:none;animation:wpdrop 2.4s cubic-bezier(.45,0,.75,.6) infinite both}
+.wp-drop .wp-ci{width:30px;height:30px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35))}
+@keyframes wpdrop{0%{transform:translateY(0) rotate(-20deg);opacity:0}10%{opacity:1}100%{transform:translateY(640px) rotate(220deg);opacity:0}}
+.wp-bill{display:inline-grid;place-items:center;width:34px;height:22px;border-radius:4px;background:linear-gradient(180deg,#5FD18E,#2E9A5C);color:#fff;font:900 .9rem/1 system-ui,sans-serif;box-shadow:0 3px 6px rgba(0,0,0,.3);vertical-align:middle}
+.wpbox > :not(.wp-rays):not(.wp-cf):not(.wp-drop){position:relative;z-index:2}
+.wp-photo{position:relative;width:150px;height:168px;margin:6px auto 0;animation:wppop .55s cubic-bezier(.2,1.5,.4,1) both}
+.wp-photo img{width:100%;height:100%;object-fit:cover;border-radius:18px;box-shadow:0 0 0 4px #fff,0 0 0 8px #FFC93C,0 18px 30px -10px rgba(0,0,0,.6)}
+.wp-badge{position:absolute;right:-16px;bottom:-14px;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:1.7rem;background:radial-gradient(circle at 35% 30%,#FFF3A8,#FFC93C 55%,#E79A00);box-shadow:0 0 0 4px #fff,0 8px 18px -6px rgba(0,0,0,.6);animation:wppulse 1.6s ease-in-out infinite}
+.wp-trophy{font-size:4.2rem;line-height:1;margin:8px 0 0;animation:wppop .55s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes wppop{from{transform:scale(.4);opacity:0}}
+@keyframes wppulse{50%{transform:scale(1.1)}}
+.wpbox h2{margin-top:24px!important}
+.wp-amt{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 0!important;font:900 2.6rem/1.05 "Archivo Black","Arial Black",sans-serif!important;color:#E9A514!important;text-shadow:0 2px 0 rgba(0,0,0,.18)}
+.wp-amt.cash{color:#2E9A5C!important}
+.wp-amt .wp-ci{width:38px;height:38px}
+.wp-lbl{margin:4px 0 14px!important;font-size:.95rem!important;opacity:.85}
+@media (prefers-reduced-motion:reduce){.wp-cf,.wp-drop{display:none}.wpbox .wp-rays,.wp-badge,.wp-photo,.wp-trophy{animation:none!important}}
+.uphint{margin:10px 0 0;padding:10px 12px;border-radius:12px;background:rgba(233,165,20,.14);border:1px solid rgba(233,165,20,.5);font-size:.9rem;line-height:1.4;text-align:left}.uphint b{display:block}
 </style>
 </head>
 <body>
@@ -1309,6 +1333,7 @@ S.gemsSet10 = true;
 S.entries = S.entries || []; Object.keys(S.entered || {}).forEach(k => { if (!S.entries.some(e => e.id === S.entered[k])) delete S.entered[k]; });
 
 /* ---------- Image helpers ---------- */
+const fileURL = f => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); });
 const loadImg = src => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
 function toID(img, max) {
   const w0 = img.naturalWidth || img.width, h0 = img.naturalHeight || img.height;
@@ -1808,7 +1833,7 @@ $('#file').addEventListener('change', async e => {
   const smp = window.__sampleURL; window.__sampleURL = null; const f = smp ? { type: 'image/jpeg' } : e.target.files && e.target.files[0]; if (!f) return;
   if ($('#ceg').classList.contains('on')) { $('#ceg').classList.remove('on', 'under'); $('#ceg').style.top = ''; clearInterval(window.__ceg); }
   if (!/^image\//.test(f.type)) { toast('That file isn’t an image. Pick a JPG, PNG or HEIC.'); return; }
-  const url = smp || URL.createObjectURL(f);
+  let url; try { url = smp || await fileURL(f); } catch (err) { toast('This photo couldn’t be read. Try another one.'); return; }
   let img;
   try { img = await loadImg(url); } catch (err) { toast('This photo couldn’t be opened. Try a JPG or PNG.'); return; }
   img = await fitCrop(img); if (!img) { URL.revokeObjectURL(url); return; }
@@ -2241,6 +2266,32 @@ function openSignup(then, opts = {}) {
     if (then) { closeFlow(); then(); return; }
     if (firstTime) setTimeout(() => askAlerts(() => goalRoute(cur())), 1600);
   };
+}
+
+// one celebration for every challenge win; the coins/cash fly to the balance when the player collects
+function winPop(amt, cur, label, o = {}) {
+  const boom = () => cur === 'cash' ? cashExplosion(amt, { label }) : gemExplosion(amt, { label });
+  const c = $('#coach');
+  if (!amt || amt <= 0 || !c || c.classList.contains('on')) { boom(); return; }
+  const src = o.src || (document.querySelector('#sheetBody .kg2-ph.me img, #sheetBody .pc-vs figure.won img, #sheetBody .won img, #flow .kg2-ph.me img') || {}).src;
+  const isCash = cur === 'cash', show = v => isCash ? money(v) : Math.round(v).toLocaleString();
+  const ic = isCash ? '<span class="wp-bill">$</span>' : gemIcon('wp-ci');
+  const title = o.title || (/prize/i.test(label) ? 'Prize won!' : 'You win!');
+  c.innerHTML = `<div class="crbox wpbox" role="dialog" aria-modal="true" aria-labelledby="wpT">
+    <div class="cr-rays wp-rays" aria-hidden="true"></div>
+    ${[...Array(26)].map((_, i) => `<i class="wp-cf" style="left:${(i * 37) % 100}%;background:${['#FFC93C', '#FF6B6B', '#5B8DEF', '#3CCB8A', '#F59E0B'][i % 5]};animation-delay:${(i * .09).toFixed(2)}s;animation-duration:${(2.1 + (i % 5) * .3).toFixed(2)}s"></i>`).join('')}
+    ${[...Array(12)].map((_, i) => `<span class="wp-drop" style="left:${(i * 61 + 7) % 92}%;animation-delay:${(.15 + i * .17).toFixed(2)}s">${ic}</span>`).join('')}
+    ${src ? `<div class="wp-photo"><img src="${src}" alt="Your photo"><span class="wp-badge">🏆</span></div>` : '<div class="wp-trophy" aria-hidden="true">🏆</div>'}
+    <h2 id="wpT">${esc(title)}</h2>
+    <p class="wp-amt ${isCash ? 'cash' : ''}"><span>+<span id="wpN">${show(0)}</span></span>${ic}</p>
+    <p class="wp-lbl">${esc(label)} · ${isCash ? 'added to your cash' : 'added to your coins'}</p>
+    <button class="bt-cta" id="wpGo">${isCash ? 'Collect my cash' : 'Collect my coins'}</button></div>`;
+  c.classList.add('on', 'cr');
+  const el = $('#wpN'), t0 = performance.now(), D = 1100;
+  const tick = now => { if (!el.isConnected) return; const k = Math.min(1, (now - t0) / D); el.textContent = show(amt * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); };
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) el.textContent = show(amt); else requestAnimationFrame(tick);
+  let done = false; const close = () => { if (done) return; done = true; c.classList.remove('on', 'cr'); c.innerHTML = ''; setTimeout(boom, 80); };
+  $('#wpGo').onclick = close; c.onclick = e => { if (e.target === c) close(); };
 }
 function celebrate({ src, score, title, text, cta, onCta, later, onLater }) {
   const c = $('#coach');
@@ -3155,7 +3206,7 @@ let picAfter = null;
 function pickProfilePic(after) { picAfter = after || null; const i = $('#picFile'); i.value = ''; i.click(); }
 $('#picFile').addEventListener('change', async e => {
   const f = e.target.files && e.target.files[0]; if (!f) return;
-  const url = URL.createObjectURL(f); let im;
+  const url = await fileURL(f); let im;
   try { im = await loadImg(url); } catch (err) { URL.revokeObjectURL(url); toast('This photo couldn’t be opened. Try another one.'); return; }
   const n = 192, c = document.createElement('canvas'); c.width = c.height = n; const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height, k = Math.min(w, h);
   c.getContext('2d').drawImage(im, (w - k) / 2, (h - k) / 2, k, k, 0, 0, n, n); URL.revokeObjectURL(url);
@@ -3865,7 +3916,7 @@ $('#pkFile').addEventListener('change', async () => {
   {
     const f = inp.files && inp.files[0]; if (!f) return;
     if (S.photos.length >= CFG.MAX_PHOTOS) { toast('Your studio is full. Remove a photo in Studio first.'); return; }
-    const url = URL.createObjectURL(f); let img; try { img = await loadImg(url); } catch (e) { toast('This photo couldn’t be opened. Try a JPG or PNG.'); return; }
+    const url = await fileURL(f).catch(() => ''); let img; try { img = await loadImg(url); } catch (e) { toast('This photo couldn’t be opened. Try a JPG or PNG.'); return; }
     img = await fitCrop(img); if (!img) { URL.revokeObjectURL(url); inp.value = ''; return; }
     const id = toID(img, 960); URL.revokeObjectURL(url); const src = toURL(id);
     const row = $('#sheetBody .pk-row') || $('#sheetBody .pk-grid'); if (row) row.insertAdjacentHTML('afterbegin', `<div class="pk-scan"><img src="${src}" alt=""><span><i></i>Scoring…</span></div>`);
@@ -4086,7 +4137,7 @@ function fcBattle(c) {
       ${won ? `<div class="kg2-next ${c.stake.cur === 'cash' ? 'win' : 'gemw'}"><small>You won</small><b>${c.stake.riv ? (rivWon ? money(rivWon) : 'this round') : prizeTxt(c.stake)}${bonus ? ` <em>+${bonus} 🟡</em>` : ''}</b><span>${bonus ? 'Includes the bonus for today’s theme' : 'Added to your balance'}</span></div>
         ${newPass ? `<div class="fb-pass"><b>🎟️ Cash Cup ticket earned!</b><span>Use it to enter a photo in today’s Daily Cash Cup. It expires at midnight.</span></div><button class="btn block kg2-go" id="fbCup">Collect & enter the Cash Cup</button><div style="text-align:center"><button class="link kg2-back" id="fbMore">Challenge again</button></div>` : `<button class="btn block kg2-go" id="fbMore">Challenge again</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to Friends</button></div>`}`
         : `<div class="kg2-next lose"><small>You lost</small><b>${stakeTxt(c.stake)}</b><span>Rematch @${esc(c.f)} with any photo</span></div><button class="btn block kg2-go" id="fbMore">Rematch</button><div style="text-align:center"><button class="link kg2-back" data-shclose>Back to Friends</button></div>`}`;
-    if (won) setTimeout(() => { if (c.stake.riv) { if (rivWon) cashExplosion(rivWon, { label: 'Rivalry pot' }); paintWallet(); } else if (c.stake.cur === 'cash') { cashExplosion(prize, { label: 'Friend challenge' }); paintWallet(); } else gemExplosion(prize + bonus, { label: 'Friend challenge' }); }, 300); else { paintGems(false); paintWallet(); }
+    if (won) setTimeout(() => { if (c.stake.riv) { if (rivWon) winPop(rivWon, 'cash', 'Rivalry pot'); paintWallet(); } else if (c.stake.cur === 'cash') { winPop(prize, 'cash', 'Friend challenge'); paintWallet(); } else winPop(prize + bonus, 'gems', 'Friend challenge'); }, 500); else { paintGems(false); paintWallet(); }
     $('#fb').insertAdjacentHTML('beforeend', `<button class="to-cash" data-tocash><span class="i">💵</span><span><b>${won ? 'You’ve got the eye. Win real cash' : 'Shake it off. Try a cash game'}</b><small>Scheduled $1 tournaments up to $1,000</small></span><i>›</i></button>`);
     $('#fbMore').onclick = () => fcNew(c.f);
     if ($('#fbCup')) $('#fbCup').onclick = () => { closeSheet(); CXF = 'all'; openComps(); cxEnter(CX.find(x => x.id === 'daily')); };
@@ -4489,7 +4540,7 @@ function crewFight(c, k, h, pid, rev) { const coin = frGem(), st = coin ? 0 : fr
   const me = S.photos.find(x => x.id === pid) || lgMine(k), N = 15, their = 72 + (hsh(h + k) % 16), won = Math.random() < Math.max(.2, Math.min(.8, .5 + (me.s.total - their) / 30));
   const mv = won ? 8 + Math.floor(Math.random() * 3) : 4 + Math.floor(Math.random() * 4), tv = N - mv, src = lgPhoto(h, k), cn = esc(crownName(k)), H = c.hold[k] || null; let msg = '';
   if (st) c.pot[k] = +((c.pot[k] || 0) + LG_CUT * st).toFixed(2);
-  if (won && coin) { S.gems += FR_GEM * 2; setTimeout(() => { paintGems(); gemExplosion(FR_GEM * 2, { label: '🟡 Coin challenge won' }); }, 9000); }
+  if (won && coin) { S.gems += FR_GEM * 2; setTimeout(() => { paintGems(); winPop(FR_GEM * 2, 'gems', 'Coin challenge won'); }, 9000); }
   if (won) { const L = lgS(); L.wins = (L.wins || 0) + 1; L.fwins = (L.fwins || 0) + 1; delete c.rev[k]; if (rev) { S.gems += 25; setTimeout(() => { paintGems(); gemExplosion(25, { label: '🔥 Rematch bonus' }); }, 9500); }
     if (H !== 'you') { c.hold[k] = 'you'; c.since[k] = Date.now(); c.def[k] = 0; msg = `🏅 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} blue ribbon!`; crewLog(c, `🏅 You took ${H ? `@${esc(H)}’s` : 'the'} ${cn} blue ribbon`); }
     else { c.def[k] = (c.def[k] || 0) + 1; msg = `🏅 Blue ribbon defended · ${c.def[k]} defence${c.def[k] === 1 ? '' : 's'}`; crewLog(c, `🛡️ You defended the ${cn} blue ribbon against @${esc(h)}`); } }
@@ -4867,7 +4918,7 @@ function sprDone(id, right, ms) { const O = qsOpp(id), pr = window.__qsPractice,
     <div class="qs3-sb">${side('You', right, ms, won)}<span class="qs3-vs">VS</span>${side(oh, O.sc, O.ms, !won)}</div>
     ${mine.length ? `<div class="qs3-cmp">${row('You', mine)}${row(oh, O.seq)}<p>Highlighted: the ${pk(split.filter(Boolean).length).replace('pick', 'pair')} where you split</p></div>` : ''}
     ${up}<button class="bt-cta qs2-go" id="qsAgain">${pr ? `Play again · ${QS_COIN} 🟡` : `Play again · ${qsM(st)} entry`}</button>${pr ? `<button class="btn block qs3-real" id="qsReal">💵 Play for real · win ${qsM(qsPay(2)[0])}</button>` : ''}<button class="bt-no" id="cpBack">${isYoungW() ? 'Keep judging' : 'Keep voting'}</button></div>`;
-  if (won && !pr) setTimeout(() => cashExplosion && cashExplosion(pay, { label: 'Quick Sprint' }), 400);
+  if (won && !pr) setTimeout(() => winPop(pay, 'cash', 'Quick Sprint win'), 500);
   const shut = () => c.classList.remove('on', 'cr');
   $('#qsAgain').onclick = () => { shut(); pr ? sprPractice() : sprEnter(st); }; if ($('#qsReal')) $('#qsReal').onclick = () => { shut(); window.__qsReal = 1; sprEnter(); }; $('#cpBack').onclick = shut; $('#qsX').onclick = shut; }
 function sprSettle() { if (!S || !S.cs) return; Object.entries(S.cs).forEach(([k, e]) => { const id = +k; if (e.paid || e.score == null || Date.now() < (id + 1) * SPR_MS) return;
@@ -5006,7 +5057,7 @@ function freeCh() { if ($('#sheet').classList.contains('on')) closeSheet(); cons
         ${won ? `<div class="pc2-pool fc-won"><b>+${money(FC_PRIZE)}</b><span>real cash, in your wallet now<em>Yours to keep. Add cash any time to play for more</em></span></div>` : `<p class="fch-m">Next free ${CH} in <b>${frMinsLeft()} min</b>. Or play a real one now.</p>`}
         <button class="btn block pc-real" id="fcReal">💵 ${won ? `Play a $${LG_FEE} cash ${CH}` : `Play for real · $${LG_FEE}`}</button>
         <div style="text-align:center"><button class="link pc-later" id="fcNo">${y ? 'Keep judging' : 'Keep voting'}</button></div></div>`);
-      if (won) setTimeout(() => { try { cashExplosion(FC_PRIZE, { label: 'Free cash ' + CH }); } catch (e) {} paintWallet(); }, 400);
+      if (won) setTimeout(() => { try { winPop(FC_PRIZE, 'cash', 'Free cash ' + CH); } catch (e) {} paintWallet(); }, 400);
       $('#fcReal').onclick = () => { popClose(); const o2 = iHold ? (lgRank(k).find(r => !r.me) || {}).h : lgHold(k).h; payCash(LG_FEE, 'A challenge', () => lgFight(k, o2, !iHold)); };
       $('#fcNo').onclick = () => popClose(); bindX(); };
     let v = 0, m = 0; const iv = setInterval(() => { if (!$('#fcV')) { clearInterval(iv); return; } if (seq[v]) m++; v++; const sh = m / v * 100;
@@ -5687,7 +5738,7 @@ function openGemBattle(stake, after, opt = {}) {
           : `<div class="kg2-next lose"><small>${free ? 'Free challenge' : 'You lost'}</small><b>${free ? 'No cost' : `🟡 ${stake}`}</b><span>Touch up your photo to win more votes</span></div>`}
         ${nx ? `<button class="btn block kg2-go" id="gbNext">${nx.label}</button><div style="text-align:center"><button class="link kg2-back" id="gbAgain">Play again free · coins</button></div>`
           : `<button class="btn block kg2-go" id="gbAgain">Play again · Free</button>${!isCash() ? `<button class="btn block pc-real kg2-real" id="gbReal">💵 Play for real · $${LG_FEE}</button>` : ''}<div style="text-align:center"><button class="link kg2-back" data-shclose>Back</button></div>`}`;
-      if (won && !opt.revenge) setTimeout(() => gemExplosion(prize, { label: 'Coin challenge win' }), 300);
+      if (won && !opt.revenge) setTimeout(() => winPop(prize, 'gems', 'Coin challenge win'), 500);
       if (opt.revenge) { const a = $('#gbAgain'); a.textContent = won ? 'Done' : `Get it back · ${REPAIR_GEMS} 🟡`; a.onclick = () => { closeSheet(); if (!won) repairPhoto(); }; paintTop(); }
       if (nx) $('#gbNext').onclick = () => { closeSheet(); nx.go(); }; if ($('#gbReal')) $('#gbReal').onclick = () => { closeSheet(); fcRealCh(cat); };
       if (!opt.revenge && /coins|Free/.test($('#gbAgain').textContent)) $('#gbAgain').onclick = () => openGemBattle(stake || 25);
@@ -5755,7 +5806,7 @@ function openCashBattle(stake, th, photo) {
           : `<div class="kg2-next lose"><small>You lost</small><b>${money(stake)}</b><span>Touch up your photo to win more votes</span></div>`}
         <button class="btn block kg2-go" id="duAgain">Play again · $${stake}</button>
         <div style="text-align:center"><button class="link kg2-back" data-shclose>Back to judging</button></div>`;
-      if (won) setTimeout(() => cashExplosion(prize, { label: 'Head-to-head win' }), 300);
+      if (won) setTimeout(() => winPop(prize, 'cash', 'Head-to-head win'), 500);
       $('#duAgain').onclick = () => openCashBattle(stake);
       document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
     }, 220);
@@ -5923,7 +5974,7 @@ function kingLive(cat, mine) {
         : `<div class="kg2-next"><small>Next challenge bounty</small><b>${money(K.bounty)}</b><span>Up from ${money(pot)}</span></div>
         <button class="btn block kg2-go" id="kgAgain">Challenge again · $1</button>`}
       <div style="text-align:center"><button class="link kg2-back" data-shclose>Back to judging</button></div>`;
-    if (win) { paintWallet(); setTimeout(() => cashExplosion(pot, { label: `${catLabel(cat)} bounty` }), 300); }
+    if (win) { paintWallet(); setTimeout(() => winPop(pot, 'cash', `${catLabel(cat)} bounty`), 500); }
     if ($('#kgAgain')) $('#kgAgain').onclick = () => payCash(1, 'A Champion challenge', () => kingLive(cat, mine));
     document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
   }, 240);
@@ -6024,7 +6075,7 @@ function paintSdRoom(r) {
       <div class="sd-l">${order.map((x, k) => `<div class="sd-r ${x.me ? 'me' : ''} ${k === 0 ? 'win' : ''}"><span class="sd-pl">${k + 1}</span><img src="${x.src}" alt=""><span class="sd-n">${x.me ? 'You' : '@' + esc(x.h)}${k === 0 ? `<em class="sd-wn">🏆 Takes ${money(prize)}</em>` : ''}</span><span class="sd-b"><i style="width:${x.rate}%"></i></span><b class="sd-p">${x.rate.toFixed(1)}%</b></div>`).join('')}</div>
       <button class="btn block kg-go" id="sdAgain">New Showdown · ${money(SD_FEE)}</button>
       <div style="text-align:center"><button class="link" data-shclose>Back to judging</button></div>`;
-    if (w.me && !r.boomed) { r.boomed = true; save(); setTimeout(() => cashExplosion(prize, { label: 'Showdown win' }), 300); }
+    if (w.me && !r.boomed) { r.boomed = true; save(); setTimeout(() => winPop(prize, 'cash', 'Showdown win'), 500); }
     $('#sdAgain').onclick = () => { closeSheet(); openShowdown(); };
   }
   body.querySelectorAll('[data-shclose]').forEach(b => b.onclick = () => closeSheet());
@@ -6302,7 +6353,7 @@ function paintTourney() {
   if (ph.st === 'done') {
     if (T.drawn === 'done') return; T.drawn = 'done'; tFinish(T); T.seen = true; save();
     const R0 = tResult(T), won = R0.k === 'win', ch = tChamp(T);
-    if (R0.amt && !T.boomed) { T.boomed = true; save(); setTimeout(() => cashExplosion(R0.amt, { label: won ? 'Tournament win' : 'Tournament prize' }), 300); }
+    if (R0.amt && !T.boomed) { T.boomed = true; save(); setTimeout(() => winPop(R0.amt, 'cash', won ? 'Tournament win' : 'Tournament prize'), 500); }
     body.innerHTML = `<h2 class="tk-h">🏆 Knockout Tournament</h2>
       <div class="tk-res ${won || R0.amt ? 'w tk-won' : 'tk-run'}"><b>${won ? '🏆 You won the tournament!' : R0.amt ? '🥈 You finished 2nd!' : `${R0.gems ? 'Great run!' : 'Good effort!'} You reached ${T_NAMES[T.out]}`}</b>
         ${R0.amt || R0.gems ? `<small>You won</small>${tWon(R0.amt, R0.gems)}` : `<span>Your ${money(T_FEE)} went into the prize pot</span>`}</div>
@@ -6736,6 +6787,24 @@ function streakHello() {
 })();
 })();
 
+
+// if the photo picker never opens (in-app browsers), say so and point to the sample photos
+(function upHintWatch() {
+  document.addEventListener('click', e => {
+    const l = e.target.closest('label[for="file"]'); if (!l || e.defaultPrevented) return;
+    let opened = false; const f = document.getElementById('file'), mark = () => { opened = true; };
+    window.addEventListener('blur', mark, { once: true }); document.addEventListener('visibilitychange', mark, { once: true });
+    if (f) { f.addEventListener('change', mark, { once: true }); f.addEventListener('cancel', mark, { once: true }); }
+    setTimeout(() => {
+      window.removeEventListener('blur', mark); document.removeEventListener('visibilitychange', mark);
+      if (opened || !l.isConnected) return;
+      let h = l.parentNode.querySelector('.uphint'); if (h) return;
+      h = document.createElement('p'); h.className = 'uphint'; h.setAttribute('role', 'status');
+      h.innerHTML = `<b>Photo picker didn’t open?</b> This browser may block uploads. ${l.closest('#ageGate') ? 'Tap one of our photos below to try it now, or ' : ''}open this page in Safari or Chrome to use your own.`;
+      l.insertAdjacentElement('afterend', h);
+    }, 1600);
+  });
+})();
 </script>
 </body>
 </html>
