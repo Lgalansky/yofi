@@ -735,3 +735,7 @@ python3 rmv224.py
 python3 build-skill/winpop.py index.html skill-preview.html   # preview copy
 python3 build-skill/winpop.py                                  # on "push live": patch index.html in place
 ```
+
+## Upload hint (Skill)
+
+`uploadhint.py`: if tapping an upload button opens no photo picker within ~1.5 s (some in-app browsers, such as the Claude app viewer, Facebook and Instagram, block it), a hint appears under the button pointing to the sample photos and to opening the page in Safari or Chrome. Run after `winpop.py`, same arguments.
