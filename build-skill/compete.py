@@ -112,6 +112,7 @@ renderGalleries = function () { const r = _renderGalleriesST.apply(this, argumen
 const _renderVariantsST = renderVariants;
 renderVariants = function () { const r = _renderVariantsST.apply(this, arguments);
   try { const v = EN.variants && EN.variants[EN.sel], act = document.querySelector('#flowBody .actions'); if (v && act && !act.querySelector('.st-line')) act.insertAdjacentHTML('afterbegin', `<div class="im2-strip st-line"><span class="im2-sh">${stLine(v.s.total, EN.p.s.total)}</span></div>`); } catch (e) {}
+  try { const g = document.querySelector('#flowBody .goal70'), n = g && +(g.querySelector('span') || g).innerText.replace(/\D/g, ''); if (g && !g.querySelector('.g-ic') && ({ 70: 1, 80: 1, 90: 1 })[n]) g.insertAdjacentHTML('beforeend', ` <i class="g-ic">${({ 70: '🥇', 80: '💎', 90: '🏆' })[n]}</i>`); } catch (e) {}
   return r; };
 // every new upload gets a name
 S.photos.forEach(p => { if (!p.nmAsk) p.nmAsk = 1; }); save();
@@ -179,6 +180,12 @@ CSS = r'''
 .cw-play{margin:4px 16px 8px;font:900 1.2rem Fraunces,serif;color:#5A1A22}.cw-mem-end{margin-top:14px!important}.cw-cant{opacity:.72}
 html body #gallery .cw-can .bcc-go{background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important}
 .st-line{margin:12px 14px 8px!important}#flowBody .actions .st-line{margin:0 0 10px!important}
+/* Before and after matches Improve: centred bold status, Goal pill with its medal, readable After label */
+html body #flowBody .st-line{text-align:center!important;padding:10px 12px!important}html body #flowBody .st-line .im2-sh{margin:0!important;text-align:center;font-weight:700;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#flowBody .goal70 .g-ic{font-style:normal;margin-left:2px}
+html body #flowBody .vcard[aria-pressed="true"] .best{background:#2D4E86!important;color:#fff!important}
+/* Vote: same gap above and below the photos block */
+html body #vgGoal.vg{margin:6px 0 12px!important}
 .nm-ask{text-align:center}.nm-ph{width:120px;height:160px;object-fit:cover;border-radius:14px;box-shadow:0 0 0 3px #E0A82E;margin:4px auto 10px;display:block}
 .nm-ask input{width:100%;box-sizing:border-box;margin:6px 0 12px;padding:12px 14px;border-radius:14px;border:1.5px solid #CDBFA8;font:800 1.2rem Fraunces,serif;text-align:center;background:#FFFDF9;color:#2D2521}
 /* Improve photo frame stands out more (drawn outside the photo, so sizes don't change) */
