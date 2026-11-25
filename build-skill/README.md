@@ -758,7 +758,8 @@ python3 build-skill/improve2.py sp-a2.html sp-i2.html
 python3 build-skill/votegoal.py sp-i2.html sp-v.html
 python3 build-skill/votecash.py sp-v.html sp-c.html
 python3 build-skill/noenergy.py sp-c.html sp-n.html
-python3 build-skill/samples.py sp-n.html skill-preview.html
+python3 build-skill/samples.py sp-n.html sp-s.html
+python3 build-skill/compete.py sp-s.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -772,3 +773,5 @@ python3 build-skill/samples.py sp-n.html skill-preview.html
 `improve2.py` replaces the Improve tab with the card-style screen: the photo card with a burgundy band previewing coins per vote, four touch-ups (Fix lighting, Boost colour, Sharpen details, Soften background) with projected scores, premium filters from 80, and Apply with the price set into the button. Touch-ups raise the matching part score so the overall score stays the average of the five, and the look is saved into the photo.
 
 `samples.py` swaps the six Pets sample photos for the owner's dog photos in `samples/pets/` (600x800; dog-only, collar tag blurred).
+
+`compete.py` merges the Compete and Tournaments buttons into one Compete menu with Challenges | Tournaments tabs.
