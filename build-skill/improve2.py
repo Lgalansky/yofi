@@ -79,7 +79,7 @@ function im2Render() {
   if (sel && inGal) { const r = galRoom(p.cat); if (r.full && r.ph.includes(p)) { const mins = r.ph.map(q => q.id === p.id ? to : q.s.total), tr = galTier(Math.min(...mins));
     if (galRank(tr) > galRank(r.tier)) { const i = GAL.PATH.indexOf(p.cat), nx = GAL.PATH[i + 1]; proj = `<b>Completes ${tr} ${esc(galNm(p.cat))}</b> · all three at ${tr === 'Gold' ? 70 : tr === 'Diamond' ? 80 : 90}+${tr === 'Gold' && nx && !galOpen(nx) ? ` · unlocks ${esc(galNm(nx))}` : ''}`; } } }
   if (sel && !proj && t1 !== t && t1) proj = `<b>${esc(alName(p))} becomes ${t1}</b> · ${x1}× coins every time a voter picks it`;
-  const line = proj ? proj.replace(/<b>|<\/b>/g, '').replace(/ · .*$/, '') : (tS ? `${TI[tS]} ${tS} · ${pay} coins per vote` : `Not ranked · reach 70 for 🥇 Gold`);
+  const line = proj && /^<b>Completes/.test(proj) ? proj.replace(/<b>|<\/b>/g, '').replace(/ · .*$/, '') : stLine(sel ? to : v, sel ? v : null);
   const strip = `<span class="im2-sh">${line}</span>`;
   const short = sel && S.gems < sel.price ? sel.price - Math.floor(S.gems) : 0;
   const maxed = opts.every(o => o.max);

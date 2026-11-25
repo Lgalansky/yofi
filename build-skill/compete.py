@@ -94,11 +94,52 @@ chBuy = function () {
 };
 // 2. no "You've got N coins!" pop pushing coin games (coin games live in the coin balance sheet)
 gemNudge = function () { return false; };
+
+// one status line, the same on every photo screen
+const TIER_IC = { Gold: '🥇', Diamond: '💎', Platinum: '🏆' };
+function stLine(v, from) {
+  const t = galTier(v), t0 = from == null ? t : galTier(from), pay = GAL.BASE * galMult(v);
+  if (from != null && t && t !== t0) return `${TIER_IC[t]} Becomes ${t} · ${pay} coins per vote`;
+  return t ? `${TIER_IC[t]} ${t} · ${pay} coins per vote` : 'Not ranked · reach 70 for 🥇 Gold';
+}
+// big card in the gallery: one status line instead of two
+const _renderGalleriesST = renderGalleries;
+renderGalleries = function () { const r = _renderGalleriesST.apply(this, arguments);
+  const big = document.querySelector('#studio .al-card.big'), P = AL_OPEN && S.photos.find(x => x.id === AL_OPEN);
+  if (big && P) { document.querySelectorAll('#studio .al-to, #studio .al-why').forEach(e => e.remove()); big.insertAdjacentHTML('afterend', `<div class="im2-strip st-line"><span class="im2-sh">${stLine(P.s.total)}</span></div>`); }
+  return r; };
+// Before and after: status of the new version above the Touch up button
+const _renderVariantsST = renderVariants;
+renderVariants = function () { const r = _renderVariantsST.apply(this, arguments);
+  try { const v = EN.variants && EN.variants[EN.sel], act = document.querySelector('#flowBody .actions'); if (v && act && !act.querySelector('.st-line')) act.insertAdjacentHTML('afterbegin', `<div class="im2-strip st-line"><span class="im2-sh">${stLine(v.s.total, EN.p.s.total)}</span></div>`); } catch (e) {}
+  return r; };
+// every new upload gets a name
+S.photos.forEach(p => { if (!p.nmAsk) p.nmAsk = 1; }); save();
+function nameAsk() {
+  const p = S.photos.find(x => !x.nmAsk && x.s); if (!p || !S.user) return;
+  if ($('#flow').classList.contains('on') || $('#sheet').classList.contains('on') || $('#coach').classList.contains('on')) return;
+  p.nmAsk = 1; save();
+  openSheet(`<div class="ug nm-ask"><img class="nm-ph" src="${p.src}" alt=""><h2>Name your photo</h2><p class="sub">This name shows on its card, in your gallery and when voters pick it.</p>
+    <input id="nmIn" maxlength="16" value="${esc(alName(p))}" aria-label="Photo name"><button class="btn block" id="nmGo">Save name</button></div>`);
+  const i = $('#nmIn'); setTimeout(() => { i.focus(); i.select(); }, 80);
+  const go = () => { const v = i.value.trim(); if (v) p.nm = v; save(); closeSheet(); try { renderStudio(); } catch (e) {} try { vgPaint(); } catch (e) {} };
+  $('#nmGo').onclick = go; i.onkeydown = e => { if (e.key === 'Enter') go(); };
+}
+setInterval(() => { try { nameAsk(); } catch (e) {} }, 800);
 new MutationObserver(() => { try { cmpPaint(); } catch (e) {} }).observe($('#flowBody'), { childList: true });
 '''
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
 CSS = r'''
 /* one Compete menu */
+.st-line{margin:12px 14px 8px!important}#flowBody .actions .st-line{margin:0 0 10px!important}
+.nm-ask{text-align:center}.nm-ph{width:120px;height:160px;object-fit:cover;border-radius:14px;box-shadow:0 0 0 3px #E0A82E;margin:4px auto 10px;display:block}
+.nm-ask input{width:100%;box-sizing:border-box;margin:6px 0 12px;padding:12px 14px;border-radius:14px;border:1.5px solid #CDBFA8;font:800 1.2rem Fraunces,serif;text-align:center;background:#FFFDF9;color:#2D2521}
+/* Improve photo frame stands out more (drawn outside the photo, so sizes don't change) */
+html body .im2 .im2-ph{box-shadow:0 0 0 3px #CDBFA8,0 0 0 6px #FBF6EC,0 12px 22px -12px rgba(0,0,0,.6)!important}
+html body .im2 .im2-ph.t-gold{box-shadow:0 0 0 4px #E0A82E,0 0 0 7px #FBEFD2,0 0 0 8.5px #C99A2E,0 0 18px rgba(224,168,46,.55),0 12px 22px -12px rgba(0,0,0,.6)!important}
+html body .im2 .im2-ph.t-diamond{box-shadow:0 0 0 4px #7FA7E6,0 0 0 7px #EEF5FF,0 0 0 8.5px #5B7FC0,0 0 20px rgba(127,167,230,.7),0 12px 22px -12px rgba(0,0,0,.6)!important}
+html body .im2 .im2-ph.t-platinum{box-shadow:0 0 0 4px #A7B0BD,0 0 0 7px #FFFFFF,0 0 0 8.5px #7D8693,0 0 18px rgba(167,176,189,.7),0 12px 22px -12px rgba(0,0,0,.6)!important}
+
 #btGem{display:none!important}
 .cmp-h{text-align:center;margin:6px 16px 10px;font:900 clamp(1.9rem,8.6vw,2.4rem)/1 Fraunces,serif;color:#1F3157}html.yg .cmp-h{color:#fff}
 #flowBody.cmp-t>*:not(.cmp-bar):not(.cmp-cards):not(.cmp-h){display:none!important}
