@@ -7,7 +7,7 @@ There are two versions of Yofi. Before making any change, ask the user which one
 
 | Project | Git branch | Live link | Preview link |
 |---|---|---|---|
-| **Yofi - Skill** (no real-money chance features) | `main` | https://claude.ai/artifact/SxVfVNedhAE8fQPjbnUGXb | https://claude.ai/artifact/EpaA8hVsAF6QWQmYff4jD8 ("Yofi - Skill (Preview)") |
+| **Yofi - Skill** (no real-money chance features) | `main` | https://claude.ai/artifact/ETeWdfSqr3e5VUckSpkLS6 | https://claude.ai/artifact/VgCzvvjqSPanuTC7wh91ET ("Yofi - Skill (Preview)") |
 | **Yofi - Real Money**, now called **PhotoPicks** (hourly photo Finals with real-money picks) | `real-money` | https://claude.ai/artifact/L5ef589M7kCz3uTuPAUAQe | same link |
 
 Each version keeps its own saved player data (`yofi.proto.v1` for Skill, `yofi.real.v1` for Real Money).
