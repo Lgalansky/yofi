@@ -25,15 +25,17 @@ s = s.replace('<span>Touch-ups</span></button>', '<span>My photos</span></button
 
 JS = r'''
 /* ---------- photo cards ---------- */
-const CARD_T = [{ n: 'Bronze', at: 0, pay: 3, c: 'br' }, { n: 'Silver', at: 60, pay: 5, c: 'si' }, { n: 'Gold', at: 70, pay: 8, c: 'go' }, { n: 'Hall of Fame', at: 85, pay: 8, c: 'hf' }];
-const CARD_CAP = 20, CARD_PRINT = 50;
+const CARD_BASE = 3, CARD_T = [{ n: 'Bronze', at: 0, x: 1, c: 'br' }, { n: 'Silver', at: 60, x: 2, c: 'si' }, { n: 'Gold', at: 70, x: 3, c: 'go' }, { n: 'Hall of Fame', at: 85, x: 4, c: 'hf' }];
+CARD_T.forEach(t => { t.pay = CARD_BASE * t.x; });
+const CARD_CAP = 10, CARD_PRINT = 50, PRINT_DAY = 3;
+CFG.MAX_PHOTOS = Math.max(CFG.MAX_PHOTOS, 12);
 function cardTier(v) { let k = 0; CARD_T.forEach((t, i) => { if (v >= t.at) k = i; }); return k; }
-function cwDay() { const d = todayKey(); if (!S.cw || S.cw.d !== d) S.cw = { d, n: 0, c: 0, by: {} }; return S.cw; }
+function cwDay() { const d = todayKey(); if (!S.cw || S.cw.d !== d) S.cw = { d, n: 0, c: 0, by: {}, pr: 0 }; return S.cw; }
 function cardHTML(p, o = {}) {
   const k = cardTier(p.s.total), t = CARD_T[k], nx = CARD_T[k + 1], w = cwDay().by[p.id] || 0;
   const stats = C.map(c => `<div class="pc-st${o.hi === c.k ? ' up' : ''}"><span>${esc(c.short)}</span><i><u style="width:${p.s[c.k]}%"></u></i><b>${p.s[c.k]}${o.hi === c.k ? ' ▲' : ''}</b></div>`).join('');
-  return `<div class="pcard ${t.c}${o.mini ? ' mini' : ''}"><div class="pc-h"><span>${t.n}</span><b>${p.s.total}</b></div><img src="${p.src}" alt="">
-    ${o.mini ? `<small class="pc-w">${w ? `${w} win${w === 1 ? '' : 's'} today` : nx ? `${nx.at - p.s.total} to ${nx.n}` : 'Top tier'}</small>` : `${p.cat ? `<p class="pc-c">${esc(pcatName(p.cat))}</p>` : ''}${stats}`}</div>`;
+  return `<div class="pcard ${t.c}${o.mini ? ' mini' : ''}"><div class="pc-h"><span>${t.n} ×${t.x}</span><b>${p.s.total}</b></div><img src="${p.src}" alt="">
+    ${o.mini ? `<small class="pc-w">${w ? `${w} win${w === 1 ? '' : 's'} · +${w * t.pay} today` : nx ? `${nx.at - p.s.total} to ${nx.n}` : 'Top tier'}</small>` : `${p.cat ? `<p class="pc-c">${esc(pcatName(p.cat))}</p>` : ''}${stats}`}</div>`;
 }
 function cardPop({ p, title, amt, text, cta, act, later, lact, hi }) {
   const c = $('#coach'); if (!c) { act && act(); return; }
@@ -50,22 +52,22 @@ function cardPop({ p, title, amt, text, cta, act, later, lact, hi }) {
 const _showResultC = showResult;
 showResult = function (p, o = {}) {
   if (!o.fresh || p.carded || !p.s) return _showResultC.apply(this, arguments);
-  p.carded = 1; p.tierSeen = cardTier(p.s.total); S.gems += CARD_PRINT; save();
+  p.carded = 1; p.tierSeen = cardTier(p.s.total); const D0 = cwDay(), bonus = (D0.pr || 0) < PRINT_DAY ? CARD_PRINT : 0; D0.pr = (D0.pr || 0) + 1; S.gems += bonus; save();
   const t = CARD_T[p.tierSeen], args = arguments, self = this;
-  cardPop({ p, title: 'Your card is printed!', amt: CARD_PRINT,
-    text: `It’s a <b>${t.n}</b> card. While you vote, it wins votes of its own and pays <b>+${t.pay} coins</b> a win. Touch it up to reach ${CARD_T[Math.min(2, p.tierSeen + 1)].n} and earn more.`,
+  cardPop({ p, title: 'Your card is printed!', amt: bonus,
+    text: `It’s a <b>${t.n}</b> card: <b>×${t.x}</b> coins on every vote it wins (+${t.pay} a win). Touch it up to reach ${CARD_T[Math.min(2, p.tierSeen + 1)].n} for <b>×${CARD_T[Math.min(2, p.tierSeen + 1)].x}</b>.${bonus ? '' : ` You’ve had today’s ${PRINT_DAY} print bonuses, but it still earns.`}`,
     cta: 'See its scores', act: () => { paintGems(); _showResultC.apply(self, args); },
     later: 'Vote and watch it earn', lact: () => { paintGems(); try { closeFlow(); } catch (e) {} openApp && openApp(); go('judge'); renderJudge(); } });
 };
 // cards earn while you vote
 function cardVoteTick() {
-  const D = cwDay(), cards = S.photos.filter(x => x.s && !photoLock(x));
-  if (!cards.length || D.n >= CARD_CAP || Math.random() > .32) return;
+  const D = cwDay(), cards = S.photos.filter(x => x.s && !photoLock(x) && (D.by[x.id] || 0) < CARD_CAP);
+  if (!cards.length || Math.random() > .4) return;
   const p = cards[Math.floor(Math.random() * cards.length)], win = Math.random() < Math.max(.25, Math.min(.85, (p.s.total - 35) / 50));
   if (!win) return;
   const t = CARD_T[cardTier(p.s.total)]; D.n++; D.c += t.pay; D.by[p.id] = (D.by[p.id] || 0) + 1; S.gems += t.pay; save();
   const b = document.createElement('div'); b.className = 'pc-ban'; b.setAttribute('role', 'status');
-  b.innerHTML = `<img src="${p.src}" alt=""><span><b>Your card won a vote · +${t.pay}</b>${gemIcon('')}<small>${t.n} card · ${D.by[p.id]} win${D.by[p.id] === 1 ? '' : 's'} today${D.n >= CARD_CAP ? ' · daily limit reached' : ''}</small></span>`;
+  b.innerHTML = `<img src="${p.src}" alt=""><span><b>Your card won a vote · ${t.x > 1 ? `×${t.x} ` : ''}+${t.pay}</b>${gemIcon('')}<small>${t.n} card · ${D.by[p.id]} of ${CARD_CAP} paid wins today</small></span>`;
   document.body.appendChild(b); setTimeout(() => b.classList.add('on'), 20); setTimeout(() => { b.classList.remove('on'); setTimeout(() => b.remove(), 400); }, 2600);
   setTimeout(paintGems, 300); paintCardStrip();
 }
@@ -73,7 +75,7 @@ function paintCardStrip() {
   const j = $('#judge'); if (!j || !S.photos.length) return; let el = j.querySelector('.pc-strip');
   if (!el) { el = document.createElement('button'); el.className = 'pc-strip'; j.appendChild(el); el.onclick = () => go('studio'); }
   const D = cwDay(), best = S.photos.slice().sort((a, b) => (D.by[b.id] || 0) - (D.by[a.id] || 0) || b.s.total - a.s.total)[0];
-  el.innerHTML = `<img src="${best.src}" alt=""><span><b>Your cards · ${D.n} win${D.n === 1 ? '' : 's'} today</b><small>+${D.c} coins earned${D.n >= CARD_CAP ? ' · limit reached, back tomorrow' : ` · ${CARD_CAP - D.n} more wins can pay today`}</small></span><em>My photos ›</em>`;
+  el.innerHTML = `<img src="${best.src}" alt=""><span><b>Your cards · ${D.n} win${D.n === 1 ? '' : 's'} today</b><small>+${D.c} coins earned · each card pays up to ${CARD_CAP} wins a day · more cards, more coins</small></span><em>My photos ›</em>`;
 }
 const _voteC = vote;
 vote = async function () { const n0 = S.votes; const r = await _voteC.apply(this, arguments); if (S.votes > n0) cardVoteTick(); return r; };
@@ -92,8 +94,8 @@ renderStudio = function () {
       st.classList.remove('tallp');
       st.innerHTML = `${seg('cards')}<div class="pc-cards"><div class="pc-rh"><small>${D.n ? `<b>+${D.c} coins</b> from vote wins today` : 'Your cards earn coins while you vote'}</small></div>
         <div class="pc-grid">${S.photos.map(x => `<button class="pc-pick${x.id === p.id ? ' on' : ''}" data-pcp="${x.id}" aria-label="Touch up card scoring ${x.s.total}">${cardHTML(x, { mini: 1 })}</button>`).join('')}
-        ${S.photos.length < CFG.MAX_PHOTOS ? `<button class="pc-new" id="pcNew"><b>+</b><span>New card</span><small>Upload a photo · +${CARD_PRINT} coins</small></button>` : ''}</div>
-        <p class="pc-next">Tap a card to touch it up. Each vote it wins pays: Bronze +3 · Silver +5 · Gold +8 (Gold also enters challenges).</p></div>`;
+        ${S.photos.length < CFG.MAX_PHOTOS ? `<button class="pc-new" id="pcNew"><b>+</b><span>New card</span><small>Upload a photo${(cwDay().pr || 0) < PRINT_DAY ? ` · +${CARD_PRINT} coins` : ''}</small></button>` : ''}</div>
+        <p class="pc-next">Tap a card to touch it up. Tiers multiply the coins each vote win pays: Bronze ×1 · Silver ×2 · Gold ×3 · Hall of Fame ×4. Each card pays up to ${CARD_CAP} wins a day, so more cards earn more.</p></div>`;
       st.querySelectorAll('[data-pcp]').forEach(b => b.onclick = () => { S.cur = b.dataset.pcp; S.pcView = 'touch'; save(); renderStudio(); st.scrollTop = 0; });
       if ($('#pcNew')) $('#pcNew').onclick = () => pickPhoto(true);
     } else {
@@ -101,11 +103,11 @@ renderStudio = function () {
     }
     st.querySelectorAll('[data-pcv]').forEach(b => b.onclick = () => { S.pcView = b.dataset.pcv; save(); renderStudio(); st.scrollTop = 0; });
     if (S.pcView === 'cards') return r;
-    { const sc = st.querySelector('.scr2'); if (sc) sc.insertAdjacentHTML('beforeend', `<p class="pc-tag ${CARD_T[k].c}"><strong>${CARD_T[k].n} card</strong> · +${CARD_T[k].pay} coins a vote win${nx ? ` · ${nx.at - p.s.total} to ${nx.n}` : ''}</p>`); }
+    { const sc = st.querySelector('.scr2'); if (sc) sc.insertAdjacentHTML('beforeend', `<p class="pc-tag ${CARD_T[k].c}"><strong>${CARD_T[k].n} card ×${CARD_T[k].x}</strong> · +${CARD_T[k].pay} coins a vote win${nx ? ` · ${nx.at - p.s.total} to ${nx.n} ×${nx.x}` : ''}</p>`); }
     if (p.tierSeen == null) { p.tierSeen = k; save(); }
     else if (k > p.tierSeen) { p.tierSeen = k; save(); const t = CARD_T[k];
       const show = (n = 0) => { const c = $('#coach'); if (c && (c.classList.contains('on') || $('#flow').classList.contains('on'))) { if (n < 20) setTimeout(() => show(n + 1), 700); return; }
-        cardPop({ p, title: k === 3 ? 'Hall of Fame!' : `${t.n} card!`, text: k === 3 ? `Your photo scored <b>${p.s.total}</b>. It earns the top rate on every vote it wins. Ready to print your next card?` : `Your card levelled up. It now pays <b>+${t.pay} coins</b> for every vote it wins${k === 2 ? ' and can <b>enter challenges</b>' : ''}.`,
+        cardPop({ p, title: k === 3 ? 'Hall of Fame!' : `${t.n} card!`, text: k === 3 ? `Your photo scored <b>${p.s.total}</b>. It earns ×${t.x} (+${t.pay}) on every vote it wins. Ready to print your next card?` : `Your card levelled up. It now earns <b>×${t.x}</b>: <b>+${t.pay} coins</b> for every vote it wins${k === 2 ? ' and can <b>enter challenges</b>' : ''}.`,
           cta: k === 3 ? 'Print another card' : k === 2 ? 'Enter a challenge' : 'Keep touching it up', act: () => { if (k === 3) pickPhoto(true); else if (k === 2) { try { openComps(p); } catch (e) {} } },
           later: k === 3 ? 'Keep it racing' : k === 2 ? 'Not now' : '', lact: () => {} }); };
       setTimeout(show, SCORE_ANIM_MS + 200); }
