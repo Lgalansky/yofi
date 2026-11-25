@@ -78,6 +78,22 @@ function cmpTourCards() {
   fb.querySelectorAll('.cmp-go').forEach(b => b.onclick = () => rows[+b.dataset.ti].click());
 }
 setInterval(() => { try { document.querySelectorAll('.cmp-cards').forEach(c => c.dataset.sig = ''); cmpTourCards(); } catch (e) {} }, 1000);
+
+// tap audit fixes
+// 1. Crowd Championship: Enter opens its details first; money is only taken on the green Join button
+const _chBuyC = chBuy;
+chBuy = function () {
+  const E = S.ch || {}, cur = chId(), nxt = cur + 1;
+  if (S.geoBlock || (E[cur] && E[cur].score == null) || E[nxt] || (S.cash || 0) < CH_ENTRY) return _chBuyC.apply(this, arguments);
+  const at = new Date(nxt * CH_MS).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), pot = ((document.querySelector('#chRow .tsr2-p') || {}).textContent || '').replace('↑', '').trim();
+  openSheet(`<div class="ug"><h2>🏆 Crowd Championship</h2><p class="sub">Pick the photo the crowd chose, pair after pair. The best scores share the prize pool.</p>
+    <div class="cmp-tc" style="margin:12px 0"><div class="cmp-ft"><span>Starts at ${at}</span><span>${pot ? pot + ' prize pool' : ''}</span></div></div>
+    <button class="btn block pay-cash" id="chJoin">Join for $${CH_ENTRY}</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div></div>`);
+  $('#chJoin').onclick = () => { closeSheet(); _chBuyC(); };
+  document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
+};
+// 2. no "You've got N coins!" pop pushing coin games (coin games live in the coin balance sheet)
+gemNudge = function () { return false; };
 new MutationObserver(() => { try { cmpPaint(); } catch (e) {} }).observe($('#flowBody'), { childList: true });
 '''
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
