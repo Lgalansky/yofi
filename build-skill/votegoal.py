@@ -93,7 +93,7 @@ vgPaint = function () {
   else el.classList.remove('earn');
 };
 const _voteR = vote;
-vote = async function () { const n0 = S.votes; if (!V_BUSY_R) { V_BUSY_R = 1; } const r = await _voteR.apply(this, arguments); V_BUSY_R = 0; if (S.votes > n0) { S.vgTurn = ((S.vgTurn || 0) + 1) % 3; save(); try { vgPaint(); } catch (e) {} } return r; };
+vote = async function () { const n0 = S.votes; if (!V_BUSY_R) { V_BUSY_R = 1; } const r = await _voteR.apply(this, arguments); V_BUSY_R = 0; if (S.votes > n0 && S.votes % 5 === 0) { S.vgTurn = ((S.vgTurn || 0) + 1) % 3; save(); try { vgPaint(); } catch (e) {} } return r; };
 let V_BUSY_R = 0;
 // a photo of yours gets picked: switch the bar to earnings and tick the total up
 const _galPickR = galPick;
@@ -124,7 +124,7 @@ vgPaint = function () {
   _vgPaintA();
 };
 const _voteA = vote;
-vote = async function () { const n0 = S.votes; const r = await _voteA.apply(this, arguments); if (S.votes > n0 && VG_AWAY && VG_AWAY.shown) VG_AWAY = null; return r; };
+vote = async function () { const n0 = S.votes; const r = await _voteA.apply(this, arguments); if (S.votes > n0 && S.votes % 5 === 0 && VG_AWAY && VG_AWAY.shown) VG_AWAY = null; return r; };
 vgAwayCheck(); setTimeout(() => { try { vgPaint(); } catch (e) {} }, 300);
 const _goV = go; go = function (w) { const r = _goV.apply(this, arguments); if (w === 'judge') { try { vgPaint(); } catch (e) {} } return r; };
 setInterval(() => { try { if (S.user) { S.galSeen = Date.now(); save(); } } catch (e) {} }, 60000);

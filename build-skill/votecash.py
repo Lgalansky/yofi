@@ -32,7 +32,8 @@ function vcCard() {
     best && (() => ({ art: '⚡', t: '5-player Showdown', s: `$${SD_FEE} entry · winner takes ${money(sdPrize())}`, cta: 'View showdown', go: () => openShowdown() })),
     best && (() => ({ art: '🤝', t: 'Challenge a friend', s: `$1 each · winner takes ${money(fcPrize({ cur: 'cash', amt: 1 }))}`, cta: 'Pick a friend', go: () => fcNew() }))
   ].filter(Boolean);
-  S.vcTurn = ((S.vcTurn || 0) + 1) % G.length; save();
+  // changes every 5 votes, not every pair
+  S.vcTurn = Math.floor(((S.votes || 0) + (S.vcOff || 0)) / 5) % G.length;
   return G[S.vcTurn]();
 }
 function vcPaint() {
