@@ -157,6 +157,10 @@ html.yg .vcs i{background:rgba(255,255,255,.2)}html.yg .vcs i.on{background:#FF2
 #vgGoal .vg-cta,#vgGoal.ready .vg-cta{background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important}
 #judge .vc-cta{background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important}
 #judge .eye{display:none!important}
+/* whole cards feel like buttons: top = coins (subtle gold), bottom = cash (subtle green) */
+html body #vgGoal.vg,html body #vgGoal.vg.earn,html body #vgGoal.vg.ready{background:linear-gradient(180deg,#FFF9EA,#FBEFD2)!important;box-shadow:inset 0 0 0 1.5px #E3C376,0 6px 14px -9px rgba(160,110,10,.55),inset 0 1px 0 #fff!important}
+html body #judge .vc{background:linear-gradient(180deg,#F4FAF5,#E3F1E7)!important;box-shadow:inset 0 0 0 1.5px #A9D3B4,0 6px 14px -9px rgba(33,120,74,.5),inset 0 1px 0 #fff!important}
+#vgGoal.vg:active,#judge .vc:active{transform:scale(.985)}
 /* one line of text per notification */
 #vgGoal .vg-tx small,#judge .vc-tx small{display:block!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp:unset!important;font-size:.84rem!important;margin-top:3px;color:#4E433C!important}
 #vgGoal .vg-tx b,#judge .vc-tx b{display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:2!important;white-space:normal;overflow:hidden;font-size:1rem!important;line-height:1.18!important}
