@@ -759,7 +759,8 @@ python3 build-skill/votegoal.py sp-i2.html sp-v.html
 python3 build-skill/votecash.py sp-v.html sp-c.html
 python3 build-skill/noenergy.py sp-c.html sp-n.html
 python3 build-skill/samples.py sp-n.html sp-s.html
-python3 build-skill/compete.py sp-s.html skill-preview.html
+python3 build-skill/compete.py sp-s.html sp-x.html
+python3 build-skill/nowow.py sp-x.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -775,3 +776,5 @@ python3 build-skill/compete.py sp-s.html skill-preview.html
 `samples.py` swaps the six Pets sample photos for the owner's dog photos in `samples/pets/` (600x800; dog-only, collar tag blurred).
 
 `compete.py` merges the Compete and Tournaments buttons into one Compete menu with Challenges | Tournaments tabs.
+
+`nowow.py` drops Wow factor: the overall score is the average of the four touch-up scores; existing photos are rescored once on load.
