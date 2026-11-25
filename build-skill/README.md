@@ -743,3 +743,11 @@ python3 build-skill/winpop.py                                  # on "push live":
 ## Upload read fix (Skill)
 
 `uploadread.py`: chosen photos are read as data URLs instead of `blob:` links, which some hosts (the Claude app viewer) block, so photos picked from the library never appeared. Run after `uploadhint.py`, same arguments.
+
+## Galleries (Skill preview)
+
+`galleries.py` adds Gallery and Improve tabs to Touch-ups: a room of 3 frames per category (Pets → Travel → Nature → Family → Garden → Baking → Home), room tier set by its lowest photo (Gold 70, Diamond 80, Platinum 90), the next room opens at Gold, and hanging photos earn 2 coins × their rate when voters pick them. It also renames the photo levels to Gold / Diamond / Platinum / Masterpiece. Build the preview from the live `index.html`:
+
+```bash
+python3 build-skill/galleries.py index.html skill-preview.html
+```
