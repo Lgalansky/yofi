@@ -21,19 +21,19 @@ function vcStreak() {
 }
 function vcCard() {
   const fr = S.fr && (S.fr.ch || []).find(c => c.st === 'yours');
-  if (fr) return { img: fr.theirSrc, t: `@${fr.f} challenged you`, s: `${stakeTxt(fr.stake)} each · winner takes ${prizeTxt(fr.stake)}`, cta: 'View matchup', go: () => fcAccept(fr) };
+  if (fr) return { img: fr.theirSrc, t: `@${fr.f} challenged you`, s: `${stakeTxt(fr.stake)} each · winner takes ${prizeTxt(fr.stake)}`, cta: 'View', go: () => fcAccept(fr) };
   // every cash game takes a turn; games that need a 70+ photo are skipped until you have one
   const F = fighters(), best = F[0], T = tSlots()[0], nm = best ? (GAL.PATH.includes(best.cat) ? alName(best) : 'your photo') : '';
   // real-money games only (coin games live in the coin balance sheet); head-to-head nudges come round most often
-  const h2h = best && (() => { const rv = battleRival(best.cat || 'any'); return { img: rv.src, t: `A rival challenged ${nm}`, s: `Head-to-head · $1 entry · win $${(2 * (1 - KING_FEE)).toFixed(2)}`, cta: 'View matchup', go: () => openCashBattle(1, null, best) }; });
+  const h2h = best && (() => { const rv = battleRival(best.cat || 'any'); return { img: rv.src, t: `${nm} vs a rival`, s: `Head-to-head · $1 entry · win $${(2 * (1 - KING_FEE)).toFixed(2)}`, cta: 'View', go: () => openCashBattle(1, null, best) }; });
   const G = [
     h2h,
-    best && (() => { const cat = best.cat || 'any', K = kingOf(cat); return { img: K.src, t: `Beat the ${catLabel(cat)} champion`, s: `$1 entry · ${money(K.bounty)} pot`, cta: 'View matchup', go: () => openKing(cat) }; }),
-    () => ({ art: '🏆', t: 'Quick tournament', when: T.at, s: `$1 entry · US$${T.gtd} prize`, cta: 'View tournament', go: () => openTourney() }),
+    best && (() => { const cat = best.cat || 'any', K = kingOf(cat); return { img: K.src, t: `Beat the ${catLabel(cat)} champion`, s: `$1 entry · ${money(K.bounty)} pot`, cta: 'View', go: () => openKing(cat) }; }),
+    () => ({ art: '🏆', t: 'Quick tournament', when: T.at, s: `$1 entry · US$${T.gtd} prize`, cta: 'View', go: () => openTourney() }),
     h2h,
-    () => ({ art: '🎯', t: 'Quick Sprint', s: '1 v 1 · $2 entry · win $3.20', cta: 'View sprint', go: () => { window.__qsReal = 1; sprEnter(); } }),
-    best && (() => ({ art: '⚡', t: '5-player Showdown', s: `$${SD_FEE} entry · winner takes ${money(sdPrize())}`, cta: 'View showdown', go: () => openShowdown() })),
-    best && (() => ({ art: '🤝', t: 'Challenge a friend', s: `$1 each · winner takes ${money(fcPrize({ cur: 'cash', amt: 1 }))}`, cta: 'Pick a friend', go: () => fcNew() }))
+    () => ({ art: '🎯', t: 'Quick Sprint', s: '1 v 1 · $2 entry · win $3.20', cta: 'View', go: () => { window.__qsReal = 1; sprEnter(); } }),
+    best && (() => ({ art: '⚡', t: '5-player Showdown', s: `$${SD_FEE} entry · winner takes ${money(sdPrize())}`, cta: 'View', go: () => openShowdown() })),
+    best && (() => ({ art: '🤝', t: 'Challenge a friend', s: `$1 each · winner takes ${money(fcPrize({ cur: 'cash', amt: 1 }))}`, cta: 'Challenge', go: () => fcNew() }))
   ].filter(Boolean);
   // changes every 3 votes
   S.vcTurn = Math.floor(((S.votes || 0) + (S.vcOff || 0)) / 3) % G.length;
@@ -76,6 +76,23 @@ new MutationObserver(() => { clearTimeout(vcGreen.t); vcGreen.t = setTimeout(() 
 
 const _voteNoPop = vote;
 vote = async function () { if ((S.since || 0) >= CFG.BATTLE_EVERY - 1) S.since = 0; return _voteNoPop.apply(this, arguments); };
+
+// top notification styled like the bottom card: square photo, short bold title, one-word button
+const _vgGoalS = vgGoal;
+vgGoal = function () {
+  const g = _vgGoalS(); if (!g) return g; const nm = g.p ? alName(g.p) : '';
+  if (g.earn != null) { g.t = g.t.replace('Your photos earned', 'Earned').replace(' while you were away', ' while away'); g.cta = 'View'; }
+  else if (/^Add|^Start/.test(g.t)) { g.t = g.t.replace(' to earn more', '').replace(/^Start your (.+) collection$/, 'Start $1 collection'); g.cta = 'Add'; }
+  else if (g.ready) { g.t = `${nm}’s upgrade is ready`; g.cta = 'Improve'; }
+  else if (g.p) { const nb = [70, 80, 90].find(b => g.p.s.total < b); g.t = nb ? `Get ${nm} to ${nb}` : `Improve ${nm}`; g.cta = 'Improve'; }
+  return g;
+};
+const _vgPaintS = vgPaint;
+vgPaint = function () {
+  _vgPaintS(); const el = $('#vgGoal'); if (!el) return; const g = vgGoal(); if (!g) return;
+  let c = el.querySelector('.vg-cta'); if (!c) { el.insertAdjacentHTML('beforeend', '<span class="vg-cta"></span>'); c = el.querySelector('.vg-cta'); }
+  c.textContent = g.cta || 'View';
+};
 const _renderJudgeC2 = renderJudge;
 renderJudge = function () { const r = _renderJudgeC2.apply(this, arguments); try { vcPaint(); } catch (e) {} return r; };
 setInterval(() => { document.querySelectorAll('.vc [data-tat]').forEach(e => { e.textContent = tLeft(+e.dataset.tat); }); }, 1000);
@@ -126,6 +143,12 @@ html.yg .vcs i{background:rgba(255,255,255,.2)}html.yg .vcs i.on{background:#FF2
 #vgGoal .vg-tx b,#judge .vc-tx b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #vgGoal .vg-tx small,#judge .vc-tx small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #judge .vc-tx b{font-size:.95rem}
+/* top + bottom cards share one look */
+#vgGoal.vg img,#vgGoal .vg-ic{border-radius:12px!important;box-shadow:none!important}
+#vgGoal .vg-tx b,#judge .vc-tx b{font:800 1.08rem/1.2 Fraunces,serif!important;color:#2D2521!important;-webkit-line-clamp:2}
+#vgGoal .vg-ci{display:none!important}
+#vgGoal .vg-cta,#judge .vc-cta{flex:none;width:auto!important;max-width:none!important;white-space:nowrap;padding:10px 18px!important;border-radius:12px!important;background:#2D4E86!important;color:#fff!important;font:800 .95rem "Nunito Sans",sans-serif!important}
+#vgGoal.ready .vg-cta{background:#2D4E86!important}
 /* one line of text per notification */
 #vgGoal .vg-tx small,#judge .vc-tx small{display:none!important}
 #vgGoal .vg-tx b,#judge .vc-tx b{font-size:1.05rem!important;line-height:1.25}
