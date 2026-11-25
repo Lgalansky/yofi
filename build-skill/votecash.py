@@ -22,12 +22,18 @@ function vcStreak() {
 function vcCard() {
   const fr = S.fr && (S.fr.ch || []).find(c => c.st === 'yours');
   if (fr) return { img: fr.theirSrc, t: `@${fr.f} challenged you`, s: `${stakeTxt(fr.stake)} each · winner takes ${prizeTxt(fr.stake)}`, cta: 'View matchup', go: () => fcAccept(fr) };
-  S.vcTurn = (S.vcTurn || 0) + 1;
-  const F = fighters(), best = F[0];
-  if (best && S.vcTurn % 2) { const cat = best.cat || 'any', K = kingOf(cat), nm = GAL.PATH.includes(best.cat) ? alName(best) : 'your photo';
-    return { img: K.src, t: `Beat the ${catLabel(cat)} champion`, s: `$1 entry · ${money(K.bounty)} pot`, cta: 'View matchup', go: () => openKing(cat), champ: 1 }; }
-  const t = tSlots()[0];
-  return { art: 1, t: 'Quick tournament', when: t.at, s: `$1 entry · US$${t.gtd} prize`, cta: 'View tournament', go: () => openTourney() };
+  // every cash game takes a turn; games that need a 70+ photo are skipped until you have one
+  const F = fighters(), best = F[0], T = tSlots()[0], nm = best ? (GAL.PATH.includes(best.cat) ? alName(best) : 'your photo') : '';
+  const G = [
+    best && (() => { const cat = best.cat || 'any', K = kingOf(cat); return { img: K.src, t: `Beat the ${catLabel(cat)} champion`, s: `$1 entry · ${money(K.bounty)} pot`, cta: 'View matchup', go: () => openKing(cat) }; }),
+    () => ({ art: '🏆', t: 'Quick tournament', when: T.at, s: `$1 entry · US$${T.gtd} prize`, cta: 'View tournament', go: () => openTourney() }),
+    () => ({ art: '🎯', t: 'Quick Sprint', s: '1 v 1 · $2 entry · win $3.20', cta: 'View sprint', go: () => { window.__qsReal = 1; sprEnter(); } }),
+    best && (() => ({ img: best.src, t: `Head-to-head with ${nm}`, s: `$1 entry · win $${(2 * (1 - CASH_FEE)).toFixed(2)}`, cta: 'View matchup', go: () => openCashBattle(1, null, best) })),
+    best && (() => ({ art: '⚡', t: '5-player Showdown', s: `$${SD_FEE} entry · winner takes ${money(sdPrize())}`, cta: 'View showdown', go: () => openShowdown() })),
+    best && (() => ({ art: '🤝', t: 'Challenge a friend', s: `$1 each · winner takes ${money(fcPrize({ cur: 'cash', amt: 1 }))}`, cta: 'Pick a friend', go: () => fcNew() }))
+  ].filter(Boolean);
+  S.vcTurn = ((S.vcTurn || 0) + 1) % G.length; save();
+  return G[S.vcTurn]();
 }
 function vcPaint() {
   const j = $('#judge'), card = j && j.querySelector('#jcard'); if (!card) return;
@@ -36,7 +42,7 @@ function vcPaint() {
   j.querySelectorAll('.vc, .vc-nxu').forEach(e => e.remove());
   const c = vcCard(); if (!c) return;
   const el = document.createElement('button'); el.className = 'vc';
-  el.innerHTML = `${c.art ? `<span class="vc-art" aria-hidden="true">🏆</span>` : `<img src="${c.img}" alt="">`}<span class="vc-tx"><b>${esc(c.t)}</b><small>${c.when ? `🕒 <span data-tat="${c.when}">${tLeft(c.when)}</span> · ` : ''}${esc(c.s)}</small></span><span class="vc-cta">${c.cta}</span>`;
+  el.innerHTML = `${c.art ? `<span class="vc-art" aria-hidden="true">${c.art}</span>` : `<img src="${c.img}" alt="">`}<span class="vc-tx"><b>${esc(c.t)}</b><small>${c.when ? `🕒 <span data-tat="${c.when}">${tLeft(c.when)}</span> · ` : ''}${esc(c.s)}</small></span><span class="vc-cta">${c.cta}</span>`;
   el.onclick = c.go; card.insertAdjacentElement('afterend', el);
   const nu = h && h.querySelector('.nxu'); if (nu) nu.remove();
   const n = typeof nextUp === 'function' && nextUp(); if (n) el.insertAdjacentHTML('afterend', `<p class="vc-nxu">${n.k === 'tour' ? '🏆 Tournament' : n.k === 'cash' ? '🏅 Head-to-head' : '🟡 Practice challenge'} ${n.left === 1 ? 'after this vote' : `in <b>${n.left}</b> votes`}</p>`);
