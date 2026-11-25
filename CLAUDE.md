@@ -8,9 +8,12 @@ There are two versions of Yofi. Before making any change, ask the user which one
 | Project | Git branch | Live link | Preview link |
 |---|---|---|---|
 | **Yofi - Skill** (no real-money chance features) | `main` | https://claude.ai/artifact/ETeWdfSqr3e5VUckSpkLS6 | https://claude.ai/artifact/VgCzvvjqSPanuTC7wh91ET ("Yofi - Skill (Preview)") |
+| **Yofi - Skill 2** (new prototype: Vote · Gallery · Compete) | `skill-2` | https://claude.ai/artifact/XrccYa895cyW9KT8LZxNCD | same link |
 | **Yofi - Real Money**, now called **PhotoPicks** (hourly photo Finals with real-money picks) | `real-money` | https://claude.ai/artifact/L5ef589M7kCz3uTuPAUAQe | same link |
 
-Each version keeps its own saved player data (`yofi.proto.v1` for Skill, `yofi.real.v1` for Real Money).
+Each version keeps its own saved player data (`yofi.proto.v1` for Skill, `yofi.real.v1` for Real Money, `yofi.skill2.v1` for Skill 2).
+
+Skill 2 is built from `build-skill2/app.src.html` by `python3 build-skill2/build.py` (photos come from `main`). Publish it from a copy of index.html, never from the path used for the Skill live link.
 
 The Skill preview is now one app with two looks: ages 18 to 24 get the original dark Yofi, 25+ get the Fall Fair look. It is built by the scripts in `build-skill/` on `main` (see its README). Make Skill changes there and rebuild. The Canada 50+ version is parked and no longer maintained.
 
