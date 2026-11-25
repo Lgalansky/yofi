@@ -30,13 +30,13 @@ $('#segGallery').onclick = () => cmpOpen(CMP_TAB === 'tour' ? 'tour' : 'ch');
 $('#segCompete').onclick = () => cmpOpen('tour');
 const _closeFlowC = closeFlow; closeFlow = function () { const r = _closeFlowC.apply(this, arguments); if (CMP_TAB === 'tour') CMP_TAB = 'ch'; return r; };
 
-// "Use your coins": Gallery (touch-ups) first, then Compete (games); no coin-for-ticket swap
+// "Use your coins": Touch-ups first, then Compete (games); no coin-for-ticket swap
 useGems = function () {
   const I = gemIdeas(), isTU = x => /touch up|enhance|improve/i.test(x.t), gal = I.filter(isTU), cmp = I.filter(x => !isTU(x));
   const row = x => { const i = I.indexOf(x); return `<button class="ug-r" data-ug="${i}"><span class="ug-i">${x.ic}</span><span class="ug-t"><b>${x.t}</b><small>${x.d}</small></span><em class="ug-c${S.gems < x.cost ? ' need' : ''}">${x.cost} 🟡</em></button>`; };
   openSheet(`<div class="ug"><h2>Use your coins</h2><p class="sub">You have <b>${Math.floor(S.gems).toLocaleString()} 🟡</b>. Here’s what they can do for you right now.</p>
-    ${I.length ? `${gal.length ? `<h3 class="ug-h">🖼 Gallery</h3>${gal.map(row).join('')}` : ''}${cmp.length ? `<h3 class="ug-h">🏅 Compete</h3>${cmp.map(row).join('')}` : ''}` : `<p class="ug-none">Upload a photo and your coins can start working for you.</p>`}
-    <button class="link ug-buy" id="ugBuy">Get more coins</button></div>`);
+    ${I.length ? `${gal.length ? `<h3 class="ug-h">✨ Touch-ups</h3>${gal.map(row).join('')}` : ''}${cmp.length ? `<h3 class="ug-h">🏅 Compete</h3>${cmp.map(row).join('')}` : ''}` : `<p class="ug-none">Upload a photo and your coins can start working for you.</p>`}
+    <button class="link ug-buy" id="ugBuy">💵 Get cash</button></div>`);
   document.querySelectorAll('#sheetBody [data-ug]').forEach(b => b.onclick = () => { const x = I[+b.dataset.ug];
     if (isTU(x)) { const ph = S.photos.find(q => q.src === x.src) || S.photos.filter(q => q.s && lowestOpen(q)).sort((a, b) => a.s.total - b.s.total)[0] || cur(); closeSheet(); if (ph) galImprove(ph.id); go('studio'); return; }
     if (S.gems < x.cost) { closeSheet(); runOut('gems', `You need ${x.cost - S.gems} more coins`, null, x.cost - S.gems); return; } x.go(); });
