@@ -13,14 +13,15 @@ if 'function vgGoal(' in s: sys.exit('vote goal already applied')
 
 JS = r'''
 /* ---------- vote goal bar ---------- */
+const vgToGallery = c => { if (!S.user) { galAdd(c); return; } S.galCat = c; AL_OPEN = null; TU_GAL = true; save(); go('studio'); };
 function vgGoal() {
-  if (!S.user || !S.photos.length) return { t: 'Add your first photo', s: 'Your photos earn coins every time a voter picks them', act: () => galAdd('pets') };
+  if (!S.user || !S.photos.length) return { t: 'Add your first photo', s: 'Your photos earn coins every time a voter picks them', act: () => vgToGallery('pets') };
   const open = GAL.PATH.filter(galOpen);
   const c = S.galCat && galOpen(S.galCat) && galRoom(S.galCat).tier !== 'Platinum' ? S.galCat : (open.find(x => galRoom(x).tier !== 'Platinum') || null);
   if (!c) return null;
   const r = galRoom(c), nm = galNm(c);
-  if (!r.ph.length) return { t: `Add your first ${nm.toLowerCase()} photo`, s: `Start your ${nm} collection: 3 photos, earning on every vote`, act: () => galAdd(c) };
-  if (!r.full) { const n = 3 - r.ph.length; return { p: r.ph[0], t: `Add ${n} more ${nm} photo${n === 1 ? '' : 's'}`, s: `${r.ph.length} of 3 · complete the collection to earn more`, act: () => galAdd(c) }; }
+  if (!r.ph.length) return { t: `Add your first ${nm.toLowerCase()} photo`, s: `Start your ${nm} collection: 3 photos, earning on every vote`, act: () => vgToGallery(c) };
+  if (!r.full) { const n = 3 - r.ph.length; return { p: r.ph[0], t: `Add ${n} more ${nm} photo${n === 1 ? '' : 's'}`, s: `${r.ph.length} of 3 · complete the collection to earn more`, act: () => vgToGallery(c) }; }
   const cand = r.ph.filter(x => x.s.total < r.next && lowestOpen(x) && !photoLock(x)).sort((a, b) => b.s.total - a.s.total);
   const p = cand[0]; if (!p) return null;
   const name = alName(p), cost = fixCost(p), have = Math.floor(S.gems), card = () => { AL_OPEN = p.id; TU_GAL = true; save(); go('studio'); };
