@@ -743,17 +743,3 @@ python3 build-skill/winpop.py                                  # on "push live":
 ## Upload read fix (Skill)
 
 `uploadread.py`: chosen photos are read as data URLs instead of `blob:` links, which some hosts (the Claude app viewer) block, so photos picked from the library never appeared. Run after `uploadhint.py`, same arguments.
-
-## Photo cards (Skill)
-
-`cards.py`: every photo is a card showing its five scores and a tier frame (Bronze, Silver 60+, Gold 70+ = enters challenges, Hall of Fame 85+). Uploading prints the card (+50 coins reveal). While you vote, your cards win votes and multiply coins by tier (×1 / ×2 / ×3, ×4 Hall of Fame; 3 coins a win base; each card pays up to 10 wins a day; print bonus +50 on the first 3 cards a day; up to 12 cards) with a banner and a strip on Vote. The Touch-ups tab is renamed "My photos": the touch-up screen shows the card's tier and points to the next tier, a "My cards" row sits below, and a tier-up reveal plays after a touch-up. Also fixes the overall score freezing mid count-up. Run after `uploadread.py` (on a built file, run it on index.html).
-
-## One pop at a time (Skill)
-
-`popqueue.py` (run after `cards.py`): reward and result pops queue and open one after another; nudge pops (daily rewards, streak, gifts, coins nudge, deposit offer and others) are dropped if another pop showed in the last 90 s and wait while a full screen is open; lucky/mystery box pops open at most once every 12 votes (small coin burst in between); card win banners show one at a time and never over a pop; the coins nudge now points to touching up your best card.
-
-## Cleaner Vote screen (Skill)
-
-`voteclean.py` (run after `popqueue.py`): Vote keeps one rank line at the top ("Your card #9 in today's top cards", tap for the top 10, ranked by today's vote wins; rivals simulated in the prototype), the two photos with small dots to the next box, and one card line (wins, coins, tier, Touch up). The touch-up goal card, ticket strip, wins bar and "Your eye" line are hidden.
-
-Skill preview build order on top of the live `index.html`: `popqueue.py` → `voteclean.py` (live already has `winpop`, `uploadhint`, `uploadread`, `cards`).
