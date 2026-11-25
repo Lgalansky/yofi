@@ -126,11 +126,34 @@ function nameAsk() {
   $('#nmGo').onclick = go; i.onkeydown = e => { if (e.key === 'Enter') go(); };
 }
 setInterval(() => { try { nameAsk(); } catch (e) {} }, 800);
+
+// Clubs: show the challenges you can play first; invite comes after (not straight after creating a club)
+const CLUB_SEED = 1; // starter pot per category you can play, so it never shows $0.00
+let CW_SKIP_INV = false;
+const _crewCreateC = crewCreate; crewCreate = function () { CW_SKIP_INV = true; const r = _crewCreateC.apply(this, arguments); setTimeout(() => { CW_SKIP_INV = false; }, 4000); return r; };
+const _crewInviteC = crewInvite; crewInvite = function () { if (CW_SKIP_INV) { CW_SKIP_INV = false; try { closeSheet(); } catch (e) {} renderGallery(); return; } return _crewInviteC.apply(this, arguments); };
+function clubTidy() {
+  const g = $('#gallery'), grid = g && g.querySelector('.tcg'); if (!grid || !g.querySelector('.cw-mem')) return;
+  const c = crewCur && crewCur(); if (!c) return; c.pot = c.pot || {}; c.seed = c.seed || {}; let ch = false;
+  CATS8.forEach(k => { if (S.photos.some(p => fitsTheme(p, k)) && !(c.pot[k] > 0)) { c.pot[k] = CLUB_SEED; c.seed[k] = 1; ch = true; } });
+  if (ch) save();
+  const cards = [...grid.children], CK = CATS8;
+  cards.forEach((el, i) => { const k = CK[i], can = !el.querySelector('.bcc-go.up'), pot = el.querySelector('.bcc-pot'), lab = el.querySelector('.bcc-l');
+    if (can) { if (pot) pot.textContent = money(c.pot[k] || 0); if (lab && c.seed[k] && (c.pot[k] || 0) <= CLUB_SEED) lab.textContent = 'Starter pot'; el.classList.add('cw-can'); }
+    else { if (pot) pot.style.display = 'none'; if (lab) lab.textContent = 'Add a photo to play'; el.classList.add('cw-cant'); } });
+  cards.sort((a, b) => (b.classList.contains('cw-can') ? 1 : 0) - (a.classList.contains('cw-can') ? 1 : 0)).forEach(el => grid.appendChild(el));
+  const mem = g.querySelector('.cw-mem'), hdr = g.querySelector('.cw-play');
+  if (!hdr) { grid.insertAdjacentHTML('beforebegin', `<h3 class="cw-play">Your challenges</h3>`); g.querySelector('.tcg').insertAdjacentElement('afterend', mem); mem.classList.add('cw-mem-end'); }
+}
+const _renderGalleryCW = renderGallery;
+renderGallery = function () { const r = _renderGalleryCW.apply(this, arguments); try { clubTidy(); } catch (e) {} return r; };
 new MutationObserver(() => { try { cmpPaint(); } catch (e) {} }).observe($('#flowBody'), { childList: true });
 '''
 i = s.index("  shownGems = S.gems;\n})();\n})();"); s = s[:i] + JS + s[i:]
 CSS = r'''
 /* one Compete menu */
+.cw-play{margin:4px 16px 8px;font:900 1.2rem Fraunces,serif;color:#5A1A22}.cw-mem-end{margin-top:14px!important}.cw-cant{opacity:.72}
+html body #gallery .cw-can .bcc-go{background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important}
 .st-line{margin:12px 14px 8px!important}#flowBody .actions .st-line{margin:0 0 10px!important}
 .nm-ask{text-align:center}.nm-ph{width:120px;height:160px;object-fit:cover;border-radius:14px;box-shadow:0 0 0 3px #E0A82E;margin:4px auto 10px;display:block}
 .nm-ask input{width:100%;box-sizing:border-box;margin:6px 0 12px;padding:12px 14px;border-radius:14px;border:1.5px solid #CDBFA8;font:800 1.2rem Fraunces,serif;text-align:center;background:#FFFDF9;color:#2D2521}
