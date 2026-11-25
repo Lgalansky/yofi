@@ -63,10 +63,10 @@ function im2Render() {
   if (IM2PID !== p.id) { IM2PID = p.id; IM2SEL = null; }
   const v = p.s.total, t = im2Tier(v), x = galMult(v), opts = im2Opts(p), sel = IM2SEL && opts.find(o => o.k === IM2SEL && !o.max);
   const to = sel ? im2Proj(p, sel) : v, t1 = im2Tier(to), x1 = galMult(to), lk = photoLock(p), inGal = GAL.PATH.includes(p.cat);
-  const band = sel ? `<b>${x1 > x ? `<s>${x}×</s> → ${x1}×` : `${x}×`} coins per vote</b><small>${esc(sel.t)} · ${v} → ${to}${t1 !== t && t1 ? ` · ${t1}` : ''}</small>`
-    : `<b>${x}× coins per vote</b><small>Tap a touch-up to preview it free</small>`;
+  const nb = [70, 80, 90].find(b => v < b), nmx = galNextMult(v);
+  const strip = sel ? `<b>${t1 || 'Untiered'} card:</b> ${x1}× · ${GAL.BASE * x1} coins per vote win${x1 > x ? `<small>Up from ${x}×</small>` : ''}` : `<b>${t || 'Untiered'} card:</b> ${x}× · ${GAL.BASE * x} coins per vote win${nmx ? `<small>Reach ${nmx.at} for ${nmx.x}× · tap a touch-up to preview it free</small>` : ''}`;
   const look = im2Look(sel && sel.k);
-  const tile = o => `<button class="im2-ed${sel && sel.k === o.k ? ' on' : ''}" data-i2="${o.k}" ${o.max || lk ? 'disabled' : ''}><b>${o.t}<i>${o.max ? '✓' : '+' + o.gain}</i></b><small>${o.max ? 'Done' : `→ ${im2Proj(p, o)} · ${o.price} coins`}</small></button>`;
+  const tile = o => `<button class="im2-row${sel && sel.k === o.k ? ' on' : ''}${o.prem ? ' prem' : ''}" data-i2="${o.k}" ${o.max || lk ? 'disabled' : ''}><span>${o.prem ? '✨ ' : ''}${o.t}</span><b>${o.max ? '✓' : sel && sel.k === o.k ? `→ ${im2Proj(p, o)}` : o.prem ? '+' + o.gain : p.s[o.part]}</b></button>`;
   let proj = '';
   if (sel && inGal) { const r = galRoom(p.cat); if (r.full && r.ph.includes(p)) { const mins = r.ph.map(q => q.id === p.id ? to : q.s.total), tr = galTier(Math.min(...mins));
     if (galRank(tr) > galRank(r.tier)) { const i = GAL.PATH.indexOf(p.cat), nx = GAL.PATH[i + 1]; proj = `<b>Completes ${tr} ${esc(galNm(p.cat))}</b> · all three at ${tr === 'Gold' ? 70 : tr === 'Diamond' ? 80 : 90}+${tr === 'Gold' && nx && !galOpen(nx) ? ` · unlocks ${esc(galNm(nx))}` : ''}`; } } }
@@ -80,16 +80,16 @@ function im2Render() {
     : short ? `<button class="im2-apply" id="i2Vote">Need ${short} more coins · Vote to earn</button>`
     : `<button class="im2-apply" id="i2Go">${esc(sel.v)}<span>${sel.price} <i class="im2-coin"></i></span></button>`;
   st.innerHTML = `<div class="gl im2">${galSeg('imp')}<button class="im2-back" id="i2Back">‹ ${inGal ? `${esc(galNm(p.cat))} collection` : 'My gallery'}</button>
-    <div class="im2-card t-${(t || 'plain').toLowerCase()}"><div class="im2-in"><div class="im2-hd"><b>${esc(alName(p))}</b><span class="im2-sc">${t ? `<i class="a2-tb">${t.toUpperCase()}</i>` : ''}<b id="i2Score">${v}</b></span></div>
-      <div class="im2-ph"><img id="i2Img" src="${p.src}" alt="" style="filter:${look.f}"><i class="im2-vig" style="opacity:${look.vig}"></i><i class="im2-warm" style="opacity:${look.warm}"></i>${sel ? '<button class="im2-hold" id="i2Hold">Hold to compare</button>' : ''}</div>
-      <div class="im2-band">${band}</div></div></div>
-    <div class="im2-eds">${opts.filter(o => !o.prem).map(tile).join('')}</div>
-    ${v >= IM2.PREM_AT ? `<p class="im2-ph2">Premium filters</p><div class="im2-eds im2-prem">${opts.filter(o => o.prem).map(tile).join('')}</div>` : `<p class="im2-lock">🔒 <span><b>Premium filters</b> (Suncast, Velvet, Nocturne) unlock at ${IM2.PREM_AT}</span></p>`}
-    ${proj ? `<p class="im2-proj">${proj}</p>` : ''}${btn}</div>`;
+    <h2 class="im2-t">Improve ${esc(alName(p))}</h2>
+    <div class="im2-grid"><div class="im2-ph t-${(t || 'plain').toLowerCase()}"><img id="i2Img" src="${p.src}" alt="" style="filter:${look.f}"><i class="im2-vig" style="opacity:${look.vig}"></i><i class="im2-warm" style="opacity:${look.warm}"></i><button class="im2-hold" id="i2Hold">Hold to compare</button></div>
+      <div class="im2-side"><small class="im2-lb">Overall score</small><div class="im2-sr"><b id="i2Score">${v}</b>${nb ? `<span class="im2-goal">Goal <b>${nb}</b></span>` : '<span class="im2-goal">Platinum</span>'}</div>
+        <div class="im2-rows">${opts.filter(o => !o.prem).map(tile).join('')}${opts.filter(o => o.prem).map(tile).join('')}</div></div></div>
+    <p class="im2-strip">${strip}${proj ? `<small>${proj}</small>` : ''}</p>
+    ${v < IM2.PREM_AT ? `<p class="im2-lock">🔒 Premium filters (Suncast, Velvet, Nocturne) unlock at ${IM2.PREM_AT}</p>` : ''}${btn}</div>`;
   galWire(st);
   $('#i2Back').onclick = () => { if (inGal) S.galCat = p.cat; AL_OPEN = null; TU_GAL = true; save(); renderStudio(); st.scrollTop = 0; };
   st.querySelectorAll('[data-i2]').forEach(b => b.onclick = () => { IM2SEL = IM2SEL === b.dataset.i2 ? null : b.dataset.i2; im2Render(); });
-  const h = $('#i2Hold'); if (h) { const img = $('#i2Img'), vg = st.querySelector('.im2-vig'), wm = st.querySelector('.im2-warm');
+  const h = $('#i2Hold'); if (h && sel) { const img = $('#i2Img'), vg = st.querySelector('.im2-vig'), wm = st.querySelector('.im2-warm');
     const show = raw => { img.style.filter = raw ? 'none' : look.f; vg.style.opacity = raw ? 0 : look.vig; wm.style.opacity = raw ? 0 : look.warm; h.textContent = raw ? 'Before' : 'Hold to compare'; };
     h.addEventListener('pointerdown', e => { e.preventDefault(); show(true); }); ['pointerup', 'pointerleave', 'pointercancel'].forEach(k => h.addEventListener(k, () => show(false))); }
   if ($('#i2Vote')) $('#i2Vote').onclick = () => go('judge');
@@ -147,6 +147,29 @@ CSS = r'''
 .im2-apply[disabled]{opacity:.55;cursor:default}#i2Vote{justify-content:center;padding:6px 18px;font-size:1.02rem}
 .im2-coin{display:inline-block;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF3A8,#E0A82E 60%,#A8761A)}
 html.yg .im2-proj,html.yg .im2-lock{color:#2D2521}html.yg .im2-ed{background:#FFFDF9!important}html.yg .im2-prem .im2-ed{background:linear-gradient(180deg,#FFF8E6,#FBEFD2)!important}html.yg .im2-ed.on{background:#EEF2FA!important}.im2-ed b,.im2-ed small{opacity:1}html.yg .im2-ed b{color:#2D2521!important}html.yg .im2-ed small{color:#6F6258!important}
+/* Improve: photo left, score and touch-ups right */
+.im2-t{text-align:center;margin:0 16px 12px;font:900 clamp(1.8rem,8.4vw,2.3rem)/1.05 Fraunces,serif}
+.im2-grid{display:grid;grid-template-columns:47% 1fr;gap:12px;align-items:start;margin:0 14px}
+.im2 .im2-ph{position:relative;height:auto;aspect-ratio:3/4.2;border-radius:20px;overflow:hidden;box-shadow:0 10px 20px -12px rgba(0,0,0,.6)}
+.im2 .im2-ph.t-gold{box-shadow:0 0 0 3px #E0A82E,0 10px 20px -12px rgba(0,0,0,.6)}.im2 .im2-ph.t-diamond{box-shadow:0 0 0 3px #8FB6EE,0 0 14px rgba(160,200,255,.7)}.im2 .im2-ph.t-platinum{box-shadow:0 0 0 3px #B9C1CC,0 10px 20px -12px rgba(0,0,0,.6)}
+.im2-lb{display:block;font:800 .74rem "Nunito Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#4E433C}
+.im2-sr{display:flex;align-items:center;gap:10px;margin:2px 0 8px}.im2-sr>b{font:900 3.2rem/1 Fraunces,serif;color:#2E6B42}
+.im2-goal{padding:5px 12px;border-radius:999px;background:#FBEFD2;box-shadow:inset 0 0 0 1.5px #E0B860;font:800 .78rem "Nunito Sans",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#8A5A0A;white-space:nowrap}.im2-goal b{font:900 1.3rem Fraunces,serif;letter-spacing:0;color:#8A5A0A}
+.im2-rows{display:flex;flex-direction:column;gap:7px}
+.im2-row{display:flex;align-items:center;justify-content:space-between;gap:6px;border:0;border-radius:12px;padding:8px 10px;background:#FFFDF9;box-shadow:inset 0 0 0 1.5px #E2D5BE;font:700 .86rem "Nunito Sans",sans-serif;color:#2D2521!important;cursor:pointer;text-align:left}
+.im2-row span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.im2-row b{flex:none;font:900 1rem Fraunces,serif;color:#2D2521}
+.im2-row.on{background:#EEF2FA!important;box-shadow:inset 0 0 0 2px #2D4E86;color:#24406F!important}.im2-row.on b{color:#2E6B42}
+.im2-row.prem{background:linear-gradient(180deg,#FFF8E6,#FBEFD2)!important;box-shadow:inset 0 0 0 1.5px #D9B467}.im2-row.prem.on{box-shadow:inset 0 0 0 2px #2D4E86}
+.im2-row[disabled]{opacity:.55;cursor:default}
+.im2-strip{margin:14px 14px 8px;padding:10px 14px;border-radius:14px;background:#FBEFD2;text-align:center;font-size:1rem;color:#2D2521}.im2-strip b{color:#6A3500}.im2-strip s{opacity:.55}
+.im2-strip small{display:block;margin-top:3px;font-size:.82rem;color:#4E433C}.im2-strip small b{color:#2D2521}
+.im2 .im2-lock{margin:0 14px 8px;font-size:.8rem;justify-content:center;background:none;padding:0}
+html.yg .im2-strip{color:#2D2521}html.yg .im2-row{background:#FFFDF9!important}html.yg .im2-lb{color:#D8CCF0}
+.im2-t{display:block;position:static;margin:4px 16px 14px!important;padding:0}
+.im2-side{min-width:0}.im2 .im2-row{font-size:.8rem;padding:8px 8px;gap:4px}.im2 .im2-row b{font-size:.95rem}.im2-rows .im2-row{width:100%;box-sizing:border-box}
+.im2 .im2-hold{white-space:nowrap;font-size:.78rem!important;padding:5px 11px!important}
+.im2 .im2-apply{background:#2D4E86!important;color:#fff!important;opacity:1}.im2 .im2-apply[disabled]{opacity:.55}
+html.yg .im2 .im2-lock{color:#D8CCF0}
 @media (prefers-reduced-motion:reduce){.im2-card{animation:none!important}.im2-ph img,.im2-vig,.im2-warm{transition:none}}
 '''
 i = s.rindex('</style>'); s = s[:i] + CSS + s[i:]
