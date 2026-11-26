@@ -54,7 +54,17 @@ paintSdRoom = function (r) { const out = _paintSdRoomP.apply(this, arguments);
   return out; };
 // Crowd Championship: your run is done; standings so far (results when the hour ends)
 const chN = id => chPlayers(id, id * CH_MS), chW = n => Math.max(1, Math.ceil(n * .2));
-const chPrize = (rank, n) => { const W = chW(n); if (rank > W) return 0; const sum = W * (W + 1) / 2; return Math.max(1, +(chPool(n) * (W - rank + 1) / sum).toFixed(2)); };
+const CH_PZ = {};
+function chPrize(rank, n) { const W = chW(n); if (rank < 1 || rank > W) return 0;
+  if (!CH_PZ[n]) { const pool = chPool(n), raw = [];
+    for (let k = 1; k <= W; k++) { let v;
+      if (W <= 10) v = k === 1 ? pool * .4 : pool * .6 * (W - k + 1) / ((W - 1) * W / 2);
+      else if (k === 1) v = pool * .10; else if (k <= 10) v = pool * .30 * (11 - k) / 45;
+      else { const m = W - 10, w = q => 1 + (W - q) / m; let sum = 0; for (let q = 11; q <= W; q++) sum += w(q); v = pool * .60 * w(k) / sum; }
+      raw.push(+v.toFixed(2)); }
+    CH_PZ[n] = raw.sort((a, b) => b - a); } // always highest first, so a better place never pays less
+  return CH_PZ[n][rank - 1]; }
+window.chPrize = chPrize;
 const CH_NM = ['kai.shoots', 'nina.paws', 'ivy.frames', 'theo.snaps', 'sam_wild', 'luna_loves', 'marco_eats', 'dogdad'];
 function chRowsAt(id, rank, score, n) { const rows = [], W = chW(n);
   const add = (k, me) => { if (k < 1 || k > n || rows.some(r => r.rank === k)) return; const sc = me ? score : k === 1 ? CH_N : Math.max(0, Math.min(CH_N, score + (k > rank ? -1 : 0)));
@@ -67,8 +77,8 @@ chDone = function (id, right, ms) { const r = _chDoneP.apply(this, arguments);
   try { const F = chRows(id, right), at = new Date((id + 1) * CH_MS).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), inP = F.me <= F.paid, pool = chPool(F.N);
     gsResultSheet({ ic: '👥', nm: 'Crowd Championship', sub: `Your run is in · results at ${at}`, won: false,
       head: `${right}/15 right`, headSub: `You’re ${ORD(F.me)} of ${F.N} so far`,
-      box: { k: 'Prize pool', b: `$${pool.toLocaleString()}`, s: inP ? `You’re in the paid places · pays at ${at}` : `Top 20% get paid · pays at ${at}` },
-      mid: gsList(F.rows, F.N, F.paid), go: { t: 'Keep voting', free: 1, fn: () => { closeSheet(); go('judge'); } }, link: { t: 'How it works', fn: () => toast('Everyone plays the same photo pairs. When the hour ends, the top 20% of scores share the pot.') } }); } catch (e) {}
+      box: { k: 'Prize pool', b: `$${pool.toLocaleString()}`, s: inP ? `In the paid places · about ${money(chPrize(F.me, F.N))}` : `Top 20% get paid · 1st wins ${money(chPrize(1, F.N))}` },
+      mid: gsList(F.rows, F.N, F.paid), go: { t: 'Keep voting', free: 1, fn: () => { closeSheet(); go('judge'); } }, link: { t: 'How it works', fn: () => toast('Everyone plays the same photo pairs. When the hour ends, 1st wins 10% of the pot, places 2–10 share 30% and the rest of the top 20% share 60%.') } }); } catch (e) {}
   return r; };
 // Tournament (knockout of 16): result when it ends
 function tourResultSheet() { const T = S.tour; if (!T) return; const R0 = tResult(T), ch = tChamp(T), N = T.n || 16, won = R0.k === 'win', fin = R0.k === 'final';
@@ -115,5 +125,8 @@ CSS = '''
 html body #sheetBody .gr-free{background:#2D4E86!important;color:#fff!important}
 .gr .gs-rg .c3-ring{width:80%}
 '''
+a = "if (rank <= W) { const sum = W * (W + 1) / 2; prize = Math.max(1, +(pool * (W - rank + 1) / sum).toFixed(2)); }"
+assert s.count(a) == 1, 'payout'
+s = s.replace(a, 'prize = window.chPrize ? window.chPrize(rank, n) : 0;')
 i = s.rfind('</style>'); s = s[:i] + CSS + s[i:]
 open(p, 'w', encoding='utf-8').write(s); print('places ok')

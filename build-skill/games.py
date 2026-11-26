@@ -93,8 +93,8 @@ function tourSheet(kind) { const T = tSlots(), t = kind === 'big' ? T.find(x => 
     onGo: () => { closeSheet(); cmpOpen('tour'); setTimeout(() => { const c = [...document.querySelectorAll('#flowBody .cmp-tc')].find(x => (x.querySelector('.cmp-tt b') || {}).textContent === nm); const b = c && c.querySelector('.cmp-go'); if (b) b.click(); setTimeout(() => { const j = $('#tkGo'); if (j) j.click(); }, 600); }, 450); },
     link: 'How it works', onLink: gsHow('Enter one photo. When it starts, voters judge every entry and the top photos share the prize pool.') }); }
 // Crowd Championship (your eye)
-function crowdSheet() { const l = typeof jgLv === 'function' && jgLv(), a = l ? jgAcc() : 0, nxt = chId() + 1, at = new Date(nxt * CH_MS).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), pool = chPool(700 + hsh('ch' + nxt) % 900);
-  gameSheet({ ic: '👥', nm: 'Crowd Championship', what: 'Pick the crowd’s favourites, pair after pair · top 20% share', pl: 'Prize pool', prize: `$${pool.toLocaleString()}`, chip: `⏱ Starts at ${at}`,
+function crowdSheet() { const l = typeof jgLv === 'function' && jgLv(), a = l ? jgAcc() : 0, nxt = chId() + 1, at = new Date(nxt * CH_MS).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), pool = chPool(chPlayers(nxt, nxt * CH_MS));
+  gameSheet({ ic: '👥', nm: 'Crowd Championship', what: `Pick the crowd’s favourites · 1st wins about $${Math.round(pool * .1).toLocaleString()}`, pl: 'Prize pool', prize: `$${pool.toLocaleString()}`, chip: `⏱ Starts at ${at}`,
     left: gsTile('👥', 'Every judge'), lcap: 'The field<small>Top 20% share</small>', right: gsRing(l ? a : 50, l ? a + '%' : '?', 'me'), rcap: `You<small>${l ? l.n : 'New judge'}</small>`,
     fixed: `$${CH_ENTRY}`, fixedSub: 'one entry', go: `Play · $${CH_ENTRY}`, onGo: () => { closeSheet(); chBuy(); setTimeout(() => { const b = $('#chJoin'); if (b) b.click(); }, 60); },
     link: 'How it works', onLink: gsHow('At the start time you get a run of photo pairs. Pick the one the crowd chose. The top 20% of scores share the pot.') }); }
