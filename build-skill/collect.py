@@ -10,15 +10,15 @@ s = open(src, encoding='utf-8').read()
 
 JS = r'''
 // ---- coin jar on the top Vote card ----
-let JAR_HOLD = 0, JAR_SHOWN = null;
+let JAR_HOLD = 0, JAR_SKIP = 0, JAR_SHOWN = null;
 const _gemExplosionJ = gemExplosion;
-gemExplosion = function () { if (Date.now() - JAR_HOLD < 1500) return; return _gemExplosionJ.apply(this, arguments); };
+gemExplosion = function (n) { if (JAR_SKIP && n === JAR_SKIP && Date.now() - JAR_HOLD < 1500) { JAR_SKIP = 0; return; } return _gemExplosionJ.apply(this, arguments); }; // only the pick that went into the jar is silenced
 function jarAdd(n, p) { if (!(n > 0)) return; S.vgJar = (S.vgJar || 0) + n; S.vgJarN = (S.vgJarN || 0) + 1;
   if (p) { if (S.vgJarP && S.vgJarP !== p.id) S.vgJarMix = 1; S.vgJarP = p.id; } S.gems -= n; save(); }
 const _galPickJ = galPick;
 galPick = function () { const g0 = S.gems, before = new Map(S.photos.map(x => [x.id, x.gl || 0])); JAR_HOLD = Date.now();
   _galPickJ.apply(this, arguments);
-  const d = S.gems - g0; if (d > 0) { const p = S.photos.find(x => (x.gl || 0) > (before.get(x.id) || 0)); jarAdd(d, p); try { paintGems(); vgPaint(); } catch (e) {} } };
+  const d = S.gems - g0; JAR_SKIP = d > 0 ? d : 0; if (d > 0) { const p = S.photos.find(x => (x.gl || 0) > (before.get(x.id) || 0)); jarAdd(d, p); try { paintGems(); vgPaint(); } catch (e) {} } };
 // coins earned while away go into the jar too
 if (typeof VG_AWAY !== 'undefined' && VG_AWAY && !VG_AWAY.shown) { const a = VG_AWAY; VG_AWAY = null; S.vgJar = (S.vgJar || 0) + a.tot; S.vgJarAway = 1; S.gems -= a.tot; if (a.top) S.vgJarP = a.top.id; save(); }
 const jarPhoto = () => S.photos.find(x => x.id === S.vgJarP) || S.photos.filter(x => x.s).sort((a, b) => (b.gl || 0) - (a.gl || 0))[0];
