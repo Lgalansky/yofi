@@ -767,7 +767,8 @@ python3 build-skill/jarfull.py sp-j.html sp-f.html
 python3 build-skill/judge.py sp-f.html sp-u.html
 python3 build-skill/jackpot.py sp-u.html sp-p.html
 python3 build-skill/polish.py sp-p.html sp-m.html
-python3 build-skill/map.py sp-m.html skill-preview.html
+python3 build-skill/map.py sp-m.html sp-q.html
+python3 build-skill/potsheet.py sp-q.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -790,7 +791,7 @@ python3 build-skill/map.py sp-m.html skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `map.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `potsheet.py`, then copy the result to `index.html` with the title "Yofi - Skill".
 
 `collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve. It also sets the one status line on every photo screen to say what a voter's pick pays ("Earns you 2 🟡 per vote · 🥇 Gold earns 4", "🥇 Gold photos earn you 4 🟡 per vote"), and gallery sleeves show coins per vote instead of "2×". Each level pays one rate (unranked 2, Gold 4, Diamond 8, Platinum 12 coins per vote). Gallery photos show their level icon by the score, a gold "+N today" pill on the photo and "Earns N per vote" underneath. Reaching a new level shows a celebration with the new rate ("Milo is Gold! now earns you 4 🟡 per vote").
 
@@ -803,3 +804,5 @@ The live `index.html` now includes the galleries steps. Their input is the earli
 `polish.py` fixes the wrong-vote overlay (now a light card with navy text) and the score screen after an upload: all bar rows line up, rows and the button use the four touch-up names from Improve, and the button is gold because it spends coins.
 
 `map.py` adds the collection map: a full-screen road of the 7 collections (finished stops gold with a tick, the current one bobbing under a "You are here" pin, locked ones grey; each shows its 3 slots and its 🎟️ reward). Stops pop in, the road marches, clouds drift. It shows the first time Gallery opens (S.mapSeen), from the collection badge ("🗺 1/3 filled"), and from the collection-complete pop ("See Travel on the map"), where the next stop unlocks with confetti. One button: "Fill Travel · 2 to go".
+
+`potsheet.py` rebuilds the daily jackpot challenge screen: "🐾 Pet jackpot", the pot counting up with "Pays in 5h 35m", three star slots ("3 more ⭐ to share" / "You're in · about $9.30"), the ribbon holder vs your photo, the $1/$2/$5 chips, one green "Challenge · $2" button with "Win: +2 ⭐ and take the ribbon", and a "How it works" link. Under 70 the button becomes "✨ Touch up Coast to 70" (opens Improve). Rival photos never use one of your own photos.
