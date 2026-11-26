@@ -16,6 +16,10 @@ def rep(a, b):
 # the old one-off "while you were away" credit is replaced by the jar filling over time
 rep("function vgAwayCheck(now = Date.now()) {\n  if (!S.user) return;", "function vgAwayCheck(now = Date.now()) {\n  return;")
 
+# the app always opens on Vote (it used to open signed-in players on Compete)
+rep("paintGems(false); if (S.user) openBattleTab(); }", "paintGems(false); if (S.user) { GV.tab = 'battle'; go('judge'); } }")
+rep("renderStudio(); paintGems(false); openBattleTab(); }", "renderStudio(); paintGems(false); GV.tab = 'battle'; go('judge'); }")
+
 JS = r'''
 // ---- 1. a jar that fills over time and holds 8 hours ----
 const JAR_HRS = 8;
