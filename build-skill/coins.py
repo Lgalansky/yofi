@@ -4,7 +4,7 @@
 # Quick Sprint · coins and Head-to-head · coins. One is marked Suggested (Quick Sprint once your judge
 # score is 70%+, else Head-to-head). A green line points to the cash versions.
 # The moment: the app's usual celebration pop, "You've got 180 coins" with "Use my coins", shown only at
-# key milestones (coins first cover a touch-up, then Head-to-head · coins, then Quick Sprint · coins),
+# high milestones only (250, 500, 1,000, 2,500 coins; the top card already nudges touch-ups),
 # each once, at most once per visit, and only on Vote when nothing else is open.
 # usage: python3 build-skill/coins.py in.html out.html
 import sys
@@ -37,10 +37,10 @@ useGems = function () { const g = Math.floor(S.gems || 0), p = coinTU(), best = 
 let COIN_POPPED = false;
 function coinMoment() { if (COIN_POPPED || !S.user || $('#panes').dataset.at !== 'judge') return;
   if ($('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on')) return;
-  const g = Math.floor(S.gems || 0), p = coinTU(), steps = [p ? fixCost(p) : null, CC_COIN, QS_COIN].filter(Boolean).sort((a, b) => a - b);
+  const g = Math.floor(S.gems || 0), p = coinTU(), steps = [QS_COIN, 500, 1000, 2500]; // high levels only: the top card already nudges touch-ups
   const hit = steps.filter(v => g >= v).pop(); if (!hit || (S.coinPop || 0) >= hit) return;
   COIN_POPPED = true; S.coinPop = hit; save();
-  const what = p && g >= fixCost(p) ? `Touch up ${esc(alName(p))}${[70, 80, 90].find(b => p.s.total < b) ? ` to ${galBand([70, 80, 90].find(b => p.s.total < b))}` : ''}` : g >= QS_COIN ? 'practise Quick Sprint' : 'practise a Head-to-head';
+  const what = 'practise Quick Sprint for coins';
   celebrate({ src: (p || fighters()[0] || S.photos[0] || {}).src || '', score: '🟡', title: `You’ve got ${g.toLocaleString()} coins`, text: `Earned from your votes and your photos. ${what.charAt(0).toUpperCase() + what.slice(1)}, or see everything they can do.`,
     cta: 'Use my coins', onCta: () => useGems(), later: 'Keep voting' }); }
 setInterval(() => { try { coinMoment(); } catch (e) {} }, 2500);
