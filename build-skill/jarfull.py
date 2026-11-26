@@ -54,6 +54,14 @@ vgPaint = function () { _vgPaintF.apply(this, arguments); const el = $('#vgGoal'
   el.classList.toggle('jar-full', !!(g && g.full));
   const tx = el.querySelector('.vg-tx'); if (tx) { let m = tx.querySelector('.jar-m'); if (g && g.jar) { if (!m) { tx.insertAdjacentHTML('beforeend', '<span class="jar-m"><i></i></span>'); m = tx.querySelector('.jar-m'); } m.firstChild.style.width = Math.min(100, Math.round((S.vgJar || 0) / jarCap() * 100)) + '%'; } else if (m) m.remove(); } };
 
+
+// the jar on the Vote tab: coins waiting, or FULL
+function jarTab() { const b = $('#segJudge'); if (!b) return; let t = b.querySelector('.jar-tb'); const n = S.user ? (S.vgJar || 0) : 0;
+  if (!n) { if (t) t.remove(); return; }
+  if (!t) { b.style.position = 'relative'; b.insertAdjacentHTML('beforeend', '<i class="jar-tb" aria-hidden="true"></i>'); t = b.querySelector('.jar-tb'); }
+  const full = jarFull(); t.classList.toggle('full', full); t.textContent = full ? 'FULL' : `+${n}`;
+  b.setAttribute('aria-label', full ? 'Vote. Your coin jar is full' : `Vote. ${n} coins in your jar`); }
+setInterval(() => { try { jarTab(); } catch (e) {} }, 1000);
 // ---- 2. completing a collection: a big moment that pays a free $1 cash challenge ----
 const _galCeleF = galCele;
 galCele = function (ev) { const key = ev.c + '_' + ev.tier; S.galTix = S.galTix || {}; const fresh = !S.galTix[key];
@@ -89,6 +97,12 @@ CSS = '''
 html body #vgGoal.jar-full{animation:jarFullG 1.4s ease-in-out infinite}
 @keyframes jarFullG{0%,100%{box-shadow:inset 0 0 0 2px #E0A82E,0 0 0 0 rgba(224,168,46,.5)}50%{box-shadow:inset 0 0 0 2px #E0A82E,0 0 0 7px rgba(224,168,46,.18)}}
 html body #vgGoal.jar-full .vg-tx b{color:#8A3B00!important}
+/* jar badge on the Vote tab */
+.jar-tb{position:absolute;top:-4px;left:50%;margin-left:12px;display:inline-flex;align-items:center;gap:2px;padding:2px 7px 2px 6px;border-radius:99px;font:900 .72rem/1.2 "Nunito Sans",sans-serif;font-style:normal;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;box-shadow:0 2px 5px rgba(0,0,0,.25);pointer-events:none;white-space:nowrap}
+html body #segJudge .jar-tb svg{width:11px!important;height:11px!important;margin:0!important}
+.jar-tb.full{background:linear-gradient(180deg,#FFB547,#E07A1E);color:#fff;letter-spacing:.06em;animation:jarTb 1.2s ease-in-out infinite}
+@keyframes jarTb{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.jar-tb.full{animation:none}}
 /* collection reward ticket */
 .gl-tix{display:flex;align-items:center;gap:12px;margin:12px auto 4px;max-width:300px;padding:12px 14px;border-radius:16px;text-align:left;background:linear-gradient(180deg,#E9F7EE,#CFEBD9);box-shadow:inset 0 0 0 2px #7FBE91,0 8px 18px -10px rgba(33,120,74,.6);animation:tixIn .7s .5s cubic-bezier(.2,1.4,.4,1) both;position:relative}
 .gl-tix::before,.gl-tix::after{content:"";position:absolute;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:#FFF8EA}.gl-tix::before{left:-7px}.gl-tix::after{right:-7px}
