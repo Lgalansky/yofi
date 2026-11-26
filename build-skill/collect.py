@@ -50,6 +50,15 @@ vgPaint = function () { _vgPaintJ.apply(this, arguments);
     const tick = t => { if (!n.isConnected) return; const k = Math.min(1, (t - t0) / 800); n.textContent = '+' + Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); };
     requestAnimationFrame(tick); }
 };
+// ---- one clear earnings line on every photo screen: what a voter's pick pays this photo ----
+stLine = function (v, from) {
+  const t = galTier(v), pay = GAL.BASE * galMult(v), ci = gemIcon('gem st-ci');
+  if (from != null) { const t0 = galTier(from), p0 = GAL.BASE * galMult(from);
+    if (p0 !== pay) return `${t && t !== t0 ? `${TIER_IC[t]} ${t} · each` : 'Each'} voter pick ${p0} → <b>${pay}</b>${ci}`; }
+  const nx = galNextMult(v), nb = !t ? 70 : null;
+  return `${t ? `${TIER_IC[t]} ${t} · each` : 'Each'} voter pick earns <b>${pay}</b>${ci}${nb ? ` · 🥇 ${nb}+ earns ${GAL.BASE * galMult(nb)}` : ''}`;
+};
+
 setTimeout(() => { try { vgPaint(); } catch (e) {} }, 350);
 '''
 anchor = "  shownGems = S.gems;\n})();\n})();"
@@ -66,5 +75,8 @@ html body #vgGoal .vg-cta.jar-cta{display:inline-flex;align-items:center;gap:5px
 @keyframes jarBump{0%{transform:scale(1)}35%{transform:scale(1.03)}100%{transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){html body #vgGoal .vg-cta.jar-cta,#vgGoal .vg-cta.jar-cta::after,#vgGoal.jar-pop{animation:none}}
 '''
+a = '<b>${x}×</b> per vote · <em>+${d} today</em>'
+assert s.count(a) == 1; s = s.replace(a, '<b>${GAL.BASE * x}</b>${gemIcon("gem st-ci")} a pick · <em>+${d} today</em>')
+CSS += '.st-ci{width:1em;height:1em;vertical-align:-.15em;margin-left:2px}\n'
 i = s.rfind('</style>'); s = s[:i] + CSS + s[i:]
 open(p, 'w', encoding='utf-8').write(s); print('collect ok')
