@@ -59,6 +59,17 @@ stLine = function (v, from) {
   return `${t ? `${TIER_IC[t]} ${t} · each` : 'Each'} voter pick earns <b>${pay}</b>${ci}${nb ? ` · 🥇 ${nb}+ earns ${GAL.BASE * galMult(nb)}` : ''}`;
 };
 
+// ---- score on its own full-width line, earnings line right under it (Improve and Before and after) ----
+const _im2RenderL = im2Render;
+im2Render = function () { const r = _im2RenderL.apply(this, arguments);
+  try { const g = document.querySelector('#studio .im2 .im2-grid'), sr = document.querySelector('#studio .im2 .im2-sr'), lb = document.querySelector('#studio .im2 .im2-lb'), strip = document.querySelector('#studio .im2 .im2-strip');
+    if (g && sr && !document.querySelector('#studio .im2-scb')) { const bar = document.createElement('div'); bar.className = 'im2-scb'; bar.innerHTML = '<small class="im2-scl">Score now</small>'; bar.appendChild(sr); if (lb) lb.remove(); g.before(bar); if (strip) bar.after(strip); } } catch (e) {}
+  return r; };
+const _renderVariantsL = renderVariants;
+renderVariants = function () { const r = _renderVariantsL.apply(this, arguments);
+  try { const fb = $('#flowBody'), sc = fb.querySelector('.ba-sc'), ls = [...fb.querySelectorAll('.st-line')]; if (sc && ls.length) { const keep = ls.pop(); ls.forEach(x => x.remove()); sc.after(keep); keep.classList.add('st-top'); } } catch (e) {}
+  return r; };
+
 setTimeout(() => { try { vgPaint(); } catch (e) {} }, 350);
 '''
 anchor = "  shownGems = S.gems;\n})();\n})();"
@@ -78,5 +89,16 @@ html body #vgGoal .vg-cta.jar-cta{display:inline-flex;align-items:center;gap:5px
 a = '<b>${x}×</b> per vote · <em>+${d} today</em>'
 assert s.count(a) == 1; s = s.replace(a, '<b>${GAL.BASE * x}</b>${gemIcon("gem st-ci")} a pick · <em>+${d} today</em>')
 CSS += '.st-ci{width:1em;height:1em;vertical-align:-.15em;margin-left:2px}\n'
+CSS += """
+/* Improve: score bar like Before and after, earnings line under it */
+html body .im2 .im2-scb{display:flex;align-items:center;gap:10px;margin:0 14px 8px;padding:8px 14px;border-radius:16px;background:#FFFDF9;box-shadow:inset 0 0 0 1.5px #E2D5BE,0 6px 14px -10px rgba(60,40,20,.45)}
+.im2-scl{font:800 .74rem "Nunito Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#4E433C}
+html body .im2 .im2-scb .im2-sr{flex:1;display:flex;align-items:center;justify-content:space-between;margin:0}
+html body .im2 .im2-scb #i2Score{font:900 2.4rem/1 Fraunces,serif!important;color:#2E6B42!important}
+html body .im2 .im2-scb + .im2-strip{margin:0 14px 12px!important}
+html body .im2 .im2-side{justify-content:center}
+html body #flowBody .st-line.st-top{margin:-4px 0 12px!important}
+html body .im2 .im2-scb ~ .im2-grid{margin-bottom:14px!important}
+"""
 i = s.rfind('</style>'); s = s[:i] + CSS + s[i:]
 open(p, 'w', encoding='utf-8').write(s); print('collect ok')
