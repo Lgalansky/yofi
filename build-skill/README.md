@@ -761,7 +761,8 @@ python3 build-skill/noenergy.py sp-c.html sp-n.html
 python3 build-skill/samples.py sp-n.html sp-s.html
 python3 build-skill/compete.py sp-s.html sp-x.html
 python3 build-skill/nowow.py sp-x.html sp-w.html
-python3 build-skill/stakes.py sp-w.html skill-preview.html
+python3 build-skill/stakes.py sp-w.html sp-k.html
+python3 build-skill/collect.py sp-k.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -784,4 +785,6 @@ python3 build-skill/stakes.py sp-w.html skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `stakes.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `collect.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+
+`collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve.
