@@ -29,10 +29,11 @@ function c2Photo() { const L = lgS(), F = fighters(), best = F[0], cat = best ? 
   const one = (inc ? `<button class="c3-t c3-h2h c3-inc" data-c2r="inc"><span class="c3-pair"><img src="${inc.theirSrc}" alt=""><i>VS</i>${(fcPhotos(inc.f, inc.theme)[0] || best) ? `<img src="${(fcPhotos(inc.f, inc.theme)[0] || best).src}" alt="">` : '<img alt="">'}</span><span class="c3-lb"><b>🤝 @${esc(inc.f)} challenged you</b><em>${stakeTxt(inc.stake)} each</em></span></button>` : '')
     + (best ? `<button class="c3-t c3-h2h" data-c2r="h2h"><span class="c3-pair"><img src="${rv}" alt=""><i>VS</i><img src="${best.src}" alt=""></span><span class="c3-lb"><b>Head-to-head</b><em>$1 → $${(2 * (1 - KING_FEE)).toFixed(2)}</em></span></button>`
     : `<button class="c3-need" data-c2r="need">✨ Get a photo to ${CFG.QUALIFY} to play 1 v 1 <b>›</b></button>`);
+  const tile = (id, ic, nm, win, when, price) => `<button class="c3-tt" data-c2r="${id}"><span class="c3-ti">${ic}</span><b>${nm}</b><small>${win}</small><i>${when}</i><em>${price}</em></button>`;
   const ban = (id, ic, nm, chip, price, cls) => cls ? `<button class="c3-b ${cls}" data-c2r="${id}"><span class="c3-bi">${ic}</span><span class="c3-bt"><b>${nm}</b><i>${chip}</i></span><em>${price}</em></button>` : `<button class="c3-b c3-sm" data-c2r="${id}"><span class="c3-r1"><span class="c3-bi">${ic}</span><b>${nm}</b></span><span class="c3-r2"><i>${chip}</i><em>${price}</em></span></button>`;
   return `<h3 class="c2-h">💰 Daily jackpots <small>⏱ ${dayLeft()}</small></h3><div class="c3-jps">${jp}</div>
     <h3 class="c2-h">⚔️ 1 v 1 now</h3><div class="c3-one">${one}</div>
-    <h3 class="c2-h">🏆 Tournaments</h3><div class="c3-bs">${ban('sd', '⚡', 'Showdown', `5 players · win ${money(sdPrize())}`, '$' + SD_FEE, 'wide')}${big ? ban('bigcup', '🏆', `Big Cup<small>Win $${big.gtd}</small>`, `⏱ ${tLeft(big.at)}`, '$1') : ''}${spr ? ban('sprint', '⏱', `Sprint<small>Win $${spr.gtd}</small>`, spr.now ? '⚡ On join' : `⏱ ${tLeft(spr.at)}`, '$1') : ''}</div>
+    <h3 class="c2-h">🏆 Tournaments</h3><div class="c3-tl">${tile('sd', '⚡', 'Showdown', `Win ${money(sdPrize()).replace('.00', '')}`, 'Minutes', '$' + SD_FEE)}${spr ? tile('sprint', '⏱', 'Sprint', `Win $${spr.gtd}`, spr.now ? 'On join' : tLeft(spr.at), '$1') : ''}${big ? tile('bigcup', '🏆', 'Big Cup', `Win $${big.gtd}`, tLeft(big.at), '$1') : ''}</div>
     <button class="c3-club" data-c2r="clubs">👥 <b>Clubs</b> · weekly pots with friends <span>›</span></button>`; }
 function c2Eye() { const l = typeof jgLv === 'function' ? jgLv() : null, a = l ? jgAcc() : 0, nx = l && jgNext(), rvA = l ? Math.max(50, a - 1 - hsh(dayKey() + 'qs') % 4) : 0, pr = l ? Math.round(jgProg() * 100) : Math.round(jgN() / JG_MIN * 100);
   const ring = (v, lab, cls) => `<span class="c3-ring ${cls || ''}" style="--p:${v}"><b>${lab}</b></span>`;
@@ -85,6 +86,13 @@ html body .c2 .c2-h{display:flex;justify-content:space-between;align-items:basel
 .c2-vote{display:block;margin:12px auto 0;font:800 .9rem "Nunito Sans"}
 '''
 CSS += '''
+/* tournaments: three equal tiles */
+.c3-tl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 14px}
+html body #gallery .c3-tt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;border:0;border-radius:18px;background:linear-gradient(160deg,#2B4372,#14213D)!important;color:#fff!important;cursor:pointer;font-family:inherit;box-shadow:0 8px 16px -10px rgba(20,33,61,.8)}
+.c3-ti{font-size:1.6rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}.c3-tt b{font:900 1rem Fraunces,serif;color:#fff}.c3-tt small{font:800 .76rem "Nunito Sans";color:#F3D27A}
+html body #gallery .c3-tt i{font:800 .7rem "Nunito Sans";font-style:normal;color:#2D2521!important;background:#FFF3D6;padding:1px 8px;border-radius:99px;white-space:nowrap}
+.c3-tt em{font-style:normal;font:900 .85rem "Nunito Sans";padding:5px 12px;border-radius:10px;background:linear-gradient(180deg,#2E9A5C,#21784A);color:#fff;margin-top:2px}
+
 html body #gallery .c3-b,html body #gallery .c3-eye{background:linear-gradient(160deg,#2B4372,#14213D)!important;color:#fff!important;border:0!important}
 html body #gallery .c3-b *,html body #gallery .c3-eye .c3-et b{color:#fff}html body #gallery .c3-bt i{color:#2D2521!important}html body #gallery .c3-et em{color:#E6EDF8!important}html body #gallery .c3-et small{color:#C9D6EE!important}
 html body #gallery .c3-b{display:flex!important;width:auto!important;padding:12px!important;min-width:0}
