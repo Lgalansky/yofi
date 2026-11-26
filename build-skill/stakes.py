@@ -29,6 +29,17 @@ rep("Win <b>+1 star</b>. Lose and you keep your stars.", "Win <b>1 ⭐ per $1</b
 # your stars on the front of each challenge photo
 rep('alt="" loading="lazy"></button>', 'alt="" loading="lazy">${y ? `<em class="bcc-ys">⭐ ${y}<small>your stars</small></em>` : \'\'}</button>')
 
+# the 70% is shared by stars, not equally: 3+ stars to qualify, then each star is one share
+# (demo: the other qualifiers hold about 6 stars each)
+rep("return y < LG_SHARE ? 0 : +(L.jp[k] * (1 - LG_KING) / lgQn(k) +", "return y < LG_SHARE ? 0 : +(L.jp[k] * (1 - LG_KING) * y / (lgQn(k) * 6 + y) +")
+rep("Everyone with <b>3+ stars</b> share the other <b>70%</b> equally.", "With <b>3+ stars</b> you share the other <b>70%</b> by stars: more stars, bigger share.")
+s = s.replace("🏆 Most stars wins 30% · 3+ stars share 70%</span>", "🏆 Most stars wins 30% · 3+ stars share 70% by stars</span>")
+rep("Everyone with 3+ stars shares the other 70% equally.", "With 3+ stars you share the other 70% by stars: more stars, bigger share.")
+rep("<span>70% shared equally by players with ${LG_SHARE}+ ${ST}.<br>", "<span>70% shared by ${ST} among players with ${LG_SHARE}+.<br>")
+rep("${need} win${need === 1 ? '' : 's'} to qualify", "${need} more ⭐ to qualify")
+rep("Win ${LG_SHARE} to qualify.", "Get ${LG_SHARE} ⭐ to qualify.")
+rep("⭐ ${LG_SHARE}+ stars share <b>70%</b> equally", "⭐ ${LG_SHARE}+ stars share <b>70%</b> by stars")
+
 JS = r'''
 // stakes: $1 / $2 / $5, one star per $1 on a win
 const LG_STAKES = [1, 2, 5];

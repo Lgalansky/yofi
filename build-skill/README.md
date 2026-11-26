@@ -780,7 +780,7 @@ python3 build-skill/stakes.py sp-w.html skill-preview.html
 
 `nowow.py` drops Wow factor: the overall score is the average of the four touch-up scores; existing photos are rescored once on load.
 
-`stakes.py` lets players pick $1, $2 or $5 per daily photo challenge; a cash win earns 1 star per $1 (rematch doubles), 80% of the stake goes into the pot, and your stars for each category show on the front of its challenge photo.
+`stakes.py` lets players pick $1, $2 or $5 per daily photo challenge; a cash win earns 1 star per $1 (rematch doubles), 80% of the stake goes into the pot, and your stars for each category show on the front of its challenge photo. Players with 3+ stars share the 70% in proportion to their stars.
 
 ## Live (galleries build)
 
