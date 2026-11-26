@@ -132,6 +132,8 @@ for a, b in [
   ("to earn ${nx.x}× per vote`, s: `Earning ${galMult(p.s.total)}× now ·", "to earn ${GAL.BASE * nx.x} per vote`, s: `Earns ${GAL.BASE * galMult(p.s.total)} per vote now ·"),
   ("t: nx ? `Improve ${name} to ${nx.at} to earn ${nx.x}× per vote`", "t: nx ? `Get ${name} to ${nx.at} to earn ${GAL.BASE * nx.x} per vote`"),
   ("They now earn at least <b>${galMult(band)}× coins</b> every time a voter picks them.", "They now earn you at least <b>${GAL.BASE * galMult(band)} 🟡 per vote</b>."),
+  ('<div class="al-bot"><b>${x}× coins</b><span>${GAL.BASE * x} coins per vote received</span></div>',
+   '<div class="al-bot"><b class="al-lv">${t ? `${({ Gold: "🥇", Diamond: "💎", Platinum: "🏆" })[t]} ${t}` : "Not ranked"}</b><span class="al-td"><em>+${galToday(p)}</em>${gemIcon("gem al-tic")}<small>today</small></span></div>'),
   ("<small>${galMult(p.s.total)}× · +${galToday(p)} today</small>", "<small>${GAL.BASE * galMult(p.s.total)} per vote · +${galToday(p)} today</small>"),
   ("for ${galMult(band)}× coins per vote`", "to earn ${GAL.BASE * galMult(band)} per vote`"),
   ("earns <b>${x}×</b> per vote${nm ? ` · <b>${nm.at}</b> pays ${nm.x}×` : ''}", "earns you <b>${GAL.BASE * x}</b> per vote${nm ? ` · <b>${nm.at}+</b> earns ${GAL.BASE * nm.x}` : ''}"),
@@ -147,6 +149,7 @@ html body .a2-ph{position:relative}
 .a2-earn .a2-eic{width:16px;height:16px}
 .a2-earn.none{background:rgba(255,253,249,.92);box-shadow:0 2px 6px rgba(0,0,0,.25);animation:none}.a2-earn.none small{margin:0;color:#4E433C}
 @keyframes a2Earn{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+html body .al-bot .al-lv{font-size:1.6rem!important}html body .al-card.big .al-sc em,html body .al-card.big .al-gem{display:none!important}.al-td small{white-space:nowrap}html body #studio .st-line{text-align:center!important}html body #studio .st-line .im2-sh{text-align:center;font-weight:700}.al-td{display:inline-flex;align-items:center;gap:5px;margin-left:auto}.al-td em{font:900 1.6rem/1 Fraunces,serif;font-style:normal;color:#8A5A0A!important}.al-td .al-tic{width:22px;height:22px}.al-td small{font:800 .8rem "Nunito Sans",sans-serif;color:#4E433C}
 html body .a2-l2{font-size:.86rem!important;color:#4E433C}html body .a2-l2 b{font:900 1.05rem Fraunces,serif;color:#8A5A0A}
 """
 i = s.rfind('</style>'); s = s[:i] + CSS + s[i:]
