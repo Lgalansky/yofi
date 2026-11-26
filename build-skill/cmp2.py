@@ -29,11 +29,13 @@ function c2Photo() { const L = lgS(), F = fighters(), best = F[0], cat = best ? 
   const one = (inc ? `<button class="c3-t c3-h2h c3-inc" data-c2r="inc"><span class="c3-pair"><img src="${inc.theirSrc}" alt=""><i>VS</i>${(fcPhotos(inc.f, inc.theme)[0] || best) ? `<img src="${(fcPhotos(inc.f, inc.theme)[0] || best).src}" alt="">` : '<img alt="">'}</span><span class="c3-lb"><b>🤝 @${esc(inc.f)} challenged you</b><em>${stakeTxt(inc.stake)} each</em></span></button>` : '')
     + (best ? `<button class="c3-t c3-h2h" data-c2r="h2h"><span class="c3-pair"><img src="${rv}" alt=""><i>VS</i><img src="${best.src}" alt=""></span><span class="c3-lb"><b>Head-to-head</b><em>$1 → $${(2 * (1 - KING_FEE)).toFixed(2)}</em></span></button>`
     : `<button class="c3-need" data-c2r="need">✨ Get a photo to ${CFG.QUALIFY} to play 1 v 1 <b>›</b></button>`);
+  const KO_PYR = '<svg class="ko-pyr" viewBox="0 0 40 34" aria-hidden="true"><rect x="15" y="1" width="10" height="6" rx="2" fill="#F3D27A"/><rect x="10" y="9" width="20" height="6" rx="2" fill="#E0A82E"/><rect x="5" y="17" width="30" height="6" rx="2" fill="#C9D6EE"/><rect x="0" y="25" width="40" height="6" rx="2" fill="#9FB6DD"/></svg>';
   const tile = (id, ic, nm, win, when, price) => `<button class="c3-tt" data-c2r="${id}"><span class="c3-ti">${ic}</span><b>${nm}</b><small>${win}</small><i>${when}</i><em>${price}</em></button>`;
   const ban = (id, ic, nm, chip, price, cls) => cls ? `<button class="c3-b ${cls}" data-c2r="${id}"><span class="c3-bi">${ic}</span><span class="c3-bt"><b>${nm}</b><i>${chip}</i></span><em>${price}</em></button>` : `<button class="c3-b c3-sm" data-c2r="${id}"><span class="c3-r1"><span class="c3-bi">${ic}</span><b>${nm}</b></span><span class="c3-r2"><i>${chip}</i><em>${price}</em></span></button>`;
   return `<h3 class="c2-h">💰 Daily jackpots <small>⏱ ${dayLeft()}</small></h3><div class="c3-jps">${jp}</div>
     <h3 class="c2-h">⚔️ 1 v 1 now</h3><div class="c3-one">${one}</div>
-    <h3 class="c2-h">🏆 Tournaments</h3><div class="c3-tl">${tile('sd', '⚡', 'Showdown', `Win ${money(sdPrize()).replace('.00', '')}`, 'Minutes', '$' + SD_FEE)}${spr ? tile('sprint', '⏱', 'Sprint', `Win $${spr.gtd}`, spr.now ? 'On join' : tLeft(spr.at), '$1') : ''}${big ? tile('bigcup', '🏆', 'Big Cup', `Win $${big.gtd}`, tLeft(big.at), '$1') : ''}</div>
+    <h3 class="c2-h">🏆 Tournaments</h3><div class="c3-ko"><p class="c3-kh">${KO_PYR}<b>Knockouts</b><span>16 photos · 1 v 1 to the final</span></p><div class="c3-tl two">${spr ? tile('sprint', KO_PYR, 'Sprint', `Win $${spr.gtd}`, spr.now ? '⚡ On join' : tLeft(spr.at), '$1') : ''}${big ? tile('bigcup', KO_PYR, 'Big Cup', `Win $${big.gtd}`, '⏱ ' + tLeft(big.at), '$1') : ''}</div></div>
+    <button class="c3-sdr" data-c2r="sd"><span class="c3-sdi">⚡</span><span class="c3-sdt"><b>Showdown</b><small>5 photos · win ${money(sdPrize())}</small></span><i>Minutes</i><em>$${SD_FEE}</em></button>
     <button class="c3-club" data-c2r="clubs">👥 <b>Clubs</b> · weekly pots with friends <span>›</span></button>`; }
 function c2Eye() { const l = typeof jgLv === 'function' ? jgLv() : null, a = l ? jgAcc() : 0, nx = l && jgNext(), rvA = l ? Math.max(50, a - 1 - hsh(dayKey() + 'qs') % 4) : 0, pr = l ? Math.round(jgProg() * 100) : Math.round(jgN() / JG_MIN * 100);
   const ring = (v, lab, cls) => `<span class="c3-ring ${cls || ''}" style="--p:${v}"><b>${lab}</b></span>`;
@@ -86,6 +88,16 @@ html body .c2 .c2-h{display:flex;justify-content:space-between;align-items:basel
 .c2-vote{display:block;margin:12px auto 0;font:800 .9rem "Nunito Sans"}
 '''
 CSS += '''
+/* knockouts grouped under a pyramid; Showdown on its own row */
+.c3-ko{margin:0 14px 10px;padding:10px 10px 10px;border-radius:20px;background:#EEF3FB;box-shadow:inset 0 0 0 1.5px #9FB6DD}
+.c3-kh{display:flex;align-items:center;gap:8px;margin:0 4px 9px;font:800 .78rem "Nunito Sans";color:#4E433C}.c3-kh .ko-pyr{width:30px;height:26px}.c3-kh span{white-space:nowrap}.c3-kh b{font:900 1.02rem Fraunces,serif;color:#1F3157}
+.c3-tl.two{grid-template-columns:1fr 1fr;margin:0}
+.c3-tt .ko-pyr{width:54px;height:46px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}.c3-tt .c3-ti{line-height:0}
+html body #gallery .c3-sdr{background:linear-gradient(160deg,#2B4372,#14213D)!important;color:#fff!important}html body #gallery .c3-sdr b{color:#fff}
+.c3-sdr{display:flex;align-items:center;gap:10px;width:calc(100% - 28px);margin:0 14px;padding:11px 12px;border:0;border-radius:18px;background:linear-gradient(160deg,#2B4372,#14213D);color:#fff;cursor:pointer;text-align:left;font-family:inherit;box-shadow:0 8px 16px -10px rgba(20,33,61,.8)}
+.c3-sdi{font-size:1.6rem}.c3-sdt{flex:1;min-width:0}.c3-sdt b{display:block;font:900 1rem Fraunces,serif}.c3-sdt small{font:800 .74rem "Nunito Sans";color:#F3D27A}
+.c3-sdr i{font:800 .7rem "Nunito Sans";font-style:normal;color:#2D2521;background:#FFF3D6;padding:1px 8px;border-radius:99px}.c3-sdr em{font-style:normal;font:900 .85rem "Nunito Sans";padding:5px 10px;border-radius:10px;background:linear-gradient(180deg,#2E9A5C,#21784A)}
+
 /* tournaments: three equal tiles */
 .c3-tl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 14px}
 html body #gallery .c3-tt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;border:0;border-radius:18px;background:linear-gradient(160deg,#2B4372,#14213D)!important;color:#fff!important;cursor:pointer;font-family:inherit;box-shadow:0 8px 16px -10px rgba(20,33,61,.8)}
