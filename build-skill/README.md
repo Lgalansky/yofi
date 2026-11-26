@@ -760,7 +760,8 @@ python3 build-skill/votecash.py sp-v.html sp-c.html
 python3 build-skill/noenergy.py sp-c.html sp-n.html
 python3 build-skill/samples.py sp-n.html sp-s.html
 python3 build-skill/compete.py sp-s.html sp-x.html
-python3 build-skill/nowow.py sp-x.html skill-preview.html
+python3 build-skill/nowow.py sp-x.html sp-w.html
+python3 build-skill/stakes.py sp-w.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -779,6 +780,8 @@ python3 build-skill/nowow.py sp-x.html skill-preview.html
 
 `nowow.py` drops Wow factor: the overall score is the average of the four touch-up scores; existing photos are rescored once on load.
 
+`stakes.py` lets players pick $1, $2 or $5 per daily photo challenge; a cash win earns 1 star per $1 (rematch doubles), 80% of the stake goes into the pot, and your stars for each category show on the front of its challenge photo.
+
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `nowow.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `stakes.py`, then copy the result to `index.html` with the title "Yofi - Skill".
