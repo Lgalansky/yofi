@@ -61,6 +61,16 @@ im2Levels = function () { const r = _im2LevelsL.apply(this, arguments);
 function lvUp(p, t) { const pay = GAL.BASE * galMult(p.s.total);
   celebrate({ src: p.src, score: p.s.total, title: `${alName(p)} is ${t}!`, text: `${TIER_IC[t] || ''} ${esc(alName(p))} now earns you <b>${pay} 🟡 per vote</b>.`,
     cta: '🗳 Back to voting', onCta: () => go('judge'), later: 'Keep improving' }); }
+
+// gallery sleeves: level icon on the photo, today's earnings as a gold pill on the photo, rate underneath
+const _renderGalleriesE = renderGalleries;
+renderGalleries = function () { const r = _renderGalleriesE.apply(this, arguments);
+  try { document.querySelectorAll('#studio .a2-sl[data-alc]').forEach(b => { const p = S.photos.find(x => x.id === b.dataset.alc); if (!p || !p.s) return;
+    const t = galTier(p.s.total), sc = b.querySelector('.a2-sc'), ph = b.querySelector('.a2-ph'), l2 = b.querySelector('.a2-l2'), d = galToday(p), pay = GAL.BASE * galMult(p.s.total);
+    if (sc && t && !sc.querySelector('.a2-ti')) sc.insertAdjacentHTML('afterbegin', `<i class="a2-ti">${TIER_IC[t]}</i>`);
+    if (ph && !ph.querySelector('.a2-earn')) ph.insertAdjacentHTML('beforeend', d > 0 ? `<em class="a2-earn"><b>+${d}</b>${gemIcon('gem a2-eic')}<small>today</small></em>` : `<em class="a2-earn none"><small>Earns on votes</small></em>`);
+    if (l2) l2.innerHTML = `Earns <b>${pay}</b>${gemIcon('gem st-ci')} per vote`; }); } catch (e) {}
+  return r; };
 // ---- one clear earnings line on every photo screen: what a voter's pick pays this photo ----
 stLine = function (v, from) {
   const t = galTier(v), pay = GAL.BASE * galMult(v), ci = gemIcon('gem st-ci');
@@ -128,5 +138,16 @@ for a, b in [
 ]:
     assert s.count(a) == 1, a
     s = s.replace(a, b)
+CSS += """
+/* gallery: level icon + earnings on the photo */
+html body .a2-sc{display:inline-flex!important;align-items:center;gap:3px}.a2-ti{font-style:normal;font-size:.9em;line-height:1}
+html body .a2-ph{position:relative}
+.a2-earn{position:absolute;left:6px;bottom:6px;display:inline-flex;align-items:center;gap:3px;padding:4px 9px 4px 8px;border-radius:999px;font-style:normal;background:linear-gradient(180deg,#FFF6DA,#F3D27A);box-shadow:0 3px 8px rgba(0,0,0,.35),inset 0 0 0 1.5px #E0A82E;color:#3A2600;animation:a2Earn .6s ease-out}
+.a2-earn b{font:900 1.05rem/1 Fraunces,serif}.a2-earn small{font:800 .66rem "Nunito Sans",sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#6A4A10;margin-left:2px}
+.a2-earn .a2-eic{width:16px;height:16px}
+.a2-earn.none{background:rgba(255,253,249,.92);box-shadow:0 2px 6px rgba(0,0,0,.25);animation:none}.a2-earn.none small{margin:0;color:#4E433C}
+@keyframes a2Earn{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+html body .a2-l2{font-size:.86rem!important;color:#4E433C}html body .a2-l2 b{font:900 1.05rem Fraunces,serif;color:#8A5A0A}
+"""
 i = s.rfind('</style>'); s = s[:i] + CSS + s[i:]
 open(p, 'w', encoding='utf-8').write(s); print('collect ok')
