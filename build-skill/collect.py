@@ -56,6 +56,11 @@ const _im2LevelsL = im2Levels;
 im2Levels = function () { const r = _im2LevelsL.apply(this, arguments);
   try { const b = $('#sheetBody'); b.innerHTML = b.innerHTML.replace(/(\d+)–\1 coins/g, '$1 coins').replace(/(\d+) coins/g, '$1 per vote').replace('Each time a voter picks your photo, it earns coins.', 'Your photo earns coins every time a voter picks it.').replace('about 25 picks', 'about 25 votes'); if (b.querySelector('.btn')) b.querySelectorAll('[data-shclose], .btn').forEach(x => x.onclick = () => closeSheet()); } catch (e) {}
   return r; };
+
+// a photo reaching a new level: celebrate with what it now earns
+function lvUp(p, t) { const pay = GAL.BASE * galMult(p.s.total);
+  celebrate({ src: p.src, score: p.s.total, title: `${alName(p)} is ${t}!`, text: `${TIER_IC[t] || ''} ${esc(alName(p))} now earns you <b>${pay} 🟡 per vote</b>.`,
+    cta: '🗳 Back to voting', onCta: () => go('judge'), later: 'Keep improving' }); }
 // ---- one clear earnings line on every photo screen: what a voter's pick pays this photo ----
 stLine = function (v, from) {
   const t = galTier(v), pay = GAL.BASE * galMult(v), ci = gemIcon('gem st-ci');
@@ -106,5 +111,22 @@ html body .im2 .im2-side{justify-content:center}
 html body #flowBody .st-line.st-top{margin:-4px 0 12px!important}
 html body .im2 .im2-scb ~ .im2-grid{margin-bottom:14px!important}
 """
+
+# level-ups celebrate with the coin rate; the last "2×" wording becomes coins per vote
+for a, b in [
+  ("toast(t1 !== t0 && t1 ? `${alName(p)} is ${t1}! ${p.s.total} · ${x1}× coins per vote` : x1 > x0 ? `${alName(p)} ${v0} → ${p.s.total} · now ${x1}× coins per vote`",
+   "(t1 !== t0 && t1 ? () => lvUp(p, t1) : toast)(t1 !== t0 && t1 ? '' : x1 > x0 ? `${alName(p)} ${v0} → ${p.s.total} · now earns you ${GAL.BASE * x1} 🟡 per vote`"),
+  ("toast(t1 !== run.t0 && t1 ? `${alName(p)} is ${t1}! ${p.s.total} · ${x1}× coins per vote` : x1 > run.x0 ? `${alName(p)} ${run.v0} → ${p.s.total} · now ${x1}× coins per vote`",
+   "(t1 !== run.t0 && t1 ? () => lvUp(p, t1) : toast)(t1 !== run.t0 && t1 ? '' : x1 > run.x0 ? `${alName(p)} ${run.v0} → ${p.s.total} · now earns you ${GAL.BASE * x1} 🟡 per vote`"),
+  ("· ${x1}× coins every time a voter picks it`", "· earns you ${GAL.BASE * x1} 🟡 per vote`"),
+  ("to earn ${nx.x}× per vote`, s: `Earning ${galMult(p.s.total)}× now ·", "to earn ${GAL.BASE * nx.x} per vote`, s: `Earns ${GAL.BASE * galMult(p.s.total)} per vote now ·"),
+  ("t: nx ? `Improve ${name} to ${nx.at} to earn ${nx.x}× per vote`", "t: nx ? `Get ${name} to ${nx.at} to earn ${GAL.BASE * nx.x} per vote`"),
+  ("They now earn at least <b>${galMult(band)}× coins</b> every time a voter picks them.", "They now earn you at least <b>${GAL.BASE * galMult(band)} 🟡 per vote</b>."),
+  ("<small>${galMult(p.s.total)}× · +${galToday(p)} today</small>", "<small>${GAL.BASE * galMult(p.s.total)} per vote · +${galToday(p)} today</small>"),
+  ("for ${galMult(band)}× coins per vote`", "to earn ${GAL.BASE * galMult(band)} per vote`"),
+  ("earns <b>${x}×</b> per vote${nm ? ` · <b>${nm.at}</b> pays ${nm.x}×` : ''}", "earns you <b>${GAL.BASE * x}</b> per vote${nm ? ` · <b>${nm.at}+</b> earns ${GAL.BASE * nm.x}` : ''}"),
+]:
+    assert s.count(a) == 1, a
+    s = s.replace(a, b)
 i = s.rfind('</style>'); s = s[:i] + CSS + s[i:]
 open(p, 'w', encoding='utf-8').write(s); print('collect ok')
