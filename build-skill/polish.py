@@ -1,6 +1,7 @@
 # Skill preview: small consistency fixes.
 # 1. A wrong vote: the "So close! / Missed it" overlay on your tile was dark text on a dark box.
 #    It is now a light card with navy text, matching the rest of the Vote screen.
+# Compete: the challenge cards' Compete/Rematch buttons are green (real money).
 # 2. The score screen after an upload ("Touch up your photo"): every bar row has the same
 #    padding so the highlighted row lines up with the rest; rows and the button use the same four
 #    touch-up names as Improve (Fix lighting, Boost colour, Sharpen details, Soften background);
@@ -28,6 +29,8 @@ html:not(.yg) .tot-miss b{color:#1F3157!important}html:not(.yg) .tot-miss small{
 /* score screen bars: every row the same box, so the highlighted one lines up */
 html body #flowBody .rs-top .bars .bar{padding:6px 8px!important;margin-left:-8px!important;margin-right:0!important;border-radius:12px;box-shadow:inset 0 0 0 1.5px transparent}
 html body #flowBody .rs-top .bars .bar.low{box-shadow:inset 0 0 0 1.5px #2E508A!important}
+/* Compete > Challenges: playing a challenge costs real money, so the Compete / Rematch buttons are green (Upload stays navy: it's free) */
+html body #gallery .bcc-go:not(.up){background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important;box-shadow:0 6px 14px -8px rgba(33,120,74,.7)!important}
 /* spending coins = gold button */
 html body #flowBody #doFix.pay-coin{background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important;box-shadow:0 6px 14px -8px rgba(160,110,10,.7)!important}
 html body #flowBody #doFix.pay-coin > span:first-child{color:#3A2600!important}

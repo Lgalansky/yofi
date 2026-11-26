@@ -24,7 +24,7 @@ vcCard = function () { const fr = S.fr && (S.fr.ch || []).find(c => c.st === 'yo
   return _vcCardJ.apply(this, arguments); };
 // your judge score sells the 1 v 1 Quick Sprint (pick the crowd's photo in 10 pairs)
 function vcSprint() { const has = typeof jgLv === 'function' && jgLv(), a = has ? jgAcc() : 0, rv = has ? Math.max(50, a - 1 - hsh(dayKey() + 'qs') % 4) : 0;
-  return { art: '🎯', t: has ? `Your ${a}% eye vs a ${rv}% rival` : 'Pick the crowd’s photo, 1 v 1', s: 'Quick Sprint · $2 wins $3.20', cta: 'Play', go: () => { window.__qsReal = 1; sprEnter(); } }; }
+  return { art: '🎯', t: has ? `Your ${a}% eye vs a ${rv}% rival` : 'Who has the better eye? 1 v 1', s: 'Quick Sprint · $2 wins $3.20', cta: 'Play', go: () => { window.__qsReal = 1; sprEnter(); } }; }
 setTimeout(() => { try { vcPaint(); } catch (e) {} }, 450);
 '''
 anchor = "  shownGems = S.gems;\n})();\n})();"
