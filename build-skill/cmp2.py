@@ -25,15 +25,14 @@ function c2Photo() { const L = lgS(), F = fighters(), best = F[0], cat = best ? 
       <span class="c3-pot"><b>$${Math.round(L.jp[k]).toLocaleString()}</b><em class="${m ? '' : 'nav'}">${m ? 'Play $1+' : any ? 'Needs 70' : '+ Add'}</em></span></button>`; }).join('');
   const T = tSlots(), big = T.find(x => x.gtd >= 100), spr = T.find(x => x.gtd < 100);
   const rv = best ? c2NotMine(battleRival(cat).src, cat) : null, K = best ? kingOf(cat) : null, Ks = K ? c2NotMine(K.src, cat, 1) : '';
-  const one = best ? `<div class="c3-one">
-      <button class="c3-t c3-h2h" data-c2r="h2h"><span class="c3-pair"><img src="${best.src}" alt=""><i>VS</i><img src="${rv}" alt=""></span><span class="c3-lb"><b>Head-to-head</b><em>$1 → $${(2 * (1 - KING_FEE)).toFixed(2)}</em></span></button>
-      <button class="c3-t" data-c2r="king"><span class="c3-im"><img src="${Ks}" alt=""><i class="c3-md">🏅</i></span><span class="c3-lb"><b>Champion</b><em>$1 → ${money(K.bounty)}</em></span></button>
-      <button class="c3-t" data-c2r="friend"><span class="c3-im c3-fr"><span>🤝</span></span><span class="c3-lb"><b>A friend</b><em>$1 → ${money(fcPrize({ cur: 'cash', amt: 1 }))}</em></span></button></div>`
-    : `<button class="c3-need" data-c2r="need">✨ Get a photo to ${CFG.QUALIFY} to play 1 v 1 <b>›</b></button>`;
+  const inc = S.fr && (S.fr.ch || []).find(x => x.st === 'yours');
+  const one = (inc ? `<button class="c3-t c3-h2h c3-inc" data-c2r="inc"><span class="c3-pair"><img src="${inc.theirSrc}" alt=""><i>VS</i>${(fcPhotos(inc.f, inc.theme)[0] || best) ? `<img src="${(fcPhotos(inc.f, inc.theme)[0] || best).src}" alt="">` : '<img alt="">'}</span><span class="c3-lb"><b>🤝 @${esc(inc.f)} challenged you</b><em>${stakeTxt(inc.stake)} each</em></span></button>` : '')
+    + (best ? `<button class="c3-t c3-h2h" data-c2r="h2h"><span class="c3-pair"><img src="${rv}" alt=""><i>VS</i><img src="${best.src}" alt=""></span><span class="c3-lb"><b>Head-to-head</b><em>$1 → $${(2 * (1 - KING_FEE)).toFixed(2)}</em></span></button>`
+    : `<button class="c3-need" data-c2r="need">✨ Get a photo to ${CFG.QUALIFY} to play 1 v 1 <b>›</b></button>`);
   const ban = (id, ic, nm, chip, price, cls) => cls ? `<button class="c3-b ${cls}" data-c2r="${id}"><span class="c3-bi">${ic}</span><span class="c3-bt"><b>${nm}</b><i>${chip}</i></span><em>${price}</em></button>` : `<button class="c3-b c3-sm" data-c2r="${id}"><span class="c3-r1"><span class="c3-bi">${ic}</span><b>${nm}</b></span><span class="c3-r2"><i>${chip}</i><em>${price}</em></span></button>`;
   return `<h3 class="c2-h">💰 Daily jackpots <small>⏱ ${dayLeft()}</small></h3><div class="c3-jps">${jp}</div>
-    <h3 class="c2-h">⚔️ 1 v 1 now</h3>${one}
-    <h3 class="c2-h">🏆 Tournaments</h3><div class="c3-bs">${ban('sd', '⚡', 'Showdown', `5 players · win ${money(sdPrize())}`, '$' + SD_FEE, 'wide')}${big ? ban('tour', '🏆', `Big Cup<small>Win $${big.gtd}</small>`, `⏱ ${tLeft(big.at)}`, '$1') : ''}${spr ? ban('tour', '⏱', `Sprint<small>Win $${spr.gtd}</small>`, `⏱ ${tLeft(spr.at)}`, '$1') : ''}</div>
+    <h3 class="c2-h">⚔️ 1 v 1 now</h3><div class="c3-one">${one}</div>
+    <h3 class="c2-h">🏆 Tournaments</h3><div class="c3-bs">${ban('sd', '⚡', 'Showdown', `5 players · win ${money(sdPrize())}`, '$' + SD_FEE, 'wide')}${big ? ban('bigcup', '🏆', `Big Cup<small>Win $${big.gtd}</small>`, `⏱ ${tLeft(big.at)}`, '$1') : ''}${spr ? ban('sprint', '⏱', `Sprint<small>Win $${spr.gtd}</small>`, `⏱ ${tLeft(spr.at)}`, '$1') : ''}</div>
     <button class="c3-club" data-c2r="clubs">👥 <b>Clubs</b> · weekly pots with friends <span>›</span></button>`; }
 function c2Eye() { const l = typeof jgLv === 'function' ? jgLv() : null, a = l ? jgAcc() : 0, nx = l && jgNext(), rvA = l ? Math.max(50, a - 1 - hsh(dayKey() + 'qs') % 4) : 0, pr = l ? Math.round(jgProg() * 100) : Math.round(jgN() / JG_MIN * 100);
   const ring = (v, lab, cls) => `<span class="c3-ring ${cls || ''}" style="--p:${v}"><b>${lab}</b></span>`;
@@ -46,9 +45,9 @@ function c2Render() { const g = $('#gallery'); if (!g || GV.tab !== 'battle') re
   g.innerHTML = `<div class="c2">${c2Bar(C2)}${C2 === 'eye' ? c2Eye() : c2Photo()}</div>`; c2Wire(g);
   g.querySelectorAll('[data-lgk]').forEach(b => b.onclick = () => { const k = b.dataset.lgk; if (!lgMine(k) && !S.photos.some(p => fitsTheme(p, k))) { addCatPhoto(k); return; } goCash(); lgCat(k); });
   const best = fighters()[0], cat = best ? (best.cat || 'any') : 'any';
-  const act = { h2h: () => openCashBattle(1, null, best), king: () => openKing(cat), friend: () => fcNew(), sd: () => openShowdown(), tour: () => cmpOpen('tour'),
+  const act = { h2h: () => h2hSheet(), inc: () => { const c = S.fr && (S.fr.ch || []).find(x => x.st === 'yours'); if (c) incSheet(c); }, sd: () => sdSheet(), bigcup: () => tourSheet('big'), sprint: () => tourSheet('sprint'), tour: () => cmpOpen('tour'),
     clubs: () => { GV.tab = 'friends'; renderGallery(); $('#gallery').scrollTop = 0; }, need: () => { TU_GAL = true; go('studio'); renderStudio(); },
-    judge: () => judgeCard(), qs: () => { window.__qsReal = 1; sprEnter(); }, crowd: () => chBuy(), vote: () => go('judge') };
+    judge: () => judgeCard(), qs: () => qsSheet(), crowd: () => crowdSheet(), vote: () => go('judge') };
   g.querySelectorAll('[data-c2r]').forEach(b => b.onclick = () => { const f = act[b.dataset.c2r]; if (f) f(); }); }
 const _renderGalleryC2 = renderGallery;
 renderGallery = function () { const r = _renderGalleryC2.apply(this, arguments);
