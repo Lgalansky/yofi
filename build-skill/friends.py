@@ -14,10 +14,14 @@ def rep(a, b):
     assert s.count(a) == 1, a[:60]
     s = s.replace(a, b)
 
-# coins or cash is the player's choice, not the app mode
+# coins or cash is the player's choice, not the app mode; coin stakes 100 / 250 / 500
+rep("const FR_GEM = 100, frGem", "let FR_GEM = (typeof S !== 'undefined' && S && [100, 250, 500].includes(S.frGemAmt)) ? S.frGemAmt : 100; const frGem")
+rep("document.querySelectorAll('#sheetBody [data-frs]').forEach(b => b.onclick = () => { S.frSt = b.dataset.frs === 'gem' ? 'gem' : +b.dataset.frs; save(); sel = po.sel; paint(); });",
+    "document.querySelectorAll('#sheetBody [data-frs]').forEach(b => b.onclick = () => { S.frSt = b.dataset.frs === 'gem' ? 'gem' : +b.dataset.frs; if (b.dataset.amt) { FR_GEM = +b.dataset.amt; S.frGemAmt = FR_GEM; } save(); sel = po.sel; paint(); });")
 rep("frGem = () => !isCash()", "frGem = () => S.frSt === 'gem' || (S.frSt == null && !isCash())")
 rep('<div class="riv-st fr-st bf-st" role="group" aria-label="Entry">${isCash() ? FR_ST.map(x => `<button data-frs="${x}" aria-pressed="${x === st}">$${x}</button>`).join(\'\') : `<button data-frs="gem" aria-pressed="true">${FR_GEM} ${G}</button>`}</div>',
-    '<div class="sk-row fr-sk" role="radiogroup" aria-label="Entry"><button role="radio" class="fr-coin" data-frs="gem" aria-checked="${coin}"><b>${FR_GEM} 🟡</b><small>win ${FR_GEM * 2} 🟡</small></button>${[1, 5].map(x => `<button role="radio" data-frs="${x}" aria-checked="${!coin && x === st}"><b>$${x}</b><small>win ${money(.85 * x * 2)}</small></button>`).join(\'\')}</div>')
+    '<div class="fr-tg" role="tablist"><button role="tab" data-frs="gem" aria-selected="${coin}">🟡 Coins</button><button role="tab" data-frs="${[1, 2, 5].includes(st) ? st : 1}" aria-selected="${!coin}">💵 Cash</button></div>'
+    + '<div class="sk-row fr-sk" role="radiogroup" aria-label="Entry">${coin ? [100, 250, 500].map(a => `<button role="radio" class="fr-coin" data-frs="gem" data-amt="${a}" aria-checked="${a === FR_GEM}"><b>${a} 🟡</b><small>win ${a * 2} 🟡</small></button>`).join(\'\') : [1, 2, 5].map(x => `<button role="radio" data-frs="${x}" aria-checked="${x === st}"><b>$${x}</b><small>win ${money(.85 * x * 2)}</small></button>`).join(\'\')}</div>')
 rep('<span class="fcs-wa">${WA_ICON}</span>Invite on WhatsApp</a>', '<span class="fcs-wa">${WA_ICON}</span>Invite on WhatsApp · ${coin ? FR_GEM + \' 🟡\' : \'$\' + st}</a>')
 rep('<h2><span class="bf-ic">${VS_IC}</span>Challenge a friend</h2>', '<h2>🤝 Challenge a friend</h2>')
 s = s.replace('<a class="btn block fcn-go bf-go" id="bfGo"', '<a class="btn block fcn-go bf-go ${coin ? \'fr-gold\' : \'fr-green\'}" id="bfGo"', 1)
@@ -47,6 +51,7 @@ assert s.count(anchor) == 1
 s = s.replace(anchor, JS + anchor)
 CSS = '''
 /* friend challenge stake: coins gold, cash green */
+.fr-tg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:3px;border-radius:12px;background:#EFE6D6;margin:2px 0 8px}.fr-tg button{border:0;cursor:pointer;padding:7px;border-radius:9px;background:none;font:800 .88rem "Nunito Sans";color:#5F534A}.fr-tg button[aria-selected="true"]{background:#FFFDF9;color:#1F3157;box-shadow:0 1px 4px rgba(0,0,0,.15)}
 .sk-row.fr-sk{margin:4px 0 10px}.sk-row.fr-sk button.fr-coin{box-shadow:inset 0 0 0 1.5px #E0B860;color:#8A5A0A}
 .sk-row.fr-sk button.fr-coin[aria-checked="true"]{background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;box-shadow:0 5px 12px -6px rgba(160,110,10,.7)}.sk-row.fr-sk button.fr-coin[aria-checked="true"] small{color:#5A3E00}
 html body #sheetBody .bf-go{white-space:nowrap;font-size:1.05rem!important}
