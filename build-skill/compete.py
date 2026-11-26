@@ -10,7 +10,7 @@ if 'function cmpBar(' in s: sys.exit('compete already applied')
 JS = r'''
 /* ---------- one Compete menu with Challenges | Tournaments tabs ---------- */
 let CMP_TAB = 'ch';
-const cmpBar = t => `<h1 class="cmp-h">Compete</h1><div class="cmp-bar" role="tablist" aria-label="Compete"><button role="tab" data-cmp="ch" aria-selected="${t === 'ch'}">🏅 Challenges</button><button role="tab" data-cmp="tour" aria-selected="${t === 'tour'}">🏆 Tournaments</button></div>`;
+const cmpBar = t => `<div class="cmp-bar" role="tablist" aria-label="Compete"><button role="tab" data-cmp="ch" aria-selected="${t === 'ch'}">🏅 Challenges</button><button role="tab" data-cmp="tour" aria-selected="${t === 'tour'}">🏆 Tournaments</button></div>`;
 const _segTourGo = $('#segCompete').onclick;
 function cmpOpen(t) {
   CMP_TAB = t;
@@ -186,6 +186,13 @@ html body #flowBody .st-line{text-align:center!important;padding:10px 12px!impor
 html body #flowBody .vcard[aria-pressed="true"] .best{background:#2D4E86!important;color:#fff!important}
 /* Vote: same gap above and below the photos block */
 html body #vgGoal.vg{margin:6px 0 12px!important}
+/* one menu style on Gallery and Compete: tabs at the same spot, same font; section titles in the album burgundy */
+html body .gl-seg,html body .cmp-bar{margin:4px 14px 14px!important;width:auto!important}html body .tot-h .gl-seg{margin:0 0 14px!important;width:100%!important}
+html body .gl-seg button,html body .cmp-bar button{font:800 1rem "Nunito Sans",sans-serif!important;padding:10px 6px!important}
+#studio .tot-h:has(.gl-seg),html body #studio .gl.a2,html body #studio .gl.im2{background:none!important;box-shadow:none!important}html body #studio .gl.a2,html body #studio .gl.im2{margin-top:0!important;padding-top:0!important}
+html body #gallery .bt-sw button{font:800 .95rem "Nunito Sans",sans-serif!important}
+html body #gallery h1:not(.cmp-h),html body .im2 h2,html body .im2-t{font-family:Fraunces,serif!important;font-weight:900!important;color:#7A1F27!important}
+html.yg body #gallery h1:not(.cmp-h),html.yg body .im2 h2,html.yg body .im2-t{color:#fff!important}
 .nm-ask{text-align:center}.nm-ph{width:120px;height:160px;object-fit:cover;border-radius:14px;box-shadow:0 0 0 3px #E0A82E;margin:4px auto 10px;display:block}
 .nm-ask input{width:100%;box-sizing:border-box;margin:6px 0 12px;padding:12px 14px;border-radius:14px;border:1.5px solid #CDBFA8;font:800 1.2rem Fraunces,serif;text-align:center;background:#FFFDF9;color:#2D2521}
 /* Improve photo frame stands out more (drawn outside the photo, so sizes don't change) */

@@ -80,7 +80,7 @@ function galPick() {
 }
 const _voteG = vote;
 vote = async function () { const n0 = S.votes; const r = await _voteG.apply(this, arguments); if (S.votes > n0) setTimeout(galPick, 700); return r; };
-const galSeg = v => `<div class="gl-seg" role="tablist" aria-label="Touch-ups"><button role="tab" data-gv="gal" aria-selected="${v === 'gal'}">Gallery</button><button role="tab" data-gv="imp" aria-selected="${v === 'imp'}">Improve</button></div>`;
+const galSeg = v => `<div class="gl-seg" role="tablist" aria-label="Touch-ups"><button role="tab" data-gv="gal" aria-selected="${v === 'gal'}">🖼️ Gallery</button><button role="tab" data-gv="imp" aria-selected="${v === 'imp'}">✨ Improve</button></div>`;
 function galWire(st) { st.querySelectorAll('[data-gv]').forEach(b => b.onclick = () => { TU_GAL = b.dataset.gv === 'gal'; if (!TU_GAL && S.user) sdSmart(); renderStudio(); st.scrollTop = 0; }); }
 function galImprove(id) { const p = S.photos.find(x => x.id === id); if (!p) return; const r = galRoom(p.cat), nx = r.next && p.s.total < r.next ? r.next : nextLvl(p.s.total) && nextLvl(p.s.total).at;
   S.cur = id; TU_GAL = false; WALL = false; window.__sdWhy = nx ? `${esc(galNm(p.cat))} gallery · <b>${nx - p.s.total} point${nx - p.s.total === 1 ? '' : 's'} to ${galBand(nx)}</b>` : ''; save(); renderStudio(); $('#studio').scrollTop = 0; }
