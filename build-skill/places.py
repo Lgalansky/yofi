@@ -53,14 +53,18 @@ paintSdRoom = function (r) { const out = _paintSdRoomP.apply(this, arguments);
       mid: gsList(rows, 5, 1), go: { t: `Play again · ${money(SD_FEE).replace('.00', '')}`, fn: () => { closeSheet(); sdSheet(); } }, link: grBack() }); } catch (e) {}
   return out; };
 // Crowd Championship: your run is done; standings so far (results when the hour ends)
-function chField(id) { return 150 + hsh('chf' + id) % 150; }
-function chRows(id, right) { const N = chField(id), better = Math.max(0, Math.round(N * Math.pow(Math.max(0, 15 - right) / 15, 1.6) * .9)), names = ['kai.shoots', 'nina.paws', 'ivy.frames', 'theo.snaps', 'sam_wild', 'luna_loves', 'marco_eats', 'dogdad'];
-  const me = Math.min(N, better + 1), rows = []; for (let k = 1; k <= N; k++) { if (k === me) rows.push({ rank: k, me: 1, val: right + '/15' }); else if (k === 1 || Math.abs(k - me) === 1 || k <= 3) rows.push({ rank: k, nm: '@' + names[(k + id) % names.length], val: Math.max(right - (k > me ? 1 : -1) * (k === 1 ? 4 : 0), Math.min(15, k < me ? right + (k === 1 ? Math.min(4, 15 - right) : 0) : right - (k > me ? 1 : 0))) + '/15' }); }
-  return { N, me, rows, paid: Math.round(N * .2) }; }
+const chN = id => chPlayers(id, id * CH_MS), chW = n => Math.max(1, Math.ceil(n * .2));
+const chPrize = (rank, n) => { const W = chW(n); if (rank > W) return 0; const sum = W * (W + 1) / 2; return Math.max(1, +(chPool(n) * (W - rank + 1) / sum).toFixed(2)); };
+const CH_NM = ['kai.shoots', 'nina.paws', 'ivy.frames', 'theo.snaps', 'sam_wild', 'luna_loves', 'marco_eats', 'dogdad'];
+function chRowsAt(id, rank, score, n) { const rows = [], W = chW(n);
+  const add = (k, me) => { if (k < 1 || k > n || rows.some(r => r.rank === k)) return; const sc = me ? score : k === 1 ? CH_N : Math.max(0, Math.min(CH_N, score + (k > rank ? -1 : 0)));
+    const pz = chPrize(k, n); rows.push({ rank: k, me, nm: '@' + CH_NM[(k + id) % CH_NM.length], val: sc + '/' + CH_N, prize: pz ? '$' + pz.toFixed(2).replace('.00', '') : '' }); };
+  add(rank, 1); [1, rank - 1, rank + 1].forEach(k => add(k)); return { rows: rows.sort((a, b) => a.rank - b.rank), W }; }
+function chRows(id, right) { const n = chN(id), est = Math.max(1, Math.round(n * Math.pow(Math.max(0, CH_N - right) / CH_N, 1.4) * .9) + 1), R = chRowsAt(id, Math.min(n, est), right, n);
+  return { N: n, me: Math.min(n, est), rows: R.rows, paid: R.W }; }
 const _chDoneP = chDone;
 chDone = function (id, right, ms) { const r = _chDoneP.apply(this, arguments);
   try { const F = chRows(id, right), at = new Date((id + 1) * CH_MS).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), inP = F.me <= F.paid, pool = chPool(F.N);
-    F.rows.forEach(x => { if (x.rank <= F.paid && x.rank === 1) x.prize = '$' + Math.round(pool * .12); });
     gsResultSheet({ ic: '👥', nm: 'Crowd Championship', sub: `Your run is in · results at ${at}`, won: false,
       head: `${right}/15 right`, headSub: `You’re ${ORD(F.me)} of ${F.N} so far`,
       box: { k: 'Prize pool', b: `$${pool.toLocaleString()}`, s: inP ? `You’re in the paid places · pays at ${at}` : `Top 20% get paid · pays at ${at}` },
@@ -78,6 +82,20 @@ function tourResultSheet() { const T = S.tour; if (!T) return; const R0 = tResul
     mid: gsList(rows.sort((a, b) => a.rank - b.rank), N, 2), go: { t: `Play again · $${T.fee || 1}`, fn: () => { tTier(T.fee || 1); S.tour = null; save(); closeSheet(); tourSheet(T.slot && T.slot.gtd >= 100 ? 'big' : 'sprint'); } }, link: grBack() }); }
 new MutationObserver(() => { try { const b = $('#sheetBody'), d = b && b.querySelector('.tk-res'); if (d && b.querySelector('#tkAgain') && !d.dataset.gr) { d.dataset.gr = 1; tourResultSheet(); } } catch (e) {} }).observe($('#sheetBody'), { childList: true, subtree: true });
 
+// Crowd Championship: the final result when the hour ends
+function chFinal(id) { const e = (S.ch || {})[id]; if (!e || e.rank == null) return; e.grShown = 1; save();
+  const n = chN(id), W = chW(n), R = chRowsAt(id, e.rank, e.score, n), won = e.prize > 0;
+  gsResultSheet({ ic: '👥', nm: 'Crowd Championship', sub: `${new Date(id * CH_MS).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} · final result`, won,
+    head: won ? 'You won!' : `You placed ${ORD(e.rank)}`, headSub: `${ORD(e.rank)} of ${n} · ${e.score}/${CH_N} right`,
+    box: won ? { k: 'You won', b: money(e.prize), s: 'Added to your cash' } : { k: 'You lost', b: '$' + CH_ENTRY, s: `Top ${W} got paid · ${W - e.rank < 0 ? (e.rank - W) + ' places off' : ''}`.replace(/ · $/, '') },
+    mid: gsList(R.rows, n, W), go: { t: `Play the next one · $${CH_ENTRY}`, fn: () => { closeSheet(); crowdSheet(); } }, link: grBack() }); }
+function chNote(id) { const e = S.ch[id]; let b = $('#sdNote'); if (!b) { b = document.createElement('button'); b.id = 'sdNote'; b.className = 'sd-note'; document.body.appendChild(b); }
+  b.innerHTML = `<span class="sd-ni">👥</span><span><b>${e.prize ? `You won ${money(e.prize)}!` : 'Your Crowd Championship results'}</b><small>${ORD(e.rank)} of ${chN(id)} · tap to see the standings</small></span><em>View</em>`;
+  b.onclick = () => { b.classList.remove('on'); chFinal(id); }; requestAnimationFrame(() => b.classList.add('on')); setTimeout(() => b.classList.remove('on'), 9000); }
+const _celebrateCH = celebrate;
+celebrate = function (o) { if (o && /with \d+\/\d+\./.test(o.text || '') && /finished <b>#/.test(o.text || '')) return; return _celebrateCH.apply(this, arguments); };
+setInterval(() => { try { Object.entries(S.ch || {}).forEach(([k, e]) => { if (e.paid && !e.grShown && !e.grNote) { e.grNote = 1; save(); if (!$('#sheet').classList.contains('on') && !$('#coach').classList.contains('on')) chFinal(+k); else chNote(+k); } }); } catch (e) {} }, 1500);
+
 '''
 anchor = "  shownGems = S.gems;\n})();\n})();"
 assert s.count(anchor) == 1
@@ -86,7 +104,7 @@ CSS = '''
 /* placing list */
 .gpl{border-radius:16px;background:#FFFDF9;box-shadow:inset 0 0 0 1.5px #E2D5BE;padding:5px;margin-bottom:12px}
 .gpl-r{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:11px;font:800 .9rem "Nunito Sans";color:#2D2521}
-.gpl-n{width:24px;height:24px;flex:none;border-radius:50%;background:#EFE6D6;text-align:center;font:900 .74rem/24px "Nunito Sans"}
+.gpl-n{min-width:24px;padding:0 5px;box-sizing:border-box;height:24px;flex:none;border-radius:99px;background:#EFE6D6;text-align:center;font:900 .74rem/24px "Nunito Sans"}
 .gpl-r.paid .gpl-n{background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600}
 .gpl-av{width:32px;height:32px;flex:none;border-radius:8px;background-size:cover;background-position:center}
 .gpl-r b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gpl-r em{font-style:normal;font:900 .92rem Fraunces,serif;color:#1F3157}
