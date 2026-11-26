@@ -5,6 +5,7 @@
 #  - $1 / $2 / $5 stake chips (win +1/+2/+5 ⭐), one green button, one "How it works" link
 #  - if your photo is under 70: one navy "Touch up Cleo to 70" button instead
 # Also: rival photos never use one of your own photos.
+# Stars: every star you win shares the 70% (no 3-star minimum); screens show your star count.
 # usage: python3 build-skill/potsheet.py in.html out.html
 import sys
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
@@ -19,6 +20,23 @@ def rep(a, b):
 rep("const lgPhoto = (h, k) => { const pool = SEED.filter(x => x.cat === BATTLE_POOL[k]),",
     "const lgPhoto = (h, k) => { const mineS = new Set(S.photos.flatMap(p => [p.src, p.orig])), pool = SEED.filter(x => x.cat === BATTLE_POOL[k] && !mineS.has(x.src)),")
 
+# every star shares the 70% (no 3-star wall since the pot is split by stars)
+rep("let LG_FEE = 2, LG_SHARE = 3,", "let LG_FEE = 2, LG_SHARE = 1,")
+rep("<p>With <b>3+ stars</b> you share the other <b>70%</b> by stars: more stars, bigger share.", "<p>Every star you win gets a share of the other <b>70%</b>: more stars, bigger share.")
+rep("🏆 Most stars wins 30% · 3+ stars share 70% by stars", "🏆 Most stars wins 30% · every ⭐ shares 70%")
+rep("With 3+ stars you share the other 70% by stars: more stars, bigger share.", "Every star you win shares the other 70%: more stars, bigger share.")
+rep("70% shared by ${ST} among players with ${LG_SHARE}+.<br>", "70% is shared by every ${ST.slice(0, -1)} won today.<br>")
+rep("⭐ ${LG_SHARE}+ stars share <b>70%</b> by stars", "⭐ every star shares <b>70%</b>")
+rep("<span class=\"yd-s\">${Math.min(r.y, LG_SHARE)}/${LG_SHARE}</span>", "<span class=\"yd-s\">${r.y} ⭐</span>")
+rep("<span class=\"y\">You <b>${Math.min(Math.max(0, y), LG_SHARE)}/${LG_SHARE}</b></span>", "<span class=\"y\">You <b>${Math.max(0, y)} ⭐</b></span>")
+rep("<p><b>${Math.min(y, LG_SHARE)}/${LG_SHARE} ${ST}</b> · ${need ? `${need} more ⭐ to qualify`", "<p><b>${y} ${y === 1 ? ST.slice(0, -1) : ST}</b> · ${need ? 'win one to get a share'")
+rep("<p><b>${Math.min(y, LG_SHARE)}/${LG_SHARE} stars</b> · ${need ? `${need} more win${need === 1 ? '' : 's'} to share the pool`", "<p><b>${y} star${y === 1 ? '' : 's'}</b> · ${need ? 'win one to get a share'")
+rep("'Earn 3 stars to share the pot'", "'Every star wins a share of the pot'")
+rep("Collect 3 stars in a category by midnight to share the pot.", "Every star you win by midnight gets a share of the pot.")
+rep("Get ${LG_SHARE} ⭐ to qualify.", "Every ⭐ gets a share.")
+rep("s: mine ? `You ${Math.min(y, LG_SHARE)}/${LG_SHARE} ⭐ · from $1 · daily`", "s: mine ? (y ? `You ${y} ⭐ · about ${money(lgShare(k))} · from $1` : 'Win ⭐ for a share · from $1')")
+s = s.replace("an equal share wi", "a share by stars wi")
+
 JS = r'''
 // ---- the jackpot challenge screen ----
 const LG_IC = { pets: '🐾', travel: '✈️', night: '🍃', selfie: '👨‍👩‍👧', fitness: '🌷', food: '🧁', style: '🏠', any: '⭐' };
@@ -28,9 +46,9 @@ lgCat = function (k) {
   const near = iHold ? R0.filter(r => !r.me).sort((a, b) => Math.abs(a.n - y) - Math.abs(b.n - y))[0] : { h: H.h };
   const low = !mine && S.photos.filter(p => fitsTheme(p, k) && p.s).sort((a, b) => b.s.total - a.s.total)[0];
   const rematch = !iHold && (H.hist || [])[0] === 'you', cash = isCash(), free = cash && (S.cashTix || 0) > 0 && LG_FEE === 1;
-  const pot = L.jp[k] || 0, share = y >= LG_SHARE ? lgShare(k) : 0, stars = [0, 1, 2].map(i => `<i class="${i < y ? 'on' : ''}">★</i>`).join('');
+  const pot = L.jp[k] || 0, share = y ? lgShare(k) : 0, stars = `<i class="${y ? 'on' : ''}">★</i><b>${y}</b>`;
   const me = mine || low, theirs = lgPhoto(near.h, k);
-  const starLine = y >= LG_SHARE ? `You’re in · about <b>${money(share)}</b> so far` : `${LG_SHARE - y} more ⭐ to share the pot`;
+  const starLine = y ? `Your share now: about <b>${money(share)}</b>` : 'Win a ⭐ to get a share of the pot';
   const btn = S.minor ? `<p class="pj-min">Cash jackpots are 18+</p>`
     : mine ? `<button class="btn block pj-go" id="lgQuick">${VS_IC}${iHold ? 'Defend your ribbon' : rematch ? 'Rematch' : 'Challenge'} · ${cash ? (free ? 'Free 🎟️' : '$' + LG_FEE) : LG_COIN + ' 🟡'}</button>
        <p class="pj-win">Win: <b>+${cash ? LG_FEE : 1} ⭐</b>${iHold ? ' and keep the ribbon' : ' and take the ribbon'}</p>`
@@ -41,9 +59,9 @@ lgCat = function (k) {
     <div class="pj-top"><span class="pj-t">${LG_IC[k] || '⭐'} ${esc(cn)} jackpot</span><button class="pj-x" data-shclose aria-label="Close">✕</button></div>
     <div class="pj-pot"><b id="pjPot">$${Math.round(pot).toLocaleString()}</b><span>⏱ Pays in ${dayLeft()}</span></div>
     <div class="pj-st"><span class="pj-stars">${stars}</span><span>${starLine}</span></div>
-    <div class="pj-vs"><figure class="pj-them"><span class="pj-ph"><img src="${theirs}" alt=""><i class="pj-rib">${CRW}</i></span><figcaption>@${esc(near.h)}<small>${iHold ? 'Nearest rival' : 'Ribbon holder'}</small></figcaption></figure>
+    <div class="pj-vs"><figure class="pj-them"><span class="pj-ph"><img src="${theirs}" alt="">${iHold ? '' : `<i class="pj-rib">${CRW}</i>`}</span><figcaption>@${esc(near.h)}<small>${iHold ? 'Nearest rival' : 'Ribbon holder'}</small></figcaption></figure>
       <span class="pj-x2">VS</span>
-      <figure class="pj-me ${mine ? '' : 'low'}">${me ? `<span class="pj-ph"><img src="${me.src}" alt=""><i class="pj-sc">${me.s.total}</i></span>` : `<span class="pj-ph pj-add">+</span>`}<figcaption>You<small>${mine ? (iHold ? '🎀 You hold it' : 'Ready to play') : low ? `Needs ${CFG.QUALIFY}` : 'No photo yet'}</small></figcaption></figure></div>
+      <figure class="pj-me ${mine ? '' : 'low'}">${me ? `<span class="pj-ph"><img src="${me.src}" alt="">${iHold ? `<i class="pj-rib">${CRW}</i>` : ''}<i class="pj-sc">${me.s.total}</i></span>` : `<span class="pj-ph pj-add">+</span>`}<figcaption>You<small>${mine ? (iHold ? '🎀 You hold it' : 'Ready to play') : low ? `Needs ${CFG.QUALIFY}` : 'No photo yet'}</small></figcaption></figure></div>
     ${chips}${btn}
     <button class="link pj-how" id="pjHow">How it works</button></div>`);
   // the pot counts up a little
@@ -67,7 +85,7 @@ CSS = '''
 .pj-pot::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.6) 50%,transparent 65%);transform:translateX(-120%);animation:jarShine 3.2s ease-in-out infinite}
 .pj-pot b{display:block;font:900 2.6rem/1 Fraunces,serif;color:#1E6B3E}.pj-pot span{display:inline-block;margin-top:6px;font:800 .8rem "Nunito Sans";color:#2E6B42;background:rgba(255,255,255,.7);padding:2px 10px;border-radius:99px}
 .pj-st{display:flex;align-items:center;gap:10px;justify-content:center;margin:0 0 12px;font:700 .92rem "Nunito Sans";color:#2D2521}.pj-st b{color:#1E6B3E}
-.pj-stars{display:inline-flex;gap:2px}.pj-stars i{font-style:normal;font-size:1.5rem;line-height:1;color:#E2D5BE}.pj-stars i.on{color:#E0A82E;text-shadow:0 0 8px rgba(224,168,46,.6);animation:pjStar .5s ease-out both}
+.pj-stars{display:inline-flex;align-items:center;gap:3px;padding:3px 10px 3px 7px;border-radius:99px;background:#FFFDF9;box-shadow:inset 0 0 0 1.5px #E0B860}.pj-stars b{font:900 1.15rem Fraunces,serif;color:#8A5A0A}.pj-stars i{font-style:normal;font-size:1.5rem;line-height:1;color:#E2D5BE}.pj-stars i.on{color:#E0A82E;text-shadow:0 0 8px rgba(224,168,46,.6);animation:pjStar .5s ease-out both}
 @keyframes pjStar{0%{transform:scale(.3)}70%{transform:scale(1.25)}100%{transform:none}}
 .pj-vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:12px}
 .pj-vs figure{margin:0;text-align:center}.pj-ph{position:relative;display:block;aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:#EFE6D6}.pj-ph img{width:100%;height:100%;object-fit:cover;display:block}
