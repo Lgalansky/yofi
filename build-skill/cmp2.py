@@ -34,7 +34,7 @@ function c2Photo() { const L = lgS(), F = fighters(), best = F[0], cat = best ? 
   const ban = (id, ic, nm, chip, price, cls) => cls ? `<button class="c3-b ${cls}" data-c2r="${id}"><span class="c3-bi">${ic}</span><span class="c3-bt"><b>${nm}</b><i>${chip}</i></span><em>${price}</em></button>` : `<button class="c3-b c3-sm" data-c2r="${id}"><span class="c3-r1"><span class="c3-bi">${ic}</span><b>${nm}</b></span><span class="c3-r2"><i>${chip}</i><em>${price}</em></span></button>`;
   return `<h3 class="c2-h">💰 Daily jackpots <small>⏱ ${dayLeft()}</small></h3><div class="c3-jps">${jp}</div>
     <h3 class="c2-h">⚔️ 1 v 1 now</h3><div class="c3-one">${one}</div>
-    <h3 class="c2-h">🏆 Tournaments</h3><div class="c3-ko"><p class="c3-kh">${KO_PYR}<b>Knockouts</b><span>16 photos · 1 v 1 to the final</span></p><div class="c3-tl two">${spr ? tile('sprint', KO_PYR, 'Sprint', `Win $${spr.gtd}`, spr.now ? '⚡ On join' : tLeft(spr.at), '$1') : ''}${big ? tile('bigcup', KO_PYR, 'Big Cup', `Win $${big.gtd}`, '⏱ ' + tLeft(big.at), '$1') : ''}</div></div>
+    <h3 class="c2-h">🏆 Tournaments</h3>${spr ? `<button class="c3-sdr c3-spr" data-c2r="sprint"><span class="c3-sdi">${KO_PYR}</span><span class="c3-sdt"><b>Sprint</b><small>16 photos · win $${spr.gtd}</small></span><i>⏳ 16 to start</i><em>$1</em></button>` : ''}
     <button class="c3-sdr" data-c2r="sd"><span class="c3-sdi">⚡</span><span class="c3-sdt"><b>Showdown</b><small>5 photos · win ${money(sdPrize())}</small></span><i>Minutes</i><em>$${SD_FEE}</em></button>
     <button class="c3-club" data-c2r="clubs">👥 <b>Clubs</b> · weekly pots with friends <span>›</span></button>`; }
 function c2Eye() { const l = typeof jgLv === 'function' ? jgLv() : null, a = l ? jgAcc() : 0, nx = l && jgNext(), rvA = l ? Math.max(50, a - 1 - hsh(dayKey() + 'qs') % 4) : 0, pr = l ? Math.round(jgProg() * 100) : Math.round(jgN() / JG_MIN * 100);
@@ -59,7 +59,7 @@ renderGallery = function () { const r = _renderGalleryC2.apply(this, arguments);
 // the tournament list (opened from Big Cup / Sprint) keeps the same two tabs; Coin Cup and Crowd Championship are not listed there
 cmpPaint = function () { const fl = $('#flow'), fb = $('#flowBody');
   if (CMP_TAB === 'tour' && fl.classList.contains('on') && fb && !fb.querySelector('.c2-bar')) { fb.querySelectorAll('.cmp-bar, .cmp-h').forEach(e => e.remove()); fb.insertAdjacentHTML('afterbegin', c2Bar('photo')); c2Wire(fb); $('#segGallery').setAttribute('aria-pressed', 'true'); $('#segCompete').setAttribute('aria-pressed', 'false'); }
-  if (fb) fb.querySelectorAll('.cmp-tc').forEach(c => { const n = (c.querySelector('.cmp-tt b') || {}).textContent || ''; if (/Coin Cup|Crowd Championship/.test(n)) c.style.display = 'none'; }); };
+  if (fb) fb.querySelectorAll('.cmp-tc').forEach(c => { const n = (c.querySelector('.cmp-tt b') || {}).textContent || ''; if (/Coin Cup|Crowd Championship|Big Cup/.test(n)) c.style.display = 'none'; }); };
 new MutationObserver(() => { try { if (CMP_TAB === 'tour') cmpPaint(); } catch (e) {} }).observe($('#flowBody'), { childList: true, subtree: true });
 '''
 anchor = "  shownGems = S.gems;\n})();\n})();"
@@ -95,7 +95,7 @@ CSS += '''
 .c3-tt .ko-pyr{width:54px;height:46px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}.c3-tt .c3-ti{line-height:0}
 html body #gallery .c3-sdr{background:linear-gradient(160deg,#2B4372,#14213D)!important;color:#fff!important}html body #gallery .c3-sdr b{color:#fff}
 .c3-sdr{display:flex;align-items:center;gap:10px;width:calc(100% - 28px);margin:0 14px;padding:11px 12px;border:0;border-radius:18px;background:linear-gradient(160deg,#2B4372,#14213D);color:#fff;cursor:pointer;text-align:left;font-family:inherit;box-shadow:0 8px 16px -10px rgba(20,33,61,.8)}
-.c3-sdi{font-size:1.6rem}.c3-sdt{flex:1;min-width:0}.c3-sdt b{display:block;font:900 1rem Fraunces,serif}.c3-sdt small{font:800 .74rem "Nunito Sans";color:#F3D27A}
+.c3-sdi{font-size:1.6rem}.c3-spr{margin-bottom:10px!important}.c3-spr .ko-pyr{width:40px;height:34px}.c3-sdt{flex:1;min-width:0}.c3-sdt b{display:block;font:900 1rem Fraunces,serif}.c3-sdt small{font:800 .74rem "Nunito Sans";color:#F3D27A}
 .c3-sdr i{font:800 .7rem "Nunito Sans";font-style:normal;color:#2D2521;background:#FFF3D6;padding:1px 8px;border-radius:99px}.c3-sdr em{font-style:normal;font:900 .85rem "Nunito Sans";padding:5px 10px;border-radius:10px;background:linear-gradient(180deg,#2E9A5C,#21784A)}
 
 /* tournaments: three equal tiles */
