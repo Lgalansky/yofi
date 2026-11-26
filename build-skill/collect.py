@@ -50,11 +50,17 @@ vgPaint = function () { _vgPaintJ.apply(this, arguments);
     const tick = t => { if (!n.isConnected) return; const k = Math.min(1, (t - t0) / 800); n.textContent = '+' + Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); };
     requestAnimationFrame(tick); }
 };
+// one rate per level, so the line is always true: Gold 4, Diamond 8, Platinum 12 (unranked 2)
+GAL.MULT = [[90, 6], [80, 4], [70, 2], [0, 1]];
+const _im2LevelsL = im2Levels;
+im2Levels = function () { const r = _im2LevelsL.apply(this, arguments);
+  try { const b = $('#sheetBody'); b.innerHTML = b.innerHTML.replace(/(\d+)–\1 coins/g, '$1 coins').replace(/(\d+) coins/g, '$1 per vote').replace('Each time a voter picks your photo, it earns coins.', 'Your photo earns coins every time a voter picks it.').replace('about 25 picks', 'about 25 votes'); if (b.querySelector('.btn')) b.querySelectorAll('[data-shclose], .btn').forEach(x => x.onclick = () => closeSheet()); } catch (e) {}
+  return r; };
 // ---- one clear earnings line on every photo screen: what a voter's pick pays this photo ----
 stLine = function (v, from) {
   const t = galTier(v), pay = GAL.BASE * galMult(v), ci = gemIcon('gem st-ci');
   if (from != null) { const t0 = galTier(from), p0 = GAL.BASE * galMult(from);
-    if (p0 !== pay) return t ? `${TIER_IC[t]} ${t} photos earn you ${p0} → <b>${pay}</b>${ci} per vote` : `Earns you ${p0} → <b>${pay}</b>${ci} per vote`; }
+    }
   const nx = galNextMult(v), nb = !t ? 70 : null;
   return t ? `${TIER_IC[t]} ${t} photos earn you <b>${pay}</b>${ci} per vote` : `Earns you <b>${pay}</b>${ci} per vote · 🥇 Gold earns ${GAL.BASE * galMult(nb)}`;
 };
