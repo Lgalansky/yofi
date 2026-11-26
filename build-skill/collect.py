@@ -34,7 +34,7 @@ vgGoal = function () {
     return { p, jar: S.vgJar, t, s: 'Tap to collect', cta: `+${S.vgJar}`, act: jarCollect }; }
   const g = _vgGoalJ.apply(this, arguments);
   if (g && g.earn != null && g.p) { const p = g.p, rate = GAL.BASE * galMult(p.s.total), nm = alName(p);
-    return { p, t: `${nm} earns ${rate} coins a pick`, s: 'Picks pay out here', cta: 'Earn more', act: () => jarGoImprove(p) }; }
+    return { p, t: `${nm} earns you ${rate} coins per vote`, s: 'Votes pay out here', cta: 'Earn more', act: () => jarGoImprove(p) }; }
   return g;
 };
 const _vgPaintJ = vgPaint;
@@ -54,9 +54,9 @@ vgPaint = function () { _vgPaintJ.apply(this, arguments);
 stLine = function (v, from) {
   const t = galTier(v), pay = GAL.BASE * galMult(v), ci = gemIcon('gem st-ci');
   if (from != null) { const t0 = galTier(from), p0 = GAL.BASE * galMult(from);
-    if (p0 !== pay) return `${t && t !== t0 ? `${TIER_IC[t]} ${t} · each` : 'Each'} voter pick ${p0} → <b>${pay}</b>${ci}`; }
+    if (p0 !== pay) return t ? `${TIER_IC[t]} ${t} photos earn you ${p0} → <b>${pay}</b>${ci} per vote` : `Earns you ${p0} → <b>${pay}</b>${ci} per vote`; }
   const nx = galNextMult(v), nb = !t ? 70 : null;
-  return `${t ? `${TIER_IC[t]} ${t} · each` : 'Each'} voter pick earns <b>${pay}</b>${ci}${nb ? ` · 🥇 ${nb}+ earns ${GAL.BASE * galMult(nb)}` : ''}`;
+  return t ? `${TIER_IC[t]} ${t} photos earn you <b>${pay}</b>${ci} per vote` : `Earns you <b>${pay}</b>${ci} per vote · 🥇 Gold earns ${GAL.BASE * galMult(nb)}`;
 };
 
 // ---- score on its own full-width line, earnings line right under it (Improve and Before and after) ----
@@ -87,7 +87,7 @@ html body #vgGoal .vg-cta.jar-cta{display:inline-flex;align-items:center;gap:5px
 @media (prefers-reduced-motion:reduce){html body #vgGoal .vg-cta.jar-cta,#vgGoal .vg-cta.jar-cta::after,#vgGoal.jar-pop{animation:none}}
 '''
 a = '<b>${x}×</b> per vote · <em>+${d} today</em>'
-assert s.count(a) == 1; s = s.replace(a, '<b>${GAL.BASE * x}</b>${gemIcon("gem st-ci")} a pick · <em>+${d} today</em>')
+assert s.count(a) == 1; s = s.replace(a, '<b>${GAL.BASE * x}</b>${gemIcon("gem st-ci")} per vote · <em>+${d} today</em>')
 CSS += '.st-ci{width:1em;height:1em;vertical-align:-.15em;margin-left:2px}\n'
 CSS += """
 /* Improve: score bar like Before and after, earnings line under it */
