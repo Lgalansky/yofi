@@ -771,7 +771,8 @@ python3 build-skill/map.py sp-m.html sp-q.html
 python3 build-skill/potsheet.py sp-q.html sp-r.html
 python3 build-skill/cmp2.py sp-r.html sp-c2.html
 python3 build-skill/games.py sp-c2.html sp-g.html2
-python3 build-skill/results.py sp-g.html2 skill-preview.html
+python3 build-skill/results.py sp-g.html2 sp-rs.html
+python3 build-skill/places.py sp-rs.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -794,7 +795,7 @@ python3 build-skill/results.py sp-g.html2 skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `results.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `places.py`, then copy the result to `index.html` with the title "Yofi - Skill".
 
 `collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve. It also sets the one status line on every photo screen to say what a voter's pick pays ("Earns you 2 🟡 per vote · 🥇 Gold earns 4", "🥇 Gold photos earn you 4 🟡 per vote"), and gallery sleeves show coins per vote instead of "2×". Each level pays one rate (unranked 2, Gold 4, Diamond 8, Platinum 12 coins per vote). Gallery photos show their level icon by the score, a gold "+N today" pill on the photo and "Earns N per vote" underneath. Reaching a new level shows a celebration with the new rate ("Milo is Gold! now earns you 4 🟡 per vote").
 
@@ -815,3 +816,5 @@ The live `index.html` now includes the galleries steps. Their input is the earli
 `games.py` gives every cash game the same screen: name + one line, a green prize box (what you can win + when), a VS picture (rival left, you right: photos, eye rings, a room of 5, or "the field"), 3 stake chips that each say what they win (or one outlined chip when the stake is fixed), one big green "Play · $2" button and one small link. Games: Daily jackpot, Head-to-head (with "Challenge a friend instead"), incoming friend challenges (Accept · $1 / Decline, stake set by the friend), Quick Sprint, Showdown, Big Cup / Sprint and Crowd Championship. Champion is cut (the jackpot ribbon holder plays that role). The Vote card and Compete open these screens; an incoming challenge shows at the top of 1 v 1 and on the Vote card as "🤝 @mike challenged you".
 
 `results.py` gives jackpot, head-to-head and friend challenges one result screen in the same style as the game screen: name + "Pet · Final result", a headline ("You won!" / "@mike won", by N votes), a prize box (green "+2 ⭐ · Your share now" or "$1.70 · Added to your cash"; neutral "You lost $1" with one tip), the VS photos with a WINNER tag and votes, the vote bar, one green "Play again · $2" / "Rematch" button and a "Back to voting" link. It also shows your stars today ("★ 2 TODAY") big and gold on the Compete jackpot photos.
+
+`places.py` brings Quick Sprint, Showdown, Crowd Championship and knockout tournaments into the same result frame. 1 v 1 games (Quick Sprint) show VS (your score ring vs theirs); games with many players show your place in a list: the top places, a dashed "paid" line, you highlighted with the players either side, "+N more". Crowd Championship shows standings so far when your run ends ("11/15 right · You’re 23rd of 205 so far", results at the hour). Tournament "Play · $1" now joins in one tap, and Sprint says "Starts 1 min after you join" instead of a countdown that never moved.

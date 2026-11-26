@@ -87,10 +87,10 @@ function sdSheet() { const a = sdActive(); if (a) { openSdRoom(a.id); return; } 
 // Big Cup / Sprint (scheduled)
 function tourSheet(kind) { const T = tSlots(), t = kind === 'big' ? T.find(x => x.gtd >= 100) : T.find(x => x.gtd < 100), me = fighters()[0]; if (!t) return; if (!me) { gsNeedPhoto(); return; }
   const nm = kind === 'big' ? 'Big Cup' : 'Sprint';
-  gameSheet({ ic: kind === 'big' ? '🏆' : '⏱', nm, what: 'A scheduled tournament · voters pick the winners', pl: 'Prize pool', prize: `$${t.gtd}`, chip: `⏱ Starts in ${tLeft(t.at)}`,
+  gameSheet({ ic: kind === 'big' ? '🏆' : '⏱', nm, what: 'A scheduled tournament · voters pick the winners', pl: 'Prize pool', prize: `$${t.gtd}`, chip: t.now ? '⚡ Starts 1 min after you join' : `⏱ Starts in ${tLeft(t.at)}`,
     left: gsTile('👥', 'Everyone entered'), lcap: 'The field<small>Top photos share it</small>', right: gsPh(me.src, me.s.total), rcap: `You<small>${esc(alName(me))}</small>`,
     fixed: '$1', fixedSub: `one entry · $${t.gtd} prize pool`, go: 'Play · $1',
-    onGo: () => { closeSheet(); cmpOpen('tour'); setTimeout(() => { const c = [...document.querySelectorAll('#flowBody .cmp-tc')].find(x => (x.querySelector('.cmp-tt b') || {}).textContent === nm); const b = c && c.querySelector('.cmp-go'); if (b) b.click(); }, 450); },
+    onGo: () => { closeSheet(); cmpOpen('tour'); setTimeout(() => { const c = [...document.querySelectorAll('#flowBody .cmp-tc')].find(x => (x.querySelector('.cmp-tt b') || {}).textContent === nm); const b = c && c.querySelector('.cmp-go'); if (b) b.click(); setTimeout(() => { const j = $('#tkGo'); if (j) j.click(); }, 600); }, 450); },
     link: 'How it works', onLink: gsHow('Enter one photo. When it starts, voters judge every entry and the top photos share the prize pool.') }); }
 // Crowd Championship (your eye)
 function crowdSheet() { const l = typeof jgLv === 'function' && jgLv(), a = l ? jgAcc() : 0, nxt = chId() + 1, at = new Date(nxt * CH_MS).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), pool = chPool(700 + hsh('ch' + nxt) % 900);
