@@ -764,7 +764,8 @@ python3 build-skill/nowow.py sp-x.html sp-w.html
 python3 build-skill/stakes.py sp-w.html sp-k.html
 python3 build-skill/collect.py sp-k.html sp-j.html
 python3 build-skill/jarfull.py sp-j.html sp-f.html
-python3 build-skill/judge.py sp-f.html skill-preview.html
+python3 build-skill/judge.py sp-f.html sp-u.html
+python3 build-skill/jackpot.py sp-u.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -787,10 +788,12 @@ python3 build-skill/judge.py sp-f.html skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `judge.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `jackpot.py`, then copy the result to `index.html` with the title "Yofi - Skill".
 
 `collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve. It also sets the one status line on every photo screen to say what a voter's pick pays ("Earns you 2 🟡 per vote · 🥇 Gold earns 4", "🥇 Gold photos earn you 4 🟡 per vote"), and gallery sleeves show coins per vote instead of "2×". Each level pays one rate (unranked 2, Gold 4, Diamond 8, Platinum 12 coins per vote). Gallery photos show their level icon by the score, a gold "+N today" pill on the photo and "Earns N per vote" underneath. Reaching a new level shows a celebration with the new rate ("Milo is Gold! now earns you 4 🟡 per vote").
 
 `jarfull.py` makes the coin jar fill over time from votes on your hung photos (replacing the one-off "while you were away" credit). It holds 8 hours of earnings; the Vote card shows a fill bar and "Jar full in 5h 0m", and once full it reads "Your coin jar is full!" and stops filling until collected. The Vote tab shows a gold "+N" badge for coins waiting, or a pulsing "FULL". The app always opens on Vote (signed-in players used to land on Compete). Completing a collection at a new level pays a free $1 cash challenge entry (S.cashTix), shown as a ticket on the celebration pop; "Play my free challenge" opens that category's daily challenge with the $1 stake marked FREE.
 
 `judge.py` adds a judge score: how often your vote matches the crowd over your last 50 votes. The 🔥 pill still shows only streak days; a thin gold ring around the flame fills towards the next judge level and "+1 ✓" pops on a match. Tapping the pill opens the judge card: level (Good Eye, Sharp Eye 65%+, Expert 75%+ pays +1 coin a correct vote, Master 85%+ pays +2), a progress bar, two goals (8 of your next 10 right = +20 coins; reach the next level) and a 3-row league of players with a similar number of votes (simulated). The score shows after 20 votes; a level only drops when you fall 3% below it.
+
+`jackpot.py` gives the daily jackpot challenges (Today's photo challenges) every other turn in the green real-money card on Vote: "$2,855 Pet jackpot · You 0/3 ⭐ · from $1 · daily" with a green Play button that opens that category's challenge with the $1/$2/$5 stake picker. Categories you have a 70+ photo for take turns; an incoming friend challenge still comes first.
