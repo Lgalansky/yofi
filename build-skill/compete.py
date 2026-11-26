@@ -193,6 +193,11 @@ html body .gl-seg button,html body .cmp-bar button{font:800 1rem "Nunito Sans",s
 html body #gallery .bt-sw button{font:800 .95rem "Nunito Sans",sans-serif!important}
 html body #gallery h1:not(.cmp-h),html body .im2 h2,html body .im2-t{font-family:Fraunces,serif!important;font-weight:900!important;color:#7A1F27!important}
 html.yg body #gallery h1:not(.cmp-h),html.yg body .im2 h2,html.yg body .im2-t{color:#fff!important}
+/* same header on every page: the day-progress dots already live on Vote */
+html body #sTop{display:none!important}
+/* tournament titles fit their banner */
+html body .cmp-ic{width:72px!important;height:66px!important}html body .cmp-tt b{font-size:clamp(1.1rem,5.6vw,1.75rem)!important;overflow-wrap:normal}
+html body .gl-seg button,html body .cmp-bar button{white-space:nowrap;font-size:clamp(.86rem,4.1vw,1rem)!important}
 .nm-ask{text-align:center}.nm-ph{width:120px;height:160px;object-fit:cover;border-radius:14px;box-shadow:0 0 0 3px #E0A82E;margin:4px auto 10px;display:block}
 .nm-ask input{width:100%;box-sizing:border-box;margin:6px 0 12px;padding:12px 14px;border-radius:14px;border:1.5px solid #CDBFA8;font:800 1.2rem Fraunces,serif;text-align:center;background:#FFFDF9;color:#2D2521}
 /* Improve photo frame stands out more (drawn outside the photo, so sizes don't change) */
@@ -228,4 +233,5 @@ html.yg .cmp-bar{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1.5px r
 html.yg .cmp-bar button[aria-selected="true"]{background:linear-gradient(95deg,#7B3CFF,#FF2D8E);color:#fff}
 '''
 i = s.rindex('</style>'); s = s[:i] + CSS + s[i:]
+a = 'id="cxToStudio">Go to Studio</button>'; assert s.count(a) == 1; s = s.replace(a, 'id="cxToStudio">Go to Gallery</button>')
 open(p, 'w', encoding='utf-8').write(s); print('compete ok')
