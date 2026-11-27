@@ -1,6 +1,7 @@
 # Skill preview: a calm first-upload journey in the right order.
 #   1. pick a photo (or a sample)  2. "Name your photo" with the photo shown  3. the scan
-#   4. land straight on Improve, the score counting up from 0, with any welcome gift
+#   4. land straight on Improve, the score counting up from 0; the first photo comes with a welcome gift
+#      of coins that covers its first touch-up
 # The old "Touch up your photo" result screen no longer flashes for new uploads, and the
 # name is never asked after the score.
 # usage: python3 build-skill/upflow.py in.html out.html
@@ -19,6 +20,9 @@ rep("  openFlow(`<div class=\"scan\"><img src=\"${src}\" alt=\"Your photo\"></di
 rep("const p = { id: uid(), src, orig: src, s, start: s.total, enh: 0, q: s.total >= CFG.QUALIFY, at: Date.now() };",
     "const p = { id: uid(), src, orig: src, s, start: s.total, enh: 0, q: s.total >= CFG.QUALIFY, at: Date.now(), nm: upName || undefined, nmAsk: 1 };")
 
+# the Improve button uses the touch-up's name and is gold (it spends coins)
+for a, b in [("v: 'Apply lighting fix'", "v: 'Fix lighting'"), ("v: 'Apply colour boost'", "v: 'Boost colour'"), ("v: 'Apply sharpening'", "v: 'Sharpen details'"), ("v: 'Apply soft background'", "v: 'Soften background'")]:
+    rep(a, b)
 JS = r'''
 // ---- first-upload journey: name → scan → Improve ----
 function upAskName(src) { return new Promise(done => {
@@ -38,7 +42,9 @@ showResult = function (p, o = {}) {
   window.__upLand = Date.now();
   try { closeFlow(); } catch (e) {} S.cur = p.id; TU_GAL = false; WALL = false; AL_OPEN = null; save(); go('studio'); try { renderStudio(); } catch (e) {}
   setTimeout(() => { const sc = $('#i2Score'); if (sc) { const b = p.s.total, t0 = performance.now(); sc.classList.add('up-rev'); const tick = n => { const k = Math.min(1, (n - t0) / 1100); sc.textContent = Math.round(b * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); }; sc.textContent = '0'; requestAnimationFrame(tick); } }, 120);
-  if (o.win) setTimeout(() => { try { gemExplosion(o.win, { label: o.first ? 'Welcome gift' : 'Daily upload bonus', from: $('#i2Score') }); } catch (e) {} }, 1400);
+  // first photo: a welcome gift that covers its first touch-up
+  let gift = o.win || 0; if (!S.firstGift && S.photos.filter(x => x.s).length === 1) { S.firstGift = 1; const need = Math.max(0, fixCost(p) - Math.floor(S.gems || 0)); if (need) { S.gems = (S.gems || 0) + need; gift += need; } save(); }
+  if (gift) { shownGems = S.gems - gift; try { paintGems(); renderStudio(); } catch (e) {} setTimeout(() => { try { gemExplosion(gift, { label: S.photos.length === 1 ? 'Welcome gift · enough for your first touch-up' : 'Daily upload bonus', from: $('#i2Score') }); } catch (e) {} }, 1400); }
   try { galCheck(); } catch (e) {}
 };
 '''
@@ -46,6 +52,7 @@ anchor = "  shownGems = S.gems;\n})();\n})();"
 assert s.count(anchor) == 1
 s = s.replace(anchor, JS + anchor)
 CSS = '''
+html body .im2 #i2Go.im2-apply{background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important;box-shadow:0 8px 18px -8px rgba(160,110,10,.7)!important}
 #i2Score.up-rev{animation:upRev 1.2s ease-out}
 @keyframes upRev{0%{transform:scale(.6);opacity:.3}60%{transform:scale(1.15);opacity:1}100%{transform:none}}
 '''
