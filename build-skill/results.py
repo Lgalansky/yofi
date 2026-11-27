@@ -32,6 +32,7 @@ function gsResult() { const sb = $('#sheetBody'); if (!sb) return;
       box: won ? { k: 'You won', b: T(nx && nx.querySelector('b')), s: 'Added to your cash' } : { k: 'You lost', b: T(nx && nx.querySelector('b')), s: 'Touch up your photo to win more votes' },
       btn: kg.querySelector('#duAgain, #fbMore') };
     if (o.btn && id === 'fb' && !/\$/.test(o.btn.textContent)) o.btn.textContent = 'Rematch';
+    if (o.btn && id === 'du') { const st = (o.btn.textContent.match(/\$(\d+)/) || [])[1]; o.btn.onclick = () => { closeSheet(); if (st) H2H_ST = +st; setTimeout(() => h2hSheet(), 280); }; }
   }
   const mg = Math.abs(o.mv - o.tv), N = o.mv + o.tv || 1, pm = Math.round(o.mv / N * 100), cat = o.cat ? o.cat.charAt(0) + o.cat.slice(1).toLowerCase() : '';
   const fig = (src, nm, v, w, me) => `<figure class="${me ? 'pj-me' : 'pj-them'} ${w ? 'gr-w' : 'gr-l'}"><span class="pj-ph"><img src="${src || ''}" alt="">${w ? '<i class="gr-tag">🏆 WINNER</i>' : ''}</span><figcaption>${esc(nm)}<small>${v} vote${v === 1 ? '' : 's'}</small></figcaption></figure>`;
@@ -49,6 +50,9 @@ function gsResult() { const sb = $('#sheetBody'); if (!sb) return;
   if (jp && o.btn) { const k = CATS8.find(x => crownName(x) === T(jp.querySelector('.pr3-k'))), fee = isCash() ? '$' + LG_FEE : LG_COIN + ' 🟡';
     o.btn.textContent = `${o.won ? 'Play again' : 'Rematch'} · ${fee}`; o.btn.onclick = () => { closeSheet(); setTimeout(() => lgCat(k), 280); }; }
   const host = jp ? jp.closest('.kg2') : kg; host.innerHTML = ''; host.appendChild(wrap);
+  // the close and back buttons were added after the sheet opened, so bind them here
+  const onVote = $('#panes').dataset.at === 'judge';
+  wrap.querySelectorAll('[data-shclose]').forEach(b => b.onclick = () => { closeSheet(); if (b.classList.contains('pj-how')) { if (onVote) go('judge'); else { GV.tab = 'battle'; go('gallery'); renderGallery(); } } });
   sb.querySelectorAll('.to-cash').forEach(x => x.remove());
 }
 new MutationObserver(() => { try { gsResult(); } catch (e) {} }).observe($('#sheetBody'), { childList: true, subtree: true });
