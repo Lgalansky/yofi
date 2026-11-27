@@ -19,14 +19,20 @@ function tkTidy() { const b = $('#tkBody'); if (!b || !b.querySelector('.tk-h'))
   const cnt = b.querySelector('.tk-cnt'); if (cnt && vs && !cnt.dataset.t) { cnt.dataset.t = 1; const n = [...vs.querySelectorAll('.tk-nm')].map(x => x.textContent); const sp = cnt.querySelectorAll('span'); if (sp[0]) sp[0].insertAdjacentHTML('afterend', `<small>${n[0] || ''}</small>`); if (sp[1]) sp[1].insertAdjacentHTML('beforebegin', `<small>${n[1] || ''}</small>`); }
   const rin = b.querySelector('.tk-rin'); if (rin && !rin.dataset.t) { rin.dataset.t = 1; const bar = b.querySelector('.kg-bar'); const c = b.querySelector('.tk-cnt'); if (c) c.after(rin); else if (bar) bar.after(rin); }
   const rc = b.querySelector('.tk-rc p'); if (rc && /-\d/.test(rc.textContent)) rc.textContent = rc.textContent.replace(/-(\d+)/, '$1');
+  // lobby: players joined instead of a countdown
+  const st = b.querySelector('.tk-st'); if (st && !st.dataset.t) { const tm = st.querySelector('[data-tmins]'); if (tm) { st.dataset.t = 1; const box = tm.parentElement; tm.style.display = 'none'; box.insertAdjacentHTML('afterbegin', '<small>Players</small><b class="tk-j"></b><i class="tk-jb"><i></i></i>'); const sm = box.querySelectorAll('small')[1]; if (sm) sm.remove(); }
+    const pj = b.querySelector('.tk-pj'); if (pj) pj.style.display = 'none'; const sub = b.querySelector('.tk-sub'); if (sub) sub.textContent = 'You’re in! It starts when 16 have joined'; }
+  const j = b.querySelector('.tk-j'); if (j) { const n = Math.min(16, (typeof tCount === 'function' ? tCount() : 16)); const t = `${n}/16`; if (j.dataset.n !== t) { j.dataset.n = t; j.innerHTML = `${t}<small> joined</small>`; } const bar = b.querySelector('.tk-jb i'); if (bar) bar.style.width = (n / 16 * 100) + '%'; }
   b.querySelectorAll('.btn[data-shclose]').forEach(x => { if (/Keep judging/.test(x.textContent)) x.textContent = 'Keep voting'; }); }
 const KO_PYR2 = '<svg class="ko-pyr" viewBox="0 0 40 34" aria-hidden="true"><rect x="15" y="1" width="10" height="6" rx="2" fill="#F3D27A"/><rect x="10" y="9" width="20" height="6" rx="2" fill="#E0A82E"/><rect x="5" y="17" width="30" height="6" rx="2" fill="#C9D6EE"/><rect x="0" y="25" width="40" height="6" rx="2" fill="#9FB6DD"/></svg>';
+setInterval(() => { try { tkTidy(); } catch (e) {} }, 1000);
 new MutationObserver(() => { try { tkTidy(); } catch (e) {} }).observe($('#sheetBody'), { childList: true, subtree: true });
 '''
 anchor = "  shownGems = S.gems;\n})();\n})();"
 assert s.count(anchor) == 1
 s = s.replace(anchor, JS + anchor)
 CSS = '''
+#tkBody .tk-j{display:block;font:900 1.9rem/1.1 Fraunces,serif;color:#1F3157;white-space:nowrap}#tkBody .tk-j small{font:800 .8rem "Nunito Sans";color:#4E433C}#tkBody .tk-jb{display:block;height:6px;margin-top:6px;border-radius:99px;background:#E7DCC7;overflow:hidden}#tkBody .tk-jb i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2D4E86,#5B8DEF);border-radius:99px;transition:width .6s}
 /* live knockout screen */
 html body #tkBody .tk-h{display:flex;flex-direction:column;align-items:center;gap:2px;margin:0 0 12px;font:900 1.7rem Fraunces,serif;color:#1F3157}
 #tkBody .tk-h .ko-pyr{width:42px;height:36px;margin-bottom:2px}#tkBody .tk-h small{font:800 .8rem "Nunito Sans";color:#4E433C}
