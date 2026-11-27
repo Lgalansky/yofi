@@ -34,7 +34,7 @@ function c2Photo() { const L = lgS(), F = fighters(), best = F[0], cat = best ? 
   const ban = (id, ic, nm, chip, price, cls) => cls ? `<button class="c3-b ${cls}" data-c2r="${id}"><span class="c3-bi">${ic}</span><span class="c3-bt"><b>${nm}</b><i>${chip}</i></span><em>${price}</em></button>` : `<button class="c3-b c3-sm" data-c2r="${id}"><span class="c3-r1"><span class="c3-bi">${ic}</span><b>${nm}</b></span><span class="c3-r2"><i>${chip}</i><em>${price}</em></span></button>`;
   return `<h3 class="c2-h">💰 Daily jackpots <small>⏱ ${dayLeft()}</small></h3><div class="c3-jps">${jp}</div>
     <h3 class="c2-h">⚔️ 1 v 1 now</h3><div class="c3-one">${one}</div>
-    <h3 class="c2-h">🏆 Tournaments</h3>${spr ? `<button class="c3-sdr c3-spr" data-c2r="sprint"><span class="c3-sdi">${KO_PYR}</span><span class="c3-sdt"><b>Sprint</b><small>16 photos · win $${spr.gtd}</small></span><i>⏳ 16 to start</i><em>$1</em></button>` : ''}
+    <h3 class="c2-h">🏆 Tournaments</h3>${spr ? `<button class="c3-sdr c3-spr" data-c2r="sprint"><span class="c3-sdi">${KO_PYR}</span><span class="c3-sdt"><b>Sprint</b><small>16 photos · win $25</small></span><i>⏳ 16 to start</i><em>$2</em></button>` : ''}
     <button class="c3-sdr" data-c2r="sd"><span class="c3-sdi">⚡</span><span class="c3-sdt"><b>Showdown</b><small>5 photos · win ${money(sdPrize())}</small></span><i>Minutes</i><em>$${SD_FEE}</em></button>
     <button class="c3-club" data-c2r="clubs">👥 <b>Clubs</b> · weekly pots with friends <span>›</span></button>`; }
 function c2Eye() { const l = typeof jgLv === 'function' ? jgLv() : null, a = l ? jgAcc() : 0, nx = l && jgNext(), rvA = l ? Math.max(50, a - 1 - hsh(dayKey() + 'qs') % 4) : 0, pr = l ? Math.round(jgProg() * 100) : Math.round(jgN() / JG_MIN * 100);

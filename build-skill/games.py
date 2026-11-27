@@ -28,6 +28,8 @@ rep("<button class=\"pj-x\" data-shclose aria-label=\"Close\">✕</button></div>
 rep("${iHold ? 'Defend your ribbon' : rematch ? 'Rematch' : 'Challenge'} · ${cash ? (free ? 'Free 🎟️' : '$' + LG_FEE) : LG_COIN + ' 🟡'}",
     "${iHold ? 'Defend' : rematch ? 'Rematch' : 'Play'} · ${cash ? (free ? 'Free 🎟️' : '$' + LG_FEE) : LG_COIN + ' 🟡'}")
 
+rep("const tPay = (k, n = T_N) => { const c0 = tCfg();", "const tPay = (k, n = T_N) => { const f2 = (S.tour && !S.tour.seen && S.tour.fee) || T_FEE; if (f2 === 2 && !(tCfg() && tCfg().gem)) return k === 'win' ? 25 : k === 'final' ? 2.2 : 0; const c0 = tCfg();")
+rep("if (!window.__tSlot) window.__tSlot = { gtd: 25, gem: false }; tTier(1);", "if (!window.__tSlot) window.__tSlot = { gtd: 25, gem: false }; tTier(window.__tSlot && window.__tSlot.gem ? 1 : 2);")
 JS = r'''
 // ---- one game screen for every cash game ----
 const gsPh = (src, sc) => `<span class="pj-ph"><img src="${src}" alt="">${sc != null ? `<i class="pj-sc">${sc}</i>` : ''}</span>`;
@@ -87,11 +89,13 @@ function sdSheet() { const a = sdActive(); if (a) { openSdRoom(a.id); return; } 
 // Big Cup / Sprint (scheduled)
 function tourSheet(kind) { const T = tSlots(), t = kind === 'big' ? T.find(x => x.gtd >= 100) : T.find(x => x.gtd < 100), me = fighters()[0]; if (!t) return; if (!me) { gsNeedPhoto(); return; }
   const nm = kind === 'big' ? 'Big Cup' : 'Sprint';
-  gameSheet({ ic: kind === 'big' ? '🏆' : '⏱', nm, what: '16-photo knockout · 1 v 1 rounds to the final', pl: 'Prize pool', prize: `$${t.gtd}`, chip: '⏳ Starts when 16 have joined',
+  gameSheet({ ic: kind === 'big' ? '🏆' : '⏱', nm, what: '16-photo knockout · 1 v 1 rounds to the final', pl: 'Winner takes', prize: '$25', chip: '⏳ Starts when 16 have joined',
     left: gsTile('🏆', '16 photos'), lcap: 'The field<small>Winner and finalist paid</small>', right: gsPh(me.src, me.s.total), rcap: `You<small>${esc(alName(me))}</small>`,
-    fixed: '$1', fixedSub: `one entry · $${t.gtd} prize pool`, go: 'Play · $1',
-    onGo: () => { closeSheet(); cmpOpen('tour'); setTimeout(() => { const c = [...document.querySelectorAll('#flowBody .cmp-tc')].find(x => (x.querySelector('.cmp-tt b') || {}).textContent === nm); const b = c && c.querySelector('.cmp-go'); if (b) b.click(); setTimeout(() => { const j = $('#tkGo'); if (j) j.click(); }, 600); }, 450); },
+    fixed: '$2', fixedSub: 'winner $25 · finalist $2.20', go: 'Play · $2',
+    onGo: () => { closeSheet(); tTier(2); cmpOpen('tour'); setTimeout(() => { const c = [...document.querySelectorAll('#flowBody .cmp-tc')].find(x => (x.querySelector('.cmp-tt b') || {}).textContent === nm); const b = c && c.querySelector('.cmp-go'); if (b) b.click(); setTimeout(() => { const j = $('#tkGo'); if (j) j.click(); }, 600); }, 450); },
     link: 'How it works', onLink: gsHow('Enter one photo. When it starts, voters judge every entry and the top photos share the prize pool.') }); }
+// Sprint costs $2: 16 × $2 = $32 in, winner $25, finalist $2.20, $4.80 rake
+T_TIERS[2] = Object.assign({}, T_TIERS[1], { gtd: 25 });
 // Crowd Championship (your eye)
 function crowdSheet() { const l = typeof jgLv === 'function' && jgLv(), a = l ? jgAcc() : 0, nxt = chId() + 1, at = new Date(nxt * CH_MS).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), pool = chPool(chPlayers(nxt, nxt * CH_MS));
   gameSheet({ ic: '👥', nm: 'Crowd Championship', what: `Pick the crowd’s favourites · 1st wins about $${Math.round(pool * .1).toLocaleString()}`, pl: 'Prize pool', prize: `$${pool.toLocaleString()}`, chip: `⏱ Starts at ${at}`,
