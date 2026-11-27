@@ -778,7 +778,8 @@ python3 build-skill/friends.py sp-co.html sp-fr.html
 python3 build-skill/upflow.py sp-fr.html sp-uf.html
 python3 build-skill/tourlive.py sp-uf.html sp-tl.html
 python3 build-skill/steal.py sp-tl.html sp-st.html
-python3 build-skill/cmp3.py sp-st.html skill-preview.html
+python3 build-skill/cmp3.py sp-st.html sp-c3.html
+python3 build-skill/cardfix.py sp-c3.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -801,7 +802,7 @@ python3 build-skill/cmp3.py sp-st.html skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `cmp3.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `cardfix.py`, then copy the result to `index.html` with the title "Yofi - Skill".
 
 `collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve. It also sets the one status line on every photo screen to say what a voter's pick pays ("Earns you 2 🟡 per vote · 🥇 Gold earns 4", "🥇 Gold photos earn you 4 🟡 per vote"), and gallery sleeves show coins per vote instead of "2×". Each level pays one rate (unranked 2, Gold 4, Diamond 8, Platinum 12 coins per vote). Gallery photos show their level icon by the score, a gold "+N today" pill on the photo and "Earns N per vote" underneath. Reaching a new level shows a celebration with the new rate ("Milo is Gold! now earns you 4 🟡 per vote").
 
@@ -836,3 +837,5 @@ The live `index.html` now includes the galleries steps. Their input is the earli
 `steal.py` adds card stealing. Gallery photos are cards that earn per vote. After 2h+ away, a (simulated) rival may steal one card (you keep what it earned; its slot is empty until you win it back). On return the usual key-moment pop shows "While you were away · +40 🟡 earned by your cards" (the jar is collected) and "1 card stolen · Emma won 5–4" with "Win Falls back". Steal battles (win back, or steal a rival's card from Compete › Your photo › Cards): risk one of your cards, first to 5 votes wins both cards, 3 a day, navy buttons (no money at stake). A stolen card joins your collection ("🃏 Won from Zara") and earns for you; it is never entered in cash games. Platinum cards (90+) can't be stolen or risked and show a "🛡 Safe" tag.
 
 `cmp3.py` lays out Compete › Your photo as agreed: Daily jackpots (photo cards with "From $1" / "Add photo", "Ends in" timer), Head-to-head (VS photo card, "Entry $1 · Win $1.70", green "View matchup"), Challenge a friend (WhatsApp row, green "Invite"), Card challenges panel ("Win Falls back · Emma won 5–4" + navy "Rematch"; "Steal a card"), Tournaments as full-width navy rows (gold "Win $25", green "Entry $2"), then Clubs.
+
+`cardfix.py` tidies three things: the Improve button uses the shared gold coin button (centred "Fix lighting · 50 🟡"); the first photo's welcome gift is a small coin fly-in plus one gold line under the score ("🎁 Welcome gift · first touch-up on us"), and big "+N" coin banners stay on screen; cards won in a steal show "🃏 Won from Maya" in the bottom pill instead of over the score.
