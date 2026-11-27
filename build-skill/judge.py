@@ -50,6 +50,9 @@ function jgLeague() { const a = jgAcc(), n = Math.max(jgN(), S.eyeN || 0), lo = 
   const others = names.map((h, i) => ({ h, a: Math.max(40, Math.min(95, a + ((hsh(h + dayKey()) % 17) - 8))) }));
   const all = [...others, { h: 'you', a, me: 1 }].sort((x, y) => y.a - x.a || (y.me ? 1 : -1)); const i = all.findIndex(x => x.me);
   return { rows: all.slice(Math.max(0, i - 1), Math.max(0, i - 1) + 3).map(r => ({ ...r, rank: all.indexOf(r) + 1 })), band: `${lo}–${hi} votes`, rank: i + 1, of: all.length }; }
+// the streak, simplified: one line (days you voted 3+ times), no sessions
+function jgStreak(ds) { const done = ds.D.last === ds.t, n = done ? 3 : Math.min(3, ds.D.n || 0), st = ds.streak || 0;
+  return `<div class="jg-stk ${done ? 'done' : ''}"><span class="jg-fl">🔥</span><span><b>${st ? `${st}-day streak` : 'Start a streak'}</b><small>${done ? 'Today counted · come back tomorrow' : `Vote ${3 - n} more today to ${st ? 'keep it' : 'start it'}`}</small></span><span class="jg-dots">${[0, 1, 2].map(i => `<i class="${i < n || done ? 'on' : ''}"></i>`).join('')}</span></div>`; }
 function judgeCard() { const l = jgLv(), nx = jgNext(), a = jgAcc(), ds = dailyState(), b = jgBatch(), L = jgLeague();
   const head = l ? `<div class="jg-big"><b>${a}%</b><span>${l.ic} ${l.n}<small>${jgN()} recent votes match the crowd ${a}% of the time</small></span></div>`
     : `<div class="jg-big"><b>${jgN()}/${JG_MIN}</b><span>🎯 Judge score<small>Vote ${JG_MIN - jgN()} more to get your score</small></span></div>`;
@@ -57,9 +60,13 @@ function judgeCard() { const l = jgLv(), nx = jgNext(), a = jgAcc(), ds = dailyS
   const goals = `<div class="jg-gs"><div class="jg-g"><span class="jg-gi">🎯</span><span><b>Get 8 of your next 10 right</b><small>${b.ok}/${b.n} so far</small></span><em>+20 🟡</em></div>
     <div class="jg-g"><span class="jg-gi">${nx ? nx.ic : '🏆'}</span><span><b>${nx ? `Reach ${nx.n} (${nx.at}%)` : l ? 'Stay a Master' : `Vote ${JG_MIN - jgN()} more`}</b><small>${nx && nx.bonus ? `Then every correct vote pays +${nx.bonus} 🟡` : l ? `${l.bonus ? `+${l.bonus} 🟡 every correct vote` : 'Keep matching the crowd'}` : 'Unlocks your judge level'}</small></span><em>${nx && nx.bonus ? `+${nx.bonus} 🟡` : ''}</em></div></div>`;
   const lg = l ? `<div class="jg-lg"><h4>Your league · players with ${L.band}</h4>${L.rows.map(r => `<div class="jg-r ${r.me ? 'me' : ''}"><i>${r.rank}</i><b>${r.me ? 'You' : '@' + esc(r.h)}</b><em>${r.a}%</em></div>`).join('')}</div>` : '';
-  openSheet(`<div class="jg"><h2>Your judge score</h2><p class="jg-sub">How often you pick the photo most voters choose · 🔥 ${ds.streak}-day streak</p>${head}${bar}${goals}${lg}
+  openSheet(`<div class="jg"><h2>Your judge score</h2><p class="jg-sub">How often you pick the photo most voters choose</p>${jgStreak(ds)}${head}${bar}${goals}${lg}
     <button class="btn block jg-go" data-shclose>Keep voting</button></div>`); }
 $('#sFlame').onclick = () => judgeCard();
+// the old daily-rewards pop (4 sessions) is gone: the 🔥 pill opens the judge card, and nothing pops by itself
+streakPop = () => {}; streakHello = () => {};
+// a streak day = 3 votes that day
+setInterval(() => { try { const ds = dailyState(), D = ds.D; if ((D.n || 0) >= 3 && D.last !== ds.t) { D.streak = (D.last === ds.y ? (D.streak || 0) : 0) + 1; D.last = ds.t; save(); paintFlame(); toast(D.streak === 1 ? '🔥 Streak started! Vote 3 tomorrow to keep it' : `🔥 ${D.streak}-day streak!`); } } catch (e) {} }, 1000);
 setTimeout(() => { try { jgPaint(); } catch (e) {} }, 400);
 '''
 anchor = "  shownGems = S.gems;\n})();\n})();"
@@ -72,6 +79,9 @@ CSS = '''
 #sFlame .jg-pop{position:absolute;left:50%;top:-12px;transform:translateX(-50%);font:900 .68rem "Nunito Sans",sans-serif;font-style:normal;white-space:nowrap;color:#21784A;background:#DDF1E2;padding:1px 6px;border-radius:99px;animation:jgPop 1.3s ease-out forwards;pointer-events:none}
 @keyframes jgPop{0%{opacity:0;transform:translate(-50%,6px)}20%{opacity:1;transform:translate(-50%,0)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-6px)}}
 /* judge card */
+.jg-stk{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:9px 12px;border-radius:14px;background:#FBEFD2;box-shadow:inset 0 0 0 1.5px #E0B860}.jg-stk.done{background:#E9F7EE;box-shadow:inset 0 0 0 1.5px #7FBE91}
+.jg-fl{font-size:1.5rem}.jg-stk b{display:block;font:900 1rem Fraunces,serif;color:#2D2521}.jg-stk small{display:block;font:700 .78rem "Nunito Sans";color:#4E433C}.jg-stk>span:nth-child(2){flex:1}
+.jg-dots{display:flex;gap:4px}.jg-dots i{width:10px;height:10px;border-radius:50%;background:#E2D5BE}.jg-dots i.on{background:#E0A82E}.jg-stk.done .jg-dots i.on{background:#2E9A5C}
 .jg h2{margin:0;text-align:center;font:900 1.6rem Fraunces,serif;color:#1F3157}.jg-sub{text-align:center;margin:2px 0 12px;font-size:.88rem;color:#4E433C}
 .jg-big{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px}.jg-big b{font:900 3.2rem/1 Fraunces,serif;color:#1F3157}.jg-big span{font:900 1.15rem Fraunces,serif;color:#1F3157}.jg-big small{display:block;max-width:170px;font:700 .78rem/1.3 "Nunito Sans",sans-serif;color:#4E433C;margin-top:3px}
 .jg-lv{display:flex;justify-content:space-between;gap:8px;font:800 .78rem "Nunito Sans",sans-serif;color:#4E433C;margin:0 2px 5px}.jg-bar{height:10px;border-radius:9px;background:#E7DCC7;overflow:hidden;margin-bottom:12px}.jg-bar i{display:block;height:100%;background:linear-gradient(90deg,#E0A82E,#F3D27A);border-radius:9px}
