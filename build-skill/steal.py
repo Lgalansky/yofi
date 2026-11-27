@@ -4,6 +4,7 @@
 #    empty (it stops earning and stops counting towards Gold) until you win it back.
 #  - Coming back after 2h+: the usual key-moment pop, "While you were away": the coins your cards
 #    earned (collected from the jar) and "1 card stolen · Falls · Emma won 5–4", button "Win Falls back".
+#  - Platinum cards (90+) can't be stolen or risked ("🛡 Can’t be stolen" tag in the gallery).
 #  - Steal battles: risk one of your cards vs theirs, first to 5 votes wins both cards (at most 9
 #    live votes). No coins or cash at stake, so the button is navy. 3 attempts a day.
 #  - Win back a stolen card, or steal a rival's card (Compete › Your photo › Steal a card, and a
@@ -32,15 +33,17 @@ const cardRate = sc => GAL.BASE * galMult(sc);
 const stlDay = () => { if (!S.stl || S.stl.d !== todayKey()) S.stl = { d: todayKey(), n: 0 }; return S.stl; };
 const stlLeft = () => Math.max(0, 3 - stlDay().n);
 const myCards = () => GAL.PATH.filter(galOpen).flatMap(c => galRoom(c).ph);
+const isSafe = p => p && p.s && p.s.total >= 90; // Platinum cards can't be stolen
+const riskable = () => myCards().filter(p => !isSafe(p));
 // rival cards you could steal: other players' photos in your open categories
 function rivalCards() { const mine = new Set(S.photos.flatMap(p => [p.src, p.orig])), out = [];
   GAL.PATH.filter(galOpen).forEach((c, ci) => { SEED.filter(x => x.cat === BATTLE_POOL[c] && !mine.has(x.src)).slice(0, 2).forEach((x, i) => { const r = RIVALS[(hsh(x.id) + i) % RIVALS.length];
     out.push({ key: x.id, src: x.src, nm: x.title || 'Photo', cat: c, sc: 70 + hsh(x.id) % 18, h: r.h }); }); });
-  return out.filter(x => !(S.stlTaken || []).includes(x.key)); }
+  return out.filter(x => !(S.stlTaken || []).includes(x.key) && x.sc < 90); }
 // a rival steals one of your cards while you're away (2h+), one at a time
 function stealAway(force) { if (!S.user) return; const now = Date.now(), last = S.lastSeen || now; S.lastSeen = now; save();
   const away = now - last; if (!force && away < 2 * 36e5) return;
-  const held = S.photos.some(p => p.heldBy), cards = myCards(); let st = null;
+  const held = S.photos.some(p => p.heldBy), cards = riskable(); let st = null;
   if (!held && cards.length >= 1) { const p = cards.slice().sort((a, b) => hsh(a.id + todayKey()) - hsh(b.id + todayKey()))[0], r = RIVALS[hsh(p.id + now) % RIVALS.length];
     if (p.card) { S.photos = S.photos.filter(x => x !== p); } else { p.heldBy = r.h; p.heldAt = now; }
     st = { pid: p.id, nm: alName(p), src: p.src, h: r.h, score: '5–' + (2 + hsh(p.id) % 3), earned: p.gl || 0 }; save(); }
@@ -56,7 +59,7 @@ function awayPop() { const N = S.awayNews; if (!N || N.shown || !S.user) return;
 setInterval(() => { try { awayPop(); } catch (e) {} }, 1500);
 setTimeout(() => { try { stealAway(); } catch (e) {} }, 600);
 // the steal screen: win back, or steal a rival's card
-function stealSheet(o = {}) { const mine = myCards(); if (!mine.length) { toast('Add a photo to your gallery to play for cards'); return; }
+function stealSheet(o = {}) { const mine = riskable(); if (!mine.length) { toast(myCards().length ? 'Your cards are all Platinum and safe · nothing to risk' : 'Add a photo to your gallery to play for cards'); return; }
   let them, title, back = null;
   if (o.back) { const p = S.photos.find(x => x.id === o.back && x.heldBy); if (!p) { toast('That card is already yours'); return; } back = p; them = { src: p.src, nm: alName(p), sc: p.s.total, h: p.heldBy, cat: p.cat }; title = `Win ${them.nm} back`; }
   else { const list = rivalCards(); them = o.rival || list[0]; if (!them) { toast('No cards to steal right now'); return; } title = `Try to steal ${them.nm}`; }
@@ -103,7 +106,8 @@ renderGalleries = function () { const r = _renderGalleriesS.apply(this, argument
   try { const th = document.querySelector('#studio .a2-th'), c = S.galCat, held = S.photos.find(p => p.heldBy && (!c || p.cat === c));
     if (th && held && !document.querySelector('#studio .stl-ban')) { th.insertAdjacentHTML('afterend', `<button class="stl-ban"><img src="${held.src}" alt=""><span><b>${esc(alName(held))} was stolen by ${esc(rvName(held.heldBy))}</b><small>Its slot is empty until you win it back</small></span><em>Win it back ›</em></button>`);
       document.querySelector('#studio .stl-ban').onclick = () => stealSheet({ back: held.id }); }
-    document.querySelectorAll('#studio .a2-sl[data-alc]').forEach(b => { const p = S.photos.find(x => x.id === b.dataset.alc); if (p && p.card && !b.querySelector('.stl-tag')) { const ph = b.querySelector('.a2-ph'); if (ph) ph.insertAdjacentHTML('beforeend', `<i class="stl-tag">🃏 Won from ${esc(rvName(p.card.from))}</i>`); } }); } catch (e) {}
+    document.querySelectorAll('#studio .a2-sl[data-alc]').forEach(b => { const p = S.photos.find(x => x.id === b.dataset.alc); if (p && isSafe(p) && !b.querySelector('.stl-safe')) { const ph = b.querySelector('.a2-ph'); if (ph) ph.insertAdjacentHTML('beforeend', '<i class="stl-safe">🛡 Safe</i>'); }
+      if (p && p.card && !b.querySelector('.stl-tag')) { const ph = b.querySelector('.a2-ph'); if (ph) ph.insertAdjacentHTML('beforeend', `<i class="stl-tag">🃏 Won from ${esc(rvName(p.card.from))}</i>`); } }); } catch (e) {}
   return r; };
 '''
 anchor = "  shownGems = S.gems;\n})();\n})();"
@@ -120,6 +124,7 @@ html body #sheetBody .gs.stl .pj-go,html body #sheetBody .stl .pj-go{background:
 .stl-r em,.stl-ban em{font-style:normal;font:800 .85rem "Nunito Sans";color:#2D4E86;white-space:nowrap}
 .stl-ban{width:calc(100% - 36px);margin:0 18px 12px;background:#FBEFD2;box-shadow:inset 0 0 0 1.5px #E0B860}
 .stl-sc{display:flex;justify-content:center;align-items:baseline;gap:14px;margin:6px 0 4px}.stl-sc b{font:900 2.6rem Fraunces,serif;color:#1F3157}.stl-sc span{font:900 1.6rem Fraunces,serif;color:#8A7E72}
+.stl-safe{position:absolute;left:6px;top:6px;font:800 .62rem "Nunito Sans";font-style:normal;padding:2px 7px;border-radius:99px;background:linear-gradient(180deg,#fff,#D7DCE3);color:#2E3440;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .stl-tag{position:absolute;left:6px;top:6px;font:800 .62rem "Nunito Sans";font-style:normal;padding:2px 7px;border-radius:99px;background:#1F3157;color:#fff}
 .stl-row em{background:#2D4E86!important}
 '''
