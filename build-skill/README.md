@@ -775,7 +775,8 @@ python3 build-skill/results.py sp-g.html2 sp-rs.html
 python3 build-skill/places.py sp-rs.html sp-pl.html
 python3 build-skill/coins.py sp-pl.html sp-co.html
 python3 build-skill/friends.py sp-co.html sp-fr.html
-python3 build-skill/upflow.py sp-fr.html skill-preview.html
+python3 build-skill/upflow.py sp-fr.html sp-uf.html
+python3 build-skill/tourlive.py sp-uf.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -798,7 +799,7 @@ python3 build-skill/upflow.py sp-fr.html skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `upflow.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `tourlive.py`, then copy the result to `index.html` with the title "Yofi - Skill".
 
 `collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve. It also sets the one status line on every photo screen to say what a voter's pick pays ("Earns you 2 🟡 per vote · 🥇 Gold earns 4", "🥇 Gold photos earn you 4 🟡 per vote"), and gallery sleeves show coins per vote instead of "2×". Each level pays one rate (unranked 2, Gold 4, Diamond 8, Platinum 12 coins per vote). Gallery photos show their level icon by the score, a gold "+N today" pill on the photo and "Earns N per vote" underneath. Reaching a new level shows a celebration with the new rate ("Milo is Gold! now earns you 4 🟡 per vote").
 
@@ -827,3 +828,5 @@ The live `index.html` now includes the galleries steps. Their input is the earli
 `friends.py` makes friend challenges work in coins and cash (they bring new players in). The friend challenge screen has a Coins | Cash toggle: 100 / 250 / 500 🟡 (gold, winner takes double) or $1 / $2 / $5 (green, into the club pot); the WhatsApp button says what it costs. The coin drop-down offers Challenge a friend · coins (Suggested) and Quick Sprint · coins; Head-to-head · coins is gone because it used live votes on strangers' matches. Compete › Your photo › 1 v 1 has a "Challenge a friend" tile next to Head-to-head.
 
 `upflow.py` puts the upload journey in order: pick a photo (or a sample) → "Name your photo" with the photo shown (button "Score my photo") → the scan → straight onto Improve with the score counting up from 0. The first photo comes with a welcome gift of coins that covers its first touch-up (S.firstGift). The Improve button uses the touch-up name ("Soften background") and is gold. The old "Touch up your photo" result screen no longer flashes for new uploads, and the collection map waits until the next Gallery visit.
+
+`tourlive.py` restyles the live knockout (Sprint) screen: pyramid icon with "Sprint · Knockout of 16 · live", a calm "You’re out · Level 1" box, framed photos with names underneath (not over the photos), counts by each name under the vote bar, a small "20 votes to go" chip, and "Keep voting".
