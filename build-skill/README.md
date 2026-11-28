@@ -786,7 +786,8 @@ python3 build-skill/vreset.py sp-lt.html sp-vr.html
 python3 build-skill/livegames.py sp-vr.html sp-lg.html
 python3 build-skill/choose.py sp-lg.html sp-chs.html
 python3 build-skill/jarpop.py sp-chs.html sp-jpp.html
-python3 build-skill/votefx.py sp-jpp.html skill-preview.html
+python3 build-skill/votefx.py sp-jpp.html sp-vf.html
+python3 build-skill/cpfix.py sp-vf.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -809,7 +810,7 @@ python3 build-skill/votefx.py sp-jpp.html skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `votefx.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `cpfix.py`, then copy the result to `index.html` with the title "Yofi - Skill".
 
 `collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve. It also sets the one status line on every photo screen to say what a voter's pick pays ("Earns you 2 🟡 per vote · 🥇 Gold earns 4", "🥇 Gold photos earn you 4 🟡 per vote"), and gallery sleeves show coins per vote instead of "2×". Each level pays one rate (unranked 2, Gold 4, Diamond 8, Platinum 12 coins per vote). Gallery photos show their level icon by the score, a gold "+N today" pill on the photo and "Earns N per vote" underneath. Reaching a new level shows a celebration with the new rate ("Milo is Gold! now earns you 4 🟡 per vote").
 
@@ -885,3 +886,5 @@ Steal reveals use the user's Steal card art (`build-skill/assets/steal.jpg`) wit
 
 The raid is now called Steal everywhere a player sees it ("STEAL!" banner, "another steal is coming").
 Special tiles fit their vote photo exactly: the tile re-finds the current photo every frame (photos can be rebuilt or pushed down by the jar card), positions are measured from the real containing block, nothing tilts (the face-down tile pulses its glow instead of wiggling), and the Joker/Steal art fills the whole photo.
+
+`cpfix.py`: tournaments that need other players (Crowd Championship, Sprint) are no longer offered in the Live games row on Vote, only in Compete. Crowd Championship and Quick Sprint picks stamp "✓ Right!" / "✗ Missed" on your photo (sparks on a right pick), the progress dots turn green/red, the Championship tip reads "Everyone gets the same 15 pairs · top 20% share the prize", and a finished Championship run opens a celebration pop ("You're in the money!" / "Great eye!" / "Run complete!", "9/15", place so far, results time) before the standings.
