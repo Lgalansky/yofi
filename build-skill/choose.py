@@ -5,6 +5,7 @@
 #  Picking one moves it into the next spot on the path and plays the usual map unlock reveal.
 #  If you close the pop, the choice waits: the map's button becomes "Choose your next collection"
 #  and tapping any locked stop opens the picker. The chosen order is saved (S.galPath).
+#  Tapping a locked category in the Gallery opens the map (or the picker when a choice is waiting).
 # usage: python3 build-skill/choose.py in.html out.html
 import sys
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
@@ -31,6 +32,10 @@ galCele = function (ev) { const r = _galCeleCh.apply(this, arguments); if (!ev |
   document.querySelectorAll('#coach .gl-pop button').forEach(b => { if (/^See .+ on the map$/.test(b.textContent.trim())) b.textContent = 'See the map'; });
   const g = $('#glpGo'); if (g) { g.textContent = 'Choose your next collection'; g.classList.add('chp-go'); g.onclick = () => { const co = $('#coach'); co.classList.remove('on', 'cr'); co.innerHTML = ''; chPicker(); }; }
   return r; };
+// a locked category (gallery tabs, "Next" sleeve) opens the map, or the picker when a choice is waiting
+function chLockTap(e) { const b = e.target.closest('#studio [data-gc]'); if (!b || galOpen(b.dataset.gc)) return; e.stopImmediatePropagation(); e.preventDefault();
+  if (chPending()) chPicker(); else { try { showMap({}); } catch (x) {} } }
+document.addEventListener('click', chLockTap, true);
 const _showMapCh = showMap;
 showMap = function (o) { const r = _showMapCh.apply(this, arguments); const slot = chPending(); const el = $('#gmap'); if (!el) return r;
   const sb = el.querySelector('.gm-sub'); if (sb && /open the next/.test(sb.textContent)) sb.innerHTML = sb.innerHTML.replace('open the next', 'choose the next');
