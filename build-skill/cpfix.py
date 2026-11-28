@@ -8,6 +8,7 @@
 #  - Championship tip text: "Everyone gets the same 15 pairs · top 20% share the prize".
 #  - End of a Championship run: a celebration pop first ("You're in the money!" / "Great eye!" /
 #    "Run complete", big "13/15", your place so far and when results land), then the standings.
+#  - Live games: no Steal / Stolen tiles; jackpot tile chip reads "Pet challenge"; Friend tile is WhatsApp green with a white icon.
 #  - Lost results: the "You lost $5" box is soft red with a red amount, not beige.
 #  - Vote screen: in the "So close! / Missed it" box the crowd's % is bold ("55% picked the other one").
 # usage: python3 build-skill/cpfix.py in.html out.html
@@ -22,6 +23,11 @@ def rep(a, b, n=1):
 # Live games: drop the tournaments that need other players
 rep("  if (mins <= 15 && !(S.ch && S.ch[nx])) {", "  if (0 && mins <= 15 && !(S.ch && S.ch[nx])) {")
 rep("  if (spr) T({ icon: KO_PYR2,", "  if (0 && spr) T({ icon: KO_PYR2,")
+# Live games: no steal tiles under the vote (steals come from Steal tiles, the Payday receipt and Compete)
+rep("  if (held) T({ hot: 1, img: held.src, chip: '🃏 Stolen',", "  if (0 && held) T({ hot: 1, img: held.src, chip: '🃏 Stolen',")
+rep("  if (rc && !held) T({ img: rc.src, chip: '🃏 Steal',", "  if (0 && rc && !held) T({ img: rc.src, chip: '🃏 Steal',")
+# jackpot tile: "Pet challenge"
+rep("chip: st ? `★ ${st} today` : `💰 ${short(k)}`", "chip: st ? `★ ${st} today` : `💰 ${short(k)} challenge`")
 # pick feedback
 rep("let i = 0, right = 0; const t0 = Date.now(), c = $('#coach');", "let i = 0, right = 0, res = []; const t0 = Date.now(), c = $('#coach');")
 rep("<i class=\"${j < i ? 'd' : ''} ${j === i ? 'n' : ''}\"></i>", "<i class=\"${j < i ? 'd ' + (res[j] ? 'w' : 'l') : ''} ${j === i ? 'n' : ''}\"></i>")
@@ -47,6 +53,7 @@ assert s.count(anchor) == 1
 s = s.replace(anchor, JS + anchor)
 CSS = '''
 /* crowd picks: clear right / wrong */
+html body #judge .lgx-wa{background:linear-gradient(160deg,#34C46C,#128C4A)!important;color:#fff!important}html body #judge .lgx-wa svg{filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
 /* lost results: the box is clearly a loss */
 html body #sheetBody .pj.gs.gr.lost .gr-box{background:#FBECE8!important;box-shadow:inset 0 0 0 2px #E7B8AE!important}
 html body #sheetBody .pj.gs.gr.lost .gr-box .gs-pl{color:#A3372A!important}html body #sheetBody .pj.gs.gr.lost .gr-box b{color:#A3372A!important}
