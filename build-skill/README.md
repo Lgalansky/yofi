@@ -803,7 +803,8 @@ python3 build-skill/signup.py sp-a1.html sp-su.html
 python3 build-skill/shields.py sp-su.html sp-sh.html
 python3 build-skill/cmpquick.py sp-sh.html sp-cq.html
 python3 build-skill/shieldfx.py sp-cq.html sp-sf.html
-python3 build-skill/tilefit.py sp-sf.html skill-preview.html
+python3 build-skill/tilefit.py sp-sf.html sp-tf.html
+python3 build-skill/jduel.py sp-tf.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -981,3 +982,5 @@ Shields are won only from the special tile while voting (user decision): 3-day s
 The 🔥 streak tile in Live games is a Judge Duel tile (avatars, "🎯 Judge Duel" chip, gold) with "🔥 5 right in a row" as its line, so it says which game it opens (`qsicon.py`). `tilefit.py`: special-tile card art (Jokers, Steal, Photo Duel, Shield) shows the whole card inside the vote photo frame on a dark background instead of being cropped.
 
 Improve after a touch-up: the picked row keeps its current score ("65 ↑") and the line under the score says what the photo is now ("Milo is 🥇 Gold · earns 4 coins a vote") or what the picked touch-up could make it ("Fix lighting could make Milo 💎 Diamond · 8 coins a vote"); it used to read "Diamond photos earn you 8 per vote" while Milo was still Gold, which looked like the touch-up hadn't counted (`ctafix.py`). The "Milo can reach Diamond" card on Vote has a plain "Improve" button with no coin price; the cost shows on the Improve screen (`jartext.py`, user decision).
+
+`jduel.py`: a Judge Duel special tile while voting, using the user's card art (`build-skill/assets/judgeduel.jpg`). About 1 in 25 right votes; no photo needed. Three taps crack it open with a blue-and-red glow and sparks, then the Judge Duel game screen opens and the player chooses whether to play.
