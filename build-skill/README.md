@@ -974,3 +974,5 @@ The Collect and Improve buttons on the Vote top card use the app's shared button
 `cmpquick.py` (user chose option B): Compete › Photo games no longer repeats the Live games. It keeps Daily jackpots and Tournaments (Photo Knockout, Showdown), then one small "⚡ Quick games" row (Photo Duel · Judge Duel · Friend). The big Photo Duel card, Challenge a friend row, incoming-challenge row, Card challenges and Clubs link are gone. The Judge games tab is unchanged.
 
 `shieldfx.py`: the special tile hides while a sheet or pop-up is open (it used to sit on top of the Shields sheet). Revealing a Shield flies a gold shield from the tile into the 🛡 pill, which glows. Right after any shield is earned (tile, 3-day streak, judge rank-up) a "New shield!" sheet asks you to place it ("Put it on your best card. It blocks one steal while you're away." · "🛡 Shield Milo" · "Later"); with one still unplaced it asks again once a day on Vote.
+
+Shields are won only from the special tile while voting (user decision): 3-day streaks and judge rank-ups no longer give shields, and the Shields sheet reads "Win shields from ✨ special tiles while you vote." (`shields.py`, `shieldfx.py`).

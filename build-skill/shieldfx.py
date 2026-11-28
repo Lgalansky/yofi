@@ -2,7 +2,7 @@
 #  - The special tile never sits on top of a sheet or pop-up any more (it hides while one is open).
 #  - Revealing a Shield: a big gold shield flies from the tile into the 🛡 pill in the header, the pill glows and
 #    its number ticks up, so you see where it went.
-#  - You're prompted to place it: right after you earn a shield (special tile, 3-day streak, judge rank-up) the
+#  - You're prompted to place it: right after you win a shield from a special tile the
 #    "New shield!" sheet opens once the reveal is done: "Put it on your best card. It blocks one steal while you're
 #    away." with "🛡 Shield Milo" and "Later". If you still have one unplaced, it asks again once a day on Vote.
 # Usage: python3 build-skill/shieldfx.py in.html out.html  (run after cmpquick.py)

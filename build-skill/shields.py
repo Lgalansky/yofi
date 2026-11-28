@@ -2,7 +2,7 @@
 #  1. Stolen cards are trophies. They no longer fill a collection's 3 Gold slots (collections need your own photos);
 #     they show in a "🃏 Trophies" row on their collection's binder page and still earn coins on every vote.
 #  2. Shields are earned, never bought, and you choose which card they protect.
-#     Earn: the special tile (as before), every 3-day streak, and every judge rank-up from Sharp Eye up (hold up to 3).
+#     Earn: only from the special tile while voting (hold up to 3). Streaks and judge ranks don't give shields (user decision).
 #     Use: tap the 🛡 pill (or the Gallery's "🛡 Shield Milo" chip) and put a shield on a card. An overnight steal
 #     that targets a shielded card is blocked and the shield breaks ("Your shield stopped Emma stealing Milo").
 #     Shields you haven't placed no longer block anything. Shielded cards show 🛡 in the Gallery.
@@ -25,7 +25,7 @@ JS = r'''
     openSheet(`<div class="shs"><h2 class="shs-h">🛡 Shields</h2><p class="shs-p">A shield on a card blocks one steal while you’re away, then breaks.</p>
       <div class="shs-row"><b>${n}</b><span>ready to use<small>Hold up to ${VF_MAXSH}</small></span></div>
       ${on.length ? `<div class="shs-on">${on.map(p => `<span><img src="${p.src}" alt="">🛡 ${esc(alName(p))}</span>`).join('')}</div>` : ''}
-      <p class="shs-earn">Earn shields from ✨ special tiles, 🔥 every 3-day streak and 🎯 judge rank-ups.</p>
+      <p class="shs-earn">Win shields from ✨ special tiles while you vote.</p>
       ${n && t ? `<button class="btn block shs-go" id="shGo">🛡 Shield ${esc(alName(t))}</button><div style="text-align:center"><button class="link" data-shclose>Not now</button></div>` : `<button class="btn block shs-go" data-shclose>Keep voting</button>`}</div>`);
     document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
     if ($('#shGo')) $('#shGo').onclick = () => { closeSheet(); shPut(t); }; }
@@ -42,12 +42,6 @@ JS = r'''
         if (p.shield) { const r = RIVALS[hsh(p.id + now) % RIVALS.length]; p.shield = 0; S.lastSeen = now;
           S.awayNews = { coins: Math.floor(S.vgJar || 0), st: null, blocked: { h: r.h, nm: alName(p) }, at: now }; save(); try { vfShPaint(); } catch (e) {} return; } } }
     const k = S.shields; S.shields = 0; try { return _sa.apply(this, arguments); } finally { S.shields = k; save(); } };
-  // earn: every 3-day streak and every judge rank-up (Sharp Eye and up)
-  const shGive = why => { if ((S.shields || 0) + shPlaced().length >= VF_MAXSH) return; S.shields = (S.shields || 0) + 1; save(); try { vfShPaint(); } catch (e) {} toast(`🛡 +1 shield · ${why} · tap 🛡 to protect a card`); };
-  setInterval(() => { try { if (!S.user) return;
-    const st = (dailyState().D || {}).streak || 0; if (st && st % 3 === 0 && S.shStk !== st) { S.shStk = st; save(); shGive(`${st}-day streak`); }
-    const l = jgLv(), i = l ? JG_LV.indexOf(l) : -1; if (S.shRank == null) { S.shRank = i; save(); } else if (i > S.shRank) { S.shRank = i; save(); if (i >= 1) shGive(`you’re ${l.n}`); }
-  } catch (e) {} }, 2000);
   // Gallery: shielded badge, trophies row, "Shield Milo" chip
   function shGal() { const st = document.querySelector('#studio'); if (!st) return; const page = st.querySelector('.gs-page'); if (!page) return;
     st.querySelectorAll('.a2-sl[data-alc]').forEach(b => { const p = S.photos.find(x => x.id === b.dataset.alc); const has = b.querySelector('.sh-bdg');
