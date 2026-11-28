@@ -6,6 +6,9 @@
 #     it bounces, a shield slams on it, "Sorry, Hilltop village is shielded", and nothing is stolen. Then a sheet offers
 #     to shield your best photo ("🛡 Shield Milo" if you have a shield, otherwise how to win one).
 #  4. An unopened special tile hides when you leave Vote (it used to float over Compete and Gallery).
+#  5. You can only steal from collections you have a photo in (user's idea, option A). Cards from other collections
+#     show greyed with a lock: "🔒 Add a travel photo"; tapping one closes the steal and opens "Add a travel photo".
+#     Every wall has at least one card you can steal; surprise shields only land on those.
 # Usage: python3 build-skill/steal2.py in.html out.html  (run after winback.py)
 import sys
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
@@ -14,6 +17,9 @@ def R(a, b):
     global s
     assert s.count(a) == 1, (a[:60], s.count(a)); s = s.replace(a, b)
 R("<small>${100 - mine}% picked the other one", "<small>${mine}% picked this one too")
+R("wall = pool.sort(() => Math.random() - .5).slice(0, 3).map(x => ({ ...x, h: rv.h }));",
+  "wall = (() => { const ok = c => S.photos.some(p => p.s && !p.card && !p.heldBy && p.cat === c), sh = pool.sort(() => Math.random() - .5), a = sh.filter(x => ok(x.cat)), b = sh.filter(x => !ok(x.cat));"
+  " if (!a.length) return sh.slice(0, 3); return [a[0], ...[...a.slice(1), ...b].sort(() => Math.random() - .5).slice(0, 2)].sort(() => Math.random() - .5); })().map(x => ({ ...x, h: rv.h })); window.__rdWall = wall;")
 JS = r'''
 // ---- one Compete list ----
 (() => { C2 = 'photo'; S.cmpTab = 'photo';
@@ -37,7 +43,16 @@ setInterval(() => { try { const t = document.getElementById('vfTile'); if (t) t.
     document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
     if ($('#shOf')) $('#shOf').onclick = () => { closeSheet(); window.__shPut && window.__shPut(t); }; }
   new MutationObserver(() => { try { const el = document.getElementById('raid'); if (!el || el.dataset.sh2) return; const cs = [...el.querySelectorAll('.rd-card[data-rd]')]; if (cs.length < 3) return; el.dataset.sh2 = 1;
-    if (!window.__shForce && Math.random() >= .35) return; const c = window.__shForce ? cs[0] : cs[Math.floor(Math.random() * cs.length)];
+    const W = window.__rdWall || [], own = c => S.photos.some(p => p.s && !p.card && !p.heldBy && p.cat === c);
+    cs.forEach((c, i) => { const w = W[+c.dataset.rd]; if (!w || own(w.cat)) return; const cn = galNm(w.cat);
+      c.classList.add('rd-lock'); const sm = c.querySelector('small'); if (sm) sm.textContent = `🔒 Add a ${cn.toLowerCase()} photo`;
+      const fr = c.querySelector('.rd-fr'); if (fr) fr.insertAdjacentHTML('beforeend', `<i class="rd-lk">🔒<small>${esc(cn)}</small></i>`);
+      c.addEventListener('click', e => { if (el.dataset.pick) return; e.stopImmediatePropagation(); e.preventDefault(); el.dataset.pick = 1;
+        try { el.remove(); } catch (x) {} try { VF_BUSY = 0; } catch (x) {} addCatPhoto(w.cat);
+        setTimeout(() => { const pp = document.querySelector('#sheetBody .acp p'); if (pp) pp.innerHTML = `Add your own ${esc(cn.toLowerCase())} photo to open the ${esc(cn)} collection. Then you can steal ${esc(cn)} cards like <b>${esc(w.nm)}</b>, and they earn coins on every vote.`; }, 60); }, true); });
+    if (cs.some(c => c.classList.contains('rd-lock'))) { const hn = el.querySelector('.rd-hint'); if (hn) hn.insertAdjacentHTML('beforeend', '<br><b class="rd-lkn">🔒 Grey cards: add a photo to that collection to steal them</b>'); }
+    const free = cs.filter(c => !c.classList.contains('rd-lock')); if (!free.length) return;
+    if (!window.__shForce && Math.random() >= .35) return; const c = window.__shForce ? free[0] : free[Math.floor(Math.random() * free.length)];
     c.addEventListener('click', e => { if (el.dataset.pick) return; e.stopImmediatePropagation(); e.preventDefault(); el.dataset.pick = 1;
       const nm = (c.querySelector('b') || {}).textContent || 'That photo', who = ((el.querySelector('.rd-who') || {}).textContent || '').split('’')[0].replace(/^\s*\S\s*/, '').trim() || 'They';
       c.classList.add('picked', 'rd-shd', 'rd-bonk'); el.querySelectorAll('.rd-card').forEach(x => x !== c && x.classList.add('gone'));
@@ -51,6 +66,9 @@ assert s.count(a) == 1
 i = s.index(a); s = s[:i] + JS + s[i:]
 CSS = r'''
 html body .c2-bar{display:none!important}
+#raid .rd-card.rd-lock .rd-fr img{filter:grayscale(1) brightness(.55)}#raid .rd-card.rd-lock .rd-sc{display:none}
+#raid .rd-lk{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-style:normal;font-size:1.6rem}#raid .rd-lk small{font:900 .8rem "Nunito Sans",sans-serif;color:#fff}
+#raid .rd-lkn{display:inline-block;margin-top:6px;color:#F3D27A;font-weight:800}
 #raid .rd-card.rd-shd{opacity:1!important;filter:none!important}#raid .rd-card.rd-shd .rd-fr{box-shadow:0 0 0 3px #8FB6EE,0 0 22px rgba(143,182,238,.9)!important}
 #raid .rd-card.rd-bonk{animation:rdBonk .45s}@keyframes rdBonk{20%{transform:translateX(-8px) rotate(-3deg)}50%{transform:translateX(8px) rotate(3deg)}80%{transform:translateX(-4px)}}
 #raid .rd-shb{position:absolute;top:50%;left:50%;z-index:3;display:grid;place-items:center;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:#14213D;font-style:normal;font-size:2rem;box-shadow:0 0 0 3px #D9AE4F,0 0 24px rgba(143,182,238,.9)}
