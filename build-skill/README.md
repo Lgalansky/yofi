@@ -796,7 +796,8 @@ python3 build-skill/h2hopen.py sp-si.html sp-ho.html
 python3 build-skill/qsicon.py sp-ho.html sp-qi.html
 python3 build-skill/names.py sp-qi.html sp-nm.html
 python3 build-skill/jartext.py sp-nm.html sp-jt.html
-python3 build-skill/judgecard.py sp-jt.html skill-preview.html
+python3 build-skill/judgecard.py sp-jt.html sp-jc.html
+python3 build-skill/galfix.py sp-jc.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -950,3 +951,5 @@ The upgrade card on Vote matches the coin jar card: "Milo can reach Diamond" / "
 The "Your photo" label on the coin jar and upgrade cards was removed (user decision).
 
 `judgecard.py`: the judge card (tap the 🔥 pill) follows the user's "Judge status" mock-up: a Current rank card (medallion, rank, "34% accuracy", "You picked the crowd favourite in 11 of your last 32 votes."), a Rank progression ladder of the four ranks (Good Eye 👁️, Sharp Eye 🦅 65%, Expert 🏅 75% +1 coin a correct vote, Master 👑 85% +2) marked Current / Next / Top rank, League position and Judging streak tiles, and one navy "Keep voting" button. The goal rows and 3-row league list are gone; the 8-of-10 bonus still pays.
+
+`galfix.py`: a Gallery binder page with no photos yet keeps its layout. The empty sleeves on the first row had no height, so their "+ Add a home photo" labels sat on the page title; empty sleeves now keep a filled card's height.
