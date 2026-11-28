@@ -924,3 +924,5 @@ Losing a steal shows a gold "✨ Touch up Milo · beat 77" button (opens Improve
 `h2hopen.py`: no score locks on higher stakes. Head-to-head $5 and $10 (and tournament tiers) are open to any photo; the "🔒 80+ / 90+" chips are gone.
 
 Lost games (`losetip.py`) now always lead with the gold "✨ Touch up <name>" button whenever the photo can still be touched up (was only under 75); "Play again" moves to the link. The Payday receipt (`jarpop.py`) no longer shows the "×2" multiplier badge next to "4 🪙 a vote".
+
+Shield reveals use the user's navy Shield card art (`build-skill/assets/shield.jpg`, embedded by `votefx.py`), fitted inside the tile on a navy background. Showdown uses a race icon (5 pins racing to a chequered finish line, from the user's mock-up) on its Compete row, game screen and result (`sprintic.py`); the row reads "5 entries · top vote wins".

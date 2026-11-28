@@ -7,6 +7,7 @@
 #     prize appears one piece at a time (icon, then title, then amount):
 #       🃏 Joker  +20 / +50 / +100 coins (60/30/10%), random; the amount slams in big with glowing
 #                rays and sparks, shown as the teal / purple / red Joker card art (assets/joker*.jpg);
+#                a Shield shows the user's navy Shield card art (assets/shield.jpg);
 #                Big Joker (50) and MEGA Joker (100) get more sparks, a bigger number,
 #                and MEGA adds a gold flash and a screen shake; coins fly to your balance
 #       🛡 Shield  blocks one steal while you're away (hold up to 3)
@@ -31,10 +32,11 @@ ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
 JK = {k: 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(ASSETS, f'joker{k}.jpg'), 'rb').read()).decode() for k in (20, 50, 100)}
 ST_IMG = 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(ASSETS, 'steal.jpg'), 'rb').read()).decode()
 CH_IMG = 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(ASSETS, 'challenge.jpg'), 'rb').read()).decode()
+SH_IMG = 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(ASSETS, 'shield.jpg'), 'rb').read()).decode()
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
 s = open(src, encoding='utf-8').read()
 
-JS = "const JK_IMG = { 20: '" + JK[20] + "', 50: '" + JK[50] + "', 100: '" + JK[100] + "' }, ST_IMG = '" + ST_IMG + "', CHL_IMG = '" + CH_IMG + "';\n" + r'''
+JS = "const JK_IMG = { 20: '" + JK[20] + "', 50: '" + JK[50] + "', 100: '" + JK[100] + "' }, ST_IMG = '" + ST_IMG + "', CHL_IMG = '" + CH_IMG + "', SHD_IMG = '" + SH_IMG + "';\n" + r'''
 // ---- exciting voting: coin burst, special tiles, shields, raids ----
 const VF_MAXSH = 3;
 let VF_N = S.eyeN || 0, VF_OK = S.eyeOk || 0, VF_G = S.gems || 0, VF_BUSY = 0;
@@ -68,7 +70,7 @@ function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorA
         <svg class="vf-crk c1" viewBox="0 0 100 130" preserveAspectRatio="none"><path d="M52 0 L47 22 L56 34 L44 52 L50 63"/><path d="M56 34 L70 40 L78 36"/></svg>
         <svg class="vf-crk c2" viewBox="0 0 100 130" preserveAspectRatio="none"><path d="M50 63 L58 78 L45 96 L53 112 L48 130"/><path d="M44 52 L28 58 L18 54 L6 62"/><path d="M58 78 L76 84 L94 80"/><path d="M45 96 L30 104 L22 118"/></svg>
         <b class="vf-tap">Tap to crack it open</b></span>
-      <span class="vf-face front ${kind} ${kind === 'coins' ? 'a' + amt : ''}"><i class="vf-rays"></i>${kind === 'coins' ? `<img class="vf-jk" src="${JK_IMG[amt]}" alt="Joker ${amt} coins">` : kind === 'steal' ? `<img class="vf-jk" src="${ST_IMG}" alt="Steal: take another player’s treasure">` : kind === 'chal' ? `<img class="vf-jk" src="${CHL_IMG}" alt="Challenge: go head-to-head with another player">` : `<span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p>`}</span></button>`;
+      <span class="vf-face front ${kind} ${kind === 'coins' ? 'a' + amt : ''}"><i class="vf-rays"></i>${kind === 'coins' ? `<img class="vf-jk" src="${JK_IMG[amt]}" alt="Joker ${amt} coins">` : kind === 'steal' ? `<img class="vf-jk" src="${ST_IMG}" alt="Steal: take another player’s treasure">` : kind === 'chal' ? `<img class="vf-jk" src="${CHL_IMG}" alt="Challenge: go head-to-head with another player">` : kind === 'shield' ? `<img class="vf-jk vf-shd" src="${SHD_IMG}" alt="Shield: blocks one steal">` : `<span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p>`}</span></button>`;
   sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
   const wt = el.querySelector('.vf-wait'), fp = el.querySelector('.vf-flip'), put = (n, r) => { n.style.left = r.x + 'px'; n.style.top = r.y + 'px'; n.style.width = r.w + 'px'; n.style.height = r.h + 'px'; };
   const follow = () => { if (!el.isConnected) return; const cur = document.querySelectorAll('#jcard button.tot-c'); if (cur.length >= 2) { put(fp, vfRel(cur[k])); put(wt, vfRel(cur[1 - k])); } requestAnimationFrame(follow); }; follow(); // re-find the photos every frame: they can be rebuilt or pushed down
@@ -207,6 +209,7 @@ html body #vfTile .vf-face.back{background:repeating-linear-gradient(45deg,#2439
 .vf-tap{position:absolute;bottom:14px;left:0;right:0;margin:0 auto;width:max-content;padding:7px 14px;border-radius:99px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 .85rem "Nunito Sans";white-space:nowrap;animation:rdPulse 1.2s ease-in-out infinite}
 html body #vfTile .vf-face.front{transform:none;background:linear-gradient(180deg,#FFF6DD,#F3D27A)!important;box-shadow:inset 0 0 0 4px #E0A82E,0 0 40px rgba(243,210,122,.8)!important}
 html body #vfTile .vf-face.front.steal{background:radial-gradient(circle at 50% 35%,#3A5A9A,#14213D)!important}
+html body #vfTile .vf-jk.vf-shd{object-fit:contain!important;object-position:50% 50%!important;background:radial-gradient(circle at 50% 40%,#2A3F6E,#14213D 75%)!important}
 html body #vfTile .vf-face.front.shield{background:linear-gradient(180deg,#fff,#D7DCE3)!important;box-shadow:inset 0 0 0 4px #9AA6B5,0 0 40px rgba(215,220,227,.8)!important}
 /* crack it open */
 .vf-crk{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none;transition:opacity .15s}.vf-crk path{fill:none;stroke:#FFF6DD;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 6px #F3D27A)}
