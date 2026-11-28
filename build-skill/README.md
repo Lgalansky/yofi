@@ -994,3 +994,5 @@ Every steal wall now has one rival card behind a glowing blue shield ("🛡 Shie
 Tapping the "Milo can reach Diamond" card or its Improve button on Vote opens the Improve screen on Milo directly (it used to open Milo's card in the Gallery first) (`jartext.py`).
 
 `winback.py` (user chose "win it back"): every "Win Palm garden back" opens a $1 Photo Duel against the stealer: the stolen card (held by Emma) vs your best photo, "Winner takes $1.70 + card", green "Win it back · $1". A short simulated vote decides it (your score vs the card's score sets the odds). Win: the card returns and $1.70 goes to your cash. Lose: "So close! Emma kept Palm garden" with a gold "Touch up Milo" button. Free steal tries stay for stealing new cards.
+
+Win-back (user chose option A): the stealer never bets. "Win it back · $1" is a normal Photo Duel against a rival who chose to play (close to your score), with your best photo from the stolen card's category (or your best photo). Win: $1.70 plus the card back from the stealer. Lose: the card stays, gold "Touch up Milo" (`winback.py`).
