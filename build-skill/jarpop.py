@@ -36,7 +36,7 @@ function jpShow(n, earn, held, since) { const co = $('#coach'); if (!co || co.cl
   const per = p => galMult(p.s.total) * GAL.BASE, picks = x => x.c > 0 ? Math.max(1, Math.round(x.c / per(x.p))) : 0;
   const mine = earn.filter(x => !x.p.card), won = earn.filter(x => x.p.card), wonT = won.reduce((a, x) => a + x.c, 0), allPk = earn.reduce((a, x) => a + picks(x), 0), rc = typeof rivalCards === 'function' ? rivalCards() : [];
   const ago = since < 36e5 ? `${Math.max(1, Math.round(since / 6e4))} min` : (Math.round(since % 36e5 / 6e4) ? `${Math.floor(since / 36e5)}h ${Math.round(since % 36e5 / 6e4)}m` : `${Math.floor(since / 36e5)}h`);
-  const tier = p => { const t = galTier(p.s.total); return `<i class="jp-t t-${t ? t.toLowerCase() : 'none'}">${t ? `${t === 'Gold' ? '🥇' : t === 'Diamond' ? '💎' : '🏆'} ${t}` : 'No tier'}</i><i class="jp-x">×${galMult(p.s.total)}</i>`; };
+  const tier = p => { const t = galTier(p.s.total); return `<i class="jp-t t-${t ? t.toLowerCase() : 'none'}">${t ? `${t === 'Gold' ? '🥇' : t === 'Diamond' ? '💎' : '🏆'} ${t}` : 'No tier'}</i>`; };
   let k = 0; const row = (x, sub, cls = '') => `<div class="jp-r ${cls}" style="animation-delay:${(.35 + k++ * .18).toFixed(2)}s"><img src="${x.p.src}" alt=""><span><b>${esc(alName(x.p))}</b><small>${sub}</small></span><em data-jc="${x.c}" data-jd="${(.35 + (k - 1) * .18).toFixed(2)}">+0</em></div>`;
   const pk = x => `${per(x.p)} 🟡 a vote`;
   const h = held[0], lt = stlLeft(), go = h ? { t: `Win ${alName(h.p)} back`, fn: () => stealSheet({ back: h.p.id }) } : rc.length ? { t: lt ? `Steal a card · ${lt} free tr${lt === 1 ? 'y' : 'ies'} left` : 'Steal a card · new tries tomorrow', fn: () => stealSheet({}) } : null;

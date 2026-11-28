@@ -790,7 +790,9 @@ python3 build-skill/votefx.py sp-jpp.html sp-vf.html
 python3 build-skill/cpfix.py sp-vf.html sp-cp.html
 python3 build-skill/screens.py sp-cp.html sp-sc.html
 python3 build-skill/gstyle.py sp-sc.html sp-gs.html
-python3 build-skill/ctafix.py sp-gs.html skill-preview.html
+python3 build-skill/ctafix.py sp-gs.html sp-ct.html
+python3 build-skill/sprintic.py sp-ct.html sp-si.html
+python3 build-skill/h2hopen.py sp-si.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -916,3 +918,9 @@ Gallery binder rings are angled gold loops from the leather spine into a punched
 Losing a steal shows a gold "✨ Touch up Milo · beat 77" button (opens Improve on your best photo) and a "Back to voting" link. Live games labels sit above the tile image instead of over it, and the "⚔️ 1 v 1 challenge" (head-to-head) tile is back in the row.
 
 `ctafix.py`: the touch-up keeps one name from Improve to Before and after. While the welcome gift covers the first touch-up, the gold Improve button reads "Boost colour · Free 🎁" (not the 50-coin price); the selected touch-up row shows "↑" instead of a projected score the result rarely matched; the Before and after button reads "Use Boost colour · Gold 🥇" (was "Touch up · Unlock Gold") and stays navy because nothing more is spent there. Live `index.html` input: run it after `gstyle.py`.
+
+`sprintic.py`: Sprint uses the pyramid icon everywhere (4 levels of 1 v 1): next to the title on its game screen (was a stopwatch), on the field tile (was a trophy) and on the Compete › Tournaments row. The game line reads "4 rounds of 1 v 1 · 16 photos".
+
+`h2hopen.py`: no score locks on higher stakes. Head-to-head $5 and $10 (and tournament tiers) are open to any photo; the "🔒 80+ / 90+" chips are gone.
+
+Lost games (`losetip.py`) now always lead with the gold "✨ Touch up <name>" button whenever the photo can still be touched up (was only under 75); "Play again" moves to the link. The Payday receipt (`jarpop.py`) no longer shows the "×2" multiplier badge next to "4 🪙 a vote".

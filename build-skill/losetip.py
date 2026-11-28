@@ -1,5 +1,5 @@
 # Skill preview: a lost game offers at most two actions (option B).
-#  If the photo you played with scores under 75, the main button becomes gold "✨ Touch up <name>"
+#  If the photo you played with can still be touched up (any score; was under 75 only), the main button becomes gold "✨ Touch up <name>"
 #  (opens Improve on that photo) and the rematch moves down to the link. Otherwise you get the
 #  rematch button and the "Back" link. The old third "Touch up your photo first" link is gone.
 #  Card steals are left out (the lost card is held by the rival, so you can't touch it up).
@@ -16,7 +16,7 @@ function ltTidy() { const w = document.querySelector('#sheetBody .pj.gs.gr.lost'
   w.querySelectorAll('.gr-tip').forEach(x => x.remove());
   if (/🃏/.test((w.querySelector('.pj-t') || {}).textContent || '')) return;
   const im = w.querySelector('.pj-me img'), ph = im && S.photos.find(x => x.src === im.getAttribute('src') || x.src === im.src);
-  if (!ph || !ph.s || ph.s.total >= LT_MIN) return;
+  if (!ph || !ph.s) return; try { if (im2Opts(ph).every(o => o.max)) return; } catch (e) {}
   const reTxt = main.textContent.trim(), reFn = main.onclick;
   const nb = document.createElement('button'); nb.className = 'btn block lt-gold'; nb.textContent = `✨ Touch up ${alName(ph)}`;
   nb.onclick = () => { closeSheet(); S.cur = ph.id; TU_GAL = false; WALL = false; AL_OPEN = null; save(); go('studio'); try { renderStudio(); } catch (e) {} };
