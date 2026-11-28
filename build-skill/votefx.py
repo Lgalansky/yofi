@@ -10,7 +10,7 @@
 #                Big Joker (50) and MEGA Joker (100) get more sparks, a bigger number,
 #                and MEGA adds a gold flash and a screen shake; coins fly to your balance
 #       🛡 Shield  blocks one steal while you're away (hold up to 3)
-#       🦝 Steal  every 10–15 votes; the screen switches straight to a raid
+#       🦝 Steal  every 10–15 votes; shows the Steal card art (assets/steal.jpg), then switches to a raid
 #     The other photo waits ("Reveal the special photo first") so the tile can't be missed.
 #  3. Shields: a 🛡 pill in the header. An overnight steal that hits a shield is blocked and the
 #     "While you were away" pop says so.
@@ -25,10 +25,11 @@
 import sys, base64, os
 ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
 JK = {k: 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(ASSETS, f'joker{k}.jpg'), 'rb').read()).decode() for k in (20, 50, 100)}
+ST_IMG = 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(ASSETS, 'steal.jpg'), 'rb').read()).decode()
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
 s = open(src, encoding='utf-8').read()
 
-JS = "const JK_IMG = { 20: '" + JK[20] + "', 50: '" + JK[50] + "', 100: '" + JK[100] + "' };\n" + r'''
+JS = "const JK_IMG = { 20: '" + JK[20] + "', 50: '" + JK[50] + "', 100: '" + JK[100] + "' }, ST_IMG = '" + ST_IMG + "';\n" + r'''
 // ---- exciting voting: coin burst, special tiles, shields, raids ----
 const VF_MAXSH = 3;
 let VF_N = S.eyeN || 0, VF_OK = S.eyeOk || 0, VF_G = S.gems || 0, VF_BUSY = 0;
@@ -61,7 +62,7 @@ function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorA
         <svg class="vf-crk c1" viewBox="0 0 100 130" preserveAspectRatio="none"><path d="M52 0 L47 22 L56 34 L44 52 L50 63"/><path d="M56 34 L70 40 L78 36"/></svg>
         <svg class="vf-crk c2" viewBox="0 0 100 130" preserveAspectRatio="none"><path d="M50 63 L58 78 L45 96 L53 112 L48 130"/><path d="M44 52 L28 58 L18 54 L6 62"/><path d="M58 78 L76 84 L94 80"/><path d="M45 96 L30 104 L22 118"/></svg>
         <b class="vf-tap">Tap to crack it open</b></span>
-      <span class="vf-face front ${kind} ${kind === 'coins' ? 'a' + amt : ''}"><i class="vf-rays"></i>${kind === 'coins' ? `<img class="vf-jk" src="${JK_IMG[amt]}" alt="Joker ${amt} coins">` : `<span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p>`}</span></button>`;
+      <span class="vf-face front ${kind} ${kind === 'coins' ? 'a' + amt : ''}"><i class="vf-rays"></i>${kind === 'coins' ? `<img class="vf-jk" src="${JK_IMG[amt]}" alt="Joker ${amt} coins">` : kind === 'steal' ? `<img class="vf-jk" src="${ST_IMG}" alt="Steal: take another player’s treasure">` : `<span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p>`}</span></button>`;
   sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
   const wt = el.querySelector('.vf-wait'), fp = el.querySelector('.vf-flip'), put = (n, r) => { n.style.left = r.x + 'px'; n.style.top = r.y + 'px'; n.style.width = r.w + 'px'; n.style.height = r.h + 'px'; };
   const follow = () => { if (!el.isConnected) return; if (ph[k].isConnected) { put(fp, vfRel(ph[k])); put(wt, vfRel(ph[1 - k])); } requestAnimationFrame(follow); }; follow();
@@ -83,7 +84,7 @@ function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorA
         setTimeout(() => { S.gems += amt; VF_G = S.gems; save(); try { gemExplosion(amt, { mid: 1, from: fr }); } catch (e) { paintGems(); } }, 650);
         done(mega ? 2400 : big ? 2000 : 1700); }
       else if (kind === 'shield') { S.shields = Math.min(VF_MAXSH, (S.shields || 0) + 1); save(); vfShPaint(); const sb = $('#vfSh'); if (sb) { sb.classList.remove('bump'); void sb.offsetWidth; sb.classList.add('bump'); } done(1600); }
-      else { setTimeout(() => { el.remove(); VF_BUSY = 0; raidStart(); }, 1100); } }, 700); }; }
+      else { const r = vfRel(fr); vfPop(sh, r.x + r.w / 2, r.y + r.h / 2, ['#3CCB8A', '#F3D27A', '#fff'], 36); setTimeout(() => { el.remove(); VF_BUSY = 0; raidStart(); }, 1600); } }, 700); }; }
 // little burst of sparks
 function vfPop(host, x, y, cols, n = 16) { const L = document.createElement('div'); L.className = 'vf-layer'; host.appendChild(L);
   for (let i = 0; i < n; i++) { const p = document.createElement('i'); p.className = 'vf-spk'; p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.background = cols[i % cols.length]; L.appendChild(p);
@@ -212,6 +213,7 @@ html body #vfTile .vf-face.front.coins.a50{box-shadow:inset 0 0 0 4px #B26BE0,0 
 html body #vfTile .vf-face.front.coins.a100{background:radial-gradient(circle at 50% 45%,#5A1A1A,#140808)!important;box-shadow:inset 0 0 0 4px #F3C24A,0 0 60px 10px rgba(243,194,74,.95)!important}
 .vf-jk{position:relative;z-index:1;height:92%;max-width:92%;object-fit:contain;border-radius:12px;opacity:0;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
 #vfTile.open .vf-jk{animation:vfJk .7s cubic-bezier(.2,1.6,.4,1) .15s both}@keyframes vfJk{0%{transform:scale(2.6) rotate(-10deg);opacity:0}55%{transform:scale(.9) rotate(2deg);opacity:1}100%{transform:none;opacity:1}}
+html body #vfTile .vf-face.front.steal{background:radial-gradient(circle at 50% 45%,#1E3A5F,#07101F)!important;box-shadow:inset 0 0 0 4px #2E9A5C,0 0 50px 6px rgba(60,203,138,.75)!important}
 #vfTile.wow .vf-jk{animation:vfJk .7s cubic-bezier(.2,1.6,.4,1) .15s both,vfBob 1.4s ease-in-out .9s infinite}
 .vf-amt{display:inline-block}
 .vf-rays{position:absolute;left:50%;top:50%;width:300%;height:300%;margin:-150% 0 0 -150%;background:repeating-conic-gradient(rgba(255,255,255,.55) 0 8deg,transparent 8deg 20deg);opacity:0;pointer-events:none}
