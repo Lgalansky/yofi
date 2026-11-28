@@ -931,3 +931,5 @@ Shield reveals use the user's navy Shield card art (`build-skill/assets/shield.j
 Live games Friend tile shows your own best photo (the one you'd play with) with a small green WhatsApp badge in the corner, instead of the plain green WhatsApp tile (`livegames.py`).
 
 `qsicon.py`: Quick Sprint uses its rival / you avatars everywhere. Compete › Your eye shows the two avatars with their eye % pills on the Quick Sprint button (was two score rings), and Vote › Live games has a Quick Sprint tile after the 1 v 1 tile (avatars VS, "Win $3.20", "Your eye vs a rival", "Play · $2"); it is left out while the 🔥 streak Quick Sprint tile is showing.
+
+Live games: the 1 v 1 tile is now called "⚔️ Head-to-head" (same name as its game screen and Compete) and always shows when you have a photo. Under 70 it reads "Get Milo to 70 · Then play for $1" with a gold "✨ Touch up" button that opens Improve; a photo already in a game reads "Milo is in a game" with a navy "See game". Sprint stays out of Live games because it isn't instant (`qsicon.py`).
