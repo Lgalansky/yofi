@@ -789,8 +789,7 @@ python3 build-skill/jarpop.py sp-chs.html sp-jpp.html
 python3 build-skill/votefx.py sp-jpp.html sp-vf.html
 python3 build-skill/cpfix.py sp-vf.html sp-cp.html
 python3 build-skill/screens.py sp-cp.html sp-sc.html
-python3 build-skill/gstyle.py sp-sc.html sp-gs.html
-python3 build-skill/lgx2.py sp-gs.html skill-preview.html
+python3 build-skill/gstyle.py sp-sc.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -813,7 +812,7 @@ python3 build-skill/lgx2.py sp-gs.html skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `lgx2.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `gstyle.py`, then copy the result to `index.html` with the title "Yofi - Skill".
 
 `collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve. It also sets the one status line on every photo screen to say what a voter's pick pays ("Earns you 2 🟡 per vote · 🥇 Gold earns 4", "🥇 Gold photos earn you 4 🟡 per vote"), and gallery sleeves show coins per vote instead of "2×". Each level pays one rate (unranked 2, Gold 4, Diamond 8, Platinum 12 coins per vote). Gallery photos show their level icon by the score, a gold "+N today" pill on the photo and "Earns N per vote" underneath. Reaching a new level shows a celebration with the new rate ("Milo is Gold! now earns you 4 🟡 per vote").
 
@@ -912,5 +911,3 @@ The Live games jackpot tile follows the category being voted on: voting "Best Na
 
 `gstyle.py` restyles the Gallery to the user's binder mock-up: navy leather binder with gold stitching and round gold rings, cream page with "Pets Collection" + "1/3 filled" and a gold rule, gold-framed photo cards with a round score medallion and a name / tier / per-vote plaque inside the card, glossy empty sleeves, and the next collection as a navy leather card (photo, gold lock, "Travel Collection", "Opens at Gold").
 Gallery binder rings are angled gold loops from the leather spine into a punched hole in the page margin.
-
-`lgx2.py` restyles Live games to the user's mock-up: two big tiles side by side (no sideways scroll), photo on top with a navy title chip ("🏆 Nature Challenge" following the vote category, "🤝 Friend Challenge"), navy panel with a gold headline, one detail line and a green cash button; the Friend tile is green with your best photo vs another photo, a VS badge and a WhatsApp "Invite · $1" button.
