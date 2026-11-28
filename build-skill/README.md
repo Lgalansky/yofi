@@ -800,7 +800,8 @@ python3 build-skill/judgecard.py sp-jt.html sp-jc.html
 python3 build-skill/galfix.py sp-jc.html sp-gf.html
 python3 build-skill/audit1.py sp-gf.html sp-a1.html
 python3 build-skill/signup.py sp-a1.html sp-su.html
-python3 build-skill/shields.py sp-su.html skill-preview.html
+python3 build-skill/shields.py sp-su.html sp-sh.html
+python3 build-skill/cmpquick.py sp-sh.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -968,3 +969,5 @@ The Collect and Improve buttons on the Vote top card use the app's shared button
 `signup.py` (user decisions): no sign-up coin bonus (the first touch-up is the welcome gift); sign-up from a touch-up reads "Save Milo’s touch-up · Create your free account so your photo and coins stay yours." with no bonus box or coin burst, and the "Welcome bonus when you sign up" banner is gone. The profile sheet keeps two buttons (Hall of Fame, Spend coins); Competitions is gone. The "Add 2 more Pets photos" top card's line is shortened to "Each photo earns on votes" (`jartext.py`).
 
 `shields.py` (user chose A for both): stolen cards are trophies. They no longer fill a collection's Gold slots; they show in a "🃏 Trophies" row on their collection's binder page and still earn coins. Shields are earned (special tile, every 3-day streak, every judge rank-up from Sharp Eye; hold up to 3), never bought, and placed on a card from the 🛡 pill sheet or the Gallery "🛡 Shield Milo" chip. An overnight steal aimed at a shielded card is blocked and the shield breaks, with a "Shield held!" pop ("Leo tried to steal Milo…"); unplaced shields no longer block anything. About 1 in 2 steal walls has a rival card marked "🛡 Shielded" that can't be picked.
+
+`cmpquick.py` (user chose option B): Compete › Photo games no longer repeats the Live games. It keeps Daily jackpots and Tournaments (Photo Knockout, Showdown), then one small "⚡ Quick games" row (Photo Duel · Judge Duel · Friend). The big Photo Duel card, Challenge a friend row, incoming-challenge row, Card challenges and Clubs link are gone. The Judge games tab is unchanged.
