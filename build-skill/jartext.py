@@ -1,9 +1,9 @@
 # Skill preview: the coin jar card on Vote says plainly whose photo earned what (user chose option A).
 #  Was "A voter picked Milo · Jar full in 2h 32m · +4". Now:
 #   "Milo earned you 4 coins" / "Players voted for it" / fill bar / "Full in 2h 32m",
-#   a "Your photo" label on the picture, and the gold button reads "Collect +4".
+#   and the gold button reads "Collect +4".
 #  Several photos: "Your photos earned you 12 coins". Full jar: "... · Full · collect to keep earning".
-#  The upgrade card matches: "Milo can reach Diamond" / "71 → 80 · earns 8 coins a vote", "Your photo" label,
+#  The upgrade card matches: "Milo can reach Diamond" / "71 → 80 · earns 8 coins a vote", 
 #  gold button "Improve" with the cost ("120 🪙") under it (was "Milo’s upgrade is ready · 71 → 80 for Diamond · 120 c…").
 # Usage: python3 build-skill/jartext.py in.html out.html  (run after names.py)
 import sys
@@ -28,13 +28,13 @@ JS = r'''
     try { const el = $('#vgGoal'); if (!el) return; const g = vgGoal(), jar = !!(g && g.jar);
       el.querySelectorAll('.jt-yp,.jt-when').forEach(x => x.parentNode.removeChild(x));
       if (g && g.ready && g.p) { const sm = el.querySelector('.vg-tx > small'); if (sm) sm.textContent = g.s;
-        const im = el.querySelector(':scope > img'); if (im) { el.classList.add('jt-rel'); el.insertAdjacentHTML('beforeend', `<em class="jt-yp" style="left:${im.offsetLeft + 4}px;top:${im.offsetTop + im.offsetHeight - 22}px">Your photo</em>`); }
+        el.classList.add('jt-rel');
         const c = el.querySelector('.vg-cta'); if (c && !c.querySelector('.jt-cost')) { c.classList.add('jt-two'); c.innerHTML = `<small class="jt-cl">Improve</small><span class="jt-cost">${g.cost} ${gemIcon('jt-ci')}</span>`; }
         el.setAttribute('aria-label', `${g.t}. ${g.s}. Improve for ${g.cost} coins`); return; }
       if (!jar) return;
       const sm = el.querySelector('.vg-tx > small'); if (sm) sm.textContent = g.s;
       const tx = el.querySelector('.vg-tx'); if (tx) tx.insertAdjacentHTML('beforeend', `<small class="jt-when">${esc(g.when)}</small>`);
-      const im = el.querySelector(':scope > img'); if (im) { el.classList.add('jt-rel'); el.insertAdjacentHTML('beforeend', `<em class="jt-yp" style="left:${im.offsetLeft + 4}px;top:${im.offsetTop + im.offsetHeight - 22}px">${S.vgJarMix ? 'Your photos' : 'Your photo'}</em>`); }
+        el.classList.add('jt-rel');
       const c = el.querySelector('.vg-cta'); if (c && !c.querySelector('.jt-cl')) c.insertAdjacentHTML('afterbegin', '<small class="jt-cl">Collect</small>');
       el.setAttribute('aria-label', `${g.t}. ${g.s}. Collect ${g.jar} coins`); } catch (e) {} };
 })();

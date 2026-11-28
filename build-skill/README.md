@@ -945,3 +945,5 @@ Compete tabs use the game families: "📷 Photo games | 🎯 Judge games" (was Y
 Judge Duel result screen uses the same rival / you avatars as its game screen (score such as "6/10" in each pill, gold WINNER tag on top) instead of score rings; the loss tip reads "Vote more to sharpen your judging" (`qsicon.py`).
 
 The upgrade card on Vote matches the coin jar card: "Milo can reach Diamond" / "71 → 80 · 8 coins a vote", a "Your photo" label on the picture, and a gold "Improve" button with the cost ("120 🪙") under it (was "Milo’s upgrade is ready · 71 → 80 for Diamond · 120 c…") (`jartext.py`).
+
+The "Your photo" label on the coin jar and upgrade cards was removed (user decision).
