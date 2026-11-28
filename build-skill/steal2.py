@@ -1,6 +1,6 @@
 # Skill preview: batch of user changes.
-#  1. Compete has one list (the Judge games tab is gone): Daily jackpots, Tournaments (Photo Knockout, Showdown,
-#     Crowd Championship), then Quick games (Photo Duel · Judge Duel · Friend).
+#  1. Compete has one list (the Judge games tab is gone): Daily jackpots, Tournaments (Photo Knockout, Showdown),
+#     then Quick games (Photo Duel · Judge Duel · Friend). Crowd Championship was removed (user decision).
 #  2. A missed vote says how many agreed with you: "Missed it · 38% picked this one too" (was "62% picked the other").
 #  3. Steal wall: no shields shown on the three cards. About 1 in 3 steals, the card you pick turns out to be shielded:
 #     it bounces, a shield slams on it, "Sorry, Hilltop village is shielded", and nothing is stolen. Then a sheet offers
@@ -22,7 +22,7 @@ JS = r'''
     try { const t = document.createElement('div'); t.innerHTML = h; const rows = t.querySelectorAll('.c4-t'), last = rows[rows.length - 1];
       let win = ''; try { const nx = chId() + 1; win = `Win $${Math.round(chPool(chPlayers(nx, nx * CH_MS)) * .1).toLocaleString()}`; } catch (e) { win = 'Top 20% paid'; }
       const row = `<button class="c4-t" data-c2r="crowd"><span class="c4-ti">👥</span><span class="c4-tt"><b>Crowd Championship</b><small>Judges vs the crowd</small><em>${win}</em></span><span class="c4-te">Entry $${typeof CH_ENTRY !== 'undefined' ? CH_ENTRY : 2}</span></button>`;
-      if (last) last.insertAdjacentHTML('afterend', row);
+      // Crowd Championship removed (user decision)
       return t.innerHTML; } catch (e) { return h; } };
 })();
 // ---- an unopened special tile stays on Vote (it used to float over other tabs) ----
