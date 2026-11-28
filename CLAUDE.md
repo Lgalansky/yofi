@@ -85,7 +85,7 @@ Think like a world-class graphic designer: clear hierarchy, strong contrast, gen
 **Yofi Skill style guide (apply on every change without being asked):**
 - **Fonts:** titles and big numbers in Fraunces (serif); all buttons, chips, labels and body text in Nunito Sans bold. Never put the serif font on a button.
 - **Cards:** one bold title, at most one short line, then one button. No extra labels or badges on photos unless they carry information the title doesn't. Never repeat a number that's already in the title (e.g. "Milo earned you 16 coins" → button just "Collect").
-- **Buttons:** same height, corner radius and font in the same spot on every card; the price sits inside the button ("Play · $2", "Improve" + "120 🪙"), never as loose text.
+- **Buttons:** same height, corner radius and font in the same spot on every card; cash prices sit inside the button ("Play · $2"), never as loose text. Top-of-Vote cards show no coin price on their button ("Improve", "Collect"); the cost shows on the next screen.
 - **Game names (name by what competes):** 📷 Photo games: **Photo Duel** (1 v 1, voters pick), **Photo Knockout** (16-photo knockout, pyramid icon), **Showdown** (race icon). 🎯 Judge games: **Judge Duel** (judge vs judge, red/blue avatars), **Crowd Championship**. Never use "Head-to-head", "Sprint" or "Quick Sprint" in player-facing text.
 - **Plain words:** say whose photo and what the player gets ("Milo earned you 16 coins", "Milo can reach Diamond"), not system words ("voter", "jar", "upgrade is ready").
 - **Text must fit:** nothing truncated with "…" on a 393px-wide phone; shorten the copy rather than shrink the font.

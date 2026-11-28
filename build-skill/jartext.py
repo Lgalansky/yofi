@@ -4,7 +4,7 @@
 #   and the gold button reads "Collect" (the amount is already in the title).
 #  Several photos: "Your photos earned you 12 coins". Full jar: "... · Full · collect to keep earning".
 #  The upgrade card matches: "Milo can reach Diamond" / "71 → 80 · earns 8 coins a vote", 
-#  gold button "Improve" with the cost ("120 🪙") under it (was "Milo’s upgrade is ready · 71 → 80 for Diamond · 120 c…").
+#  gold button just "Improve" (the price shows on the Improve screen; user decision) (was "Milo’s upgrade is ready · 71 → 80 for Diamond · 120 c…").
 # Usage: python3 build-skill/jartext.py in.html out.html  (run after names.py)
 import sys
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
@@ -30,7 +30,7 @@ JS = r'''
       el.querySelectorAll('.jt-yp,.jt-when').forEach(x => x.parentNode.removeChild(x));
       if (g && g.ready && g.p) { const sm = el.querySelector('.vg-tx > small'); if (sm) sm.textContent = g.s;
         el.classList.add('jt-rel');
-        const c = el.querySelector('.vg-cta'); if (c && !c.querySelector('.jt-cost')) { c.classList.add('jt-two'); c.innerHTML = `<small class="jt-cl">Improve</small><span class="jt-cost">${g.cost} ${gemIcon('jt-ci')}</span>`; }
+        const c = el.querySelector('.vg-cta'); if (c && !c.querySelector('.jt-cost')) { c.classList.add('jt-two'); c.innerHTML = `<small class="jt-cl">Improve</small><span class="jt-cost" hidden></span>`; c.classList.add('jt-one'); }
         el.setAttribute('aria-label', `${g.t}. ${g.s}. Improve for ${g.cost} coins`); return; }
       if (!jar) return;
       const sm = el.querySelector('.vg-tx > small'); if (sm) sm.parentNode.removeChild(sm);
