@@ -794,7 +794,8 @@ python3 build-skill/ctafix.py sp-gs.html sp-ct.html
 python3 build-skill/sprintic.py sp-ct.html sp-si.html
 python3 build-skill/h2hopen.py sp-si.html sp-ho.html
 python3 build-skill/qsicon.py sp-ho.html sp-qi.html
-python3 build-skill/names.py sp-qi.html skill-preview.html
+python3 build-skill/names.py sp-qi.html sp-nm.html
+python3 build-skill/jartext.py sp-nm.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -938,3 +939,5 @@ Live games: the 1 v 1 tile is now called "⚔️ Head-to-head" (same name as its
 `names.py`: games are named by what competes (user chose option A). Your photo competes: Head-to-head is now **Photo Duel**, Sprint is now **Photo Knockout**. Your judging competes: Quick Sprint is now **Judge Duel**. "Crowd Sprint" labels read Crowd Championship. It swaps the text across the whole app (code comparisons change on both sides); lower-case ids such as `'sprint'` are untouched. Run it last.
 
 Compete tabs use the game families: "📷 Photo games | 🎯 Judge games" (was Your photo | Your eye), and the judge card's label reads "Your judge score" (`names.py`). The Judge Duel avatars on the Compete button sit in round frames (`qsicon.py`).
+
+`jartext.py`: the coin jar card on Vote says plainly whose photo earned what (user chose option A): "Milo earned you 16 coins" / "Players voted for it" / fill bar / "Full in 1h 5m", a "Your photo" label on the picture, and the gold button reads "Collect +16" (was "A voter picked Milo · Jar full in …").
