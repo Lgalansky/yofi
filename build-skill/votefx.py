@@ -17,8 +17,9 @@
 #  3. Shields: a 🛡 pill in the header. An overnight steal that hits a shield is blocked and the
 #     "While you were away" pop says so.
 #  4. Raid: full-screen heist. Flash + slam "RAID!", rotating gold rays and sparkles behind a rival's
-#     wall of 3 spot-lit photos. Tap one; your best photo vs it, best of 3 live votes shown as numbered 1 2 3 slots that fill with the photo that got each
-#     vote (gold = rival, blue = you), tally in screen order, bursts on every vote and a "Deciding vote!" moment at 1–1. Win: gold flash, confetti and coin rain,
+#     wall of 3 spot-lit photos. Tap one; your best photo vs it, a score face-off: the wall hides the rival scores ("?"), you pick the one you think
+#     scores lowest, then their score is revealed (shake, flash, slam) against your best photo's score;
+#     match or beat it to steal it and a "Deciding vote!" moment at 1–1. Win: gold flash, confetti and coin rain,
 #     the photo zooms in as a NEW CARD that earns for you. Lose: "So close!", nothing lost.
 #     One button back to voting; after a win the card flies into the earnings card at the top of Vote,
 #     which turns gold for a few seconds: "<name> is earning for you · 🃏 Stolen card" with a "+8 a vote" chip.
@@ -105,24 +106,23 @@ function raidStart() { const me = S.photos.filter(p => p.s && !p.heldBy).sort((a
   const sh = $('#shell'), el = document.createElement('div'); el.id = 'raid'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Steal');
   el.innerHTML = `<div class="rd-rays"></div><div class="rd-sparks">${[...Array(22)].map((_, i) => `<i style="left:${(i * 47) % 100}%;top:${(i * 29) % 100}%;animation-delay:${(i * .23 % 2).toFixed(2)}s"></i>`).join('')}</div><i class="rd-flash"></i>
     <div class="rd-in"><div class="rd-ban">STEAL!</div><p class="rd-who"><span class="rd-av">${rv.n[0]}</span>${rv.n}’s gallery · <b>steal one photo</b></p>
-    <div class="rd-wall">${wall.map((w, i) => `<button class="rd-card" data-rd="${i}" style="--d:${(.55 + i * .15).toFixed(2)}s"><span class="rd-lamp"></span><span class="rd-fr"><img src="${w.src}" alt=""><i class="rd-sc">${w.sc}</i><span class="rd-tg"></span></span><b>${esc(w.nm)}</b><small>earns ${cardRate(w.sc)} 🟡 a vote</small></button>`).join('')}</div>
-    <p class="rd-hint">👆 Tap the photo you want · best of 3 votes · nothing to lose</p></div>`;
+    <div class="rd-wall">${wall.map((w, i) => `<button class="rd-card" data-rd="${i}" style="--d:${(.55 + i * .15).toFixed(2)}s"><span class="rd-lamp"></span><span class="rd-fr"><img src="${w.src}" alt=""><i class="rd-sc">?</i><span class="rd-tg"></span></span><b>${esc(w.nm)}</b><small>Score hidden</small></button>`).join('')}</div>
+    <p class="rd-hint">👆 Pick the photo you think scores lowest · your best photo scores ${me.s.total} · nothing to lose</p></div>`;
   sh.appendChild(el); requestAnimationFrame(() => { el.classList.add('on'); setTimeout(() => el.classList.add('shake'), 420); });
   el.querySelectorAll('[data-rd]').forEach(b => b.onclick = () => { if (el.dataset.pick) return; el.dataset.pick = 1; b.classList.add('picked'); el.querySelectorAll('.rd-card').forEach(c => c !== b && c.classList.add('gone'));
     const r = vfRel(b); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, ['#F3D27A', '#fff'], 18); setTimeout(() => raidFight(el, me, wall[+b.dataset.rd], rv), 650); }); }
-function raidFight(el, me, them, rv) { const pWin = Math.max(.35, Math.min(.75, .55 + (me.s.total - them.sc) / 40)), won = Math.random() < pWin;
-  const pick = l => l[Math.floor(Math.random() * l.length)], seq = won ? pick([[1, 1], [0, 1, 1], [1, 0, 1]]) : pick([[0, 0], [1, 0, 0], [0, 1, 0]]);
-  el.classList.remove('shake'); rdStage(el).innerHTML = `<div class="rd-ban sm">STEAL</div><p class="rd-who" id="rdSay">Best of 3 votes · <b>voters are deciding…</b></p>
-    <div class="rd-vs"><figure><span class="rd-ph"><img src="${them.src}" alt=""><i class="rd-sc">${them.sc}</i></span><figcaption>${esc(them.nm)}<small>${rv.n}</small></figcaption></figure><span class="rd-x">VS</span>
-      <figure class="me"><span class="rd-ph"><img src="${me.src}" alt=""><i class="rd-sc">${me.s.total}</i></span><figcaption>${esc(alName(me))}<small>You</small></figcaption></figure></div>
-    <div class="rd-dots">${[0, 1, 2].map(i => `<i data-dt="${i}"><b>${i + 1}</b></i>`).join('')}</div><p class="rd-tally"><b id="rdT">0</b><span>–</span><b id="rdM">0</b></p><p class="rd-key"><span class="t">${rv.n}</span><span class="m">You</span></p>`;
-  let i = 0, m = 0, t = 0; const step = () => { if (!el.isConnected) return; const v = seq[i], d = el.querySelector(`[data-dt="${i}"]`);
-    if (v) m++; else t++; d.className = v ? 'me' : 'them'; d.innerHTML = `<img src="${v ? me.src : them.src}" alt=""><small>${v ? 'You' : rv.n}</small>`; $('#rdM').textContent = m; $('#rdT').textContent = t; i++;
-    const r = vfRel(d); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, v ? ['#5B8DEF', '#fff', '#F3D27A'] : ['#E0A82E', '#fff'], 14);
-    el.querySelector(v ? '.rd-vs .me' : '.rd-vs figure').classList.remove('hit'); void el.offsetWidth; el.querySelector(v ? '.rd-vs .me' : '.rd-vs figure').classList.add('hit');
-    if (i >= seq.length) { setTimeout(() => raidDone(el, me, them, rv, won, m, t), 900); return; }
-    if (m === 1 && t === 1) { $('#rdSay').innerHTML = '<b class="rd-dec">⚡ Deciding vote! ⚡</b>'; el.classList.add('tense'); setTimeout(step, 1700); } else setTimeout(step, 1100); };
-  setTimeout(step, 1200); }
+function raidFight(el, me, them, rv) { const won = me.s.total >= them.sc;
+  el.classList.remove('shake'); el.classList.add('tense'); rdStage(el).innerHTML = `<div class="rd-ban sm">STEAL</div><p class="rd-who" id="rdSay">Match or beat their score to steal it</p>
+    <div class="rd-vs"><figure class="th"><span class="rd-ph"><img src="${them.src}" alt=""><span class="rd-big hide" id="rdTS"><b>?</b><small>score</small></span></span><figcaption>${esc(them.nm)}<small>${rv.n}</small></figcaption></figure><span class="rd-x">VS</span>
+      <figure class="me"><span class="rd-ph"><img src="${me.src}" alt=""><span class="rd-big mine"><b>${me.s.total}</b><small>your score</small></span></span><figcaption>${esc(alName(me))}<small>You</small></figcaption></figure></div>
+    <p class="rd-drum" id="rdDrum">Revealing their score…</p>`;
+  setTimeout(() => { if (!el.isConnected) return; const ts = $('#rdTS'); ts.classList.add('shake'); }, 700);
+  setTimeout(() => { if (!el.isConnected) return; const ts = $('#rdTS'); ts.classList.remove('hide', 'shake'); ts.classList.add('show', won ? 'lo' : 'hi'); ts.querySelector('b').textContent = them.sc;
+    const fl = el.querySelector('.rd-flash'); fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
+    const r = vfRel(ts); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, ['#F3D27A', '#fff', '#E0A82E'], 30);
+    el.querySelector(won ? '.rd-vs .me' : '.rd-vs .th').classList.add('win'); el.querySelector(won ? '.rd-vs .th' : '.rd-vs .me').classList.add('lose');
+    $('#rdDrum').innerHTML = won ? `<b class="ok">${me.s.total} ${me.s.total === them.sc ? 'matches' : 'beats'} ${them.sc}!</b>` : `<b class="no">${them.sc} beats ${me.s.total}</b>`; el.classList.remove('tense');
+    setTimeout(() => raidDone(el, me, them, rv, won, me.s.total, them.sc), 1700); }, 2300); }
 function raidDone(el, me, them, rv, won, m, t) { el.classList.remove('tense');
   if (won && them.back) { them.back.heldBy = null; them.back.heldAt = null; if (S.awayNews && S.awayNews.st) S.awayNews.st = null; save(); }
   else if (won) { S.photos.push({ id: uid(), src: them.src, orig: them.src, cat: them.cat, nm: them.nm, nmAsk: 1, enh: 0, at: Date.now(), card: { from: rv.h }, s: { light: them.sc, comp: them.sc, colour: them.sc, tech: them.sc, total: them.sc } }); S.stlTaken = (S.stlTaken || []).concat(them.key); save(); }
@@ -132,7 +132,7 @@ function raidDone(el, me, them, rv, won, m, t) { el.classList.remove('tense');
     <div class="rd-ban">${won ? (them.back ? 'WON BACK!' : 'STOLEN!') : 'So close!'}</div>
     <div class="rd-prize ${won ? 'w' : ''}"><img src="${them.src}" alt="">${won ? (them.back ? '<i class="rd-new">✨ BACK IN YOUR GALLERY ✨</i>' : '<i class="rd-new">✨ NEW CARD ✨</i>') : ''}</div>
     <h3 class="rd-h">${won ? (them.back ? `${esc(them.nm)} is yours again!` : `${esc(them.nm)} is yours!`) : `${rv.n} kept ${esc(them.nm)}`}</h3>
-    <p class="rd-who">${won ? `It earns you <b>${cardRate(them.sc)} 🟡 a vote</b> from now on · won ${m}–${t}` : `${t}–${m} · nothing lost · another steal is coming`}</p>
+    <p class="rd-who">${won ? `It earns you <b>${cardRate(them.sc)} 🟡 a vote</b> from now on · ${m} vs ${t}` : `${t} beat your ${m} · nothing lost · another steal is coming`}</p>
     <button class="rd-go">Back to voting</button>`;
   if (won) setTimeout(() => { const pr = el.querySelector('.rd-prize'); if (pr) { const r = vfRel(pr); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, ['#F3D27A', '#fff', '#E0A82E'], 30); } }, 350);
   el.querySelector('.rd-go').onclick = () => { el.classList.remove('on'); setTimeout(() => el.remove(), 300); try { renderJudge(); } catch (e) {} if (won) setTimeout(() => rdLand(them), 450); }; }
@@ -296,6 +296,14 @@ html body #raid .rd-sc{position:absolute!important;top:10px!important;right:10px
 .rd-dots{display:flex;gap:16px;margin:24px 0 6px}.rd-dots i{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 2px rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-style:normal;animation:rdPulse 1s ease-in-out infinite}
 .rd-dots i b{font:900 1.5rem "Nunito Sans";color:#C9D6EE}.rd-dots i.w{background:#2E9A5C;box-shadow:0 0 22px rgba(46,154,92,.9);animation:rdDot .45s cubic-bezier(.2,1.6,.4,1)}.rd-dots i.l{background:#C8432F;box-shadow:0 0 22px rgba(200,67,47,.8);animation:rdDot .45s cubic-bezier(.2,1.6,.4,1)}.rd-dots i.w b,.rd-dots i.l b{color:#fff}
 @keyframes rdDot{0%{transform:scale(.4)}100%{transform:none}}
+html body #raid .rd-big{position:absolute!important;padding:0!important;border:0!important;background:rgba(12,21,41,.82)!important;border-radius:50%!important;width:96px!important;height:96px!important;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;width:96px;height:96px;border-radius:50%;background:rgba(12,21,41,.82);box-shadow:0 0 0 4px #F3D27A,0 10px 24px rgba(0,0,0,.5)}
+html body #raid .rd-big b{font:900 2.6rem/1 Fraunces,serif;color:#fff!important}html body #raid .rd-big small{color:#C9D6EE!important;font:800 .66rem "Nunito Sans";color:#C9D6EE;text-transform:uppercase;letter-spacing:.06em}
+.rd-big.mine{box-shadow:0 0 0 4px #5B8DEF,0 10px 24px rgba(0,0,0,.5)}
+.rd-big.hide b{color:#F3D27A;animation:rdPulse .6s ease-in-out infinite}.rd-big.shake{animation:rdBigShake .5s linear infinite}@keyframes rdBigShake{25%{transform:translate(-53%,-50%) rotate(-4deg)}75%{transform:translate(-47%,-50%) rotate(4deg)}}
+.rd-big.show{animation:rdBigShow .7s cubic-bezier(.2,1.7,.4,1) both}@keyframes rdBigShow{0%{transform:translate(-50%,-50%) scale(2.8);opacity:0}60%{transform:translate(-50%,-50%) scale(.9);opacity:1}100%{transform:translate(-50%,-50%) scale(1.1)}}
+html body #raid .rd-big.show.hi{background:#C8432F!important}html body #raid .rd-big.show.lo{background:#4E5D7A!important}html body #raid .rd-big.mine{background:#1F3157!important}
+.rd-vs figure.win .rd-ph img{box-shadow:0 0 0 5px #F3D27A,0 0 40px rgba(243,210,122,.9)!important}.rd-vs figure.lose .rd-ph img{filter:grayscale(.7) brightness(.7)}
+.rd-drum{margin:26px 0 0;font:800 1.1rem "Nunito Sans";color:#E6EDF8}.rd-drum b{font:900 1.6rem Fraunces,serif}.rd-drum b.ok{color:#F3D27A}.rd-drum b.no{color:#FFB4A6}
 .rd-tally{display:flex;gap:12px;align-items:center;font:900 2.4rem Fraunces,serif;color:#fff;margin:6px 0 0}.rd-tally span{color:#C9D6EE}
 .rd-dec{display:inline-block;color:#FFE8A6!important;font:900 1.2rem "Nunito Sans";animation:rdPulse .6s ease-in-out infinite}
 .rd-prize{position:relative;width:min(190px,50%);margin:26px 0 8px;animation:rdPrize .8s cubic-bezier(.2,1.5,.4,1) both}@keyframes rdPrize{0%{transform:scale(.2) rotate(-200deg);opacity:0}70%{transform:scale(1.06) rotate(4deg);opacity:1}100%{transform:none;opacity:1}}

@@ -901,3 +901,5 @@ Live games row: Steal / Stolen tiles removed; the jackpot tile chip reads "💰 
 
 The Challenge special tile uses the user's head-to-head card art (`assets/challenge.jpg`). The 1 v 1 tile is gone from the Live games row (head-to-head now comes from the tile reveal); the row is Pet challenge and Friend.
 Live games row: "💰 Pet challenge" and "🤝 Friend challenge".
+
+Steals are a score face-off instead of a vote: the rival wall hides scores ("?", "Score hidden"); you pick the photo you think scores lowest; your best photo's score shows, theirs shakes as "?" then slams in with a flash and sparks; match or beat it to steal it ("79 beats 76!"). Win-backs compare your best photo with your held card the same way.
