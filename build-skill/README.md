@@ -780,7 +780,8 @@ python3 build-skill/tourlive.py sp-uf.html sp-tl.html
 python3 build-skill/steal.py sp-tl.html sp-st.html
 python3 build-skill/cmp3.py sp-st.html sp-c3.html
 python3 build-skill/cardfix.py sp-c3.html sp-cf.html
-python3 build-skill/winall.py sp-cf.html skill-preview.html
+python3 build-skill/winall.py sp-cf.html sp-wa.html
+python3 build-skill/losetip.py sp-wa.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -803,7 +804,7 @@ python3 build-skill/winall.py sp-cf.html skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `winall.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `losetip.py`, then copy the result to `index.html` with the title "Yofi - Skill".
 
 `collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve. It also sets the one status line on every photo screen to say what a voter's pick pays ("Earns you 2 🟡 per vote · 🥇 Gold earns 4", "🥇 Gold photos earn you 4 🟡 per vote"), and gallery sleeves show coins per vote instead of "2×". Each level pays one rate (unranked 2, Gold 4, Diamond 8, Platinum 12 coins per vote). Gallery photos show their level icon by the score, a gold "+N today" pill on the photo and "Earns N per vote" underneath. Reaching a new level shows a celebration with the new rate ("Milo is Gold! now earns you 4 🟡 per vote").
 
@@ -842,3 +843,5 @@ The live `index.html` now includes the galleries steps. Their input is the earli
 `cardfix.py` tidies three things: the Improve button uses the shared gold coin button (centred "Fix lighting · 50 🟡"); the first photo's welcome gift is a small coin fly-in plus one gold line under the score ("🎁 Welcome gift · first touch-up on us"), and big "+N" coin banners stay on screen; cards won in a steal show "🃏 Won from Maya" in the bottom pill instead of over the score.
 
 `winall.py` makes every game win pause on the winner pop before the result screen (jackpot, head-to-head, friend, Quick Sprint, Showdown, Sprint, Crowd Championship, card steals). Cash and coin prizes say "Collect" and fly into the balance; stars and cards say "See result". If a game already fired its own winner pop, that one is kept, so there is only ever one pop per win.
+
+`losetip.py` keeps a lost game to two actions. If the photo you played with scores under 75, the main button is gold "✨ Touch up <name>" (opens Improve on it) and the rematch becomes the link; otherwise it's the rematch button and the Back link. Card steals are left out.
