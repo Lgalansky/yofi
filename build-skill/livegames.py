@@ -35,7 +35,7 @@ function lgxTiles() { const L = lgS(), best = fighters()[0], cat = best ? (best.
     T({ hot: st ? 1 : 0, img: m ? m.src : lgPhoto(lgHold(k).h, k), chip: st ? `★ ${st} today` : `💰 ${short(k)}`, big: `$${Math.round(L.jp[k]).toLocaleString()} pot`, sm: `Ends ${dayLeft()}`, go: 'Play · from $1', gs: 'Win stars tonight',
       fn: () => { if (!lgMine(k) && !S.photos.some(p => fitsTheme(p, k))) { addCatPhoto(k); return; } goCash(); lgCat(k); } }); }
   if (best) T({ pair: [c2NotMine(battleRival(cat).src, cat), best.src], chip: '⚔️ 1 v 1', big: `Win ${win}`, sm: 'Voters pick', go: 'Play · $1', gs: 'Result in minutes', fn: () => h2hSheet() });
-  if (best && !inc) T({ wa: 1, chip: '🤝 Friend', big: `Win ${win}`, sm: 'Invite a friend', go: 'Invite · $1', gs: 'Send on WhatsApp', fn: () => { if (S.frSt === 'gem' || S.frSt == null) S.frSt = 1; save(); frDare(); } });
+  if (best && !inc) T({ wa: best.src, chip: '🤝 Friend', big: `Win ${win}`, sm: 'Invite a friend', go: 'Invite · $1', gs: 'Send on WhatsApp', fn: () => { if (S.frSt === 'gem' || S.frSt == null) S.frSt = 1; save(); frDare(); } });
   const spr = tSlots().find(x => x.gtd < 100);
   if (spr) T({ icon: KO_PYR2, chip: '⏱ Sprint', big: 'Win $25', sm: `${Math.min(16, tCount())}/16 joined`, go: 'Join · $2', gs: 'Starts at 16', fn: () => tourSheet('sprint') });
   const rc = typeof rivalCards === 'function' ? rivalCards()[0] : null;
@@ -45,7 +45,7 @@ function lgxPaint() { const j = $('#judge'); if (!j) return; const foot = j.quer
   let w = j.querySelector('.lgx-wrap'); const tiles = lgxTiles(), sig = tiles.map(t => t.chip + t.big + t.sm).join('|');
   if (w && w.nextElementSibling === foot && w.dataset.sig === sig) return;
   if (!tiles.length) { if (w) w.remove(); return; }
-  const ph = t => t.pair ? `<img src="${t.pair[0]}" alt=""><img src="${t.pair[1]}" alt=""><span class="lgx-vs">VS</span>` : t.icon ? `<span class="lgx-ic">${t.icon}</span>` : t.wa ? `<span class="lgx-ic lgx-wa">${WA_ICON}</span>` : `<img src="${t.img}" alt="">`;
+  const ph = t => t.pair ? `<img src="${t.pair[0]}" alt=""><img src="${t.pair[1]}" alt=""><span class="lgx-vs">VS</span>` : t.icon ? `<span class="lgx-ic">${t.icon}</span>` : t.wa ? `<span class="lgx-fr"><img src="${t.wa}" alt=""><i class="lgx-wab">${WA_ICON}</i></span>` : `<img src="${t.img}" alt="">`;
   const html = `<div class="lgx-h"><span><i class="lgx-dot"></i>Live games</span><button class="lgx-all">See all ›</button></div><div class="lgx-row">${tiles.map((t, i) => `<button class="lgx ${t.hot ? 'hot' : ''} ${t.pair ? 'two' : ''}" data-lgx="${i}"><span class="lgx-ph">${ph(t)}<i class="lgx-chip">${t.chip}</i></span><b>${t.big}</b><small>${esc(t.sm)}</small>${t.gs ? `<small class="lgx-d">${esc(t.gs)}</small>` : ''}<em class="${t.free ? 'nav' : ''}">${t.go}</em></button>`).join('')}</div>`;
   if (!w) { w = document.createElement('div'); w.className = 'lgx-wrap'; } w.innerHTML = html; w.dataset.sig = sig; foot.before(w);
   w.querySelectorAll('[data-lgx]').forEach(b => b.onclick = () => tiles[+b.dataset.lgx].fn());
@@ -72,6 +72,7 @@ html body #judge > .vc{display:none!important}
 .lgx-ph img{width:100%;height:100%;object-fit:cover}.lgx.two .lgx-ph img{width:50%}
 .lgx-vs{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:#2D4E86;color:#fff;font:900 .6rem/24px Fraunces,serif;text-align:center;box-shadow:0 0 0 2px #FFFDF9}
 .lgx-ic{display:flex;align-items:center;justify-content:center}.lgx-ic .ko-pyr{width:56px;height:48px}.lgx-wa{background:#fff;width:100%;height:100%;color:#25A35A}.lgx-wa svg{width:48px;height:48px}
+.lgx-fr{position:relative;display:block;width:100%;height:100%}.lgx-fr>img{display:block;width:100%;height:100%;object-fit:cover}.lgx-wab{position:absolute;right:6px;bottom:6px;width:30px;height:30px;border-radius:50%;background:#25A35A;color:#fff;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.3)}.lgx-wab svg{width:18px;height:18px}
 .lgx-chip{position:absolute;left:5px;top:5px;padding:2px 7px;border-radius:99px;background:rgba(20,33,61,.85);color:#fff;font:800 .66rem "Nunito Sans";font-style:normal;white-space:nowrap}
 .lgx.hot .lgx-chip{background:#E0A82E;color:#3A2600}
 .lgx b{font:900 1.02rem/1.2 Fraunces,serif;color:#1E6B3E;white-space:nowrap}

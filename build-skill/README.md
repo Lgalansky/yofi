@@ -926,3 +926,5 @@ Losing a steal shows a gold "✨ Touch up Milo · beat 77" button (opens Improve
 Lost games (`losetip.py`) now always lead with the gold "✨ Touch up <name>" button whenever the photo can still be touched up (was only under 75); "Play again" moves to the link. The Payday receipt (`jarpop.py`) no longer shows the "×2" multiplier badge next to "4 🪙 a vote".
 
 Shield reveals use the user's navy Shield card art (`build-skill/assets/shield.jpg`, embedded by `votefx.py`), fitted inside the tile on a navy background. Showdown uses a race icon (5 pins racing to a chequered finish line, from the user's mock-up) on its Compete row, game screen and result (`sprintic.py`); the row reads "5 entries · top vote wins".
+
+Live games Friend tile shows your own best photo (the one you'd play with) with a small green WhatsApp badge in the corner, instead of the plain green WhatsApp tile (`livegames.py`).
