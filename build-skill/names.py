@@ -9,7 +9,7 @@ import sys, re
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
 s = open(src).read()
 for a, b in [('Quick Sprint', 'Judge Duel'), ('Crowd Sprint', 'Crowd Championship'), ('CROWD SPRINT', 'CROWD CHAMPIONSHIP'),
-             ('Cash head-to-head', 'Cash Photo Duel'), ('Head-to-head', 'Photo Duel')]:
+             ('Cash head-to-head', 'Cash Photo Duel'), ('Challenge: go head-to-head with another player', 'Photo Duel: your photo vs a rival’s'), ('Head-to-head', 'Photo Duel')]:
     assert a in s, a
     s = s.replace(a, b)
 for a, b in [('aria-selected="${t === \'photo\'}">📷 Your photo</button>', 'aria-selected="${t === \'photo\'}">📷 Photo games</button>'),

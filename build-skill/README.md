@@ -955,3 +955,5 @@ The "Your photo" label on the coin jar and upgrade cards was removed (user decis
 `galfix.py`: a Gallery binder page with no photos yet keeps its layout. The empty sleeves on the first row had no height, so their "+ Add a home photo" labels sat on the page title; empty sleeves now keep a filled card's height.
 
 The coin jar card was simplified (user mark-up): no "Players voted for it" line, and the button reads just "Collect" because the amount is already in the title (`jartext.py`).
+
+The Photo Duel special-tile card art now reads "PHOTO DUEL · Your photo vs a rival's" (was "HEAD OR HEAD · Face a rival in a duel"): `build-skill/assets/challenge.jpg` was relettered; the original art is kept as `assets/challenge_original.jpg`. Its alt text matches (`names.py`).
