@@ -8,6 +8,7 @@
 #  - Championship tip text: "Everyone gets the same 15 pairs · top 20% share the prize".
 #  - End of a Championship run: a celebration pop first ("You're in the money!" / "Great eye!" /
 #    "Run complete", big "13/15", your place so far and when results land), then the standings.
+#  - Vote screen: in the "So close! / Missed it" box the crowd's % is bold ("55% picked the other one").
 # usage: python3 build-skill/cpfix.py in.html out.html
 import sys
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
@@ -29,6 +30,9 @@ rep("c.querySelectorAll('[data-cp]').forEach(b2 => b2.classList.add(((b2.dataset
     "c.querySelectorAll('[data-cp]').forEach(b2 => b2.classList.add(((b2.dataset.cp === 'a') === (p.pa >= 50)) ? 'crowd' : 'lose')); btn.classList.add(win ? 'ok' : 'bad');\n      btn.insertAdjacentHTML('beforeend', `<b class=\"cpr-res ${win ? 'ok' : 'bad'}\">${win ? '✓ Right!' : '✗ Missed'}</b>`);\n      if (win) try { const r0 = vfRel(btn); vfPop($('#shell'), r0.x + r0.w / 2, r0.y + r0.h / 2, ['#3CCB8A', '#F3D27A', '#fff'], 18); } catch (e) {}\n      res.push(win); { const d = c.querySelectorAll('.cpr-steps i')[i]; if (d) d.className = 'd ' + (win ? 'w' : 'l'); }\n      if (win) right++; i++;")
 
 JS = r'''
+// ---- vote result: the crowd's % in bold ----
+function cfPct() { document.querySelectorAll('#judge .tot-miss small:not([data-pb])').forEach(e => { e.dataset.pb = 1; e.innerHTML = e.innerHTML.replace(/(\d+%)/, '<b class="tot-pct">$1</b>'); }); }
+new MutationObserver(() => { try { cfPct(); } catch (e) {} }).observe($('#judge'), { childList: true, subtree: true });
 // ---- Championship: a celebration when your run is in, before the standings ----
 const _chDoneCF = chDone;
 chDone = function (id, right, ms) { const r = _chDoneCF.apply(this, arguments);
@@ -42,6 +46,7 @@ assert s.count(anchor) == 1
 s = s.replace(anchor, JS + anchor)
 CSS = '''
 /* crowd picks: clear right / wrong */
+html body #judge .tot-miss small b.tot-pct{display:inline;font:900 1.15em "Nunito Sans";color:#1F3157}
 .cpr-p button{position:relative}
 .cpr-res{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);z-index:3;padding:10px 18px;border-radius:16px;font:900 1.35rem "Nunito Sans";white-space:nowrap;color:#fff;box-shadow:0 10px 24px -8px rgba(0,0,0,.6);animation:cprStamp .45s cubic-bezier(.2,1.7,.4,1) both;pointer-events:none}
 .cpr-res.ok{background:#2E9A5C}.cpr-res.bad{background:#C8432F}
