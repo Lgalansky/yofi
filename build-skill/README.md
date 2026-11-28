@@ -789,7 +789,8 @@ python3 build-skill/jarpop.py sp-chs.html sp-jpp.html
 python3 build-skill/votefx.py sp-jpp.html sp-vf.html
 python3 build-skill/cpfix.py sp-vf.html sp-cp.html
 python3 build-skill/screens.py sp-cp.html sp-sc.html
-python3 build-skill/gstyle.py sp-sc.html skill-preview.html
+python3 build-skill/gstyle.py sp-sc.html sp-gs.html
+python3 build-skill/ctafix.py sp-gs.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -913,3 +914,5 @@ The Live games jackpot tile follows the category being voted on: voting "Best Na
 Gallery binder rings are angled gold loops from the leather spine into a punched hole in the page margin.
 
 Losing a steal shows a gold "✨ Touch up Milo · beat 77" button (opens Improve on your best photo) and a "Back to voting" link. Live games labels sit above the tile image instead of over it, and the "⚔️ 1 v 1 challenge" (head-to-head) tile is back in the row.
+
+`ctafix.py`: the touch-up keeps one name from Improve to Before and after. While the welcome gift covers the first touch-up, the gold Improve button reads "Boost colour · Free 🎁" (not the 50-coin price); the selected touch-up row shows "↑" instead of a projected score the result rarely matched; the Before and after button reads "Use Boost colour · Gold 🥇" (was "Touch up · Unlock Gold") and stays navy because nothing more is spent there. Live `index.html` input: run it after `gstyle.py`.
