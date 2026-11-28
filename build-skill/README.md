@@ -795,7 +795,8 @@ python3 build-skill/sprintic.py sp-ct.html sp-si.html
 python3 build-skill/h2hopen.py sp-si.html sp-ho.html
 python3 build-skill/qsicon.py sp-ho.html sp-qi.html
 python3 build-skill/names.py sp-qi.html sp-nm.html
-python3 build-skill/jartext.py sp-nm.html skill-preview.html
+python3 build-skill/jartext.py sp-nm.html sp-jt.html
+python3 build-skill/judgecard.py sp-jt.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -947,3 +948,5 @@ Judge Duel result screen uses the same rival / you avatars as its game screen (s
 The upgrade card on Vote matches the coin jar card: "Milo can reach Diamond" / "71 → 80 · 8 coins a vote", a "Your photo" label on the picture, and a gold "Improve" button with the cost ("120 🪙") under it (was "Milo’s upgrade is ready · 71 → 80 for Diamond · 120 c…") (`jartext.py`).
 
 The "Your photo" label on the coin jar and upgrade cards was removed (user decision).
+
+`judgecard.py`: the judge card (tap the 🔥 pill) follows the user's "Judge status" mock-up: a Current rank card (medallion, rank, "34% accuracy", "You picked the crowd favourite in 11 of your last 32 votes."), a Rank progression ladder of the four ranks (Good Eye 👁️, Sharp Eye 🦅 65%, Expert 🏅 75% +1 coin a correct vote, Master 👑 85% +2) marked Current / Next / Top rank, League position and Judging streak tiles, and one navy "Keep voting" button. The goal rows and 3-row league list are gone; the 8-of-10 bonus still pays.
