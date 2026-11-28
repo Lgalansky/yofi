@@ -8,6 +8,8 @@
 #    a photo already in a game shows "Milo is in a game" with a navy "See game".
 #  - Judge Duel result: the avatars replace the score rings (score in the pill, e.g. 6/10; WINNER tag on top);
 #    the loss tip reads "Vote more to sharpen your judging".
+#  - The 🔥 streak tile is a Judge Duel tile like the normal one (avatars, "🎯 Judge Duel" chip), gold, with
+#    "🔥 5 right in a row" as its line, so you can see which game it opens.
 # Usage: python3 build-skill/qsicon.py in.html out.html  (run after h2hopen.py)
 import sys
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
@@ -19,8 +21,10 @@ AVS = "(() => { try { return [AV_RIVAL, (S.user && S.user.pic) || AV_YOU]; } cat
 R("${ring(l ? a : 50, l ? a + '%' : '?', 'me')}<i>VS</i>${ring(l ? rvA : 50, l ? rvA + '%' : '?', 'them')}",
   "${(() => { const v = " + AVS + "; if (!v) return ring(l ? rvA : 50, l ? rvA + '%' : '?', 'them') + '<i>VS</i>' + ring(l ? a : 50, l ? a + '%' : '?', 'me');"
   " return `<span class=\"qsi-av rv\"><i class=\"qsi-cl\"><img src=\"${v[0]}\" alt=\"A rival\"></i><b>${l ? rvA + '%' : '?'}</b></span><i>VS</i><span class=\"qsi-av me\"><i class=\"qsi-cl\"><img src=\"${v[1]}\" alt=\"You\"></i><b>${l ? a + '%' : '?'}</b></span>`; })()}")
+R("T({ hot: 1, icon: '<span class=\"lgx-em\">🔥</span>', chip: `🔥 ${run} right`, big: `Win ${qsM(qsPay(2)[0])}`, sm: 'Quick Sprint', gs: 'Your eye vs a rival', go: 'Play · $2',",
+  "T({ hot: 1, qs: 1, ...((v => v ? { pair: v } : { icon: '<span class=\"lgx-em\">🔥</span>' })(" + AVS + ")), chip: '🎯 Quick Sprint', big: `Win ${qsM(qsPay(2)[0])}`, sm: `🔥 ${run} right in a row`, gs: 'You vs another judge', go: 'Play · $2',")
 R("  if (best && !inc) T({ wa: best.src,",
-  "  { const v = " + AVS + "; if (v && !out.some(t => t.sm === 'Quick Sprint')) T({ pair: v, chip: '🎯 Quick Sprint', big: `Win ${qsM(qsPay(2)[0])}`, sm: 'Your eye vs a rival', go: 'Play · $2', gs: 'About 30 seconds', fn: () => { QS_SEL = 2; qsSheet(); } }); }\n"
+  "  { const v = " + AVS + "; if (v && !out.some(t => t.qs)) T({ pair: v, chip: '🎯 Quick Sprint', big: `Win ${qsM(qsPay(2)[0])}`, sm: 'Your eye vs a rival', go: 'Play · $2', gs: 'About 30 seconds', fn: () => { QS_SEL = 2; qsSheet(); } }); }\n"
   "  if (best && !inc) T({ wa: best.src,")
 R("chip: '⚔️ 1 v 1 challenge'", "chip: '⚔️ Head-to-head'")
 R("<em class=\"${t.free ? 'nav' : ''}\">${t.go}</em>", "<em class=\"${t.free ? 'nav' : t.gold ? 'gld' : ''}\">${t.go}</em>")

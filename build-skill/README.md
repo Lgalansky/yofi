@@ -802,7 +802,8 @@ python3 build-skill/audit1.py sp-gf.html sp-a1.html
 python3 build-skill/signup.py sp-a1.html sp-su.html
 python3 build-skill/shields.py sp-su.html sp-sh.html
 python3 build-skill/cmpquick.py sp-sh.html sp-cq.html
-python3 build-skill/shieldfx.py sp-cq.html skill-preview.html
+python3 build-skill/shieldfx.py sp-cq.html sp-sf.html
+python3 build-skill/tilefit.py sp-sf.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -976,3 +977,5 @@ The Collect and Improve buttons on the Vote top card use the app's shared button
 `shieldfx.py`: the special tile hides while a sheet or pop-up is open (it used to sit on top of the Shields sheet). Revealing a Shield flies a gold shield from the tile into the 🛡 pill, which glows. Right after any shield is earned (tile, 3-day streak, judge rank-up) a "New shield!" sheet asks you to place it ("Put it on your best card. It blocks one steal while you're away." · "🛡 Shield Milo" · "Later"); with one still unplaced it asks again once a day on Vote.
 
 Shields are won only from the special tile while voting (user decision): 3-day streaks and judge rank-ups no longer give shields, and the Shields sheet reads "Win shields from ✨ special tiles while you vote." (`shields.py`, `shieldfx.py`).
+
+The 🔥 streak tile in Live games is a Judge Duel tile (avatars, "🎯 Judge Duel" chip, gold) with "🔥 5 right in a row" as its line, so it says which game it opens (`qsicon.py`). `tilefit.py`: special-tile card art (Jokers, Steal, Photo Duel, Shield) shows the whole card inside the vote photo frame on a dark background instead of being cropped.
