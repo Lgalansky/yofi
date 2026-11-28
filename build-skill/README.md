@@ -867,4 +867,4 @@ Tapping a locked category in the Gallery opens the collection map (or the picker
 
 The coin jar now holds 3 hours of earnings and fills in 3 hours (`JAR_HRS = 3` in `jarfull.py`; same coins per hour, so more frequent, smaller collects).
 
-`navsteal.py` adds Steal to the bottom menu (Vote | Gallery | Compete | Steal). It opens the steal screen, or "Win it back" when a rival holds one of your cards (red "!" badge); otherwise a gold badge shows tries left today.
+`navsteal.py` puts a Steal button on the Vote screen right under the two photos (not in the menu): "Steal a card · Free try · first to 5 votes" with a navy "3 left ›" pill, or gold "Win Milo back · Emma has it · free try" when a rival holds one of your cards. The Live games row drops its own steal tiles so the offer isn't shown twice.
