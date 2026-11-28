@@ -953,3 +953,5 @@ The "Your photo" label on the coin jar and upgrade cards was removed (user decis
 `judgecard.py`: the judge card (tap the 🔥 pill) follows the user's "Judge status" mock-up: a Current rank card (medallion, rank, "34% accuracy", "You picked the crowd favourite in 11 of your last 32 votes."), a Rank progression ladder of the four ranks (Good Eye 👁️, Sharp Eye 🦅 65%, Expert 🏅 75% +1 coin a correct vote, Master 👑 85% +2) marked Current / Next / Top rank, League position and Judging streak tiles, and one navy "Keep voting" button. The goal rows and 3-row league list are gone; the 8-of-10 bonus still pays.
 
 `galfix.py`: a Gallery binder page with no photos yet keeps its layout. The empty sleeves on the first row had no height, so their "+ Add a home photo" labels sat on the page title; empty sleeves now keep a filled card's height.
+
+The coin jar card was simplified (user mark-up): no "Players voted for it" line, and the button reads just "Collect" because the amount is already in the title (`jartext.py`).
