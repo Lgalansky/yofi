@@ -806,7 +806,8 @@ python3 build-skill/shieldfx.py sp-cq.html sp-sf.html
 python3 build-skill/tilefit.py sp-sf.html sp-tf.html
 python3 build-skill/jduel.py sp-tf.html sp-jd.html
 python3 build-skill/cmpjudge.py sp-jd.html sp-cj.html
-python3 build-skill/winback.py sp-cj.html skill-preview.html
+python3 build-skill/winback.py sp-cj.html sp-wb.html
+python3 build-skill/steal2.py sp-wb.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -996,3 +997,5 @@ Tapping the "Milo can reach Diamond" card or its Improve button on Vote opens th
 `winback.py` (user chose "win it back"): every "Win Palm garden back" opens a $1 Photo Duel against the stealer: the stolen card (held by Emma) vs your best photo, "Winner takes $1.70 + card", green "Win it back · $1". A short simulated vote decides it (your score vs the card's score sets the odds). Win: the card returns and $1.70 goes to your cash. Lose: "So close! Emma kept Palm garden" with a gold "Touch up Milo" button. Free steal tries stay for stealing new cards.
 
 Win-back (user chose option A): the stealer never bets. "Win it back · $1" is a normal Photo Duel against a rival who chose to play (close to your score), with your best photo from the stolen card's category (or your best photo). Win: $1.70 plus the card back from the stealer. Lose: the card stays, gold "Touch up Milo" (`winback.py`).
+
+`steal2.py`: Compete is one list (the Judge games tab is gone): Daily jackpots, Tournaments (Photo Knockout, Showdown, Crowd Championship "Judges vs the crowd"), then Quick games. A missed vote reads "Missed it · 41% picked this one too" (how many agreed with you). Steal walls show no shields up front; about 1 in 3 steals, the card you pick turns out to be shielded (it bounces, a shield slams on, "Sorry, Sun through cloud is shielded", nothing stolen), then a sheet offers "🛡 Shield Milo" (or how to win a shield). An unopened special tile hides when you leave Vote. The old always-visible shielded card on the wall is removed from `shields.py`.

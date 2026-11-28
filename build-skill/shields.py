@@ -6,8 +6,7 @@
 #     Use: tap the 🛡 pill (or the Gallery's "🛡 Shield Milo" chip) and put a shield on a card. An overnight steal
 #     that targets a shielded card is blocked and the shield breaks ("Your shield stopped Emma stealing Milo").
 #     Shields you haven't placed no longer block anything. Shielded cards show 🛡 in the Gallery.
-#     See it: every steal wall has one rival card behind a glowing blue shield ("🛡 Shielded"); tapping it bounces
-#     off, and the hint line explains "Shielded cards can't be stolen · shields from special tiles protect yours too".
+#     The steal wall's surprise shield moved to steal2.py.
 # Usage: python3 build-skill/shields.py in.html out.html  (run after signup.py)
 import sys
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
@@ -54,10 +53,6 @@ JS = r'''
     page.insertAdjacentHTML('beforeend', `<div class="tro-row" data-sig="${sig}">${tro.length ? `<div class="tro-in"><span class="tro-ims">${tro.slice(0, 3).map(p => `<img src="${p.src}" alt="">`).join('')}</span><span class="tro-tx"><b>🃏 Trophies · ${tro.length} stolen card${tro.length === 1 ? '' : 's'}</b><small>Earn ${tro.map(p => GAL.BASE * galMult(p.s.total)).reduce((a, b) => a + b, 0)} coins a vote</small></span></div>` : ''}${chip}</div>`);
     const b = page.querySelector('[data-shput]'); if (b) b.onclick = e => { e.stopPropagation(); shPut(S.photos.find(x => x.id === b.dataset.shput)); }; }
   new MutationObserver(() => { try { shGal(); } catch (e) {} }).observe($('#studio'), { childList: true, subtree: true });
-  // steal wall: some rival cards carry a shield and can't be picked
-  new MutationObserver(() => { try { const el = document.getElementById('raid'); if (!el || el.dataset.shd) return; const cs = [...el.querySelectorAll('.rd-card[data-rd]')]; if (cs.length < 3) return; el.dataset.shd = 1;
-    { const c = cs[Math.floor(Math.random() * cs.length)]; const hn = el.querySelector('.rd-hint'); if (hn) hn.insertAdjacentHTML('beforeend', '<br><b class="rd-shn">🛡 Shielded cards can’t be stolen · shields from ✨ special tiles protect yours too</b>'); c.classList.add('rd-shd'); const sm = c.querySelector('small'); if (sm) sm.textContent = '🛡 Shielded';
-      const fr = c.querySelector('.rd-fr'); if (fr) fr.insertAdjacentHTML('beforeend', '<i class="rd-shb">🛡</i>'); c.onclick = e => { e.stopPropagation(); c.classList.remove('rd-bonk'); void c.offsetWidth; c.classList.add('rd-bonk'); toast(`🛡 ${(c.querySelector('b') || {}).textContent || 'That card'} is shielded · pick another`); }; } } catch (e) {} }).observe($('#shell'), { childList: true });
   // a blocked steal with nothing else to report still gets its own moment
   const _ap = awayPop;
   awayPop = function () { const N = S.awayNews;
