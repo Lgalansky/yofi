@@ -857,3 +857,5 @@ Card steals are now free to try (like Steal a Brainrot): a steal or win-back bat
 Live games tiles: each tile has a third small detail line ("Result in minutes", "Starts at 16", "3 of 3 tries left") and a one-line entry button ("Play · $1", "Join · $2", "Play · free"); tile photos are 96px tall (doubled at the user's request), so the buttons sit just below the fold and show with a short scroll.
 
 Compete › Your photo: the Your photo | Your eye tabs scroll with the page instead of floating over the jackpot cards. With no photo at 70+, Head-to-head shows the VS card with a rival photo and your best photo ("62 → 70" badge), "Get Milo to 70 to play · Entry $1 · Win $1.70" and a gold "Improve" button that opens Improve on that photo (navy "Add photo" if you have none).
+
+Live games moment tiles: 5+ right votes in a row adds a gold "🔥 N right · Win $3.20 · Quick Sprint · Play · $2" tile (gone after you play it or miss a vote); a Crowd Championship starting within 15 minutes adds a gold "⏱ N min · 1st wins $X · Join · $2" tile (gone once you join).

@@ -4,7 +4,8 @@
 #    photo says what it is, one big line says what you can win, one small line gives the detail,
 #    and the button shows the entry (green = cash, navy = free).
 #  - What just happened leads, in gold: a friend's challenge, a stolen card, or a jackpot where
-#    your photo won stars today. Then Jackpot, Head-to-head, Challenge a friend, Sprint, Steal.
+#    your photo won stars today, 5+ right votes in a row (Quick Sprint), or a Crowd Championship
+#    starting within 15 minutes. Then Jackpot, Head-to-head, Challenge a friend, Sprint, Steal.
 #  - "See all ›" opens Compete.
 # usage: python3 build-skill/livegames.py in.html out.html
 import sys
@@ -20,6 +21,14 @@ function lgxTiles() { const L = lgS(), best = fighters()[0], cat = best ? (best.
   if (inc) T({ hot: 1, img: inc.theirSrc, chip: '🤝 Challenge', big: `Win ${prizeTxt(inc.stake)}`, sm: `From @${String(inc.f).slice(0, 11)}`, go: 'View', gs: `${stakeTxt(inc.stake)} each`, fn: () => incSheet(inc) });
   const held = S.photos.find(p => p.heldBy);
   if (held) T({ hot: 1, img: held.src, chip: '🃏 Stolen', big: 'Win it back', sm: 'Free try', go: 'Play', gs: `${stlLeft()} of 3 tries left`, free: 1, fn: () => stealSheet({ back: held.id }) });
+  // your eye: 5+ right in a row -> Quick Sprint for cash
+  const h = jgHist(); let run = 0; for (let i = h.length - 1; i >= 0 && h[i]; i--) run++;
+  if (run >= 5 && S.lgxStrkAt !== (S.votes || 0) - run) T({ hot: 1, icon: '<span class="lgx-em">🔥</span>', chip: `🔥 ${run} right`, big: `Win ${qsM(qsPay(2)[0])}`, sm: 'Quick Sprint', gs: 'Your eye vs a rival', go: 'Play · $2',
+    fn: () => { S.lgxStrkAt = (S.votes || 0) - run; save(); QS_SEL = 2; qsSheet(); } });
+  // Crowd Championship starting soon
+  const nx = chId() + 1, mins = Math.ceil((nx * CH_MS - Date.now()) / 6e4);
+  if (mins <= 15 && !(S.ch && S.ch[nx])) { const pool = chPool(chPlayers(nx, nx * CH_MS));
+    T({ hot: 1, icon: '<span class="lgx-em">👥</span>', chip: `⏱ ${mins} min`, big: `1st wins $${Math.round(pool * .1).toLocaleString()}`, sm: 'Crowd Championship', gs: 'Top 20% paid', go: `Join · $${CH_ENTRY}`, fn: () => crowdSheet() }); }
   const ks = CATS8.filter(k => k !== 'any').sort((a, b) => ((L.you[b] || 0) - (L.you[a] || 0)) || (!!lgMine(b) - !!lgMine(a)) || (L.jp[b] - L.jp[a]));
   const k = ks[0];
   if (k) { const m = lgMine(k), st = L.you[k] || 0;
@@ -33,15 +42,16 @@ function lgxTiles() { const L = lgS(), best = fighters()[0], cat = best ? (best.
   if (rc && !held) T({ img: rc.src, chip: '🃏 Steal', big: 'Win a card', sm: 'First to 5 votes', go: 'Play · free', gs: `${stlLeft()} of 3 tries left`, free: 1, fn: () => stealSheet({}) });
   return out; }
 function lgxPaint() { const j = $('#judge'); if (!j) return; const foot = j.querySelector('.jfoot') || j.querySelector('#jcard'); if (!foot) return;
-  let w = j.querySelector('.lgx-wrap'); if (w && w.nextElementSibling === foot && Date.now() - (+w.dataset.at || 0) < 15000) return;
-  const tiles = lgxTiles(); if (!tiles.length) { if (w) w.remove(); return; }
+  let w = j.querySelector('.lgx-wrap'); const tiles = lgxTiles(), sig = tiles.map(t => t.chip + t.big + t.sm).join('|');
+  if (w && w.nextElementSibling === foot && w.dataset.sig === sig) return;
+  if (!tiles.length) { if (w) w.remove(); return; }
   const ph = t => t.pair ? `<img src="${t.pair[0]}" alt=""><img src="${t.pair[1]}" alt=""><span class="lgx-vs">VS</span>` : t.icon ? `<span class="lgx-ic">${t.icon}</span>` : t.wa ? `<span class="lgx-ic lgx-wa">${WA_ICON}</span>` : `<img src="${t.img}" alt="">`;
   const html = `<div class="lgx-h"><span><i class="lgx-dot"></i>Live games</span><button class="lgx-all">See all ›</button></div><div class="lgx-row">${tiles.map((t, i) => `<button class="lgx ${t.hot ? 'hot' : ''} ${t.pair ? 'two' : ''}" data-lgx="${i}"><span class="lgx-ph">${ph(t)}<i class="lgx-chip">${t.chip}</i></span><b>${t.big}</b><small>${esc(t.sm)}</small>${t.gs ? `<small class="lgx-d">${esc(t.gs)}</small>` : ''}<em class="${t.free ? 'nav' : ''}">${t.go}</em></button>`).join('')}</div>`;
-  if (!w) { w = document.createElement('div'); w.className = 'lgx-wrap'; } w.innerHTML = html; w.dataset.at = Date.now(); foot.before(w);
+  if (!w) { w = document.createElement('div'); w.className = 'lgx-wrap'; } w.innerHTML = html; w.dataset.sig = sig; foot.before(w);
   w.querySelectorAll('[data-lgx]').forEach(b => b.onclick = () => tiles[+b.dataset.lgx].fn());
   w.querySelector('.lgx-all').onclick = () => { GV.tab = 'battle'; go('gallery'); renderGallery(); }; }
 new MutationObserver(() => { try { const j = $('#judge'), w = j && j.querySelector('.lgx-wrap'), f = j && (j.querySelector('.jfoot') || j.querySelector('#jcard')); if (!w || w.nextElementSibling !== f) lgxPaint(); } catch (e) {} }).observe($('#judge'), { childList: true });
-setInterval(() => { try { if ($('#panes').dataset.at === 'judge') lgxPaint(); } catch (e) {} }, 5000);
+setInterval(() => { try { if ($('#panes').dataset.at === 'judge') lgxPaint(); } catch (e) {} }, 2000);
 setTimeout(() => { try { lgxPaint(); } catch (e) {} }, 400);
 '''
 anchor = "  shownGems = S.gems;\n})();\n})();"
@@ -68,6 +78,7 @@ html body #judge > .vc{display:none!important}
 .lgx small{font:700 .74rem/1.3 "Nunito Sans";color:#4E433C;white-space:nowrap}
 .lgx em{margin-top:6px;text-align:center;padding:6px 0;border-radius:10px;background:linear-gradient(180deg,#2E9A5C,#21784A);color:#fff;font:900 .82rem "Nunito Sans";font-style:normal}
 .lgx em.nav{background:#2D4E86}
+.lgx-em{font-size:2.6rem;line-height:1}.lgx.hot .lgx-ph{background:linear-gradient(160deg,#F3D27A,#E0A82E)}
 .lgx small.lgx-d{color:#6A5E55;font-weight:600}
 html body #judge .lgx-all{color:#2D4E86!important;background:none!important}
 '''
