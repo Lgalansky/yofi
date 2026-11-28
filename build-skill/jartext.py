@@ -18,6 +18,7 @@ JS = r'''
       g.t = `${nm} earned you ${n} coin${n === 1 ? '' : 's'}`;
       g.s = mix ? 'Players voted for them' : 'Players voted for it';
       g.when = full ? 'Full · collect to keep earning' : `Full in ${jarLeft()}`; }
+    else if (g && /^Add \d+ more|^Start /.test(g.t || '')) { g.s = 'Each photo earns on votes'; }
     else if (g && g.ready && g.p) { const p = g.p, nm = alName(p), nb = [70, 80, 90].find(b => p.s.total < b), tier = nb ? galBand(nb) : '', cost = fixCost(p);
       g.t = tier ? `${nm} can reach ${tier}` : `${nm} can score higher`;
       g.s = nb ? `${p.s.total} → ${nb} · ${GAL.BASE * galMult(nb)} coins a vote` : `Now ${p.s.total} · touch it up`;
