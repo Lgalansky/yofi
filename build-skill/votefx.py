@@ -13,7 +13,9 @@
 #     wall of 3 spot-lit photos. Tap one; your best photo vs it, best of 3 live votes with bursts on
 #     every vote and a "Deciding vote!" moment at 1–1. Win: gold flash, confetti and coin rain,
 #     the photo zooms in as a NEW CARD that earns for you. Lose: "So close!", nothing lost.
-#     One button back to voting. Raids are free and don't use your 3 daily steal tries.
+#     One button back to voting; after a win the card flies into the earnings card at the top of Vote,
+#     which turns gold for a few seconds: "<name> is earning for you · 🃏 Stolen card" with a "+8 a vote" chip.
+#     Raids are free and don't use your 3 daily steal tries.
 # usage: python3 build-skill/votefx.py in.html out.html
 import sys
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
@@ -100,7 +102,15 @@ function raidDone(el, me, them, rv, won, m, t) { el.classList.remove('tense');
     <p class="rd-who">${won ? `It earns you <b>${cardRate(them.sc)} 🟡 a vote</b> from now on · won ${m}–${t}` : `${t}–${m} · nothing lost · another raid is coming`}</p>
     <button class="rd-go">Back to voting</button>`;
   if (won) setTimeout(() => { const pr = el.querySelector('.rd-prize'); if (pr) { const r = vfRel(pr); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, ['#F3D27A', '#fff', '#E0A82E'], 30); } }, 350);
-  el.querySelector('.rd-go').onclick = () => { el.classList.remove('on'); setTimeout(() => el.remove(), 300); try { renderJudge(); } catch (e) {} }; }
+  el.querySelector('.rd-go').onclick = () => { el.classList.remove('on'); setTimeout(() => el.remove(), 300); try { renderJudge(); } catch (e) {} if (won) setTimeout(() => rdLand(them), 450); }; }
+// the stolen card flies into the earnings card at the top of Vote, which celebrates it for a few seconds
+function rdLand(c) { const sh = $('#shell'), g = $('#vgGoal'); if (!sh || !g) return; const rate = cardRate(c.sc), gr = vfRel(g), tg = g.querySelector('img') ? vfRel(g.querySelector('img')) : { x: gr.x + 10, y: gr.y + 10, w: 60, h: 70 };
+  const fly = document.createElement('img'); fly.className = 'rd-fly'; fly.src = c.src; const W = 150, H = 200, sr = sh.getBoundingClientRect(); fly.style.cssText = `left:${sr.width / 2 - W / 2}px;top:${sr.height / 2 - H / 2}px;width:${W}px;height:${H}px`; sh.appendChild(fly);
+  fly.animate([{ transform: 'scale(.4) rotate(-20deg)', opacity: 0 }, { transform: 'scale(1.1) rotate(6deg)', opacity: 1, offset: .3 }, { transform: `translate(${tg.x + tg.w / 2 - sr.width / 2}px,${tg.y + tg.h / 2 - sr.height / 2}px) scale(${tg.w / W}) rotate(0deg)`, opacity: 1 }], { duration: 950, easing: 'cubic-bezier(.5,0,.3,1)', fill: 'forwards' });
+  setTimeout(() => { fly.remove(); const until = Date.now() + 7000; vfPop(sh, tg.x + tg.w / 2, tg.y + tg.h / 2, ['#F3D27A', '#fff', '#E0A82E'], 26);
+    const paint = () => { const g2 = $('#vgGoal'); if (!g2) return; g2.classList.add('vg-got'); if (!g2.querySelector('.vg-new')) g2.insertAdjacentHTML('beforeend', `<span class="vg-new"><img src="${c.src}" alt=""><span class="vg-nt"><b>${esc(c.nm)} is earning for you</b><small>🃏 Stolen card · in your collection</small></span><span class="vg-nc">+${rate}<small>a vote</small></span><i class="vg-sh"></i></span>`); };
+    paint(); const iv = setInterval(() => { if (Date.now() > until) { clearInterval(iv); const g3 = $('#vgGoal'); if (g3) { g3.classList.add('vg-out'); setTimeout(() => { g3.classList.remove('vg-got', 'vg-out'); g3.querySelectorAll('.vg-new').forEach(x => x.remove()); }, 400); } return; } paint(); }, 300); }, 950); }
+
 // watch each vote
 setInterval(() => { try { const n = S.eyeN || 0; if (n <= VF_N) { VF_G = S.gems; vfShPaint(); return; } const ok = (S.eyeOk || 0) > VF_OK; VF_N = n; VF_OK = S.eyeOk || 0; VF_G = S.gems || 0;
   if (ok) vfBurst();
@@ -196,6 +206,14 @@ html body #raid .rd-sc{position:absolute!important;top:10px!important;right:10px
 #raid.lose .rd-ban{color:#E6EDF8;-webkit-text-stroke:1.5px #4E5D7A;text-shadow:0 5px 0 #4E5D7A,0 14px 30px rgba(0,0,0,.45);font-size:2.6rem}
 html body #raid .rd-go{display:block;margin-top:22px;min-width:240px;min-height:54px;padding:0 24px!important;border:0!important;border-radius:999px!important;background:#FFFDF9!important;color:#1F3157!important;font:900 1.05rem "Nunito Sans"!important;box-shadow:0 8px 18px -8px rgba(0,0,0,.6)!important;animation:vfIn .4s cubic-bezier(.2,1.4,.4,1) .6s both}
 .rd-conf{position:absolute;inset:0;pointer-events:none;overflow:hidden}.rd-conf i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:rdFall linear forwards}@keyframes rdFall{to{transform:translateY(110vh) rotate(720deg)}}
+.rd-fly{position:absolute;z-index:85;object-fit:cover;border-radius:14px;box-shadow:0 0 0 4px #E0A82E,0 0 40px rgba(243,210,122,.9);pointer-events:none}
+html body #vgGoal.vg-got{position:relative;overflow:hidden;box-shadow:0 0 0 3px #E0A82E,0 0 28px rgba(243,210,122,.8)!important;animation:vgBump .5s cubic-bezier(.2,1.6,.4,1)}@keyframes vgBump{40%{transform:scale(1.05)}}
+.vg-new{position:absolute;inset:0;display:flex;align-items:center;gap:12px;padding:10px 12px;box-sizing:border-box;border-radius:inherit;background:linear-gradient(180deg,#FFF6DD,#F7DF9A);text-align:left;animation:vfIn .4s cubic-bezier(.2,1.4,.4,1)}
+.vg-new img{width:58px;height:68px;flex:none;border-radius:10px;object-fit:cover;box-shadow:0 0 0 3px #E0A82E;animation:vgCard 1.2s ease-in-out infinite}@keyframes vgCard{50%{transform:rotate(-4deg) scale(1.05)}}
+.vg-nt{flex:1;min-width:0}.vg-nt b{display:block;font:900 1.02rem/1.15 Fraunces,serif;color:#3A2600}.vg-nt small{display:block;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:800 .78rem "Nunito Sans";color:#8A5A0A}
+.vg-nc{flex:none;display:flex;flex-direction:column;align-items:center;padding:6px 10px;border-radius:12px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 1.25rem/1 Fraunces,serif;box-shadow:0 4px 10px -6px rgba(160,110,10,.8)}.vg-nc small{font:800 .62rem "Nunito Sans";margin-top:2px}
+.vg-sh{position:absolute;top:0;bottom:0;left:-40%;width:35%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-18deg);animation:vgShine 1.6s ease-in-out infinite;pointer-events:none}@keyframes vgShine{to{left:120%}}
+#vgGoal.vg-out .vg-new{opacity:0;transition:opacity .35s}
 .rd-coin{position:absolute;top:-40px;width:30px;height:30px;animation:rdFall 2.2s ease-in forwards}.rd-coin svg{width:100%;height:100%}
 '''
 i = s.rfind('</style>'); s = s[:i] + CSS + s[i:]
