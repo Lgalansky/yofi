@@ -783,7 +783,8 @@ python3 build-skill/cardfix.py sp-c3.html sp-cf.html
 python3 build-skill/winall.py sp-cf.html sp-wa.html
 python3 build-skill/losetip.py sp-wa.html sp-lt.html
 python3 build-skill/vreset.py sp-lt.html sp-vr.html
-python3 build-skill/livegames.py sp-vr.html skill-preview.html
+python3 build-skill/livegames.py sp-vr.html sp-lg.html
+python3 build-skill/choose.py sp-lg.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -806,7 +807,7 @@ python3 build-skill/livegames.py sp-vr.html skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `livegames.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `choose.py`, then copy the result to `index.html` with the title "Yofi - Skill".
 
 `collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve. It also sets the one status line on every photo screen to say what a voter's pick pays ("Earns you 2 🟡 per vote · 🥇 Gold earns 4", "🥇 Gold photos earn you 4 🟡 per vote"), and gallery sleeves show coins per vote instead of "2×". Each level pays one rate (unranked 2, Gold 4, Diamond 8, Platinum 12 coins per vote). Gallery photos show their level icon by the score, a gold "+N today" pill on the photo and "Earns N per vote" underneath. Reaching a new level shows a celebration with the new rate ("Milo is Gold! now earns you 4 🟡 per vote").
 
@@ -859,3 +860,5 @@ Live games tiles: each tile has a third small detail line ("Result in minutes", 
 Compete › Your photo: the Your photo | Your eye tabs scroll with the page instead of floating over the jackpot cards. With no photo at 70+, Head-to-head shows the VS card with a rival photo and your best photo ("62 → 70" badge), "Get Milo to 70 to play · Entry $1 · Win $1.70" and a gold "Improve" button that opens Improve on that photo (navy "Add photo" if you have none).
 
 Live games moment tiles: 5+ right votes in a row adds a gold "🔥 N right · Win $3.20 · Quick Sprint · Play · $2" tile (gone after you play it or miss a vote); a Crowd Championship starting within 15 minutes adds a gold "⏱ N min · 1st wins $X · Join · $2" tile (gone once you join).
+
+`choose.py` lets players choose their next collection: when a collection reaches Gold, the pop says "Pick any collection to open next" with a navy "Choose your next collection" button. The picker lists every locked collection with "N of your photos fit" (ones you can fill first, in gold). The pick moves into the next spot and plays the map unlock reveal; the order is saved in `S.galPath`. If the pop is closed, the map offers the choice (pulsing locked stops, "Choose your next collection" button).
