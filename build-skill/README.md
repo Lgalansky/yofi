@@ -782,7 +782,8 @@ python3 build-skill/cmp3.py sp-st.html sp-c3.html
 python3 build-skill/cardfix.py sp-c3.html sp-cf.html
 python3 build-skill/winall.py sp-cf.html sp-wa.html
 python3 build-skill/losetip.py sp-wa.html sp-lt.html
-python3 build-skill/vreset.py sp-lt.html skill-preview.html
+python3 build-skill/vreset.py sp-lt.html sp-vr.html
+python3 build-skill/livegames.py sp-vr.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -805,7 +806,7 @@ python3 build-skill/vreset.py sp-lt.html skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `vreset.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `livegames.py`, then copy the result to `index.html` with the title "Yofi - Skill".
 
 `collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve. It also sets the one status line on every photo screen to say what a voter's pick pays ("Earns you 2 🟡 per vote · 🥇 Gold earns 4", "🥇 Gold photos earn you 4 🟡 per vote"), and gallery sleeves show coins per vote instead of "2×". Each level pays one rate (unranked 2, Gold 4, Diamond 8, Platinum 12 coins per vote). Gallery photos show their level icon by the score, a gold "+N today" pill on the photo and "Earns N per vote" underneath. Reaching a new level shows a celebration with the new rate ("Milo is Gold! now earns you 4 🟡 per vote").
 
@@ -850,3 +851,5 @@ The live `index.html` now includes the galleries steps. Their input is the earli
 Card steals are now free to try (like Steal a Brainrot): a steal or win-back battle never risks one of your cards. Lose and nothing is taken; it just uses one of your 3 daily tries ("Not this time · Nothing lost · 2 of 3 tries left today", with "Try again"). Cards are only lost to overnight steals, and Platinum cards stay safe from those.
 
 `vreset.py` clears each photo's vote record once (votes, coins earned from votes, lost games and the out-of-lives flag) on the next open. Scores, cards, coins and the judge score stay.
+
+`livegames.py` puts a "Live games" row under the vote, replacing the single green card. Tiles use short fixed lines so every word shows (chip on the photo, big "Win …" line, one small detail line, entry button: green cash, navy free). What just happened leads in gold (a friend's challenge, a stolen card, a jackpot where your photo won stars today), then Jackpot, Head-to-head, Challenge a friend, Sprint and Steal. "See all ›" opens Compete.
