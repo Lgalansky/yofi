@@ -6,7 +6,8 @@
 #     gold (Joker), blue (Steal) or silver (Shield), tap 3 bursts it open in place (no flip) and the
 #     prize appears one piece at a time (icon, then title, then amount):
 #       🃏 Joker  +20 / +50 / +100 coins (60/30/10%), random; the amount slams in big with glowing
-#                rays and sparks; Big Joker (50) and MEGA Joker (100) get more sparks, a bigger number,
+#                rays and sparks, shown as the teal / purple / red Joker card art (assets/joker*.jpg);
+#                Big Joker (50) and MEGA Joker (100) get more sparks, a bigger number,
 #                and MEGA adds a gold flash and a screen shake; coins fly to your balance
 #       🛡 Shield  blocks one steal while you're away (hold up to 3)
 #       🦝 Steal  every 10–15 votes; the screen switches straight to a raid
@@ -21,11 +22,13 @@
 #     which turns gold for a few seconds: "<name> is earning for you · 🃏 Stolen card" with a "+8 a vote" chip.
 #     Raids are free and don't use your 3 daily steal tries.
 # usage: python3 build-skill/votefx.py in.html out.html
-import sys
+import sys, base64, os
+ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
+JK = {k: 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(ASSETS, f'joker{k}.jpg'), 'rb').read()).decode() for k in (20, 50, 100)}
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
 s = open(src, encoding='utf-8').read()
 
-JS = r'''
+JS = "const JK_IMG = { 20: '" + JK[20] + "', 50: '" + JK[50] + "', 100: '" + JK[100] + "' };\n" + r'''
 // ---- exciting voting: coin burst, special tiles, shields, raids ----
 const VF_MAXSH = 3;
 let VF_N = S.eyeN || 0, VF_OK = S.eyeOk || 0, VF_G = S.gems || 0, VF_BUSY = 0;
@@ -58,8 +61,10 @@ function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorA
         <svg class="vf-crk c1" viewBox="0 0 100 130" preserveAspectRatio="none"><path d="M52 0 L47 22 L56 34 L44 52 L50 63"/><path d="M56 34 L70 40 L78 36"/></svg>
         <svg class="vf-crk c2" viewBox="0 0 100 130" preserveAspectRatio="none"><path d="M50 63 L58 78 L45 96 L53 112 L48 130"/><path d="M44 52 L28 58 L18 54 L6 62"/><path d="M58 78 L76 84 L94 80"/><path d="M45 96 L30 104 L22 118"/></svg>
         <b class="vf-tap">Tap to crack it open</b></span>
-      <span class="vf-face front ${kind} ${kind === 'coins' ? 'a' + amt : ''}"><i class="vf-rays"></i><span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p></span></button>`;
+      <span class="vf-face front ${kind} ${kind === 'coins' ? 'a' + amt : ''}"><i class="vf-rays"></i>${kind === 'coins' ? `<img class="vf-jk" src="${JK_IMG[amt]}" alt="Joker ${amt} coins">` : `<span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p>`}</span></button>`;
   sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
+  const wt = el.querySelector('.vf-wait'), fp = el.querySelector('.vf-flip'), put = (n, r) => { n.style.left = r.x + 'px'; n.style.top = r.y + 'px'; n.style.width = r.w + 'px'; n.style.height = r.h + 'px'; };
+  const follow = () => { if (!el.isConnected) return; if (ph[k].isConnected) { put(fp, vfRel(ph[k])); put(wt, vfRel(ph[1 - k])); } requestAnimationFrame(follow); }; follow();
   const done = (ms = 1500) => setTimeout(() => { el.classList.remove('on'); setTimeout(() => { el.remove(); VF_BUSY = 0; }, 250); }, ms);
   let taps = 0; const hue = kind === 'coins' ? 'gold' : kind === 'steal' ? 'blue' : 'silver', tapTx = ['Tap to crack it open', 'Again!', 'One more!'];
   el.querySelector('.vf-flip').onclick = () => { if (el.classList.contains('open')) return; taps++; const fl = el.querySelector('.vf-flip'), r0 = vfRel(fl);
@@ -69,7 +74,7 @@ function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorA
     el.classList.add('t3'); vfPop(sh, r0.x + r0.w / 2, r0.y + r0.h / 2, hue === 'blue' ? ['#5B8DEF', '#F3D27A', '#fff'] : hue === 'silver' ? ['#D7DCE3', '#fff', '#9AA6B5'] : ['#F3D27A', '#E0A82E', '#fff'], 34);
     setTimeout(() => el.classList.add('open'), 160); const fr = el.querySelector('.vf-face.front');
     setTimeout(() => {
-      if (kind === 'coins') { const b = el.querySelector('.vf-amt'), r = vfRel(fr), cx = r.x + r.w / 2, cy = r.y + r.h / 2;
+      if (kind === 'coins') { const b = el.querySelector('.vf-jk'), r = vfRel(fr), cx = r.x + r.w / 2, cy = r.y + r.h / 2;
         el.classList.add('wow', 'a' + amt); b.classList.add('slam');
         const big = amt >= 50, mega = amt === 100;
         vfPop(sh, cx, cy, ['#F3D27A', '#E0A82E', '#fff', '#FF6B6B', '#5B8DEF', '#3CCB8A'], mega ? 60 : big ? 40 : 24);
@@ -200,6 +205,14 @@ html body #vfTile .vf-face.front{opacity:0}
 #vfTile.open .vf-face.front p{animation:vfStepP .1s linear .75s both}
 @keyframes vfStep{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}@keyframes vfStepP{from{opacity:0}to{opacity:1}}
 #vfTile.wow.a50 .vf-face.front .vf-ic,#vfTile.wow.a100 .vf-face.front .vf-ic{opacity:1}
+/* joker card art */
+html body #vfTile .vf-face.front.coins{background:radial-gradient(circle at 50% 45%,#2B4372,#0C1529)!important;box-shadow:inset 0 0 0 4px #E0A82E,0 0 40px rgba(243,210,122,.8)!important}
+html body #vfTile .vf-face.front.coins.a20{box-shadow:inset 0 0 0 4px #4FB3BF,0 0 40px rgba(79,179,191,.85)!important}
+html body #vfTile .vf-face.front.coins.a50{box-shadow:inset 0 0 0 4px #B26BE0,0 0 46px rgba(178,107,224,.9)!important}
+html body #vfTile .vf-face.front.coins.a100{background:radial-gradient(circle at 50% 45%,#5A1A1A,#140808)!important;box-shadow:inset 0 0 0 4px #F3C24A,0 0 60px 10px rgba(243,194,74,.95)!important}
+.vf-jk{position:relative;z-index:1;height:92%;max-width:92%;object-fit:contain;border-radius:12px;opacity:0;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
+#vfTile.open .vf-jk{animation:vfJk .7s cubic-bezier(.2,1.6,.4,1) .15s both}@keyframes vfJk{0%{transform:scale(2.6) rotate(-10deg);opacity:0}55%{transform:scale(.9) rotate(2deg);opacity:1}100%{transform:none;opacity:1}}
+#vfTile.wow .vf-jk{animation:vfJk .7s cubic-bezier(.2,1.6,.4,1) .15s both,vfBob 1.4s ease-in-out .9s infinite}
 .vf-amt{display:inline-block}
 .vf-rays{position:absolute;left:50%;top:50%;width:300%;height:300%;margin:-150% 0 0 -150%;background:repeating-conic-gradient(rgba(255,255,255,.55) 0 8deg,transparent 8deg 20deg);opacity:0;pointer-events:none}
 #vfTile.wow .vf-rays{opacity:1;animation:vfRaysIn .5s ease-out,vfRayP 1.4s ease-in-out .5s infinite}@keyframes vfRayP{50%{opacity:.5}}@keyframes vfRaysIn{from{transform:scale(.2)}}
