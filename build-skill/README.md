@@ -792,7 +792,8 @@ python3 build-skill/screens.py sp-cp.html sp-sc.html
 python3 build-skill/gstyle.py sp-sc.html sp-gs.html
 python3 build-skill/ctafix.py sp-gs.html sp-ct.html
 python3 build-skill/sprintic.py sp-ct.html sp-si.html
-python3 build-skill/h2hopen.py sp-si.html skill-preview.html
+python3 build-skill/h2hopen.py sp-si.html sp-ho.html
+python3 build-skill/qsicon.py sp-ho.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -928,3 +929,5 @@ Lost games (`losetip.py`) now always lead with the gold "✨ Touch up <name>" bu
 Shield reveals use the user's navy Shield card art (`build-skill/assets/shield.jpg`, embedded by `votefx.py`), fitted inside the tile on a navy background. Showdown uses a race icon (5 pins racing to a chequered finish line, from the user's mock-up) on its Compete row, game screen and result (`sprintic.py`); the row reads "5 entries · top vote wins".
 
 Live games Friend tile shows your own best photo (the one you'd play with) with a small green WhatsApp badge in the corner, instead of the plain green WhatsApp tile (`livegames.py`).
+
+`qsicon.py`: Quick Sprint uses its rival / you avatars everywhere. Compete › Your eye shows the two avatars with their eye % pills on the Quick Sprint button (was two score rings), and Vote › Live games has a Quick Sprint tile after the 1 v 1 tile (avatars VS, "Win $3.20", "Your eye vs a rival", "Play · $2"); it is left out while the 🔥 streak Quick Sprint tile is showing.
