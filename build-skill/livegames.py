@@ -36,7 +36,7 @@ function lgxPaint() { const j = $('#judge'); if (!j) return; const foot = j.quer
   let w = j.querySelector('.lgx-wrap'); if (w && w.nextElementSibling === foot && Date.now() - (+w.dataset.at || 0) < 15000) return;
   const tiles = lgxTiles(); if (!tiles.length) { if (w) w.remove(); return; }
   const ph = t => t.pair ? `<img src="${t.pair[0]}" alt=""><img src="${t.pair[1]}" alt=""><span class="lgx-vs">VS</span>` : t.icon ? `<span class="lgx-ic">${t.icon}</span>` : t.wa ? `<span class="lgx-ic lgx-wa">${WA_ICON}</span>` : `<img src="${t.img}" alt="">`;
-  const html = `<div class="lgx-h"><span><i class="lgx-dot"></i>Live games</span><button class="lgx-all">See all ›</button></div><div class="lgx-row">${tiles.map((t, i) => `<button class="lgx ${t.hot ? 'hot' : ''} ${t.pair ? 'two' : ''}" data-lgx="${i}"><span class="lgx-ph">${ph(t)}<i class="lgx-chip">${t.chip}</i></span><b>${t.big}</b><small>${esc(t.sm)}</small><em class="${t.free ? 'nav' : ''}">${t.go}${t.gs ? `<span>${esc(t.gs)}</span>` : ''}</em></button>`).join('')}</div>`;
+  const html = `<div class="lgx-h"><span><i class="lgx-dot"></i>Live games</span><button class="lgx-all">See all ›</button></div><div class="lgx-row">${tiles.map((t, i) => `<button class="lgx ${t.hot ? 'hot' : ''} ${t.pair ? 'two' : ''}" data-lgx="${i}"><span class="lgx-ph">${ph(t)}<i class="lgx-chip">${t.chip}</i></span><b>${t.big}</b><small>${esc(t.sm)}</small>${t.gs ? `<small class="lgx-d">${esc(t.gs)}</small>` : ''}<em class="${t.free ? 'nav' : ''}">${t.go}</em></button>`).join('')}</div>`;
   if (!w) { w = document.createElement('div'); w.className = 'lgx-wrap'; } w.innerHTML = html; w.dataset.at = Date.now(); foot.before(w);
   w.querySelectorAll('[data-lgx]').forEach(b => b.onclick = () => tiles[+b.dataset.lgx].fn());
   w.querySelector('.lgx-all').onclick = () => { GV.tab = 'battle'; go('gallery'); renderGallery(); }; }
@@ -66,9 +66,9 @@ html body #judge > .vc{display:none!important}
 .lgx.hot .lgx-chip{background:#E0A82E;color:#3A2600}
 .lgx b{font:900 1.02rem/1.2 Fraunces,serif;color:#1E6B3E;white-space:nowrap}
 .lgx small{font:700 .74rem/1.3 "Nunito Sans";color:#4E433C;white-space:nowrap}
-.lgx em{margin-top:6px;text-align:center;padding:7px 0 6px;line-height:1.15;border-radius:10px;background:linear-gradient(180deg,#2E9A5C,#21784A);color:#fff;font:900 .82rem "Nunito Sans";font-style:normal}
+.lgx em{margin-top:6px;text-align:center;padding:6px 0;border-radius:10px;background:linear-gradient(180deg,#2E9A5C,#21784A);color:#fff;font:900 .82rem "Nunito Sans";font-style:normal}
 .lgx em.nav{background:#2D4E86}
-.lgx em span{display:block;margin-top:2px;font:700 .66rem "Nunito Sans";color:rgba(255,255,255,.9);white-space:nowrap}
+.lgx small.lgx-d{color:#6A5E55;font-weight:600}
 html body #judge .lgx-all{color:#2D4E86!important;background:none!important}
 '''
 i = s.rfind('</style>'); s = s[:i] + CSS + s[i:]

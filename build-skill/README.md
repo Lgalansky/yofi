@@ -854,4 +854,4 @@ Card steals are now free to try (like Steal a Brainrot): a steal or win-back bat
 
 `livegames.py` puts a "Live games" row under the vote, replacing the single green card. Tiles use short fixed lines so every word shows (chip on the photo, big "Win …" line, one small detail line, entry button: green cash, navy free). What just happened leads in gold (a friend's challenge, a stolen card, a jackpot where your photo won stars today), then Jackpot, Head-to-head, Challenge a friend, Sprint and Steal. "See all ›" opens Compete.
 
-Live games tiles: the entry button is taller with a second small line of detail ("Play · $1 / Result in minutes", "Join · $2 / Starts at 16", "Play · free / 3 of 3 tries left"); the photo is a little shorter so the whole tile still sits above the menu bar.
+Live games tiles: each tile has a third small detail line ("Result in minutes", "Starts at 16", "3 of 3 tries left") and a one-line entry button ("Play · $1", "Join · $2", "Play · free"); the photo is a little shorter so the whole tile still sits above the menu bar.
