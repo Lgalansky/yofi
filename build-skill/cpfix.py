@@ -26,6 +26,8 @@ rep("  if (spr) T({ icon: KO_PYR2,", "  if (0 && spr) T({ icon: KO_PYR2,")
 # Live games: no steal tiles under the vote (steals come from Steal tiles, the Payday receipt and Compete)
 rep("  if (held) T({ hot: 1, img: held.src, chip: '🃏 Stolen',", "  if (0 && held) T({ hot: 1, img: held.src, chip: '🃏 Stolen',")
 rep("  if (rc && !held) T({ img: rc.src, chip: '🃏 Steal',", "  if (0 && rc && !held) T({ img: rc.src, chip: '🃏 Steal',")
+# head-to-head is now a special tile reveal, so no 1 v 1 tile in the row
+rep("  if (best) T({ pair: [c2NotMine(battleRival(cat).src, cat), best.src], chip: '⚔️ 1 v 1',", "  if (0 && best) T({ pair: [c2NotMine(battleRival(cat).src, cat), best.src], chip: '⚔️ 1 v 1',")
 # jackpot tile: "Pet challenge"
 rep("chip: st ? `★ ${st} today` : `💰 ${short(k)}`", "chip: st ? `★ ${st} today` : `💰 ${short(k)} challenge`")
 # pick feedback
