@@ -30,12 +30,13 @@ CSS = '''
 /* Gallery binder look */
 html body #studio .a2-book{position:relative;margin:6px 10px 14px;padding:12px 12px 14px 22px!important;border:0!important;border-radius:26px!important;background:radial-gradient(circle at 30% 20%,#2B3D66,#16213D 75%)!important;box-shadow:inset 0 0 0 2px #0E1730,inset 0 0 0 7px #1D2B4F,0 18px 30px -16px rgba(0,0,0,.6)!important}
 html body #studio .a2-book::before{content:"";position:absolute;inset:6px;border-radius:21px;border:1.5px dashed rgba(224,168,46,.55);pointer-events:none}
-html body #studio .gs-page{position:relative;padding:14px 12px 14px;border-radius:18px;background:linear-gradient(180deg,#FBF5EA,#F3E9D6);box-shadow:inset 0 0 0 1.5px #E2D2B3,0 4px 10px -6px rgba(0,0,0,.5)}
+html body #studio .gs-page{position:relative;padding:14px 12px 14px 30px;border-radius:18px;background:linear-gradient(180deg,#FBF5EA,#F3E9D6);box-shadow:inset 0 0 0 1.5px #E2D2B3,0 4px 10px -6px rgba(0,0,0,.5)}
 html body #studio .gs-page .a2-th{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 12px!important;padding:0 0 10px!important;border-bottom:2px solid #D8B25A}
-html body #studio .gs-page .a2-th h3{margin:0!important;min-width:0;font:900 1.35rem/1.05 Fraunces,serif!important;color:#8E1F1F!important}
-html body #studio .gs-page .a2-badge{flex:none;white-space:nowrap;padding:4px 10px!important;border-radius:99px!important;background:#FFF6DD!important;box-shadow:inset 0 0 0 1.5px #D8B25A!important;color:#1F3157!important;font:900 .82rem Fraunces,serif!important}
+html body #studio .gs-page .a2-th h3{margin:0!important;min-width:0;font:900 1.2rem/1.05 Fraunces,serif!important;white-space:nowrap;color:#8E1F1F!important}
+html body #studio .gs-page .a2-badge{flex:none;white-space:nowrap;padding:3px 8px!important;font-size:.74rem!important;border-radius:99px!important;background:#FFF6DD!important;box-shadow:inset 0 0 0 1.5px #D8B25A!important;color:#1F3157!important;font:900 .82rem Fraunces,serif!important}
 html body #studio .a2-grid{margin:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;gap:12px!important}
-html body #studio .a2-ring{left:-2px!important;width:30px!important;height:30px!important;border-radius:50%!important;background:none!important;border:6px solid #D3A13A!important;box-shadow:inset 0 2px 3px rgba(0,0,0,.35),0 2px 4px rgba(0,0,0,.45),0 0 0 1px #8A5A0A!important;z-index:3}
+html body #studio .a2-ring{left:-6px!important;width:52px!important;height:24px!important;margin-top:-12px;border-radius:50%!important;background:none!important;border:5px solid transparent!important;border-top-color:#F7D98A!important;border-right-color:#C8962A!important;border-bottom-color:#8A5A0A!important;border-left-color:#B07F1E!important;box-shadow:0 3px 5px rgba(0,0,0,.45),inset 0 1px 2px rgba(0,0,0,.4)!important;transform:rotate(-6deg);z-index:3}
+html body #studio .a2-ring::after{content:"";position:absolute;right:-1px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:#3A2E1A;box-shadow:inset 0 1px 2px #000}
 /* filled card */
 html body #studio .a2-sl:not(.empty):not(.a2-nx) .a2-card{position:relative;display:block;padding:5px!important;border-radius:16px!important;background:linear-gradient(160deg,#F7DB8E,#C8962A 55%,#F3D27A)!important;box-shadow:0 10px 18px -10px rgba(0,0,0,.6)!important}
 html body #studio .a2-sl .a2-card .a2-ph{border-radius:12px!important;overflow:hidden}

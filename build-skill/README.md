@@ -910,3 +910,4 @@ Payday receipt rows show each photo's tier and multiplier, for your photos and s
 The Live games jackpot tile follows the category being voted on: voting "Best Nature & Seasons" shows "Nature challenge", "Best Pet" shows "Pet challenge".
 
 `gstyle.py` restyles the Gallery to the user's binder mock-up: navy leather binder with gold stitching and round gold rings, cream page with "Pets Collection" + "1/3 filled" and a gold rule, gold-framed photo cards with a round score medallion and a name / tier / per-vote plaque inside the card, glossy empty sleeves, and the next collection as a navy leather card (photo, gold lock, "Travel Collection", "Opens at Gold").
+Gallery binder rings are angled gold loops from the leather spine into a punched hole in the page margin.
