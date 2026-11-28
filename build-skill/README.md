@@ -1003,3 +1003,5 @@ Win-back (user chose option A): the stealer never bets. "Win it back · $1" is a
 Crowd Championship is removed (user decision): no Compete row (`steal2.py`); its Live games tile was already off and its reminder only fires for a booked place, which can no longer be made.
 
 Steals are limited to collections you have a photo in (user chose option A, `steal2.py`). Cards from other collections show greyed with a lock ("🔒 Add a travel photo"); tapping one closes the steal and opens "Add a travel photo" ("Add your own travel photo to open the Travel collection. Then you can steal Travel cards like Infinity sunset…"). Every wall has at least one card you can steal, and surprise shields only land on those.
+
+The Gallery next-collection tile shows the reward for filling the current collection: "🎟️ Free $1 entry · opens at Gold" (was "Opens at Gold"); filling a collection to Gold already paid a free $1 cash entry (`steal2.py`).

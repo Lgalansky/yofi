@@ -9,6 +9,8 @@
 #  5. You can only steal from collections you have a photo in (user's idea, option A). Cards from other collections
 #     show greyed with a lock: "🔒 Add a travel photo"; tapping one closes the steal and opens "Add a travel photo".
 #     Every wall has at least one card you can steal; surprise shields only land on those.
+#  6. The Gallery's next-collection tile shows the reward for filling this one: "🎟️ Free $1 entry · opens at Gold"
+#     (filling a collection to Gold already paid a free $1 cash entry and opened the next one; now the tile says so).
 # Usage: python3 build-skill/steal2.py in.html out.html  (run after winback.py)
 import sys
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
@@ -17,6 +19,7 @@ def R(a, b):
     global s
     assert s.count(a) == 1, (a[:60], s.count(a)); s = s.replace(a, b)
 R("<small>${100 - mine}% picked the other one", "<small>${mine}% picked this one too")
+R("${nxOpen ? \'Open now\' : \'Opens at Gold\'}", "${nxOpen ? \'Open now\' : \'🎟️ Free $1 entry · opens at Gold\'}")
 R("wall = pool.sort(() => Math.random() - .5).slice(0, 3).map(x => ({ ...x, h: rv.h }));",
   "wall = (() => { const ok = c => S.photos.some(p => p.s && !p.card && !p.heldBy && p.cat === c), sh = pool.sort(() => Math.random() - .5), a = sh.filter(x => ok(x.cat)), b = sh.filter(x => !ok(x.cat));"
   " if (!a.length) return sh.slice(0, 3); return [a[0], ...[...a.slice(1), ...b].sort(() => Math.random() - .5).slice(0, 2)].sort(() => Math.random() - .5); })().map(x => ({ ...x, h: rv.h })); window.__rdWall = wall;")
