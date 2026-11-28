@@ -941,3 +941,5 @@ Live games: the 1 v 1 tile is now called "⚔️ Head-to-head" (same name as its
 Compete tabs use the game families: "📷 Photo games | 🎯 Judge games" (was Your photo | Your eye), and the judge card's label reads "Your judge score" (`names.py`). The Judge Duel avatars on the Compete button sit in round frames (`qsicon.py`).
 
 `jartext.py`: the coin jar card on Vote says plainly whose photo earned what (user chose option A): "Milo earned you 16 coins" / "Players voted for it" / fill bar / "Full in 1h 5m", a "Your photo" label on the picture, and the gold button reads "Collect +16" (was "A voter picked Milo · Jar full in …").
+
+Judge Duel result screen uses the same rival / you avatars as its game screen (score such as "6/10" in each pill, gold WINNER tag on top) instead of score rings; the loss tip reads "Vote more to sharpen your judging" (`qsicon.py`).
