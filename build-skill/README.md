@@ -905,3 +905,5 @@ Live games row: "💰 Pet challenge" and "🤝 Friend challenge".
 Steals are a score face-off instead of a vote: the rival wall hides scores ("?", "Score hidden"); you pick the photo you think scores lowest; your best photo's score shows, theirs shakes as "?" then slams in with a flash and sparks; match or beat it to steal it ("79 beats 76!"). Win-backs compare your best photo with your held card the same way.
 
 Payday receipt rows show each photo's tier and multiplier, for your photos and stolen cards: "💎 Diamond ×4 · 8 🟡 a vote" ("No tier ×1" under 70).
+
+The Live games jackpot tile follows the category being voted on: voting "Best Nature & Seasons" shows "Nature challenge", "Best Pet" shows "Pet challenge".

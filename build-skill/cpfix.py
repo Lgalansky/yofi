@@ -8,6 +8,7 @@
 #  - Championship tip text: "Everyone gets the same 15 pairs · top 20% share the prize".
 #  - End of a Championship run: a celebration pop first ("You're in the money!" / "Great eye!" /
 #    "Run complete", big "13/15", your place so far and when results land), then the standings.
+#  - Live games: the jackpot tile follows the category being voted on (voting Best Nature → Nature challenge).
 #  - Live games: no Steal / Stolen tiles; jackpot tile chip reads "Pet challenge"; Friend tile is WhatsApp green with a white icon.
 #  - Lost results: the "You lost $5" box is soft red with a red amount, not beige.
 #  - Vote screen: in the "So close! / Missed it" box the crowd's % is bold ("55% picked the other one").
@@ -29,6 +30,9 @@ rep("  if (rc && !held) T({ img: rc.src, chip: '🃏 Steal',", "  if (0 && rc &&
 # head-to-head is now a special tile reveal, so no 1 v 1 tile in the row
 rep("  if (best) T({ pair: [c2NotMine(battleRival(cat).src, cat), best.src], chip: '⚔️ 1 v 1',", "  if (0 && best) T({ pair: [c2NotMine(battleRival(cat).src, cat), best.src], chip: '⚔️ 1 v 1',")
 rep("chip: '🤝 Friend'", "chip: '🤝 Friend challenge'")
+# jackpot tile follows the category being voted on
+rep("  const ks = CATS8.filter(k => k !== 'any').sort((a, b) => ((L.you[b] || 0) - (L.you[a] || 0)) || (!!lgMine(b) - !!lgMine(a)) || (L.jp[b] - L.jp[a]));",
+    "  const vt = (document.querySelector('#judge .tot-h p b') || {}).textContent, vsc = typeof CHAL === 'object' ? Object.keys(CHAL).find(c => CHAL[c] === vt) : null, vkc = vsc ? CATS8.filter(x => x !== 'any' && BATTLE_POOL[x] === vsc) : [], vk = vkc.find(x => vt.includes(crownName(x).split(' ')[0])) || vkc[0] || null;\n  const ks = CATS8.filter(k => k !== 'any').sort((a, b) => ((b === vk) - (a === vk)) || ((L.you[b] || 0) - (L.you[a] || 0)) || (!!lgMine(b) - !!lgMine(a)) || (L.jp[b] - L.jp[a]));")
 # jackpot tile: "Pet challenge"
 rep("chip: st ? `★ ${st} today` : `💰 ${short(k)}`", "chip: st ? `★ ${st} today` : `💰 ${short(k)} challenge`")
 # pick feedback
