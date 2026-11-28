@@ -82,6 +82,15 @@ Reuse shared components and design tokens. Avoid creating a new style for each s
 
 Think like a world-class graphic designer: clear hierarchy, strong contrast, generous spacing and polished mobile layouts. Make rewards exciting without making screens cluttered.
 
+**Yofi Skill style guide (apply on every change without being asked):**
+- **Fonts:** titles and big numbers in Fraunces (serif); all buttons, chips, labels and body text in Nunito Sans bold. Never put the serif font on a button.
+- **Cards:** one bold title, at most one short line, then one button. No extra labels or badges on photos unless they carry information the title doesn't. Never repeat a number that's already in the title (e.g. "Milo earned you 16 coins" → button just "Collect").
+- **Buttons:** same height, corner radius and font in the same spot on every card; the price sits inside the button ("Play · $2", "Improve" + "120 🪙"), never as loose text.
+- **Game names (name by what competes):** 📷 Photo games: **Photo Duel** (1 v 1, voters pick), **Photo Knockout** (16-photo knockout, pyramid icon), **Showdown** (race icon). 🎯 Judge games: **Judge Duel** (judge vs judge, red/blue avatars), **Crowd Championship**. Never use "Head-to-head", "Sprint" or "Quick Sprint" in player-facing text.
+- **Plain words:** say whose photo and what the player gets ("Milo earned you 16 coins", "Milo can reach Diamond"), not system words ("voter", "jar", "upgrade is ready").
+- **Text must fit:** nothing truncated with "…" on a 393px-wide phone; shorten the copy rather than shrink the font.
+- **Empty states:** every screen must lay out correctly with no photos, one photo and many photos.
+
 ### 4. Review every change for inconsistencies
 
 Do not consider a change complete just because the edited screen looks correct.
@@ -108,7 +117,9 @@ Offer specific improvements as suggestions, prioritised by likely impact on fun,
 
 **At most 2 options on any screen.** Every result, popup or decision screen offers at most two actions (one main button, one secondary link). Cut the rest.
 
-**Always give 2 options.** For every issue or idea you raise, offer two concrete ways to fix it (with a one-line trade-off each) and say which you recommend. Always show the options graphically: a visual board of mock-ups (in the app's own style) comparing the two options side by side, sent as an image, plus a short text summary.
+**Fix clear-cut issues directly; give 2 options only for real trade-offs.** Consistency fixes, layout bugs, wording that breaks the style guide and anything the user has already decided: just fix them and report. When an issue needs a product decision (a real trade-off between two reasonable choices), offer two concrete options with a one-line trade-off each, say which you recommend, and show them graphically: a mock-up board in the app's own style, sent as an image, plus a short text summary.
+
+**Batch, don't trickle.** Prefer the user sending one batch of feedback per session, and prefer finding issues yourself with a full play-through audit (test phone browser, every screen and state) before asking. Fix what's clear, then send one short list of decisions.
 
 ### 6. Build a functioning prototype
 
