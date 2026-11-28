@@ -22,7 +22,8 @@
 #     the photo zooms in as a NEW CARD that earns for you. Lose: "So close!", nothing lost.
 #     One button back to voting; after a win the card flies into the earnings card at the top of Vote,
 #     which turns gold for a few seconds: "<name> is earning for you · 🃏 Stolen card" with a "+8 a vote" chip.
-#     Raids are free and don't use your 3 daily steal tries.
+#     Steal tiles are free; steals started from a button (Live games, Payday receipt, Compete, win-back)
+#     open this same screen and use one of the 3 daily tries. Win-backs skip the wall: "WON BACK!".
 # usage: python3 build-skill/votefx.py in.html out.html
 import sys, base64, os
 ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
@@ -123,13 +124,14 @@ function raidFight(el, me, them, rv) { const pWin = Math.max(.35, Math.min(.75, 
     if (m === 1 && t === 1) { $('#rdSay').innerHTML = '<b class="rd-dec">⚡ Deciding vote! ⚡</b>'; el.classList.add('tense'); setTimeout(step, 1700); } else setTimeout(step, 1100); };
   setTimeout(step, 1200); }
 function raidDone(el, me, them, rv, won, m, t) { el.classList.remove('tense');
-  if (won) { S.photos.push({ id: uid(), src: them.src, orig: them.src, cat: them.cat, nm: them.nm, nmAsk: 1, enh: 0, at: Date.now(), card: { from: rv.h }, s: { light: them.sc, comp: them.sc, colour: them.sc, tech: them.sc, total: them.sc } }); S.stlTaken = (S.stlTaken || []).concat(them.key); save(); }
+  if (won && them.back) { them.back.heldBy = null; them.back.heldAt = null; if (S.awayNews && S.awayNews.st) S.awayNews.st = null; save(); }
+  else if (won) { S.photos.push({ id: uid(), src: them.src, orig: them.src, cat: them.cat, nm: them.nm, nmAsk: 1, enh: 0, at: Date.now(), card: { from: rv.h }, s: { light: them.sc, comp: them.sc, colour: them.sc, tech: them.sc, total: them.sc } }); S.stlTaken = (S.stlTaken || []).concat(them.key); save(); }
   el.classList.add(won ? 'win' : 'lose'); const fl = el.querySelector('.rd-flash'); fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
   rdStage(el).innerHTML = `${won ? `<div class="rd-conf" aria-hidden="true">${[...Array(40)].map((_, i) => `<i style="left:${(i * 37) % 100}%;background:${['#FFC93C', '#FF6B6B', '#5B8DEF', '#3CCB8A', '#F59E0B', '#fff'][i % 6]};animation-delay:${(i * .05).toFixed(2)}s;animation-duration:${(1.8 + (i % 5) * .3).toFixed(2)}s"></i>`).join('')}
       ${[...Array(12)].map((_, i) => `<span class="rd-coin" style="left:${(i * 61 + 7) % 92}%;animation-delay:${(.2 + i * .12).toFixed(2)}s">${gemIcon('')}</span>`).join('')}</div>` : ''}
-    <div class="rd-ban">${won ? 'STOLEN!' : 'So close!'}</div>
-    <div class="rd-prize ${won ? 'w' : ''}"><img src="${them.src}" alt="">${won ? '<i class="rd-new">✨ NEW CARD ✨</i>' : ''}</div>
-    <h3 class="rd-h">${won ? `${esc(them.nm)} is yours!` : `${rv.n} kept ${esc(them.nm)}`}</h3>
+    <div class="rd-ban">${won ? (them.back ? 'WON BACK!' : 'STOLEN!') : 'So close!'}</div>
+    <div class="rd-prize ${won ? 'w' : ''}"><img src="${them.src}" alt="">${won ? (them.back ? '<i class="rd-new">✨ BACK IN YOUR GALLERY ✨</i>' : '<i class="rd-new">✨ NEW CARD ✨</i>') : ''}</div>
+    <h3 class="rd-h">${won ? (them.back ? `${esc(them.nm)} is yours again!` : `${esc(them.nm)} is yours!`) : `${rv.n} kept ${esc(them.nm)}`}</h3>
     <p class="rd-who">${won ? `It earns you <b>${cardRate(them.sc)} 🟡 a vote</b> from now on · won ${m}–${t}` : `${t}–${m} · nothing lost · another steal is coming`}</p>
     <button class="rd-go">Back to voting</button>`;
   if (won) setTimeout(() => { const pr = el.querySelector('.rd-prize'); if (pr) { const r = vfRel(pr); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, ['#F3D27A', '#fff', '#E0A82E'], 30); } }, 350);
@@ -142,6 +144,19 @@ function rdLand(c) { const sh = $('#shell'), g = $('#vgGoal'); if (!sh || !g) re
     const paint = () => { const g2 = $('#vgGoal'); if (!g2) return; g2.classList.add('vg-got'); if (!g2.querySelector('.vg-new')) g2.insertAdjacentHTML('beforeend', `<span class="vg-new"><img src="${c.src}" alt=""><span class="vg-nt"><b>${esc(c.nm)} is earning for you</b><small>🃏 Stolen card · in your collection</small></span><span class="vg-nc">+${rate}<small>a vote</small></span><i class="vg-sh"></i></span>`); };
     paint(); const iv = setInterval(() => { if (Date.now() > until) { clearInterval(iv); const g3 = $('#vgGoal'); if (g3) { g3.classList.add('vg-out'); setTimeout(() => { g3.classList.remove('vg-got', 'vg-out'); g3.querySelectorAll('.vg-new').forEach(x => x.remove()); }, 400); } return; } paint(); }, 300); }, 950); }
 
+// every steal uses the same full-screen steal (buttons, receipt, Compete, win-backs); button steals use the 3 daily tries
+function raidShell() { const sh = $('#shell'), el = document.createElement('div'); el.id = 'raid'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Steal');
+  el.innerHTML = `<div class="rd-rays"></div><div class="rd-sparks">${[...Array(22)].map((_, i) => `<i style="left:${(i * 47) % 100}%;top:${(i * 29) % 100}%;animation-delay:${(i * .23 % 2).toFixed(2)}s"></i>`).join('')}</div><i class="rd-flash"></i><div class="rd-in"></div>`;
+  sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on')); return el; }
+function raidBack(p) { const me = S.photos.filter(x => x.s && !x.heldBy).sort((a, b) => b.s.total - a.s.total)[0]; if (!me) { toast('Add a photo to your gallery to play for cards'); return; }
+  const rv = RIVALS.find(r => r.h === p.heldBy) || { h: p.heldBy, n: rvName(p.heldBy) }, el = raidShell();
+  raidFight(el, me, { src: p.src, sc: p.s.total, nm: alName(p), cat: p.cat, h: p.heldBy, back: p }, rv); }
+stealSheet = function (o = {}) { try { closeSheet(); } catch (e) {} try { const co = $('#coach'); co.classList.remove('on', 'cr'); co.innerHTML = ''; } catch (e) {}
+  if (!stlLeft()) { toast('3 steals a day · new tries tomorrow, or reveal a Steal tile while voting'); return; }
+  const back = o.back && S.photos.find(x => x.id === o.back && x.heldBy);
+  if (!back && RD_POOL().length < 3) { toast('No cards to steal right now'); return; }
+  if (!S.photos.some(x => x.s && !x.heldBy)) { toast('Add a photo to your gallery to play for cards'); return; }
+  stlDay().n++; save(); setTimeout(() => back ? raidBack(back) : raidStart(), 120); };
 // watch each vote
 setInterval(() => { try { const n = S.eyeN || 0; if (n <= VF_N) { VF_G = S.gems; vfShPaint(); return; } const ok = (S.eyeOk || 0) > VF_OK; VF_N = n; VF_OK = S.eyeOk || 0; VF_G = S.gems || 0;
   if (ok) vfBurst();

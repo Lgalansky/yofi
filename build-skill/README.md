@@ -891,3 +891,5 @@ Special tiles fit their vote photo exactly: the tile re-finds the current photo 
 Vote screen: the crowd's % is bold in the "So close! / Missed it" box ("**57%** picked the other one").
 
 Challenge special tile: about 1 in 25 right votes (when you have a photo at 70+) the special tile holds the Challenge card art (`build-skill/assets/challenge.jpg`, red hint glow on tap 2); after the reveal the head-to-head offer opens and the player chooses whether to play. Steal votes show as numbered 1 2 3 slots that fill with the photo that won each vote (gold ring = rival, blue = you), with the tally in screen order (rival – you). Lost results show the "You lost" box in soft red.
+
+Every steal uses the same full-screen Steal (Live games tile, Payday receipt, Compete, win-backs); the old first-to-5 sheet is no longer used. Button-started steals use one of the 3 daily tries; Steal tiles while voting are free. Win-backs go straight to the vote: "WON BACK! · back in your gallery".
