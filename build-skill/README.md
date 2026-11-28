@@ -871,3 +871,5 @@ The coin jar now holds 3 hours of earnings and fills in 3 hours (`JAR_HRS = 3` i
 `jarpop.py` adds the coin jar receipt. One tap still collects (coins fly in at once); then a pop shows what each photo earned since your last collect ("+68 collected · since 2h 36m ago"): your photos with tier and +coins, cards you stole in gold ("won from Maya +14", "Stolen cards earned you +14 extra", or a "Steal a card" teaser if you have none), and cards taken from you in red ("Emma has it · missed ~22"). One navy button ("Win Tidepool back" or "Steal a card · free try") and "Done". Only shows when you tap the jar yourself.
 
 The Steal button under the vote photos was removed (user decision); stealing stays in the Live games row (Steal / Stolen tiles), the coin jar receipt, and Compete.
+
+Stolen cards always earn into the coin jar, on top of your collections, even when their collection is locked or full (`jarHung` in `jarfull.py`). The jar receipt lists every stolen card you own, even at +0.

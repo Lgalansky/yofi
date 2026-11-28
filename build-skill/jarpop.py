@@ -2,7 +2,7 @@
 #  then a receipt pop shows what each photo earned since your last collect:
 #   - "+56 🟡 collected · since 2h 40m ago"
 #   - Your photos: thumb, name, tier, +coins
-#   - Cards you stole (gold): "won from Maya +14" and "Stolen cards earned you +14 extra"
+#   - Cards you stole (gold, every one you own, even at +0): "won from Maya +14" and "Stolen cards earned you +14 extra"
 #     (no stolen cards yet: a gold teaser "Steal a card · it earns for you too")
 #   - Taken from you (red): "Emma has it · missed about +12"
 #  One button: "Win Tidepool back" / "Steal a card · free try" (navy, free), plus "Done".
@@ -29,7 +29,8 @@ jarCollect = function () { const n = S.vgJar || 0, snap = S.jarSnap || {}, since
   let left = n; earn.sort((a, b) => b.d - a.d).forEach((x, i) => { x.c = i === earn.length - 1 ? left : Math.round(n * x.d / (tot || 1)); left -= x.c; });
   const hrs = Math.min(JAR_HRS, Math.max(.25, since / 36e5)), held = S.photos.filter(p => p.heldBy).map(p => ({ p, miss: Math.round(jpRate(p) * hrs) }));
   jpSnap(); save();
-  if (tap) setTimeout(() => { try { jpShow(n, earn.filter(x => x.c > 0), held, since); } catch (e) {} }, 1100);
+  const shown = earn.filter(x => x.c > 0); S.photos.filter(p => p.card && p.s && !p.heldBy && !shown.some(x => x.p === p)).forEach(p => shown.push({ p, c: 0 })); // every stolen card you own is listed
+  if (tap) setTimeout(() => { try { jpShow(n, shown, held, since); } catch (e) {} }, 1100);
   return r; };
 function jpShow(n, earn, held, since) { const co = $('#coach'); if (!co || co.classList.contains('on')) return;
   const mine = earn.filter(x => !x.p.card), won = earn.filter(x => x.p.card), wonT = won.reduce((a, x) => a + x.c, 0), rc = typeof rivalCards === 'function' ? rivalCards() : [];

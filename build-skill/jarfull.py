@@ -23,7 +23,7 @@ rep("renderStudio(); paintGems(false); openBattleTab(); }", "renderStudio(); pai
 JS = r'''
 // ---- 1. a jar that fills over time and holds 3 hours ----
 const JAR_HRS = 3;
-const jarHung = () => GAL.PATH.filter(galOpen).flatMap(c => galRoom(c).ph).filter(p => p.s);
+const jarHung = () => { const h = GAL.PATH.filter(galOpen).flatMap(c => galRoom(c).ph).filter(p => p.s); return h.concat(S.photos.filter(p => p.card && p.s && !p.heldBy && !h.includes(p))); }; // stolen cards always earn, on top of your collections
 const jarRate = () => jarHung().reduce((a, p) => a + GAL.BASE * galMult(p.s.total) * Math.max(.5, 1 + (p.s.total - 55) / 15), 0); // coins an hour
 const jarCap = () => Math.max(20, Math.round(jarRate() * JAR_HRS));
 const jarFull = () => (S.vgJar || 0) >= jarCap();
