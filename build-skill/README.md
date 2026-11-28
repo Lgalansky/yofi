@@ -793,7 +793,8 @@ python3 build-skill/gstyle.py sp-sc.html sp-gs.html
 python3 build-skill/ctafix.py sp-gs.html sp-ct.html
 python3 build-skill/sprintic.py sp-ct.html sp-si.html
 python3 build-skill/h2hopen.py sp-si.html sp-ho.html
-python3 build-skill/qsicon.py sp-ho.html skill-preview.html
+python3 build-skill/qsicon.py sp-ho.html sp-qi.html
+python3 build-skill/names.py sp-qi.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -933,3 +934,5 @@ Live games Friend tile shows your own best photo (the one you'd play with) with 
 `qsicon.py`: Quick Sprint uses its rival / you avatars everywhere. Compete › Your eye shows the two avatars with their eye % pills on the Quick Sprint button (was two score rings), and Vote › Live games has a Quick Sprint tile after the 1 v 1 tile (avatars VS, "Win $3.20", "Your eye vs a rival", "Play · $2"); it is left out while the 🔥 streak Quick Sprint tile is showing.
 
 Live games: the 1 v 1 tile is now called "⚔️ Head-to-head" (same name as its game screen and Compete) and always shows when you have a photo. Under 70 it reads "Get Milo to 70 · Then play for $1" with a gold "✨ Touch up" button that opens Improve; a photo already in a game reads "Milo is in a game" with a navy "See game". Sprint stays out of Live games because it isn't instant (`qsicon.py`).
+
+`names.py`: games are named by what competes (user chose option A). Your photo competes: Head-to-head is now **Photo Duel**, Sprint is now **Photo Knockout**. Your judging competes: Quick Sprint is now **Judge Duel**. "Crowd Sprint" labels read Crowd Championship. It swaps the text across the whole app (code comparisons change on both sides); lower-case ids such as `'sprint'` are untouched. Run it last.
