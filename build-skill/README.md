@@ -797,7 +797,8 @@ python3 build-skill/qsicon.py sp-ho.html sp-qi.html
 python3 build-skill/names.py sp-qi.html sp-nm.html
 python3 build-skill/jartext.py sp-nm.html sp-jt.html
 python3 build-skill/judgecard.py sp-jt.html sp-jc.html
-python3 build-skill/galfix.py sp-jc.html skill-preview.html
+python3 build-skill/galfix.py sp-jc.html sp-gf.html
+python3 build-skill/audit1.py sp-gf.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -959,3 +960,5 @@ The coin jar card was simplified (user mark-up): no "Players voted for it" line,
 The Photo Duel special-tile card art now reads "PHOTO DUEL · Your photo vs a rival's" (was "HEAD OR HEAD · Face a rival in a duel"): `build-skill/assets/challenge.jpg` was relettered; the original art is kept as `assets/challenge_original.jpg`. Its alt text matches (`names.py`).
 
 The Collect and Improve buttons on the Vote top card use the app's shared button font ("Nunito Sans" bold, like the other buttons in that spot) instead of the serif title font (`jartext.py`).
+
+`audit1.py`: fixes from the full play-through audit against the style guide in CLAUDE.md: pop-up buttons in the shared button font (no serif capitals); navy Continue on the age question; Payday reads "Earned by your photos in the last …" with a shorter "Steal a card · 3 free tries"; Add cash has no duplicate "Shop" heading or "blue ribbon" wording; the repeated sign-up sentence is gone; the jackpot screen is titled "Pet challenge" like its tile; judge wording ("You vs another judge", "Similar judge"); profile "Spend coins" (was Coin store); Crowd Championship shows your judge avatar.
