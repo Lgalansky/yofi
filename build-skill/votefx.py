@@ -54,7 +54,7 @@ function vfShPaint() { const f = $('#sFlame'); if (!f) return; let b = $('#vfSh'
 function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorAll('#jcard button.tot-c')]; if (!sh || ph.length < 2) return; VF_BUSY = 1;
   const k = Math.random() < .5 ? 0 : 1, a = vfRel(ph[k]), b = vfRel(ph[1 - k]);
   const amt = kind === 'coins' ? (r => r < .6 ? 20 : r < .9 ? 50 : 100)(Math.random()) : 0;
-  const face = kind === 'coins' ? { ic: '🃏', t: amt === 100 ? 'MEGA Joker!' : amt === 50 ? 'Big Joker!' : 'Joker!', s: `<b class="vf-amt">+${amt}</b> ${gemIcon('vf-gi')}` } : kind === 'steal' ? { ic: '🦝', t: 'Steal!', s: 'Raid time!' } : { ic: '🛡', t: 'Shield!', s: 'Blocks a steal' };
+  const face = kind === 'coins' ? { ic: '🃏', t: amt === 100 ? 'MEGA Joker!' : amt === 50 ? 'Big Joker!' : 'Joker!', s: `<b class="vf-amt">+${amt}</b> ${gemIcon('vf-gi')}` } : kind === 'steal' ? { ic: '🦝', t: 'Steal!', s: 'Steal time!' } : { ic: '🛡', t: 'Shield!', s: 'Blocks a steal' };
   const el = document.createElement('div'); el.id = 'vfTile';
   el.innerHTML = `<div class="vf-wait" style="left:${b.x}px;top:${b.y}px;width:${b.w}px;height:${b.h}px"><span>✨ Reveal the special photo first</span></div>
     <button class="vf-flip" style="left:${a.x}px;top:${a.y}px;width:${a.w}px;height:${a.h}px" aria-label="Special photo, tap to reveal">
@@ -96,9 +96,9 @@ const RD_POOL = () => { const mine = new Set(S.photos.flatMap(p => [p.src, p.ori
 const rdStage = el => el.querySelector('.rd-in');
 function raidStart() { const me = S.photos.filter(p => p.s && !p.heldBy).sort((a, b) => b.s.total - a.s.total)[0], pool = RD_POOL(); if (!me || pool.length < 3) return;
   const rv = RIVALS[Math.floor(Math.random() * RIVALS.length)], wall = pool.sort(() => Math.random() - .5).slice(0, 3).map(x => ({ ...x, h: rv.h }));
-  const sh = $('#shell'), el = document.createElement('div'); el.id = 'raid'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Raid');
+  const sh = $('#shell'), el = document.createElement('div'); el.id = 'raid'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Steal');
   el.innerHTML = `<div class="rd-rays"></div><div class="rd-sparks">${[...Array(22)].map((_, i) => `<i style="left:${(i * 47) % 100}%;top:${(i * 29) % 100}%;animation-delay:${(i * .23 % 2).toFixed(2)}s"></i>`).join('')}</div><i class="rd-flash"></i>
-    <div class="rd-in"><div class="rd-ban">RAID!</div><p class="rd-who"><span class="rd-av">${rv.n[0]}</span>${rv.n}’s gallery · <b>steal one photo</b></p>
+    <div class="rd-in"><div class="rd-ban">STEAL!</div><p class="rd-who"><span class="rd-av">${rv.n[0]}</span>${rv.n}’s gallery · <b>steal one photo</b></p>
     <div class="rd-wall">${wall.map((w, i) => `<button class="rd-card" data-rd="${i}" style="--d:${(.55 + i * .15).toFixed(2)}s"><span class="rd-lamp"></span><span class="rd-fr"><img src="${w.src}" alt=""><i class="rd-sc">${w.sc}</i><span class="rd-tg"></span></span><b>${esc(w.nm)}</b><small>earns ${cardRate(w.sc)} 🟡 a vote</small></button>`).join('')}</div>
     <p class="rd-hint">👆 Tap the photo you want · best of 3 votes · nothing to lose</p></div>`;
   sh.appendChild(el); requestAnimationFrame(() => { el.classList.add('on'); setTimeout(() => el.classList.add('shake'), 420); });
@@ -106,7 +106,7 @@ function raidStart() { const me = S.photos.filter(p => p.s && !p.heldBy).sort((a
     const r = vfRel(b); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, ['#F3D27A', '#fff'], 18); setTimeout(() => raidFight(el, me, wall[+b.dataset.rd], rv), 650); }); }
 function raidFight(el, me, them, rv) { const pWin = Math.max(.35, Math.min(.75, .55 + (me.s.total - them.sc) / 40)), won = Math.random() < pWin;
   const pick = l => l[Math.floor(Math.random() * l.length)], seq = won ? pick([[1, 1], [0, 1, 1], [1, 0, 1]]) : pick([[0, 0], [1, 0, 0], [0, 1, 0]]);
-  el.classList.remove('shake'); rdStage(el).innerHTML = `<div class="rd-ban sm">RAID</div><p class="rd-who" id="rdSay">Best of 3 votes · <b>voters are deciding…</b></p>
+  el.classList.remove('shake'); rdStage(el).innerHTML = `<div class="rd-ban sm">STEAL</div><p class="rd-who" id="rdSay">Best of 3 votes · <b>voters are deciding…</b></p>
     <div class="rd-vs"><figure><span class="rd-ph"><img src="${them.src}" alt=""><i class="rd-sc">${them.sc}</i></span><figcaption>${esc(them.nm)}<small>${rv.n}</small></figcaption></figure><span class="rd-x">VS</span>
       <figure class="me"><span class="rd-ph"><img src="${me.src}" alt=""><i class="rd-sc">${me.s.total}</i></span><figcaption>${esc(alName(me))}<small>You</small></figcaption></figure></div>
     <div class="rd-dots">${[0, 1, 2].map(i => `<i data-dt="${i}"><b>?</b></i>`).join('')}</div><p class="rd-tally"><b id="rdM">0</b><span>–</span><b id="rdT">0</b></p>`;
@@ -125,7 +125,7 @@ function raidDone(el, me, them, rv, won, m, t) { el.classList.remove('tense');
     <div class="rd-ban">${won ? 'STOLEN!' : 'So close!'}</div>
     <div class="rd-prize ${won ? 'w' : ''}"><img src="${them.src}" alt="">${won ? '<i class="rd-new">✨ NEW CARD ✨</i>' : ''}</div>
     <h3 class="rd-h">${won ? `${esc(them.nm)} is yours!` : `${rv.n} kept ${esc(them.nm)}`}</h3>
-    <p class="rd-who">${won ? `It earns you <b>${cardRate(them.sc)} 🟡 a vote</b> from now on · won ${m}–${t}` : `${t}–${m} · nothing lost · another raid is coming`}</p>
+    <p class="rd-who">${won ? `It earns you <b>${cardRate(them.sc)} 🟡 a vote</b> from now on · won ${m}–${t}` : `${t}–${m} · nothing lost · another steal is coming`}</p>
     <button class="rd-go">Back to voting</button>`;
   if (won) setTimeout(() => { const pr = el.querySelector('.rd-prize'); if (pr) { const r = vfRel(pr); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, ['#F3D27A', '#fff', '#E0A82E'], 30); } }, 350);
   el.querySelector('.rd-go').onclick = () => { el.classList.remove('on'); setTimeout(() => el.remove(), 300); try { renderJudge(); } catch (e) {} if (won) setTimeout(() => rdLand(them), 450); }; }

@@ -882,3 +882,5 @@ After a raid win, "Back to voting" flies the stolen card into the earnings card 
 The special tile cracks open in 3 taps: tap 1 shudders it and a glowing crack appears ("Again!"), tap 2 adds cracks and it glows gold (Joker), blue (Steal) or silver (Shield) ("One more!"), tap 3 bursts it open in place with sparks (no flip) and the prize appears one piece at a time: the icon, then the title, then the amount. A Joker's amount (random 20/50/100) slams in with glowing rays and sparks: "Joker! +20", "Big Joker! +50" (bigger number, double burst), "MEGA Joker! +100" (red giant number, gold flash, screen shake), then the coins fly to your balance.
 Joker reveals use the user's card art (`build-skill/assets/joker20.jpg`, `joker50.jpg`, `joker100.jpg`: teal / purple / red), embedded by `votefx.py`. The special tile follows its vote photo every frame, so it stays lined up if the page shifts or scrolls.
 Steal reveals use the user's Steal card art (`build-skill/assets/steal.jpg`) with a green glow and sparks, held for a moment before the raid opens.
+
+The raid is now called Steal everywhere a player sees it ("STEAL!" banner, "another steal is coming").
