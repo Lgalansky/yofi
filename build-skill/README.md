@@ -807,7 +807,8 @@ python3 build-skill/tilefit.py sp-sf.html sp-tf.html
 python3 build-skill/jduel.py sp-tf.html sp-jd.html
 python3 build-skill/cmpjudge.py sp-jd.html sp-cj.html
 python3 build-skill/winback.py sp-cj.html sp-wb.html
-python3 build-skill/steal2.py sp-wb.html skill-preview.html
+python3 build-skill/steal2.py sp-wb.html sp-s2.html
+python3 build-skill/awaypop.py sp-s2.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -1005,3 +1006,5 @@ Crowd Championship is removed (user decision): no Compete row (`steal2.py`); its
 Steals are limited to collections you have a photo in (user chose option A, `steal2.py`). Cards from other collections show greyed with a lock ("🔒 Add a travel photo"); tapping one closes the steal and opens "Add a travel photo" ("Add your own travel photo to open the Travel collection. Then you can steal Travel cards like Infinity sunset…"). Every wall has at least one card you can steal, and surprise shields only land on those.
 
 The Gallery next-collection tile shows the reward for filling the current collection: "🎟️ Free $1 entry · opens at Gold" (was "Opens at Gold"); filling a collection to Gold already paid a free $1 cash entry (`steal2.py`).
+
+`awaypop.py`: coming back after a card was stolen shows the stolen photo with a 🦝 badge, "Leo stole Milo!", "While you were away, Leo won Milo 5–4. You keep the coins it already earned." and how to protect ("🛡 You have 1 shield: put one on Cleo so it can't happen again", or "Win shields from ✨ special tiles while you vote to stop steals"). Two actions: green "Win Milo back · $1" and "🛡 Shield Cleo" (or "Back to voting" with no shield).
