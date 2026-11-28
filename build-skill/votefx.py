@@ -3,8 +3,9 @@
 #     on top of the usual "+5" and fly-to-balance.
 #  2. Special tile: now and then ONE of the two vote photos is a face-down special tile (no pop-up).
 #     Crack it open with 3 taps: tap 1 shudders and cracks it, tap 2 cracks it further and it glows
-#     gold (Joker), blue (Steal) or silver (Shield), tap 3 bursts it open and the card flips:
-#       🃏 Joker  +20 / +50 / +100 coins (60/30/10%), random; the amount slams in big with spinning
+#     gold (Joker), blue (Steal) or silver (Shield), tap 3 bursts it open in place (no flip) and the
+#     prize appears one piece at a time (icon, then title, then amount):
+#       🃏 Joker  +20 / +50 / +100 coins (60/30/10%), random; the amount slams in big with glowing
 #                rays and sparks; Big Joker (50) and MEGA Joker (100) get more sparks, a bigger number,
 #                and MEGA adds a gold flash and a screen shake; coins fly to your balance
 #       🛡 Shield  blocks one steal while you're away (hold up to 3)
@@ -61,12 +62,12 @@ function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorA
   sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
   const done = (ms = 1500) => setTimeout(() => { el.classList.remove('on'); setTimeout(() => { el.remove(); VF_BUSY = 0; }, 250); }, ms);
   let taps = 0; const hue = kind === 'coins' ? 'gold' : kind === 'steal' ? 'blue' : 'silver', tapTx = ['Tap to crack it open', 'Again!', 'One more!'];
-  el.querySelector('.vf-flip').onclick = () => { if (el.classList.contains('flip')) return; taps++; const fl = el.querySelector('.vf-flip'), r0 = vfRel(fl);
+  el.querySelector('.vf-flip').onclick = () => { if (el.classList.contains('open')) return; taps++; const fl = el.querySelector('.vf-flip'), r0 = vfRel(fl);
     fl.classList.remove('shud'); void fl.offsetWidth; fl.classList.add('shud');
     if (taps < 3) { el.classList.add('t' + taps); if (taps === 2) el.classList.add('hue-' + hue); el.querySelector('.vf-tap').textContent = tapTx[taps];
       vfPop(sh, r0.x + r0.w / 2, r0.y + r0.h * (taps === 1 ? .3 : .6), taps === 2 ? (hue === 'blue' ? ['#5B8DEF', '#fff'] : hue === 'silver' ? ['#D7DCE3', '#fff'] : ['#F3D27A', '#fff']) : ['#fff', '#F3D27A'], 8 + taps * 6); return; }
     el.classList.add('t3'); vfPop(sh, r0.x + r0.w / 2, r0.y + r0.h / 2, hue === 'blue' ? ['#5B8DEF', '#F3D27A', '#fff'] : hue === 'silver' ? ['#D7DCE3', '#fff', '#9AA6B5'] : ['#F3D27A', '#E0A82E', '#fff'], 34);
-    setTimeout(() => el.classList.add('flip'), 160); const fr = el.querySelector('.vf-face.front');
+    setTimeout(() => el.classList.add('open'), 160); const fr = el.querySelector('.vf-face.front');
     setTimeout(() => {
       if (kind === 'coins') { const b = el.querySelector('.vf-amt'), r = vfRel(fr), cx = r.x + r.w / 2, cy = r.y + r.h / 2;
         el.classList.add('wow', 'a' + amt); b.classList.add('slam');
@@ -168,14 +169,14 @@ CSS = '''
 #vfTile .vf-wait{position:absolute;pointer-events:auto;border-radius:22px;background:rgba(20,33,61,.55);display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;box-sizing:border-box}
 #vfTile .vf-wait span{padding:6px 12px;border-radius:99px;background:rgba(255,253,249,.92);color:#1F3157;font:800 .74rem "Nunito Sans";text-align:center}
 html body #vfTile .vf-flip{position:absolute!important;pointer-events:auto;display:block!important;padding:0!important;margin:0!important;border:0!important;border-radius:22px!important;background:none!important;box-shadow:none!important;cursor:pointer;transform-style:preserve-3d!important;transition:transform .6s cubic-bezier(.3,1.3,.5,1);perspective:1000px;min-height:0!important}
-#vfTile:not(.flip) .vf-flip{animation:vfIn .45s cubic-bezier(.2,1.4,.4,1),vfWig 2.4s ease-in-out .6s infinite}
-#vfTile.flip .vf-flip{transform:rotateY(180deg)}
+#vfTile:not(.open) .vf-flip{animation:vfIn .45s cubic-bezier(.2,1.4,.4,1),vfWig 2.4s ease-in-out .6s infinite}
+#vfTile.open .vf-flip{transform:none}
 html body #vfTile .vf-face{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px;text-align:center;border-radius:22px!important;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 html body #vfTile .vf-face.back{background:repeating-linear-gradient(45deg,#24396A 0 14px,#1C2E57 14px 28px)!important;box-shadow:inset 0 0 0 4px #E0A82E,0 0 26px rgba(243,210,122,.7)!important}
 .vf-sp{position:absolute;top:12px;left:0;right:0;font:900 .7rem "Nunito Sans";font-style:normal;letter-spacing:.1em;color:#F3D27A}
 .vf-q{font:900 5rem/1 Fraunces,serif;color:#F3D27A;text-shadow:0 0 30px rgba(243,210,122,.8);animation:rdPulse 1.2s ease-in-out infinite}
 .vf-tap{position:absolute;bottom:14px;left:0;right:0;margin:0 auto;width:max-content;padding:7px 14px;border-radius:99px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 .85rem "Nunito Sans";white-space:nowrap;animation:rdPulse 1.2s ease-in-out infinite}
-html body #vfTile .vf-face.front{transform:rotateY(180deg);background:linear-gradient(180deg,#FFF6DD,#F3D27A)!important;box-shadow:inset 0 0 0 4px #E0A82E,0 0 40px rgba(243,210,122,.8)!important}
+html body #vfTile .vf-face.front{transform:none;background:linear-gradient(180deg,#FFF6DD,#F3D27A)!important;box-shadow:inset 0 0 0 4px #E0A82E,0 0 40px rgba(243,210,122,.8)!important}
 html body #vfTile .vf-face.front.steal{background:radial-gradient(circle at 50% 35%,#3A5A9A,#14213D)!important}
 html body #vfTile .vf-face.front.shield{background:linear-gradient(180deg,#fff,#D7DCE3)!important;box-shadow:inset 0 0 0 4px #9AA6B5,0 0 40px rgba(215,220,227,.8)!important}
 /* crack it open */
@@ -185,23 +186,33 @@ html body #vfTile .vf-face.front.shield{background:linear-gradient(180deg,#fff,#
 #vfTile.hue-gold .vf-glow{background:radial-gradient(circle at 50% 50%,rgba(255,214,102,.85),transparent 70%)}#vfTile.hue-blue .vf-glow{background:radial-gradient(circle at 50% 50%,rgba(91,141,239,.9),transparent 70%)}#vfTile.hue-silver .vf-glow{background:radial-gradient(circle at 50% 50%,rgba(230,236,244,.9),transparent 70%)}
 html body #vfTile.hue-gold .vf-face.back{box-shadow:inset 0 0 0 4px #E0A82E,0 0 34px 8px rgba(255,214,102,.95)!important}html body #vfTile.hue-blue .vf-face.back{box-shadow:inset 0 0 0 4px #5B8DEF,0 0 34px 8px rgba(91,141,239,.95)!important}html body #vfTile.hue-silver .vf-face.back{box-shadow:inset 0 0 0 4px #C9D1DC,0 0 34px 8px rgba(230,236,244,.95)!important}
 html body #vfTile .vf-face{overflow:hidden!important}
-#vfTile.t1:not(.flip) .vf-flip,#vfTile.t2:not(.flip) .vf-flip{animation:none}
+#vfTile.t1:not(.open) .vf-flip,#vfTile.t2:not(.open) .vf-flip{animation:none}
 html body #vfTile .vf-flip.shud{animation:vfShud .38s ease-in-out!important}@keyframes vfShud{15%{transform:translateX(-6px) rotate(-2deg)}30%{transform:translateX(6px) rotate(2deg)}45%{transform:translateX(-5px) rotate(-1.5deg)}60%{transform:translateX(4px) rotate(1deg)}80%{transform:translateX(-2px)}}
-#vfTile.flip .vf-flip.shud{animation:none!important}
+#vfTile.open .vf-flip.shud{animation:none!important}
 #vfTile.t2 .vf-q{animation:rdPulse .45s ease-in-out infinite}
+/* open in place: the back bursts away, then card, title and amount appear one after another */
+html body #vfTile .vf-face.front{opacity:0}
+#vfTile.open .vf-face.back{animation:vfBurstOut .22s ease-in forwards}@keyframes vfBurstOut{to{transform:scale(1.08);opacity:0}}
+#vfTile.open .vf-face.front{opacity:1;transition:opacity .15s .1s}
+#vfTile .vf-face.front .vf-ic,#vfTile .vf-face.front h3,#vfTile .vf-face.front p{opacity:0}
+#vfTile.open .vf-face.front .vf-ic{animation:vfStep .45s cubic-bezier(.2,1.7,.4,1) .2s both}
+#vfTile.open .vf-face.front h3{animation:vfStep .4s cubic-bezier(.2,1.7,.4,1) .5s both}
+#vfTile.open .vf-face.front p{animation:vfStepP .1s linear .75s both}
+@keyframes vfStep{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}@keyframes vfStepP{from{opacity:0}to{opacity:1}}
+#vfTile.wow.a50 .vf-face.front .vf-ic,#vfTile.wow.a100 .vf-face.front .vf-ic{opacity:1}
 .vf-amt{display:inline-block}
 .vf-rays{position:absolute;left:50%;top:50%;width:300%;height:300%;margin:-150% 0 0 -150%;background:repeating-conic-gradient(rgba(255,255,255,.55) 0 8deg,transparent 8deg 20deg);opacity:0;pointer-events:none}
-#vfTile.wow .vf-rays{opacity:1;animation:rdSpin 6s linear infinite,vfRaysIn .5s ease-out}@keyframes vfRaysIn{from{transform:scale(.2)}}
+#vfTile.wow .vf-rays{opacity:1;animation:vfRaysIn .5s ease-out,vfRayP 1.4s ease-in-out .5s infinite}@keyframes vfRayP{50%{opacity:.5}}@keyframes vfRaysIn{from{transform:scale(.2)}}
 #vfTile.wow .vf-face.front{animation:vfGlowP 1s ease-in-out infinite}@keyframes vfGlowP{50%{box-shadow:inset 0 0 0 4px #E0A82E,0 0 60px 14px rgba(255,214,102,.95)}}
 .vf-amt.slam{animation:vfSlam .7s cubic-bezier(.2,1.7,.4,1) both;color:#1E6B3E!important}@keyframes vfSlam{0%{transform:scale(4) rotate(-12deg);opacity:0}55%{transform:scale(.85) rotate(3deg);opacity:1}100%{transform:scale(1.2)}}
 html body #vfTile .vf-face.front.a50 p b{font-size:2.6rem!important}html body #vfTile .vf-face.front.a100 p b{font-size:3.2rem!important;color:#B4231A!important;text-shadow:0 3px 0 #F3D27A,0 0 18px rgba(255,214,102,.9)}
 #vfTile .vf-face.front.a50 h3,#vfTile .vf-face.front.a100 h3{font-size:1.65rem}#vfTile .vf-face.front.a100 h3{color:#B4231A}
 html body #vfTile .vf-face.front.a100{background:radial-gradient(circle at 50% 40%,#FFF6DD,#F3D27A 55%,#E0A82E)!important}
 #vfTile .vf-face.front.a100 .vf-ic{font-size:3rem}#vfTile .vf-face.front.a100 h3{line-height:1.05;margin:2px 0}
-#vfTile.wow.a50 .vf-ic,#vfTile.wow.a100 .vf-ic{animation:vfIcon .8s cubic-bezier(.2,1.8,.4,1) .3s both,vfBob 1.2s ease-in-out 1.1s infinite}@keyframes vfIcon{from{transform:scale(.2) rotate(-30deg)}to{transform:scale(1.05)}}@keyframes vfBob{50%{transform:scale(1.05) rotate(-6deg)}}
+#vfTile.wow.a50 .vf-ic,#vfTile.wow.a100 .vf-ic{animation:vfBob 1.2s ease-in-out infinite}@keyframes vfIcon{from{transform:scale(.2) rotate(-30deg)}to{transform:scale(1.05)}}@keyframes vfBob{50%{transform:scale(1.05) rotate(-6deg)}}
 .vf-flash{position:absolute;inset:0;z-index:90;background:#FFF3C4;pointer-events:none;animation:rdFlash .6s ease-out forwards}
 .vf-quake{animation:rdShake .5s ease-in-out}
-.vf-ic{font-size:3.8rem;line-height:1}#vfTile.flip .vf-ic{animation:vfIn .5s cubic-bezier(.2,1.6,.4,1) .45s both}
+.vf-ic{font-size:3.8rem;line-height:1}
 .vf-face h3{margin:0;font:900 1.5rem Fraunces,serif;color:#3A2600}.vf-face.steal h3{color:#F3D27A}.vf-face.shield h3{color:#1F3157}
 .vf-face p{margin:0 8px;display:flex;align-items:center;justify-content:center;gap:5px;font:800 .9rem "Nunito Sans";color:#4E433C}.vf-face.steal p{color:#E6EDF8}.vf-face p b{font:900 1.8rem Fraunces,serif;color:#2D4E86}.vf-gi{width:24px;height:24px}
 /* raid */
