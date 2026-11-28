@@ -785,7 +785,8 @@ python3 build-skill/losetip.py sp-wa.html sp-lt.html
 python3 build-skill/vreset.py sp-lt.html sp-vr.html
 python3 build-skill/livegames.py sp-vr.html sp-lg.html
 python3 build-skill/choose.py sp-lg.html sp-chs.html
-python3 build-skill/navsteal.py sp-chs.html skill-preview.html
+python3 build-skill/navsteal.py sp-chs.html sp-ns.html
+python3 build-skill/jarpop.py sp-ns.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -808,7 +809,7 @@ python3 build-skill/navsteal.py sp-chs.html skill-preview.html
 
 ## Live (galleries build)
 
-The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `navsteal.py`, then copy the result to `index.html` with the title "Yofi - Skill".
+The live `index.html` now includes the galleries steps. Their input is the earlier live app, kept as `build-skill/pre-galleries.html`: run the chain from `galleries.py pre-galleries.html sp-g.html` through `jarpop.py`, then copy the result to `index.html` with the title "Yofi - Skill".
 
 `collect.py` puts the coins your photos earn from voters' picks (and while you are away) into a jar on the top Vote card: "3 voters picked Milo", with a pulsing gold "+12" button that ticks up on each pick. Tap to collect and the coins fly into your balance. With nothing to collect, the earnings card reads "Milo earns 4 coins a pick" and "Earn more" opens Improve. It also sets the one status line on every photo screen to say what a voter's pick pays ("Earns you 2 🟡 per vote · 🥇 Gold earns 4", "🥇 Gold photos earn you 4 🟡 per vote"), and gallery sleeves show coins per vote instead of "2×". Each level pays one rate (unranked 2, Gold 4, Diamond 8, Platinum 12 coins per vote). Gallery photos show their level icon by the score, a gold "+N today" pill on the photo and "Earns N per vote" underneath. Reaching a new level shows a celebration with the new rate ("Milo is Gold! now earns you 4 🟡 per vote").
 
@@ -868,3 +869,5 @@ Tapping a locked category in the Gallery opens the collection map (or the picker
 The coin jar now holds 3 hours of earnings and fills in 3 hours (`JAR_HRS = 3` in `jarfull.py`; same coins per hour, so more frequent, smaller collects).
 
 `navsteal.py` puts a Steal button on the Vote screen right under the two photos (not in the menu): "Steal a card · Free try · first to 5 votes" with a navy "3 left ›" pill, or gold "Win Milo back · Emma has it · free try" when a rival holds one of your cards. The Live games row drops its own steal tiles so the offer isn't shown twice.
+
+`jarpop.py` adds the coin jar receipt. One tap still collects (coins fly in at once); then a pop shows what each photo earned since your last collect ("+68 collected · since 2h 36m ago"): your photos with tier and +coins, cards you stole in gold ("won from Maya +14", "Stolen cards earned you +14 extra", or a "Steal a card" teaser if you have none), and cards taken from you in red ("Emma has it · missed ~22"). One navy button ("Win Tidepool back" or "Steal a card · free try") and "Done". Only shows when you tap the jar yourself.
