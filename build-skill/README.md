@@ -1008,3 +1008,5 @@ Steals are limited to collections you have a photo in (user chose option A, `ste
 The Gallery next-collection tile shows the reward for filling the current collection: "🎟️ Free $1 entry · opens at Gold" (was "Opens at Gold"); filling a collection to Gold already paid a free $1 cash entry (`steal2.py`).
 
 `awaypop.py`: coming back after a card was stolen shows the stolen photo with a 🦝 badge, "Leo stole Milo!", "While you were away, Leo won Milo 5–4. You keep the coins it already earned." and how to protect ("🛡 You have 1 shield: put one on Cleo so it can't happen again", or "Win shields from ✨ special tiles while you vote to stop steals"). Two actions: green "Win Milo back · $1" and "🛡 Shield Cleo" (or "Back to voting" with no shield).
+
+Steal locks are now a surprise, styled like the shield reveal (user request): the wall shows no locks; picking a card from a collection you have not started shakes it, a 🔒 slams on ("🔒 Home collection", "Add a home photo to steal this"), then a sheet: "Palm garden is in Home" · "You can only steal from collections you have started…" · "📷 Add a home photo" · "Back to voting" (`steal2.py`).

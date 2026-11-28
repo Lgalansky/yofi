@@ -6,8 +6,9 @@
 #     it bounces, a shield slams on it, "Sorry, Hilltop village is shielded", and nothing is stolen. Then a sheet offers
 #     to shield your best photo ("🛡 Shield Milo" if you have a shield, otherwise how to win one).
 #  4. An unopened special tile hides when you leave Vote (it used to float over Compete and Gallery).
-#  5. You can only steal from collections you have a photo in (user's idea, option A). Cards from other collections
-#     show greyed with a lock: "🔒 Add a travel photo"; tapping one closes the steal and opens "Add a travel photo".
+#  5. You can only steal from collections you have a photo in (user's idea, option A). Nothing shows up front: pick a
+#     card from a collection you haven't started and it's revealed like a shield (shake, 🔒 slams on, "Add a travel photo
+#     to steal this"), then a sheet: "Infinity sunset is in Travel" · "📷 Add a travel photo" · "Back to voting".
 #     Every wall has at least one card you can steal; surprise shields only land on those.
 #  6. The Gallery's next-collection tile shows the reward for filling this one: "🎟️ Free $1 entry · opens at Gold"
 #     (filling a collection to Gold already paid a free $1 cash entry and opened the next one; now the tile says so).
@@ -45,16 +46,21 @@ setInterval(() => { try { const t = document.getElementById('vfTile'); if (t) t.
         : `<p class="shs-earn">${t && t.shield ? '' : 'No shields yet · win them from ✨ special tiles while you vote.'}</p><button class="btn block shs-go" data-shclose>Back to voting</button>`}</div>`);
     document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
     if ($('#shOf')) $('#shOf').onclick = () => { closeSheet(); window.__shPut && window.__shPut(t); }; }
+  function lkOffer(w, cn) {
+    openSheet(`<div class="shs shp"><div class="shp-ic">🔒</div><h2 class="shs-h">${esc(w.nm)} is in ${esc(cn)}</h2><p class="shs-p">You can only steal from collections you’ve started. Add your own ${esc(cn.toLowerCase())} photo, then ${esc(cn)} cards like this one are yours to steal, and they earn coins on every vote.</p>
+      <div class="shp-card"><img src="${w.src}" alt=""><span><b>${esc(w.nm)}</b><small>${esc(cn)} · about ${GAL.BASE * galMult(w.sc || 70)} coins a vote</small></span></div>
+      <button class="btn block shs-go" id="lkGo">📷 Add a ${esc(cn.toLowerCase())} photo</button><div style="text-align:center"><button class="link" data-shclose>Back to voting</button></div></div>`);
+    document.querySelectorAll('#sheetBody [data-shclose]').forEach(b => b.onclick = () => closeSheet());
+    $('#lkGo').onclick = () => { closeSheet(); setTimeout(() => addCatPhoto(w.cat), 250); }; }
   new MutationObserver(() => { try { const el = document.getElementById('raid'); if (!el || el.dataset.sh2) return; const cs = [...el.querySelectorAll('.rd-card[data-rd]')]; if (cs.length < 3) return; el.dataset.sh2 = 1;
     const W = window.__rdWall || [], own = c => S.photos.some(p => p.s && !p.card && !p.heldBy && p.cat === c);
-    cs.forEach((c, i) => { const w = W[+c.dataset.rd]; if (!w || own(w.cat)) return; const cn = galNm(w.cat);
-      c.classList.add('rd-lock'); const sm = c.querySelector('small'); if (sm) sm.textContent = `🔒 Add a ${cn.toLowerCase()} photo`;
-      const fr = c.querySelector('.rd-fr'); if (fr) fr.insertAdjacentHTML('beforeend', `<i class="rd-lk">🔒<small>${esc(cn)}</small></i>`);
+    cs.forEach((c, i) => { const w = W[+c.dataset.rd]; if (!w || own(w.cat)) return; const cn = galNm(w.cat); c.dataset.lk = 1;
       c.addEventListener('click', e => { if (el.dataset.pick) return; e.stopImmediatePropagation(); e.preventDefault(); el.dataset.pick = 1;
-        try { el.remove(); } catch (x) {} try { VF_BUSY = 0; } catch (x) {} addCatPhoto(w.cat);
-        setTimeout(() => { const pp = document.querySelector('#sheetBody .acp p'); if (pp) pp.innerHTML = `Add your own ${esc(cn.toLowerCase())} photo to open the ${esc(cn)} collection. Then you can steal ${esc(cn)} cards like <b>${esc(w.nm)}</b>, and they earn coins on every vote.`; }, 60); }, true); });
-    if (cs.some(c => c.classList.contains('rd-lock'))) { const hn = el.querySelector('.rd-hint'); if (hn) hn.insertAdjacentHTML('beforeend', '<br><b class="rd-lkn">🔒 Grey cards: add a photo to that collection to steal them</b>'); }
-    const free = cs.filter(c => !c.classList.contains('rd-lock')); if (!free.length) return;
+        c.classList.add('picked', 'rd-lock', 'rd-bonk'); el.querySelectorAll('.rd-card').forEach(x => x !== c && x.classList.add('gone'));
+        const fr = c.querySelector('.rd-fr'); if (fr) fr.insertAdjacentHTML('beforeend', '<i class="rd-shb rd-slam">🔒</i>'); const sm = c.querySelector('small'); if (sm) sm.textContent = `🔒 ${cn} collection`;
+        const hn = el.querySelector('.rd-hint'); if (hn) hn.innerHTML = `<b class="rd-shn">🔒 Add a ${esc(cn.toLowerCase())} photo to steal this</b>`;
+        setTimeout(() => { try { el.remove(); } catch (x) {} try { VF_BUSY = 0; } catch (x) {} lkOffer(w, cn); }, 1900); }, true); });
+    const free = cs.filter(c => !c.dataset.lk); if (!free.length) return;
     if (!window.__shForce && Math.random() >= .35) return; const c = window.__shForce ? free[0] : free[Math.floor(Math.random() * free.length)];
     c.addEventListener('click', e => { if (el.dataset.pick) return; e.stopImmediatePropagation(); e.preventDefault(); el.dataset.pick = 1;
       const nm = (c.querySelector('b') || {}).textContent || 'That photo', who = ((el.querySelector('.rd-who') || {}).textContent || '').split('’')[0].replace(/^\s*\S\s*/, '').trim() || 'They';
