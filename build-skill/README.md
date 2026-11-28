@@ -936,3 +936,5 @@ Live games Friend tile shows your own best photo (the one you'd play with) with 
 Live games: the 1 v 1 tile is now called "⚔️ Head-to-head" (same name as its game screen and Compete) and always shows when you have a photo. Under 70 it reads "Get Milo to 70 · Then play for $1" with a gold "✨ Touch up" button that opens Improve; a photo already in a game reads "Milo is in a game" with a navy "See game". Sprint stays out of Live games because it isn't instant (`qsicon.py`).
 
 `names.py`: games are named by what competes (user chose option A). Your photo competes: Head-to-head is now **Photo Duel**, Sprint is now **Photo Knockout**. Your judging competes: Quick Sprint is now **Judge Duel**. "Crowd Sprint" labels read Crowd Championship. It swaps the text across the whole app (code comparisons change on both sides); lower-case ids such as `'sprint'` are untouched. Run it last.
+
+Compete tabs use the game families: "📷 Photo games | 🎯 Judge games" (was Your photo | Your eye), and the judge card's label reads "Your judge score" (`names.py`). The Judge Duel avatars on the Compete button sit in round frames (`qsicon.py`).
