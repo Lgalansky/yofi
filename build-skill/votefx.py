@@ -7,7 +7,8 @@
 #     New players get their first reveal within their first few right votes.
 #  3. Shields: a 🛡 pill in the header shows how many you hold. An overnight steal that hits a
 #     shield is blocked; the "While you were away" pop says so.
-#  4. Raid: every 10–15 votes the whole screen switches to a raid. A random rival's wall of 3
+#  4. Raid: every 10–15 votes the special photo flips to a 🦝 Steal! card; "Start the raid" switches
+#     the whole screen to a raid. A random rival's wall of 3
 #     photos; tap one to try to steal it; your best photo vs theirs, best of 3 live votes;
 #     win and it joins your cards (it earns coins for you); lose and nothing is lost.
 #     One button back to voting. Raids are free and don't use your 3 daily steal tries.
@@ -42,13 +43,14 @@ function vfReveal(kind) { const sh = $('#shell'), card = $('#jcard'); if (!sh ||
   const el = document.createElement('div'); el.id = 'vfRev'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Special photo');
   el.innerHTML = `<div class="vf-spot" style="left:${cr.left - sr.left}px;top:${cr.top - sr.top}px;width:${cr.width}px;height:${cr.height}px">
     <button class="vf-flip" aria-label="Tap to reveal"><span class="vf-face back"><i class="vf-sp">✨ SPECIAL PHOTO ✨</i><span class="vf-q">?</span><b class="vf-tap">Tap to reveal</b></span>
-      <span class="vf-face front ${kind}"><span class="vf-ic">${kind === 'coins' ? '🃏' : '🛡'}</span><h3>${kind === 'coins' ? 'Joker!' : 'Shield!'}</h3>
-        <p>${kind === 'coins' ? `<b>+${amt}</b> ${gemIcon('vf-gi')}` : 'Blocks one steal while you’re away'}</p></span></button></div>
-    <button class="vf-go" disabled>${kind === 'coins' ? `Collect ${amt}` : 'Keep my shield'}</button>`;
+      <span class="vf-face front ${kind}"><span class="vf-ic">${kind === 'coins' ? '🃏' : kind === 'steal' ? '🦝' : '🛡'}</span><h3>${kind === 'coins' ? 'Joker!' : kind === 'steal' ? 'Steal!' : 'Shield!'}</h3>
+        <p>${kind === 'coins' ? `<b>+${amt}</b> ${gemIcon('vf-gi')}` : kind === 'steal' ? 'Raid a rival and take a photo' : 'Blocks one steal while you’re away'}</p></span></button></div>
+    <button class="vf-go ${kind === 'steal' ? 'nav' : ''}" disabled>${kind === 'coins' ? `Collect ${amt}` : kind === 'steal' ? 'Start the raid' : 'Keep my shield'}</button>`;
   sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
   el.querySelector('.vf-flip').onclick = () => { if (el.classList.contains('flip')) return; el.classList.add('flip'); setTimeout(() => { const g = el.querySelector('.vf-go'); g.disabled = false; g.classList.add('in'); }, 650); };
   el.querySelector('.vf-go').onclick = () => { const fr = el.querySelector('.vf-face.front');
     if (kind === 'coins') { S.gems += amt; save(); try { gemExplosion(amt, { mid: 1, from: fr }); } catch (e) { paintGems(); } }
+    else if (kind === 'steal') { el.classList.remove('on'); setTimeout(() => { el.remove(); VF_BUSY = 0; raidStart(); }, 250); return; }
     else { S.shields = Math.min(VF_MAXSH, (S.shields || 0) + 1); save(); vfShPaint(); const b = $('#vfSh'); if (b) { b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); } }
     VF_G = S.gems; el.classList.remove('on'); setTimeout(() => { el.remove(); VF_BUSY = 0; }, 300); }; }
 // 4. raids
@@ -85,7 +87,7 @@ setInterval(() => { try { const n = S.eyeN || 0; if (n <= VF_N) { VF_G = S.gems;
   if (ok) { vfBurst(gained || CFG.VOTE); S.vfR = (S.vfR || 0) + 1;
     const first = !S.vfFirst && S.vfR >= 4, roll = Math.random(), kind = first ? 'coins' : roll < .08 ? 'coins' : roll < .12 && (S.shields || 0) < VF_MAXSH ? 'shield' : null;
     if (kind && n < S.vfRaidAt) { if (first) S.vfFirst = 1; save(); setTimeout(() => { if (!vfOverlayOpen()) vfReveal(kind); }, 900); } }
-  if (n >= S.vfRaidAt) { S.vfRaidAt = n + 10 + Math.floor(Math.random() * 6); save(); setTimeout(() => { if (!vfOverlayOpen() && $('#panes').dataset.at === 'judge') raidStart(); }, 1300); }
+  if (n >= S.vfRaidAt) { S.vfRaidAt = n + 10 + Math.floor(Math.random() * 6); save(); setTimeout(() => { if (!vfOverlayOpen() && $('#panes').dataset.at === 'judge' && RD_POOL().length >= 3) vfReveal('steal'); }, 1100); }
 } catch (e) {} }, 200);
 // a shield blocks an overnight steal
 const _stealAwayVF = stealAway;
@@ -116,7 +118,8 @@ CSS = '''
 @keyframes vfIn{from{transform:scale(.3) rotate(-8deg)}to{transform:none}}
 .vf-face{position:absolute;inset:0;border-radius:24px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;box-shadow:0 20px 40px -12px rgba(0,0,0,.6)}
 .vf-face.back{background:linear-gradient(160deg,#2B4372,#14213D);box-shadow:inset 0 0 0 5px #E0A82E,0 20px 40px -12px rgba(0,0,0,.6)}.vf-face.back span{font:900 5rem Fraunces,serif;color:#F3D27A}.vf-face.back small{font:800 .8rem "Nunito Sans";letter-spacing:.1em;text-transform:uppercase;color:#E6EDF8}
-.vf-face.front{transform:rotateY(180deg);background:linear-gradient(180deg,#FFF6DD,#F3D27A);box-shadow:inset 0 0 0 5px #E0A82E,0 0 50px rgba(243,210,122,.7)}.vf-face.front.shield{background:linear-gradient(180deg,#fff,#D7DCE3);box-shadow:inset 0 0 0 5px #9AA6B5,0 0 50px rgba(215,220,227,.7)}
+.vf-face.front{transform:rotateY(180deg);background:linear-gradient(180deg,#FFF6DD,#F3D27A);box-shadow:inset 0 0 0 5px #E0A82E,0 0 50px rgba(243,210,122,.7)}.vf-face.front.steal{background:linear-gradient(180deg,#2B4372,#14213D)!important;box-shadow:inset 0 0 0 5px #E0A82E,0 0 50px rgba(243,210,122,.7)!important}.vf-face.steal h3{color:#F3D27A!important}.vf-face.steal p{color:#E6EDF8!important}
+.vf-face.front.shield{background:linear-gradient(180deg,#fff,#D7DCE3);box-shadow:inset 0 0 0 5px #9AA6B5,0 0 50px rgba(215,220,227,.7)}
 .vf-ic{font-size:4.6rem;line-height:1}.vf-face h3{margin:0;font:900 1.7rem Fraunces,serif;color:#3A2600}.vf-face.shield h3{color:#1F3157}.vf-face p{margin:0 14px;display:flex;align-items:center;justify-content:center;gap:6px;font:800 1rem "Nunito Sans";color:#4E433C}.vf-face p b{font:900 2rem Fraunces,serif;color:#2D4E86}.vf-gi{width:28px;height:28px}
 .vf-go{min-width:220px;padding:14px 24px;border:0;border-radius:999px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 1.05rem "Nunito Sans";box-shadow:0 8px 18px -8px rgba(160,110,10,.8);cursor:pointer;transition:opacity .2s}.vf-go:disabled{opacity:0}
 #raid{position:absolute;inset:0;z-index:66;background:radial-gradient(circle at 50% 20%,#2B4372,#14213D 70%);color:#fff;opacity:0;transform:scale(1.08);transition:opacity .3s,transform .3s;overflow-y:auto}#raid.on{opacity:1;transform:none}
@@ -155,6 +158,7 @@ html body #vfRev .vf-go{opacity:0}html body #vfRev .vf-go.in{opacity:1;animation
 /* beat the app's general button styles */
 html body #vfRev .vf-go{position:absolute;left:50%;bottom:150px;transform:translateX(-50%);z-index:2;display:block;min-width:220px;min-height:52px;padding:0 24px!important;border:0!important;border-radius:999px!important;background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important;font:900 1.05rem "Nunito Sans"!important;box-shadow:0 8px 18px -8px rgba(160,110,10,.8)!important;opacity:1}
 html body #vfRev .vf-go:disabled{opacity:0!important}
+html body #vfRev .vf-go.nav{background:#2D4E86!important;color:#fff!important;box-shadow:0 8px 18px -8px rgba(45,78,134,.8)!important}
 html body #raid .rd-wall{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 html body #raid .rd-card{min-width:0!important;width:auto!important;margin:0!important;padding:6px 6px 8px!important;border:0!important;border-radius:16px!important;background:#FFFDF9!important;color:#2D2521!important;box-shadow:0 10px 20px -10px rgba(0,0,0,.6)!important;display:flex!important;flex-direction:column!important;position:relative!important;min-height:0!important;height:auto!important}
 html body #raid .rd-card b{color:#2D2521!important;display:block}html body #raid .rd-card small{color:#4E433C!important;display:block;white-space:nowrap}
