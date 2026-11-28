@@ -28,6 +28,7 @@ rep("  if (held) T({ hot: 1, img: held.src, chip: '🃏 Stolen',", "  if (0 && h
 rep("  if (rc && !held) T({ img: rc.src, chip: '🃏 Steal',", "  if (0 && rc && !held) T({ img: rc.src, chip: '🃏 Steal',")
 # head-to-head is now a special tile reveal, so no 1 v 1 tile in the row
 rep("  if (best) T({ pair: [c2NotMine(battleRival(cat).src, cat), best.src], chip: '⚔️ 1 v 1',", "  if (0 && best) T({ pair: [c2NotMine(battleRival(cat).src, cat), best.src], chip: '⚔️ 1 v 1',")
+rep("chip: '🤝 Friend'", "chip: '🤝 Friend challenge'")
 # jackpot tile: "Pet challenge"
 rep("chip: st ? `★ ${st} today` : `💰 ${short(k)}`", "chip: st ? `★ ${st} today` : `💰 ${short(k)} challenge`")
 # pick feedback

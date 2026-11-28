@@ -900,3 +900,4 @@ Live games row: Steal / Stolen tiles removed; the jackpot tile chip reads "💰 
 `screens.py` redoes two screens to the user's mock-ups. Rematch: "REMATCH?", both photos with "Score 84" pills (tap yours to change photo), "<part> made the difference", "Choose your entry" $1/$2/$5 with the stars a win earns (doubled for a rematch), one gold Touch up row, green "Rematch for $2", "Win to earn 4 stars · double for a rematch". Quick Sprint: illustrated rival / you avatars (`assets/av_rival.jpg`, `av_you.jpg`; your profile photo replaces yours when set) with the eye % in a red / navy pill.
 
 The Challenge special tile uses the user's head-to-head card art (`assets/challenge.jpg`). The 1 v 1 tile is gone from the Live games row (head-to-head now comes from the tile reveal); the row is Pet challenge and Friend.
+Live games row: "💰 Pet challenge" and "🤝 Friend challenge".
