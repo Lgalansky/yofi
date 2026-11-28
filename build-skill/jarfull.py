@@ -1,5 +1,5 @@
 # Skill preview: retention beats borrowed from village games, without coin sinks.
-# 1. The coin jar fills over time from votes on your photos and holds 8 hours of earnings.
+# 1. The coin jar fills over time from votes on your photos and holds 3 hours of earnings (fills in 3 hours).
 #    The Vote card counts down ("Full in 3h 20m"); once full it says so and stops filling until collected.
 # 2. Completing a collection (all 3 photos reach a new level) is a big moment that pays a
 #    free $1 cash challenge entry (a ticket), used straight from the pop.
@@ -21,8 +21,8 @@ rep("paintGems(false); if (S.user) openBattleTab(); }", "paintGems(false); if (S
 rep("renderStudio(); paintGems(false); openBattleTab(); }", "renderStudio(); paintGems(false); GV.tab = 'battle'; go('judge'); }")
 
 JS = r'''
-// ---- 1. a jar that fills over time and holds 8 hours ----
-const JAR_HRS = 8;
+// ---- 1. a jar that fills over time and holds 3 hours ----
+const JAR_HRS = 3;
 const jarHung = () => GAL.PATH.filter(galOpen).flatMap(c => galRoom(c).ph).filter(p => p.s);
 const jarRate = () => jarHung().reduce((a, p) => a + GAL.BASE * galMult(p.s.total) * Math.max(.5, 1 + (p.s.total - 55) / 15), 0); // coins an hour
 const jarCap = () => Math.max(20, Math.round(jarRate() * JAR_HRS));
