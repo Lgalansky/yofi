@@ -1,8 +1,9 @@
 # Skill preview: make voting exciting (our own look, not a copy of any game).
 #  1. Right vote: coins burst out of the photos towards you (zoom + fade) with a gold shock ring,
 #     on top of the usual "+5" and fly-to-balance.
-#  2. Lucky reveals: now and then a right vote flips a card: "💰 Lucky find! +25/40/60 coins" or
-#     "🛡 Shield!" (blocks one steal while you're away, hold up to 3). One "Collect" button.
+#  2. Special photo: now and then a right vote drops a face-down special photo onto the vote. Tap to
+#     reveal: a 🃏 Joker (+20 / +50 / +100 coins) or a 🛡 Shield (blocks one steal while you're away,
+#     hold up to 3). Then one "Collect" button.
 #     New players get their first reveal within their first few right votes.
 #  3. Shields: a 🛡 pill in the header shows how many you hold. An overnight steal that hits a
 #     shield is blocked; the "While you were away" pop says so.
@@ -36,14 +37,16 @@ function vfShPaint() { const f = $('#sFlame'); if (!f) return; let b = $('#vfSh'
   if (!b) { b = document.createElement('button'); b.id = 'vfSh'; b.className = 'vf-sh'; b.setAttribute('aria-label', 'Shields'); f.after(b); b.onclick = () => toast(`🛡 ${S.shields || 0} of ${VF_MAXSH} shields · each one blocks a steal while you’re away`); }
   b.hidden = !n; const h = `🛡<b>${n}</b>`; if (b.innerHTML !== h) b.innerHTML = h; }
 // 2. lucky reveals
-function vfReveal(kind) { const sh = $('#shell'); if (!sh) return; VF_BUSY = 1;
-  const amt = kind === 'coins' ? [25, 40, 60][Math.floor(Math.random() * 3)] : 0;
-  const el = document.createElement('div'); el.id = 'vfRev'; el.setAttribute('role', 'dialog');
-  el.innerHTML = `<div class="vf-flip"><div class="vf-face back"><span>?</span><small>Lucky reveal</small></div>
-    <div class="vf-face front ${kind}"><span class="vf-ic">${kind === 'coins' ? '💰' : '🛡'}</span><h3>${kind === 'coins' ? 'Lucky find!' : 'Shield!'}</h3>
-      <p>${kind === 'coins' ? `<b>+${amt}</b> ${gemIcon('vf-gi')}` : 'Blocks one steal while you’re away'}</p></div></div>
-    <button class="vf-go" disabled>${kind === 'coins' ? 'Collect' : 'Keep my shield'}</button>`;
-  sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on')); setTimeout(() => { el.classList.add('flip'); el.querySelector('.vf-go').disabled = false; }, 700);
+function vfReveal(kind) { const sh = $('#shell'), card = $('#jcard'); if (!sh || !card) return; VF_BUSY = 1;
+  const amt = kind === 'coins' ? (r => r < .6 ? 20 : r < .9 ? 50 : 100)(Math.random()) : 0, sr = sh.getBoundingClientRect(), cr = card.getBoundingClientRect();
+  const el = document.createElement('div'); el.id = 'vfRev'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Special photo');
+  el.innerHTML = `<div class="vf-spot" style="left:${cr.left - sr.left}px;top:${cr.top - sr.top}px;width:${cr.width}px;height:${cr.height}px">
+    <button class="vf-flip" aria-label="Tap to reveal"><span class="vf-face back"><i class="vf-sp">✨ SPECIAL PHOTO ✨</i><span class="vf-q">?</span><b class="vf-tap">Tap to reveal</b></span>
+      <span class="vf-face front ${kind}"><span class="vf-ic">${kind === 'coins' ? '🃏' : '🛡'}</span><h3>${kind === 'coins' ? 'Joker!' : 'Shield!'}</h3>
+        <p>${kind === 'coins' ? `<b>+${amt}</b> ${gemIcon('vf-gi')}` : 'Blocks one steal while you’re away'}</p></span></button></div>
+    <button class="vf-go" disabled>${kind === 'coins' ? `Collect ${amt}` : 'Keep my shield'}</button>`;
+  sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
+  el.querySelector('.vf-flip').onclick = () => { if (el.classList.contains('flip')) return; el.classList.add('flip'); setTimeout(() => { const g = el.querySelector('.vf-go'); g.disabled = false; g.classList.add('in'); }, 650); };
   el.querySelector('.vf-go').onclick = () => { const fr = el.querySelector('.vf-face.front');
     if (kind === 'coins') { S.gems += amt; save(); try { gemExplosion(amt, { mid: 1, from: fr }); } catch (e) { paintGems(); } }
     else { S.shields = Math.min(VF_MAXSH, (S.shields || 0) + 1); save(); vfShPaint(); const b = $('#vfSh'); if (b) { b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); } }
@@ -107,8 +110,9 @@ CSS = '''
 .vf-ring{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:5px solid #F3D27A;animation:vfRing .7s ease-out forwards}@keyframes vfRing{to{transform:scale(7);opacity:0;border-width:1px}}
 .vf-sh{display:inline-flex;align-items:center;gap:3px;margin-left:6px;padding:4px 10px;border:0;border-radius:99px;background:linear-gradient(180deg,#fff,#D7DCE3);box-shadow:inset 0 0 0 1.5px #B9C2CE;font:900 .9rem "Nunito Sans";color:#2E3440;cursor:pointer}.vf-sh[hidden]{display:none}
 .vf-sh.bump{animation:jpPop .5s ease-out}
-#vfRev{position:absolute;inset:0;z-index:65;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:rgba(20,33,61,.72);opacity:0;transition:opacity .25s;perspective:900px}#vfRev.on{opacity:1}
-.vf-flip{position:relative;width:220px;height:280px;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,1.3,.5,1);animation:vfIn .5s cubic-bezier(.2,1.4,.4,1)}#vfRev.flip .vf-flip{transform:rotateY(180deg)}
+#vfRev{position:absolute;inset:0;z-index:65;background:rgba(20,33,61,.55);opacity:0;transition:opacity .25s}#vfRev.on{opacity:1}
+.vf-spot{position:absolute;display:flex;align-items:center;justify-content:center;perspective:1000px}
+.vf-flip{position:relative;width:min(240px,70%);height:100%;padding:0;border:0;background:none;cursor:pointer;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,1.3,.5,1);animation:vfIn .5s cubic-bezier(.2,1.4,.4,1)}#vfRev.flip .vf-flip{transform:rotateY(180deg)}
 @keyframes vfIn{from{transform:scale(.3) rotate(-8deg)}to{transform:none}}
 .vf-face{position:absolute;inset:0;border-radius:24px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;box-shadow:0 20px 40px -12px rgba(0,0,0,.6)}
 .vf-face.back{background:linear-gradient(160deg,#2B4372,#14213D);box-shadow:inset 0 0 0 5px #E0A82E,0 20px 40px -12px rgba(0,0,0,.6)}.vf-face.back span{font:900 5rem Fraunces,serif;color:#F3D27A}.vf-face.back small{font:800 .8rem "Nunito Sans";letter-spacing:.1em;text-transform:uppercase;color:#E6EDF8}
@@ -139,8 +143,17 @@ CSS = '''
 .rd-h{margin:16px 0 0;font:900 1.6rem Fraunces,serif;color:#fff}
 .rd-go{margin-top:auto;min-width:240px;padding:15px 24px;border:0;border-radius:999px;background:#FFFDF9;color:#1F3157;font:900 1.05rem "Nunito Sans";cursor:pointer;box-shadow:0 8px 18px -8px rgba(0,0,0,.6)}
 .rd-cf{position:absolute;inset:0;pointer-events:none}
+.vf-face.back{background:repeating-linear-gradient(45deg,#24396A 0 14px,#1C2E57 14px 28px)!important}
+.vf-sp{position:absolute;top:14px;left:0;right:0;font:900 .72rem "Nunito Sans";font-style:normal;letter-spacing:.1em;color:#F3D27A}
+.vf-q{font:900 6rem/1 Fraunces,serif;color:#F3D27A;text-shadow:0 0 30px rgba(243,210,122,.8);animation:rdPulse 1.2s ease-in-out infinite}
+.vf-tap{position:absolute;bottom:18px;left:0;right:0;margin:0 auto;width:max-content;padding:8px 18px;border-radius:99px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 .95rem "Nunito Sans";white-space:nowrap;animation:rdPulse 1.2s ease-in-out infinite}
+#vfRev:not(.flip) .vf-flip{animation:vfIn .5s cubic-bezier(.2,1.4,.4,1),vfWig 2.4s ease-in-out .6s infinite}@keyframes vfWig{0%,80%,100%{transform:none}85%{transform:rotate(-3deg)}90%{transform:rotate(3deg)}95%{transform:rotate(-2deg)}}
+html body #vfRev .vf-flip{display:block!important;width:min(240px,70%)!important;height:100%!important;min-height:0!important;padding:0!important;margin:0!important;border:0!important;border-radius:24px!important;background:none!important;box-shadow:none!important;transform-style:preserve-3d!important}
+html body #vfRev .vf-face{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;border-radius:24px!important;overflow:hidden}
+html body #vfRev .vf-face.back{background:repeating-linear-gradient(45deg,#24396A 0 14px,#1C2E57 14px 28px)!important;box-shadow:inset 0 0 0 5px #E0A82E,0 0 40px rgba(243,210,122,.55),0 20px 40px -12px rgba(0,0,0,.6)!important}
+html body #vfRev .vf-go{opacity:0}html body #vfRev .vf-go.in{opacity:1;animation:vfIn .4s cubic-bezier(.2,1.4,.4,1)}
 /* beat the app's general button styles */
-html body #vfRev .vf-go{position:relative;z-index:2;display:block;min-width:220px;min-height:52px;padding:0 24px!important;border:0!important;border-radius:999px!important;background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important;font:900 1.05rem "Nunito Sans"!important;box-shadow:0 8px 18px -8px rgba(160,110,10,.8)!important;opacity:1}
+html body #vfRev .vf-go{position:absolute;left:50%;bottom:150px;transform:translateX(-50%);z-index:2;display:block;min-width:220px;min-height:52px;padding:0 24px!important;border:0!important;border-radius:999px!important;background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important;font:900 1.05rem "Nunito Sans"!important;box-shadow:0 8px 18px -8px rgba(160,110,10,.8)!important;opacity:1}
 html body #vfRev .vf-go:disabled{opacity:0!important}
 html body #raid .rd-wall{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 html body #raid .rd-card{min-width:0!important;width:auto!important;margin:0!important;padding:6px 6px 8px!important;border:0!important;border-radius:16px!important;background:#FFFDF9!important;color:#2D2521!important;box-shadow:0 10px 20px -10px rgba(0,0,0,.6)!important;display:flex!important;flex-direction:column!important;position:relative!important;min-height:0!important;height:auto!important}
