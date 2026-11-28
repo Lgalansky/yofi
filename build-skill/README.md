@@ -805,7 +805,8 @@ python3 build-skill/cmpquick.py sp-sh.html sp-cq.html
 python3 build-skill/shieldfx.py sp-cq.html sp-sf.html
 python3 build-skill/tilefit.py sp-sf.html sp-tf.html
 python3 build-skill/jduel.py sp-tf.html sp-jd.html
-python3 build-skill/cmpjudge.py sp-jd.html skill-preview.html
+python3 build-skill/cmpjudge.py sp-jd.html sp-cj.html
+python3 build-skill/winback.py sp-cj.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -991,3 +992,5 @@ Improve after a touch-up: the picked row keeps its current score ("65 ↑") and 
 Every steal wall now has one rival card behind a glowing blue shield ("🛡 Shielded"); tapping it bounces off ("Hilltop village is shielded · pick another"), and the hint line says "🛡 Shielded cards can't be stolen · shields from ✨ special tiles protect yours too" (`shields.py`).
 
 Tapping the "Milo can reach Diamond" card or its Improve button on Vote opens the Improve screen on Milo directly (it used to open Milo's card in the Gallery first) (`jartext.py`).
+
+`winback.py` (user chose "win it back"): every "Win Palm garden back" opens a $1 Photo Duel against the stealer: the stolen card (held by Emma) vs your best photo, "Winner takes $1.70 + card", green "Win it back · $1". A short simulated vote decides it (your score vs the card's score sets the odds). Win: the card returns and $1.70 goes to your cash. Lose: "So close! Emma kept Palm garden" with a gold "Touch up Milo" button. Free steal tries stay for stealing new cards.
