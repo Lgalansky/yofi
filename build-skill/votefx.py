@@ -10,13 +10,15 @@
 #                Big Joker (50) and MEGA Joker (100) get more sparks, a bigger number,
 #                and MEGA adds a gold flash and a screen shake; coins fly to your balance
 #       🛡 Shield  blocks one steal while you're away (hold up to 3)
+#       ⚔️ Challenge  ~1 in 25 right votes when you have a photo at 70+: the Challenge card art
+#                (assets/challenge.jpg), then the head-to-head offer opens (you choose to play)
 #       🦝 Steal  every 10–15 votes; shows the Steal card art (assets/steal.jpg), then switches to a raid
 #     The other photo waits ("Reveal the special photo first") so the tile can't be missed.
 #  3. Shields: a 🛡 pill in the header. An overnight steal that hits a shield is blocked and the
 #     "While you were away" pop says so.
 #  4. Raid: full-screen heist. Flash + slam "RAID!", rotating gold rays and sparkles behind a rival's
-#     wall of 3 spot-lit photos. Tap one; your best photo vs it, best of 3 live votes with bursts on
-#     every vote and a "Deciding vote!" moment at 1–1. Win: gold flash, confetti and coin rain,
+#     wall of 3 spot-lit photos. Tap one; your best photo vs it, best of 3 live votes shown as numbered 1 2 3 slots that fill with the photo that got each
+#     vote (gold = rival, blue = you), tally in screen order, bursts on every vote and a "Deciding vote!" moment at 1–1. Win: gold flash, confetti and coin rain,
 #     the photo zooms in as a NEW CARD that earns for you. Lose: "So close!", nothing lost.
 #     One button back to voting; after a win the card flies into the earnings card at the top of Vote,
 #     which turns gold for a few seconds: "<name> is earning for you · 🃏 Stolen card" with a "+8 a vote" chip.
@@ -26,10 +28,11 @@ import sys, base64, os
 ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
 JK = {k: 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(ASSETS, f'joker{k}.jpg'), 'rb').read()).decode() for k in (20, 50, 100)}
 ST_IMG = 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(ASSETS, 'steal.jpg'), 'rb').read()).decode()
+CH_IMG = 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(ASSETS, 'challenge.jpg'), 'rb').read()).decode()
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
 s = open(src, encoding='utf-8').read()
 
-JS = "const JK_IMG = { 20: '" + JK[20] + "', 50: '" + JK[50] + "', 100: '" + JK[100] + "' }, ST_IMG = '" + ST_IMG + "';\n" + r'''
+JS = "const JK_IMG = { 20: '" + JK[20] + "', 50: '" + JK[50] + "', 100: '" + JK[100] + "' }, ST_IMG = '" + ST_IMG + "', CHL_IMG = '" + CH_IMG + "';\n" + r'''
 // ---- exciting voting: coin burst, special tiles, shields, raids ----
 const VF_MAXSH = 3;
 let VF_N = S.eyeN || 0, VF_OK = S.eyeOk || 0, VF_G = S.gems || 0, VF_BUSY = 0;
@@ -63,12 +66,12 @@ function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorA
         <svg class="vf-crk c1" viewBox="0 0 100 130" preserveAspectRatio="none"><path d="M52 0 L47 22 L56 34 L44 52 L50 63"/><path d="M56 34 L70 40 L78 36"/></svg>
         <svg class="vf-crk c2" viewBox="0 0 100 130" preserveAspectRatio="none"><path d="M50 63 L58 78 L45 96 L53 112 L48 130"/><path d="M44 52 L28 58 L18 54 L6 62"/><path d="M58 78 L76 84 L94 80"/><path d="M45 96 L30 104 L22 118"/></svg>
         <b class="vf-tap">Tap to crack it open</b></span>
-      <span class="vf-face front ${kind} ${kind === 'coins' ? 'a' + amt : ''}"><i class="vf-rays"></i>${kind === 'coins' ? `<img class="vf-jk" src="${JK_IMG[amt]}" alt="Joker ${amt} coins">` : kind === 'steal' ? `<img class="vf-jk" src="${ST_IMG}" alt="Steal: take another player’s treasure">` : `<span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p>`}</span></button>`;
+      <span class="vf-face front ${kind} ${kind === 'coins' ? 'a' + amt : ''}"><i class="vf-rays"></i>${kind === 'coins' ? `<img class="vf-jk" src="${JK_IMG[amt]}" alt="Joker ${amt} coins">` : kind === 'steal' ? `<img class="vf-jk" src="${ST_IMG}" alt="Steal: take another player’s treasure">` : kind === 'chal' ? `<img class="vf-jk" src="${CHL_IMG}" alt="Challenge: go head-to-head with another player">` : `<span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p>`}</span></button>`;
   sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
   const wt = el.querySelector('.vf-wait'), fp = el.querySelector('.vf-flip'), put = (n, r) => { n.style.left = r.x + 'px'; n.style.top = r.y + 'px'; n.style.width = r.w + 'px'; n.style.height = r.h + 'px'; };
   const follow = () => { if (!el.isConnected) return; const cur = document.querySelectorAll('#jcard button.tot-c'); if (cur.length >= 2) { put(fp, vfRel(cur[k])); put(wt, vfRel(cur[1 - k])); } requestAnimationFrame(follow); }; follow(); // re-find the photos every frame: they can be rebuilt or pushed down
   const done = (ms = 1500) => setTimeout(() => { el.classList.remove('on'); setTimeout(() => { el.remove(); VF_BUSY = 0; }, 250); }, ms);
-  let taps = 0; const hue = kind === 'coins' ? 'gold' : kind === 'steal' ? 'blue' : 'silver', tapTx = ['Tap to crack it open', 'Again!', 'One more!'];
+  let taps = 0; const hue = kind === 'coins' ? 'gold' : kind === 'steal' ? 'blue' : kind === 'chal' ? 'red' : 'silver', tapTx = ['Tap to crack it open', 'Again!', 'One more!'];
   el.querySelector('.vf-flip').onclick = () => { if (el.classList.contains('open')) return; taps++; const fl = el.querySelector('.vf-flip'), r0 = vfRel(fl);
     fl.classList.remove('shud'); void fl.offsetWidth; fl.classList.add('shud');
     if (taps < 3) { el.classList.add('t' + taps); if (taps === 2) el.classList.add('hue-' + hue); el.querySelector('.vf-tap').textContent = tapTx[taps];
@@ -85,6 +88,7 @@ function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorA
         setTimeout(() => { S.gems += amt; VF_G = S.gems; save(); try { gemExplosion(amt, { mid: 1, from: fr }); } catch (e) { paintGems(); } }, 650);
         done(mega ? 2400 : big ? 2000 : 1700); }
       else if (kind === 'shield') { S.shields = Math.min(VF_MAXSH, (S.shields || 0) + 1); save(); vfShPaint(); const sb = $('#vfSh'); if (sb) { sb.classList.remove('bump'); void sb.offsetWidth; sb.classList.add('bump'); } done(1600); }
+      else if (kind === 'chal') { const r = vfRel(fr); vfPop(sh, r.x + r.w / 2, r.y + r.h / 2, ['#C8432F', '#5B8DEF', '#F3D27A', '#fff'], 36); setTimeout(() => { el.remove(); VF_BUSY = 0; try { h2hSheet(); } catch (e) {} }, 1600); }
       else { const r = vfRel(fr); vfPop(sh, r.x + r.w / 2, r.y + r.h / 2, ['#3CCB8A', '#F3D27A', '#fff'], 36); setTimeout(() => { el.remove(); VF_BUSY = 0; raidStart(); }, 1600); } }, 700); }; }
 // little burst of sparks
 function vfPop(host, x, y, cols, n = 16) { const L = document.createElement('div'); L.className = 'vf-layer'; host.appendChild(L);
@@ -110,10 +114,10 @@ function raidFight(el, me, them, rv) { const pWin = Math.max(.35, Math.min(.75, 
   el.classList.remove('shake'); rdStage(el).innerHTML = `<div class="rd-ban sm">STEAL</div><p class="rd-who" id="rdSay">Best of 3 votes · <b>voters are deciding…</b></p>
     <div class="rd-vs"><figure><span class="rd-ph"><img src="${them.src}" alt=""><i class="rd-sc">${them.sc}</i></span><figcaption>${esc(them.nm)}<small>${rv.n}</small></figcaption></figure><span class="rd-x">VS</span>
       <figure class="me"><span class="rd-ph"><img src="${me.src}" alt=""><i class="rd-sc">${me.s.total}</i></span><figcaption>${esc(alName(me))}<small>You</small></figcaption></figure></div>
-    <div class="rd-dots">${[0, 1, 2].map(i => `<i data-dt="${i}"><b>?</b></i>`).join('')}</div><p class="rd-tally"><b id="rdM">0</b><span>–</span><b id="rdT">0</b></p>`;
+    <div class="rd-dots">${[0, 1, 2].map(i => `<i data-dt="${i}"><b>${i + 1}</b></i>`).join('')}</div><p class="rd-tally"><b id="rdT">0</b><span>–</span><b id="rdM">0</b></p><p class="rd-key"><span class="t">${rv.n}</span><span class="m">You</span></p>`;
   let i = 0, m = 0, t = 0; const step = () => { if (!el.isConnected) return; const v = seq[i], d = el.querySelector(`[data-dt="${i}"]`);
-    if (v) m++; else t++; d.className = v ? 'w' : 'l'; d.innerHTML = `<b>${v ? '✓' : '✗'}</b>`; $('#rdM').textContent = m; $('#rdT').textContent = t; i++;
-    const r = vfRel(d); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, v ? ['#3CCB8A', '#F3D27A', '#fff'] : ['#FF6B6B', '#fff'], 14);
+    if (v) m++; else t++; d.className = v ? 'me' : 'them'; d.innerHTML = `<img src="${v ? me.src : them.src}" alt=""><small>${v ? 'You' : rv.n}</small>`; $('#rdM').textContent = m; $('#rdT').textContent = t; i++;
+    const r = vfRel(d); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, v ? ['#5B8DEF', '#fff', '#F3D27A'] : ['#E0A82E', '#fff'], 14);
     el.querySelector(v ? '.rd-vs .me' : '.rd-vs figure').classList.remove('hit'); void el.offsetWidth; el.querySelector(v ? '.rd-vs .me' : '.rd-vs figure').classList.add('hit');
     if (i >= seq.length) { setTimeout(() => raidDone(el, me, them, rv, won, m, t), 900); return; }
     if (m === 1 && t === 1) { $('#rdSay').innerHTML = '<b class="rd-dec">⚡ Deciding vote! ⚡</b>'; el.classList.add('tense'); setTimeout(step, 1700); } else setTimeout(step, 1100); };
@@ -143,7 +147,7 @@ setInterval(() => { try { const n = S.eyeN || 0; if (n <= VF_N) { VF_G = S.gems;
   if (ok) vfBurst();
   let kind = null;
   if (n >= S.vfRaidAt) { S.vfRaidAt = n + 10 + Math.floor(Math.random() * 6); if (RD_POOL().length >= 3) kind = 'steal'; }
-  else if (ok) { S.vfR = (S.vfR || 0) + 1; const first = !S.vfFirst && S.vfR >= 4, roll = Math.random(); kind = first ? 'coins' : roll < .08 ? 'coins' : roll < .12 && (S.shields || 0) < VF_MAXSH ? 'shield' : null; if (first) S.vfFirst = 1; }
+  else if (ok) { S.vfR = (S.vfR || 0) + 1; const first = !S.vfFirst && S.vfR >= 4, roll = Math.random(); kind = first ? 'coins' : roll < .08 ? 'coins' : roll < .12 && (S.shields || 0) < VF_MAXSH ? 'shield' : roll < .16 && fighters().length ? 'chal' : null; if (first) S.vfFirst = 1; }
   save(); if (kind) setTimeout(() => { if (!vfOverlayOpen() && $('#panes').dataset.at === 'judge') vfTile(kind); }, 1000);
 } catch (e) {} }, 200);
 // a shield blocks an overnight steal
@@ -209,6 +213,15 @@ html body #vfTile .vf-face.front{opacity:0}
 @keyframes vfStep{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}@keyframes vfStepP{from{opacity:0}to{opacity:1}}
 #vfTile.wow.a50 .vf-face.front .vf-ic,#vfTile.wow.a100 .vf-face.front .vf-ic{opacity:1}
 /* joker card art */
+html body #vfTile .vf-face.front.chal{background:#0C1529!important;box-shadow:inset 0 0 0 4px #C8432F,0 0 50px 6px rgba(200,67,47,.7)!important}
+html body #vfTile.hue-red .vf-face.back{box-shadow:inset 0 0 0 4px #C8432F,0 0 34px 8px rgba(255,107,107,.9)!important}#vfTile.hue-red .vf-glow{background:radial-gradient(circle at 50% 50%,rgba(255,107,107,.85),transparent 70%)}
+/* steal votes: same look as voting (who got each vote), not ticks */
+html body #raid .rd-dots i{position:relative;overflow:visible}html body #raid .rd-dots i.me,html body #raid .rd-dots i.them{background:none;animation:rdDot .45s cubic-bezier(.2,1.6,.4,1)}
+#raid .rd-dots i img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+#raid .rd-dots i.me img{box-shadow:0 0 0 4px #5B8DEF,0 0 20px rgba(91,141,239,.9)}#raid .rd-dots i.them img{box-shadow:0 0 0 4px #E0A82E,0 0 20px rgba(243,210,122,.9)}
+#raid .rd-dots i small{position:absolute;left:50%;bottom:-20px;transform:translateX(-50%);font:800 .7rem "Nunito Sans";white-space:nowrap}#raid .rd-dots i.me small{color:#9FBDF5}#raid .rd-dots i.them small{color:#F3D27A}
+#raid .rd-tally{margin-top:22px}#raid .rd-tally b:first-child{color:#F3D27A}#raid .rd-tally b:last-child{color:#9FBDF5}
+.rd-key{display:flex;gap:70px;margin:0;font:800 .78rem "Nunito Sans"}.rd-key .t{color:#F3D27A}.rd-key .m{color:#9FBDF5}
 .vf-probe{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;visibility:hidden}
 @keyframes vfJk{0%{transform:scale(1.6);opacity:0}60%{transform:scale(.97);opacity:1}100%{transform:none;opacity:1}}
 html body #vfTile .vf-face.front.coins{background:radial-gradient(circle at 50% 45%,#2B4372,#0C1529)!important;box-shadow:inset 0 0 0 4px #E0A82E,0 0 40px rgba(243,210,122,.8)!important}

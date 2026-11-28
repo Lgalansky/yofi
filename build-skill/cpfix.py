@@ -8,6 +8,7 @@
 #  - Championship tip text: "Everyone gets the same 15 pairs · top 20% share the prize".
 #  - End of a Championship run: a celebration pop first ("You're in the money!" / "Great eye!" /
 #    "Run complete", big "13/15", your place so far and when results land), then the standings.
+#  - Lost results: the "You lost $5" box is soft red with a red amount, not beige.
 #  - Vote screen: in the "So close! / Missed it" box the crowd's % is bold ("55% picked the other one").
 # usage: python3 build-skill/cpfix.py in.html out.html
 import sys
@@ -46,6 +47,10 @@ assert s.count(anchor) == 1
 s = s.replace(anchor, JS + anchor)
 CSS = '''
 /* crowd picks: clear right / wrong */
+/* lost results: the box is clearly a loss */
+html body #sheetBody .pj.gs.gr.lost .gr-box{background:#FBECE8!important;box-shadow:inset 0 0 0 2px #E7B8AE!important}
+html body #sheetBody .pj.gs.gr.lost .gr-box .gs-pl{color:#A3372A!important}html body #sheetBody .pj.gs.gr.lost .gr-box b{color:#A3372A!important}
+html body #sheetBody .pj.gs.gr.lost .gr-box span{background:#fff!important;color:#4E433C!important}
 html body #judge .tot-miss small b.tot-pct{display:inline;font:900 1.15em "Nunito Sans";color:#1F3157}
 .cpr-p button{position:relative}
 .cpr-res{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);z-index:3;padding:10px 18px;border-radius:16px;font:900 1.35rem "Nunito Sans";white-space:nowrap;color:#fff;box-shadow:0 10px 24px -8px rgba(0,0,0,.6);animation:cprStamp .45s cubic-bezier(.2,1.7,.4,1) both;pointer-events:none}
