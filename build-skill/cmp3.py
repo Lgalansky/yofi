@@ -19,12 +19,14 @@ c2Photo = function () { const L = lgS(), best = fighters()[0], cat = best ? (bes
   const rv = best ? c2NotMine(battleRival(cat).src, cat) : null, win = `$${(2 * (1 - KING_FEE)).toFixed(2)}`;
   const inc = S.fr && (S.fr.ch || []).find(x => x.st === 'yours');
   const h2h = best ? `<div class="c4-card"><button class="c4-pair" data-c2r="h2h"><img src="${rv}" alt=""><i>VS</i><img src="${best.src}" alt=""></button><div class="c4-ft"><span>Entry <b>$1</b> · Win <b class="g">${win}</b></span><button class="c4-go" data-c2r="h2h">View matchup</button></div></div>`
-    : `<button class="c3-need" data-c2r="need">✨ Get a photo to ${CFG.QUALIFY} to play 1 v 1 <b>›</b></button>`;
+    : (() => { const mine = S.photos.filter(p => p.s && !p.heldBy).sort((a, b) => b.s.total - a.s.total)[0], rc = mine ? (mine.cat || 'any') : 'pets', rs = c2NotMine(battleRival(rc).src, rc);
+      return `<div class="c4-card c4-need"><button class="c4-pair" data-c2r="need"><img src="${rs}" alt=""><i>VS</i>${mine ? `<span class="c4-slot"><img src="${mine.src}" alt=""><b>${mine.s.total} → ${CFG.QUALIFY}</b></span>` : `<span class="c4-slot c4-add"><b>＋</b><small>Your photo</small></span>`}</button>
+        <div class="c4-ft"><span>${mine ? `Get ${esc(alName(mine))} to <b>${CFG.QUALIFY}</b> to play` : `Add a photo to play 1 v 1`}<small>Entry $1 · Win <b class="g">${win}</b></small></span><button class="c4-go ${mine ? 'gold' : 'nav'}" data-c2r="need">${mine ? 'Improve' : 'Add photo'}</button></div></div>`; })();
   const incRow = inc ? `<button class="c4-row" data-c2r="inc"><img class="c4-th" src="${inc.theirSrc}" alt=""><span class="c4-tx"><b>@${esc(inc.f)} challenged you</b><small>${stakeTxt(inc.stake)} each · winner takes ${prizeTxt(inc.stake)}</small></span><span class="c4-go">View</span></button>` : '';
   const fr = best ? `<div class="c4-row"><span class="c4-wa">${WA_ICON}</span><span class="c4-tx"><b>Challenge a friend</b><small>Entry $1 · Win <b class="g">${win}</b></small></span><button class="c4-go" data-c2r="friend">Invite</button></div>` : '';
   const held = S.photos.find(p => p.heldBy), rc = typeof rivalCards === 'function' ? rivalCards()[0] : null;
   const cards = (held || rc) ? `<h3 class="c2-h">🃏 Card challenges</h3><div class="c4-panel">${held ? `<div class="c4-crow"><img class="c4-card1" src="${held.src}" alt=""><span class="c4-tx"><b>Win ${esc(alName(held))} back</b><small>${esc(rvName(held.heldBy))} won ${(S.awayNews && S.awayNews.st && S.awayNews.st.score) || '5–4'}</small></span><button class="c4-go nav" data-c2r="steal">Rematch</button></div>` : ''}
-    ${rc ? `<button class="c4-crow" data-c2r="stealnew"><span class="c4-fan"><img src="${rc.src}" alt=""><img src="${(rivalCards()[1] || rc).src}" alt=""></span><span class="c4-tx"><b>Steal a card</b><small>Free to try · first to 5 votes takes it</small></span><span class="c4-arr">›</span></button>` : ''}</div>` : '';
+    ${rc ? `<button class="c4-crow" data-c2r="stealnew"><span class="c4-fan"><img src="${rc.src}" alt=""><img src="${(rivalCards()[1] || rc).src}" alt=""></span><span class="c4-tx"><b>Steal a card</b><small>Free try · first to 5 votes</small></span><span class="c4-arr">›</span></button>` : ''}</div>` : '';
   const T = tSlots(), spr = T.find(x => x.gtd < 100);
   const tour = (id, ic, nm, det, win, entry) => `<button class="c4-t" data-c2r="${id}"><span class="c4-ti">${ic}</span><span class="c4-tt"><b>${nm}</b><small>${det}</small><em>Win ${win}</em></span><span class="c4-te">Entry ${entry}</span></button>`;
   return `<h3 class="c2-h">💰 Daily jackpots <small>⏱ Ends in ${dayLeft()}</small></h3><div class="c3-jps">${jp}</div>
@@ -34,7 +36,8 @@ c2Photo = function () { const L = lgS(), best = fighters()[0], cat = best ? (bes
     <button class="c3-club" data-c2r="clubs">👥 <b>Clubs</b> · weekly prizes with friends <span>›</span></button>`; };
 const _c2RenderC4 = c2Render;
 c2Render = function () { _c2RenderC4.apply(this, arguments); const b = document.querySelector('#gallery [data-c2r="stealnew"]'); if (b) b.onclick = () => stealSheet({});
-  document.querySelectorAll('#gallery [data-c2r="h2h"]').forEach(x => x.onclick = () => h2hSheet()); };
+  document.querySelectorAll('#gallery [data-c2r="h2h"]').forEach(x => x.onclick = () => h2hSheet());
+  document.querySelectorAll('#gallery [data-c2r="need"]').forEach(x => x.onclick = () => { const m = S.photos.filter(p => p.s && !p.heldBy).sort((a, b) => b.s.total - a.s.total)[0]; if (m) { S.cur = m.id; TU_GAL = false; AL_OPEN = null; } else TU_GAL = true; save(); go('studio'); renderStudio(); }); };
 '''
 anchor = "  shownGems = S.gems;\n})();\n})();"
 assert s.count(anchor) == 1
@@ -47,6 +50,13 @@ html body #gallery .c3-pot em{font-size:.86rem;padding:5px 14px}
 .c4-pair i{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;background:#2D4E86;color:#fff;font:900 1rem/48px Fraunces,serif;font-style:normal;text-align:center;box-shadow:0 0 0 4px #FFFDF9}
 .c4-ft{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px}.c4-ft span{font:800 .92rem "Nunito Sans";color:#2D2521}
 b.g{color:#1E6B3E}
+html body #gallery .c2-bar{position:static!important}
+.c4-pair i{z-index:2}
+.c4-slot{position:relative;display:block;height:150px;overflow:hidden}.c4-slot img{filter:grayscale(.35) brightness(.8)}
+.c4-slot b{position:absolute;right:10px;bottom:10px;padding:4px 10px;border-radius:99px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 .85rem "Nunito Sans"}
+.c4-add{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F3EBDD;box-shadow:inset 0 0 0 2px #D9CAB0}.c4-add b{position:static;background:none;color:#2D4E86;font:900 2rem/1 "Nunito Sans";padding:0}.c4-add small{font:800 .8rem "Nunito Sans";color:#4E433C}
+.c4-ft span small{display:block;font:700 .8rem "Nunito Sans";color:#4E433C;margin-top:2px}
+html body #gallery .c4-go.gold{background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important;box-shadow:0 4px 10px -6px rgba(160,110,10,.8)}
 html body #gallery .c4-go{flex:none;border:0;cursor:pointer;padding:9px 16px;border-radius:12px;background:linear-gradient(180deg,#2E9A5C,#21784A)!important;color:#fff!important;font:900 .92rem "Nunito Sans";box-shadow:0 4px 10px -6px rgba(33,120,74,.8)}
 html body #gallery .c4-go.nav{background:#2D4E86!important;box-shadow:0 4px 10px -6px rgba(45,78,134,.8)}
 .c4-row{display:flex;align-items:center;gap:12px;width:calc(100% - 28px);margin:0 14px 10px;padding:10px 12px;border:0;border-radius:16px;background:#FFFDF9;box-shadow:inset 0 0 0 1.5px #E2D5BE;text-align:left;font-family:inherit;cursor:pointer;box-sizing:border-box}
