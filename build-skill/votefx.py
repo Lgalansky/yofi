@@ -133,8 +133,10 @@ function raidDone(el, me, them, rv, won, m, t) { el.classList.remove('tense');
     <div class="rd-prize ${won ? 'w' : ''}"><img src="${them.src}" alt="">${won ? (them.back ? '<i class="rd-new">✨ BACK IN YOUR GALLERY ✨</i>' : '<i class="rd-new">✨ NEW CARD ✨</i>') : ''}</div>
     <h3 class="rd-h">${won ? (them.back ? `${esc(them.nm)} is yours again!` : `${esc(them.nm)} is yours!`) : `${rv.n} kept ${esc(them.nm)}`}</h3>
     <p class="rd-who">${won ? `It earns you <b>${cardRate(them.sc)} 🟡 a vote</b> from now on · ${m} vs ${t}` : `${t} beat your ${m} · nothing lost · another steal is coming`}</p>
-    <button class="rd-go">Back to voting</button>`;
+    ${won ? '<button class="rd-go">Back to voting</button>' : `<button class="rd-go rd-tu">✨ Touch up ${esc(alName(me))} · beat ${t}</button><button class="rd-back">Back to voting</button>`}`;
   if (won) setTimeout(() => { const pr = el.querySelector('.rd-prize'); if (pr) { const r = vfRel(pr); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, ['#F3D27A', '#fff', '#E0A82E'], 30); } }, 350);
+  const rb = el.querySelector('.rd-back'); if (rb) rb.onclick = () => { el.classList.remove('on'); setTimeout(() => el.remove(), 300); try { renderJudge(); } catch (e) {} };
+  if (!won) { el.querySelector('.rd-go').onclick = () => { el.classList.remove('on'); setTimeout(() => el.remove(), 300); S.cur = me.id; TU_GAL = false; WALL = false; AL_OPEN = null; save(); go('studio'); try { renderStudio(); } catch (e) {} }; return; }
   el.querySelector('.rd-go').onclick = () => { el.classList.remove('on'); setTimeout(() => el.remove(), 300); try { renderJudge(); } catch (e) {} if (won) setTimeout(() => rdLand(them), 450); }; }
 // the stolen card flies into the earnings card at the top of Vote, which celebrates it for a few seconds
 function rdLand(c) { const sh = $('#shell'), g = $('#vgGoal'); if (!sh || !g) return; const rate = cardRate(c.sc), gr = vfRel(g), tg = g.querySelector('img') ? vfRel(g.querySelector('img')) : { x: gr.x + 10, y: gr.y + 10, w: 60, h: 70 };
@@ -313,6 +315,8 @@ html body #raid .rd-big.show.hi{background:#C8432F!important}html body #raid .rd
 .rd-h{margin:30px 0 0;font:900 1.6rem Fraunces,serif;color:#fff}
 #raid.lose .rd-ban{color:#E6EDF8;-webkit-text-stroke:1.5px #4E5D7A;text-shadow:0 5px 0 #4E5D7A,0 14px 30px rgba(0,0,0,.45);font-size:2.6rem}
 html body #raid .rd-go{display:block;margin-top:22px;min-width:240px;min-height:54px;padding:0 24px!important;border:0!important;border-radius:999px!important;background:#FFFDF9!important;color:#1F3157!important;font:900 1.05rem "Nunito Sans"!important;box-shadow:0 8px 18px -8px rgba(0,0,0,.6)!important;animation:vfIn .4s cubic-bezier(.2,1.4,.4,1) .6s both}
+html body #raid .rd-go.rd-tu{background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important}
+html body #raid .rd-back{margin-top:12px;border:0;background:none;color:#E6EDF8;font:800 .95rem "Nunito Sans";text-decoration:underline;cursor:pointer;animation:vfIn .4s cubic-bezier(.2,1.4,.4,1) .7s both}
 .rd-conf{position:absolute;inset:0;pointer-events:none;overflow:hidden}.rd-conf i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:rdFall linear forwards}@keyframes rdFall{to{transform:translateY(110vh) rotate(720deg)}}
 .rd-fly{position:absolute;z-index:85;object-fit:cover;border-radius:14px;box-shadow:0 0 0 4px #E0A82E,0 0 40px rgba(243,210,122,.9);pointer-events:none}
 html body #vgGoal.vg-got{position:relative;overflow:hidden;box-shadow:0 0 0 3px #E0A82E,0 0 28px rgba(243,210,122,.8)!important;animation:vgBump .5s cubic-bezier(.2,1.6,.4,1)}@keyframes vgBump{40%{transform:scale(1.05)}}

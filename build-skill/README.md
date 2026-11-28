@@ -911,3 +911,5 @@ The Live games jackpot tile follows the category being voted on: voting "Best Na
 
 `gstyle.py` restyles the Gallery to the user's binder mock-up: navy leather binder with gold stitching and round gold rings, cream page with "Pets Collection" + "1/3 filled" and a gold rule, gold-framed photo cards with a round score medallion and a name / tier / per-vote plaque inside the card, glossy empty sleeves, and the next collection as a navy leather card (photo, gold lock, "Travel Collection", "Opens at Gold").
 Gallery binder rings are angled gold loops from the leather spine into a punched hole in the page margin.
+
+Losing a steal shows a gold "✨ Touch up Milo · beat 77" button (opens Improve on your best photo) and a "Back to voting" link. Live games labels sit above the tile image instead of over it, and the "⚔️ 1 v 1 challenge" (head-to-head) tile is back in the row.

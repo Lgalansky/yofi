@@ -27,8 +27,7 @@ rep("  if (spr) T({ icon: KO_PYR2,", "  if (0 && spr) T({ icon: KO_PYR2,")
 # Live games: no steal tiles under the vote (steals come from Steal tiles, the Payday receipt and Compete)
 rep("  if (held) T({ hot: 1, img: held.src, chip: '🃏 Stolen',", "  if (0 && held) T({ hot: 1, img: held.src, chip: '🃏 Stolen',")
 rep("  if (rc && !held) T({ img: rc.src, chip: '🃏 Steal',", "  if (0 && rc && !held) T({ img: rc.src, chip: '🃏 Steal',")
-# head-to-head is now a special tile reveal, so no 1 v 1 tile in the row
-rep("  if (best) T({ pair: [c2NotMine(battleRival(cat).src, cat), best.src], chip: '⚔️ 1 v 1',", "  if (0 && best) T({ pair: [c2NotMine(battleRival(cat).src, cat), best.src], chip: '⚔️ 1 v 1',")
+rep("chip: '⚔️ 1 v 1'", "chip: '⚔️ 1 v 1 challenge'")
 rep("chip: '🤝 Friend'", "chip: '🤝 Friend challenge'")
 # jackpot tile follows the category being voted on
 rep("  const ks = CATS8.filter(k => k !== 'any').sort((a, b) => ((L.you[b] || 0) - (L.you[a] || 0)) || (!!lgMine(b) - !!lgMine(a)) || (L.jp[b] - L.jp[a]));",
@@ -60,6 +59,11 @@ assert s.count(anchor) == 1
 s = s.replace(anchor, JS + anchor)
 CSS = '''
 /* crowd picks: clear right / wrong */
+/* Live games: label above the image */
+html body #judge .lgx{position:relative!important;padding-top:34px!important}html body #judge .lgx-ph{position:static!important}
+html body #judge .lgx-chip{top:8px!important;left:7px!important;right:7px!important;padding:2px 0!important;background:none!important;color:#1F3157!important;box-shadow:none!important;font:900 .74rem "Nunito Sans"!important;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #judge .lgx.hot .lgx-chip{background:none!important;color:#8A5A0A!important}
+html body #judge .lgx-ph .lgx-vs{display:none}
 html body #judge .lgx-wa{background:linear-gradient(160deg,#34C46C,#128C4A)!important;color:#fff!important}html body #judge .lgx-wa svg{filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
 /* lost results: the box is clearly a loss */
 html body #sheetBody .pj.gs.gr.lost .gr-box{background:#FBECE8!important;box-shadow:inset 0 0 0 2px #E7B8AE!important}
