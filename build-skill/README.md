@@ -884,3 +884,4 @@ Joker reveals use the user's card art (`build-skill/assets/joker20.jpg`, `joker5
 Steal reveals use the user's Steal card art (`build-skill/assets/steal.jpg`) with a green glow and sparks, held for a moment before the raid opens.
 
 The raid is now called Steal everywhere a player sees it ("STEAL!" banner, "another steal is coming").
+Special tiles fit their vote photo exactly: the tile re-finds the current photo every frame (photos can be rebuilt or pushed down by the jar card), positions are measured from the real containing block, nothing tilts (the face-down tile pulses its glow instead of wiggling), and the Joker/Steal art fills the whole photo.

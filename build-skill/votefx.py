@@ -35,7 +35,8 @@ const VF_MAXSH = 3;
 let VF_N = S.eyeN || 0, VF_OK = S.eyeOk || 0, VF_G = S.gems || 0, VF_BUSY = 0;
 if (S.vfRaidAt == null || S.vfRaidAt < (S.eyeN || 0)) S.vfRaidAt = (S.eyeN || 0) + 10 + Math.floor(Math.random() * 6);
 const vfOverlayOpen = () => VF_BUSY || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on') || !!$('#raid');
-const vfRel = el => { const sr = $('#shell').getBoundingClientRect(), r = el.getBoundingClientRect(); return { x: r.left - sr.left, y: r.top - sr.top, w: r.width, h: r.height }; };
+const vfOrigin = () => { const sh = $('#shell'); let pr = sh.querySelector(':scope > .vf-probe'); if (!pr) { pr = document.createElement('i'); pr.className = 'vf-probe'; sh.appendChild(pr); } return pr.getBoundingClientRect(); };
+const vfRel = el => { const o = vfOrigin(), r = el.getBoundingClientRect(); return { x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height }; };
 // 1. coins burst towards you
 function vfBurst() { const card = $('#jcard'), sh = $('#shell'); if (!card || !sh || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const r = vfRel(card), x = r.x + r.w / 2, y = r.y + r.h / 2;
@@ -65,7 +66,7 @@ function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorA
       <span class="vf-face front ${kind} ${kind === 'coins' ? 'a' + amt : ''}"><i class="vf-rays"></i>${kind === 'coins' ? `<img class="vf-jk" src="${JK_IMG[amt]}" alt="Joker ${amt} coins">` : kind === 'steal' ? `<img class="vf-jk" src="${ST_IMG}" alt="Steal: take another player’s treasure">` : `<span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p>`}</span></button>`;
   sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
   const wt = el.querySelector('.vf-wait'), fp = el.querySelector('.vf-flip'), put = (n, r) => { n.style.left = r.x + 'px'; n.style.top = r.y + 'px'; n.style.width = r.w + 'px'; n.style.height = r.h + 'px'; };
-  const follow = () => { if (!el.isConnected) return; if (ph[k].isConnected) { put(fp, vfRel(ph[k])); put(wt, vfRel(ph[1 - k])); } requestAnimationFrame(follow); }; follow();
+  const follow = () => { if (!el.isConnected) return; const cur = document.querySelectorAll('#jcard button.tot-c'); if (cur.length >= 2) { put(fp, vfRel(cur[k])); put(wt, vfRel(cur[1 - k])); } requestAnimationFrame(follow); }; follow(); // re-find the photos every frame: they can be rebuilt or pushed down
   const done = (ms = 1500) => setTimeout(() => { el.classList.remove('on'); setTimeout(() => { el.remove(); VF_BUSY = 0; }, 250); }, ms);
   let taps = 0; const hue = kind === 'coins' ? 'gold' : kind === 'steal' ? 'blue' : 'silver', tapTx = ['Tap to crack it open', 'Again!', 'One more!'];
   el.querySelector('.vf-flip').onclick = () => { if (el.classList.contains('open')) return; taps++; const fl = el.querySelector('.vf-flip'), r0 = vfRel(fl);
@@ -175,7 +176,8 @@ CSS = '''
 #vfTile .vf-wait{position:absolute;pointer-events:auto;border-radius:22px;background:rgba(20,33,61,.55);display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;box-sizing:border-box}
 #vfTile .vf-wait span{padding:6px 12px;border-radius:99px;background:rgba(255,253,249,.92);color:#1F3157;font:800 .74rem "Nunito Sans";text-align:center}
 html body #vfTile .vf-flip{position:absolute!important;pointer-events:auto;display:block!important;padding:0!important;margin:0!important;border:0!important;border-radius:22px!important;background:none!important;box-shadow:none!important;cursor:pointer;transform-style:preserve-3d!important;transition:transform .6s cubic-bezier(.3,1.3,.5,1);perspective:1000px;min-height:0!important}
-#vfTile:not(.open) .vf-flip{animation:vfIn .45s cubic-bezier(.2,1.4,.4,1),vfWig 2.4s ease-in-out .6s infinite}
+#vfTile:not(.open) .vf-flip{animation:vfFade .25s ease-out}@keyframes vfFade{from{opacity:0}}
+#vfTile:not(.open) .vf-face.back{animation:vfBackGlow 1.6s ease-in-out infinite}@keyframes vfBackGlow{50%{box-shadow:inset 0 0 0 4px #F3D27A,0 0 34px 6px rgba(243,210,122,.85)}}
 #vfTile.open .vf-flip{transform:none}
 html body #vfTile .vf-face{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px;text-align:center;border-radius:22px!important;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 html body #vfTile .vf-face.back{background:repeating-linear-gradient(45deg,#24396A 0 14px,#1C2E57 14px 28px)!important;box-shadow:inset 0 0 0 4px #E0A82E,0 0 26px rgba(243,210,122,.7)!important}
@@ -193,7 +195,7 @@ html body #vfTile .vf-face.front.shield{background:linear-gradient(180deg,#fff,#
 html body #vfTile.hue-gold .vf-face.back{box-shadow:inset 0 0 0 4px #E0A82E,0 0 34px 8px rgba(255,214,102,.95)!important}html body #vfTile.hue-blue .vf-face.back{box-shadow:inset 0 0 0 4px #5B8DEF,0 0 34px 8px rgba(91,141,239,.95)!important}html body #vfTile.hue-silver .vf-face.back{box-shadow:inset 0 0 0 4px #C9D1DC,0 0 34px 8px rgba(230,236,244,.95)!important}
 html body #vfTile .vf-face{overflow:hidden!important}
 #vfTile.t1:not(.open) .vf-flip,#vfTile.t2:not(.open) .vf-flip{animation:none}
-html body #vfTile .vf-flip.shud{animation:vfShud .38s ease-in-out!important}@keyframes vfShud{15%{transform:translateX(-6px) rotate(-2deg)}30%{transform:translateX(6px) rotate(2deg)}45%{transform:translateX(-5px) rotate(-1.5deg)}60%{transform:translateX(4px) rotate(1deg)}80%{transform:translateX(-2px)}}
+html body #vfTile .vf-flip.shud{animation:vfShud .38s ease-in-out!important}@keyframes vfShud{15%{transform:translateX(-5px)}30%{transform:translateX(5px)}45%{transform:translateX(-4px)}60%{transform:translateX(3px)}80%{transform:translateX(-1px)}}
 #vfTile.open .vf-flip.shud{animation:none!important}
 #vfTile.t2 .vf-q{animation:rdPulse .45s ease-in-out infinite}
 /* open in place: the back bursts away, then card, title and amount appear one after another */
@@ -207,14 +209,16 @@ html body #vfTile .vf-face.front{opacity:0}
 @keyframes vfStep{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}@keyframes vfStepP{from{opacity:0}to{opacity:1}}
 #vfTile.wow.a50 .vf-face.front .vf-ic,#vfTile.wow.a100 .vf-face.front .vf-ic{opacity:1}
 /* joker card art */
+.vf-probe{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;visibility:hidden}
+@keyframes vfJk{0%{transform:scale(1.6);opacity:0}60%{transform:scale(.97);opacity:1}100%{transform:none;opacity:1}}
 html body #vfTile .vf-face.front.coins{background:radial-gradient(circle at 50% 45%,#2B4372,#0C1529)!important;box-shadow:inset 0 0 0 4px #E0A82E,0 0 40px rgba(243,210,122,.8)!important}
 html body #vfTile .vf-face.front.coins.a20{box-shadow:inset 0 0 0 4px #4FB3BF,0 0 40px rgba(79,179,191,.85)!important}
 html body #vfTile .vf-face.front.coins.a50{box-shadow:inset 0 0 0 4px #B26BE0,0 0 46px rgba(178,107,224,.9)!important}
 html body #vfTile .vf-face.front.coins.a100{background:radial-gradient(circle at 50% 45%,#5A1A1A,#140808)!important;box-shadow:inset 0 0 0 4px #F3C24A,0 0 60px 10px rgba(243,194,74,.95)!important}
-.vf-jk{position:relative;z-index:1;height:92%;max-width:92%;object-fit:contain;border-radius:12px;opacity:0;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
+.vf-jk{position:absolute;inset:0;z-index:1;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 55%;border-radius:22px;opacity:0}
 #vfTile.open .vf-jk{animation:vfJk .7s cubic-bezier(.2,1.6,.4,1) .15s both}@keyframes vfJk{0%{transform:scale(2.6) rotate(-10deg);opacity:0}55%{transform:scale(.9) rotate(2deg);opacity:1}100%{transform:none;opacity:1}}
 html body #vfTile .vf-face.front.steal{background:radial-gradient(circle at 50% 45%,#1E3A5F,#07101F)!important;box-shadow:inset 0 0 0 4px #2E9A5C,0 0 50px 6px rgba(60,203,138,.75)!important}
-#vfTile.wow .vf-jk{animation:vfJk .7s cubic-bezier(.2,1.6,.4,1) .15s both,vfBob 1.4s ease-in-out .9s infinite}
+#vfTile.wow .vf-jk{animation:vfJk .7s cubic-bezier(.2,1.6,.4,1) .15s both}
 .vf-amt{display:inline-block}
 .vf-rays{position:absolute;left:50%;top:50%;width:300%;height:300%;margin:-150% 0 0 -150%;background:repeating-conic-gradient(rgba(255,255,255,.55) 0 8deg,transparent 8deg 20deg);opacity:0;pointer-events:none}
 #vfTile.wow .vf-rays{opacity:1;animation:vfRaysIn .5s ease-out,vfRayP 1.4s ease-in-out .5s infinite}@keyframes vfRayP{50%{opacity:.5}}@keyframes vfRaysIn{from{transform:scale(.2)}}
