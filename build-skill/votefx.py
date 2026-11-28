@@ -1,16 +1,18 @@
 # Skill preview: make voting exciting (our own look, not a copy of any game).
 #  1. Right vote: coins burst out of the photos towards you (zoom + fade) with a gold shock ring,
 #     on top of the usual "+5" and fly-to-balance.
-#  2. Special photo: now and then a right vote drops a face-down special photo onto the vote. Tap to
-#     reveal: a 🃏 Joker (+20 / +50 / +100 coins) or a 🛡 Shield (blocks one steal while you're away,
-#     hold up to 3). Then one "Collect" button.
-#     New players get their first reveal within their first few right votes.
-#  3. Shields: a 🛡 pill in the header shows how many you hold. An overnight steal that hits a
-#     shield is blocked; the "While you were away" pop says so.
-#  4. Raid: every 10–15 votes the special photo flips to a 🦝 Steal! card; "Start the raid" switches
-#     the whole screen to a raid. A random rival's wall of 3
-#     photos; tap one to try to steal it; your best photo vs theirs, best of 3 live votes;
-#     win and it joins your cards (it earns coins for you); lose and nothing is lost.
+#  2. Special tile: now and then ONE of the two vote photos is a face-down special tile (no pop-up).
+#     Tap it and it flips in place:
+#       🃏 Joker  +20 / +50 / +100 coins (60/30/10%), coins fly to your balance
+#       🛡 Shield  blocks one steal while you're away (hold up to 3)
+#       🦝 Steal  every 10–15 votes; the screen switches straight to a raid
+#     The other photo waits ("Reveal the special photo first") so the tile can't be missed.
+#  3. Shields: a 🛡 pill in the header. An overnight steal that hits a shield is blocked and the
+#     "While you were away" pop says so.
+#  4. Raid: full-screen heist. Flash + slam "RAID!", rotating gold rays and sparkles behind a rival's
+#     wall of 3 spot-lit photos. Tap one; your best photo vs it, best of 3 live votes with bursts on
+#     every vote and a "Deciding vote!" moment at 1–1. Win: gold flash, confetti and coin rain,
+#     the photo zooms in as a NEW CARD that earns for you. Lose: "So close!", nothing lost.
 #     One button back to voting. Raids are free and don't use your 3 daily steal tries.
 # usage: python3 build-skill/votefx.py in.html out.html
 import sys
@@ -18,18 +20,19 @@ src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
 s = open(src, encoding='utf-8').read()
 
 JS = r'''
-// ---- exciting voting: coin burst, lucky reveals, shields, raids ----
+// ---- exciting voting: coin burst, special tiles, shields, raids ----
 const VF_MAXSH = 3;
 let VF_N = S.eyeN || 0, VF_OK = S.eyeOk || 0, VF_G = S.gems || 0, VF_BUSY = 0;
 if (S.vfRaidAt == null || S.vfRaidAt < (S.eyeN || 0)) S.vfRaidAt = (S.eyeN || 0) + 10 + Math.floor(Math.random() * 6);
 const vfOverlayOpen = () => VF_BUSY || $('#coach').classList.contains('on') || $('#sheet').classList.contains('on') || $('#flow').classList.contains('on') || !!$('#raid');
+const vfRel = el => { const sr = $('#shell').getBoundingClientRect(), r = el.getBoundingClientRect(); return { x: r.left - sr.left, y: r.top - sr.top, w: r.width, h: r.height }; };
 // 1. coins burst towards you
-function vfBurst(n) { const card = $('#jcard'), sh = $('#shell'); if (!card || !sh || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const sr = sh.getBoundingClientRect(), r = card.getBoundingClientRect(), x = r.left - sr.left + r.width / 2, y = r.top - sr.top + r.height / 2;
+function vfBurst() { const card = $('#jcard'), sh = $('#shell'); if (!card || !sh || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const r = vfRel(card), x = r.x + r.w / 2, y = r.y + r.h / 2;
   const L = document.createElement('div'); L.className = 'vf-layer'; sh.appendChild(L);
   for (let i = 0; i < 12; i++) { const c = document.createElement('i'); c.className = 'vf-c'; c.innerHTML = gemIcon(''); c.style.left = x + 'px'; c.style.top = y + 'px'; L.appendChild(c);
     const a = i / 12 * Math.PI * 2 + Math.random() * .4, d = 90 + Math.random() * 110, sc = 1.6 + Math.random() * 1.4;
-    c.animate([{ transform: 'translate(-50%,-50%) scale(.2) rotate(0deg)', opacity: 0 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d * .5}px),calc(-50% + ${Math.sin(a) * d * .5}px)) scale(${sc * .6}) rotate(${a * 90}deg)`, opacity: 1, offset: .35 },
+    c.animate([{ transform: 'translate(-50%,-50%) scale(.2)', opacity: 0 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d * .5}px),calc(-50% + ${Math.sin(a) * d * .5}px)) scale(${sc * .6}) rotate(${a * 90}deg)`, opacity: 1, offset: .35 },
       { transform: `translate(calc(-50% + ${Math.cos(a) * d}px),calc(-50% + ${Math.sin(a) * d}px)) scale(${sc}) rotate(${a * 180}deg)`, opacity: 0 }], { duration: 750 + i * 25, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' }); }
   const ring = document.createElement('i'); ring.className = 'vf-ring'; ring.style.left = x + 'px'; ring.style.top = y + 'px'; L.appendChild(ring);
   setTimeout(() => L.remove(), 1300); }
@@ -37,57 +40,74 @@ function vfBurst(n) { const card = $('#jcard'), sh = $('#shell'); if (!card || !
 function vfShPaint() { const f = $('#sFlame'); if (!f) return; let b = $('#vfSh'); const n = S.shields || 0;
   if (!b) { b = document.createElement('button'); b.id = 'vfSh'; b.className = 'vf-sh'; b.setAttribute('aria-label', 'Shields'); f.after(b); b.onclick = () => toast(`🛡 ${S.shields || 0} of ${VF_MAXSH} shields · each one blocks a steal while you’re away`); }
   b.hidden = !n; const h = `🛡<b>${n}</b>`; if (b.innerHTML !== h) b.innerHTML = h; }
-// 2. lucky reveals
-function vfReveal(kind) { const sh = $('#shell'), card = $('#jcard'); if (!sh || !card) return; VF_BUSY = 1;
-  const amt = kind === 'coins' ? (r => r < .6 ? 20 : r < .9 ? 50 : 100)(Math.random()) : 0, sr = sh.getBoundingClientRect(), cr = card.getBoundingClientRect();
-  const el = document.createElement('div'); el.id = 'vfRev'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Special photo');
-  el.innerHTML = `<div class="vf-spot" style="left:${cr.left - sr.left}px;top:${cr.top - sr.top}px;width:${cr.width}px;height:${cr.height}px">
-    <button class="vf-flip" aria-label="Tap to reveal"><span class="vf-face back"><i class="vf-sp">✨ SPECIAL PHOTO ✨</i><span class="vf-q">?</span><b class="vf-tap">Tap to reveal</b></span>
-      <span class="vf-face front ${kind}"><span class="vf-ic">${kind === 'coins' ? '🃏' : kind === 'steal' ? '🦝' : '🛡'}</span><h3>${kind === 'coins' ? 'Joker!' : kind === 'steal' ? 'Steal!' : 'Shield!'}</h3>
-        <p>${kind === 'coins' ? `<b>+${amt}</b> ${gemIcon('vf-gi')}` : kind === 'steal' ? 'Raid a rival and take a photo' : 'Blocks one steal while you’re away'}</p></span></button></div>
-    <button class="vf-go ${kind === 'steal' ? 'nav' : ''}" disabled>${kind === 'coins' ? `Collect ${amt}` : kind === 'steal' ? 'Start the raid' : 'Keep my shield'}</button>`;
+// 2. the special tile: one of the two vote photos
+function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorAll('#jcard button.tot-c')]; if (!sh || ph.length < 2) return; VF_BUSY = 1;
+  const k = Math.random() < .5 ? 0 : 1, a = vfRel(ph[k]), b = vfRel(ph[1 - k]);
+  const amt = kind === 'coins' ? (r => r < .6 ? 20 : r < .9 ? 50 : 100)(Math.random()) : 0;
+  const face = kind === 'coins' ? { ic: '🃏', t: 'Joker!', s: `<b>+${amt}</b> ${gemIcon('vf-gi')}` } : kind === 'steal' ? { ic: '🦝', t: 'Steal!', s: 'Raid time!' } : { ic: '🛡', t: 'Shield!', s: 'Blocks a steal' };
+  const el = document.createElement('div'); el.id = 'vfTile';
+  el.innerHTML = `<div class="vf-wait" style="left:${b.x}px;top:${b.y}px;width:${b.w}px;height:${b.h}px"><span>✨ Reveal the special photo first</span></div>
+    <button class="vf-flip" style="left:${a.x}px;top:${a.y}px;width:${a.w}px;height:${a.h}px" aria-label="Special photo, tap to reveal">
+      <span class="vf-face back"><i class="vf-sp">✨ SPECIAL ✨</i><span class="vf-q">?</span><b class="vf-tap">Tap to reveal</b></span>
+      <span class="vf-face front ${kind}"><span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p></span></button>`;
   sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
-  el.querySelector('.vf-flip').onclick = () => { if (el.classList.contains('flip')) return; el.classList.add('flip'); setTimeout(() => { const g = el.querySelector('.vf-go'); g.disabled = false; g.classList.add('in'); }, 650); };
-  el.querySelector('.vf-go').onclick = () => { const fr = el.querySelector('.vf-face.front');
-    if (kind === 'coins') { S.gems += amt; save(); try { gemExplosion(amt, { mid: 1, from: fr }); } catch (e) { paintGems(); } }
-    else if (kind === 'steal') { el.classList.remove('on'); setTimeout(() => { el.remove(); VF_BUSY = 0; raidStart(); }, 250); return; }
-    else { S.shields = Math.min(VF_MAXSH, (S.shields || 0) + 1); save(); vfShPaint(); const b = $('#vfSh'); if (b) { b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); } }
-    VF_G = S.gems; el.classList.remove('on'); setTimeout(() => { el.remove(); VF_BUSY = 0; }, 300); }; }
+  const done = (ms = 1500) => setTimeout(() => { el.classList.remove('on'); setTimeout(() => { el.remove(); VF_BUSY = 0; }, 250); }, ms);
+  el.querySelector('.vf-flip').onclick = () => { if (el.classList.contains('flip')) return; el.classList.add('flip'); const fr = el.querySelector('.vf-face.front');
+    setTimeout(() => { const r = vfRel(fr); vfPop(sh, r.x + r.w / 2, r.y + r.h / 2, kind === 'steal' ? ['#F3D27A', '#fff', '#5B8DEF'] : kind === 'shield' ? ['#D7DCE3', '#fff', '#9AA6B5'] : ['#F3D27A', '#E0A82E', '#fff'], 22);
+      if (kind === 'coins') { S.gems += amt; VF_G = S.gems; save(); try { gemExplosion(amt, { mid: 1, from: fr }); } catch (e) { paintGems(); } done(1700); }
+      else if (kind === 'shield') { S.shields = Math.min(VF_MAXSH, (S.shields || 0) + 1); save(); vfShPaint(); const sb = $('#vfSh'); if (sb) { sb.classList.remove('bump'); void sb.offsetWidth; sb.classList.add('bump'); } done(1600); }
+      else { setTimeout(() => { el.remove(); VF_BUSY = 0; raidStart(); }, 1100); } }, 550); }; }
+// little burst of sparks
+function vfPop(host, x, y, cols, n = 16) { const L = document.createElement('div'); L.className = 'vf-layer'; host.appendChild(L);
+  for (let i = 0; i < n; i++) { const p = document.createElement('i'); p.className = 'vf-spk'; p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.background = cols[i % cols.length]; L.appendChild(p);
+    const a = Math.random() * Math.PI * 2, d = 50 + Math.random() * 90; p.animate([{ transform: 'translate(-50%,-50%) scale(1)', opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d}px),calc(-50% + ${Math.sin(a) * d}px)) scale(.2)`, opacity: 0 }], { duration: 600 + Math.random() * 300, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'forwards' }); }
+  setTimeout(() => L.remove(), 1000); }
 // 4. raids
 const RD_POOL = () => { const mine = new Set(S.photos.flatMap(p => [p.src, p.orig])), taken = S.stlTaken || [], out = [];
   GAL.PATH.forEach(c => SEED.filter(x => x.cat === BATTLE_POOL[c] && !mine.has(x.src) && !taken.includes(x.id)).forEach(x => out.push({ key: x.id, src: x.src, nm: x.title || 'Photo', cat: c, sc: 68 + hsh(x.id) % 22 }))); return out; };
+const rdStage = el => el.querySelector('.rd-in');
 function raidStart() { const me = S.photos.filter(p => p.s && !p.heldBy).sort((a, b) => b.s.total - a.s.total)[0], pool = RD_POOL(); if (!me || pool.length < 3) return;
   const rv = RIVALS[Math.floor(Math.random() * RIVALS.length)], wall = pool.sort(() => Math.random() - .5).slice(0, 3).map(x => ({ ...x, h: rv.h }));
   const sh = $('#shell'), el = document.createElement('div'); el.id = 'raid'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Raid');
-  el.innerHTML = `<div class="rd-in"><div class="rd-ban">🃏 RAID!</div><p class="rd-who"><span class="rd-av">${rv.n[0]}</span>Steal a photo from <b>${rv.n}</b></p>
-    <div class="rd-wall">${wall.map((w, i) => `<button class="rd-card" data-rd="${i}" style="animation-delay:${(.5 + i * .15).toFixed(2)}s"><img src="${w.src}" alt=""><i class="rd-sc">${w.sc}</i><span class="rd-tg"></span><b>${esc(w.nm)}</b><small>earns ${cardRate(w.sc)} 🟡 a vote</small></button>`).join('')}</div>
-    <p class="rd-hint">Tap a photo to steal it · best of 3 votes · nothing to lose</p></div>`;
-  sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
-  el.querySelectorAll('[data-rd]').forEach(b => b.onclick = () => raidFight(el, me, wall[+b.dataset.rd], rv)); }
+  el.innerHTML = `<div class="rd-rays"></div><div class="rd-sparks">${[...Array(22)].map((_, i) => `<i style="left:${(i * 47) % 100}%;top:${(i * 29) % 100}%;animation-delay:${(i * .23 % 2).toFixed(2)}s"></i>`).join('')}</div><i class="rd-flash"></i>
+    <div class="rd-in"><div class="rd-ban">RAID!</div><p class="rd-who"><span class="rd-av">${rv.n[0]}</span>${rv.n}’s gallery · <b>steal one photo</b></p>
+    <div class="rd-wall">${wall.map((w, i) => `<button class="rd-card" data-rd="${i}" style="--d:${(.55 + i * .15).toFixed(2)}s"><span class="rd-lamp"></span><span class="rd-fr"><img src="${w.src}" alt=""><i class="rd-sc">${w.sc}</i><span class="rd-tg"></span></span><b>${esc(w.nm)}</b><small>earns ${cardRate(w.sc)} 🟡 a vote</small></button>`).join('')}</div>
+    <p class="rd-hint">👆 Tap the photo you want · best of 3 votes · nothing to lose</p></div>`;
+  sh.appendChild(el); requestAnimationFrame(() => { el.classList.add('on'); setTimeout(() => el.classList.add('shake'), 420); });
+  el.querySelectorAll('[data-rd]').forEach(b => b.onclick = () => { if (el.dataset.pick) return; el.dataset.pick = 1; b.classList.add('picked'); el.querySelectorAll('.rd-card').forEach(c => c !== b && c.classList.add('gone'));
+    const r = vfRel(b); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, ['#F3D27A', '#fff'], 18); setTimeout(() => raidFight(el, me, wall[+b.dataset.rd], rv), 650); }); }
 function raidFight(el, me, them, rv) { const pWin = Math.max(.35, Math.min(.75, .55 + (me.s.total - them.sc) / 40)), won = Math.random() < pWin;
   const pick = l => l[Math.floor(Math.random() * l.length)], seq = won ? pick([[1, 1], [0, 1, 1], [1, 0, 1]]) : pick([[0, 0], [1, 0, 0], [0, 1, 0]]);
-  el.querySelector('.rd-in').innerHTML = `<div class="rd-ban sm">🃏 RAID</div><p class="rd-who">Best of 3 votes · <b>voters are deciding…</b></p>
+  el.classList.remove('shake'); rdStage(el).innerHTML = `<div class="rd-ban sm">RAID</div><p class="rd-who" id="rdSay">Best of 3 votes · <b>voters are deciding…</b></p>
     <div class="rd-vs"><figure><span class="rd-ph"><img src="${them.src}" alt=""><i class="rd-sc">${them.sc}</i></span><figcaption>${esc(them.nm)}<small>${rv.n}</small></figcaption></figure><span class="rd-x">VS</span>
       <figure class="me"><span class="rd-ph"><img src="${me.src}" alt=""><i class="rd-sc">${me.s.total}</i></span><figcaption>${esc(alName(me))}<small>You</small></figcaption></figure></div>
-    <div class="rd-dots">${[0, 1, 2].map(i => `<i data-dt="${i}"><b>?</b></i>`).join('')}</div><p class="rd-tally"><b id="rdM">0</b> – <b id="rdT">0</b></p>`;
-  let i = 0, m = 0, t = 0; const iv = setInterval(() => { if (!el.isConnected) { clearInterval(iv); return; } const v = seq[i], d = el.querySelector(`[data-dt="${i}"]`);
+    <div class="rd-dots">${[0, 1, 2].map(i => `<i data-dt="${i}"><b>?</b></i>`).join('')}</div><p class="rd-tally"><b id="rdM">0</b><span>–</span><b id="rdT">0</b></p>`;
+  let i = 0, m = 0, t = 0; const step = () => { if (!el.isConnected) return; const v = seq[i], d = el.querySelector(`[data-dt="${i}"]`);
     if (v) m++; else t++; d.className = v ? 'w' : 'l'; d.innerHTML = `<b>${v ? '✓' : '✗'}</b>`; $('#rdM').textContent = m; $('#rdT').textContent = t; i++;
-    if (i >= seq.length) { clearInterval(iv); setTimeout(() => raidDone(el, me, them, rv, won, m, t), 900); } }, 1100); }
-function raidDone(el, me, them, rv, won, m, t) {
+    const r = vfRel(d); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, v ? ['#3CCB8A', '#F3D27A', '#fff'] : ['#FF6B6B', '#fff'], 14);
+    el.querySelector(v ? '.rd-vs .me' : '.rd-vs figure').classList.remove('hit'); void el.offsetWidth; el.querySelector(v ? '.rd-vs .me' : '.rd-vs figure').classList.add('hit');
+    if (i >= seq.length) { setTimeout(() => raidDone(el, me, them, rv, won, m, t), 900); return; }
+    if (m === 1 && t === 1) { $('#rdSay').innerHTML = '<b class="rd-dec">⚡ Deciding vote! ⚡</b>'; el.classList.add('tense'); setTimeout(step, 1700); } else setTimeout(step, 1100); };
+  setTimeout(step, 1200); }
+function raidDone(el, me, them, rv, won, m, t) { el.classList.remove('tense');
   if (won) { S.photos.push({ id: uid(), src: them.src, orig: them.src, cat: them.cat, nm: them.nm, nmAsk: 1, enh: 0, at: Date.now(), card: { from: rv.h }, s: { light: them.sc, comp: them.sc, colour: them.sc, tech: them.sc, total: them.sc } }); S.stlTaken = (S.stlTaken || []).concat(them.key); save(); }
-  el.querySelector('.rd-in').innerHTML = `${won ? '<div class="wr-cf rd-cf" aria-hidden="true">' + [...Array(18)].map((_, i) => `<i style="left:${(i * 37) % 95}%;animation-delay:${(i * .09).toFixed(2)}s"></i>`).join('') + '</div>' : ''}
-    <div class="rd-ban ${won ? '' : 'sm'}">${won ? '🏆 STOLEN!' : `${rv.n} kept it`}</div>
-    <div class="rd-prize ${won ? 'w' : ''}"><img src="${them.src}" alt="">${won ? '<i class="rd-new">NEW CARD</i>' : ''}</div>
-    <h3 class="rd-h">${won ? `${esc(them.nm)} is yours!` : 'Nothing lost'}</h3>
-    <p class="rd-who">${won ? `It earns you <b>${cardRate(them.sc)} 🟡 a vote</b> from now on · won ${m}–${t}` : `${t}–${m} · another raid comes along in a few votes`}</p>
+  el.classList.add(won ? 'win' : 'lose'); const fl = el.querySelector('.rd-flash'); fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
+  rdStage(el).innerHTML = `${won ? `<div class="rd-conf" aria-hidden="true">${[...Array(40)].map((_, i) => `<i style="left:${(i * 37) % 100}%;background:${['#FFC93C', '#FF6B6B', '#5B8DEF', '#3CCB8A', '#F59E0B', '#fff'][i % 6]};animation-delay:${(i * .05).toFixed(2)}s;animation-duration:${(1.8 + (i % 5) * .3).toFixed(2)}s"></i>`).join('')}
+      ${[...Array(12)].map((_, i) => `<span class="rd-coin" style="left:${(i * 61 + 7) % 92}%;animation-delay:${(.2 + i * .12).toFixed(2)}s">${gemIcon('')}</span>`).join('')}</div>` : ''}
+    <div class="rd-ban">${won ? 'STOLEN!' : 'So close!'}</div>
+    <div class="rd-prize ${won ? 'w' : ''}"><img src="${them.src}" alt="">${won ? '<i class="rd-new">✨ NEW CARD ✨</i>' : ''}</div>
+    <h3 class="rd-h">${won ? `${esc(them.nm)} is yours!` : `${rv.n} kept ${esc(them.nm)}`}</h3>
+    <p class="rd-who">${won ? `It earns you <b>${cardRate(them.sc)} 🟡 a vote</b> from now on · won ${m}–${t}` : `${t}–${m} · nothing lost · another raid is coming`}</p>
     <button class="rd-go">Back to voting</button>`;
+  if (won) setTimeout(() => { const pr = el.querySelector('.rd-prize'); if (pr) { const r = vfRel(pr); vfPop(el, r.x + r.w / 2, r.y + r.h / 2, ['#F3D27A', '#fff', '#E0A82E'], 30); } }, 350);
   el.querySelector('.rd-go').onclick = () => { el.classList.remove('on'); setTimeout(() => el.remove(), 300); try { renderJudge(); } catch (e) {} }; }
 // watch each vote
-setInterval(() => { try { const n = S.eyeN || 0; if (n <= VF_N) { VF_G = S.gems; vfShPaint(); return; } const ok = (S.eyeOk || 0) > VF_OK, gained = Math.max(0, (S.gems || 0) - VF_G); VF_N = n; VF_OK = S.eyeOk || 0; VF_G = S.gems || 0;
-  if (ok) { vfBurst(gained || CFG.VOTE); S.vfR = (S.vfR || 0) + 1;
-    const first = !S.vfFirst && S.vfR >= 4, roll = Math.random(), kind = first ? 'coins' : roll < .08 ? 'coins' : roll < .12 && (S.shields || 0) < VF_MAXSH ? 'shield' : null;
-    if (kind && n < S.vfRaidAt) { if (first) S.vfFirst = 1; save(); setTimeout(() => { if (!vfOverlayOpen()) vfReveal(kind); }, 900); } }
-  if (n >= S.vfRaidAt) { S.vfRaidAt = n + 10 + Math.floor(Math.random() * 6); save(); setTimeout(() => { if (!vfOverlayOpen() && $('#panes').dataset.at === 'judge' && RD_POOL().length >= 3) vfReveal('steal'); }, 1100); }
+setInterval(() => { try { const n = S.eyeN || 0; if (n <= VF_N) { VF_G = S.gems; vfShPaint(); return; } const ok = (S.eyeOk || 0) > VF_OK; VF_N = n; VF_OK = S.eyeOk || 0; VF_G = S.gems || 0;
+  if (ok) vfBurst();
+  let kind = null;
+  if (n >= S.vfRaidAt) { S.vfRaidAt = n + 10 + Math.floor(Math.random() * 6); if (RD_POOL().length >= 3) kind = 'steal'; }
+  else if (ok) { S.vfR = (S.vfR || 0) + 1; const first = !S.vfFirst && S.vfR >= 4, roll = Math.random(); kind = first ? 'coins' : roll < .08 ? 'coins' : roll < .12 && (S.shields || 0) < VF_MAXSH ? 'shield' : null; if (first) S.vfFirst = 1; }
+  save(); if (kind) setTimeout(() => { if (!vfOverlayOpen() && $('#panes').dataset.at === 'judge') vfTile(kind); }, 1000);
 } catch (e) {} }, 200);
 // a shield blocks an overnight steal
 const _stealAwayVF = stealAway;
@@ -105,65 +125,78 @@ assert s.count(anchor) == 1
 s = s.replace(anchor, JS + anchor)
 CSS = '''
 /* exciting voting */
-.vf-layer{position:absolute;inset:0;pointer-events:none;z-index:70;overflow:hidden}
+.vf-layer{position:absolute;inset:0;pointer-events:none;z-index:80;overflow:hidden}
 .vf-c{position:absolute;width:34px;height:34px;filter:drop-shadow(0 4px 6px rgba(120,80,0,.35))}.vf-c svg{width:100%;height:100%}
-.vf-plus{position:absolute;transform:translate(-50%,-50%);font:900 3.4rem/1 Fraunces,serif;color:#F3D27A;-webkit-text-stroke:2px #8A5A0A;text-shadow:0 6px 0 #8A5A0A,0 10px 18px rgba(0,0,0,.35);animation:vfPlus 1s cubic-bezier(.2,1.4,.4,1) forwards}
-@keyframes vfPlus{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}30%{transform:translate(-50%,-60%) scale(1.25);opacity:1}70%{transform:translate(-50%,-75%) scale(1);opacity:1}100%{transform:translate(-50%,-110%) scale(.9);opacity:0}}
 .vf-ring{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:5px solid #F3D27A;animation:vfRing .7s ease-out forwards}@keyframes vfRing{to{transform:scale(7);opacity:0;border-width:1px}}
+.vf-spk{position:absolute;width:10px;height:10px;border-radius:50%;box-shadow:0 0 8px currentColor}
 .vf-sh{display:inline-flex;align-items:center;gap:3px;margin-left:6px;padding:4px 10px;border:0;border-radius:99px;background:linear-gradient(180deg,#fff,#D7DCE3);box-shadow:inset 0 0 0 1.5px #B9C2CE;font:900 .9rem "Nunito Sans";color:#2E3440;cursor:pointer}.vf-sh[hidden]{display:none}
 .vf-sh.bump{animation:jpPop .5s ease-out}
-#vfRev{position:absolute;inset:0;z-index:65;background:rgba(20,33,61,.55);opacity:0;transition:opacity .25s}#vfRev.on{opacity:1}
-.vf-spot{position:absolute;display:flex;align-items:center;justify-content:center;perspective:1000px}
-.vf-flip{position:relative;width:min(240px,70%);height:100%;padding:0;border:0;background:none;cursor:pointer;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,1.3,.5,1);animation:vfIn .5s cubic-bezier(.2,1.4,.4,1)}#vfRev.flip .vf-flip{transform:rotateY(180deg)}
-@keyframes vfIn{from{transform:scale(.3) rotate(-8deg)}to{transform:none}}
-.vf-face{position:absolute;inset:0;border-radius:24px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;box-shadow:0 20px 40px -12px rgba(0,0,0,.6)}
-.vf-face.back{background:linear-gradient(160deg,#2B4372,#14213D);box-shadow:inset 0 0 0 5px #E0A82E,0 20px 40px -12px rgba(0,0,0,.6)}.vf-face.back span{font:900 5rem Fraunces,serif;color:#F3D27A}.vf-face.back small{font:800 .8rem "Nunito Sans";letter-spacing:.1em;text-transform:uppercase;color:#E6EDF8}
-.vf-face.front{transform:rotateY(180deg);background:linear-gradient(180deg,#FFF6DD,#F3D27A);box-shadow:inset 0 0 0 5px #E0A82E,0 0 50px rgba(243,210,122,.7)}.vf-face.front.steal{background:linear-gradient(180deg,#2B4372,#14213D)!important;box-shadow:inset 0 0 0 5px #E0A82E,0 0 50px rgba(243,210,122,.7)!important}.vf-face.steal h3{color:#F3D27A!important}.vf-face.steal p{color:#E6EDF8!important}
-.vf-face.front.shield{background:linear-gradient(180deg,#fff,#D7DCE3);box-shadow:inset 0 0 0 5px #9AA6B5,0 0 50px rgba(215,220,227,.7)}
-.vf-ic{font-size:4.6rem;line-height:1}.vf-face h3{margin:0;font:900 1.7rem Fraunces,serif;color:#3A2600}.vf-face.shield h3{color:#1F3157}.vf-face p{margin:0 14px;display:flex;align-items:center;justify-content:center;gap:6px;font:800 1rem "Nunito Sans";color:#4E433C}.vf-face p b{font:900 2rem Fraunces,serif;color:#2D4E86}.vf-gi{width:28px;height:28px}
-.vf-go{min-width:220px;padding:14px 24px;border:0;border-radius:999px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 1.05rem "Nunito Sans";box-shadow:0 8px 18px -8px rgba(160,110,10,.8);cursor:pointer;transition:opacity .2s}.vf-go:disabled{opacity:0}
-#raid{position:absolute;inset:0;z-index:66;background:radial-gradient(circle at 50% 20%,#2B4372,#14213D 70%);color:#fff;opacity:0;transform:scale(1.08);transition:opacity .3s,transform .3s;overflow-y:auto}#raid.on{opacity:1;transform:none}
-.rd-in{position:relative;min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;padding:56px 18px 30px;text-align:center}
-.rd-ban{font:900 3rem/1 Fraunces,serif;color:#F3D27A;-webkit-text-stroke:1.5px #8A5A0A;text-shadow:0 5px 0 #8A5A0A,0 10px 24px rgba(0,0,0,.4);animation:vfPlusIn .6s cubic-bezier(.2,1.5,.4,1) both}.rd-ban.sm{font-size:2rem}
-@keyframes vfPlusIn{from{transform:scale(.2) rotate(-6deg);opacity:0}to{transform:none;opacity:1}}
-.rd-who{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin:14px 0 18px;font:700 1rem "Nunito Sans";color:#E6EDF8}.rd-who b{color:#F3D27A}
-.rd-av{width:34px;height:34px;border-radius:50%;background:#E0A82E;color:#3A2600;font:900 1rem/34px Fraunces,serif}
-.rd-wall{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
-.rd-card{position:relative;display:flex;flex-direction:column;align-items:stretch;padding:6px 6px 8px;border:0;border-radius:16px;background:#FFFDF9;color:#2D2521;font-family:inherit;cursor:pointer;animation:jpIn .5s cubic-bezier(.2,1.3,.4,1) both;box-shadow:0 10px 20px -10px rgba(0,0,0,.6)}
-.rd-card img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:11px}.rd-card b{margin-top:6px;font:900 .82rem Fraunces,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rd-card small{font:700 .66rem "Nunito Sans";color:#4E433C}
-.rd-sc{position:absolute;top:10px;right:10px;padding:1px 7px;border-radius:99px;background:#FFFDF9;color:#2D2521;font:900 .78rem Fraunces,serif;font-style:normal;box-shadow:0 2px 6px rgba(0,0,0,.3)}
-.rd-tg{position:absolute;left:50%;top:38%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:3px dashed #F3D27A;box-shadow:0 0 0 3px rgba(20,33,61,.45),0 0 18px rgba(243,210,122,.8);animation:rdTg 1.4s linear infinite}@keyframes rdTg{to{transform:rotate(360deg)}}
-.rd-hint{margin:16px 0 0;font:800 .85rem "Nunito Sans";color:#C9D6EE}
-.rd-vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;width:100%}.rd-vs figure{margin:0}.rd-ph{position:relative;display:block}.rd-ph img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:16px;box-shadow:0 0 0 3px #E0A82E}.rd-vs .me .rd-ph img{box-shadow:0 0 0 3px #5B8DEF}
-.rd-vs figcaption{margin-top:6px;font:900 .95rem Fraunces,serif}.rd-vs figcaption small{display:block;font:700 .75rem "Nunito Sans";color:#C9D6EE}
-.rd-x{width:44px;height:44px;border-radius:50%;background:#F3D27A;color:#3A2600;font:900 1rem/44px Fraunces,serif}
-.rd-dots{display:flex;gap:14px;margin:22px 0 6px}.rd-dots i{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 2px rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-style:normal;animation:rdPulse 1s ease-in-out infinite}
-.rd-dots i b{font:900 1.4rem "Nunito Sans";color:#C9D6EE}.rd-dots i.w{background:#2E9A5C;box-shadow:0 0 18px rgba(46,154,92,.8);animation:jpPop .4s}.rd-dots i.l{background:#C8432F;animation:jpPop .4s}.rd-dots i.w b,.rd-dots i.l b{color:#fff}
+@keyframes vfIn{from{transform:scale(.3) rotate(-8deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes vfWig{0%,80%,100%{transform:none}85%{transform:rotate(-3deg)}90%{transform:rotate(3deg)}95%{transform:rotate(-2deg)}}
 @keyframes rdPulse{50%{transform:scale(1.08)}}
-.rd-tally{font:900 2rem Fraunces,serif;color:#fff;margin:4px 0}
-.rd-prize{position:relative;width:180px;margin:18px 0 6px;animation:vfIn .6s cubic-bezier(.2,1.4,.4,1)}.rd-prize img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:18px;box-shadow:0 0 0 4px #9AA6B5}.rd-prize.w img{box-shadow:0 0 0 5px #E0A82E,0 0 40px rgba(243,210,122,.8)}
-.rd-new{position:absolute;left:50%;bottom:-12px;transform:translateX(-50%);padding:4px 12px;border-radius:99px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 .74rem "Nunito Sans";letter-spacing:.08em;font-style:normal;white-space:nowrap}
-.rd-h{margin:16px 0 0;font:900 1.6rem Fraunces,serif;color:#fff}
-.rd-go{margin-top:auto;min-width:240px;padding:15px 24px;border:0;border-radius:999px;background:#FFFDF9;color:#1F3157;font:900 1.05rem "Nunito Sans";cursor:pointer;box-shadow:0 8px 18px -8px rgba(0,0,0,.6)}
-.rd-cf{position:absolute;inset:0;pointer-events:none}
-.vf-face.back{background:repeating-linear-gradient(45deg,#24396A 0 14px,#1C2E57 14px 28px)!important}
-.vf-sp{position:absolute;top:14px;left:0;right:0;font:900 .72rem "Nunito Sans";font-style:normal;letter-spacing:.1em;color:#F3D27A}
-.vf-q{font:900 6rem/1 Fraunces,serif;color:#F3D27A;text-shadow:0 0 30px rgba(243,210,122,.8);animation:rdPulse 1.2s ease-in-out infinite}
-.vf-tap{position:absolute;bottom:18px;left:0;right:0;margin:0 auto;width:max-content;padding:8px 18px;border-radius:99px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 .95rem "Nunito Sans";white-space:nowrap;animation:rdPulse 1.2s ease-in-out infinite}
-#vfRev:not(.flip) .vf-flip{animation:vfIn .5s cubic-bezier(.2,1.4,.4,1),vfWig 2.4s ease-in-out .6s infinite}@keyframes vfWig{0%,80%,100%{transform:none}85%{transform:rotate(-3deg)}90%{transform:rotate(3deg)}95%{transform:rotate(-2deg)}}
-html body #vfRev .vf-flip{display:block!important;width:min(240px,70%)!important;height:100%!important;min-height:0!important;padding:0!important;margin:0!important;border:0!important;border-radius:24px!important;background:none!important;box-shadow:none!important;transform-style:preserve-3d!important}
-html body #vfRev .vf-face{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;border-radius:24px!important;overflow:hidden}
-html body #vfRev .vf-face.back{background:repeating-linear-gradient(45deg,#24396A 0 14px,#1C2E57 14px 28px)!important;box-shadow:inset 0 0 0 5px #E0A82E,0 0 40px rgba(243,210,122,.55),0 20px 40px -12px rgba(0,0,0,.6)!important}
-html body #vfRev .vf-go{opacity:0}html body #vfRev .vf-go.in{opacity:1;animation:vfIn .4s cubic-bezier(.2,1.4,.4,1)}
-/* beat the app's general button styles */
-html body #vfRev .vf-go{position:absolute;left:50%;bottom:150px;transform:translateX(-50%);z-index:2;display:block;min-width:220px;min-height:52px;padding:0 24px!important;border:0!important;border-radius:999px!important;background:linear-gradient(180deg,#F3D27A,#E0A82E)!important;color:#3A2600!important;font:900 1.05rem "Nunito Sans"!important;box-shadow:0 8px 18px -8px rgba(160,110,10,.8)!important;opacity:1}
-html body #vfRev .vf-go:disabled{opacity:0!important}
-html body #vfRev .vf-go.nav{background:#2D4E86!important;color:#fff!important;box-shadow:0 8px 18px -8px rgba(45,78,134,.8)!important}
-html body #raid .rd-wall{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-html body #raid .rd-card{min-width:0!important;width:auto!important;margin:0!important;padding:6px 6px 8px!important;border:0!important;border-radius:16px!important;background:#FFFDF9!important;color:#2D2521!important;box-shadow:0 10px 20px -10px rgba(0,0,0,.6)!important;display:flex!important;flex-direction:column!important;position:relative!important;min-height:0!important;height:auto!important}
-html body #raid .rd-card b{color:#2D2521!important;display:block}html body #raid .rd-card small{color:#4E433C!important;display:block;white-space:nowrap}
-html body #raid .rd-sc{position:absolute!important;top:10px!important;right:10px!important;left:auto!important;width:auto!important}
-html body #raid .rd-go{display:block;min-width:240px;min-height:54px;padding:0 24px!important;border:0!important;border-radius:999px!important;background:#FFFDF9!important;color:#1F3157!important;font:900 1.05rem "Nunito Sans"!important;box-shadow:0 8px 18px -8px rgba(0,0,0,.6)!important}
+/* the special tile sits exactly on one vote photo */
+#vfTile{position:absolute;inset:0;z-index:60;pointer-events:none;opacity:0;transition:opacity .2s}#vfTile.on{opacity:1}
+#vfTile .vf-wait{position:absolute;pointer-events:auto;border-radius:22px;background:rgba(20,33,61,.55);display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;box-sizing:border-box}
+#vfTile .vf-wait span{padding:6px 12px;border-radius:99px;background:rgba(255,253,249,.92);color:#1F3157;font:800 .74rem "Nunito Sans";text-align:center}
+html body #vfTile .vf-flip{position:absolute!important;pointer-events:auto;display:block!important;padding:0!important;margin:0!important;border:0!important;border-radius:22px!important;background:none!important;box-shadow:none!important;cursor:pointer;transform-style:preserve-3d!important;transition:transform .6s cubic-bezier(.3,1.3,.5,1);perspective:1000px;min-height:0!important}
+#vfTile:not(.flip) .vf-flip{animation:vfIn .45s cubic-bezier(.2,1.4,.4,1),vfWig 2.4s ease-in-out .6s infinite}
+#vfTile.flip .vf-flip{transform:rotateY(180deg)}
+html body #vfTile .vf-face{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px;text-align:center;border-radius:22px!important;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+html body #vfTile .vf-face.back{background:repeating-linear-gradient(45deg,#24396A 0 14px,#1C2E57 14px 28px)!important;box-shadow:inset 0 0 0 4px #E0A82E,0 0 26px rgba(243,210,122,.7)!important}
+.vf-sp{position:absolute;top:12px;left:0;right:0;font:900 .7rem "Nunito Sans";font-style:normal;letter-spacing:.1em;color:#F3D27A}
+.vf-q{font:900 5rem/1 Fraunces,serif;color:#F3D27A;text-shadow:0 0 30px rgba(243,210,122,.8);animation:rdPulse 1.2s ease-in-out infinite}
+.vf-tap{position:absolute;bottom:14px;left:0;right:0;margin:0 auto;width:max-content;padding:7px 14px;border-radius:99px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 .85rem "Nunito Sans";white-space:nowrap;animation:rdPulse 1.2s ease-in-out infinite}
+html body #vfTile .vf-face.front{transform:rotateY(180deg);background:linear-gradient(180deg,#FFF6DD,#F3D27A)!important;box-shadow:inset 0 0 0 4px #E0A82E,0 0 40px rgba(243,210,122,.8)!important}
+html body #vfTile .vf-face.front.steal{background:radial-gradient(circle at 50% 35%,#3A5A9A,#14213D)!important}
+html body #vfTile .vf-face.front.shield{background:linear-gradient(180deg,#fff,#D7DCE3)!important;box-shadow:inset 0 0 0 4px #9AA6B5,0 0 40px rgba(215,220,227,.8)!important}
+.vf-ic{font-size:3.8rem;line-height:1}#vfTile.flip .vf-ic{animation:vfIn .5s cubic-bezier(.2,1.6,.4,1) .45s both}
+.vf-face h3{margin:0;font:900 1.5rem Fraunces,serif;color:#3A2600}.vf-face.steal h3{color:#F3D27A}.vf-face.shield h3{color:#1F3157}
+.vf-face p{margin:0 8px;display:flex;align-items:center;justify-content:center;gap:5px;font:800 .9rem "Nunito Sans";color:#4E433C}.vf-face.steal p{color:#E6EDF8}.vf-face p b{font:900 1.8rem Fraunces,serif;color:#2D4E86}.vf-gi{width:24px;height:24px}
+/* raid */
+#raid{position:absolute;inset:0;z-index:66;overflow:hidden;color:#fff;background:radial-gradient(circle at 50% 28%,#3A5A9A 0%,#1C2E57 42%,#0C1529 100%);opacity:0;transform:scale(1.1);transition:opacity .3s,transform .35s cubic-bezier(.2,1.2,.4,1)}#raid.on{opacity:1;transform:none}
+.rd-rays{position:absolute;left:50%;top:22%;width:240vmax;height:240vmax;margin:-120vmax 0 0 -120vmax;background:repeating-conic-gradient(from 0deg,rgba(243,210,122,.09) 0 9deg,transparent 9deg 22deg);animation:rdSpin 24s linear infinite;pointer-events:none}
+@keyframes rdSpin{to{transform:rotate(360deg)}}
+#raid.win{background:radial-gradient(circle at 50% 30%,#4A6CB0 0%,#203766 45%,#0C1529 100%)}#raid.win .rd-rays{background:repeating-conic-gradient(from 0deg,rgba(255,206,84,.2) 0 9deg,transparent 9deg 22deg);animation-duration:8s}
+#raid.lose .rd-rays{background:repeating-conic-gradient(from 0deg,rgba(201,214,238,.08) 0 9deg,transparent 9deg 22deg)}
+#raid.tense .rd-rays{animation-duration:4s}
+.rd-sparks{position:absolute;inset:0;pointer-events:none}.rd-sparks i{position:absolute;width:4px;height:4px;border-radius:50%;background:#F3D27A;box-shadow:0 0 8px #F3D27A;animation:rdTw 2s ease-in-out infinite}@keyframes rdTw{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1.4)}}
+.rd-flash{position:absolute;inset:0;background:#fff;pointer-events:none;opacity:0;animation:rdFlash .5s ease-out .05s}.rd-flash.go{animation:rdFlash .6s ease-out}#raid.win .rd-flash.go{background:#FFF3C4}@keyframes rdFlash{0%{opacity:.85}100%{opacity:0}}
+.rd-in{position:relative;z-index:1;height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px 32px;text-align:center}
+#raid.shake .rd-in{animation:rdShake .45s ease-in-out}@keyframes rdShake{20%{transform:translate(-6px,3px)}40%{transform:translate(6px,-3px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
+.rd-ban{font:900 3.6rem/1 Fraunces,serif;color:#F3D27A;-webkit-text-stroke:2px #8A5A0A;text-shadow:0 6px 0 #8A5A0A,0 14px 30px rgba(0,0,0,.45),0 0 40px rgba(243,210,122,.5);animation:rdSlam .55s cubic-bezier(.2,1.6,.4,1) both}.rd-ban.sm{font-size:2.2rem}
+@keyframes rdSlam{0%{transform:scale(3) rotate(-8deg);opacity:0}60%{transform:scale(.92) rotate(2deg);opacity:1}100%{transform:none}}
+.rd-who{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin:14px 0 18px;font:700 1rem "Nunito Sans";color:#E6EDF8}.rd-who b{color:#F3D27A}
+.rd-av{width:34px;height:34px;border-radius:50%;background:#E0A82E;color:#3A2600;font:900 1rem/34px Fraunces,serif;box-shadow:0 0 0 3px rgba(243,210,122,.35)}
+html body #raid .rd-wall{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px;width:100%;max-width:380px}
+html body #raid .rd-card{position:relative!important;display:flex!important;flex-direction:column!important;align-items:stretch;min-width:0!important;width:auto!important;margin:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;color:#fff!important;min-height:0!important;height:auto!important;cursor:pointer;animation:rdDrop .6s cubic-bezier(.2,1.4,.4,1) var(--d) both}
+@keyframes rdDrop{from{transform:translateY(-60px) rotate(-6deg);opacity:0}to{transform:none;opacity:1}}
+.rd-lamp{position:absolute;left:50%;top:-34px;width:120%;height:60px;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 0,rgba(255,243,196,.55),transparent 70%);pointer-events:none}
+.rd-fr{position:relative;display:block;padding:5px;border-radius:12px;background:linear-gradient(160deg,#F3D27A,#B37A12);box-shadow:0 14px 24px -10px rgba(0,0,0,.7);animation:rdSway 3.2s ease-in-out infinite;transform-origin:50% -20px}
+.rd-card:nth-child(2) .rd-fr{animation-delay:-1s}.rd-card:nth-child(3) .rd-fr{animation-delay:-2s}@keyframes rdSway{50%{transform:rotate(1.6deg)}}
+.rd-fr img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px}
+html body #raid .rd-card b{display:block;margin-top:8px;font:900 .85rem Fraunces,serif;color:#fff!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}html body #raid .rd-card small{display:block;font:700 .68rem "Nunito Sans";color:#C9D6EE!important;white-space:nowrap}
+html body #raid .rd-sc{position:absolute!important;top:10px!important;right:10px!important;left:auto!important;width:auto!important;padding:1px 7px;border-radius:99px;background:#FFFDF9;color:#2D2521;font:900 .78rem Fraunces,serif;font-style:normal;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.rd-tg{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:3px dashed #F3D27A;box-shadow:0 0 0 3px rgba(20,33,61,.45),0 0 18px rgba(243,210,122,.8);animation:rdTg 1.4s linear infinite}@keyframes rdTg{to{transform:rotate(360deg)}}
+.rd-card.picked{animation:rdPick .6s cubic-bezier(.2,1.4,.4,1) forwards!important;z-index:2}@keyframes rdPick{to{transform:scale(1.18)}}.rd-card.gone{opacity:.15;transition:opacity .3s}
+.rd-hint{margin:22px 0 0;font:800 .88rem "Nunito Sans";color:#C9D6EE}
+.rd-vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;width:100%;max-width:380px}.rd-vs figure{margin:0;transition:transform .2s}.rd-vs figure.hit{animation:rdHit .45s ease-out}@keyframes rdHit{30%{transform:scale(1.07)}}
+.rd-ph{position:relative;display:block}.rd-ph img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:16px;box-shadow:0 0 0 3px #E0A82E,0 12px 24px -10px rgba(0,0,0,.7)}.rd-vs .me .rd-ph img{box-shadow:0 0 0 3px #5B8DEF,0 12px 24px -10px rgba(0,0,0,.7)}
+.rd-vs figcaption{margin-top:6px;font:900 .95rem Fraunces,serif}.rd-vs figcaption small{display:block;font:700 .75rem "Nunito Sans";color:#C9D6EE}
+.rd-x{width:48px;height:48px;border-radius:50%;background:radial-gradient(circle,#FFE8A6,#E0A82E);color:#3A2600;font:900 1.05rem/48px Fraunces,serif;box-shadow:0 0 24px rgba(243,210,122,.8);animation:rdPulse 1s ease-in-out infinite}
+.rd-dots{display:flex;gap:16px;margin:24px 0 6px}.rd-dots i{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 2px rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-style:normal;animation:rdPulse 1s ease-in-out infinite}
+.rd-dots i b{font:900 1.5rem "Nunito Sans";color:#C9D6EE}.rd-dots i.w{background:#2E9A5C;box-shadow:0 0 22px rgba(46,154,92,.9);animation:rdDot .45s cubic-bezier(.2,1.6,.4,1)}.rd-dots i.l{background:#C8432F;box-shadow:0 0 22px rgba(200,67,47,.8);animation:rdDot .45s cubic-bezier(.2,1.6,.4,1)}.rd-dots i.w b,.rd-dots i.l b{color:#fff}
+@keyframes rdDot{0%{transform:scale(.4)}100%{transform:none}}
+.rd-tally{display:flex;gap:12px;align-items:center;font:900 2.4rem Fraunces,serif;color:#fff;margin:6px 0 0}.rd-tally span{color:#C9D6EE}
+.rd-dec{display:inline-block;color:#FFE8A6!important;font:900 1.2rem "Nunito Sans";animation:rdPulse .6s ease-in-out infinite}
+.rd-prize{position:relative;width:min(190px,50%);margin:26px 0 8px;animation:rdPrize .8s cubic-bezier(.2,1.5,.4,1) both}@keyframes rdPrize{0%{transform:scale(.2) rotate(-200deg);opacity:0}70%{transform:scale(1.06) rotate(4deg);opacity:1}100%{transform:none;opacity:1}}
+.rd-prize img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:18px;box-shadow:0 0 0 4px #9AA6B5}#raid.lose .rd-prize img{filter:grayscale(.6)}
+.rd-prize.w img{box-shadow:0 0 0 6px #E0A82E,0 0 60px rgba(243,210,122,.9)}
+.rd-new{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);padding:5px 14px;border-radius:99px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 .78rem "Nunito Sans";letter-spacing:.06em;font-style:normal;white-space:nowrap;box-shadow:0 6px 14px -6px rgba(0,0,0,.6)}
+.rd-h{margin:30px 0 0;font:900 1.6rem Fraunces,serif;color:#fff}
+#raid.lose .rd-ban{color:#E6EDF8;-webkit-text-stroke:1.5px #4E5D7A;text-shadow:0 5px 0 #4E5D7A,0 14px 30px rgba(0,0,0,.45);font-size:2.6rem}
+html body #raid .rd-go{display:block;margin-top:22px;min-width:240px;min-height:54px;padding:0 24px!important;border:0!important;border-radius:999px!important;background:#FFFDF9!important;color:#1F3157!important;font:900 1.05rem "Nunito Sans"!important;box-shadow:0 8px 18px -8px rgba(0,0,0,.6)!important;animation:vfIn .4s cubic-bezier(.2,1.4,.4,1) .6s both}
+.rd-conf{position:absolute;inset:0;pointer-events:none;overflow:hidden}.rd-conf i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:rdFall linear forwards}@keyframes rdFall{to{transform:translateY(110vh) rotate(720deg)}}
+.rd-coin{position:absolute;top:-40px;width:30px;height:30px;animation:rdFall 2.2s ease-in forwards}.rd-coin svg{width:100%;height:100%}
 '''
 i = s.rfind('</style>'); s = s[:i] + CSS + s[i:]
 open(p, 'w', encoding='utf-8').write(s); print('votefx ok')
