@@ -801,7 +801,8 @@ python3 build-skill/galfix.py sp-jc.html sp-gf.html
 python3 build-skill/audit1.py sp-gf.html sp-a1.html
 python3 build-skill/signup.py sp-a1.html sp-su.html
 python3 build-skill/shields.py sp-su.html sp-sh.html
-python3 build-skill/cmpquick.py sp-sh.html skill-preview.html
+python3 build-skill/cmpquick.py sp-sh.html sp-cq.html
+python3 build-skill/shieldfx.py sp-cq.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -971,3 +972,5 @@ The Collect and Improve buttons on the Vote top card use the app's shared button
 `shields.py` (user chose A for both): stolen cards are trophies. They no longer fill a collection's Gold slots; they show in a "🃏 Trophies" row on their collection's binder page and still earn coins. Shields are earned (special tile, every 3-day streak, every judge rank-up from Sharp Eye; hold up to 3), never bought, and placed on a card from the 🛡 pill sheet or the Gallery "🛡 Shield Milo" chip. An overnight steal aimed at a shielded card is blocked and the shield breaks, with a "Shield held!" pop ("Leo tried to steal Milo…"); unplaced shields no longer block anything. About 1 in 2 steal walls has a rival card marked "🛡 Shielded" that can't be picked.
 
 `cmpquick.py` (user chose option B): Compete › Photo games no longer repeats the Live games. It keeps Daily jackpots and Tournaments (Photo Knockout, Showdown), then one small "⚡ Quick games" row (Photo Duel · Judge Duel · Friend). The big Photo Duel card, Challenge a friend row, incoming-challenge row, Card challenges and Clubs link are gone. The Judge games tab is unchanged.
+
+`shieldfx.py`: the special tile hides while a sheet or pop-up is open (it used to sit on top of the Shields sheet). Revealing a Shield flies a gold shield from the tile into the 🛡 pill, which glows. Right after any shield is earned (tile, 3-day streak, judge rank-up) a "New shield!" sheet asks you to place it ("Put it on your best card. It blocks one steal while you're away." · "🛡 Shield Milo" · "Later"); with one still unplaced it asks again once a day on Vote.
