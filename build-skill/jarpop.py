@@ -33,31 +33,46 @@ jarCollect = function () { const n = S.vgJar || 0, snap = S.jarSnap || {}, since
   if (tap) setTimeout(() => { try { jpShow(n, shown, held, since); } catch (e) {} }, 1100);
   return r; };
 function jpShow(n, earn, held, since) { const co = $('#coach'); if (!co || co.classList.contains('on')) return;
-  const mine = earn.filter(x => !x.p.card), won = earn.filter(x => x.p.card), wonT = won.reduce((a, x) => a + x.c, 0), rc = typeof rivalCards === 'function' ? rivalCards() : [];
-  const ago = since < 36e5 ? `${Math.max(1, Math.round(since / 6e4))}m` : `${Math.floor(since / 36e5)}h ${Math.round(since % 36e5 / 6e4)}m`;
-  const tier = p => { const t = galTier(p.s.total); return t ? `<i class="jp-t t-${t.toLowerCase()}">${t}</i>` : ''; };
-  const row = (x, sub, amt, cls = '') => `<div class="jp-r ${cls}"><img src="${x.p.src}" alt=""><span><b>${esc(alName(x.p))}</b><small>${sub}</small></span><em>${amt}</em></div>`;
+  const per = p => galMult(p.s.total) * GAL.BASE, picks = x => x.c > 0 ? Math.max(1, Math.round(x.c / per(x.p))) : 0;
+  const mine = earn.filter(x => !x.p.card), won = earn.filter(x => x.p.card), wonT = won.reduce((a, x) => a + x.c, 0), allPk = earn.reduce((a, x) => a + picks(x), 0), rc = typeof rivalCards === 'function' ? rivalCards() : [];
+  const ago = since < 36e5 ? `${Math.max(1, Math.round(since / 6e4))} min` : (Math.round(since % 36e5 / 6e4) ? `${Math.floor(since / 36e5)}h ${Math.round(since % 36e5 / 6e4)}m` : `${Math.floor(since / 36e5)}h`);
+  const tier = p => { const t = galTier(p.s.total); return t ? `<i class="jp-t t-${t.toLowerCase()}">${t === 'Gold' ? '🥇' : t === 'Diamond' ? '💎' : '🏆'} ${t}</i>` : ''; };
+  let k = 0; const row = (x, sub, cls = '') => `<div class="jp-r ${cls}" style="animation-delay:${(.35 + k++ * .18).toFixed(2)}s"><img src="${x.p.src}" alt=""><span><b>${esc(alName(x.p))}</b><small>${sub}</small></span><em data-jc="${x.c}" data-jd="${(.35 + (k - 1) * .18).toFixed(2)}">+0</em></div>`;
+  const pk = x => `earns ${per(x.p)} 🟡 a vote`;
   const h = held[0], go = h ? { t: `Win ${alName(h.p)} back`, fn: () => stealSheet({ back: h.p.id }) } : rc.length && stlLeft() ? { t: 'Steal a card · free try', fn: () => stealSheet({}) } : null;
-  co.innerHTML = `<div class="crbox jpbox" role="dialog" aria-modal="true" aria-labelledby="jpT">
-    <h2 id="jpT"><span>+<b id="jpN">0</b></span> ${gemIcon('jp-ci')}</h2><p class="jp-sub">collected · since ${ago} ago</p>
+  co.innerHTML = `<div class="crbox jpbox" role="dialog" aria-modal="true" aria-labelledby="jpT"><div class="cr-rays wp-rays" aria-hidden="true"></div>
+    ${[...Array(18)].map((_, i) => `<i class="wp-cf" style="left:${(i * 37) % 100}%;background:${['#FFC93C', '#FF6B6B', '#5B8DEF', '#3CCB8A', '#F59E0B'][i % 5]};animation-delay:${(i * .09).toFixed(2)}s"></i>`).join('')}
+    <span class="jp-pay">💰 Payday</span>
+    <h2 id="jpT"><span>+<b id="jpN">0</b></span> ${gemIcon('jp-ci')}</h2>
+    <p class="jp-sub">🗳 Voters picked your photos in the last <b>${ago}</b></p>
     <div class="jp-list">
-      ${mine.length ? `<h3>Your photos</h3>${mine.map(x => row(x, `${tier(x.p)}${x.p.s.total} · earns ${galMult(x.p.s.total) * GAL.BASE} a vote`, `+${x.c}`)).join('')}` : ''}
-      <h3 class="g">🃏 Cards you stole</h3>${won.length ? won.map(x => row(x, `won from ${esc(rvName(x.p.card.from))} · earns ${galMult(x.p.s.total) * GAL.BASE} a vote`, `+${x.c}`, 'won')).join('') + `<p class="jp-note">Stolen cards earned you <b>+${wonT}</b> extra</p>`
-        : `<div class="jp-r won tease"><span class="jp-fan">${rc.slice(0, 2).map(x => `<img src="${x.src}" alt="">`).join('')}</span><span><b>Steal a card</b><small>It earns coins for you too</small></span><em>?</em></div>`}
-      ${held.length ? `<h3 class="r">Taken from you</h3>${held.map(x => row(x, `${esc(rvName(x.p.heldBy))} has it · not earning`, `<small>missed</small>~${x.miss}`, 'lost')).join('')}<p class="jp-note r">You missed about <b>${held.reduce((a, x) => a + x.miss, 0)}</b> coins</p>` : ''}
+      ${mine.length ? `<h3>📸 Your photos earned</h3>${mine.map(x => row(x, `${tier(x.p)}${pk(x)}`)).join('')}` : ''}
+      <h3 class="g">🃏 Stolen cards · bonus</h3>${won.length ? won.map(x => row(x, `from ${esc(rvName(x.p.card.from))} · ${pk(x)}`, 'won')).join('') + (wonT ? `<p class="jp-note" style="animation-delay:${(.45 + k * .18).toFixed(2)}s">🎉 Stealing earned you <b>+${wonT}</b> extra</p>` : '')
+        : `<div class="jp-r won tease" style="animation-delay:${(.35 + k++ * .18).toFixed(2)}s"><span class="jp-fan">${rc.slice(0, 2).map(x => `<img src="${x.src}" alt="">`).join('')}</span><span><b>Steal a card</b><small>It earns coins for you too</small></span><em>?</em></div>`}
+      ${held.length ? `<h3 class="r">😤 Taken from you</h3>${held.map(x => `<div class="jp-r lost" style="animation-delay:${(.35 + k++ * .18).toFixed(2)}s"><img src="${x.p.src}" alt=""><span><b>${esc(alName(x.p))}</b><small>${esc(rvName(x.p.heldBy))} is earning from it now</small></span><em><small>missed</small>~${x.miss}</em></div>`).join('')}` : ''}
     </div>
-    ${go ? `<button class="bt-cta jp-go" id="jpGo">${esc(go.t)}</button>` : ''}<button class="bt-no" id="jpNo">Done</button></div>`;
+    ${go ? `<button class="bt-cta jp-go" id="jpGo">${esc(go.t)}</button>` : ''}<button class="bt-no" id="jpNo">${go ? 'Done' : 'Nice! Back to voting'}</button></div>`;
   co.classList.add('on', 'cr');
   const close = () => { co.classList.remove('on', 'cr'); co.innerHTML = ''; };
   if ($('#jpGo')) $('#jpGo').onclick = () => { close(); go.fn(); };
   $('#jpNo').onclick = close; co.onclick = e => { if (e.target === co) close(); };
-  const el = $('#jpN'), t0 = performance.now(); const tick = t => { if (!el.isConnected) return; const k = Math.min(1, (t - t0) / 900); el.textContent = Math.round(n * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); }; requestAnimationFrame(tick); }
+  const count = (el, to, ms, delay, pre) => { const t0 = performance.now() + delay * 1000; const tick = t => { if (!el.isConnected) return; const q = Math.max(0, Math.min(1, (t - t0) / ms)); el.textContent = pre + Math.round(to * (1 - Math.pow(1 - q, 3))); if (q < 1) requestAnimationFrame(tick); else if (pre) { el.classList.add('pop'); } }; requestAnimationFrame(tick); };
+  count($('#jpN'), n, 1100, .1, '');
+  co.querySelectorAll('[data-jc]').forEach(e => count(e, +e.dataset.jc, 600, +e.dataset.jd + .2, '+')); }
 '''
 anchor = "  shownGems = S.gems;\n})();\n})();"
 assert s.count(anchor) == 1
 s = s.replace(anchor, JS + anchor)
 CSS = '''
 /* coin jar receipt */
+html body #coach .jpbox{position:relative;overflow:hidden}
+.jp-pay{display:inline-block;align-self:center;margin-top:2px;padding:4px 14px;border-radius:99px;background:linear-gradient(180deg,#F3D27A,#E0A82E);color:#3A2600;font:900 .78rem "Nunito Sans";letter-spacing:.08em;text-transform:uppercase;box-shadow:0 4px 10px -6px rgba(160,110,10,.8);animation:jpBounce .6s cubic-bezier(.3,1.6,.5,1) both}
+.jp-sub b{color:#2D4E86}
+.jp-r,.jp-note{animation:jpIn .45s cubic-bezier(.2,1.2,.4,1) both}
+@keyframes jpIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes jpBounce{from{transform:scale(.3)}to{transform:none}}
+.jp-r em.pop{animation:jpPop .35s ease-out}@keyframes jpPop{50%{transform:scale(1.35)}}
+html body #coach .jpbox .wp-drop,html body #coach .jpbox .wp-cf{z-index:0!important;opacity:.55}html body #coach .jpbox>*:not(.wp-drop):not(.wp-cf):not(.cr-rays){position:relative;z-index:2}
 html body #coach .jpbox{max-height:86vh;display:flex;flex-direction:column;text-align:center}
 .jpbox h2{display:flex;align-items:center;justify-content:center;gap:6px;margin:4px 0 0;font:900 2.6rem/1 Fraunces,serif;color:#2D4E86}.jpbox .jp-ci{width:34px;height:34px}
 .jp-sub{margin:4px 0 10px;font:700 .85rem "Nunito Sans";color:#4E433C}
