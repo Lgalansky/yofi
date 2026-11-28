@@ -4,8 +4,9 @@
 #  2. Special tile: now and then ONE of the two vote photos is a face-down special tile (no pop-up).
 #     Crack it open with 3 taps: tap 1 shudders and cracks it, tap 2 cracks it further and it glows
 #     gold (Joker), blue (Steal) or silver (Shield), tap 3 bursts it open and the card flips:
-#       🃏 Joker  +20 / +50 / +100 coins (60/30/10%); the amount rolls 20 → 50 → 100, slowing
-#                down, and lands on the real amount; coins fly to your balance
+#       🃏 Joker  +20 / +50 / +100 coins (60/30/10%), random; the amount slams in big with spinning
+#                rays and sparks; Big Joker (50) and MEGA Joker (100) get more sparks, a bigger number,
+#                and MEGA adds a gold flash and a screen shake; coins fly to your balance
 #       🛡 Shield  blocks one steal while you're away (hold up to 3)
 #       🦝 Steal  every 10–15 votes; the screen switches straight to a raid
 #     The other photo waits ("Reveal the special photo first") so the tile can't be missed.
@@ -48,7 +49,7 @@ function vfShPaint() { const f = $('#sFlame'); if (!f) return; let b = $('#vfSh'
 function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorAll('#jcard button.tot-c')]; if (!sh || ph.length < 2) return; VF_BUSY = 1;
   const k = Math.random() < .5 ? 0 : 1, a = vfRel(ph[k]), b = vfRel(ph[1 - k]);
   const amt = kind === 'coins' ? (r => r < .6 ? 20 : r < .9 ? 50 : 100)(Math.random()) : 0;
-  const face = kind === 'coins' ? { ic: '🃏', t: 'Joker!', s: `<b class="vf-amt">+20</b> ${gemIcon('vf-gi')}` } : kind === 'steal' ? { ic: '🦝', t: 'Steal!', s: 'Raid time!' } : { ic: '🛡', t: 'Shield!', s: 'Blocks a steal' };
+  const face = kind === 'coins' ? { ic: '🃏', t: amt === 100 ? 'MEGA Joker!' : amt === 50 ? 'Big Joker!' : 'Joker!', s: `<b class="vf-amt">+${amt}</b> ${gemIcon('vf-gi')}` } : kind === 'steal' ? { ic: '🦝', t: 'Steal!', s: 'Raid time!' } : { ic: '🛡', t: 'Shield!', s: 'Blocks a steal' };
   const el = document.createElement('div'); el.id = 'vfTile';
   el.innerHTML = `<div class="vf-wait" style="left:${b.x}px;top:${b.y}px;width:${b.w}px;height:${b.h}px"><span>✨ Reveal the special photo first</span></div>
     <button class="vf-flip" style="left:${a.x}px;top:${a.y}px;width:${a.w}px;height:${a.h}px" aria-label="Special photo, tap to reveal">
@@ -56,7 +57,7 @@ function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorA
         <svg class="vf-crk c1" viewBox="0 0 100 130" preserveAspectRatio="none"><path d="M52 0 L47 22 L56 34 L44 52 L50 63"/><path d="M56 34 L70 40 L78 36"/></svg>
         <svg class="vf-crk c2" viewBox="0 0 100 130" preserveAspectRatio="none"><path d="M50 63 L58 78 L45 96 L53 112 L48 130"/><path d="M44 52 L28 58 L18 54 L6 62"/><path d="M58 78 L76 84 L94 80"/><path d="M45 96 L30 104 L22 118"/></svg>
         <b class="vf-tap">Tap to crack it open</b></span>
-      <span class="vf-face front ${kind}"><span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p></span></button>`;
+      <span class="vf-face front ${kind} ${kind === 'coins' ? 'a' + amt : ''}"><i class="vf-rays"></i><span class="vf-ic">${face.ic}</span><h3>${face.t}</h3><p>${face.s}</p></span></button>`;
   sh.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
   const done = (ms = 1500) => setTimeout(() => { el.classList.remove('on'); setTimeout(() => { el.remove(); VF_BUSY = 0; }, 250); }, ms);
   let taps = 0; const hue = kind === 'coins' ? 'gold' : kind === 'steal' ? 'blue' : 'silver', tapTx = ['Tap to crack it open', 'Again!', 'One more!'];
@@ -67,10 +68,14 @@ function vfTile(kind) { const sh = $('#shell'), ph = [...document.querySelectorA
     el.classList.add('t3'); vfPop(sh, r0.x + r0.w / 2, r0.y + r0.h / 2, hue === 'blue' ? ['#5B8DEF', '#F3D27A', '#fff'] : hue === 'silver' ? ['#D7DCE3', '#fff', '#9AA6B5'] : ['#F3D27A', '#E0A82E', '#fff'], 34);
     setTimeout(() => el.classList.add('flip'), 160); const fr = el.querySelector('.vf-face.front');
     setTimeout(() => {
-      if (kind === 'coins') { const b = el.querySelector('.vf-amt'), vals = [20, 50, 100]; let k = 0, d = 55; const ticks = 9 + vals.indexOf(amt) + 3 * Math.floor(Math.random() * 2);
-        const roll = () => { if (!b.isConnected) return; b.textContent = '+' + vals[k % 3]; b.classList.remove('tick'); void b.offsetWidth; b.classList.add('tick');
-          if (k >= ticks && vals[k % 3] === amt) { b.classList.add('land'); S.gems += amt; VF_G = S.gems; save(); const r = vfRel(fr); vfPop(sh, r.x + r.w / 2, r.y + r.h * .7, ['#F3D27A', '#fff'], 18); try { gemExplosion(amt, { mid: 1, from: fr }); } catch (e) { paintGems(); } done(1500); return; }
-          k++; d = Math.min(380, d * 1.22); setTimeout(roll, d); }; roll(); }
+      if (kind === 'coins') { const b = el.querySelector('.vf-amt'), r = vfRel(fr), cx = r.x + r.w / 2, cy = r.y + r.h / 2;
+        el.classList.add('wow', 'a' + amt); b.classList.add('slam');
+        const big = amt >= 50, mega = amt === 100;
+        vfPop(sh, cx, cy, ['#F3D27A', '#E0A82E', '#fff', '#FF6B6B', '#5B8DEF', '#3CCB8A'], mega ? 60 : big ? 40 : 24);
+        if (big) setTimeout(() => vfPop(sh, cx, cy, ['#F3D27A', '#fff'], mega ? 40 : 20), 260);
+        if (mega) { const f = document.createElement('i'); f.className = 'vf-flash'; sh.appendChild(f); setTimeout(() => f.remove(), 700); const app = $('#judge'); if (app) { app.classList.remove('vf-quake'); void app.offsetWidth; app.classList.add('vf-quake'); } }
+        setTimeout(() => { S.gems += amt; VF_G = S.gems; save(); try { gemExplosion(amt, { mid: 1, from: fr }); } catch (e) { paintGems(); } }, 650);
+        done(mega ? 2400 : big ? 2000 : 1700); }
       else if (kind === 'shield') { S.shields = Math.min(VF_MAXSH, (S.shields || 0) + 1); save(); vfShPaint(); const sb = $('#vfSh'); if (sb) { sb.classList.remove('bump'); void sb.offsetWidth; sb.classList.add('bump'); } done(1600); }
       else { setTimeout(() => { el.remove(); VF_BUSY = 0; raidStart(); }, 1100); } }, 700); }; }
 // little burst of sparks
@@ -179,13 +184,23 @@ html body #vfTile .vf-face.front.shield{background:linear-gradient(180deg,#fff,#
 .vf-glow{position:absolute;inset:0;opacity:0;transition:opacity .25s;background:radial-gradient(circle at 50% 50%,rgba(255,246,221,.55),transparent 65%)}#vfTile.t1 .vf-glow{opacity:.5}#vfTile.t2 .vf-glow{opacity:1}
 #vfTile.hue-gold .vf-glow{background:radial-gradient(circle at 50% 50%,rgba(255,214,102,.85),transparent 70%)}#vfTile.hue-blue .vf-glow{background:radial-gradient(circle at 50% 50%,rgba(91,141,239,.9),transparent 70%)}#vfTile.hue-silver .vf-glow{background:radial-gradient(circle at 50% 50%,rgba(230,236,244,.9),transparent 70%)}
 html body #vfTile.hue-gold .vf-face.back{box-shadow:inset 0 0 0 4px #E0A82E,0 0 34px 8px rgba(255,214,102,.95)!important}html body #vfTile.hue-blue .vf-face.back{box-shadow:inset 0 0 0 4px #5B8DEF,0 0 34px 8px rgba(91,141,239,.95)!important}html body #vfTile.hue-silver .vf-face.back{box-shadow:inset 0 0 0 4px #C9D1DC,0 0 34px 8px rgba(230,236,244,.95)!important}
-html body #vfTile .vf-face{overflow:visible!important}html body #vfTile .vf-face.back{overflow:hidden!important}
+html body #vfTile .vf-face{overflow:hidden!important}
 #vfTile.t1:not(.flip) .vf-flip,#vfTile.t2:not(.flip) .vf-flip{animation:none}
 html body #vfTile .vf-flip.shud{animation:vfShud .38s ease-in-out!important}@keyframes vfShud{15%{transform:translateX(-6px) rotate(-2deg)}30%{transform:translateX(6px) rotate(2deg)}45%{transform:translateX(-5px) rotate(-1.5deg)}60%{transform:translateX(4px) rotate(1deg)}80%{transform:translateX(-2px)}}
 #vfTile.flip .vf-flip.shud{animation:none!important}
 #vfTile.t2 .vf-q{animation:rdPulse .45s ease-in-out infinite}
-.vf-amt{display:inline-block}.vf-amt.tick{animation:vfTick .12s ease-out}@keyframes vfTick{from{transform:translateY(-8px);opacity:.4}to{transform:none;opacity:1}}
-.vf-amt.land{animation:vfLand .5s cubic-bezier(.2,1.8,.4,1)!important;color:#1E6B3E!important}@keyframes vfLand{0%{transform:scale(.6)}60%{transform:scale(1.45)}100%{transform:scale(1.15)}}
+.vf-amt{display:inline-block}
+.vf-rays{position:absolute;left:50%;top:50%;width:300%;height:300%;margin:-150% 0 0 -150%;background:repeating-conic-gradient(rgba(255,255,255,.55) 0 8deg,transparent 8deg 20deg);opacity:0;pointer-events:none}
+#vfTile.wow .vf-rays{opacity:1;animation:rdSpin 6s linear infinite,vfRaysIn .5s ease-out}@keyframes vfRaysIn{from{transform:scale(.2)}}
+#vfTile.wow .vf-face.front{animation:vfGlowP 1s ease-in-out infinite}@keyframes vfGlowP{50%{box-shadow:inset 0 0 0 4px #E0A82E,0 0 60px 14px rgba(255,214,102,.95)}}
+.vf-amt.slam{animation:vfSlam .7s cubic-bezier(.2,1.7,.4,1) both;color:#1E6B3E!important}@keyframes vfSlam{0%{transform:scale(4) rotate(-12deg);opacity:0}55%{transform:scale(.85) rotate(3deg);opacity:1}100%{transform:scale(1.2)}}
+html body #vfTile .vf-face.front.a50 p b{font-size:2.6rem!important}html body #vfTile .vf-face.front.a100 p b{font-size:3.2rem!important;color:#B4231A!important;text-shadow:0 3px 0 #F3D27A,0 0 18px rgba(255,214,102,.9)}
+#vfTile .vf-face.front.a50 h3,#vfTile .vf-face.front.a100 h3{font-size:1.65rem}#vfTile .vf-face.front.a100 h3{color:#B4231A}
+html body #vfTile .vf-face.front.a100{background:radial-gradient(circle at 50% 40%,#FFF6DD,#F3D27A 55%,#E0A82E)!important}
+#vfTile .vf-face.front.a100 .vf-ic{font-size:3rem}#vfTile .vf-face.front.a100 h3{line-height:1.05;margin:2px 0}
+#vfTile.wow.a50 .vf-ic,#vfTile.wow.a100 .vf-ic{animation:vfIcon .8s cubic-bezier(.2,1.8,.4,1) .3s both,vfBob 1.2s ease-in-out 1.1s infinite}@keyframes vfIcon{from{transform:scale(.2) rotate(-30deg)}to{transform:scale(1.05)}}@keyframes vfBob{50%{transform:scale(1.05) rotate(-6deg)}}
+.vf-flash{position:absolute;inset:0;z-index:90;background:#FFF3C4;pointer-events:none;animation:rdFlash .6s ease-out forwards}
+.vf-quake{animation:rdShake .5s ease-in-out}
 .vf-ic{font-size:3.8rem;line-height:1}#vfTile.flip .vf-ic{animation:vfIn .5s cubic-bezier(.2,1.6,.4,1) .45s both}
 .vf-face h3{margin:0;font:900 1.5rem Fraunces,serif;color:#3A2600}.vf-face.steal h3{color:#F3D27A}.vf-face.shield h3{color:#1F3157}
 .vf-face p{margin:0 8px;display:flex;align-items:center;justify-content:center;gap:5px;font:800 .9rem "Nunito Sans";color:#4E433C}.vf-face.steal p{color:#E6EDF8}.vf-face p b{font:900 1.8rem Fraunces,serif;color:#2D4E86}.vf-gi{width:24px;height:24px}
