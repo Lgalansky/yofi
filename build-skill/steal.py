@@ -5,7 +5,8 @@
 #  - Coming back after 2h+: the usual key-moment pop, "While you were away": the coins your cards
 #    earned (collected from the jar) and "1 card stolen · Falls · Emma won 5–4", button "Win Falls back".
 #  - Platinum cards (90+) can't be stolen or risked ("🛡 Can’t be stolen" tag in the gallery).
-#  - Steal battles: risk one of your cards vs theirs, first to 5 votes wins both cards (at most 9
+#  - Steal battles are free to try (like Steal a Brainrot): play one of your cards vs theirs, first to
+#    5 votes takes their card; lose and nothing is taken, you just use one of 3 daily tries (at most 9
 #    live votes). No coins or cash at stake, so the button is navy. 3 attempts a day.
 #  - Win back a stolen card, or steal a rival's card (Compete › Your photo › Steal a card, and a
 #    banner in the gallery room). A stolen card joins your collection and earns for you.
@@ -59,16 +60,16 @@ function awayPop() { const N = S.awayNews; if (!N || N.shown || !S.user) return;
 setInterval(() => { try { awayPop(); } catch (e) {} }, 1500);
 setTimeout(() => { try { stealAway(); } catch (e) {} }, 600);
 // the steal screen: win back, or steal a rival's card
-function stealSheet(o = {}) { const mine = riskable(); if (!mine.length) { toast(myCards().length ? 'Your cards are all Platinum and safe · nothing to risk' : 'Add a photo to your gallery to play for cards'); return; }
+function stealSheet(o = {}) { const mine = myCards(); if (!mine.length) { toast('Add a photo to your gallery to play for cards'); return; }
   let them, title, back = null;
   if (o.back) { const p = S.photos.find(x => x.id === o.back && x.heldBy); if (!p) { toast('That card is already yours'); return; } back = p; them = { src: p.src, nm: alName(p), sc: p.s.total, h: p.heldBy, cat: p.cat }; title = `Win ${them.nm} back`; }
   else { const list = rivalCards(); them = o.rival || list[0]; if (!them) { toast('No cards to steal right now'); return; } title = `Try to steal ${them.nm}`; }
   const pick = mine.filter(x => x.cat === them.cat).concat(mine.filter(x => x.cat !== them.cat)), mi = Math.min(o.mi || 0, pick.length - 1), me = pick[mi], left = stlLeft();
-  gameSheet({ ic: '🃏', nm: title, what: 'First to 5 votes wins both cards', pl: 'Win', prize: back ? `${them.nm} back` : them.nm, chip: `${them.nm} earns ${cardRate(them.sc)} 🟡 per vote`,
+  gameSheet({ ic: '🃏', nm: title, what: back ? 'First to 5 votes wins it back · nothing to lose' : 'First to 5 votes takes their card · nothing to lose', pl: 'Win', prize: back ? `${them.nm} back` : them.nm, chip: `${them.nm} earns ${cardRate(them.sc)} 🟡 per vote`,
     left: gsPh(them.src, them.sc), lcap: `${esc(them.nm)}<small>Held by ${esc(rvName(them.h))}</small>`, right: gsPh(me.src, me.s.total), rcap: `${esc(alName(me))}<small>Your card</small>`,
-    fixed: `Risk ${esc(alName(me))}`, fixedSub: `lose and ${esc(rvName(them.h))} takes it · ${left} of 3 left today`,
-    go: left ? `Risk ${alName(me)} & challenge` : 'No attempts left today', onGo: () => { if (!stlLeft()) { toast('3 card battles a day · come back tomorrow'); return; } stealBattle(me, them, back); },
-    link: pick.length > 1 ? 'Choose another card' : 'Back', onLink: () => pick.length > 1 ? stealSheet({ ...o, rival: o.rival || (back ? null : them), mi: (mi + 1) % pick.length }) : closeSheet() });
+    fixed: `Play with ${esc(alName(me))}`, fixedSub: `Free try · ${left} of 3 left today`,
+    go: left ? (back ? `Win ${them.nm} back` : `Steal ${them.nm}`) : 'No tries left today', onGo: () => { if (!stlLeft()) { toast('3 card battles a day · come back tomorrow'); return; } stealBattle(me, them, back); },
+    link: pick.length > 1 ? 'Play with another card' : 'Back', onLink: () => pick.length > 1 ? stealSheet({ ...o, rival: o.rival || (back ? null : them), mi: (mi + 1) % pick.length }) : closeSheet() });
   const box = document.querySelector('#sheetBody .gs'); if (!box) return; box.classList.add('stl');
   const others = rivalCards().filter(x => x.key !== them.key).slice(0, 2);
   if (others.length) box.insertAdjacentHTML('beforeend', `<h3 class="stl-h">Steal a card</h3>${others.map(x => `<button class="stl-r" data-stk="${x.key}"><img src="${x.src}" alt=""><span><b>${esc(x.nm)}</b><small>Held by ${esc(rvName(x.h))} · earns ${cardRate(x.sc)} 🟡 a vote</small></span><em>View ›</em></button>`).join('')}`);
@@ -84,14 +85,13 @@ function stealBattle(me, them, back) { const D = stlDay(); D.n++; save();
     if (i >= seq.length) { clearInterval(iv); setTimeout(() => stealDone(me, them, back, won, y, x), 700); } }, 650); }
 function stealDone(me, them, back, won, mv, tv) { const rn = rvName(them.h);
   if (won) { if (back) { back.heldBy = null; back.heldAt = null; } else { S.photos.push({ id: uid(), src: them.src, orig: them.src, cat: them.cat, nm: them.nm, nmAsk: 1, enh: 0, at: Date.now(), card: { from: them.h }, s: { light: them.sc, comp: them.sc, colour: them.sc, tech: them.sc, total: them.sc } }); S.stlTaken = (S.stlTaken || []).concat(them.key); } }
-  else { if (me.card) S.photos = S.photos.filter(p => p !== me); else { me.heldBy = them.h; me.heldAt = Date.now(); } }
   if (S.awayNews && S.awayNews.st && back && won) S.awayNews.st = null; save();
   const fig = (src, nm, sub, w, cls) => `<figure class="${cls} ${w ? 'gr-w' : 'gr-l'}"><span class="pj-ph"><img src="${src}" alt="">${w ? '<i class="gr-tag">🏆 WINNER</i>' : ''}</span><figcaption>${esc(nm)}<small>${sub}</small></figcaption></figure>`;
   gsResultSheet({ ic: '🃏', nm: back ? `Win ${esc(them.nm)} back` : `Steal ${esc(them.nm)}`, sub: 'Final result', won,
-    head: won ? (back ? `You won ${esc(them.nm)} back!` : `You stole ${esc(them.nm)}!`) : `${esc(rn)} won`, headSub: `${mv}–${tv}`,
-    box: won ? { k: 'Now yours', b: esc(them.nm), s: `It earns you ${cardRate(them.sc)} 🟡 per vote` } : { k: 'You lost', b: esc(alName(me)), s: `${esc(rn)} holds it now · win it back any time` },
+    head: won ? (back ? `You won ${esc(them.nm)} back!` : `You stole ${esc(them.nm)}!`) : `${esc(rn)} kept ${esc(them.nm)}`, headSub: `${mv}–${tv}`,
+    box: won ? { k: 'Now yours', b: esc(them.nm), s: `It earns you ${cardRate(them.sc)} 🟡 per vote` } : { k: 'Not this time', b: esc(them.nm), s: `Nothing lost · ${stlLeft()} of 3 tries left today` },
     mid: `<div class="pj-vs">${fig(them.src, them.nm, `${tv} votes`, !won, 'pj-them')}<span class="pj-x2">VS</span>${fig(me.src, alName(me), `${mv} votes`, won, 'pj-me')}</div>`,
-    go: won ? { t: 'View my collection', free: 1, fn: () => { closeSheet(); S.galCat = them.cat; AL_OPEN = null; TU_GAL = true; save(); go('studio'); renderStudio(); } } : { t: `Win ${alName(me)} back`, free: 1, fn: () => { closeSheet(); setTimeout(() => stealSheet({ back: me.id }), 280); } },
+    go: won ? { t: 'View my collection', free: 1, fn: () => { closeSheet(); S.galCat = them.cat; AL_OPEN = null; TU_GAL = true; save(); go('studio'); renderStudio(); } } : stlLeft() ? { t: 'Try again', free: 1, fn: () => { closeSheet(); setTimeout(() => stealSheet(back ? { back: back.id } : { rival: them }), 280); } } : { t: 'View my collection', free: 1, fn: () => { closeSheet(); AL_OPEN = null; TU_GAL = true; save(); go('studio'); renderStudio(); } },
     link: grBack() }); }
 // Compete: a Steal a card row; Gallery: a banner when one of your cards is held
 const _c2PhotoS = c2Photo;

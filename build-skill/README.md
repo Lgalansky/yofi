@@ -845,3 +845,5 @@ The live `index.html` now includes the galleries steps. Their input is the earli
 `winall.py` makes every game win pause on the winner pop before the result screen (jackpot, head-to-head, friend, Quick Sprint, Showdown, Sprint, Crowd Championship, card steals). Cash and coin prizes say "Collect" and fly into the balance; stars and cards say "See result". If a game already fired its own winner pop, that one is kept, so there is only ever one pop per win.
 
 `losetip.py` keeps a lost game to two actions. If the photo you played with scores under 75, the main button is gold "✨ Touch up <name>" (opens Improve on it) and the rematch becomes the link; otherwise it's the rematch button and the Back link. Card steals are left out.
+
+Card steals are now free to try (like Steal a Brainrot): a steal or win-back battle never risks one of your cards. Lose and nothing is taken; it just uses one of your 3 daily tries ("Not this time · Nothing lost · 2 of 3 tries left today", with "Try again"). Cards are only lost to overnight steals, and Platinum cards stay safe from those.

@@ -2,7 +2,7 @@
 #  Daily jackpots (photo cards, "From $1" green / "Add photo" white, "Ends in" timer) ·
 #  Head-to-head (VS photo card, "Entry $1 · Win $1.70", green "View matchup") ·
 #  Challenge a friend (WhatsApp row, green "Invite") · Card challenges panel ("Win Falls back ·
-#  Emma won 5–4" with navy "Rematch"; "Steal a card · First to 5 votes wins both cards") ·
+#  Emma won 5–4" with navy "Rematch"; "Steal a card · Free to try · first to 5 votes") ·
 #  Tournaments (full-width rows: icon | name, detail, gold "Win $25" | green "Entry $2") · Clubs.
 # usage: python3 build-skill/cmp3.py in.html out.html
 import sys
@@ -24,7 +24,7 @@ c2Photo = function () { const L = lgS(), best = fighters()[0], cat = best ? (bes
   const fr = best ? `<div class="c4-row"><span class="c4-wa">${WA_ICON}</span><span class="c4-tx"><b>Challenge a friend</b><small>Entry $1 · Win <b class="g">${win}</b></small></span><button class="c4-go" data-c2r="friend">Invite</button></div>` : '';
   const held = S.photos.find(p => p.heldBy), rc = typeof rivalCards === 'function' ? rivalCards()[0] : null;
   const cards = (held || rc) ? `<h3 class="c2-h">🃏 Card challenges</h3><div class="c4-panel">${held ? `<div class="c4-crow"><img class="c4-card1" src="${held.src}" alt=""><span class="c4-tx"><b>Win ${esc(alName(held))} back</b><small>${esc(rvName(held.heldBy))} won ${(S.awayNews && S.awayNews.st && S.awayNews.st.score) || '5–4'}</small></span><button class="c4-go nav" data-c2r="steal">Rematch</button></div>` : ''}
-    ${rc ? `<button class="c4-crow" data-c2r="stealnew"><span class="c4-fan"><img src="${rc.src}" alt=""><img src="${(rivalCards()[1] || rc).src}" alt=""></span><span class="c4-tx"><b>Steal a card</b><small>First to 5 votes wins both cards</small></span><span class="c4-arr">›</span></button>` : ''}</div>` : '';
+    ${rc ? `<button class="c4-crow" data-c2r="stealnew"><span class="c4-fan"><img src="${rc.src}" alt=""><img src="${(rivalCards()[1] || rc).src}" alt=""></span><span class="c4-tx"><b>Steal a card</b><small>Free to try · first to 5 votes takes it</small></span><span class="c4-arr">›</span></button>` : ''}</div>` : '';
   const T = tSlots(), spr = T.find(x => x.gtd < 100);
   const tour = (id, ic, nm, det, win, entry) => `<button class="c4-t" data-c2r="${id}"><span class="c4-ti">${ic}</span><span class="c4-tt"><b>${nm}</b><small>${det}</small><em>Win ${win}</em></span><span class="c4-te">Entry ${entry}</span></button>`;
   return `<h3 class="c2-h">💰 Daily jackpots <small>⏱ Ends in ${dayLeft()}</small></h3><div class="c3-jps">${jp}</div>
