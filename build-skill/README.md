@@ -957,3 +957,5 @@ The "Your photo" label on the coin jar and upgrade cards was removed (user decis
 The coin jar card was simplified (user mark-up): no "Players voted for it" line, and the button reads just "Collect" because the amount is already in the title (`jartext.py`).
 
 The Photo Duel special-tile card art now reads "PHOTO DUEL · Your photo vs a rival's" (was "HEAD OR HEAD · Face a rival in a duel"): `build-skill/assets/challenge.jpg` was relettered; the original art is kept as `assets/challenge_original.jpg`. Its alt text matches (`names.py`).
+
+The Collect and Improve buttons on the Vote top card use the app's shared button font ("Nunito Sans" bold, like the other buttons in that spot) instead of the serif title font (`jartext.py`).
