@@ -799,7 +799,8 @@ python3 build-skill/jartext.py sp-nm.html sp-jt.html
 python3 build-skill/judgecard.py sp-jt.html sp-jc.html
 python3 build-skill/galfix.py sp-jc.html sp-gf.html
 python3 build-skill/audit1.py sp-gf.html sp-a1.html
-python3 build-skill/signup.py sp-a1.html skill-preview.html
+python3 build-skill/signup.py sp-a1.html sp-su.html
+python3 build-skill/shields.py sp-su.html skill-preview.html
 ```
 
 `votecash.py` lays out Vote as goal bar → "Which is better?" with a small streak widget → photos → one cash card (a friend's challenge, else the category champion and the next tournament taking turns) and the "Head-to-head in N votes" line.
@@ -965,3 +966,5 @@ The Collect and Improve buttons on the Vote top card use the app's shared button
 `audit1.py`: fixes from the full play-through audit against the style guide in CLAUDE.md: pop-up buttons in the shared button font (no serif capitals); navy Continue on the age question; Payday reads "Earned by your photos in the last …" with a shorter "Steal a card · 3 free tries"; Add cash has no duplicate "Shop" heading or "blue ribbon" wording; the repeated sign-up sentence is gone; the jackpot screen is titled "Pet challenge" like its tile; judge wording ("You vs another judge", "Similar judge"); profile "Spend coins" (was Coin store); Crowd Championship shows your judge avatar.
 
 `signup.py` (user decisions): no sign-up coin bonus (the first touch-up is the welcome gift); sign-up from a touch-up reads "Save Milo’s touch-up · Create your free account so your photo and coins stay yours." with no bonus box or coin burst, and the "Welcome bonus when you sign up" banner is gone. The profile sheet keeps two buttons (Hall of Fame, Spend coins); Competitions is gone. The "Add 2 more Pets photos" top card's line is shortened to "Each photo earns on votes" (`jartext.py`).
+
+`shields.py` (user chose A for both): stolen cards are trophies. They no longer fill a collection's Gold slots; they show in a "🃏 Trophies" row on their collection's binder page and still earn coins. Shields are earned (special tile, every 3-day streak, every judge rank-up from Sharp Eye; hold up to 3), never bought, and placed on a card from the 🛡 pill sheet or the Gallery "🛡 Shield Milo" chip. An overnight steal aimed at a shielded card is blocked and the shield breaks, with a "Shield held!" pop ("Leo tried to steal Milo…"); unplaced shields no longer block anything. About 1 in 2 steal walls has a rival card marked "🛡 Shielded" that can't be picked.
