@@ -989,3 +989,5 @@ Improve after a touch-up: the picked row keeps its current score ("65 ↑") and 
 `cmpjudge.py`: Compete › Judge games matches the Photo games tab: the judge score card, the "1 v 1 now" Judge Duel card and the "Every vote trains your eye" link are gone; the tab reads Tournaments (Crowd Championship) then one "⚡ Quick games" row (Judge Duel · Photo Duel).
 
 Every steal wall now has one rival card behind a glowing blue shield ("🛡 Shielded"); tapping it bounces off ("Hilltop village is shielded · pick another"), and the hint line says "🛡 Shielded cards can't be stolen · shields from ✨ special tiles protect yours too" (`shields.py`).
+
+Tapping the "Milo can reach Diamond" card or its Improve button on Vote opens the Improve screen on Milo directly (it used to open Milo's card in the Gallery first) (`jartext.py`).

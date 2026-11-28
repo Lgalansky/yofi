@@ -5,6 +5,7 @@
 #  Several photos: "Your photos earned you 12 coins". Full jar: "... · Full · collect to keep earning".
 #  The upgrade card matches: "Milo can reach Diamond" / "71 → 80 · earns 8 coins a vote", 
 #  gold button just "Improve" (the price shows on the Improve screen; user decision) (was "Milo’s upgrade is ready · 71 → 80 for Diamond · 120 c…").
+#  Tapping the upgrade card (or its Improve button) opens the Improve screen on that photo, not the photo's card.
 # Usage: python3 build-skill/jartext.py in.html out.html  (run after names.py)
 import sys
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
@@ -23,6 +24,8 @@ JS = r'''
       g.t = tier ? `${nm} can reach ${tier}` : `${nm} can score higher`;
       g.s = nb ? `${p.s.total} → ${nb} · ${GAL.BASE * galMult(nb)} coins a vote` : `Now ${p.s.total} · touch it up`;
       g.cost = cost; }
+    if (g && g.p && !g.jar && (g.ready || /^Improve|^Get .+ to \d+/.test(g.t || '') || g.cta === 'Improve')) { const p = g.p, k = (() => { try { return vgReadyKey(g); } catch (e) { return ''; } })();
+      g.act = () => { try { if (g.ready) { S.vgReadyAck = k; } } catch (e) {} S.cur = p.id; TU_GAL = false; WALL = false; AL_OPEN = null; save(); go('studio'); try { renderStudio(); } catch (e) {} }; }
     return g; };
   const _p = vgPaint;
   vgPaint = function () { _p.apply(this, arguments);
