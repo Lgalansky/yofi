@@ -874,3 +874,4 @@ The Steal button under the vote photos was removed (user decision); stealing sta
 
 Stolen cards always earn into the coin jar, on top of your collections, even when their collection is locked or full (`jarHung` in `jarfull.py`). The jar receipt lists every stolen card you own, even at +0.
 The jar receipt reads as a payday: a gold "💰 PAYDAY" badge, "+67" counting up, "🗳 Voters picked your photos in the last 2h", rows sliding in with each amount counting up, "📸 Your photos earned" / "🃏 Stolen cards · bonus" / "😤 Taken from you" sections, "🎉 Stealing earned you +18 extra", and confetti.
+The jar receipt always offers stealing when there is a rival card: "Steal a card · 3 free tries left", or "Steal a card · new tries tomorrow" when the day's 3 are used. The "Steal a card" teaser row is tappable too.

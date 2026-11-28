@@ -39,7 +39,7 @@ function jpShow(n, earn, held, since) { const co = $('#coach'); if (!co || co.cl
   const tier = p => { const t = galTier(p.s.total); return t ? `<i class="jp-t t-${t.toLowerCase()}">${t === 'Gold' ? '🥇' : t === 'Diamond' ? '💎' : '🏆'} ${t}</i>` : ''; };
   let k = 0; const row = (x, sub, cls = '') => `<div class="jp-r ${cls}" style="animation-delay:${(.35 + k++ * .18).toFixed(2)}s"><img src="${x.p.src}" alt=""><span><b>${esc(alName(x.p))}</b><small>${sub}</small></span><em data-jc="${x.c}" data-jd="${(.35 + (k - 1) * .18).toFixed(2)}">+0</em></div>`;
   const pk = x => `earns ${per(x.p)} 🟡 a vote`;
-  const h = held[0], go = h ? { t: `Win ${alName(h.p)} back`, fn: () => stealSheet({ back: h.p.id }) } : rc.length && stlLeft() ? { t: 'Steal a card · free try', fn: () => stealSheet({}) } : null;
+  const h = held[0], lt = stlLeft(), go = h ? { t: `Win ${alName(h.p)} back`, fn: () => stealSheet({ back: h.p.id }) } : rc.length ? { t: lt ? `Steal a card · ${lt} free tr${lt === 1 ? 'y' : 'ies'} left` : 'Steal a card · new tries tomorrow', fn: () => stealSheet({}) } : null;
   co.innerHTML = `<div class="crbox jpbox" role="dialog" aria-modal="true" aria-labelledby="jpT"><div class="cr-rays wp-rays" aria-hidden="true"></div>
     ${[...Array(18)].map((_, i) => `<i class="wp-cf" style="left:${(i * 37) % 100}%;background:${['#FFC93C', '#FF6B6B', '#5B8DEF', '#3CCB8A', '#F59E0B'][i % 5]};animation-delay:${(i * .09).toFixed(2)}s"></i>`).join('')}
     <span class="jp-pay">💰 Payday</span>
@@ -48,7 +48,7 @@ function jpShow(n, earn, held, since) { const co = $('#coach'); if (!co || co.cl
     <div class="jp-list">
       ${mine.length ? `<h3>📸 Your photos earned</h3>${mine.map(x => row(x, `${tier(x.p)}${pk(x)}`)).join('')}` : ''}
       <h3 class="g">🃏 Stolen cards · bonus</h3>${won.length ? won.map(x => row(x, `from ${esc(rvName(x.p.card.from))} · ${pk(x)}`, 'won')).join('') + (wonT ? `<p class="jp-note" style="animation-delay:${(.45 + k * .18).toFixed(2)}s">🎉 Stealing earned you <b>+${wonT}</b> extra</p>` : '')
-        : `<div class="jp-r won tease" style="animation-delay:${(.35 + k++ * .18).toFixed(2)}s"><span class="jp-fan">${rc.slice(0, 2).map(x => `<img src="${x.src}" alt="">`).join('')}</span><span><b>Steal a card</b><small>It earns coins for you too</small></span><em>?</em></div>`}
+        : `<div class="jp-r won tease" data-jst="1" style="animation-delay:${(.35 + k++ * .18).toFixed(2)}s"><span class="jp-fan">${rc.slice(0, 2).map(x => `<img src="${x.src}" alt="">`).join('')}</span><span><b>Steal a card</b><small>It earns coins for you too</small></span><em>?</em></div>`}
       ${held.length ? `<h3 class="r">😤 Taken from you</h3>${held.map(x => `<div class="jp-r lost" style="animation-delay:${(.35 + k++ * .18).toFixed(2)}s"><img src="${x.p.src}" alt=""><span><b>${esc(alName(x.p))}</b><small>${esc(rvName(x.p.heldBy))} is earning from it now</small></span><em><small>missed</small>~${x.miss}</em></div>`).join('')}` : ''}
     </div>
     ${go ? `<button class="bt-cta jp-go" id="jpGo">${esc(go.t)}</button>` : ''}<button class="bt-no" id="jpNo">${go ? 'Done' : 'Nice! Back to voting'}</button></div>`;
@@ -56,6 +56,7 @@ function jpShow(n, earn, held, since) { const co = $('#coach'); if (!co || co.cl
   const close = () => { co.classList.remove('on', 'cr'); co.innerHTML = ''; };
   if ($('#jpGo')) $('#jpGo').onclick = () => { close(); go.fn(); };
   $('#jpNo').onclick = close; co.onclick = e => { if (e.target === co) close(); };
+  co.querySelectorAll('[data-jst]').forEach(r => r.onclick = () => { close(); stealSheet({}); });
   const count = (el, to, ms, delay, pre) => { const t0 = performance.now() + delay * 1000; const tick = t => { if (!el.isConnected) return; const q = Math.max(0, Math.min(1, (t - t0) / ms)); el.textContent = pre + Math.round(to * (1 - Math.pow(1 - q, 3))); if (q < 1) requestAnimationFrame(tick); else if (pre) { el.classList.add('pop'); } }; requestAnimationFrame(tick); };
   count($('#jpN'), n, 1100, .1, '');
   co.querySelectorAll('[data-jc]').forEach(e => count(e, +e.dataset.jc, 600, +e.dataset.jd + .2, '+')); }
@@ -84,7 +85,7 @@ html body #coach .jpbox{max-height:86vh;display:flex;flex-direction:column;text-
 .jp-r em{flex:none;font:900 1.05rem "Nunito Sans";font-style:normal;color:#2D4E86}
 .jp-r.won{background:#FFF3D6;box-shadow:inset 0 0 0 2px #E0A82E}.jp-r.won em{color:#8A5A0A}.jp-r.won img{box-shadow:0 0 0 2px #E0A82E}
 .jp-r.lost{background:#FBECE8;box-shadow:inset 0 0 0 1.5px #E7B8AE}.jp-r.lost img{filter:grayscale(.7)}.jp-r.lost em{color:#A3372A;text-align:right;line-height:1.1}.jp-r.lost em small{display:block;font:800 .62rem "Nunito Sans";text-transform:uppercase;letter-spacing:.05em}
-.jp-fan{position:relative;width:44px;height:48px;flex:none!important}.jp-fan img{position:absolute;width:30px;height:40px}.jp-fan img:first-child{left:0;top:4px;transform:rotate(-10deg)}.jp-fan img:nth-child(2){right:0;top:0;transform:rotate(8deg)}
+.jp-r.tease{cursor:pointer}.jp-fan{position:relative;width:44px;height:48px;flex:none!important}.jp-fan img{position:absolute;width:30px;height:40px}.jp-fan img:first-child{left:0;top:4px;transform:rotate(-10deg)}.jp-fan img:nth-child(2){right:0;top:0;transform:rotate(8deg)}
 .jp-t{font-style:normal;font:900 .62rem "Nunito Sans";padding:1px 6px;border-radius:99px;background:#F3D27A;color:#3A2600}.jp-t.t-diamond{background:#CFE0F5;color:#1F3157}.jp-t.t-platinum{background:#E3E6EA;color:#2E3440}
 .jp-note{margin:0 2px 4px;font:800 .8rem "Nunito Sans";color:#8A5A0A}.jp-note.r{color:#A3372A}
 html body #coach .jpbox .jp-go{background:#2D4E86!important;color:#fff!important;margin-top:12px}
