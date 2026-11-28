@@ -6,7 +6,8 @@
 #     Use: tap the 🛡 pill (or the Gallery's "🛡 Shield Milo" chip) and put a shield on a card. An overnight steal
 #     that targets a shielded card is blocked and the shield breaks ("Your shield stopped Emma stealing Milo").
 #     Shields you haven't placed no longer block anything. Shielded cards show 🛡 in the Gallery.
-#     See it: on the steal wall a rival's shielded card shows "🛡 Shielded" and can't be picked (about 1 in 2 steals).
+#     See it: every steal wall has one rival card behind a glowing blue shield ("🛡 Shielded"); tapping it bounces
+#     off, and the hint line explains "Shielded cards can't be stolen · shields from special tiles protect yours too".
 # Usage: python3 build-skill/shields.py in.html out.html  (run after signup.py)
 import sys
 src = sys.argv[1]; p = sys.argv[2] if len(sys.argv) > 2 else src
@@ -55,8 +56,8 @@ JS = r'''
   new MutationObserver(() => { try { shGal(); } catch (e) {} }).observe($('#studio'), { childList: true, subtree: true });
   // steal wall: some rival cards carry a shield and can't be picked
   new MutationObserver(() => { try { const el = document.getElementById('raid'); if (!el || el.dataset.shd) return; const cs = [...el.querySelectorAll('.rd-card[data-rd]')]; if (cs.length < 3) return; el.dataset.shd = 1;
-    if (Math.random() < .5) { const c = cs[Math.floor(Math.random() * cs.length)]; c.classList.add('rd-shd'); const sm = c.querySelector('small'); if (sm) sm.textContent = '🛡 Shielded';
-      const fr = c.querySelector('.rd-fr'); if (fr) fr.insertAdjacentHTML('beforeend', '<i class="rd-shb">🛡</i>'); c.onclick = e => { e.stopPropagation(); toast('🛡 That card is shielded · pick another'); }; } } catch (e) {} }).observe($('#shell'), { childList: true });
+    { const c = cs[Math.floor(Math.random() * cs.length)]; const hn = el.querySelector('.rd-hint'); if (hn) hn.insertAdjacentHTML('beforeend', '<br><b class="rd-shn">🛡 Shielded cards can’t be stolen · shields from ✨ special tiles protect yours too</b>'); c.classList.add('rd-shd'); const sm = c.querySelector('small'); if (sm) sm.textContent = '🛡 Shielded';
+      const fr = c.querySelector('.rd-fr'); if (fr) fr.insertAdjacentHTML('beforeend', '<i class="rd-shb">🛡</i>'); c.onclick = e => { e.stopPropagation(); c.classList.remove('rd-bonk'); void c.offsetWidth; c.classList.add('rd-bonk'); toast(`🛡 ${(c.querySelector('b') || {}).textContent || 'That card'} is shielded · pick another`); }; } } catch (e) {} }).observe($('#shell'), { childList: true });
   // a blocked steal with nothing else to report still gets its own moment
   const _ap = awayPop;
   awayPop = function () { const N = S.awayNews;
@@ -80,7 +81,7 @@ html body #sheetBody .shs{text-align:left;color:#14213D}.shs-h{margin:2px 0 6px!
 .tro-row{margin-top:10px;display:flex;flex-direction:column;gap:8px}.tro-in{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:#FFF6DA;box-shadow:inset 0 0 0 1.5px #E0B860}
 .tro-ims{display:flex}.tro-ims img{width:40px;height:40px;border-radius:8px;object-fit:cover;box-shadow:0 0 0 2px #B3261E;margin-right:-8px}.tro-tx{margin-left:10px;min-width:0}.tro-tx b{display:block;font:800 .88rem "Nunito Sans",sans-serif;color:#6A3500}.tro-tx small{font-size:.76rem;color:#6B5B4B}
 html body .sh-chip{align-self:center;border:0;border-radius:999px;padding:8px 16px;background:#14213D;color:#fff;font:800 .9rem "Nunito Sans",sans-serif;cursor:pointer}
-#raid .rd-card.rd-shd{opacity:.55;filter:grayscale(.4)}#raid .rd-shb{position:absolute;top:8px;right:8px;z-index:3;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#14213D;font-style:normal;box-shadow:0 0 0 2px #D9AE4F}
+#raid .rd-card.rd-shd{opacity:.7;filter:grayscale(.35)}#raid .rd-card.rd-shd .rd-fr{box-shadow:0 0 0 3px #8FB6EE,0 0 18px rgba(143,182,238,.8)!important}#raid .rd-card.rd-bonk{animation:rdBonk .45s}@keyframes rdBonk{20%{transform:translateX(-8px) rotate(-3deg)}50%{transform:translateX(8px) rotate(3deg)}80%{transform:translateX(-4px)}}#raid .rd-shn{display:inline-block;margin-top:6px;color:#BFD6FF;font-weight:800}#raid .rd-shb{position:absolute;top:8px;right:8px;z-index:3;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#14213D;font-style:normal;box-shadow:0 0 0 2px #D9AE4F}
 '''
 i = s.rfind('</style>'); s = s[:i] + CSS + s[i:]
 open(p, 'w').write(s); print('shields ok')

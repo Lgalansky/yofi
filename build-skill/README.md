@@ -987,3 +987,5 @@ Improve after a touch-up: the picked row keeps its current score ("65 ↑") and 
 `jduel.py`: a Judge Duel special tile while voting, using the user's card art (`build-skill/assets/judgeduel.jpg`). About 1 in 25 right votes; no photo needed. Three taps crack it open with a blue-and-red glow and sparks, then the Judge Duel game screen opens and the player chooses whether to play.
 
 `cmpjudge.py`: Compete › Judge games matches the Photo games tab: the judge score card, the "1 v 1 now" Judge Duel card and the "Every vote trains your eye" link are gone; the tab reads Tournaments (Crowd Championship) then one "⚡ Quick games" row (Judge Duel · Photo Duel).
+
+Every steal wall now has one rival card behind a glowing blue shield ("🛡 Shielded"); tapping it bounces off ("Hilltop village is shielded · pick another"), and the hint line says "🛡 Shielded cards can't be stolen · shields from ✨ special tiles protect yours too" (`shields.py`).
